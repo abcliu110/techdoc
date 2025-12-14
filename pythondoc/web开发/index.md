@@ -9,7 +9,7 @@
 <div style="page-break-after: always;"></div>
 
 <!-- 章节 -->
-@import "文档模版.md"
+@import "web.md"
 
 <div style="page-break-after: always;"></div>
 
@@ -55,10 +55,5 @@
 
 <!-- 章节 -->
 @import "lambda表达式.md"
-
-<div style="page-break-after: always;"></div>
-
-<!-- 章节 -->
-@import "锁.md"
 
 <!-- 注意：最后一章后面不需要加换页，否则 PDF 最后会多一张白纸 -->
