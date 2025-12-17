@@ -51,5 +51,26 @@
 <!-- 章节 -->
 @import "闭包.md"
 
+<div style="page-break-after: always;"></div>
+
+<!-- 章节 -->
+@import "vue原理.md"
+
+<div style="page-break-after: always;"></div>
+
+<!-- 章节 -->
+@import "vue渲染细节.md"
+
+<div style="page-break-after: always;"></div>
+
+<!-- 章节 -->
+@import "浏览器原理.md"
+
+<div style="page-break-after: always;"></div>
+
+<!-- 章节 -->
+@import "垃圾回收.md"
+
+
 
 <!-- 注意：最后一章后面不需要加换页，否则 PDF 最后会多一张白纸 -->
