@@ -763,5 +763,339 @@ console.log(app.count);
 
 这样，数据就能精确地知道，每一次读取操作背后，真正的“雇主”是谁。
 
+**完全不一样。** 这两个名字非常容易让人混淆，尤其是如果你了解经典的“观察者模式”（Observer Pattern）。
+
+在 Vue 的源码架构中，它们的职责是截然不同的：
+
+*   **Observer (观察者类)**：它是**数据的加工者**（负责“监听”数据变化）。
+*   **Watcher (订阅者类)**：它是**指令的执行者**（负责“做出”反应）。
+
+---
+
+### 1. 核心区别一览
+
+| 特性 | Observer (加工者) | Watcher (执行者) |
+| :--- | :--- | :--- |
+| **主要职责** | 把普通对象变成响应式对象。 | 当数据变了，执行具体的业务逻辑（如刷新页面）。 |
+| **核心动作** | 遍历对象属性，使用 `Object.defineProperty` 添加 Getter/Setter。 | 也就是 `render` 函数、`computed`、`$watch` 的背后实体。 |
+| **存在数量** | 只有 data 中的**对象/数组**才会生成 Observer 实例。 | 每个组件、每个 computed、每个 watch 都会生成 Watcher 实例。 |
+| **它认识谁？** | 它创建 **Dep**。 | 它订阅 **Dep**。 |
+
+---
+
+### 2. 它们是如何协作的？（一条龙服务）
+
+为了让你理解它们的关系，我们需要引入第三者 **Dep**。
+
+#### 第一阶段：初始化（Observer 出场）
+Vue 启动时，**Observer** 会像一个“装修队”一样进场：
+1.  它遍历 `data` 中的所有属性。
+2.  给每个属性安装“传感器”（Getter/Setter）。
+3.  **注意**：在安装“传感器”的时候，Observer 会为每个属性创建一个 **Dep**（专门用来存电话号码的通讯录）。
+
+> **Observer 的任务到此基本结束**，它把数据改造好了。
+
+#### 第二阶段：使用数据（Watcher 出场）
+当组件开始渲染时，**Watcher** 像一个“访客”一样进场：
+1.  Watcher 读取数据（触发 Getter）。
+2.  数据中的 **Dep** 发现有人读它，就把这个 Watcher 记在小本本上（收集依赖）。
+
+#### 第三阶段：数据变化
+1.  你修改数据（触发 Setter）。
+2.  **Dep** 通知 Watcher。
+3.  **Watcher** 执行 `update` 更新视图。
+
+---
+
+### 3. 为什么名字这么乱？（设计模式视角的解释）
+
+这可能是最让你困惑的地方。
+
+在经典的**设计模式（Observer Pattern）**中：
+*   **Subject（目标）**：负责被观察，发生改变时通知观察者。
+*   **Observer（观察者）**：负责接收通知并更新。
+
+**但在 Vue 的源码命名中：**
+
+1.  **Vue 的 `Observer` 类**：
+    *   它**不是**经典模式里的“观察者”。
+    *   它的作用更像是**“Subject 工厂”**，它负责把数据转换成可以被观察的 Subject（即 Dep）。
+
+2.  **Vue 的 `Watcher` 类**：
+    *   它才是经典模式里真正的**“观察者 (Observer)”**。
+
+### 4. 生活类比
+
+为了彻底分清，我们可以把 Vue 的系统想象成一个**大楼安防系统**：
+
+*   **Observer（安装工人）**：
+    *   他的工作是把大楼里的每一扇窗户都装上**报警器**。
+    *   他只负责**安装**，装完就走，不负责后面的监控。
+
+*   **Dep（报警器本身）**：
+    *   装在窗户上。如果窗户被打破（数据修改），它会响。
+    *   它里面存着保安室的电话号码。
+
+*   **Watcher（保安）**：
+    *   坐在监控室里的人。
+    *   一旦报警器（Dep）响了，他负责**冲出去抓人**（更新 DOM）或者**报警**（触发回调）。
+
+### 总结
+
+*   **Observer** 是**“建设者”**：它利用 `Object.defineProperty` 递归地把数据变成响应式的。
+*   **Watcher** 是**“使用者”**：它依赖数据，数据变了它就干活。
+
+所以在 Vue 中：**如果没有 Observer，Watcher 就没法监听到数据的变化；如果没有 Watcher，Observer 就算监测到了变化也没人去处理。**
+
+这是一个非常好的实战题目。要实现一个极简版的 Vue2，我们需要将代码拆解为几个核心模块：
+
+1.  **Observer (响应式)**：劫持数据。
+2.  **Dep & Watcher (依赖收集)**：连接数据和视图的桥梁。
+3.  **Compiler (模拟)**：这里我们不写复杂的正则解析器，而是直接手写 `render` 函数（生成虚拟 DOM），这是 Vue 最终编译出来的样子。
+4.  **VDOM & Patch (虚拟 DOM 与 渲染)**：将虚拟 DOM 变为真实 DOM。
+5.  **Vue Class (主类)**：整合以上所有逻辑。
+
+下面是不到 100 行代码的核心逻辑实现：
+
+### 1. 核心代码实现
+
+```javascript
+// ==========================================
+// 1. VDOM & h函数 (模拟虚拟DOM)
+// ==========================================
+function h(tag, props, children) {
+    return { tag, props, children }; // 返回一个 VNode 对象
+}
+
+// ==========================================
+// 2. Dep & Watcher (发布订阅模式)
+// ==========================================
+class Dep {
+    constructor() {
+        this.subs = []; // 存放 Watcher
+    }
+    depend() {
+        if (Dep.target) {
+            this.subs.push(Dep.target); // 收集依赖
+        }
+    }
+    notify() {
+        this.subs.forEach(watcher => watcher.update()); // 派发更新
+    }
+}
+Dep.target = null; // 全局变量，记录当前正在计算的 Watcher
+
+class Watcher {
+    constructor(vm, renderFunc) {
+        this.vm = vm;
+        this.getter = renderFunc;
+        this.get(); // 实例化时立即执行一次，触发依赖收集
+    }
+    get() {
+        Dep.target = this; // 标记当前 watcher
+        this.getter.call(this.vm); // 执行渲染函数 -> 触发数据的 getter -> 收集依赖
+        Dep.target = null; // 清除标记
+    }
+    update() {
+        this.get(); // 重新渲染
+    }
+}
+
+// ==========================================
+// 3. Observer (响应式劫持)
+// ==========================================
+function defineReactive(obj, key, val) {
+    const dep = new Dep(); // 每个 key 对应一个 Dep
+    
+    // 递归处理嵌套对象
+    observe(val);
+
+    Object.defineProperty(obj, key, {
+        enumerable: true,
+        configurable: true,
+        get() {
+            // 依赖收集：如果在 Watcher 上下文中读取，则收集
+            if (Dep.target) dep.depend();
+            return val;
+        },
+        set(newVal) {
+            if (newVal === val) return;
+            val = newVal;
+            observe(newVal); // 新值也要响应式
+            dep.notify(); // 派发更新 -> 触发 Watcher.update
+        }
+    });
+}
+
+function observe(data) {
+    if (!data || typeof data !== 'object') return;
+    Object.keys(data).forEach(key => defineReactive(data, key, data[key]));
+}
+
+// ==========================================
+// 4. Vue Class (主流程)
+// ==========================================
+class Vue {
+    constructor(options) {
+        this.$options = options;
+        this.$data = options.data;
+        this.$el = document.querySelector(options.el);
+
+        // 1. 数据代理：让 this.msg 能访问到 this.$data.msg
+        this._proxyData(this.$data);
+
+        // 2. 响应式处理
+        observe(this.$data);
+
+        // --- 生命周期：created ---
+        if (options.created) options.created.call(this);
+
+        // 3. 挂载
+        this.$mount();
+    }
+
+    _proxyData(data) {
+        Object.keys(data).forEach(key => {
+            Object.defineProperty(this, key, {
+                get() { return data[key]; },
+                set(val) { data[key] = val; }
+            });
+        });
+    }
+
+    $mount() {
+        // 创建“渲染 Watcher”
+        // 这里的逻辑是：Watcher 执行 getter -> 调用 render -> 读取数据 -> 收集依赖
+        new Watcher(this, () => {
+            this._update(this._render());
+        });
+        
+        // --- 生命周期：mounted (简化版，仅首次触发) ---
+        if (this.$options.mounted && !this._isMounted) {
+            this.$options.mounted.call(this);
+            this._isMounted = true;
+        }
+    }
+
+    _render() {
+        // 调用用户传入的 render 函数，生成 VNode
+        return this.$options.render.call(this, h);
+    }
+
+    _update(vnode) {
+        // 简化版 Patch：不做复杂的 Diff，直接清空旧 DOM 重新生成
+        // 真实 Vue 这里会进行 diff 算法比对
+        const realDom = this._createEl(vnode);
+        this.$el.innerHTML = ''; 
+        this.$el.appendChild(realDom);
+    }
+
+    _createEl(vnode) {
+        // 简单处理：如果是文本节点（children 是字符串）
+        if (typeof vnode === 'string' || typeof vnode === 'number') {
+            return document.createTextNode(vnode);
+        }
+        // 创建元素
+        const el = document.createElement(vnode.tag);
+        // 处理 props (简单处理事件和属性)
+        if (vnode.props) {
+            Object.keys(vnode.props).forEach(key => {
+                if (key.startsWith('on')) {
+                    el.addEventListener(key.slice(2).toLowerCase(), vnode.props[key].bind(this));
+                } else {
+                    el.setAttribute(key, vnode.props[key]);
+                }
+            });
+        }
+        // 递归处理 children
+        if (vnode.children) {
+            vnode.children.forEach(child => {
+                el.appendChild(this._createEl(child));
+            });
+        }
+        return el;
+    }
+}
+```
+
+### 2. 测试代码 (HTML 使用示例)
+
+你可以直接把上面的代码复制到浏览器的 Console 或者一个 HTML 文件中运行。
+
+```html
+<div id="app"></div>
+
+<script>
+    // --- 这里粘贴上面的 Vue 实现代码 ---
+
+    const vm = new Vue({
+        el: '#app',
+        data: {
+            msg: 'Hello Vue 2!',
+            count: 0
+        },
+        // 模拟 Vue 的 created 生命周期
+        created() {
+            console.log('生命周期: created 触发');
+        },
+        // 模拟 Vue 的 mounted 生命周期
+        mounted() {
+            console.log('生命周期: mounted 触发');
+            // 模拟异步更新
+            setTimeout(() => {
+                this.count = 100;
+                console.log('异步修改了 count');
+            }, 1000);
+        },
+        // 为了简化解析器逻辑，我们直接写 render 函数 (相当于编译后的代码)
+        render(h) {
+            return h('div', { id: 'container' }, [
+                h('h1', { style: 'color: red' }, [this.msg]),
+                h('p', {}, [`当前计数: ${this.count}`]),
+                h('button', { onClick: this.add }, ['点击 +1'])
+            ]);
+        },
+        // 方法
+        methods: { // 注意：上面的简化代码没处理 methods 混入，这里简单扩充一下思路
+            // 实际 Vue 会把 methods 混入到 this
+        } 
+    });
+    
+    // 手动挂载方法演示
+    vm.add = function() {
+        this.count++;
+        console.log('Count 更新为:', this.count);
+    }
+</script>
+```
+
+### 3. 代码核心逻辑解析
+
+#### 1. 响应式系统 (`Object.defineProperty`)
+*   **代码位置**：`defineReactive` 函数。
+*   **原理**：利用闭包保存一个 `Dep` 实例。Getter 中调用 `dep.depend()` 收集依赖，Setter 中调用 `dep.notify()` 通知更新。
+
+#### 2. 依赖收集流程 (`Dep` & `Watcher`)
+*   **Watcher (渲染 Watcher)**：在 `$mount` 时创建。它负责调用 `_render`。
+*   **Dep.target**：这是一个精妙的全局开关。
+    1.  Watcher 开始执行 `render` 前，把自己赋值给 `Dep.target`。
+    2.  `render` 函数读取 `this.msg`。
+    3.  `this.msg` 的 Getter 触发，看到 `Dep.target` 有值，就把这个 Watcher 加入自己的订阅列表。
+    4.  Watcher 执行完毕，将 `Dep.target` 置空。
+
+#### 3. 虚拟 DOM (`h` 和 VNode)
+*   `h` 函数就是 Vue 中的 `createElement`。它不操作 DOM，只返回一个纯 JS 对象（VNode），描述节点长什么样。
+*   例如：`{ tag: 'div', children: [...] }`。
+
+#### 4. 挂载与更新 (`_update` & `patch`)
+*   **代码位置**：`Vue.prototype._update`。
+*   在真实的 Vue2 中，这里包含复杂的 **Diff 算法**（同层比较、双端指针等）。
+*   **简化**：为了演示核心流程，我这里的 `_createEl` 直接把旧的 `innerHTML` 清空，全部用新的 VNode 创建一遍 DOM。这性能很差，但逻辑闭环了：
+    *   **Setter** -> **Dep.notify** -> **Watcher.update** -> **_render (生成新 VNode)** -> **_update (暴力替换 DOM)**。
+
+### 总结
+这个极简版 Vue 涵盖了 Vue2 最本质的逻辑闭环：
+**Data -> Observer -> Dep -> Watcher -> Render -> VDOM -> View**。
+
 <!-- 跳转链接 -->
 [⬆️ 返回目录](#catalog)  |  [文章开头 ➡️](#chap-concept)
