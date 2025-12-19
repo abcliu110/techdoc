@@ -33,11 +33,6 @@
 <div style="page-break-after: always;"></div>
 
 <!-- 章节 -->
-@import "原型.md"
-
-<div style="page-break-after: always;"></div>
-
-<!-- 章节 -->
 @import "进制.md"
 
 <div style="page-break-after: always;"></div>
@@ -90,8 +85,21 @@
 <!-- 章节 -->
 @import "undefined.md"
 
+<div style="page-break-after: always;"></div>
 <!-- 面向对象章节 -->
 @import "面向对象\属性.md"
+
+
+<div style="page-break-after: always;"></div>
+
+<!-- 章节 -->
+@import "面向对象\隐藏类.md"
+
+
+<div style="page-break-after: always;"></div>
+
+<!-- 章节 -->
+@import "面向对象\原型.md"
 
 
 
