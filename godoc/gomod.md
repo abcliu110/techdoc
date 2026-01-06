@@ -549,5 +549,170 @@ func Hello(name string) {
 
 所以，你不需要登录任何后台去上传文档，只要代码写好了，文档就自动有了。这就是 Go 社区常说的 "Documentation is a first-class citizen"（文档是一等公民）。
 
+这句话**不完全正确**。这里需要区分 **语法强制规则** (编译器要求的) 和 **工程最佳实践** (社区约定的)。
+
+简单来说：
+1.  **语法上**：文件夹名字**不一定要叫 `main`**，叫 `server`、`app`、`demo` 都可以。
+2.  **代码上**：文件里的包名必须是 `package main`。
+3.  **结构上**：如果一个项目有多个入口（多个 main 函数），它们**必须放在不同的文件夹里**，不能混在同一个文件夹下。
+
+以下是详细的解释：
+
+### 1. 语法规则：文件夹名字随意，包名必须是 main
+
+Go 编译器只关心你的代码第一行是不是 `package main`。
+
+假设你的项目结构如下：
+
+```text
+my-project/
+├── api-server/      <-- 文件夹名不叫 main
+│   └── main.go      <-- 内容是 package main
+├── background-job/  <-- 文件夹名不叫 main
+│   └── main.go      <-- 内容是 package main
+└── go.mod
+```
+
+这是完全合法的。编译出来的二进制文件通常会默认使用文件夹的名字（例如 `api-server` 和 `background-job`）。
+
+### 2. 为什么不能在同一个文件夹放多个 main？
+
+如果你在一个文件夹里放了两个文件，都包含 `func main()`，编译器会报错。
+
+**错误示范：**
+```text
+my-project/
+└── utils/
+    ├── tool_a.go  (包含 func main)
+    └── tool_b.go  (包含 func main)
+```
+
+当你运行 `go build ./utils` 时，Go 会报错：`main redeclared in this block`（main 函数重复声明）。因为 Go 把同一个文件夹下的所有文件视为同一个包，一个包里只能有一个 `main` 函数。
+
+**解决方法：** 必须分文件夹存放。
+
+### 3. 工程最佳实践：Standard Go Project Layout
+
+虽然文件夹名字可以随便起，但 Go 社区有一个广泛遵守的目录规范（Standard Go Project Layout），特别是当你的项目里有多个可执行程序时。
+
+通常我们会创建一个名为 **`cmd`** 的目录，然后在里面为每个程序建立子目录。
+
+**推荐结构：**
+
+```text
+my-project/
+├── cmd/                <-- 存放所有程序的入口
+│   ├── web-api/        <-- 你的 Web 服务
+│   │   └── main.go     (package main)
+│   ├── cron-worker/    <-- 你的定时任务程序
+│   │   └── main.go     (package main)
+│   └── cli-tool/       <-- 你的命令行工具
+│       └── main.go     (package main)
+├── pkg/                <-- 公共库代码
+├── internal/           <-- 私有业务逻辑
+└── go.mod
+```
+
+**如何运行或编译：**
+
+*   运行 Web 服务：`go run ./cmd/web-api`
+*   运行命令行工具：`go run ./cmd/cli-tool`
+*   编译所有：
+    ```bash
+    go build ./cmd/web-api
+    go build ./cmd/cron-worker
+    ```
+
+### 总结
+
+*   **必须做的事**：每个包含 `main` 函数的文件，必须声明为 `package main`。
+*   **必须做的事**：如果项目有多个 `main` 函数，它们必须物理隔离在**不同的文件夹**中。
+*   **不需要做的事**：文件夹的名字不需要叫 `main`（实际上最好**不要**叫 `main`，而是用程序的功能命名，如 `server`、`worker`）。
+
+
+出现“找不到 `go.mod` 文件”的错误，通常是因为你没有在**项目的根目录**初始化 Go Module，或者你运行命令的路径不对。
+
+在使用多文件夹存放多个 `main` 函数的结构时，**`go.mod` 文件必须位于项目的最顶层**，而不是每个子文件夹里都要放一个。
+
+请按照以下步骤检查并修复：
+
+### 1. 确保目录结构正确
+
+你的文件结构应该长这样：
+
+```text
+my-project/             <-- 【关键】项目的根目录
+├── go.mod              <-- 【关键】这个文件必须在这里，管理整个项目
+├── go.sum              <-- 自动生成的依赖锁定文件
+├── cmd/
+│   ├── app-one/
+│   │   └── main.go     (package main)
+│   └── app-two/
+│       └── main.go     (package main)
+└── pkg/
+    └── utils.go        (其他代码)
+```
+
+**错误的做法**（这会导致找不到依赖或混乱）：
+*   ❌ 在 `cmd/app-one/` 里放一个 `go.mod`
+*   ❌ 在 `cmd/app-two/` 里又放一个 `go.mod`
+*   ❌ 根目录没有任何 `go.mod`
+
+### 2. 解决方法：初始化 go.mod
+
+如果你还没有 `go.mod` 文件，请打开终端（命令行），**进入项目的根目录**（比如 `my-project`），然后执行：
+
+```bash
+# 1. 进入根目录
+cd /path/to/my-project
+
+# 2. 初始化 module (名字通常是你的 git 仓库地址，或者自定义的项目名)
+go mod init my-project-name
+
+# 3. 整理依赖 (如果你的代码里引用了第三方库)
+go mod tidy
+```
+
+执行完后，根目录下会生成一个 `go.mod` 文件。
+
+### 3. 如何正确运行代码
+
+一旦根目录有了 `go.mod`，Go 就能自动识别项目里的所有子文件夹。
+
+**方式 A：在根目录运行（推荐）**
+这是最常用的方式，不用切来切去。
+
+```bash
+# 当前位置: my-project/
+
+# 运行 app-one
+go run ./cmd/app-one
+
+# 运行 app-two
+go run ./cmd/app-two
+```
+
+**方式 B：进入子目录运行**
+由于 Go 会自动向上级目录查找 `go.mod`，所以这样也是可以的：
+
+```bash
+# 进入子文件夹
+cd cmd/app-one
+
+# 运行当前文件夹下的 main
+go run .
+```
+*(注：如果这里报错找不到 go.mod，说明你的 Go 版本太旧，或者 `go.mod` 确实不在父级目录链中。建议使用方式 A)*
+
+### 4. 为什么会报错？（原理解析）
+
+当你代码里有 `import` 语句（比如引用了你项目里的 `pkg` 文件夹，或者第三方的 github 库）时，Go 必须依靠 `go.mod` 来解析这些路径。
+
+*   如果你在根目录没有 `go.mod`，Go 就不知道 `my-project/pkg` 是什么。
+*   即使你只写了 `fmt` 标准库，现代 Go 版本也默认开启 Module 模式，如果没有 `go.mod`，它可能会提示错误或回退到旧的 GOPATH 模式（这通常是环境配置导致的问题）。
+
+**总结：只要在项目最外层运行一次 `go mod init`，所有子文件夹里的 `main` 函数都能共享这个配置，问题就解决了。**
+
+
 <!-- 跳转链接 -->
 [⬆️ 返回目录](#catalog)  |  [文章开头 ➡️](#chap-gomod)
