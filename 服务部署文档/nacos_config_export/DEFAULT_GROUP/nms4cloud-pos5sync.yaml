@@ -1,0 +1,66 @@
+server:
+  port: 9189
+spring:
+  cloud:
+    config:
+      enabled: false
+    nacos:
+      config:
+        file-extension: yaml 
+        shared-configs:
+          - data-id: nms4cloud-shared.yaml
+
+
+
+pos5sync:
+  canals:
+    - address: 192.168.1.118
+      port: 11111
+      destination: example
+    # - address: 192.168.1.118
+    #   port: 11111
+    #   destination: example2
+---
+spring:
+  kafka:
+    bootstrap-servers: 192.168.1.118:9092
+
+    producer:
+      bootstrap-servers: ${spring.kafka.bootstrap-servers}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      retries: 3
+      batch-size: 16384
+      linger-ms: 10
+      buffer_memory: 33554432
+
+    consumer:
+      bootstrap-servers: ${spring.kafka.bootstrap-servers}
+      group-id: my-consumer-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-commit-interval-ms: 5000
+      auto-commit: true
+
+
+          
+mybatis-flex:
+  datasource:
+    sync:
+      driverClassName: com.mysql.jdbc.Driver
+      type: com.alibaba.druid.pool.DruidDataSource
+      url: jdbc:mysql://192.168.1.118:3306/a_sync?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+      username: root
+      password: st11338
+    ck:
+      driver-class-name: ru.yandex.clickhouse.ClickHouseDriver
+      url: jdbc:clickhouse://192.168.1.118:8123/nms4cloud?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&useTimeZone=true&serverTimezone=Asia/Shanghai
+      username: 
+      password: 
+      
+
+
+nms:
+  common:
+    spring-doc-enabled: true
+    # show-sql-for-debug: true

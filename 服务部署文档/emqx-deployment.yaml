@@ -1,0 +1,86 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emqx-54
+  labels:
+    app: emqx-54
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: emqx-54
+  template:
+    metadata:
+      labels:
+        app: emqx-54
+    spec:
+      imagePullSecrets:
+      - name: tencent-ccr-secret
+      containers:
+      - name: emqx
+        image: emqx/emqx:5.4.1
+        imagePullPolicy: Always
+        ports:
+        - name: mqtt
+          containerPort: 1883
+          protocol: TCP
+        - name: mqtts
+          containerPort: 8883
+          protocol: TCP
+        - name: ws
+          containerPort: 8083
+          protocol: TCP
+        - name: wss
+          containerPort: 8084
+          protocol: TCP
+        - name: dashboard
+          containerPort: 18083
+          protocol: TCP
+        resources:
+          requests:
+            cpu: "0.5"
+            memory: "1024Mi"
+          limits:
+            cpu: "1"
+            memory: "2048Mi"
+        env:
+        - name: EMQX_NAME
+          value: "emqx"
+        - name: EMQX_HOST
+          value: "127.0.0.1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: emqx-54
+spec:
+  type: NodePort
+  selector:
+    app: emqx-54
+  ports:
+  - name: mqtt
+    port: 1883
+    targetPort: 1883
+    nodePort: 31883
+    protocol: TCP
+  - name: mqtts
+    port: 8883
+    targetPort: 8883
+    nodePort: 30883
+    protocol: TCP
+  - name: ws
+    port: 8083
+    targetPort: 8083
+    nodePort: 30083
+    protocol: TCP
+  - name: wss
+    port: 8084
+    targetPort: 8084
+    nodePort: 30084
+    protocol: TCP
+  - name: dashboard
+    port: 18083
+    targetPort: 18083
+    nodePort: 30183
+    protocol: TCP

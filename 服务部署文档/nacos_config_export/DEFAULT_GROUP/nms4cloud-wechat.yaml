@@ -1,0 +1,82 @@
+server:
+  port: 18121
+spring:
+  shardingsphere:
+    props:
+      sql-show: false
+    mode:
+      # type: Memory
+      type: Standalone
+    datasource:
+      names: wechat,mycat
+      wechat:
+        driverClassName: com.mysql.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://192.168.1.118:3306/a_wechat?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+        username: root
+        password: st11338
+      mycat:
+        driverClassName: com.mysql.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://192.168.1.118:3306/gylregdb?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+        username: root
+        password: st11338
+    rules:
+      sharding:
+        tables:
+          wx_merchant_config:
+            actual-data-nodes: mycat.sc_store_wx_info
+    nacos:
+      config:
+        file-extension: yaml 
+        shared-configs:
+          - data-id: nms4cloud-shared.yaml
+  application:
+    name: nms4cloud-wechat
+
+  
+
+wechat:
+  candao:
+    accessKey: 4a0cf1131d2293d4
+    secret: a68245a6f6b5906c1d1559e39a808887
+  open:
+    components:
+      - componentAppId: wx18ba482f622130ff
+        componentSecret: 70f67d81634c91e67ebece96171f98be
+        componentToken: 7SP20ZOVD4E9DLELLGOWQEBT2RHYOEC57AAMKVIN9AOF3RUDDPIJQA6GZTDKGOERXEUP5UESUMHJJM7OOJ1YI2GZFNW1QK9R
+        componentAesKey: GFFWJRRFQXLONRUAMQOK5F4GSLHDTUQ0XJFLEIS4QWX
+        keyPrefix: yd1
+  platform:
+    platformMaId: wxeefeede5c3d9d98d
+    platformMaSecret: 040b72c1bba3410c17206bd4fd621ef2
+    barMaId: wxd9651722917bc04e
+    barMaSecret: 36f20dc6d552aa0cc5f2d08a6d66ef6c
+    hotelMaId: wxbee03144104f232a
+    hotelMaSecret: 0aaf5753b4237df126f89a2f7ecaeaad
+    orderPassMaId: 
+     - wx93fed5c0cb590fb8
+     - wx74c6f6f990021ba4   
+    orderPassMaSecret: 
+     - 7e2448b83fad6ffdeedf3568a96489c5
+     - 700637bcf227143be2c878860bdf617c
+    lemonMpId: wx92fdc9c35f968ae3
+    lemonMpSecret: 07623a8957a3312ee93d5e1be231465c
+    bossMaId: wx795245e5d334e919
+    bossMaSecret: 4ffa7711182ed4bd1a09a55fbb8a09fc
+    pubMaId: wx5b22e59e103f95ab
+    pubMaSecret: a658916d88d7a90b103d1cb05cb63dd0
+    bizAdmMaId: wx820b2d17cb1c037a
+    bizAdmMaSecret: f5569f8645d424c2f6d04505794e8bbc
+    mdbMaId: wx203db71f9a6dd58a
+    mdbMaSecret: 076ed473bb5ec8c7fee1d00a05685ac4
+logstash:
+  destination: 172.16.0.14:35044
+
+douying:
+  open:
+    ClientKey: awb53rbj9azrejhf
+    ClientSecret: 7bf7aa0b7b94535180bbc4e46f5759b8
+# mybatis-plus:
+#   configuration:
+#     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

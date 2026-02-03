@@ -1,0 +1,258 @@
+server:
+  port: 18230
+spring:
+  cloud:
+    config:
+      enabled: false
+    nacos:
+      config:
+        file-extension: yaml #文件拓展格式
+        shared-configs:
+          - data-id: nms4cloud-shared.yaml
+  shardingsphere:
+    mode:
+      # type: Memory
+      type: Standalone
+    datasource:
+      names: mycat,wms
+      mycat:
+        driverClassName: com.mysql.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://192.168.1.118:3306/gylregdb?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+        username: root
+        password: st11338
+      wms:
+        driverClassName: com.mysql.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://192.168.1.118:3306/a_wms?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+        username: root
+        password: st11338
+    rules:
+      sharding:
+        tables:
+          sc_client:
+            actual-data-nodes: mycat.sc_client
+          sc_client_type:
+            actual-data-nodes: mycat.sc_client_type
+          sc_goods_in_department:
+            actual-data-nodes: mycat.sc_goods_in_department   
+          sc_goods_route_rule:
+            actual-data-nodes: mycat.sc_goods_route_rule
+          sc_goods_sales_delivery_record:
+            actual-data-nodes: mycat.sc_goods_sales_delivery_record              
+          sc_st_convert_bill:
+            actual-data-nodes: mycat.sc_st_convert_bill    
+          sc_st_convert_bill_item_in:
+            actual-data-nodes: mycat.sc_st_convert_bill_item_in    
+          sc_st_convert_bill_item_out:
+            actual-data-nodes: mycat.sc_st_convert_bill_item_out    
+          sc_st_item_change:
+            actual-data-nodes: mycat.sc_st_item_change    
+          sc_st_item_change_fjz:
+            actual-data-nodes: mycat.sc_st_item_change_fjz    
+          sc_st_unit:
+            actual-data-nodes: mycat.sc_st_unit    
+          sc_supplier:
+            actual-data-nodes: wms.sc_supplier    
+          sc_supplier_goods:
+            actual-data-nodes: mycat.sc_supplier_goods  
+            
+            
+            
+              
+          sc_supplier_type:
+            actual-data-nodes: wms.sc_supplier_type    
+          sc_warehouse:
+            actual-data-nodes: wms.sc_warehouse    
+          wms_bom:
+            actual-data-nodes: wms.wms_bom    
+          wms_bom_item:
+            actual-data-nodes: wms.wms_bom_item    
+          wms_deduct_setting:
+            actual-data-nodes: wms.wms_deduct_setting  
+          sc_supplier_store:
+            actual-data-nodes: wms.sc_supplier_store  
+          wms_label_unit:
+            actual-data-nodes: wms.wms_label_unit  
+          sc_goods_store:
+            actual-data-nodes: wms.sc_goods_store  
+          sc_goods_img:
+            actual-data-nodes: wms.sc_goods_img  
+          sc_check_prohibit:
+            actual-data-nodes: wms.sc_check_prohibit  
+          sc_goods:
+            actual-data-nodes: wms.sc_goods
+          sc_goods_in_warehouse:
+            actual-data-nodes: wms.sc_goods_in_warehouse
+          sc_goods_type:
+            actual-data-nodes: wms.sc_goods_type  
+          sc_goods_unit:
+            actual-data-nodes: wms.sc_goods_unit  
+          sc_st_account_period:
+            actual-data-nodes: wms.sc_st_account_period  
+          sc_st_bill:
+            actual-data-nodes: wms.sc_st_bill      
+          sc_st_bill_item:
+            actual-data-nodes: wms.sc_st_bill_item    
+          sc_st_check_bill:
+            actual-data-nodes: wms.sc_st_check_bill   
+          sc_st_check_bill_item:
+            actual-data-nodes: wms.sc_st_check_bill_item    
+          sc_st_goods_day_book:
+            actual-data-nodes: wms.sc_st_goods_day_book    
+          sc_st_goods_summary:
+            actual-data-nodes: wms.sc_st_goods_summary 
+
+          sc_delivery_rule:
+            actual-data-nodes: wms.sc_delivery_rule 
+          sc_quote_order:
+            actual-data-nodes: wms.sc_quote_order 
+          sc_quote_order_store:
+            actual-data-nodes: wms.sc_quote_order_store 
+          sc_quote_order_supplier:
+            actual-data-nodes: wms.sc_quote_order_supplier 
+          sc_quote_order_item:
+            actual-data-nodes: wms.sc_quote_order_item 
+          sc_supplier_quote:
+            actual-data-nodes: wms.sc_supplier_quote 
+          sc_depart_order:
+            actual-data-nodes: wms.sc_depart_order 
+          sc_depart_order_item:
+            actual-data-nodes: wms.sc_depart_order_item 
+          sc_store_order:
+            actual-data-nodes: wms.sc_store_order 
+          sc_store_order_item:
+            actual-data-nodes: wms.sc_store_order_item 
+          sc_rdc_order:
+            actual-data-nodes: wms.sc_rdc_order 
+          sc_rdc_order_item:
+            actual-data-nodes: wms.sc_rdc_order_item 
+            
+            
+          sc_item_attachment:
+            actual-data-nodes: wms.sc_item_attachment 
+          sc_prepay_order:
+            actual-data-nodes: wms.sc_prepay_order 
+          sc_prepay_order_item:
+            actual-data-nodes: wms.sc_prepay_order_item 
+          sc_prepay_checked_item:
+            actual-data-nodes: wms.sc_prepay_checked_item             
+          sc_bill_pay_item:
+            actual-data-nodes: wms.sc_bill_pay_item 
+          sc_bill_invoice_order:
+            actual-data-nodes: wms.sc_bill_invoice_order 
+          sc_invoice_attachment:
+            actual-data-nodes: wms.sc_invoice_attachment 
+          sc_bill_invoice_ref:
+            actual-data-nodes: wms.sc_bill_invoice_ref 
+          sc_organ_target:
+            actual-data-nodes: wms.sc_organ_target 
+          sc_st_type_summary:
+            actual-data-nodes: wms.sc_st_type_summary 
+
+          sc_order_template:
+            actual-data-nodes: wms.sc_order_template 
+          sc_order_template_item:
+            actual-data-nodes: wms.sc_order_template_item 
+          sc_history_remark:
+            actual-data-nodes: wms.sc_history_remark 
+          sc_history_order:
+            actual-data-nodes: wms.sc_history_order 
+          sc_history_order_item:
+            actual-data-nodes: wms.sc_history_order_item 
+
+          sc_stock_snapshot_of_month:
+            actual-data-nodes: wms.sc_stock_snapshot_of_month 
+
+          sc_weight_img:
+            actual-data-nodes: wms.sc_weight_img 
+          sc_weight_record:
+            actual-data-nodes: wms.sc_weight_record 
+
+          sc_supplier_apply:
+            actual-data-nodes: wms.sc_supplier_apply 
+          sc_supplier_relate:
+            actual-data-nodes: wms.sc_supplier_relate 
+          sc_delivery_order:
+            actual-data-nodes: wms.sc_delivery_order 
+          sc_delivery_order_item:
+            actual-data-nodes: wms.sc_delivery_order_item 
+          sc_delivery_order_store:
+            actual-data-nodes: wms.sc_delivery_order_store 
+          sc_delivery_quote:
+            actual-data-nodes: wms.sc_delivery_quote 
+          sc_pay_task:
+            actual-data-nodes: wms.sc_pay_task 
+          wms_goods_last_price:
+            actual-data-nodes: wms.wms_goods_last_price 
+
+          sc_product_type:
+            actual-data-nodes: wms.sc_product_type 
+          sc_product:
+            actual-data-nodes: wms.sc_product 
+          sc_product_unit:
+            actual-data-nodes: wms.sc_product_unit 
+          sc_product_resource:
+            actual-data-nodes: wms.sc_product_resource 
+          sc_product_raw:
+            actual-data-nodes: wms.sc_product_raw 
+          sc_product_cost:
+            actual-data-nodes: wms.sc_product_cost 
+          sc_assist_cost:
+            actual-data-nodes: wms.sc_assist_cost 
+          sc_deduct_rule:
+            actual-data-nodes: wms.sc_deduct_rule 
+          sc_tbl_area:
+            actual-data-nodes: wms.sc_tbl_area 
+          sc_product_sale_profit:
+            actual-data-nodes: wms.sc_product_sale_profit 
+          sc_product_sale_cost:
+            actual-data-nodes: wms.sc_product_sale_cost 
+          sc_sale_cost_relate:
+            actual-data-nodes: wms.sc_sale_cost_relate
+          sc_bill_stock:
+            actual-data-nodes: wms.sc_bill_stock   
+          sc_auto_deduct_task:
+            actual-data-nodes: wms.sc_auto_deduct_task   
+          order_item_depart_relate:
+            actual-data-nodes: wms.order_item_depart_relate   
+          wms_depart_goods:
+            actual-data-nodes: wms.wms_depart_goods
+          wms_user_goods:
+            actual-data-nodes: wms.wms_user_goods     
+          wms_cost_order:
+            actual-data-nodes: wms.wms_cost_order   
+          wms_cost_order_item:
+            actual-data-nodes: wms.wms_cost_order_item    
+          sc_deduct_goods:
+            actual-data-nodes: wms.sc_deduct_goods       
+          sc_deduct_product:
+            actual-data-nodes: wms.sc_deduct_product         
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# xxl:
+#   job:
+#     admin:
+#       addresses: http://xxl-job:8080/xxl-job-admin
+#       accessToken: F8idrRu8Ce8dVz7Zdp_X
+#       appname: swms-app-executor
+#       port: 9999
+#       logretentiondays: 30
+#       logpath: ./data/logs/xxl-job/executor    
+
+---
+spring:
+  kafka:
+    bootstrap-servers: 192.168.1.118:9092
+    consumer:
+      auto-commit-interval: 1000
+      auto-offset-reset: earliest
+      enable-auto-commit: true
+      group-id: nms4cloud-wms-service
+      max-poll-records: 4000
+    producer:
+      batch-size: 1000
+      buffer-memory: 33554432
+      retries: 3
