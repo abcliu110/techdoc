@@ -1,0 +1,364 @@
+server:
+  port: 9722
+spring:
+  cloud:
+    config:
+      enabled: false
+    nacos:
+      config:
+        file-extension: yaml 
+        shared-configs:
+          - data-id: nms4cloud-shared.yaml
+  
+  shardingsphere:
+    # props:
+    #   sql-show: true
+    mode:
+      # type: Memory
+      type: Standalone
+    datasource:
+      names: platform,mycat,biz,pt,pos
+      mycat:
+        driverClassName: com.mysql.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://192.168.1.118:3306/gylregdb?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+        username: root
+        password: st11338
+      platform:
+        driverClassName: com.mysql.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://192.168.1.118:3306/a_platform?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+        username: root
+        password: st11338
+      biz:
+        driverClassName: com.mysql.jdbc.Driver
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:mysql://192.168.1.118:3306/a_biz?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+        username: root
+        password: st11338
+      pt:
+        driverClassName: com.mysql.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://192.168.1.118:3306/a_product?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+        username: root
+        password: st11338
+      pos:
+        driverClassName: com.mysql.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://192.168.1.118:3306/a_pos?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+        username: root
+        password: st11338
+      # 自建数据�?
+    rules:
+      sharding:
+        tables:
+          biz_user:
+            actual-data-nodes: mycat.sc_usr
+          sys_config_data:
+            actual-data-nodes: mycat.sc_config_of_shop
+          sys_user_data_scope:
+            actual-data-nodes: mycat.sc_permission
+          sc_product_price:
+            actual-data-nodes: mycat.sc_product_price
+          sc_product_price_set:
+            actual-data-nodes: mycat.sc_product_price_set
+          sc_reg_dog:
+            actual-data-nodes: mycat.sc_reg_dog
+          sc_reg_dog_recharge_record:
+            actual-data-nodes: mycat.sc_reg_dog_recharge_record
+          sc_store_and_product:
+            actual-data-nodes: mycat.sc_store_and_product
+          sc_store_and_product_flow:
+            actual-data-nodes: mycat.sc_store_and_product_flow
+          sc_inst_and_product:
+            actual-data-nodes: mycat.sc_inst_and_product
+          sc_inst_finance_bill:
+            actual-data-nodes: mycat.sc_inst_finance_bill
+          sc_inst_op_log:
+            actual-data-nodes: mycat.sc_inst_op_log
+          sc_inst_recharge_set:
+            actual-data-nodes: mycat.sc_inst_recharge_set
+          sc_merchant:
+            actual-data-nodes: mycat.sc_merchant
+          sc_store:
+            actual-data-nodes: mycat.sc_store
+          pt_dish:
+            actual-data-nodes: mycat.sc_dish
+          pt_dish_type:
+            actual-data-nodes: mycat.sc_dish_type
+          pt_dish_unit:
+            actual-data-nodes: mycat.sc_dish_unit
+          pt_dish_map:
+            actual-data-nodes: mycat.sc_dish_map
+          pt_auto_order:
+            actual-data-nodes: mycat.sc_mall_auto_order
+          pt_cookway:
+            actual-data-nodes: mycat.caipingzuofa  
+          pt_cookway_type:
+            actual-data-nodes: mycat.zuofaleibie  
+          pt_dish_table_price:
+            actual-data-nodes: pt.pt_dish_table_price    
+          pt_dish_area:
+            actual-data-nodes: pt.pt_dish_area  
+          pt_dish_price_special:
+            actual-data-nodes: pt.pt_dish_price_special  
+          pt_festival:
+            actual-data-nodes: pt.pt_festival  
+          takeout_aggregation_platform_channel:
+            actual-data-nodes: pos.takeout_aggregation_platform_channel     
+# biz
+          biz_gift_reason:
+            actual-data-nodes: mycat.sc_mall_gift_dish_reason
+          biz_retreat_reason:
+            actual-data-nodes: mycat.sc_mall_retreat_dish_reason
+          biz_discount:
+            actual-data-nodes: mycat.sc_mall_discount
+          biz_discount_dish:
+            actual-data-nodes: mycat.sc_mall_discount_dish
+          biz_discount_tbl_type:
+            actual-data-nodes: mycat.sc_mall_discount_tbl_type
+          biz_pay_way:
+            actual-data-nodes: mycat.sc_pay_way
+          biz_income:
+            actual-data-nodes: mycat.sc_income
+          biz_income_type:
+            actual-data-nodes: mycat.sc_income_type         
+          biz_department:
+            actual-data-nodes: mycat.sc_department
+          biz_business_hours:
+            actual-data-nodes: mycat.sc_business_hours  
+          pt_tbl_type:
+            actual-data-nodes: mycat.sc_tbl_type  
+          pt_tbl:
+            actual-data-nodes: mycat.sc_tbl  
+          pt_tbl_area:
+            actual-data-nodes: mycat.sc_tbl_area  
+          biz_sms_config:
+            actual-data-nodes: biz.biz_sms_config     
+          biz_sms_send_record:
+            actual-data-nodes: biz.biz_sms_send_record     
+          wx_page:
+            actual-data-nodes: biz.wx_page      
+          wx_componet:
+            actual-data-nodes: biz.wx_componet      
+          wx_componet_item:
+            actual-data-nodes: biz.wx_componet_item      
+          wx_color:
+            actual-data-nodes: biz.wx_color      
+          invoice_info_store:
+            actual-data-nodes: biz.invoice_info_store      
+          wx_navigation:
+            actual-data-nodes: biz.wx_navigation      
+          wx_program_template:
+            actual-data-nodes: biz.wx_program_template       
+          store_intro_group:
+            actual-data-nodes: biz.store_intro_group      
+          store_intro_content:
+            actual-data-nodes: biz.store_intro_content       
+          biz_key_value:
+            actual-data-nodes: biz.biz_key_value            
+          plat_provinces:
+            actual-data-nodes: biz.plat_provinces      
+          plat_cities:
+            actual-data-nodes: biz.plat_cities      
+          plat_areas:
+            actual-data-nodes: biz.plat_areas          
+          biz_shop_group:
+            actual-data-nodes: biz.biz_shop_group      
+          biz_receipt_bind:
+            actual-data-nodes: biz.biz_receipt_bind      
+          wx_template_label:
+            actual-data-nodes: biz.wx_template_label    
+          biz_user_storage:
+            actual-data-nodes: biz.biz_user_storage  
+          biz_sms_msg_style:
+            actual-data-nodes: mycat.sms_msg_style   
+          biz_usr_merchant:
+            actual-data-nodes: mycat.biz_usr_merchant   
+          biz_sms_msg_content:
+            actual-data-nodes: mycat.sms_msg_content          
+          biz_user_map:
+            actual-data-nodes: biz.biz_user_map       
+          pos_group_dish_book:
+            actual-data-nodes: pos.pos_group_dish_book       
+          pos_group_dish_book_release:
+            actual-data-nodes: pos.pos_group_dish_book_release                                             
+          pos_app_ver:
+            actual-data-nodes: pos.pos_app_ver         
+          pos_prn_style_row:
+            actual-data-nodes: pos.pos_prn_style_row        
+          pos_prn_style_col:
+            actual-data-nodes: pos.pos_prn_style_col        
+          sys_brand:
+            actual-data-nodes: mycat.sc_brand 
+          pos_dish_hide:
+            actual-data-nodes: pos.pos_dish_hide 
+          pos_reason_type:
+            actual-data-nodes: pos.pos_reason_type
+          pos_pricing_by_time_period:
+            actual-data-nodes: pos.pos_pricing_by_time_period
+          pos_pricing_by_time:
+            actual-data-nodes: pos.pos_pricing_by_time
+          pos_pricing_by_time_timeout:
+            actual-data-nodes: pos.pos_pricing_by_time_timeout
+          print_job_type_switch:
+            actual-data-nodes: pos.print_job_type_switch     
+          pos_pricing_by_time_mode:
+            actual-data-nodes: pos.pos_pricing_by_time_mode
+          pos_package_config:
+            actual-data-nodes: pos.pos_package_config
+          pos_time_period_config:
+            actual-data-nodes: pos.pos_time_period_config
+          pos_overtime_interval_config:
+            actual-data-nodes: pos.pos_overtime_interval_config
+          pos_dev:
+            actual-data-nodes: pos.pos_dev
+          pos_promote_rule:
+            actual-data-nodes: pos.pos_promote_rule
+          pos_auto_discount:
+            actual-data-nodes: pos.pos_auto_discount
+          pos_approval_config:
+            actual-data-nodes: pos.pos_approval_config
+          pos_approval_order:
+            actual-data-nodes: pos.pos_approval_order    
+          Bi_DianCaiPiCi:
+            actual-data-nodes: mycat.bi_diancaipici
+          CaiShiFa:
+            actual-data-nodes: mycat.caishifa
+          FuKuanQingKuang:
+            actual-data-nodes: mycat.fukuanqingkuang
+          JiaoBanXinXi:
+            actual-data-nodes: mycat.jiaobanxinxi
+          XiaoFeiCaiPing:
+            actual-data-nodes: mycat.xiaofeicaiping
+          XiaoFeiDan:
+            actual-data-nodes: mycat.xiaofeidan
+          ZuoFaInShiFa:
+            actual-data-nodes: mycat.zuofainshifa
+# nms:
+#   common:
+#     spring-doc-enabled: true
+    # show-sql-for-debug: true
+---
+spring:
+  kafka:
+    bootstrap-servers: 192.168.1.118:9092
+
+    producer:
+      bootstrap-servers: ${spring.kafka.bootstrap-servers}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      retries: 3
+      batch-size: 16384
+      linger-ms: 10
+      buffer_memory: 33554432
+
+    consumer:
+      bootstrap-servers: ${spring.kafka.bootstrap-servers}
+      group-id: nms4cloud-pos4cloud
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-commit-interval-ms: 5000
+      auto-commit: true
+
+zj:
+  crm:
+   domain: https://dev2.gdsenhai.com
+   client_id: 1012
+   client_code: 10105
+   client_secret: 6b8eefegb02924fac03c4a5814e052df
+   access_token: DFC339FF02ECCB37B97A2104617F11F3
+   cbrand_id: 1  
+
+yd4cloud:
+  capital:
+    url: http://192.168.1.33:9005
+
+
+ai:
+  key: fdsfdsfsdfds
+
+---
+spring:
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+tencentcloud:
+  secret-id: AKIDRkqiNo11qRpzuc5KK7g05vYw61hAON7o
+  secret-key: ZsypRowoRpysnZBtOfgz83jAMK4Zqsff
+  app-id: 1348046909
+  role-arn: qcs::cam::uin/100041394999:roleName/member1
+  role-session-name: WeChatMiniProgram
+  duration-seconds: 10
+  asr:
+    apiUrl: https://asr.tencentcloudapi.com
+
+sms:
+  # 企业Id
+  mch-id: 1060677   
+  # 通知短信的app_id
+  app-id-notification: 10011742261099170
+  # 营销短信的app_id
+  app-id-promotional: 10021742261099284
+  # 通知短信的key
+  key-notification: ae4d8c4b15de4a8e9b2fc3c783a85a77
+  # 营销短信的key
+  key-promotional: d5729ee897be4e889979c03ce551868a
+
+---
+nms4cloud:
+  ai:
+    appId: 0909d8e6a7004bcf90b2cd323817ddd9
+    apiKeys:
+      - sk-c37700ce1409482ab7fe48dceee3a393
+
+volcengine:
+  access-key: AKLTNDc3MGZkODEzZjJmNDYwOGIwOTRkMmYwNzYwNGQyM2Y
+  secret-key: T0Rsak9UTTBZVEF4WXpjMk5HVXlaRGxtWXpnek5UYzNZVFZqTldFMU5EVQ==
+
+
+---
+nms4cloud:
+  xy:
+    user: 2993427106@qq.com
+    key: c337897ed45049b9bbd95d879686cb0f
+  jb:
+    api-code: A7D1D35432ABF94F71093764D6E16CA6
+    api-key: P5FUFZ8A9WB2YWYTZMCYQSU08NANPVSP
+  ak:
+    ak-id: LTAI5tCtdRQEhBMR9KQLx9Lc
+    ak-secret: BoOZAvwSG3f6jRuIvT1QOHzUAYV6Yb
+    ak-key: 935JuZ9OzfphfwWv
+# 企业微信服务商配�?wecom:
+  service:
+    token: TOKEN
+    encodingAesKey: ENCODING_AES_KEY
+    corpId: CORP_ID
+
+---
+nms:
+  zhilong:
+    secretKey: 111111
+    appId: 7100001
+  saobei:
+    apiVerForTakeout: 100
+    apiVerForCoupon: 300
+    instNo: 58100001
+    accessToken: 3604fbb6a7c74335a6573378757a42d8
+    key: 600fab1d38104e52a3676a34f33a5ef3
+
+---
+nms4:
+  bieyanghong:
+    appKey: 829199C7-D06E-3E54-7586-34A73B6EED1D
+    channelKey: gdydrj
+    orgId: 288733476028418
+    domain: pms
+    url: https://pms.beyondh.com:7898
+
+
+
+

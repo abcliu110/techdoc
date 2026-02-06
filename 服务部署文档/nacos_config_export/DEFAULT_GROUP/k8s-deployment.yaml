@@ -1,0 +1,273 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nms4cloud-platform
+  labels:
+    app: nms4cloud-platform
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nms4cloud-platform
+  template:
+    metadata:
+      labels:
+        app: nms4cloud-platform
+    spec:
+      containers:
+      - name: nms4cloud-platform
+        image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_platform_latest
+        ports:
+        - containerPort: 18119
+        imagePullPolicy: Always
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nms4cloud-platform
+spec:
+  type: NodePort
+  selector:
+    app: nms4cloud-platform
+  ports:
+  - port: 18119
+    targetPort: 18119
+    nodePort: 30119
+    protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nms4cloud-wechat
+  labels:
+    app: nms4cloud-wechat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nms4cloud-wechat
+  template:
+    metadata:
+      labels:
+        app: nms4cloud-wechat
+    spec:
+      containers:
+      - name: nms4cloud-wechat
+        image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_wechat_latest
+        ports:
+        - containerPort: 18121
+        imagePullPolicy: Always
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nms4cloud-wechat
+spec:
+  type: NodePort
+  selector:
+    app: nms4cloud-wechat
+  ports:
+  - port: 18121
+    targetPort: 18121
+    nodePort: 30121
+    protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nms4cloud-biz
+  labels:
+    app: nms4cloud-biz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nms4cloud-biz
+  template:
+    metadata:
+      labels:
+        app: nms4cloud-biz
+    spec:
+      containers:
+      - name: nms4cloud-biz
+        image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_biz_latest
+        ports:
+        - containerPort: 18130
+        imagePullPolicy: Always
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nms4cloud-biz
+spec:
+  type: NodePort
+  selector:
+    app: nms4cloud-biz
+  ports:
+  - port: 18130
+    targetPort: 18130
+    nodePort: 30130
+    protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nms4cloud-wms
+  labels:
+    app: nms4cloud-wms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nms4cloud-wms
+  template:
+    metadata:
+      labels:
+        app: nms4cloud-wms
+    spec:
+      containers:
+      - name: nms4cloud-wms
+        image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_wms_latest
+        ports:
+        - containerPort: 18230
+        imagePullPolicy: Always
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nms4cloud-wms
+spec:
+  type: NodePort
+  selector:
+    app: nms4cloud-wms
+  ports:
+  - port: 18230
+    targetPort: 18230
+    nodePort: 30230
+    protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yd4cloud-nms
+  labels:
+    app: yd4cloud-nms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yd4cloud-nms
+  template:
+    metadata:
+      labels:
+        app: yd4cloud-nms
+    spec:
+      containers:
+      - name: yd4cloud-nms
+        image: ccr.ccs.tencentyun.com/lemontree/ktv:yd4cloud_nms_latest
+        ports:
+        - containerPort: 9999
+        imagePullPolicy: Always
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yd4cloud-nms
+spec:
+  type: NodePort
+  selector:
+    app: yd4cloud-nms
+  ports:
+  - port: 9999
+    targetPort: 9999
+    nodePort: 30999
+    protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nms4cloud-netty
+  labels:
+    app: nms4cloud-netty
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nms4cloud-netty
+  template:
+    metadata:
+      labels:
+        app: nms4cloud-netty
+    spec:
+      containers:
+      - name: nms4cloud-netty
+        image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_netty_latest
+        ports:
+        - containerPort: 18190
+        - containerPort: 9999
+        imagePullPolicy: Always
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nms4cloud-netty
+spec:
+  type: NodePort
+  selector:
+    app: nms4cloud-netty
+  ports:
+  - name: port-18190
+    port: 18190
+    targetPort: 18190
+    nodePort: 30190
+    protocol: TCP
+  - name: port-9999
+    port: 9998
+    targetPort: 9999
+    nodePort: 30998
+    protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yd4cloud-capital
+  labels:
+    app: yd4cloud-capital
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yd4cloud-capital
+  template:
+    metadata:
+      labels:
+        app: yd4cloud-capital
+    spec:
+      containers:
+      - name: yd4cloud-capital
+        image: ccr.ccs.tencentyun.com/lemontree/ktv:yd4cloud_capital_latest
+        ports:
+        - containerPort: 9005
+        imagePullPolicy: Always
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yd4cloud-capital
+spec:
+  type: NodePort
+  selector:
+    app: yd4cloud-capital
+  ports:
+  - port: 9005
+    targetPort: 9005
+    nodePort: 30005
+    protocol: TCP

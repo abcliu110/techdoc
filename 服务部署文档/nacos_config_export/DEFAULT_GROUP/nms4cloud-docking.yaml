@@ -1,0 +1,52 @@
+server:
+  port: 80
+spring:
+  # datasource:
+  #   driverClassName: com.mysql.jdbc.Driver
+  #   type: com.zaxxer.hikari.HikariDataSource
+  #   url: jdbc:mysql://10.0.1.18:3306/a_docking?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+  #   username: nms4cloud
+  #   password: Rm_.qwdNdQV3w64ijMAWbmjZu
+  datasource:
+    dynamic:
+      primary: clickhouse #设置默认的数据源或者数据源�?默认值即为master
+      strict: false #严格匹配数据�?默认false. true未匹配到指定数据源时抛异�?false使用默认数据�?      datasource:
+        docking:
+          url: jdbc:mysql://10.0.1.18:3306/a_docking?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+          username: nms4cloud
+          password: Rm_.qwdNdQV3w64ijMAWbmjZu
+          driverClassName: com.mysql.jdbc.Driver
+          # type: com.zaxxer.hikari.HikariDataSource
+        mycat:
+          url: jdbc:mysql://mycat-saas:8066/LMN_CHAIN?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+          username: root
+          password: 8HsvuRr_z4iq_gXb
+          driverClassName: com.mysql.jdbc.Driver
+        clickhouse:
+          url: jdbc:clickhouse://clickhouse:8123/nms4cloud?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&useTimeZone=true&serverTimezone=Asia/Shanghai
+          username: 
+          password: 
+          driver-class-name: ru.yandex.clickhouse.ClickHouseDriver
+          # type: com.zaxxer.hikari.HikariDataSource
+  cloud:
+    config:
+      enabled: false
+    nacos:
+      config:
+        file-extension: yaml 
+        shared-configs:
+          - data-id: nms4cloud-shared.yaml
+  
+
+# nms:
+#   common:
+#     mybatis-flex-enabled: true
+#     show_sql_for_debug: true
+
+# mybatis-plus:
+#   configuration:
+#     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logstash:
+  destination: 172.16.0.14:35044
+

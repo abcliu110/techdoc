@@ -1,0 +1,71 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-config
+  namespace: nms4cloud
+data:
+  application.yml: |
+    # Gateway 配置
+    server:
+      port: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+  namespace: nms4cloud
+  labels:
+    app: gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      imagePullSecrets:
+      - name: tencent-ccr-secret
+      containers:
+      - name: gateway
+        image: ccr.ccs.tencentyun.com/lemontree/ktv:yd4cloud_gateway_latest
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        resources:
+          requests:
+            cpu: "0.25"
+            memory: "256Mi"
+          limits:
+            cpu: "0.5"
+            memory: "1024Mi"
+        env:
+        - name: JAVA_OPTS
+          value: "-Xms256m -Xmx1024m"
+        volumeMounts:
+        - name: config
+          mountPath: /app/config
+      volumes:
+      - name: config
+        configMap:
+          name: gateway-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+  namespace: nms4cloud
+spec:
+  type: ClusterIP
+  selector:
+    app: gateway
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
