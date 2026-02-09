@@ -1522,24 +1522,45 @@ spec:
       labels:
         app: nacos
     spec:
+      # 保留 initContainer 确保 MySQL 完全就绪
+      initContainers:
+        - name: wait-for-mysql
+          image: mysql:8.0
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - '-c'
+            - |
+              echo "等待 MySQL 完全就绪..."
+              until mysql -h mysql -P 3306 -u root -pst11338 -e "SELECT 1" > /dev/null 2>&1; do
+                echo "MySQL 尚未就绪，等待 5 秒后重试..."
+                sleep 5
+              done
+              echo "MySQL 已完全就绪"
+              echo "验证 nacos 数据库是否存在..."
+              mysql -h mysql -P 3306 -u root -pst11338 -e "USE nacos; SELECT 1;" > /dev/null 2>&1
+              if [ $? -eq 0 ]; then
+                echo "nacos 数据库验证成功"
+              else
+                echo "警告: nacos 数据库不存在或无法访问"
+                exit 1
+              fi
+          resources: {}
       containers:
         - name: nacos
           image: nacos/nacos-server:v2.2.0
-          # 【修改 1】增加延迟启动，确保物理服务器重启后，MySQL 和网络环境已完全就绪
-          command:
-            ["/bin/sh", "-c", "sleep 20; /home/nacos/bin/docker-startup.sh"]
           ports:
             - containerPort: 8848
-              hostPort: 8848 # 【修改 2】添加 hostPort 映射
+              hostPort: 8848
               name: client
             - containerPort: 9848
-              hostPort: 9848 # 【修改 2】添加 hostPort 映射
+              hostPort: 9848
               name: client-rpc
             - containerPort: 9849
-              hostPort: 9849 # 【修改 2】添加 hostPort 映射
+              hostPort: 9849
               name: raft-rpc
             - containerPort: 7848
-              hostPort: 7848 # 【修改 2】添加 hostPort 映射
+              hostPort: 7848
               name: old-raft-rpc
           env:
             - name: MODE
@@ -1548,7 +1569,6 @@ spec:
               value: "hostname"
             - name: SPRING_DATASOURCE_PLATFORM
               value: "mysql"
-            # 【修改 3】强制指定数据库数量为 1，这会触发 Nacos 脚本正确替换用户名和密码变量
             - name: MYSQL_SERVICE_DB_NUM
               value: "1"
             - name: MYSQL_SERVICE_HOST
@@ -1560,9 +1580,10 @@ spec:
             - name: MYSQL_SERVICE_USER
               value: "root"
             - name: MYSQL_SERVICE_PASSWORD
-              value: "st11338" # 请确认这是你的正确密码
+              value: "st11338"
+            # 增加连接超时时间
             - name: MYSQL_SERVICE_JDBC_PARAM
-              value: "characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true"
+              value: "characterEncoding=utf8&connectTimeout=10000&socketTimeout=30000&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true"
           resources:
             requests:
               memory: "1Gi"
