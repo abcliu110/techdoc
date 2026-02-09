@@ -322,7 +322,7 @@ EOF
 # 查看 ufw 状态
 sudo ufw status
 # 临时关闭
-sudo ufw stop
+sudo systemctl stop ufw
 # 永久禁用
 sudo ufw disable
 
