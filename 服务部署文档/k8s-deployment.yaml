@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nms4cloud-platform
+  namespace: nms4cloud
   labels:
     app: nms4cloud-platform
 spec:
@@ -45,6 +46,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nms4cloud-platform
+  namespace: nms4cloud
 spec:
   type: NodePort
   selector:
@@ -59,6 +61,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nms4cloud-wechat
+  namespace: nms4cloud
   labels:
     app: nms4cloud-wechat
 spec:
@@ -101,6 +104,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nms4cloud-wechat
+  namespace: nms4cloud
 spec:
   type: NodePort
   selector:
@@ -115,6 +119,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nms4cloud-biz
+  namespace: nms4cloud
   labels:
     app: nms4cloud-biz
 spec:
@@ -157,6 +162,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nms4cloud-biz
+  namespace: nms4cloud
 spec:
   type: NodePort
   selector:
@@ -171,6 +177,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nms4cloud-wms
+  namespace: nms4cloud
   labels:
     app: nms4cloud-wms
 spec:
@@ -213,6 +220,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nms4cloud-wms
+  namespace: nms4cloud
 spec:
   type: NodePort
   selector:
@@ -227,6 +235,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: yd4cloud-nms
+  namespace: nms4cloud
   labels:
     app: yd4cloud-nms
 spec:
@@ -269,6 +278,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: yd4cloud-nms
+  namespace: nms4cloud
 spec:
   type: NodePort
   selector:
@@ -283,6 +293,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nms4cloud-netty
+  namespace: nms4cloud
   labels:
     app: nms4cloud-netty
 spec:
@@ -326,6 +337,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nms4cloud-netty
+  namespace: nms4cloud
 spec:
   type: NodePort
   selector:
@@ -346,6 +358,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: yd4cloud-capital
+  namespace: nms4cloud
   labels:
     app: yd4cloud-capital
 spec:
@@ -388,6 +401,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: yd4cloud-capital
+  namespace: nms4cloud
 spec:
   type: NodePort
   selector:
@@ -402,6 +416,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nms4cloud-pos4cloud
+  namespace: nms4cloud
   labels:
     app: nms4cloud-pos4cloud
 spec:
@@ -416,6 +431,19 @@ spec:
     spec:
       imagePullSecrets:
       - name: tencent-ccr-secret
+      initContainers:
+      - name: wait-for-nacos
+        image: curlimages/curl:7.85.0
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for Nacos to be ready..."
+          until curl -sf http://nacos:8848/nacos/v1/console/health/readiness; do
+            echo "Nacos is not ready yet, retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Nacos is ready!"
       containers:
       - name: nms4cloud-pos4cloud
         image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_pos4cloud_latest
@@ -431,6 +459,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nms4cloud-pos4cloud
+  namespace: nms4cloud
 spec:
   type: NodePort
   selector:
@@ -445,6 +474,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nms4cloud-pos11report
+  namespace: nms4cloud
   labels:
     app: nms4cloud-pos11report
 spec:
@@ -459,6 +489,19 @@ spec:
     spec:
       imagePullSecrets:
       - name: tencent-ccr-secret
+      initContainers:
+      - name: wait-for-nacos
+        image: curlimages/curl:7.85.0
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for Nacos to be ready..."
+          until curl -sf http://nacos:8848/nacos/v1/console/health/readiness; do
+            echo "Nacos is not ready yet, retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Nacos is ready!"
       containers:
       - name: nms4cloud-pos11report
         image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_pos11report_latest
@@ -474,6 +517,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nms4cloud-pos11report
+  namespace: nms4cloud
 spec:
   type: NodePort
   selector:
@@ -488,6 +532,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nms4cloud-bi
+  namespace: nms4cloud
   labels:
     app: nms4cloud-bi
 spec:
@@ -502,6 +547,19 @@ spec:
     spec:
       imagePullSecrets:
       - name: tencent-ccr-secret
+      initContainers:
+      - name: wait-for-nacos
+        image: curlimages/curl:7.85.0
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for Nacos to be ready..."
+          until curl -sf http://nacos:8848/nacos/v1/console/health/readiness; do
+            echo "Nacos is not ready yet, retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Nacos is ready!"
       containers:
       - name: nms4cloud-bi
         image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_bi_latest
@@ -517,6 +575,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nms4cloud-bi
+  namespace: nms4cloud
 spec:
   type: NodePort
   selector:
@@ -531,6 +590,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nms4cloud-pos8book
+  namespace: nms4cloud
   labels:
     app: nms4cloud-pos8book
 spec:
@@ -545,6 +605,19 @@ spec:
     spec:
       imagePullSecrets:
       - name: tencent-ccr-secret
+      initContainers:
+      - name: wait-for-nacos
+        image: curlimages/curl:7.85.0
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for Nacos to be ready..."
+          until curl -sf http://nacos:8848/nacos/v1/console/health/readiness; do
+            echo "Nacos is not ready yet, retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Nacos is ready!"
       containers:
       - name: nms4cloud-pos8book
         image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_pos8book_latest
@@ -560,6 +633,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nms4cloud-pos8book
+  namespace: nms4cloud
 spec:
   type: NodePort
   selector:
@@ -574,6 +648,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nms4cloud-crm
+  namespace: nms4cloud
   labels:
     app: nms4cloud-crm
 spec:
@@ -588,6 +663,19 @@ spec:
     spec:
       imagePullSecrets:
       - name: tencent-ccr-secret
+      initContainers:
+      - name: wait-for-nacos
+        image: curlimages/curl:7.85.0
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for Nacos to be ready..."
+          until curl -sf http://nacos:8848/nacos/v1/console/health/readiness; do
+            echo "Nacos is not ready yet, retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Nacos is ready!"
       containers:
       - name: nms4cloud-crm
         image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_crm_latest
@@ -603,6 +691,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nms4cloud-crm
+  namespace: nms4cloud
 spec:
   type: NodePort
   selector:
@@ -617,6 +706,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nms4cloud-payment
+  namespace: nms4cloud
   labels:
     app: nms4cloud-payment
 spec:
@@ -631,6 +721,19 @@ spec:
     spec:
       imagePullSecrets:
       - name: tencent-ccr-secret
+      initContainers:
+      - name: wait-for-nacos
+        image: curlimages/curl:7.85.0
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for Nacos to be ready..."
+          until curl -sf http://nacos:8848/nacos/v1/console/health/readiness; do
+            echo "Nacos is not ready yet, retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Nacos is ready!"
       containers:
       - name: nms4cloud-payment
         image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_payment_latest
@@ -646,6 +749,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nms4cloud-payment
+  namespace: nms4cloud
 spec:
   type: NodePort
   selector:
