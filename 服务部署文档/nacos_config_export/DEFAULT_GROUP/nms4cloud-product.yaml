@@ -18,13 +18,13 @@ spring:
       mycat:
         driverClassName: com.mysql.jdbc.Driver
         type: com.alibaba.druid.pool.DruidDataSource
-        url: jdbc:mysql://192.168.1.118:3306/gylregdb?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+        url: jdbc:mysql://192.168.1.119:3306/gylregdb?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
         username: root
         password: st11338
       pt:
         driverClassName: com.mysql.jdbc.Driver
         type: com.alibaba.druid.pool.DruidDataSource
-        url: jdbc:mysql://192.168.1.118:3306/a_product?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+        url: jdbc:mysql://192.168.1.119:3306/a_product?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
         username: root
         password: st11338
     rules:

@@ -20,13 +20,13 @@ spring:
       mycat:
         driverClassName: com.mysql.jdbc.Driver
         type: com.alibaba.druid.pool.DruidDataSource
-        url: jdbc:mysql://192.168.1.118:3306/gylregdb?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+        url: jdbc:mysql://192.168.1.119:3306/gylregdb?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
         username: root
         password: st11338
       crm:
         driverClassName: com.mysql.jdbc.Driver
         type: com.alibaba.druid.pool.DruidDataSource
-        url: jdbc:mysql://192.168.1.118:3306/a_crm?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+        url: jdbc:mysql://192.168.1.119:3306/a_crm?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
         username: root
         password: st11338
     rules:
@@ -183,7 +183,7 @@ zj:
 xxl:
   job:
     admin:
-      addresses: http://192.168.1.118:31110/xxl-job-admin
+      addresses: http://192.168.1.119:31110/xxl-job-admin
       accessToken: F8idrRu8Ce8dVz7Zdp_X
       appname: scrm-app-executor
       port: 9999
@@ -193,4 +193,4 @@ xxl:
 
 yd4cloud:
   capital:
-    url: http://192.168.1.118:9005
+    url: http://192.168.1.119:9005

@@ -14,16 +14,16 @@ spring:
 
 pos5sync:
   canals:
-    - address: 192.168.1.118
+    - address: 192.168.1.119
       port: 11111
       destination: example
-    # - address: 192.168.1.118
+    # - address: 192.168.1.119
     #   port: 11111
     #   destination: example2
 ---
 spring:
   kafka:
-    bootstrap-servers: 192.168.1.118:9092
+    bootstrap-servers: 192.168.1.119:9092
 
     producer:
       bootstrap-servers: ${spring.kafka.bootstrap-servers}
@@ -49,12 +49,12 @@ mybatis-flex:
     sync:
       driverClassName: com.mysql.jdbc.Driver
       type: com.alibaba.druid.pool.DruidDataSource
-      url: jdbc:mysql://192.168.1.118:3306/a_sync?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+      url: jdbc:mysql://192.168.1.119:3306/a_sync?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
       username: root
       password: st11338
     ck:
       driver-class-name: ru.yandex.clickhouse.ClickHouseDriver
-      url: jdbc:clickhouse://192.168.1.118:8123/nms4cloud?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&useTimeZone=true&serverTimezone=Asia/Shanghai
+      url: jdbc:clickhouse://192.168.1.119:8123/nms4cloud?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&useTimeZone=true&serverTimezone=Asia/Shanghai
       username: 
       password: 
       

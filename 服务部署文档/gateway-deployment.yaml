@@ -1,4 +1,20 @@
 ---
+# 1. 通用环境变量配置 (从你提供的参数生成)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nacos
+  namespace: nms4cloud
+data:
+  JVM_OPTS: "--add-opens java.base/java.lang=ALL-UNNAMED "
+  SW_AGENT_COLLECTOR_BACKEND_SERVICES: skywalking:11800
+  TZ: Asia/Shanghai
+  spring.cloud.nacos.config.namespace: 56a75109-dbdc-4c5a-8fc1-b2300cef7f4a
+  spring.cloud.nacos.config.server-addr: nacos:8848
+  spring.cloud.nacos.discovery.server-addr: nacos:8848
+
+---
+# 2. Gateway 专用配置文件
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -6,10 +22,18 @@ metadata:
   namespace: nms4cloud
 data:
   application.yml: |
-    # Gateway 配置
     server:
       port: 8080
+    spring:
+      cloud:
+        nacos:
+          discovery:
+            server-addr: nacos:8848
+          config:
+            server-addr: nacos:8848
+
 ---
+# 3. Gateway 工作负载 (Deployment)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -28,33 +52,40 @@ spec:
         app: gateway
     spec:
       imagePullSecrets:
-      - name: tencent-ccr-secret
+        - name: tencent-ccr-secret
       containers:
-      - name: gateway
-        image: ccr.ccs.tencentyun.com/lemontree/ktv:yd4cloud_gateway_latest
-        imagePullPolicy: Always
-        ports:
-        - name: http
-          containerPort: 8080
-          protocol: TCP
-        resources:
-          requests:
-            cpu: "0.25"
-            memory: "256Mi"
-          limits:
-            cpu: "0.5"
-            memory: "1024Mi"
-        env:
-        - name: JAVA_OPTS
-          value: "-Xms256m -Xmx1024m"
-        volumeMounts:
-        - name: config
-          mountPath: /app/config
+        - name: gateway
+          image: ccr.ccs.tencentyun.com/lemontree/ktv:yd4cloud_gateway_latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "1024Mi"
+          env:
+            - name: JAVA_OPTS
+              value: "-Xms256m -Xmx1024m"
+          # 核心：同时引入上面定义的两个配置源
+          envFrom:
+            - configMapRef:
+                name: nacos
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/config/application.yml
+              subPath: application.yml
       volumes:
-      - name: config
-        configMap:
-          name: gateway-config
+        - name: config-volume
+          configMap:
+            name: gateway-config
+
 ---
+# 4. Gateway 服务发现 (Service)
 apiVersion: v1
 kind: Service
 metadata:
@@ -65,7 +96,7 @@ spec:
   selector:
     app: gateway
   ports:
-  - name: http
-    port: 8080
-    targetPort: 8080
-    protocol: TCP
+    - name: http
+      port: 8080
+      targetPort: 8080
+      protocol: TCP

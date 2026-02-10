@@ -21,34 +21,34 @@ spring:
       mycat:
         driverClassName: com.mysql.jdbc.Driver
         type: com.alibaba.druid.pool.DruidDataSource
-        url: jdbc:mysql://192.168.1.118:3306/gylregdb?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+        url: jdbc:mysql://192.168.1.119:3306/gylregdb?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
         username: root
         password: st11338
       platform:
         driverClassName: com.mysql.jdbc.Driver
         type: com.alibaba.druid.pool.DruidDataSource
-        url: jdbc:mysql://192.168.1.118:3306/a_platform?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+        url: jdbc:mysql://192.168.1.119:3306/a_platform?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
         username: root
         password: st11338
       biz:
         driverClassName: com.mysql.jdbc.Driver
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:mysql://192.168.1.118:3306/a_biz?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+        url: jdbc:mysql://192.168.1.119:3306/a_biz?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
         username: root
         password: st11338
       pt:
         driverClassName: com.mysql.jdbc.Driver
         type: com.alibaba.druid.pool.DruidDataSource
-        url: jdbc:mysql://192.168.1.118:3306/a_product?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+        url: jdbc:mysql://192.168.1.119:3306/a_product?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
         username: root
         password: st11338
       pos:
         driverClassName: com.mysql.jdbc.Driver
         type: com.alibaba.druid.pool.DruidDataSource
-        url: jdbc:mysql://192.168.1.118:3306/a_pos?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+        url: jdbc:mysql://192.168.1.119:3306/a_pos?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
         username: root
         password: st11338
-      # 自建数据�?
+      # 自建数据�?
     rules:
       sharding:
         tables:
@@ -242,7 +242,7 @@ spring:
 ---
 spring:
   kafka:
-    bootstrap-servers: 192.168.1.118:9092
+    bootstrap-servers: 192.168.1.119:9092
 
     producer:
       bootstrap-servers: ${spring.kafka.bootstrap-servers}
@@ -332,7 +332,7 @@ nms4cloud:
     ak-id: LTAI5tCtdRQEhBMR9KQLx9Lc
     ak-secret: BoOZAvwSG3f6jRuIvT1QOHzUAYV6Yb
     ak-key: 935JuZ9OzfphfwWv
-# 企业微信服务商配�?wecom:
+# 企业微信服务商配�?wecom:
   service:
     token: TOKEN
     encodingAesKey: ENCODING_AES_KEY

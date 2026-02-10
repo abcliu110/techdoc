@@ -1525,21 +1525,21 @@ spec:
       containers:
         - name: nacos
           image: nacos/nacos-server:v2.2.0
-          # 【修改 1】增加延迟启动，确保物理服务器重启后，MySQL 和网络环境已完全就绪
+          # 保持延迟启动
           command:
             ["/bin/sh", "-c", "sleep 20; /home/nacos/bin/docker-startup.sh"]
           ports:
             - containerPort: 8848
-              hostPort: 8848 # 【修改 2】添加 hostPort 映射
+              hostPort: 8848
               name: client
             - containerPort: 9848
-              hostPort: 9848 # 【修改 2】添加 hostPort 映射
+              hostPort: 9848
               name: client-rpc
             - containerPort: 9849
-              hostPort: 9849 # 【修改 2】添加 hostPort 映射
+              hostPort: 9849
               name: raft-rpc
             - containerPort: 7848
-              hostPort: 7848 # 【修改 2】添加 hostPort 映射
+              hostPort: 7848
               name: old-raft-rpc
           env:
             - name: MODE
@@ -1548,7 +1548,6 @@ spec:
               value: "hostname"
             - name: SPRING_DATASOURCE_PLATFORM
               value: "mysql"
-            # 【修改 3】强制指定数据库数量为 1，这会触发 Nacos 脚本正确替换用户名和密码变量
             - name: MYSQL_SERVICE_DB_NUM
               value: "1"
             - name: MYSQL_SERVICE_HOST
@@ -1560,16 +1559,28 @@ spec:
             - name: MYSQL_SERVICE_USER
               value: "root"
             - name: MYSQL_SERVICE_PASSWORD
-              value: "st11338" # 请确认这是你的正确密码
+              value: "st11338"
             - name: MYSQL_SERVICE_JDBC_PARAM
               value: "characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true"
+
+            # --- 【新增优化】JVM 内存调优，解决 GC 导致的卡顿 ---
+            - name: JVM_MS
+              value: "1g" # 初始堆内存
+            - name: JVM_MX
+              value: "1g" # 最大堆内存
+            - name: JVM_XMN
+              value: "512m" # 年轻代内存
+            # ----------------------------------------------
+
           resources:
+            # --- 【核心优化】提升 CPU 资源，防止由于限流导致的卡顿 ---
             requests:
               memory: "1Gi"
-              cpu: "500m"
+              cpu: "1000m" # 确保最少 1 核
             limits:
               memory: "2Gi"
-              cpu: "1000m"
+              cpu: "2000m" # 允许最高 2 核
+            # ----------------------------------------------------
 ```
 
 #### 3.6.2 创建 Nacos Service
@@ -2595,3 +2606,100 @@ rancher密码: st11338st11338
 执行业务脚本---业务数据库中
 导入腾讯云密钥docker-registry-secret.yaml
 导入k8s-deployment.yaml
+
+pod内安装工具
+apt-get update && apt-get install -y wget
+
+## 移动服务器
+
+1. 备份数据库
+   cp -r /var/lib/rancher/rke2/server/db /root/rke2-db-backup
+
+既然你的 `tls-san` 已经配置了域名（如 `jjtestserver.local`），这在 IP 变更时是一个巨大的优势，因为你**不需要重新签发证书**。只要域名解析到新 IP，证书依然有效。
+
+但是，RKE2 的底层组件（尤其是 **etcd** 和 **kube-apiserver**）在内部元数据和集群状态中仍然记录了节点的旧 IP。为了让集群完全恢复正常，你仍需要执行以下步骤：
+
+### 第一步：更新网络基础设施（最关键）
+
+1.  **修改 DNS 或 hosts 文件：**
+    确保所有节点（Server 和 Agent）以及你的管理终端，都能将 `jjtestserver.local` 解析到**新的 IP 地址**。
+    ```bash
+    # 在所有相关机器的 /etc/hosts 中更新
+    <新IP> jjtestserver.local jjtestserver
+    ```
+
+### 第二步：修复 RKE2 Server 节点
+
+即使有域名，RKE2 内部的 etcd 数据库仍可能记录了旧的对等节点 IP。建议执行一次集群重置：
+
+1.  **停止服务并清理：**
+
+    ```bash
+    systemctl stop rke2-server
+    rke2-killall.sh
+    ```
+
+2.  **更新配置文件（建议添加新 IP）：**
+    虽然你有域名，但为了万无一失（防止某些组件回退到 IP 访问），建议将新 IP 也临时加入 `tls-san`。
+    编辑 `/etc/rancher/rke2/config.yaml`:
+
+    ```yaml
+    write-kubeconfig-mode: "0644"
+    tls-san:
+      - "jjtestserver.local"
+      - "jjtestserver"
+      - "localhost"
+      - "127.0.0.1"
+      - "<新IP>" # <-- 建议把新 IP 也加上
+    node-ip: "<新IP>" # <-- 强制指定节点使用的 IP
+    cluster-cidr: 10.42.0.0/16
+    service-cidr: 10.43.0.0/16
+    ```
+
+3.  **重置集群（针对单 Server 或主节点）：**
+    这一步非常重要，它会重置 etcd，使其重新绑定到当前的网卡 IP。
+
+    ```bash
+    rke2 server --cluster-reset
+    ```
+
+4.  **重新启动 RKE2：**
+    ```bash
+    systemctl start rke2-server
+    ```
+
+### 第三步：修复 Agent 节点（如果有）
+
+如果你有其他的 Worker 节点（Agent）：
+
+1.  修改 Agent 节点的 `/etc/rancher/rke2/config.yaml`。
+2.  确保 `server: https://jjtestserver.local:9345`。
+3.  如果 `jjtestserver.local` 是通过 `/etc/hosts` 解析的，请确保该文件已更新为新 IP。
+4.  执行 `rke2-killall.sh` 然后 `systemctl start rke2-agent`。
+
+### 第四步：检查 Rancher 状态
+
+由于你使用了域名访问 Rancher，情况会简单很多：
+
+1.  **检查 Kubeconfig：**
+    由于你的 `rke2.yaml` 默认连接的是 `https://127.0.0.1:6443`，本地 `kubectl` 操作不受影响。
+2.  **验证 Rancher Agent：**
+    Rancher 部署在集群内部，它的 `cattle-cluster-agent` 通常连接的是 `server-url`。
+    - 如果你的 Rancher `server-url` 是 `https://jjtestserver.local`，且 DNS 已指向新 IP，Agent 会自动重新连上。
+    - **验证方法：** 登录 Rancher UI，查看集群状态是否变为 `Active`。
+3.  **如果 Rancher 无法访问：**
+    检查 Rancher 的 Ingress 资源：
+    ```bash
+    kubectl get ingress -n cattle-system
+    ```
+    确保域名正确，且对应的 LoadBalancer IP（如果是 RKE2 默认的 Nginx Ingress）已经反映了新的节点 IP。
+
+### 总结
+
+因为你提前配置了 `tls-san` 域名，你避免了最麻烦的“证书不匹配”报错。你现在唯一需要做的就是：
+
+1.  **更新 hosts/DNS 解析**。
+2.  **运行 `rke2 server --cluster-reset`** 来让 etcd 适应新的 IP。
+3.  **配置 `node-ip`** 确保 K8s Node 对象更新到新 IP。
+
+**应用层（你的业务）：** 如果你的业务是通过 Ingress 访问的，只要 `jjtestserver.local` 解析更新了，业务会自动恢复。如果是通过 NodePort 访问，则需改用新 IP+端口。

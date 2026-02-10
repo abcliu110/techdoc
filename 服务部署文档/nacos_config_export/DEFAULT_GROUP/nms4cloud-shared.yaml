@@ -9,14 +9,14 @@ spring:
     #   datasource:
     #     ds1:
     #       nacos:
-    #         server-addr: 192.168.1.118:8848
+    #         server-addr: 192.168.1.119:8848
     #         data-id: ${spring.application.name}.json
     #         group-id: DEFAULT_GROUP
     #         data-type: json
     #         rule-type: flow
 
   redis:
-    host: 192.168.1.118
+    host: 192.168.1.119
     port: 6379
     database: 0
     password: 123456
@@ -29,7 +29,7 @@ spring:
 
   data:
     redis:
-      host: 192.168.1.118
+      host: 192.168.1.119
       port: 6379
       database: 0
       password: 123456
@@ -40,7 +40,7 @@ spring:
           max-idle: 10
           max-wait: 5000
     redis2:
-      host: 192.168.1.118
+      host: 192.168.1.119
       port: 6379
       database: 0
       password: 123456
@@ -61,7 +61,7 @@ oss:
     report: chain-pictures-01-1251303505
 
 rocketmq:
-  name-server: 192.168.1.118:9876
+  name-server: 192.168.1.119:9876
   producer: 
     group: ${spring.application.name}
 
@@ -83,9 +83,9 @@ nms:
 
 
 forest:
-  backend: okhttp3             # 后端HTTP框架（默认为 okhttp3�?  max-connections: 1000        # 连接池最大连接数（默认为 500�?  max-route-connections: 500   # 每个路由的最大连接数（默认为 500�?  max-request-queue-size: 100  # [自v1.5.22版本起可用] 最大请求等待队列大�?  max-async-thread-size: 300   # [自v1.5.21版本起可用] 最大异步线程数
+  backend: okhttp3             # 后端HTTP框架（默认为 okhttp3�?  max-connections: 1000        # 连接池最大连接数（默认为 500�?  max-route-connections: 500   # 每个路由的最大连接数（默认为 500�?  max-request-queue-size: 100  # [自v1.5.22版本起可用] 最大请求等待队列大�?  max-async-thread-size: 300   # [自v1.5.21版本起可用] 最大异步线程数
   max-async-queue-size: 16     # [自v1.5.22版本起可用] 最大异步线程池队列大小
-  timeout: 3000                # [已不推荐使用] 请求超时时间，单位为毫秒（默认为 3000�?  connect-timeout: 3000        # 连接超时时间，单位为毫秒（默认为 timeout�?  read-timeout: 3000           # 数据读取超时时间，单位为毫秒（默认为 timeout�?  max-retry-count: 0           # 请求失败后重试次数（默认�?0 次不重试�?  ssl-protocol: TLS            # 单向验证的HTTPS的默认TLS协议（默认为 TLS�?  log-enabled: false            # 打开或关闭日志（默认�?true�?  log-request: false            # 打开/关闭Forest请求日志（默认为 true�?  log-response-status: false    # 打开/关闭Forest响应状态日志（默认�?true�?  log-response-content: false   # 打开/关闭Forest响应内容日志（默认为 false�?  async-mode: platform         # [自v1.5.27版本起可用] 异步模式（默认为 platform�?
+  timeout: 3000                # [已不推荐使用] 请求超时时间，单位为毫秒（默认为 3000�?  connect-timeout: 3000        # 连接超时时间，单位为毫秒（默认为 timeout�?  read-timeout: 3000           # 数据读取超时时间，单位为毫秒（默认为 timeout�?  max-retry-count: 0           # 请求失败后重试次数（默认�?0 次不重试�?  ssl-protocol: TLS            # 单向验证的HTTPS的默认TLS协议（默认为 TLS�?  log-enabled: false            # 打开或关闭日志（默认�?true�?  log-request: false            # 打开/关闭Forest请求日志（默认为 true�?  log-response-status: false    # 打开/关闭Forest响应状态日志（默认�?true�?  log-response-content: false   # 打开/关闭Forest响应内容日志（默认为 false�?  async-mode: platform         # [自v1.5.27版本起可用] 异步模式（默认为 platform�?
 
 piao_tong:
   password: Jj1cy1ZpCq0b36So4dGHZI1P
