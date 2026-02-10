@@ -1,0 +1,49 @@
+server:
+  port: 18139
+spring:
+  cloud:
+    config:
+      enabled: false
+    nacos:
+      config:
+        file-extension: yaml #文件拓展格式
+        shared-configs:
+          - data-id: nms4cloud-shared.yaml
+  shardingsphere:
+    mode:
+      # type: Memory
+      type: Standalone
+    datasource:
+      names: mycat,order
+      mycat:
+        driverClassName: com.mysql.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://192.168.1.119:3306/gylregdb?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+        username: root
+        password: st11338
+      order:
+        driverClassName: com.mysql.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://192.168.1.119:3306/a_order?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+        username: root
+        password: st11338
+    rules:
+      sharding:
+        tables:
+          order_bill:
+            actual-data-nodes: order.order_bill
+          order_pay:
+            actual-data-nodes: order.order_pay
+          order_food:
+            actual-data-nodes: order.order_food
+          order_taste:
+            actual-data-nodes: order.order_taste
+          order_free_food_record:
+            actual-data-nodes: order.order_free_food_record
+          order_rebate:
+            actual-data-nodes: order.order_rebate
+          order_comment:
+            actual-data-nodes: order.order_comment
+logstash:
+  destination: 172.16.0.14:35044
+

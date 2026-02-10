@@ -1,0 +1,98 @@
+server:
+  port: 18135
+spring:
+  cloud:
+    config:
+      enabled: false
+    nacos:
+      config:
+        file-extension: yaml #文件拓展格式
+        shared-configs:
+          - data-id: nms4cloud-shared.yaml
+  shardingsphere:
+    mode:
+      # type: Memory
+      type: Standalone
+    datasource:
+      names: mycat,pt
+      mycat:
+        driverClassName: com.mysql.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://192.168.1.119:3306/gylregdb?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+        username: root
+        password: st11338
+      pt:
+        driverClassName: com.mysql.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://192.168.1.119:3306/a_product?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+        username: root
+        password: st11338
+    rules:
+      sharding:
+        tables:
+          pt_tbl_area:
+            actual-data-nodes: mycat.sc_tbl_area
+          pt_tbl_type:
+            actual-data-nodes: mycat.sc_tbl_type
+          pt_tbl:
+            actual-data-nodes: mycat.sc_tbl
+          pt_dish_unit:
+            actual-data-nodes: mycat.sc_dish_unit
+          pt_dish_type:
+            actual-data-nodes: mycat.sc_dish_type
+          pt_dish:
+            actual-data-nodes: mycat.sc_dish
+          pt_cookway:
+            actual-data-nodes: mycat.caipingzuofa  
+          pt_cookway_type:
+            actual-data-nodes: mycat.zuofaleibie  
+          pt_auto_order:
+            actual-data-nodes: mycat.sc_mall_auto_order  
+          pt_qr_bind:
+            actual-data-nodes: mycat.sc_qr_bind  
+          pt_qr_code:
+            actual-data-nodes: mycat.sc_qr_code      
+          pt_dish_map:
+            actual-data-nodes: mycat.sc_dish_map  
+          pt_buffet:
+            actual-data-nodes: mycat.sc_buffet                
+          pt_buffet_food:
+            actual-data-nodes: mycat.sc_dish_buffet  
+          pt_data_sync_record:
+            actual-data-nodes: pt.pt_data_sync_record   
+          pt_dish_table_price:
+            actual-data-nodes: pt.pt_dish_table_price    
+          pt_dish_area:
+            actual-data-nodes: pt.pt_dish_area    
+          pt_dish_flavor:
+            actual-data-nodes: pt.pt_dish_flavor    
+          pt_flavor_type:
+            actual-data-nodes: pt.pt_flavor_type    
+          pt_member_price:
+            actual-data-nodes: pt.pt_member_price    
+          pt_tbl_area_dish:
+            actual-data-nodes: pt.pt_tbl_area_dish   
+          pt_card_type_free_rule:
+            actual-data-nodes: pt.pt_card_type_free_rule   
+          pt_free_rule_dish:
+            actual-data-nodes: pt.pt_free_rule_dish   
+
+          pt_cook_type:
+            actual-data-nodes: pt.pt_cook_type   
+          pt_cook_ref:
+            actual-data-nodes: pt.pt_cook_ref   
+          pt_area_period:
+            actual-data-nodes: pt.pt_area_period   
+          pt_queue:
+            actual-data-nodes: pt.pt_queue   
+          pt_queue_record:
+            actual-data-nodes: pt.pt_queue_record   
+          pt_queue_open:
+            actual-data-nodes: pt.pt_queue_open   
+          pt_x_spec_price:
+            actual-data-nodes: pt.pt_x_spec_price 
+          pt_image_compress:
+            actual-data-nodes: pt.pt_image_compress      
+logstash:
+  destination: 172.16.0.14:35044
+

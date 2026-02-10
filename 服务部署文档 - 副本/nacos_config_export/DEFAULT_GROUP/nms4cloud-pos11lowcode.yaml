@@ -1,0 +1,34 @@
+server:
+  port: 9189
+spring:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://192.168.1.119:3306/a_lowcode?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+    username: root
+    password: st11338
+  cloud:
+    config:
+      enabled: false
+    nacos:
+      config:
+        file-extension: yaml 
+        shared-configs:
+          - data-id: nms4cloud-shared.yaml
+  # shardingsphere:
+  #   rules:
+  #     sharding:
+  #       tables:
+  #         a_sync.meal_period_setting:
+  #           actual-data-nodes: a_book.meal_period_setting
+  
+
+
+
+
+logstash:
+  destination: 172.16.0.14:35044
+
+nms4cloud:
+  pos4cloud:
+    url: http://127.0.0.1:9188

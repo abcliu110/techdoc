@@ -1,0 +1,196 @@
+server:
+  port: 18138
+spring:
+  cloud:
+    config:
+      enabled: false
+    nacos:
+      config:
+        file-extension: yaml #文件拓展格式
+        shared-configs:
+          - data-id: nms4cloud-shared.yaml
+  shardingsphere:
+    props:
+      sql-show: false
+    mode:
+      # type: Memory
+      type: Standalone
+    datasource:
+      names: mycat,crm
+      mycat:
+        driverClassName: com.mysql.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://192.168.1.119:3306/gylregdb?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+        username: root
+        password: st11338
+      crm:
+        driverClassName: com.mysql.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://192.168.1.119:3306/a_crm?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+        username: root
+        password: st11338
+    rules:
+      sharding:
+        tables:
+          crm_coupon:
+            actual-data-nodes: mycat.sc_mall_coupon
+          crm_coupon_hours:
+            actual-data-nodes: mycat.sc_mall_coupon_hours
+          crm_coupon_order:
+            actual-data-nodes: mycat.sc_mall_coupon_order
+          crm_coupon_map:
+            actual-data-nodes: mycat.sc_mall_coupon_map
+          crm_coupon_purchase:
+            actual-data-nodes: mycat.sc_mall_coupon_purchase
+          crm_gift_coupon_food:
+            actual-data-nodes: mycat.sc_mall_gift_coupon_food
+          crm_envelope_proportion:
+            actual-data-nodes: mycat.sc_envelope_proportion
+          crm_store_in_coupon:
+            actual-data-nodes: mycat.sc_store_in_mall_coupon
+          crm_coupon_proportion_item:
+            actual-data-nodes: mycat.sc_coupon_proportion_item
+          crm_festival:
+            actual-data-nodes: mycat.sc_mall_festival
+          crm_coupon_festival:
+            actual-data-nodes: mycat.sc_mall_coupon_festival
+          crm_new_gift:
+            actual-data-nodes: mycat.sc_new_gift
+          crm_new_gift_store:
+            actual-data-nodes: mycat.sc_new_gift_store
+          crm_red_envelope:
+            actual-data-nodes: mycat.sc_mall_red_envelope
+          crm_invitation_reward:
+            actual-data-nodes: mycat.sc_invitation_reward
+          crm_point_exchange:
+            actual-data-nodes: mycat.sc_mall_point_exchange
+          crm_cash_back:
+            actual-data-nodes: mycat.crm_card_level_and_cash_back
+          crm_cash_back_food:
+            actual-data-nodes: mycat.sc_mall_cash_back_food
+          crm_consumption_coupon_rule:
+            actual-data-nodes: crm.crm_consumption_coupon_rule
+          crm_consumption_coupon_limit:
+            actual-data-nodes: crm.crm_consumption_coupon_limit
+          crm_large_turntable:
+            actual-data-nodes: mycat.sc_large_turntable
+          crm_large_turntable_item:
+            actual-data-nodes: mycat.sc_large_turntable_item
+          crm_card_type:
+            actual-data-nodes: mycat.crm_card_type
+          crm_advertising_scheme:
+            actual-data-nodes: mycat.crm_advertising_scheme
+          crm_advertising_scheme_and_shop:
+            actual-data-nodes: mycat.crm_advertising_scheme_and_shop
+          crm_advertising_scheme_item:
+            actual-data-nodes: mycat.crm_advertising_scheme_item
+          crm_card:
+            actual-data-nodes: mycat.crm_card
+          crm_card_level:
+            actual-data-nodes: mycat.crm_card_level
+          crm_card_level_and_cash_back:
+            actual-data-nodes: mycat.crm_card_level_and_cash_back
+          crm_card_level_and_more_recharge:
+            actual-data-nodes: mycat.crm_card_level_and_more_recharge
+          crm_card_level_and_overlord_meal:
+            actual-data-nodes: mycat.crm_card_level_and_overlord_meal
+          crm_card_op_record:
+            actual-data-nodes: mycat.crm_card_op_record
+          crm_card_points_record:
+            actual-data-nodes: mycat.crm_card_points_record
+          crm_card_record:
+            actual-data-nodes: mycat.crm_card_record
+          crm_card_type_free_rule:
+            actual-data-nodes: mycat.crm_card_type_free_rule
+          crm_join_activity:
+            actual-data-nodes: mycat.crm_join_activity
+          crm_join_activity_shop:
+            actual-data-nodes: mycat.crm_join_activity_shop
+          crm_member:
+            actual-data-nodes: mycat.crm_member
+          crm_save_rule:
+            actual-data-nodes: mycat.crm_save_rule
+          crm_save_rule_interval:
+            actual-data-nodes: mycat.crm_save_rule_interval
+          crm_shop_in_card_type:
+            actual-data-nodes: mycat.crm_shop_in_card_type
+          pos_give_bill:
+            actual-data-nodes: mycat.pos_give_bill
+          crm_consume_coupon_food:
+            actual-data-nodes: mycat.sc_mall_consume_coupon_food
+          crm_card_wx_user:
+            actual-data-nodes: crm.crm_card_wx_user           
+          crm_card_map:
+            actual-data-nodes: crm.crm_card_map
+          crm_deal_task:
+            actual-data-nodes: crm.crm_deal_task
+          crm_deal_task_item:
+            actual-data-nodes: crm.crm_deal_task_item        
+          crm_card_balance:
+            actual-data-nodes: crm.crm_card_balance                  
+          crm_coupon_task:
+            actual-data-nodes: crm.crm_coupon_task       
+          crm_overlord_store:
+            actual-data-nodes: crm.crm_overlord_store       
+          crm_card_grade_record:
+            actual-data-nodes: crm.crm_card_grade_record      
+          crm_overlord_once:
+            actual-data-nodes: crm.crm_overlord_once       
+
+          crm_actuator:
+            actual-data-nodes: crm.crm_actuator     
+          crm_actuator_coupon:
+            actual-data-nodes: crm.crm_actuator_coupon     
+          crm_actuator_record:
+            actual-data-nodes: crm.crm_actuator_record     
+          crm_filter:
+            actual-data-nodes: crm.crm_filter     
+          crm_filter_item:
+            actual-data-nodes: crm.crm_filter_item     
+          crm_coupon_dish:
+            actual-data-nodes: crm.crm_coupon_dish    
+
+          crm_card_cost_task:
+            actual-data-nodes: crm.crm_card_cost_task    
+          crm_birthday_rule:
+            actual-data-nodes: crm.crm_birthday_rule    
+          crm_birthday_record:
+            actual-data-nodes: crm.crm_birthday_record    
+          crm_card_upgrade_record:
+            actual-data-nodes: crm.crm_card_upgrade_record    
+          crm_reward_rule:
+            actual-data-nodes: crm.crm_reward_rule
+          crm_reward_record:
+            actual-data-nodes: crm.crm_reward_record    
+          crm_store_divide_record:
+            actual-data-nodes: crm.crm_store_divide_record    
+logstash:
+  destination: 172.16.0.14:35044
+
+zj:
+  crm:
+   domain: https://dev2.gdsenhai.com
+   client_id: 1012
+   client_code: 10105
+   client_secret: 6b8eefegb02924fac03c4a5814e052df
+   access_token: DFC339FF02ECCB37B97A2104617F11F3
+   cbrand_id: 1  
+
+# mybatis-plus:
+#   configuration:
+#     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+xxl:
+  job:
+    admin:
+      addresses: http://192.168.1.119:31110/xxl-job-admin
+      accessToken: F8idrRu8Ce8dVz7Zdp_X
+      appname: scrm-app-executor
+      port: 9999
+      logretentiondays: 30
+      logpath: ./data/logs/xxl-job/executor
+
+
+yd4cloud:
+  capital:
+    url: http://192.168.1.119:9005

@@ -1,0 +1,121 @@
+spring:
+  cloud:
+    # sentinel:
+    #   # filter:
+    #   #   enabled: false
+    #   transport:
+    #     dashboard: sentinel:8858
+    #     port: 9998
+    #   datasource:
+    #     ds1:
+    #       nacos:
+    #         server-addr: 192.168.1.119:8848
+    #         data-id: ${spring.application.name}.json
+    #         group-id: DEFAULT_GROUP
+    #         data-type: json
+    #         rule-type: flow
+
+  redis:
+    host: 192.168.1.119
+    port: 6379
+    database: 0
+    password: 123456
+    lettuce:
+      pool:
+        max-active: -1
+        min-idle: 5
+        max-idle: 10
+        max-wait: 5000
+
+  data:
+    redis:
+      host: 192.168.1.119
+      port: 6379
+      database: 0
+      password: 123456
+      lettuce:
+        pool:
+          max-active: -1
+          min-idle: 5
+          max-idle: 10
+          max-wait: 5000
+    redis2:
+      host: 192.168.1.119
+      port: 6379
+      database: 0
+      password: 123456
+      lettuce:
+        pool:
+          max-active: -1
+          min-idle: 5
+          max-idle: 10
+          max-wait: 5000    
+oss:
+  endpoint: https://cos.ap-guangzhou.myqcloud.com
+  region: ap-guangzhou
+  accessKey: AKIDYw61g6hPEo8D2bfzoOyLUO4VihRxuJ9l
+  secretKey: XrxoQmwsZ2HJ7h28zc0A7qJXWFjyyqVx
+  bucketName: chain-pictures-01-1251303505
+  bucket: 
+    # report: web-for-nginx-1251303505
+    report: chain-pictures-01-1251303505
+
+rocketmq:
+  name-server: 192.168.1.119:9876
+  producer: 
+    group: ${spring.application.name}
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+
+
+
+nms:
+  mybatis:
+    encryptor:
+      password: e3c38c130eb6d2b716df5f7034ce8f37
+  mqtt:
+    url: tcp://api.lmnsaas.com:1883
+    userName: nmsjb001
+    password: nmsjb001
+  wxLink: https://wx.gzjjzhy.com
+
+
+forest:
+  backend: okhttp3             # 后端HTTP框架（默认为 okhttp3�?  max-connections: 1000        # 连接池最大连接数（默认为 500�?  max-route-connections: 500   # 每个路由的最大连接数（默认为 500�?  max-request-queue-size: 100  # [自v1.5.22版本起可用] 最大请求等待队列大�?  max-async-thread-size: 300   # [自v1.5.21版本起可用] 最大异步线程数
+  max-async-queue-size: 16     # [自v1.5.22版本起可用] 最大异步线程池队列大小
+  timeout: 3000                # [已不推荐使用] 请求超时时间，单位为毫秒（默认为 3000�?  connect-timeout: 3000        # 连接超时时间，单位为毫秒（默认为 timeout�?  read-timeout: 3000           # 数据读取超时时间，单位为毫秒（默认为 timeout�?  max-retry-count: 0           # 请求失败后重试次数（默认�?0 次不重试�?  ssl-protocol: TLS            # 单向验证的HTTPS的默认TLS协议（默认为 TLS�?  log-enabled: false            # 打开或关闭日志（默认�?true�?  log-request: false            # 打开/关闭Forest请求日志（默认为 true�?  log-response-status: false    # 打开/关闭Forest响应状态日志（默认�?true�?  log-response-content: false   # 打开/关闭Forest响应内容日志（默认为 false�?  async-mode: platform         # [自v1.5.27版本起可用] 异步模式（默认为 platform�?
+
+piao_tong:
+  password: Jj1cy1ZpCq0b36So4dGHZI1P
+  platform_code: LVP35v9v
+  platform_alias: YDRJ
+  publicKey: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCJkx3HelhEm/U7jOCor29oHsIjCMSTyKbX5rpoAY8KDIs9mmr5Y9r+jvNJH8pK3u5gNnvleT6rQgJQW1mk0zHuPO00vy62tSA53fkSjtM+n0oC1Fkm4DRFd5qJgoP7uFQHR5OEffMjy2qIuxChY4Au0kq+6RruEgIttb7wUxy8TwIDAQAB
+  privateKey: MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAIVLAoolDaE7m5oMB1ZrILHkMXMF6qmC8I/FCejz4hwBcj59H3rbtcycBEmExOJTGwexFkNgRakhqM+3uP3VybWu1GBYNmqVzggWKKzThul9VPE3+OTMlxeG4H63RsCO1//J0MoUavXMMkL3txkZBO5EtTqek182eePOV8fC3ZxpAgMBAAECgYBp4Gg3BTGrZaa2mWFmspd41lK1E/kPBrRA7vltMfPj3P47RrYvp7/js/Xv0+d0AyFQXcjaYelTbCokPMJT1nJumb2A/Cqy3yGKX3Z6QibvByBlCKK29lZkw8WVRGFIzCIXhGKdqukXf8RyqfhInqHpZ9AoY2W60bbSP6EXj/rhNQJBAL76SmpQOrnCI8Xu75di0eXBN/bE9tKsf7AgMkpFRhaU8VLbvd27U9vRWqtu67RY3sOeRMh38JZBwAIS8tp5hgcCQQCyrOS6vfXIUxKoWyvGyMyhqoLsiAdnxBKHh8tMINo0ioCbU+jc2dgPDipL0ym5nhvg5fCXZC2rvkKUltLEqq4PAkAqBf9b932EpKCkjFgyUq9nRCYhaeP6JbUPN3Z5e1bZ3zpfBjV4ViE0zJOMB6NcEvYpy2jNR/8rwRoUGsFPq8//AkAklw18RJyJuqFugsUzPznQvad0IuNJV7jnsmJqo6ur6NUvef6NA7ugUalNv9+imINjChO8HRLRQfRGk6B0D/P3AkBt54UBMtFefOLXgUdilwLdCUSw4KpbuBPw+cyWlMjcXCkj4rHoeksekyBH1GrBJkLqDMRqtVQUubuFwSzBAtlc
+
+
+
+
+jetcache:
+  statIntervalMinutes: 15
+  areaInCacheName: false
+  hidePackages: com.alibaba
+  local:
+    default:
+      type: caffeine
+      limit: 100
+      keyConvertor: fastjson2 #其他可选：fastjson/jackson
+      expireAfterWriteInMillis: 100000
+    otherArea:
+      type: linkedhashmap
+      limit: 100
+      keyConvertor: none
+      expireAfterWriteInMillis: 100000
+  remote:
+    default:
+      type: redisson
+      keyConvertor: fastjson2 #其他可选：fastjson/jackson
+      # broadcastChannel: projectA
+      valueEncoder: java #其他可选：kryo/kryo5
+      valueDecoder: java #其他可选：kryo/kryo5

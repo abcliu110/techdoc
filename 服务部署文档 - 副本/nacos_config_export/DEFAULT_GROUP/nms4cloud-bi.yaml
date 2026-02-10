@@ -1,0 +1,56 @@
+server:
+  port: 18131
+spring:
+  cloud:
+    config:
+      enabled: false
+    nacos:
+      config:
+        file-extension: yaml #文件拓展格式
+        shared-configs:
+          - data-id: nms4cloud-shared.yaml
+  datasource:
+    dynamic:
+      primary: clickhouse #设置默认的数据源或者数据源�?默认值即为master
+      strict: false #严格匹配数据�?默认false. true未匹配到指定数据源时抛异�?false使用默认数据�?      datasource:
+        mysql:
+          url: jdbc:mysql://192.168.1.119:3306/gylregdb?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+          username: root
+          password: st11338
+          driverClassName: com.mysql.jdbc.Driver
+        clickhouse:
+          url: jdbc:clickhouse://192.168.1.119:8123/test?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&useTimeZone=true&serverTimezone=Asia/Shanghai
+          username: 
+          password: 
+          driver-class-name: ru.yandex.clickhouse.ClickHouseDriver
+
+
+oss:
+  bucket: 
+    report: web-for-nginx-1251303505
+
+
+logstash:
+  destination: 172.16.0.14:35044
+
+
+
+# mybatis-plus:
+#   configuration:
+#     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+
+# mybatis:
+#     configuration:
+#       log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+xxl:
+  job:
+    admin:
+      addresses: http://xxl-job:8080/xxl-job-admin
+      accessToken: F8idrRu8Ce8dVz7Zdp_X
+      appname: bi-app-executor
+      port: 9999
+      logretentiondays: 30
+      logpath: ./data/logs/xxl-job/executor

@@ -1,0 +1,151 @@
+server:
+  port: 18130
+spring:
+  cloud:
+    config:
+      enabled: false
+    nacos:
+      config:
+        file-extension: yaml #文件拓展格式
+        shared-configs:
+          - data-id: nms4cloud-shared.yaml
+  shardingsphere:
+    mode:
+      # type: Memory
+      type: Standalone
+    datasource:
+      names: mycat,biz
+      mycat:
+        driverClassName: com.mysql.jdbc.Driver
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:mysql://192.168.1.119:3306/gylregdb?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+        username: root
+        password: st11338
+      biz:
+        driverClassName: com.mysql.jdbc.Driver
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:mysql://192.168.1.119:3306/a_biz?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+        username: root
+        password: st11338
+
+    rules:
+      sharding:
+        tables:
+          biz_gift_reason:
+            actual-data-nodes: mycat.sc_mall_gift_dish_reason
+          biz_retreat_reason:
+            actual-data-nodes: mycat.sc_mall_retreat_dish_reason
+          biz_discount:
+            actual-data-nodes: mycat.sc_mall_discount
+          biz_discount_dish:
+            actual-data-nodes: mycat.sc_mall_discount_dish
+          biz_discount_tbl_type:
+            actual-data-nodes: mycat.sc_mall_discount_tbl_type
+          biz_pay_way:
+            actual-data-nodes: mycat.sc_pay_way
+          biz_income:
+            actual-data-nodes: mycat.sc_income
+          biz_income_type:
+            actual-data-nodes: mycat.sc_income_type         
+          biz_department:
+            actual-data-nodes: mycat.sc_department
+          biz_business_hours:
+            actual-data-nodes: mycat.sc_business_hours  
+          biz_sms_config:
+            actual-data-nodes: biz.biz_sms_config     
+          biz_sms_send_record:
+            actual-data-nodes: biz.biz_sms_send_record     
+          wx_page:
+            actual-data-nodes: biz.wx_page      
+          wx_componet:
+            actual-data-nodes: biz.wx_componet      
+          wx_componet_item:
+            actual-data-nodes: biz.wx_componet_item      
+          wx_color:
+            actual-data-nodes: biz.wx_color      
+          invoice_info_store:
+            actual-data-nodes: biz.invoice_info_store      
+          wx_navigation:
+            actual-data-nodes: biz.wx_navigation      
+          wx_program_template:
+            actual-data-nodes: biz.wx_program_template       
+          store_intro_group:
+            actual-data-nodes: biz.store_intro_group      
+          store_intro_content:
+            actual-data-nodes: biz.store_intro_content       
+          biz_key_value:
+            actual-data-nodes: biz.biz_key_value            
+          plat_provinces:
+            actual-data-nodes: biz.plat_provinces      
+          plat_cities:
+            actual-data-nodes: biz.plat_cities      
+          plat_areas:
+            actual-data-nodes: biz.plat_areas          
+          biz_shop_group:
+            actual-data-nodes: biz.biz_shop_group      
+          biz_receipt_bind:
+            actual-data-nodes: biz.biz_receipt_bind      
+          wx_template_label:
+            actual-data-nodes: biz.wx_template_label    
+          biz_user_storage:
+            actual-data-nodes: biz.biz_user_storage    
+
+
+          biz_sms_msg_style:
+            actual-data-nodes: mycat.sms_msg_style   
+          biz_usr_merchant:
+            actual-data-nodes: mycat.biz_usr_merchant   
+          biz_sms_msg_content:
+            actual-data-nodes: mycat.sms_msg_content          
+          biz_user_map:
+            actual-data-nodes: biz.biz_user_map                                                        
+
+          sc_product_price:
+            actual-data-nodes: mycat.sc_product_price     
+          sc_product_price_set:
+            actual-data-nodes: mycat.sc_product_price_set     
+          sc_reg_dog:
+            actual-data-nodes: mycat.sc_reg_dog     
+          sc_reg_dog_recharge_record:
+            actual-data-nodes: mycat.sc_reg_dog_recharge_record     
+          sc_store_and_product:
+            actual-data-nodes: mycat.sc_store_and_product     
+          sc_store_and_product_flow:
+            actual-data-nodes: mycat.sc_store_and_product_flow                
+          sys_brand:
+            actual-data-nodes: mycat.sc_brand  
+          sc_store:
+            actual-data-nodes: mycat.sc_store  
+          sc_merchant:
+            actual-data-nodes: mycat.sc_merchant  
+logstash:
+  destination: 172.16.0.14:35044
+
+nms:
+  common:
+    mybatis-flex-enabled: true
+
+
+mybatis-flex:
+  datasource:
+    biz:
+      driverClassName: com.mysql.jdbc.Driver
+      type: com.zaxxer.hikari.HikariDataSource
+      url: jdbc:mysql://192.168.1.119:3306/a_biz?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+      username: root
+      password: st11338
+    mycat:
+      driverClassName: com.mysql.jdbc.Driver
+      type: com.zaxxer.hikari.HikariDataSource
+      url: jdbc:mysql://192.168.1.119:3306/gylregdb?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+      username: root
+      password: st11338
+
+# mybatis-flex:
+#   configuration:
+#     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+shu_zhu:
+  appId: 5004eab8b7c46827de3e650e2cd8f329
+  appScrt: 88f5c575b1c85a71adf6106b50343948d63e5ac6 
+    
