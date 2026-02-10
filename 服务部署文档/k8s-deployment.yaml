@@ -17,6 +17,19 @@ spec:
     spec:
       imagePullSecrets:
       - name: tencent-ccr-secret
+      initContainers:
+      - name: wait-for-nacos
+        image: curlimages/curl:7.85.0
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for Nacos to be ready..."
+          until curl -sf http://nacos:8848/nacos/v1/console/health/readiness; do
+            echo "Nacos is not ready yet, retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Nacos is ready!"
       containers:
       - name: nms4cloud-platform
         image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_platform_latest
@@ -60,6 +73,19 @@ spec:
     spec:
       imagePullSecrets:
       - name: tencent-ccr-secret
+      initContainers:
+      - name: wait-for-nacos
+        image: curlimages/curl:7.85.0
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for Nacos to be ready..."
+          until curl -sf http://nacos:8848/nacos/v1/console/health/readiness; do
+            echo "Nacos is not ready yet, retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Nacos is ready!"
       containers:
       - name: nms4cloud-wechat
         image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_wechat_latest
@@ -103,6 +129,19 @@ spec:
     spec:
       imagePullSecrets:
       - name: tencent-ccr-secret
+      initContainers:
+      - name: wait-for-nacos
+        image: curlimages/curl:7.85.0
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for Nacos to be ready..."
+          until curl -sf http://nacos:8848/nacos/v1/console/health/readiness; do
+            echo "Nacos is not ready yet, retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Nacos is ready!"
       containers:
       - name: nms4cloud-biz
         image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_biz_latest
@@ -146,6 +185,19 @@ spec:
     spec:
       imagePullSecrets:
       - name: tencent-ccr-secret
+      initContainers:
+      - name: wait-for-nacos
+        image: curlimages/curl:7.85.0
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for Nacos to be ready..."
+          until curl -sf http://nacos:8848/nacos/v1/console/health/readiness; do
+            echo "Nacos is not ready yet, retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Nacos is ready!"
       containers:
       - name: nms4cloud-wms
         image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_wms_latest
@@ -189,6 +241,19 @@ spec:
     spec:
       imagePullSecrets:
       - name: tencent-ccr-secret
+      initContainers:
+      - name: wait-for-nacos
+        image: curlimages/curl:7.85.0
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for Nacos to be ready..."
+          until curl -sf http://nacos:8848/nacos/v1/console/health/readiness; do
+            echo "Nacos is not ready yet, retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Nacos is ready!"
       containers:
       - name: yd4cloud-nms
         image: ccr.ccs.tencentyun.com/lemontree/ktv:yd4cloud_nms_latest
@@ -232,6 +297,19 @@ spec:
     spec:
       imagePullSecrets:
       - name: tencent-ccr-secret
+      initContainers:
+      - name: wait-for-nacos
+        image: curlimages/curl:7.85.0
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for Nacos to be ready..."
+          until curl -sf http://nacos:8848/nacos/v1/console/health/readiness; do
+            echo "Nacos is not ready yet, retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Nacos is ready!"
       containers:
       - name: nms4cloud-netty
         image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_netty_latest
@@ -282,6 +360,19 @@ spec:
     spec:
       imagePullSecrets:
       - name: tencent-ccr-secret
+      initContainers:
+      - name: wait-for-nacos
+        image: curlimages/curl:7.85.0
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for Nacos to be ready..."
+          until curl -sf http://nacos:8848/nacos/v1/console/health/readiness; do
+            echo "Nacos is not ready yet, retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Nacos is ready!"
       containers:
       - name: yd4cloud-capital
         image: ccr.ccs.tencentyun.com/lemontree/ktv:yd4cloud_capital_latest
