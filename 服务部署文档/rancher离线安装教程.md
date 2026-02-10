@@ -82,7 +82,22 @@ cat <<EOF | sudo tee /etc/rancher/rke2/config.yaml
 write-kubeconfig-mode: "0644"
 system-default-registry: "registry.cn-hangzhou.aliyuncs.com"
 EOF
+
+# 或者
+
+cat > /etc/rancher/rke2/config.yaml << EOF
+system-default-registry: "registry.cn-hangzhou.aliyuncs.com"
+server: https://rancher-node1:9345
+token: <从 rancher-node1 获取的 token>
+write-kubeconfig-mode: "0644"
+tls-san:
+  - rancher-node2  # 或 rancher-node3
+  - 192.168.1.102  # 或 192.168.1.103
+EOF
+
+
 ```
+
 
 ---
 
