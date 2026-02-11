@@ -13,7 +13,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 20Gi
+      storage: 30Gi  # 从 20Gi 增加到 30Gi
   storageClassName: local-path
 ---
 apiVersion: v1
@@ -71,10 +71,12 @@ spec:
       serviceAccountName: jenkins
       containers:
         - name: jenkins
-          image: jenkins/jenkins:lts
+          image: jenkins/jenkins:lts-jdk21
           env:
             - name: JAVA_OPTS
-              value: "-Xmx2048m -Xms512m"
+              value: "-Xmx3072m -Xms1024m -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
+            - name: JENKINS_OPTS
+              value: "--sessionTimeout=1440"
           ports:
             - containerPort: 8080
               name: http
@@ -85,11 +87,11 @@ spec:
               mountPath: /var/jenkins_home
           resources:
             requests:
-              memory: "1Gi"
-              cpu: "500m"
+              memory: "2Gi"    # 从 1Gi 增加到 2Gi
+              cpu: "1000m"     # 从 500m 增加到 1000m
             limits:
-              memory: "3Gi"
-              cpu: "2000m"
+              memory: "4Gi"    # 从 3Gi 增加到 4Gi
+              cpu: "3000m"     # 从 2000m 增加到 3000m
       volumes:
         - name: jenkins-storage
           persistentVolumeClaim:

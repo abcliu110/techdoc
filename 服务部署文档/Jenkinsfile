@@ -5,11 +5,10 @@ pipeline {
     environment {
         // Maven配置
         MAVEN_HOME = tool 'Maven'
-        MAVEN_OPTS = '-Xmx2048m -XX:MaxPermSize=512m'
+        MAVEN_OPTS = '-Xmx2048m'
 
-        // JDK配置
-        JAVA_HOME = tool 'JDK8'
-        PATH = "${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${env.PATH}"
+        // JDK配置（使用镜像预装的 JDK 21）
+        PATH = "${MAVEN_HOME}/bin:${env.PATH}"
 
         // 项目配置
         PROJECT_NAME = 'nms4cloud-pos-java'
@@ -145,6 +144,16 @@ pipeline {
                         echo ""
                         echo "当前提交:"
                         git rev-parse HEAD
+                        echo ""
+                        echo "=== 项目结构检查 ==="
+                        echo "当前目录:"
+                        pwd
+                        echo ""
+                        echo "当前目录内容:"
+                        ls -la
+                        echo ""
+                        echo "查找所有 pom.xml 文件:"
+                        find . -name "pom.xml" -type f | head -20
                     '''
                 }
             }
