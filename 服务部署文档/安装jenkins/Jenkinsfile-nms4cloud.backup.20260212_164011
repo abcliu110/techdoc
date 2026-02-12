@@ -16,16 +16,12 @@ pipeline {
 
         // Git配置（阿里云效）
         GIT_CREDENTIAL_ID = 'aliyun-codeup-token'
-        GIT_REPO_URL = 'https://codeup.aliyun.com/613895a803e1c17d57a7630f/nms4cloud.git'  // 主项目仓库
+        GIT_REPO_URL = 'https://codeup.aliyun.com/613895a803e1c17d57a7630f/nms4cloud-pos-java/nms4cloud.git'  // 主项目仓库
         GIT_BI_REPO_URL = 'https://codeup.aliyun.com/613895a803e1c17d57a7630f/nms4cloud-pos-java/nms4cloud-bi.git'  // bi模块仓库
         GIT_BRANCH = "${params.GIT_BRANCH ?: 'master'}"
 
-        // 构建配置
-        BUILD_BI_MODULE = true  // 是否构建 bi 模块（设置为 true 只构建 bi-api）
-
         // 排除的模块（不能编译的模块）
-        // 注意：只能排除父 pom.xml 中 <modules> 里声明的模块
-        EXCLUDE_MODULES = ''  // 留空表示不排除任何模块
+        EXCLUDE_MODULES = 'nms4cloud-payment-service'  // 多个模块用逗号分隔，如：'module1,module2'
 
 
     }
@@ -134,27 +130,23 @@ pipeline {
                         ]]
                     ])
 
-                    // 步骤2：克隆 bi 模块到子目录（根据配置决定是否克隆）
-                    if (BUILD_BI_MODULE) {
-                        echo "=== 检出 bi 模块 ==="
-                        dir('nms4cloud-bi') {
-                            checkout([
-                                $class: 'GitSCM',
-                                branches: [[name: "*/${GIT_BRANCH}"]],
-                                doGenerateSubmoduleConfigurations: false,
-                                extensions: [
-                                    [$class: 'CloneOption', depth: 1, noTags: false, reference: '', shallow: true],
-                                    [$class: 'CheckoutOption', timeout: 20]
-                                ],
-                                submoduleCfg: [],
-                                userRemoteConfigs: [[
-                                    credentialsId: "${GIT_CREDENTIAL_ID}",
-                                    url: "${GIT_BI_REPO_URL}"
-                                ]]
-                            ])
-                        }
-                    } else {
-                        echo "=== 跳过 bi 模块（BUILD_BI_MODULE = false）==="
+                    // 步骤2：克隆 bi 模块到子目录
+                    echo "=== 检出 bi 模块 ==="
+                    dir('nms4cloud-bi') {
+                        checkout([
+                            $class: 'GitSCM',
+                            branches: [[name: "*/${GIT_BRANCH}"]],
+                            doGenerateSubmoduleConfigurations: false,
+                            extensions: [
+                                [$class: 'CloneOption', depth: 1, noTags: false, reference: '', shallow: true],
+                                [$class: 'CheckoutOption', timeout: 20]
+                            ],
+                            submoduleCfg: [],
+                            userRemoteConfigs: [[
+                                credentialsId: "${GIT_CREDENTIAL_ID}",
+                                url: "${GIT_BI_REPO_URL}"
+                            ]]
+                        ])
                     }
 
                     // 显示最近的提交信息
@@ -200,24 +192,20 @@ pipeline {
                         mvn install -N ${skipTests}
                     """
 
-                    // 步骤2：构建 bi 模块（只构建 bi-api）
-                    if (BUILD_BI_MODULE) {
-                        echo "步骤2：构建 bi-api 模块..."
-                        sh """
-                            # 检查 bi 目录是否存在
-                            if [ -d "nms4cloud-bi" ]; then
-                                echo "找到 nms4cloud-bi 目录"
-                                cd nms4cloud-bi
-                                # 只构建 bi-api，排除其他子模块（bi-dao 依赖 wms-api 会失败）
-                                echo "只构建 nms4cloud-bi-api 模块（跳过 bi-dao、bi-service、bi-app）"
-                                mvn ${cleanCmd} install -pl nms4cloud-bi-api -am ${skipTests}
-                            else
-                                echo "⚠️ 警告：nms4cloud-bi 目录不存在，跳过构建"
-                            fi
-                        """
-                    } else {
-                        echo "步骤2：跳过 bi 模块构建（BUILD_BI_MODULE = false）"
-                    }
+                    // 步骤2：构建 bi 模块（如果存在）
+                    echo "步骤2：检查并构建 bi 模块..."
+                    sh """
+                        # 检查 bi 目录是否存在
+                        if [ -d "nms4cloud-bi" ]; then
+                            echo "找到 nms4cloud-bi 目录，开始构建..."
+                            cd nms4cloud-bi
+                            mvn ${cleanCmd} install ${skipTests}
+                        else
+                            echo "⚠️ 警告：nms4cloud-bi 目录不存在，跳过构建"
+                            echo "当前项目只包含以下模块："
+                            ls -d */ 2>/dev/null || echo "无子目录"
+                        fi
+                    """
 
                     // 步骤3：根据选择的模块构建
                     echo "步骤3：构建指定模块..."
@@ -245,10 +233,11 @@ pipeline {
                             -T 2C
                         """
                     } else {
-                        // 构建所有剩余模块
+                        // 构建所有剩余模块（排除指定模块）
+                        def excludeCmd = EXCLUDE_MODULES ? "!${EXCLUDE_MODULES}" : ''
                         sh """
-                            echo "=== 构建所有模块 ==="
-                            mvn ${cleanCmd} install ${skipTests} \
+                            echo "排除的模块: ${EXCLUDE_MODULES}"
+                            mvn ${cleanCmd} install ${excludeCmd} ${skipTests} \
                             -Dmaven.compile.fork=true \
                             -T 2C
                         """
