@@ -1,0 +1,46 @@
+# Dockerfile for nms4cloud applications
+# 适用于 Kaniko 构建
+
+FROM eclipse-temurin:21-jre
+
+# 设置工作目录
+WORKDIR /app
+
+# 设置时区和语言环境
+ENV TZ=Asia/Shanghai \
+    LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8
+
+# 安装必要工具和设置时区
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl tzdata && \
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# 复制应用 jar 文件
+COPY target/*.jar app.jar
+
+# 复制配置文件
+COPY src/main/resources/ ./config/
+
+# 暴露端口
+EXPOSE 8080
+
+# JVM 参数
+ENV JAVA_OPTS="-Xms512m -Xmx2048m \
+    -XX:+UseG1GC \
+    -XX:MaxGCPauseMillis=200 \
+    -XX:+HeapDumpOnOutOfMemoryError \
+    -XX:HeapDumpPath=/app/logs/heapdump.hprof \
+    -Djava.security.egd=file:/dev/./urandom \
+    -Dfile.encoding=UTF-8 \
+    -Duser.timezone=Asia/Shanghai"
+
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/actuator/health || exit 1
+
+# 启动命令
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]

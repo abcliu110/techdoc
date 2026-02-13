@@ -1,0 +1,53 @@
+# 优化后的 Dockerfile 模板
+# 适用于 nms4cloud 所有 *-app 模块
+
+FROM eclipse-temurin:21-jre
+
+# 设置工作目录
+WORKDIR /app
+
+# 设置时区为中国标准时间
+ENV TZ=Asia/Shanghai \
+    LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8
+
+# 安装时区数据
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# 复制 jar 文件（只复制非 original 的 jar）
+COPY target/*-SNAPSHOT.jar app.jar
+
+# 复制配置文件（如果存在）
+COPY src/main/resources/*.yml ./config/ 2>/dev/null || true
+COPY src/main/resources/*.yaml ./config/ 2>/dev/null || true
+COPY src/main/resources/*.xml ./config/ 2>/dev/null || true
+COPY src/main/resources/*.properties ./config/ 2>/dev/null || true
+
+# 复制字体文件（如果存在）
+COPY src/main/resources/*.ttc ./fonts/ 2>/dev/null || true
+COPY src/main/resources/*.TTF ./fonts/ 2>/dev/null || true
+COPY src/main/resources/*.ttf ./fonts/ 2>/dev/null || true
+
+# 复制其他资源目录
+COPY src/main/resources/excel ./excel/ 2>/dev/null || true
+COPY src/main/resources/templates ./templates/ 2>/dev/null || true
+
+# 暴露端口（根据实际应用端口修改）
+EXPOSE 8080
+
+# JVM 参数优化
+ENV JAVA_OPTS="-Xms512m -Xmx2048m \
+    -XX:+UseG1GC \
+    -XX:MaxGCPauseMillis=200 \
+    -XX:+HeapDumpOnOutOfMemoryError \
+    -XX:HeapDumpPath=/app/logs/heapdump.hprof \
+    -Djava.security.egd=file:/dev/./urandom \
+    -Dfile.encoding=UTF-8 \
+    -Duser.timezone=Asia/Shanghai"
+
+# 健康检查（根据实际应用调整）
+HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/actuator/health || exit 1
+
+# 启动应用
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]

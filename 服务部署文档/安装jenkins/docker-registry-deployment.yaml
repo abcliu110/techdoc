@@ -1,0 +1,192 @@
+# Docker Registry 部署配置
+# 用于在 RKE2/Rancher 中部署本地镜像仓库
+
+---
+# 1. 命名空间
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: docker-registry
+
+---
+# 2. PVC - 持久化存储镜像
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: registry-data
+  namespace: docker-registry
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn  # RKE2 默认使用 Longhorn
+  resources:
+    requests:
+      storage: 100Gi  # 根据需求调整
+
+---
+# 3. Secret - 认证信息（可选）
+apiVersion: v1
+kind: Secret
+metadata:
+  name: registry-auth
+  namespace: docker-registry
+type: Opaque
+stringData:
+  # 使用 htpasswd 生成：htpasswd -Bbn admin password123
+  htpasswd: |
+    admin:$2y$05$xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+---
+# 4. ConfigMap - Registry 配置
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: registry-config
+  namespace: docker-registry
+data:
+  config.yml: |
+    version: 0.1
+    log:
+      fields:
+        service: registry
+    storage:
+      cache:
+        blobdescriptor: inmemory
+      filesystem:
+        rootdirectory: /var/lib/registry
+      delete:
+        enabled: true  # 允许删除镜像
+    http:
+      addr: :5000
+      headers:
+        X-Content-Type-Options: [nosniff]
+    health:
+      storagedriver:
+        enabled: true
+        interval: 10s
+        threshold: 3
+    # 认证配置（可选）
+    auth:
+      htpasswd:
+        realm: basic-realm
+        path: /auth/htpasswd
+
+---
+# 5. Deployment - Registry 服务
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-registry
+  namespace: docker-registry
+  labels:
+    app: docker-registry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: docker-registry
+  template:
+    metadata:
+      labels:
+        app: docker-registry
+    spec:
+      containers:
+      - name: registry
+        image: registry:2
+        ports:
+        - containerPort: 5000
+          name: http
+        env:
+        - name: REGISTRY_HTTP_ADDR
+          value: ":5000"
+        - name: REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY
+          value: "/var/lib/registry"
+        volumeMounts:
+        - name: registry-data
+          mountPath: /var/lib/registry
+        - name: registry-config
+          mountPath: /etc/docker/registry
+        - name: registry-auth
+          mountPath: /auth
+          readOnly: true
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: registry-data
+        persistentVolumeClaim:
+          claimName: registry-data
+      - name: registry-config
+        configMap:
+          name: registry-config
+      - name: registry-auth
+        secret:
+          secretName: registry-auth
+
+---
+# 6. Service - 内部访问
+apiVersion: v1
+kind: Service
+metadata:
+  name: docker-registry
+  namespace: docker-registry
+  labels:
+    app: docker-registry
+spec:
+  type: ClusterIP
+  ports:
+  - port: 5000
+    targetPort: 5000
+    protocol: TCP
+    name: http
+  selector:
+    app: docker-registry
+
+---
+# 7. Ingress - 外部访问（可选）
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: docker-registry
+  namespace: docker-registry
+  annotations:
+    # 根据你的 Ingress Controller 调整
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"  # 允许大文件上传
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    # 如果使用 HTTPS
+    # cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx  # 或 traefik
+  rules:
+  - host: registry.example.com  # 修改为你的域名
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: docker-registry
+            port:
+              number: 5000
+  # TLS 配置（可选）
+  # tls:
+  # - hosts:
+  #   - registry.example.com
+  #   secretName: registry-tls
