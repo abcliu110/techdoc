@@ -1,0 +1,298 @@
+pipeline {
+    agent any
+
+    // ==================== 环境变量配置 ====================
+    environment {
+        // Maven 配置
+        MAVEN_HOME = tool 'Maven'
+        MAVEN_OPTS = '-Xmx2048m'
+        PATH = "${MAVEN_HOME}/bin:${env.PATH}"
+
+        // Maven 本地仓库缓存（持久化目录，不会被清理）
+        MAVEN_LOCAL_REPO = '/var/jenkins_home/maven-repository'
+        MAVEN_CACHE_OPTS = "-Dmaven.repo.local=${MAVEN_LOCAL_REPO}"
+
+        // 项目配置
+        PROJECT_NAME = 'nms4cloud-pos-java'
+        ARTIFACT_VERSION = '0.0.1-SNAPSHOT'
+
+        // Git 配置（阿里云效）
+        GIT_CREDENTIAL_ID = 'aliyun-codeup-token'
+        GIT_REPO_URL = 'https://codeup.aliyun.com/613895a803e1c17d57a7630f/nms4cloud-pos-java/nms4pos.git'
+        GIT_BRANCH = "${params.GIT_BRANCH ?: 'master'}"
+
+        // 部署配置
+        DEPLOY_ENV = "${params.DEPLOY_ENV ?: 'dev'}"
+    }
+
+    // ==================== 参数化构建 ====================
+    parameters {
+        choice(
+            name: 'DEPLOY_ENV',
+            choices: ['dev', 'test', 'prod'],
+            description: '选择部署环境'
+        )
+        choice(
+            name: 'BUILD_MODULE',
+            choices: [
+                'all',
+                'pos1starter',
+                'pos2plugin',
+                'pos3boot',
+                'pos4cloud',
+                'pos5sync',
+                'pos6monitor',
+                'pos8book',
+                'pos9cash',
+                'pos10printer'
+            ],
+            description: '选择构建模块'
+        )
+        string(
+            name: 'GIT_BRANCH',
+            defaultValue: 'master',
+            description: 'Git 分支'
+        )
+        booleanParam(
+            name: 'SKIP_TESTS',
+            defaultValue: true,
+            description: '跳过单元测试'
+        )
+        booleanParam(
+            name: 'CLEAN_BUILD',
+            defaultValue: true,
+            description: '清理构建'
+        )
+    }
+
+    // ==================== 构建选项 ====================
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        disableConcurrentBuilds()
+        timeout(time: 30, unit: 'MINUTES')
+        timestamps()
+    }
+
+    // ==================== 触发器 ====================
+    triggers {
+        cron('0 2 * * *')           // 每天凌晨 2 点
+        pollSCM('H/5 * * * *')      // 每 5 分钟检查一次
+    }
+
+    // ==================== 构建阶段 ====================
+    stages {
+        // ========== 1. 环境检查 ==========
+        stage('环境检查') {
+            steps {
+                script {
+                    currentBuild.displayName = "#${BUILD_NUMBER} - ${params.BUILD_MODULE}"
+                    currentBuild.description = "分支: ${GIT_BRANCH} | 环境: ${DEPLOY_ENV}"
+
+                    echo "=== 环境信息 ==="
+                    sh '''
+                        java -version
+                        mvn -version
+                        git --version
+                    '''
+                }
+            }
+        }
+
+        // ========== 2. 代码检出 ==========
+        stage('代码检出') {
+            steps {
+                script {
+                    echo "=== 清理工作空间 ==="
+                    deleteDir()
+
+                    // 检出代码
+                    checkoutRepo('POS-Java 项目', GIT_REPO_URL, '.')
+
+                    // 显示项目结构
+                    sh '''
+                        echo "=== 项目结构 ==="
+                        ls -la
+                        echo ""
+                        echo "=== POM 文件 ==="
+                        find . -name "pom.xml" -type f | head -20
+                    '''
+                }
+            }
+        }
+
+        // ========== 3. Maven 构建 ==========
+        stage('Maven 构建') {
+            steps {
+                script {
+                    def cleanCmd = params.CLEAN_BUILD ? 'clean' : ''
+                    def skipTests = params.SKIP_TESTS ? '-Dmaven.test.skip=true' : ''
+                    def mvnOpts = '-Dmaven.compile.fork=true -T 2C'
+
+                    echo "=== Maven 构建流程 ==="
+                    echo ">>> Maven 缓存目录: ${MAVEN_LOCAL_REPO}"
+
+                    // 构建项目
+                    buildPosModule(params.BUILD_MODULE, cleanCmd, skipTests, mvnOpts, MAVEN_CACHE_OPTS)
+                }
+            }
+        }
+
+        // ========== 4. 单元测试 ==========
+        stage('单元测试') {
+            when {
+                expression { !params.SKIP_TESTS }
+            }
+            steps {
+                script {
+                    echo "=== 执行单元测试 ==="
+                    sh 'mvn test'
+                }
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        // ========== 5. 归档构建产物 ==========
+        stage('归档构建产物') {
+            steps {
+                script {
+                    echo "=== 归档构建产物 ==="
+                    archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true, allowEmptyArchive: true
+                }
+            }
+        }
+    }
+
+    // ==================== 构建后处理 ====================
+    post {
+        success {
+            echo """
+            ╔════════════════════════════════════════╗
+            ║         ✓ 构建成功                      ║
+            ╚════════════════════════════════════════╝
+            项目: ${PROJECT_NAME}
+            版本: ${ARTIFACT_VERSION}
+            分支: ${GIT_BRANCH}
+            模块: ${params.BUILD_MODULE}
+            """
+        }
+        failure {
+            echo """
+            ╔════════════════════════════════════════╗
+            ║         ✗ 构建失败                      ║
+            ╚════════════════════════════════════════╝
+            """
+        }
+        always {
+            echo "=== 清理临时文件 ==="
+            cleanWs(
+                deleteDirs: true,
+                patterns: [[pattern: 'target/**', type: 'INCLUDE']]
+            )
+        }
+    }
+}
+
+// ==================== 辅助函数 ====================
+
+/**
+ * 检出 Git 仓库
+ * @param name 仓库名称
+ * @param url 仓库地址
+ * @param targetDir 目标目录
+ */
+def checkoutRepo(String name, String url, String targetDir) {
+    echo "=== 检出 ${name} ==="
+    if (targetDir == '.') {
+        checkout([
+            $class: 'GitSCM',
+            branches: [[name: "*/${GIT_BRANCH}"]],
+            extensions: [
+                [$class: 'CloneOption', depth: 1, shallow: true],
+                [$class: 'CheckoutOption', timeout: 20]
+            ],
+            userRemoteConfigs: [[
+                credentialsId: "${GIT_CREDENTIAL_ID}",
+                url: "${url}"
+            ]]
+        ])
+    } else {
+        dir(targetDir) {
+            checkout([
+                $class: 'GitSCM',
+                branches: [[name: "*/${GIT_BRANCH}"]],
+                extensions: [
+                    [$class: 'CloneOption', depth: 1, shallow: true],
+                    [$class: 'CheckoutOption', timeout: 20]
+                ],
+                userRemoteConfigs: [[
+                    credentialsId: "${GIT_CREDENTIAL_ID}",
+                    url: "${url}"
+                ]]
+            ])
+        }
+    }
+}
+
+/**
+ * 构建 POS 模块
+ * @param buildModule 构建模块选择
+ * @param cleanCmd clean 命令
+ * @param skipTests 跳过测试参数
+ * @param mvnOpts Maven 选项
+ * @param cacheOpts Maven 缓存选项
+ */
+def buildPosModule(String buildModule, String cleanCmd, String skipTests, String mvnOpts, String cacheOpts) {
+    echo ">>> 构建 POS 模块: ${buildModule}"
+
+    // 临时移除各模块的 generator 测试依赖
+    echo ">>> 移除 generator 依赖（临时修改，不影响 Git）"
+    sh '''
+        # 查找所有包含 generator 依赖的 pom.xml 文件并移除
+        find . -name "pom.xml" -type f -exec grep -l "nms4cloud-generator" {} \\; | while read pom; do
+            echo "处理: $pom"
+            perl -i.bak -0pe 's/<dependency>\\s*<groupId>com\\.nms4cloud<\\/groupId>\\s*<artifactId>nms4cloud-generator<\\/artifactId>.*?<\\/dependency>//gs' "$pom"
+        done
+    '''
+
+    def moduleParam = ''
+    switch(buildModule) {
+        case 'pos1starter':
+            moduleParam = '-pl nms4cloud-pos1starter -am'
+            break
+        case 'pos2plugin':
+            moduleParam = '-pl nms4cloud-pos2plugin/nms4cloud-pos2plugin-app -am'
+            break
+        case 'pos3boot':
+            moduleParam = '-pl nms4cloud-pos3boot/nms4cloud-pos3boot-app -am'
+            break
+        case 'pos4cloud':
+            moduleParam = '-pl nms4cloud-pos4cloud/nms4cloud-pos4cloud-app -am'
+            break
+        case 'pos5sync':
+            moduleParam = '-pl nms4cloud-pos5sync/nms4cloud-pos5sync-app -am'
+            break
+        case 'pos6monitor':
+            moduleParam = '-pl nms4cloud-pos6monitor -am'
+            break
+        case 'pos8book':
+            moduleParam = '-pl nms4cloud-pos8book/nms4cloud-pos8book-app -am'
+            break
+        case 'pos9cash':
+            moduleParam = '-pl nms4cloud-pos9cash/nms4cloud-pos9cash-app -am'
+            break
+        case 'pos10printer':
+            moduleParam = '-pl nms4cloud-pos10printer/nms4cloud-pos10printer-app -am'
+            break
+        case 'all':
+            moduleParam = ''
+            break
+    }
+
+    sh """
+        mvn ${cleanCmd} install ${moduleParam} ${skipTests} ${mvnOpts} ${cacheOpts}
+    """
+}
