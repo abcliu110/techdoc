@@ -18,7 +18,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: longhorn  # RKE2 默认存储类
+  storageClassName: local-path  # RKE2 本地路径存储类
   resources:
     requests:
       storage: 50Gi  # 根据需求调整
@@ -44,7 +44,7 @@ spec:
     spec:
       containers:
       - name: registry
-        image: registry:2
+        image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/library/registry:2
         ports:
         - containerPort: 5000
           name: http
