@@ -762,6 +762,19 @@ kubectl -n cattle-system rollout status deploy/rancher
 
 # 查看 Rancher Pod 状态
 kubectl -n cattle-system get pods
+
+# 获取 Rancher 初始登录密码
+/var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml -n cattle-system get secret bootstrap-secret -o go-template='{{.data.bootstrapPassword|base64decode}}{{"\n"}}'
+
+
+# 1、如果你已经登录过并修改了密码，但现在忘记了，需要通过命令行强制重置 admin 密码
+
+# 1.1 找到 Rancher 的 Pod ID
+RANCHER_POD=$(/var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml -n cattle-system get pods -l app=rancher -o jsonpath='{.items[0].metadata.name}')
+
+# 1.2 执行重置命令 (将 NewPassword123 替换为你想要的新密码)
+/var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml -n cattle-system exec $RANCHER_POD -- reset-password
+
 ```
 
 #### 2.5.5 暴露 Rancher 服务
