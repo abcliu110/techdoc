@@ -81,11 +81,6 @@ pipeline {
         REPO_MAIN = 'https://codeup.aliyun.com/613895a803e1c17d57a7630f/nms4cloud.git'
         REPO_BI = 'https://codeup.aliyun.com/613895a803e1c17d57a7630f/nms4cloud-pos-java/nms4cloud-bi.git'
         REPO_WMS = 'https://codeup.aliyun.com/613895a803e1c17d57a7630f/nms4cloud-pos-java/nms4cloud-wms.git'
-
-        // Docker 私有仓库配置
-        DOCKER_REGISTRY = '192.168.80.100:30500'  // 修改为你的私有仓库地址
-        DOCKER_IMAGE_PREFIX = "${DOCKER_REGISTRY}/nms4cloud"
-        DOCKER_IMAGE_TAG = "${env.BUILD_NUMBER}-${GIT_BRANCH}"
     }
 
     // ==================== 参数化构建 ====================
@@ -119,16 +114,6 @@ pipeline {
             name: 'BUILD_WMS',
             defaultValue: true,
             description: '构建 WMS 模块'
-        )
-        booleanParam(
-            name: 'BUILD_DOCKER_IMAGE',
-            defaultValue: true,
-            description: '构建 Docker 镜像'
-        )
-        booleanParam(
-            name: 'PUSH_TO_REGISTRY',
-            defaultValue: true,
-            description: '推送镜像到私有仓库'
         )
     }
 
@@ -438,74 +423,6 @@ pipeline {
                 }
             }
         }
-
-        // ========== 阶段 7: 构建 Docker 镜像 ==========
-        stage('构建 Docker 镜像') {
-            when {
-                expression { params.BUILD_DOCKER_IMAGE }
-            }
-            steps {
-                script {
-                    echo """
-                    ╔════════════════════════════════════════╗
-                    ║         Docker 镜像构建                 ║
-                    ╚════════════════════════════════════════╝
-                    仓库地址: ${DOCKER_REGISTRY}
-                    镜像标签: ${DOCKER_IMAGE_TAG}
-                    """
-
-                    // 定义需要构建镜像的模块
-                    def modules = [
-                        [name: 'platform', path: 'nms4cloud-app/1_platform/nms4cloud-platform/nms4cloud-platform-app'],
-                        [name: 'product', path: 'nms4cloud-app/2_business/nms4cloud-product/nms4cloud-product-app'],
-                        [name: 'crm', path: 'nms4cloud-app/2_business/nms4cloud-crm/nms4cloud-crm-app'],
-                        [name: 'biz', path: 'nms4cloud-app/2_business/nms4cloud-biz/nms4cloud-biz-app']
-                    ]
-
-                    // 如果构建了 BI 和 WMS，也添加它们
-                    if (params.BUILD_BI) {
-                        modules.add([name: 'bi', path: 'nms4cloud-bi/nms4cloud-bi-app'])
-                    }
-                    if (params.BUILD_WMS) {
-                        modules.add([name: 'wms', path: 'nms4cloud-wms/nms4cloud-wms-app'])
-                    }
-
-                    // 构建每个模块的镜像
-                    modules.each { module ->
-                        buildDockerImage(module.name, module.path)
-                    }
-                }
-            }
-        }
-
-        // ========== 阶段 8: 推送镜像到私有仓库 ==========
-        stage('推送镜像到私有仓库') {
-            when {
-                allOf {
-                    expression { params.BUILD_DOCKER_IMAGE }
-                    expression { params.PUSH_TO_REGISTRY }
-                }
-            }
-            steps {
-                script {
-                    echo """
-                    ╔════════════════════════════════════════╗
-                    ║         推送镜像到私有仓库              ║
-                    ╚════════════════════════════════════════╝
-                    """
-
-                    // 定义需要推送的模块
-                    def modules = ['platform', 'product', 'crm', 'biz']
-                    if (params.BUILD_BI) modules.add('bi')
-                    if (params.BUILD_WMS) modules.add('wms')
-
-                    // 推送每个镜像
-                    modules.each { module ->
-                        pushDockerImage(module)
-                    }
-                }
-            }
-        }
     }
 
     // ==================== 构建后处理 ====================
@@ -602,75 +519,4 @@ def buildStep(String stepNum, String stepName, String command) {
     sh command.trim()
     def duration = (System.currentTimeMillis() - startTime) / 1000
     echo "✓ ${stepName} 完成 (耗时: ${duration}s)"
-}
-
-/**
- * 构建 Docker 镜像
- *
- * @param moduleName 模块名称（如 platform, bi, wms）
- * @param modulePath 模块路径（相对于工作目录）
- */
-def buildDockerImage(String moduleName, String modulePath) {
-    echo "=== 构建 ${moduleName} 镜像 ==="
-    
-    def imageName = "${DOCKER_IMAGE_PREFIX}/${moduleName}"
-    def imageTag = "${DOCKER_IMAGE_TAG}"
-    def fullImageName = "${imageName}:${imageTag}"
-    
-    sh """
-        cd ${modulePath}
-        
-        # 检查是否存在 Dockerfile
-        if [ ! -f "Dockerfile" ]; then
-            echo ">>> 创建默认 Dockerfile"
-            cat > Dockerfile <<'EOF'
-FROM openjdk:11-jre-slim
-
-# 设置工作目录
-WORKDIR /app
-
-# 复制 jar 包
-COPY target/*.jar app.jar
-
-# 暴露端口
-EXPOSE 8080
-
-# 启动命令
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
-EOF
-        fi
-        
-        # 构建镜像
-        echo ">>> 构建镜像: ${fullImageName}"
-        docker build -t ${fullImageName} .
-        
-        # 同时打上 latest 标签
-        docker tag ${fullImageName} ${imageName}:latest
-        
-        echo "✓ 镜像构建成功: ${fullImageName}"
-    """
-}
-
-/**
- * 推送 Docker 镜像到私有仓库
- *
- * @param moduleName 模块名称
- */
-def pushDockerImage(String moduleName) {
-    echo "=== 推送 ${moduleName} 镜像 ==="
-    
-    def imageName = "${DOCKER_IMAGE_PREFIX}/${moduleName}"
-    def imageTag = "${DOCKER_IMAGE_TAG}"
-    
-    sh """
-        # 推送带版本号的镜像
-        echo ">>> 推送镜像: ${imageName}:${imageTag}"
-        docker push ${imageName}:${imageTag}
-        
-        # 推送 latest 标签
-        echo ">>> 推送镜像: ${imageName}:latest"
-        docker push ${imageName}:latest
-        
-        echo "✓ 镜像推送成功"
-    """
 }
