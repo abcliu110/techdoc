@@ -1,7 +1,8 @@
 # 简化版 Dockerfile - 直接使用已构建的 JAR
 # 适用于 Jenkins 流水线中已经完成 Maven 构建的场景
 
-FROM eclipse-temurin:21-jre-alpine
+# 使用 DaoCloud 镜像源（国内访问更快，无需认证）
+FROM m.daocloud.io/docker.io/eclipse-temurin:21-jre-alpine
 
 # 设置时区
 ENV TZ=Asia/Shanghai
@@ -26,10 +27,5 @@ EXPOSE 8080
 # JVM 参数优化
 ENV JAVA_OPTS="-Xms256m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
 
-# 健康检查（需要 curl，如果没有可以移除）
-# HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
-#   CMD curl -f http://localhost:8080/actuator/health || exit 1
-
 # 启动命令
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]
-
