@@ -1,5 +1,5 @@
-# Maven
-target/
+# Maven (保留其他排除项，但移除 target/)
+# target/  ← 已注释，允许 Docker 复制 target 目录
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup

@@ -6,14 +6,15 @@
  * 使用 Kubernetes Plugin 在 RKE2 集群上动态创建 Pod 进行构建
  * 使用 Kaniko 构建 Docker 镜像（无需 Docker daemon）
  *
- * 版本: v6.0 - 2024
- * 更新: 所有阶段都在同一个 Pod 中执行，使用 Maven 容器 + Kaniko 容器
+ * 版本: v7.0 - 2024
+ * 更新: 使用持久化 Maven 仓库缓存（与 nms4cloud 共享）
  *
  * 前置要求：
  *   1. Jenkins 安装 Kubernetes Plugin
  *   2. 配置 Kubernetes Cloud（WebSocket 模式，无 Tunnel）
  *   3. RKE2 配置镜像加速
  *   4. Jenkins 使用 PVC 持久化存储
+ *   5. Maven 仓库缓存目录：/var/jenkins_home/maven-repository
  *
  * ============================================================================
  */
@@ -27,7 +28,7 @@ kind: Pod
 metadata:
   labels:
     jenkins: agent
-    version: v6
+    version: v7
 spec:
   containers:
   - name: maven
@@ -38,8 +39,6 @@ spec:
     volumeMounts:
     - name: jenkins-home
       mountPath: /var/jenkins_home
-    - name: maven-cache
-      mountPath: /root/.m2
     resources:
       requests:
         cpu: 500m
@@ -66,14 +65,16 @@ spec:
   - name: jenkins-home
     persistentVolumeClaim:
       claimName: jenkins-pvc
-  - name: maven-cache
-    emptyDir: {}
 """
         }
     }
 
     // ==================== 环境变量配置 ====================
     environment {
+        // Maven 配置（与 nms4cloud 共享同一个仓库）
+        MAVEN_LOCAL_REPO = '/var/jenkins_home/maven-repository'
+        MAVEN_OPTS = '-Xmx2048m -XX:+UseG1GC -XX:MaxMetaspaceSize=512m'
+        
         // 项目配置
         PROJECT_NAME = 'demo-springboot'
         ARTIFACT_VERSION = '1.0.0'
@@ -193,17 +194,26 @@ spec:
                         ╔════════════════════════════════════════╗
                         ║         Maven 构建流程                  ║
                         ╚════════════════════════════════════════╝
+                        Maven 仓库: ${MAVEN_LOCAL_REPO}
                         """
 
                         sh """
+                            echo ">>> 配置 Maven 使用持久化仓库"
+                            mkdir -p ${MAVEN_LOCAL_REPO}
+                            
                             echo ">>> 下载依赖"
-                            mvn dependency:go-offline -B ${skipTests}
+                            mvn dependency:go-offline -B ${skipTests} \\
+                                -Dmaven.repo.local=${MAVEN_LOCAL_REPO}
                             
                             echo ">>> 编译打包"
-                            mvn ${cleanCmd} package -B ${skipTests}
+                            mvn ${cleanCmd} package -B ${skipTests} \\
+                                -Dmaven.repo.local=${MAVEN_LOCAL_REPO}
                             
                             echo ">>> 查看构建产物"
                             ls -lh target/*.jar
+                            
+                            echo ">>> Maven 仓库缓存统计"
+                            du -sh ${MAVEN_LOCAL_REPO} || echo "无法统计缓存大小"
                         """
                     }
                 }
@@ -219,7 +229,7 @@ spec:
                 container('maven') {
                     script {
                         echo "=== 执行单元测试 ==="
-                        sh 'mvn test -B'
+                        sh "mvn test -B -Dmaven.repo.local=${MAVEN_LOCAL_REPO}"
                     }
                 }
             }
@@ -266,9 +276,29 @@ spec:
                             echo ">>> 当前工作目录"
                             pwd
                             
-                            echo ">>> 验证文件"
-                            ls -lh ${WORKSPACE}/target/*.jar || echo "未找到 JAR 文件"
-                            ls -lh ${WORKSPACE}/Dockerfile || echo "未找到 Dockerfile"
+                            echo ">>> 强制删除 .dockerignore 文件（如果存在）"
+                            if [ -f "${WORKSPACE}/.dockerignore" ]; then
+                                echo "⚠ 发现 .dockerignore 文件，正在删除..."
+                                rm -f ${WORKSPACE}/.dockerignore
+                                echo "✓ .dockerignore 已删除"
+                            else
+                                echo "✓ .dockerignore 不存在"
+                            fi
+                            
+                            echo ">>> 列出所有文件"
+                            ls -laR ${WORKSPACE}/ | head -100
+                            
+                            echo ">>> 验证 JAR 文件"
+                            ls -lh ${WORKSPACE}/target/*.jar || echo "❌ 未找到 JAR 文件"
+                            
+                            echo ">>> 验证 Dockerfile"
+                            ls -lh ${WORKSPACE}/Dockerfile || echo "❌ 未找到 Dockerfile"
+                            
+                            echo ">>> 显示 Dockerfile 内容"
+                            cat ${WORKSPACE}/Dockerfile
+                            
+                            echo ">>> 查找所有 JAR 文件"
+                            find ${WORKSPACE} -name "*.jar" -type f 2>/dev/null || echo "未找到 JAR 文件"
                             
                             # 检查 Dockerfile
                             if [ ! -f "${WORKSPACE}/Dockerfile" ]; then
@@ -277,16 +307,18 @@ spec:
                             fi
                             
                             # 检查 JAR 文件
-                            JAR_COUNT=\$(ls ${WORKSPACE}/target/*.jar 2>/dev/null | wc -l)
+                            JAR_COUNT=\$(find ${WORKSPACE}/target -name "*.jar" -type f 2>/dev/null | wc -l)
                             if [ "\$JAR_COUNT" -eq 0 ]; then
                                 echo "❌ 错误: 未找到 JAR 文件"
+                                echo ">>> 列出 target 目录内容:"
+                                ls -laR ${WORKSPACE}/target/ || echo "target 目录不存在"
                                 exit 1
                             fi
                             
                             echo "✓ 使用项目中的 Dockerfile"
                             echo "✓ JAR 文件已就绪"
                             
-                            # 使用 Kaniko 构建并推送镜像
+                            # 使用 Kaniko 构建并推送镜像（禁用缓存以确保使用最新文件）
                             /kaniko/executor \\
                                 --context=${WORKSPACE} \\
                                 --dockerfile=${WORKSPACE}/Dockerfile \\
@@ -294,8 +326,8 @@ spec:
                                 --destination=${DOCKER_IMAGE_NAME}:latest \\
                                 --insecure \\
                                 --skip-tls-verify \\
-                                --cache=true \\
-                                --cache-ttl=24h
+                                --cache=false \\
+                                --verbosity=debug
                             
                             echo "✓ 镜像构建并推送成功"
                         """
