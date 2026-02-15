@@ -1,11 +1,13 @@
 # 简化版 Dockerfile - 直接使用已构建的 JAR
 # 适用于 Jenkins 流水线中已经完成 Maven 构建的场景
 
-FROM openjdk:21-jre-slim
+FROM eclipse-temurin:21-jre-alpine
 
 # 设置时区
 ENV TZ=Asia/Shanghai
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN apk add --no-cache tzdata && \
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone
 
 # 创建应用目录
 WORKDIR /app
@@ -14,7 +16,7 @@ WORKDIR /app
 COPY target/*.jar app.jar
 
 # 创建非 root 用户
-RUN groupadd -r appuser && useradd -r -g appuser appuser
+RUN addgroup -S appuser && adduser -S appuser -G appuser
 RUN chown -R appuser:appuser /app
 USER appuser
 

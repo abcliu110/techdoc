@@ -6,10 +6,14 @@
  * 使用 Kubernetes Plugin 在 RKE2 集群上动态创建 Pod 进行构建
  * 使用 Kaniko 构建 Docker 镜像（无需 Docker daemon）
  *
+ * 版本: v6.0 - 2024
+ * 更新: 所有阶段都在同一个 Pod 中执行，使用 Maven 容器 + Kaniko 容器
+ *
  * 前置要求：
  *   1. Jenkins 安装 Kubernetes Plugin
- *   2. 配置 Kubernetes Cloud
- *   3. 创建 Secret 用于访问私有仓库（可选）
+ *   2. 配置 Kubernetes Cloud（WebSocket 模式，无 Tunnel）
+ *   3. RKE2 配置镜像加速
+ *   4. Jenkins 使用 PVC 持久化存储
  *
  * ============================================================================
  */
@@ -23,21 +27,47 @@ kind: Pod
 metadata:
   labels:
     jenkins: agent
+    version: v6
 spec:
   containers:
-  # Kaniko 构建镜像容器（使用 m.daocloud.io 镜像加速）
+  - name: maven
+    image: maven:3.9-eclipse-temurin-21
+    command:
+    - cat
+    tty: true
+    volumeMounts:
+    - name: jenkins-home
+      mountPath: /var/jenkins_home
+    - name: maven-cache
+      mountPath: /root/.m2
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 2000m
+        memory: 2Gi
   - name: kaniko
     image: m.daocloud.io/gcr.io/kaniko-project/executor:debug
     command:
     - /busybox/cat
     tty: true
+    volumeMounts:
+    - name: jenkins-home
+      mountPath: /var/jenkins_home
     resources:
       requests:
         cpu: 500m
-        memory: 512Mi
+        memory: 1Gi
       limits:
-        cpu: 1000m
+        cpu: 2000m
         memory: 2Gi
+  volumes:
+  - name: jenkins-home
+    persistentVolumeClaim:
+      claimName: jenkins-pvc
+  - name: maven-cache
+    emptyDir: {}
 """
         }
     }
@@ -96,28 +126,30 @@ spec:
         // ========== 阶段 1: 环境检查 ==========
         stage('环境检查') {
             steps {
-                script {
-                    currentBuild.displayName = "#${BUILD_NUMBER} - ${GIT_BRANCH}"
-                    currentBuild.description = "分支: ${GIT_BRANCH}"
+                container('maven') {
+                    script {
+                        currentBuild.displayName = "#${BUILD_NUMBER} - ${GIT_BRANCH}"
+                        currentBuild.description = "分支: ${GIT_BRANCH}"
 
-                    echo """
-                    ╔════════════════════════════════════════╗
-                    ║         构建配置                        ║
-                    ╚════════════════════════════════════════╝
-                    项目: ${PROJECT_NAME}
-                    版本: ${ARTIFACT_VERSION}
-                    分支: ${GIT_BRANCH}
-                    跳过测试: ${params.SKIP_TESTS}
-                    清理构建: ${params.CLEAN_BUILD}
-                    构建镜像: ${params.BUILD_DOCKER_IMAGE}
-                    镜像名称: ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
-                    """
+                        echo """
+                        ╔════════════════════════════════════════╗
+                        ║         构建配置                        ║
+                        ╚════════════════════════════════════════╝
+                        项目: ${PROJECT_NAME}
+                        版本: ${ARTIFACT_VERSION}
+                        分支: ${GIT_BRANCH}
+                        跳过测试: ${params.SKIP_TESTS}
+                        清理构建: ${params.CLEAN_BUILD}
+                        构建镜像: ${params.BUILD_DOCKER_IMAGE}
+                        镜像名称: ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+                        """
 
-                    sh '''
-                        echo "=== 环境信息 ==="
-                        java -version
-                        mvn -version
-                    '''
+                        sh '''
+                            echo "=== 环境信息 ==="
+                            java -version
+                            mvn -version
+                        '''
+                    }
                 }
             }
         }
@@ -125,25 +157,26 @@ spec:
         // ========== 阶段 2: 代码检出 ==========
         stage('代码检出') {
             steps {
-                script {
-                    echo "=== 代码检出 ==="
-                    // Kubernetes Plugin 会自动处理代码检出
-                    checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: "*/${GIT_BRANCH}"]],
-                        extensions: [
-                            [$class: 'CloneOption', depth: 1, shallow: true, timeout: 20]
-                        ],
-                        userRemoteConfigs: [[
-                            credentialsId: "${GIT_CREDENTIAL_ID}",
-                            url: "${GIT_REPO_URL}"
-                        ]]
-                    ])
-                    
-                    sh '''
-                        echo ">>> 代码检出完成"
-                        ls -la
-                    '''
+                container('maven') {
+                    script {
+                        echo "=== 代码检出 ==="
+                        checkout([
+                            $class: 'GitSCM',
+                            branches: [[name: "*/${GIT_BRANCH}"]],
+                            extensions: [
+                                [$class: 'CloneOption', depth: 1, shallow: true, timeout: 20]
+                            ],
+                            userRemoteConfigs: [[
+                                credentialsId: "${GIT_CREDENTIAL_ID}",
+                                url: "${GIT_REPO_URL}"
+                            ]]
+                        ])
+                        
+                        sh '''
+                            echo ">>> 代码检出完成"
+                            ls -la
+                        '''
+                    }
                 }
             }
         }
@@ -151,26 +184,28 @@ spec:
         // ========== 阶段 3: Maven 构建 ==========
         stage('Maven 构建') {
             steps {
-                script {
-                    def cleanCmd = params.CLEAN_BUILD ? 'clean' : ''
-                    def skipTests = params.SKIP_TESTS ? '-DskipTests' : ''
+                container('maven') {
+                    script {
+                        def cleanCmd = params.CLEAN_BUILD ? 'clean' : ''
+                        def skipTests = params.SKIP_TESTS ? '-DskipTests' : ''
 
-                    echo """
-                    ╔════════════════════════════════════════╗
-                    ║         Maven 构建流程                  ║
-                    ╚════════════════════════════════════════╝
-                    """
+                        echo """
+                        ╔════════════════════════════════════════╗
+                        ║         Maven 构建流程                  ║
+                        ╚════════════════════════════════════════╝
+                        """
 
-                    sh """
-                        echo ">>> 下载依赖"
-                        mvn dependency:go-offline -B ${skipTests}
-                        
-                        echo ">>> 编译打包"
-                        mvn ${cleanCmd} package -B ${skipTests}
-                        
-                        echo ">>> 查看构建产物"
-                        ls -lh target/*.jar
-                    """
+                        sh """
+                            echo ">>> 下载依赖"
+                            mvn dependency:go-offline -B ${skipTests}
+                            
+                            echo ">>> 编译打包"
+                            mvn ${cleanCmd} package -B ${skipTests}
+                            
+                            echo ">>> 查看构建产物"
+                            ls -lh target/*.jar
+                        """
+                    }
                 }
             }
         }
@@ -181,9 +216,11 @@ spec:
                 expression { !params.SKIP_TESTS }
             }
             steps {
-                script {
-                    echo "=== 执行单元测试 ==="
-                    sh 'mvn test -B'
+                container('maven') {
+                    script {
+                        echo "=== 执行单元测试 ==="
+                        sh 'mvn test -B'
+                    }
                 }
             }
             post {
@@ -196,9 +233,13 @@ spec:
         // ========== 阶段 5: 归档构建产物 ==========
         stage('归档构建产物') {
             steps {
-                script {
-                    echo "=== 归档构建产物 ==="
-                    archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true, allowEmptyArchive: true
+                container('maven') {
+                    script {
+                        echo "=== 归档构建产物 ==="
+                        archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true, allowEmptyArchive: true
+                        
+                        echo ">>> 构建产物已保存在 Jenkins workspace，Kaniko Pod 将通过 PVC 访问"
+                    }
                 }
             }
         }
@@ -218,22 +259,37 @@ spec:
                         镜像名称: ${DOCKER_IMAGE_NAME}
                         镜像标签: ${DOCKER_IMAGE_TAG}, latest
                         推送到: ${DOCKER_REGISTRY}
+                        工作目录: ${WORKSPACE}
                         """
 
                         sh """
+                            echo ">>> 当前工作目录"
+                            pwd
+                            
+                            echo ">>> 验证文件"
+                            ls -lh ${WORKSPACE}/target/*.jar || echo "未找到 JAR 文件"
+                            ls -lh ${WORKSPACE}/Dockerfile || echo "未找到 Dockerfile"
+                            
                             # 检查 Dockerfile
-                            if [ ! -f "Dockerfile" ]; then
+                            if [ ! -f "${WORKSPACE}/Dockerfile" ]; then
                                 echo "❌ 错误: 未找到 Dockerfile"
                                 exit 1
                             fi
                             
+                            # 检查 JAR 文件
+                            JAR_COUNT=\$(ls ${WORKSPACE}/target/*.jar 2>/dev/null | wc -l)
+                            if [ "\$JAR_COUNT" -eq 0 ]; then
+                                echo "❌ 错误: 未找到 JAR 文件"
+                                exit 1
+                            fi
+                            
                             echo "✓ 使用项目中的 Dockerfile"
+                            echo "✓ JAR 文件已就绪"
                             
                             # 使用 Kaniko 构建并推送镜像
-                            # --destination 参数会自动推送镜像
                             /kaniko/executor \\
-                                --context=\${PWD} \\
-                                --dockerfile=Dockerfile \\
+                                --context=${WORKSPACE} \\
+                                --dockerfile=${WORKSPACE}/Dockerfile \\
                                 --destination=${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} \\
                                 --destination=${DOCKER_IMAGE_NAME}:latest \\
                                 --insecure \\
