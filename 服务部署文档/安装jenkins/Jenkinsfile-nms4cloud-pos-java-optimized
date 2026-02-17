@@ -6,8 +6,8 @@
  * 使用 Kubernetes Plugin 在 RKE2 集群上动态创建 Pod 进行构建
  * 使用 Kaniko 构建 Docker 镜像（无需 Docker daemon）
  *
- * 版本: v1.0 - 2024
- * 更新: 基于 demo-springboot Jenkinsfile-k8s 改造
+ * 版本: v2.0 - 2024
+ * 更新: 使用阿里云个人镜像仓库
  *
  * 前置要求：
  *   1. Jenkins 安装 Kubernetes Plugin
@@ -15,6 +15,9 @@
  *   3. RKE2 配置镜像加速
  *   4. Jenkins 使用 PVC 持久化存储
  *   5. Maven 仓库缓存目录：/var/jenkins_home/maven-repository
+ *   6. 创建阿里云镜像仓库认证 Secret（个人版必须使用专属域名）：
+ *      参考文档：创建阿里云镜像仓库Secret.md
+ *      kubectl apply -f aliyun-registry-secret.yaml
  *
  * ============================================================================
  */
@@ -30,6 +33,10 @@ metadata:
     jenkins: agent
     project: nms4cloud-pos-java
 spec:
+  # 阿里云镜像仓库认证
+  imagePullSecrets:
+  - name: aliyun-registry-secret
+
   containers:
   - name: maven
     image: maven:3.9-eclipse-temurin-21
@@ -54,6 +61,9 @@ spec:
     volumeMounts:
     - name: jenkins-home
       mountPath: /var/jenkins_home
+    # 挂载阿里云镜像仓库认证配置
+    - name: docker-config
+      mountPath: /kaniko/.docker
     resources:
       requests:
         cpu: 500m
@@ -65,6 +75,13 @@ spec:
   - name: jenkins-home
     persistentVolumeClaim:
       claimName: jenkins-pvc
+  # 阿里云镜像仓库认证配置
+  - name: docker-config
+    secret:
+      secretName: aliyun-registry-secret
+      items:
+      - key: .dockerconfigjson
+        path: config.json
 """
         }
     }
@@ -87,8 +104,9 @@ spec:
         // 部署配置
         DEPLOY_ENV = "${params.DEPLOY_ENV ?: 'dev'}"
 
-        // Docker 私有仓库配置
-        DOCKER_REGISTRY = '192.168.80.100:30500'
+        // 阿里云镜像仓库配置（个人版公网地址）
+        DOCKER_REGISTRY = 'crpi-csgbt2t7j15cj178.cn-hangzhou.personal.cr.aliyuncs.com'
+        DOCKER_NAMESPACE = 'lgy-images'
         DOCKER_IMAGE_TAG = "${env.BUILD_NUMBER}"
     }
 
@@ -132,10 +150,9 @@ spec:
         )
         booleanParam(
             name: 'BUILD_DOCKER_IMAGE',
-            defaultValue: false,
-            description: '构建并推送 Docker 镜像（需要模块有 Dockerfile）'
+            defaultValue: true,
+            description: '构建并推送 Docker 镜像'
         )
-
     }
 
     // ==================== 构建选项 ====================
@@ -291,140 +308,55 @@ spec:
             steps {
                 container('kaniko') {
                     script {
-                        def modulesToBuild = []
-                        
-                        // 如果选择 'all'，扫描所有模块
+                        // 如果选择 all，构建所有有 Dockerfile 的模块
                         if (params.BUILD_MODULE == 'all') {
                             def allModules = [
-                                'pos1starter',
-                                'pos2plugin',
-                                'pos3boot',
-                                'pos4cloud',
-                                'pos5sync',
-                                'pos6monitor',
-                                'pos8book',
-                                'pos9cash',
-                                'pos10printer'
+                                'pos1starter', 'pos2plugin', 'pos3boot', 'pos4cloud',
+                                'pos5sync', 'pos6monitor', 'pos8book', 'pos9cash', 'pos10printer'
                             ]
-                            
-                            echo ">>> 扫描所有模块的 Dockerfile..."
-                            allModules.each { module ->
-                                def dockerfilePath = findDockerfilePath(module)
-                                if (fileExists(dockerfilePath)) {
-                                    modulesToBuild.add(module)
-                                    echo "✓ 找到 Dockerfile: ${module} -> ${dockerfilePath}"
-                                } else {
-                                    echo "✗ 未找到 Dockerfile: ${module}"
-                                }
-                            }
-                        } else {
-                            // 单个模块，检查是否有 Dockerfile
-                            def dockerfilePath = findDockerfilePath(params.BUILD_MODULE)
-                            if (fileExists(dockerfilePath)) {
-                                modulesToBuild.add(params.BUILD_MODULE)
-                                echo "✓ 找到 Dockerfile: ${params.BUILD_MODULE} -> ${dockerfilePath}"
-                            } else {
-                                echo "✗ 未找到 Dockerfile: ${params.BUILD_MODULE}"
-                            }
-                        }
-                        
-                        if (modulesToBuild.isEmpty()) {
+
                             echo """
                             ╔════════════════════════════════════════╗
-                            ║    跳过镜像构建 - 未找到 Dockerfile     ║
+                            ║    构建所有模块的 Docker 镜像           ║
                             ╚════════════════════════════════════════╝
                             """
-                            return
-                        }
-                        
-                        echo """
-                        ╔════════════════════════════════════════╗
-                        ║    构建并推送 Docker 镜像 (Kaniko)      ║
-                        ╚════════════════════════════════════════╝
-                        将构建以下模块的镜像:
-                        ${modulesToBuild.collect { "  - ${it}" }.join('\n')}
-                        """
-                        
-                        // 构建每个模块的镜像
-                        modulesToBuild.each { module ->
-                            def moduleName = getModuleName(module)
-                            def dockerImageName = "${DOCKER_REGISTRY}/${moduleName}"
-                            def dockerfilePath = findDockerfilePath(module)
-                            def buildContext = getBuildContext(module)
-                            
+
+                            def builtImages = []
+
+                            for (module in allModules) {
+                                def dockerfilePath = findDockerfilePath(module)
+
+                                if (fileExists(dockerfilePath)) {
+                                    echo "\n>>> 开始构建模块: ${module}"
+                                    buildAndPushDockerImage(module)
+                                    builtImages.add(module)
+                                } else {
+                                    echo "⊗ 跳过模块 ${module}: 未找到 Dockerfile"
+                                }
+                            }
+
                             echo """
-                            
-                            ════════════════════════════════════════
-                            开始构建模块: ${moduleName}
-                            ════════════════════════════════════════
-                            镜像名称: ${dockerImageName}
-                            镜像标签: ${DOCKER_IMAGE_TAG}, latest
-                            构建上下文: ${buildContext}
-                            Dockerfile: ${dockerfilePath}
+
+                            ╔════════════════════════════════════════╗
+                            ║         构建完成统计                    ║
+                            ╚════════════════════════════════════════╝
+                            成功构建的模块: ${builtImages.join(', ')}
+                            总计: ${builtImages.size()} 个镜像
                             """
-                            
-                            sh """
-                                echo ">>> 当前工作目录"
-                                pwd
-                                
-                                echo ">>> 强制删除 .dockerignore 文件（如果存在）"
-                                if [ -f "${WORKSPACE}/.dockerignore" ]; then
-                                    echo "⚠ 发现 .dockerignore 文件，正在删除..."
-                                    rm -f ${WORKSPACE}/.dockerignore
-                                    echo "✓ .dockerignore 已删除"
-                                fi
-                                
-                                echo ">>> 验证 JAR 文件"
-                                find ${buildContext}/target -name "*.jar" -type f 2>/dev/null || echo "❌ 未找到 JAR 文件"
-                                
-                                echo ">>> 验证 Dockerfile"
-                                if [ ! -f "${dockerfilePath}" ]; then
-                                    echo "❌ 错误: 未找到 Dockerfile: ${dockerfilePath}"
-                                    exit 1
-                                fi
-                                
-                                echo ">>> 显示 Dockerfile 内容"
-                                cat ${dockerfilePath}
-                                
-                                # 检查 JAR 文件
-                                JAR_COUNT=\$(find ${buildContext}/target -name "*.jar" -type f 2>/dev/null | wc -l)
-                                if [ "\$JAR_COUNT" -eq 0 ]; then
-                                    echo "❌ 错误: 未找到 JAR 文件"
-                                    echo ">>> 列出 target 目录内容:"
-                                    ls -laR ${buildContext}/target/ || echo "target 目录不存在"
-                                    exit 1
-                                fi
-                                
-                                echo "✓ JAR 文件已就绪"
-                                
-                                # 使用 Kaniko 构建并推送镜像
-                                /kaniko/executor \\
-                                    --context=${buildContext} \\
-                                    --dockerfile=${dockerfilePath} \\
-                                    --destination=${dockerImageName}:${DOCKER_IMAGE_TAG} \\
-                                    --destination=${dockerImageName}:latest \\
-                                    --insecure \\
-                                    --skip-tls-verify \\
-                                    --cache=false \\
-                                    --verbosity=info
-                                
-                                echo "✓ 镜像构建并推送成功: ${dockerImageName}:${DOCKER_IMAGE_TAG}"
-                            """
+
+                        } else {
+                            // 构建单个模块
+                            def dockerfilePath = findDockerfilePath(params.BUILD_MODULE)
+
+                            if (fileExists(dockerfilePath)) {
+                                buildAndPushDockerImage(params.BUILD_MODULE)
+                            } else {
+                                echo """
+                                ⊗ 跳过镜像构建: 模块 ${params.BUILD_MODULE} 未找到 Dockerfile
+                                Dockerfile 路径: ${dockerfilePath}
+                                """
+                            }
                         }
-                        
-                        // 保存构建的镜像列表
-                        env.BUILT_IMAGES = modulesToBuild.collect { module ->
-                            def moduleName = getModuleName(module)
-                            "${DOCKER_REGISTRY}/${moduleName}:${DOCKER_IMAGE_TAG}"
-                        }.join(', ')
-                        
-                        echo """
-                        
-                        ╔════════════════════════════════════════╗
-                        ║    所有镜像构建完成                     ║
-                        ╚════════════════════════════════════════╝
-                        已构建 ${modulesToBuild.size()} 个镜像
-                        """
                     }
                 }
             }
@@ -446,12 +378,23 @@ spec:
                 耗时: ${currentBuild.durationString}
                 """
 
-                if (params.BUILD_DOCKER_IMAGE && env.BUILT_IMAGES) {
+                if (params.BUILD_DOCKER_IMAGE && env.DOCKER_IMAGE_FULL) {
                     echo """
                     
                     Docker 镜像已构建并推送到私有仓库:
-                    ${env.BUILT_IMAGES.split(', ').collect { "  - ${it}" }.join('\n')}
-                    ${env.BUILT_IMAGES.split(', ').collect { "  - ${it.replaceAll(':.*', ':latest')}" }.join('\n')}
+                    - ${env.DOCKER_IMAGE_FULL}
+                    - ${env.DOCKER_IMAGE_FULL.replaceAll(':.*', ':latest')}
+                    
+                    在 K8s 中使用镜像:
+                    kubectl set image deployment/${env.MODULE_NAME} \\
+                      ${env.MODULE_NAME}=${env.DOCKER_IMAGE_FULL} \\
+                      -n default
+                    
+                    或者在 Deployment YAML 中使用:
+                    spec:
+                      containers:
+                      - name: ${env.MODULE_NAME}
+                        image: ${env.DOCKER_IMAGE_FULL}
                     """
                 }
             }
@@ -625,4 +568,171 @@ def getBuildContext(String buildModule) {
         default:
             return "${WORKSPACE}"
     }
+}
+
+/**
+ * 构建并推送单个模块的 Docker 镜像
+ * @param buildModule 构建模块选择
+ */
+def buildAndPushDockerImage(String buildModule) {
+    def moduleName = getModuleName(buildModule)
+    def dockerImageName = "${DOCKER_REGISTRY}/${DOCKER_NAMESPACE}/${moduleName}"
+    def dockerfilePath = findDockerfilePath(buildModule)
+    def buildContext = getBuildContext(buildModule)
+
+    echo """
+    ╔════════════════════════════════════════╗
+    ║    构建并推送 Docker 镜像 (Kaniko)      ║
+    ╚════════════════════════════════════════╝
+    模块: ${moduleName}
+    镜像名称: ${dockerImageName}
+    镜像标签: ${DOCKER_IMAGE_TAG}, latest
+    推送到: ${DOCKER_REGISTRY}
+    工作目录: ${WORKSPACE}
+    构建上下文: ${buildContext}
+    Dockerfile: ${dockerfilePath}
+    """
+
+    sh """
+        echo ">>> 当前工作目录"
+        pwd
+
+        echo ">>> 强制删除 .dockerignore 文件（如果存在）"
+        if [ -f "${WORKSPACE}/.dockerignore" ]; then
+            echo "⚠ 发现 .dockerignore 文件，正在删除..."
+            rm -f ${WORKSPACE}/.dockerignore
+            echo "✓ .dockerignore 已删除"
+        else
+            echo "✓ .dockerignore 不存在"
+        fi
+
+        echo ">>> 列出构建上下文目录"
+        ls -laR ${buildContext}/ | head -100
+
+        echo ">>> 验证 JAR 文件"
+        find ${buildContext} -name "*.jar" -type f 2>/dev/null || echo "❌ 未找到 JAR 文件"
+
+        echo ">>> 验证 Dockerfile"
+        if [ -f "${dockerfilePath}" ]; then
+            echo "✓ 找到 Dockerfile: ${dockerfilePath}"
+            echo ">>> 显示 Dockerfile 内容"
+            cat ${dockerfilePath}
+        else
+            echo "❌ 错误: 未找到 Dockerfile: ${dockerfilePath}"
+            exit 1
+        fi
+
+        # 检查 JAR 文件
+        JAR_COUNT=\$(find ${buildContext}/target -name "*.jar" -type f 2>/dev/null | wc -l)
+        if [ "\$JAR_COUNT" -eq 0 ]; then
+            echo "❌ 错误: 未找到 JAR 文件"
+            echo ">>> 列出 target 目录内���:"
+            ls -laR ${buildContext}/target/ || echo "target 目录不存在"
+            exit 1
+        fi
+
+        echo "✓ JAR 文件已就绪"
+
+        # 计算镜像预估大小
+        echo ""
+        echo "╔════════════════════════════════════════╗"
+        echo "║         镜像大小预估                    ║"
+        echo "╚════════════════════════════════════════╝"
+
+        # 1. JAR 文件大小
+        echo ">>> JAR 文件大小:"
+        find ${buildContext}/target -name "*.jar" -type f -exec ls -lh {} \\; | awk '{print "    " \$9 ": " \$5}'
+        JAR_SIZE_MB=\$(find ${buildContext}/target -name "*.jar" -type f -exec du -sm {} \\; | awk '{sum+=\$1} END {print sum}')
+        echo "    总计: \${JAR_SIZE_MB} MB"
+
+        # 2. 配置文件大小
+        if [ -d "${buildContext}/src/main/resources" ]; then
+            CONFIG_SIZE_MB=\$(du -sm ${buildContext}/src/main/resources 2>/dev/null | awk '{print \$1}')
+            echo ">>> 配置文件大小: \${CONFIG_SIZE_MB} MB"
+        else
+            CONFIG_SIZE_MB=0
+            echo ">>> 配置文件大小: 0 MB (无外部配置)"
+        fi
+
+        # 3. 基础镜像大小（eclipse-temurin:21-jre 约 220MB）
+        BASE_IMAGE_SIZE_MB=220
+        echo ">>> 基础镜像大小: \${BASE_IMAGE_SIZE_MB} MB (eclipse-temurin:21-jre)"
+
+        # 4. 预估总大小
+        ESTIMATED_SIZE_MB=\$((JAR_SIZE_MB + CONFIG_SIZE_MB + BASE_IMAGE_SIZE_MB))
+        echo ""
+        echo ">>> 预估镜像总大小: \${ESTIMATED_SIZE_MB} MB"
+
+        # 5. 预估推送时间（阿里云个人版约 0.5-1 MB/s）
+        ESTIMATED_TIME_MIN_FAST=\$((ESTIMATED_SIZE_MB / 60))  # 1 MB/s
+        ESTIMATED_TIME_MIN_SLOW=\$((ESTIMATED_SIZE_MB / 30))  # 0.5 MB/s
+        echo ">>> 预估推送时间: \${ESTIMATED_TIME_MIN_FAST}-\${ESTIMATED_TIME_MIN_SLOW} 分钟"
+        echo ""
+
+        if [ \$ESTIMATED_SIZE_MB -gt 400 ]; then
+            echo "⚠ 警告: 镜像较大 (>400MB)，推送可能需要较长时间"
+            echo "   建议: 使用 Alpine 基础镜像可减少约 50MB"
+        fi
+        echo ""
+
+        # 使用 Kaniko 构建并推送镜像到阿里云
+        # 优化配置：最大压缩、设置超时、推送重试
+        # 一次推送两个标签（高效，镜像层只推送一次）
+        # 使用最高压缩级别（9）：本地压缩慢但网络传输快，适合阿里云个人版
+        echo ">>> 开始构建和推送镜像..."
+        PUSH_START_TIME=\$(date +%s)
+
+        timeout 1800 /kaniko/executor \\
+            --context=${buildContext} \\
+            --dockerfile=${dockerfilePath} \\
+            --destination=${dockerImageName}:${DOCKER_IMAGE_TAG} \\
+            --destination=${dockerImageName}:latest \\
+            --compressed-caching=true \\
+            --compression=gzip \\
+            --compression-level=9 \\
+            --push-retry=3 \\
+            --cache=false \\
+            --verbosity=info \\
+            --image-fs-extract-retry=3 \\
+            --push-ignore-immutable-tag-errors || {
+                echo "❌ 镜像推送失败或超时（30分钟）"
+                echo ">>> 可能原因："
+                echo "    1. 阿里云个人版镜像仓库带宽限制"
+                echo "    2. 网络不稳定"
+                echo "    3. 镜像太大 (预估 \${ESTIMATED_SIZE_MB} MB)"
+                echo ">>> 建议："
+                echo "    1. 使用 Alpine 基础镜像减小体积"
+                echo "    2. 部署本地镜像仓库"
+                echo "    3. 升级阿里云企业版"
+                exit 1
+            }
+
+        PUSH_END_TIME=\$(date +%s)
+        PUSH_DURATION=\$((PUSH_END_TIME - PUSH_START_TIME))
+        PUSH_DURATION_MIN=\$((PUSH_DURATION / 60))
+        PUSH_DURATION_SEC=\$((PUSH_DURATION % 60))
+
+        echo ""
+        echo "╔════════════════════════════════════════╗"
+        echo "║         推送完成统计                    ║"
+        echo "╚════════════════════════════════════════╝"
+        echo ">>> 推送耗时: \${PUSH_DURATION_MIN} 分 \${PUSH_DURATION_SEC} 秒"
+
+        if [ \$PUSH_DURATION -gt 0 ]; then
+            AVG_SPEED_KB=\$((ESTIMATED_SIZE_MB * 1024 / PUSH_DURATION))
+            AVG_SPEED_MB=\$((AVG_SPEED_KB / 1024))
+            echo ">>> 平均速度: \${AVG_SPEED_MB} MB/s (\${AVG_SPEED_KB} KB/s)"
+
+            if [ \$AVG_SPEED_MB -lt 1 ]; then
+                echo "⚠ 推送速度较慢，建议部署本地镜像仓库"
+            fi
+        fi
+        echo ""
+
+        echo "✓ 镜像构建并推送成功: ${dockerImageName}:${DOCKER_IMAGE_TAG}"
+    """
+
+    // 保存镜像信息供后续使用
+    env.DOCKER_IMAGE_FULL = "${dockerImageName}:${DOCKER_IMAGE_TAG}"
+    env.MODULE_NAME = moduleName
 }

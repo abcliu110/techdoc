@@ -1,0 +1,96 @@
+# Harbor Helm Chart 配置文件
+# 适用于 RKE2 Kubernetes 集群
+
+# 暴露方式：NodePort
+expose:
+  type: nodePort
+  tls:
+    enabled: false
+  nodePort:
+    name: harbor
+    ports:
+      http:
+        nodePort: 30002
+
+# 外部访问地址（修改为你的节点 IP）
+externalURL: http://192.168.80.100:30002
+
+# 持久化存储
+persistence:
+  enabled: true
+  resourcePolicy: "keep"
+  persistentVolumeClaim:
+    registry:
+      storageClass: "local-path"
+      size: 200Gi
+    database:
+      storageClass: "local-path"
+      size: 10Gi
+    redis:
+      storageClass: "local-path"
+      size: 5Gi
+    jobservice:
+      jobLog:
+        storageClass: "local-path"
+        size: 1Gi
+      scanDataExports:
+        storageClass: "local-path"
+        size: 1Gi
+
+# Harbor 管理员密码
+harborAdminPassword: "Harbor12345"
+
+# 数据库配置
+database:
+  type: internal
+  internal:
+    password: "changeit"
+
+# Redis 配置
+redis:
+  type: internal
+
+# 禁用不需要的组件
+trivy:
+  enabled: false
+notary:
+  enabled: false
+chartmuseum:
+  enabled: false
+
+# 资源限制
+portal:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+core:
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+jobservice:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+registry:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi

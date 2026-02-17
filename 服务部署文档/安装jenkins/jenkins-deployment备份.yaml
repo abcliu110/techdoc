@@ -63,62 +63,35 @@ spec:
   selector:
     matchLabels:
       app: jenkins
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
   template:
     metadata:
       labels:
         app: jenkins
     spec:
       serviceAccountName: jenkins
-      securityContext:
-        fsGroup: 1000
-        runAsUser: 1000
       containers:
         - name: jenkins
           image: jenkins/jenkins:lts-jdk21
-          imagePullPolicy: IfNotPresent
           env:
             - name: JAVA_OPTS
-              value: "-Xmx6g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+ParallelRefProcEnabled -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:MaxMetaspaceSize=512m -Djava.awt.headless=true -Duser.timezone=Asia/Shanghai"
+              value: "-Xmx3072m -Xms1024m -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
             - name: JENKINS_OPTS
-              value: "--sessionTimeout=1440 --sessionEviction=86400"
+              value: "--sessionTimeout=1440"
           ports:
             - containerPort: 8080
               name: http
-              protocol: TCP
             - containerPort: 50000
               name: agent
-              protocol: TCP
           volumeMounts:
             - name: jenkins-storage
               mountPath: /var/jenkins_home
           resources:
             requests:
-              memory: "4Gi"    # 优化: 2Gi → 4Gi (提升 100%)
-              cpu: "2"         # 优化: 1 核 → 2 核 (提升 100%)
+              memory: "2Gi"    # 从 1Gi 增加到 2Gi
+              cpu: "1000m"     # 从 500m 增加到 1000m
             limits:
-              memory: "8Gi"    # 优化: 4Gi → 8Gi (提升 100%)
-              cpu: "6"         # 优化: 3 核 → 6 核 (提升 100%)
-          livenessProbe:
-            httpGet:
-              path: /login
-              port: 8080
-            initialDelaySeconds: 90
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
-          readinessProbe:
-            httpGet:
-              path: /login
-              port: 8080
-            initialDelaySeconds: 60
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 3
+              memory: "4Gi"    # 从 3Gi 增加到 4Gi
+              cpu: "3000m"     # 从 2000m 增加到 3000m
       volumes:
         - name: jenkins-storage
           persistentVolumeClaim:

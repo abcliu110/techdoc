@@ -1,0 +1,632 @@
+---
+# Harbor Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: harbor
+
+---
+# PostgreSQL PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: harbor-database
+  namespace: harbor
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+# Redis PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: harbor-redis
+  namespace: harbor
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+# Registry PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: harbor-registry
+  namespace: harbor
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 200Gi
+
+---
+# Harbor ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: harbor-core-config
+  namespace: harbor
+data:
+  app.conf: |
+    appname = Harbor
+    runmode = prod
+
+---
+# Harbor Secrets
+apiVersion: v1
+kind: Secret
+metadata:
+  name: harbor-core
+  namespace: harbor
+type: Opaque
+stringData:
+  HARBOR_ADMIN_PASSWORD: "Harbor12345"
+  secretKey: "not-a-secure-secret"
+
+---
+# Database Secret
+apiVersion: v1
+kind: Secret
+metadata:
+  name: harbor-database
+  namespace: harbor
+type: Opaque
+stringData:
+  POSTGRES_PASSWORD: "changeit"
+
+---
+# PostgreSQL StatefulSet
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: harbor-database
+  namespace: harbor
+spec:
+  serviceName: harbor-database
+  replicas: 1
+  selector:
+    matchLabels:
+      app: harbor-database
+  template:
+    metadata:
+      labels:
+        app: harbor-database
+    spec:
+      containers:
+      - name: database
+        image: goharbor/harbor-db:v2.9.0
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: harbor-database
+              key: POSTGRES_PASSWORD
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: database-data
+          mountPath: /var/lib/postgresql/data
+          subPath: pgdata
+      volumes:
+      - name: database-data
+        persistentVolumeClaim:
+          claimName: harbor-database
+
+---
+# PostgreSQL Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: harbor-database
+  namespace: harbor
+spec:
+  ports:
+  - port: 5432
+  clusterIP: None
+  selector:
+    app: harbor-database
+
+---
+# Redis StatefulSet
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: harbor-redis
+  namespace: harbor
+spec:
+  serviceName: harbor-redis
+  replicas: 1
+  selector:
+    matchLabels:
+      app: harbor-redis
+  template:
+    metadata:
+      labels:
+        app: harbor-redis
+    spec:
+      containers:
+      - name: redis
+        image: goharbor/redis-photon:v2.9.0
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - name: redis-data
+          mountPath: /var/lib/redis
+      volumes:
+      - name: redis-data
+        persistentVolumeClaim:
+          claimName: harbor-redis
+
+---
+# Redis Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: harbor-redis
+  namespace: harbor
+spec:
+  ports:
+  - port: 6379
+  clusterIP: None
+  selector:
+    app: harbor-redis
+
+---
+# Registry Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: harbor-registry
+  namespace: harbor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: harbor-registry
+  template:
+    metadata:
+      labels:
+        app: harbor-registry
+    spec:
+      containers:
+      - name: registry
+        image: goharbor/registry-photon:v2.9.0
+        ports:
+        - containerPort: 5000
+        - containerPort: 5001
+        volumeMounts:
+        - name: registry-data
+          mountPath: /storage
+        - name: registry-config
+          mountPath: /etc/registry
+        env:
+        - name: REGISTRY_HTTP_SECRET
+          value: "not-a-secure-secret"
+      volumes:
+      - name: registry-data
+        persistentVolumeClaim:
+          claimName: harbor-registry
+      - name: registry-config
+        configMap:
+          name: harbor-registry-config
+
+---
+# Registry ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: harbor-registry-config
+  namespace: harbor
+data:
+  config.yml: |
+    version: 0.1
+    log:
+      level: info
+    storage:
+      filesystem:
+        rootdirectory: /storage
+      delete:
+        enabled: true
+      cache:
+        blobdescriptor: redis
+      maintenance:
+        uploadpurging:
+          enabled: false
+    http:
+      addr: :5000
+      secret: not-a-secure-secret
+      debug:
+        addr: :5001
+    redis:
+      addr: harbor-redis:6379
+      db: 1
+    health:
+      storagedriver:
+        enabled: true
+        interval: 10s
+        threshold: 3
+
+---
+# Registry Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: harbor-registry
+  namespace: harbor
+spec:
+  ports:
+  - name: registry
+    port: 5000
+  - name: debug
+    port: 5001
+  selector:
+    app: harbor-registry
+
+---
+# Core Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: harbor-core
+  namespace: harbor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: harbor-core
+  template:
+    metadata:
+      labels:
+        app: harbor-core
+    spec:
+      containers:
+      - name: core
+        image: goharbor/harbor-core:v2.9.0
+        env:
+        - name: CORE_SECRET
+          value: "not-a-secure-secret"
+        - name: JOBSERVICE_SECRET
+          value: "not-a-secure-secret"
+        - name: HARBOR_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: harbor-core
+              key: HARBOR_ADMIN_PASSWORD
+        - name: DATABASE_TYPE
+          value: "postgresql"
+        - name: POSTGRESQL_HOST
+          value: "harbor-database"
+        - name: POSTGRESQL_PORT
+          value: "5432"
+        - name: POSTGRESQL_USERNAME
+          value: "postgres"
+        - name: POSTGRESQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: harbor-database
+              key: POSTGRES_PASSWORD
+        - name: POSTGRESQL_DATABASE
+          value: "registry"
+        - name: POSTGRESQL_SSLMODE
+          value: "disable"
+        - name: POSTGRESQL_MAX_IDLE_CONNS
+          value: "100"
+        - name: POSTGRESQL_MAX_OPEN_CONNS
+          value: "900"
+        - name: EXT_ENDPOINT
+          value: "http://192.168.80.100:30002"
+        - name: CORE_URL
+          value: "http://harbor-core:8080"
+        - name: JOBSERVICE_URL
+          value: "http://harbor-jobservice:8080"
+        - name: REGISTRY_URL
+          value: "http://harbor-registry:5000"
+        - name: TOKEN_SERVICE_URL
+          value: "http://harbor-core:8080/service/token"
+        - name: REGISTRY_CONTROLLER_URL
+          value: "http://harbor-registry:8080"
+        - name: REDIS_HOST
+          value: "harbor-redis"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_DB_INDEX
+          value: "0"
+        - name: LOG_LEVEL
+          value: "info"
+        - name: CONFIG_PATH
+          value: "/etc/core/app.conf"
+        - name: SYNC_REGISTRY
+          value: "false"
+        - name: CHART_CACHE_DRIVER
+          value: "redis"
+        - name: _REDIS_URL_CORE
+          value: "redis://harbor-redis:6379/0?idle_timeout_seconds=30"
+        - name: _REDIS_URL_REG
+          value: "redis://harbor-redis:6379/2?idle_timeout_seconds=30"
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: config
+          mountPath: /etc/core/app.conf
+          subPath: app.conf
+      volumes:
+      - name: config
+        configMap:
+          name: harbor-core-config
+
+---
+# Core Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: harbor-core
+  namespace: harbor
+spec:
+  ports:
+  - port: 8080
+  selector:
+    app: harbor-core
+
+---
+# Portal Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: harbor-portal
+  namespace: harbor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: harbor-portal
+  template:
+    metadata:
+      labels:
+        app: harbor-portal
+    spec:
+      containers:
+      - name: portal
+        image: goharbor/harbor-portal:v2.9.0
+        ports:
+        - containerPort: 8080
+
+---
+# Portal Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: harbor-portal
+  namespace: harbor
+spec:
+  ports:
+  - port: 8080
+  selector:
+    app: harbor-portal
+
+---
+# JobService Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: harbor-jobservice
+  namespace: harbor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: harbor-jobservice
+  template:
+    metadata:
+      labels:
+        app: harbor-jobservice
+    spec:
+      containers:
+      - name: jobservice
+        image: goharbor/harbor-jobservice:v2.9.0
+        env:
+        - name: CORE_SECRET
+          value: "not-a-secure-secret"
+        - name: JOBSERVICE_SECRET
+          value: "not-a-secure-secret"
+        - name: CORE_URL
+          value: "http://harbor-core:8080"
+        - name: REGISTRY_URL
+          value: "http://harbor-registry:5000"
+        - name: REGISTRY_CONTROLLER_URL
+          value: "http://harbor-registry:8080"
+        - name: REDIS_URL
+          value: "redis://harbor-redis:6379/1"
+        - name: HTTP_PROXY
+          value: ""
+        - name: HTTPS_PROXY
+          value: ""
+        - name: NO_PROXY
+          value: "harbor-core,harbor-jobservice,harbor-database,harbor-registry,harbor-portal,harbor-redis"
+        ports:
+        - containerPort: 8080
+
+---
+# JobService Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: harbor-jobservice
+  namespace: harbor
+spec:
+  ports:
+  - port: 8080
+  selector:
+    app: harbor-jobservice
+
+---
+# Nginx ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: harbor-nginx
+  namespace: harbor
+data:
+  nginx.conf: |
+    worker_processes auto;
+    pid /tmp/nginx.pid;
+
+    events {
+      worker_connections 3096;
+      use epoll;
+      multi_accept on;
+    }
+
+    http {
+      client_body_temp_path /tmp/client_body_temp;
+      proxy_temp_path /tmp/proxy_temp;
+      fastcgi_temp_path /tmp/fastcgi_temp;
+      uwsgi_temp_path /tmp/uwsgi_temp;
+      scgi_temp_path /tmp/scgi_temp;
+
+      tcp_nodelay on;
+
+      proxy_request_buffering off;
+
+      log_format timed_combined '$remote_addr - '
+        '"$request" $status $body_bytes_sent '
+        '"$http_referer" "$http_user_agent" '
+        '$request_time $upstream_response_time $pipe';
+
+      access_log /dev/stdout timed_combined;
+
+      upstream core {
+        server harbor-core:8080;
+      }
+
+      upstream portal {
+        server harbor-portal:8080;
+      }
+
+      server {
+        listen 8080;
+        server_tokens off;
+
+        client_max_body_size 0;
+
+        location / {
+          proxy_pass http://portal/;
+          proxy_set_header Host $http_host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_buffering off;
+          proxy_request_buffering off;
+        }
+
+        location /api/ {
+          proxy_pass http://core/api/;
+          proxy_set_header Host $http_host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_buffering off;
+          proxy_request_buffering off;
+        }
+
+        location /service/ {
+          proxy_pass http://core/service/;
+          proxy_set_header Host $http_host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_buffering off;
+          proxy_request_buffering off;
+        }
+
+        location /v2/ {
+          proxy_pass http://core/v2/;
+          proxy_set_header Host $http_host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_buffering off;
+          proxy_request_buffering off;
+        }
+
+        location /chartrepo/ {
+          proxy_pass http://core/chartrepo/;
+          proxy_set_header Host $http_host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_buffering off;
+          proxy_request_buffering off;
+        }
+
+        location /c/ {
+          proxy_pass http://core/c/;
+          proxy_set_header Host $http_host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_buffering off;
+          proxy_request_buffering off;
+        }
+      }
+    }
+
+---
+# Nginx Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: harbor-nginx
+  namespace: harbor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: harbor-nginx
+  template:
+    metadata:
+      labels:
+        app: harbor-nginx
+    spec:
+      securityContext:
+        runAsUser: 10000
+        fsGroup: 10000
+      containers:
+      - name: nginx
+        image: goharbor/nginx-photon:v2.9.0
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: config
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+      volumes:
+      - name: config
+        configMap:
+          name: harbor-nginx
+
+---
+# Nginx Service (NodePort)
+apiVersion: v1
+kind: Service
+metadata:
+  name: harbor
+  namespace: harbor
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 8080
+    nodePort: 30002
+  selector:
+    app: harbor-nginx

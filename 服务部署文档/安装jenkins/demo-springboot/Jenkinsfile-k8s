@@ -6,8 +6,13 @@
  * 使用 Kubernetes Plugin 在 RKE2 集群上动态创建 Pod 进行构建
  * 使用 Kaniko 构建 Docker 镜像（无需 Docker daemon）
  *
- * 版本: v8.0 - 2024
- * 更新: 使用阿里云个人镜像仓库
+ * 版本: v10.0 - 2024
+ * 更新:
+ *   - 支持双推送：Harbor 本地仓库 + 阿里云镜像仓库
+ *   - 使用构建参数控制推送目标
+ *   - 启用最高压缩级别（Level 9）
+ *   - 添加镜像大小预估和推送统计
+ *   - 添加超时和重试机制
  *
  * 前置要求：
  *   1. Jenkins 安装 Kubernetes Plugin
@@ -15,9 +20,16 @@
  *   3. RKE2 配置镜像加速
  *   4. Jenkins 使用 PVC 持久化存储
  *   5. Maven 仓库缓存目录：/var/jenkins_home/maven-repository
- *   6. 创建阿里云镜像仓库认证 Secret（个人版必须使用专属域名）：
- *      参考文档：创建阿里云镜像仓库Secret.md
- *      kubectl apply -f aliyun-registry-secret.yaml
+ *   6. 创建镜像仓库认证 Secret：
+ *      阿里云仓库（个人版必须使用专属域名）：
+ *        参考文档：创建阿里云镜像仓库Secret.md
+ *        kubectl apply -f aliyun-registry-secret.yaml
+ *      Harbor 仓库：
+ *        kubectl create secret docker-registry harbor-registry-secret \
+ *          --docker-server=<HARBOR_URL> \
+ *          --docker-username=<USERNAME> \
+ *          --docker-password=<PASSWORD> \
+ *          -n default
  *
  * ============================================================================
  */
@@ -62,9 +74,11 @@ spec:
     volumeMounts:
     - name: jenkins-home
       mountPath: /var/jenkins_home
-    # 挂载阿里云镜像仓库认证配置
-    - name: docker-config
-      mountPath: /kaniko/.docker
+    # 挂载镜像仓库认证配置
+    - name: aliyun-docker-config
+      mountPath: /kaniko/.docker/aliyun
+    - name: harbor-docker-config
+      mountPath: /kaniko/.docker/harbor
     resources:
       requests:
         cpu: 500m
@@ -77,13 +91,20 @@ spec:
   - name: jenkins-home
     persistentVolumeClaim:
       claimName: jenkins-pvc
-  # 阿里云镜像仓库认证配置
-  - name: docker-config
+  # 镜像仓库认证配置
+  - name: aliyun-docker-config
     secret:
       secretName: aliyun-registry-secret
       items:
       - key: .dockerconfigjson
         path: config.json
+  - name: harbor-docker-config
+    secret:
+      secretName: harbor-registry-secret
+      items:
+      - key: .dockerconfigjson
+        path: config.json
+      optional: true
 """
         }
     }
@@ -106,9 +127,14 @@ spec:
         // 阿里云镜像仓库配置（个人版公网地址）
         DOCKER_REGISTRY = 'crpi-csgbt2t7j15cj178.cn-hangzhou.personal.cr.aliyuncs.com'
         DOCKER_NAMESPACE = 'lgy-images'
-        DOCKER_REPOSITORY_NAME = 'lgy-test-repository'
+        DOCKER_REPOSITORY_NAME = 'demo-springboot'
         DOCKER_IMAGE_NAME = "${DOCKER_REGISTRY}/${DOCKER_NAMESPACE}/${DOCKER_REPOSITORY_NAME}"
         DOCKER_IMAGE_TAG = "${env.BUILD_NUMBER}"
+
+        HARBOR_REGISTRY = 'harbor-core.harbor'  // 使用 Kubernetes 服务名
+        HARBOR_PROJECT = 'library'  // 修改为实际的 Harbor 项目名称
+        HARBOR_REPOSITORY_NAME = 'demo-springboot'
+        HARBOR_IMAGE_NAME = "${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${HARBOR_REPOSITORY_NAME}"
     }
 
     // ==================== 参数化构建 ====================
@@ -132,6 +158,16 @@ spec:
             name: 'BUILD_DOCKER_IMAGE',
             defaultValue: true,
             description: '构建并推送 Docker 镜像'
+        )
+        booleanParam(
+            name: 'PUSH_TO_HARBOR',
+            defaultValue: true,
+            description: '推送镜像到 Harbor 本地仓库'
+        )
+        booleanParam(
+            name: 'PUSH_TO_ALIYUN',
+            defaultValue: true,
+            description: '推送镜像到阿里云镜像仓库'
         )
     }
 
@@ -163,8 +199,18 @@ spec:
                         跳过测试: ${params.SKIP_TESTS}
                         清理构建: ${params.CLEAN_BUILD}
                         构建镜像: ${params.BUILD_DOCKER_IMAGE}
-                        镜像名称: ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+                        推送到 Harbor: ${params.PUSH_TO_HARBOR}
+                        推送到阿里云: ${params.PUSH_TO_ALIYUN}
                         """
+
+                        if (params.BUILD_DOCKER_IMAGE) {
+                            if (params.PUSH_TO_HARBOR) {
+                                echo "Harbor 镜像: ${HARBOR_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
+                            }
+                            if (params.PUSH_TO_ALIYUN) {
+                                echo "阿里云镜像: ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
+                            }
+                        }
 
                         sh '''
                             echo "=== 环境信息 ==="
@@ -283,43 +329,223 @@ spec:
             steps {
                 container('kaniko') {
                     script {
+                        // 验证至少选择了一个推送目标
+                        if (!params.PUSH_TO_HARBOR && !params.PUSH_TO_ALIYUN) {
+                            error("错误: 必须至少选择一个推送目标（Harbor 或阿里云）")
+                        }
+
+                        def pushTargets = []
+                        if (params.PUSH_TO_HARBOR) {
+                            pushTargets.add("Harbor (${HARBOR_REGISTRY})")
+                        }
+                        if (params.PUSH_TO_ALIYUN) {
+                            pushTargets.add("阿里云 (${DOCKER_REGISTRY})")
+                        }
+
                         echo """
                         ╔════════════════════════════════════════╗
                         ║    构建并推送 Docker 镜像 (Kaniko)      ║
                         ╚════════════════════════════════════════╝
-                        镜像名称: ${DOCKER_IMAGE_NAME}
+                        推送目标: ${pushTargets.join(', ')}
                         镜像标签: ${DOCKER_IMAGE_TAG}, latest
-                        推送到: ${DOCKER_REGISTRY}
                         工作目录: ${WORKSPACE}
                         """
 
                         sh """
                             echo ">>> 验证构建环境"
-                            
+
                             # 检查 Dockerfile
                             if [ ! -f "${WORKSPACE}/Dockerfile" ]; then
                                 echo "❌ 错误: 未找到 Dockerfile"
                                 exit 1
                             fi
-                            
+
                             # 检查 JAR 文件
                             if [ ! -f ${WORKSPACE}/target/*.jar ]; then
                                 echo "❌ 错误: 未找到 JAR 文件"
                                 exit 1
                             fi
-                            
+
                             echo "✓ Dockerfile 和 JAR 文件已就绪"
-                            
-                            # 使用 Kaniko 构建并推送镜像到阿里云
-                            /kaniko/executor \\
+
+                            # 合并 Docker 认证配置
+                            echo ">>> 合并镜像仓库认证配置"
+                            mkdir -p /kaniko/.docker
+
+                            # 创建空的 config.json
+                            echo '{"auths":{}}' > /kaniko/.docker/config.json
+
+                            # 合并阿里云配置
+                            if [ "${params.PUSH_TO_ALIYUN}" = "true" ] && [ -f /kaniko/.docker/aliyun/config.json ]; then
+                                echo "  - 添加阿里云仓库认证"
+                                # 使用 jq 合并 JSON（如果没有 jq，使用简单的文件复制）
+                                if command -v jq >/dev/null 2>&1; then
+                                    jq -s '.[0].auths * .[1].auths | {auths: .}' \
+                                        /kaniko/.docker/config.json \
+                                        /kaniko/.docker/aliyun/config.json > /tmp/merged.json
+                                    mv /tmp/merged.json /kaniko/.docker/config.json
+                                else
+                                    cp /kaniko/.docker/aliyun/config.json /kaniko/.docker/config.json
+                                fi
+                            fi
+
+                            # 合并 Harbor 配置
+                            if [ "${params.PUSH_TO_HARBOR}" = "true" ] && [ -f /kaniko/.docker/harbor/config.json ]; then
+                                echo "  - 添加 Harbor 仓库认证"
+                                if command -v jq >/dev/null 2>&1; then
+                                    jq -s '.[0].auths * .[1].auths | {auths: .}' \
+                                        /kaniko/.docker/config.json \
+                                        /kaniko/.docker/harbor/config.json > /tmp/merged.json
+                                    mv /tmp/merged.json /kaniko/.docker/config.json
+                                else
+                                    # 如果没有 jq，Harbor 配置会覆盖阿里云配置
+                                    # 建议安装 jq 或创建合并的 Secret
+                                    if [ "${params.PUSH_TO_ALIYUN}" != "true" ]; then
+                                        cp /kaniko/.docker/harbor/config.json /kaniko/.docker/config.json
+                                    else
+                                        echo "⚠ 警告: 未安装 jq，无法合并多个认证配置"
+                                        echo "   建议: 创建包含两个仓库认证的单一 Secret"
+                                    fi
+                                fi
+                            fi
+
+                            # 计算镜像预估大小
+                            echo ""
+                            echo "╔════════════════════════════════════════╗"
+                            echo "║         镜像大小预估                    ║"
+                            echo "╚════════════════════════════════════════╝"
+
+                            # 1. JAR 文件大小
+                            echo ">>> JAR 文件大小:"
+                            find ${WORKSPACE}/target -name "*.jar" -type f -exec ls -lh {} \\; | awk '{print "    " \$9 ": " \$5}'
+                            JAR_SIZE_MB=\$(find ${WORKSPACE}/target -name "*.jar" -type f -exec du -sm {} \\; | awk '{sum+=\$1} END {print sum}')
+                            echo "    总计: \${JAR_SIZE_MB} MB"
+
+                            # 2. 配置文件大小
+                            if [ -d "${WORKSPACE}/src/main/resources" ]; then
+                                CONFIG_SIZE_MB=\$(du -sm ${WORKSPACE}/src/main/resources 2>/dev/null | awk '{print \$1}')
+                                echo ">>> 配置文件大小: \${CONFIG_SIZE_MB} MB"
+                            else
+                                CONFIG_SIZE_MB=0
+                                echo ">>> 配置文件大小: 0 MB (无外部配置)"
+                            fi
+
+                            # 3. 基础镜像大小（eclipse-temurin:21-jre 约 220MB）
+                            BASE_IMAGE_SIZE_MB=220
+                            echo ">>> 基础镜像大小: \${BASE_IMAGE_SIZE_MB} MB (eclipse-temurin:21-jre)"
+
+                            # 4. 预估总大小
+                            ESTIMATED_SIZE_MB=\$((JAR_SIZE_MB + CONFIG_SIZE_MB + BASE_IMAGE_SIZE_MB))
+                            echo ""
+                            echo ">>> 预估镜像总大小: \${ESTIMATED_SIZE_MB} MB"
+
+                            # 5. 预估推送时间
+                            PUSH_COUNT=0
+                            if [ "${params.PUSH_TO_HARBOR}" = "true" ]; then
+                                PUSH_COUNT=\$((PUSH_COUNT + 1))
+                            fi
+                            if [ "${params.PUSH_TO_ALIYUN}" = "true" ]; then
+                                PUSH_COUNT=\$((PUSH_COUNT + 1))
+                            fi
+
+                            echo ">>> 推送目标数量: \${PUSH_COUNT}"
+
+                            if [ "${params.PUSH_TO_ALIYUN}" = "true" ]; then
+                                ESTIMATED_TIME_MIN_FAST=\$((ESTIMATED_SIZE_MB / 60))  # 1 MB/s
+                                ESTIMATED_TIME_MIN_SLOW=\$((ESTIMATED_SIZE_MB / 30))  # 0.5 MB/s
+                                echo ">>> 预估阿里云推送时间: \${ESTIMATED_TIME_MIN_FAST}-\${ESTIMATED_TIME_MIN_SLOW} 分钟"
+                            fi
+
+                            if [ "${params.PUSH_TO_HARBOR}" = "true" ]; then
+                                ESTIMATED_TIME_MIN_HARBOR=\$((ESTIMATED_SIZE_MB / 600))  # 10 MB/s (本地网络)
+                                echo ">>> 预估 Harbor 推送时间: \${ESTIMATED_TIME_MIN_HARBOR} 分钟"
+                            fi
+                            echo ""
+
+                            if [ \$ESTIMATED_SIZE_MB -gt 400 ]; then
+                                echo "⚠ 警告: 镜像较大 (>400MB)，推送可能需要较长时间"
+                                echo "   建议: 使用 Alpine 基础镜像可减少约 50MB"
+                            fi
+                            echo ""
+
+                            # 构建 Kaniko 推送目标参数
+                            DESTINATIONS=""
+                            INSECURE_REGISTRIES=""
+
+                            if [ "${params.PUSH_TO_HARBOR}" = "true" ]; then
+                                echo ">>> 添加 Harbor 推送目标"
+                                DESTINATIONS="\${DESTINATIONS} --destination=${HARBOR_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
+                                DESTINATIONS="\${DESTINATIONS} --destination=${HARBOR_IMAGE_NAME}:latest"
+                                # Harbor 使用 HTTP，需要添加 insecure registry
+                                INSECURE_REGISTRIES="\${INSECURE_REGISTRIES} --insecure-registry=${HARBOR_REGISTRY}"
+                                echo "  - 配置 Harbor 为 insecure registry (HTTP)"
+                            fi
+
+                            if [ "${params.PUSH_TO_ALIYUN}" = "true" ]; then
+                                echo ">>> 添加阿里云推送目标"
+                                DESTINATIONS="\${DESTINATIONS} --destination=${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
+                                DESTINATIONS="\${DESTINATIONS} --destination=${DOCKER_IMAGE_NAME}:latest"
+                            fi
+
+                            # 使用 Kaniko 构建并推送镜像
+                            # 优化配置：最大压缩、设置超时、推送重试
+                            echo ">>> 开始构建和推送镜像..."
+                            PUSH_START_TIME=\$(date +%s)
+
+                            timeout 1800 /kaniko/executor \\
                                 --context=${WORKSPACE} \\
                                 --dockerfile=${WORKSPACE}/Dockerfile \\
-                                --destination=${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} \\
-                                --destination=${DOCKER_IMAGE_NAME}:latest \\
+                                \${DESTINATIONS} \\
+                                \${INSECURE_REGISTRIES} \\
+                                --skip-tls-verify \\
+                                --compressed-caching=true \\
+                                --compression=gzip \\
+                                --compression-level=9 \\
+                                --push-retry=3 \\
                                 --cache=false \\
-                                --verbosity=info
-                            
-                            echo "✓ 镜像构建并推送成功"
+                                --verbosity=info \\
+                                --image-fs-extract-retry=3 \\
+                                --push-ignore-immutable-tag-errors || {
+                                    echo "❌ 镜像推送失败或超时（30分钟）"
+                                    echo ">>> 可能原因："
+                                    echo "    1. 镜像仓库认证失败"
+                                    echo "    2. 网络不稳定"
+                                    echo "    3. 镜像太大 (预估 \${ESTIMATED_SIZE_MB} MB)"
+                                    echo ">>> 建议："
+                                    echo "    1. 检查镜像仓库 Secret 配置"
+                                    echo "    2. 使用 Alpine 基础镜像减小体积"
+                                    echo "    3. 检查网络连接"
+                                    exit 1
+                                }
+
+                            PUSH_END_TIME=\$(date +%s)
+                            PUSH_DURATION=\$((PUSH_END_TIME - PUSH_START_TIME))
+                            PUSH_DURATION_MIN=\$((PUSH_DURATION / 60))
+                            PUSH_DURATION_SEC=\$((PUSH_DURATION % 60))
+
+                            echo ""
+                            echo "╔════════════════════════════════════════╗"
+                            echo "║         推送完成统计                    ║"
+                            echo "╚════════════════════════════════════════╝"
+                            echo ">>> 推送耗时: \${PUSH_DURATION_MIN} 分 \${PUSH_DURATION_SEC} 秒"
+
+                            if [ \$PUSH_DURATION -gt 0 ]; then
+                                AVG_SPEED_KB=\$((ESTIMATED_SIZE_MB * 1024 / PUSH_DURATION))
+                                AVG_SPEED_MB=\$((AVG_SPEED_KB / 1024))
+                                echo ">>> 平均速度: \${AVG_SPEED_MB} MB/s (\${AVG_SPEED_KB} KB/s)"
+
+                                if [ \$AVG_SPEED_MB -lt 1 ] && [ "${params.PUSH_TO_ALIYUN}" = "true" ]; then
+                                    echo "⚠ 阿里云推送速度较慢，建议优先使用 Harbor 本地仓库"
+                                fi
+                            fi
+                            echo ""
+
+                            if [ "${params.PUSH_TO_HARBOR}" = "true" ]; then
+                                echo "✓ 镜像已推送到 Harbor: ${HARBOR_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
+                            fi
+                            if [ "${params.PUSH_TO_ALIYUN}" = "true" ]; then
+                                echo "✓ 镜像已推送到阿里云: ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
+                            fi
                         """
                     }
                 }
@@ -343,21 +569,42 @@ spec:
             script {
                 if (params.BUILD_DOCKER_IMAGE) {
                     echo """
-                    
-                    Docker 镜像已构建并推送到私有仓库:
+
+                    Docker 镜像已构建并推送:
+                    """
+
+                    if (params.PUSH_TO_HARBOR) {
+                        echo """
+                    Harbor 本地仓库:
+                    - ${HARBOR_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+                    - ${HARBOR_IMAGE_NAME}:latest
+
+                    在 K8s 中使用 Harbor 镜像:
+                    kubectl set image deployment/demo-springboot \\
+                      demo-springboot=${HARBOR_IMAGE_NAME}:${DOCKER_IMAGE_TAG} \\
+                      -n default
+                        """
+                    }
+
+                    if (params.PUSH_TO_ALIYUN) {
+                        echo """
+                    阿里云镜像仓库:
                     - ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
                     - ${DOCKER_IMAGE_NAME}:latest
-                    
-                    在 K8s 中使用镜像:
+
+                    在 K8s 中使用阿里云镜像:
                     kubectl set image deployment/demo-springboot \\
                       demo-springboot=${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} \\
                       -n default
-                    
+                        """
+                    }
+
+                    echo """
                     或者在 Deployment YAML 中使用:
                     spec:
                       containers:
                       - name: demo-springboot
-                        image: ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+                        image: ${params.PUSH_TO_HARBOR ? HARBOR_IMAGE_NAME : DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
                     """
                 }
             }

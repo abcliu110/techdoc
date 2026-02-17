@@ -3,6 +3,13 @@
  * NMS4Cloud 项目 Jenkins 构建流水线
  * ============================================================================
  *
+ * 版本: v2.0 - 2024
+ * 更新:
+ *   - 使用阿里云个人镜像仓库
+ *   - 启用最高压缩级别（Level 9）
+ *   - 添加镜像大小预估和推送统计
+ *   - 添加超时和重试机制
+ *
  * 项目结构：
  *   nms4cloud/
  *   ├── pom.xml (父 POM)
@@ -66,6 +73,25 @@ metadata:
     jenkins: agent
     project: nms4cloud
 spec:
+  # 镜像拉取密钥
+  imagePullSecrets:
+  - name: aliyun-registry-secret
+
+  # 节点选择器（可选，根据实际情况调整）
+  # nodeSelector:
+  #   kubernetes.io/os: linux
+  #   node-role.kubernetes.io/worker: "true"
+
+  # 容忍度（可选，允许调度到特定节点）
+  # tolerations:
+  # - key: "workload"
+  #   operator: "Equal"
+  #   value: "ci-cd"
+  #   effect: "NoSchedule"
+
+  # Pod 优先级（可选，确保构建 Pod 优先调度）
+  # priorityClassName: high-priority
+
   containers:
   - name: maven
     image: maven:3.9-eclipse-temurin-21
@@ -75,13 +101,19 @@ spec:
     volumeMounts:
     - name: jenkins-home
       mountPath: /var/jenkins_home
+    # Maven 容器资源配置（针对大型多模块项目优化）
     resources:
       requests:
-        cpu: 1000m
-        memory: 3Gi
+        cpu: 2000m          # 2 核（提高以加快编译速度）
+        memory: 4Gi         # 4GB（多模块项目需要更多内存）
       limits:
-        cpu: 4000m
-        memory: 6Gi
+        cpu: 6000m          # 6 核（允许并行编译）
+        memory: 8Gi         # 8GB（防止 OOM）
+    # 环境变量优化
+    env:
+    - name: MAVEN_OPTS
+      value: "-Xmx6g -Xms2g -XX:+UseG1GC -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError"
+
   - name: kaniko
     image: m.daocloud.io/gcr.io/kaniko-project/executor:debug
     command:
@@ -90,17 +122,27 @@ spec:
     volumeMounts:
     - name: jenkins-home
       mountPath: /var/jenkins_home
+    - name: docker-config
+      mountPath: /kaniko/.docker
+    # Kaniko 容器资源配置（镜像构建优化）
     resources:
       requests:
-        cpu: 500m
-        memory: 1Gi
+        cpu: 1000m          # 1 核（镜像构建需要 CPU）
+        memory: 2Gi         # 2GB（镜像层处理需要内存）
       limits:
-        cpu: 2000m
-        memory: 2Gi
+        cpu: 4000m          # 4 核（加快镜像构建和推送）
+        memory: 4Gi         # 4GB（防止大镜像构建 OOM）
+
   volumes:
   - name: jenkins-home
     persistentVolumeClaim:
       claimName: jenkins-pvc
+  - name: docker-config
+    secret:
+      secretName: aliyun-registry-secret
+      items:
+      - key: .dockerconfigjson
+        path: config.json
 """
         }
     }
@@ -125,8 +167,9 @@ spec:
         REPO_BI = 'https://codeup.aliyun.com/613895a803e1c17d57a7630f/nms4cloud-pos-java/nms4cloud-bi.git'
         REPO_WMS = 'https://codeup.aliyun.com/613895a803e1c17d57a7630f/nms4cloud-pos-java/nms4cloud-wms.git'
 
-        // Docker 私有仓库配置
-        DOCKER_REGISTRY = '192.168.80.100:30500'
+        // 阿里云个人镜像仓库配置
+        DOCKER_REGISTRY = 'crpi-csgbt2t7j15cj178.cn-hangzhou.personal.cr.aliyuncs.com'
+        DOCKER_NAMESPACE = 'lgy-images'
         DOCKER_IMAGE_TAG = "${env.BUILD_NUMBER}"
     }
 
@@ -134,8 +177,28 @@ spec:
     parameters {
         choice(
             name: 'BUILD_MODULE',
-            choices: ['all', 'nms4cloud-starter', 'nms4cloud-app'],
-            description: '选择构建模块'
+            choices: [
+                'all',
+                'nms4cloud-starter',
+                'nms4cloud-app',
+                '--- 平台模块 ---',
+                'nms4cloud-platform',
+                'nms4cloud-mq',
+                'nms4cloud-netty',
+                'nms4cloud-reg',
+                'nms4cloud-wechat',
+                '--- 业务模块 ---',
+                'nms4cloud-biz',
+                'nms4cloud-crm',
+                'nms4cloud-mall',
+                'nms4cloud-payment',
+                'nms4cloud-pos',
+                'nms4cloud-product',
+                'nms4cloud-scm',
+                '--- 客户模块 ---',
+                'nms4cloud-order'
+            ],
+            description: '选择构建模块（all=全部，nms4cloud-app=所有应用模块，或选择单个模块）'
         )
         string(
             name: 'GIT_BRANCH',
@@ -165,7 +228,7 @@ spec:
         booleanParam(
             name: 'BUILD_DOCKER_IMAGE',
             defaultValue: false,
-            description: '构建并推送 Docker 镜像（需要模块有 Dockerfile）'
+            description: '构建并推送 Docker 镜像（自动根据 BUILD_MODULE 参数决定构建哪些模块）'
         )
     }
 
@@ -442,16 +505,22 @@ spec:
                     """)
 
                     // ========================================
-                    // 步骤 8: 构建主项目（可选）
+                    // 步骤 8: 构建指定模块（可选）
                     // ========================================
                     // 说明：根据参数选择性构建特定模块
                     // 依赖：所有前置模块
-                    if (params.BUILD_MODULE != 'all') {
-                        buildStep('8/9', '构建主项目', """
-                            mvn ${cleanCmd} install -pl ${params.BUILD_MODULE} -am ${mvnOpts}
-                        """)
+                    if (params.BUILD_MODULE != 'all' && params.BUILD_MODULE != 'nms4cloud-app' && params.BUILD_MODULE != 'nms4cloud-starter' && !params.BUILD_MODULE.startsWith('---')) {
+                        // 获取模块的 Maven 路径
+                        def modulePath = getMavenModulePath(params.BUILD_MODULE)
+                        if (modulePath) {
+                            buildStep('8/9', "构建指定模块: ${params.BUILD_MODULE}", """
+                                mvn ${cleanCmd} install -pl ${modulePath} -am ${mvnOpts}
+                            """)
+                        } else {
+                            echo "⚠️ 警告: 未找到模块 ${params.BUILD_MODULE} 的 Maven 路径，跳过构建"
+                        }
                     } else {
-                        echo ">>> 跳过主项目构建（BUILD_MODULE=all，已构建所有模块）"
+                        echo ">>> 跳过单模块构建（BUILD_MODULE=${params.BUILD_MODULE}，已构建所有模块）"
                     }
                 }
             }
@@ -511,32 +580,51 @@ spec:
                         // 获取需要构建的模块列表
                         def modules = getDockerModules()
                         def builtImages = []
+                        def failedModules = []
 
                         // 构建每个模块的镜像
                         modules.each { module ->
-                            def imageName = buildModuleImage(module.name, module.path)
-                            if (imageName) {
-                                builtImages.add(imageName)
+                            def result = buildModuleImage(module.name, module.path)
+                            if (result.success) {
+                                builtImages.add(result.imageName)
+                            } else {
+                                failedModules.add([name: module.name, reason: result.reason])
                             }
                         }
-                        
+
                         if (builtImages.isEmpty()) {
                             echo """
                             ╔════════════════════════════════════════╗
-                            ║    跳过镜像构建 - 未找到 Dockerfile     ║
+                            ║    镜像构建失败                         ║
                             ╚════════════════════════════════════════╝
                             """
+                            if (!failedModules.isEmpty()) {
+                                echo "失败的模块:"
+                                failedModules.each { module ->
+                                    echo "  - ${module.name}: ${module.reason}"
+                                }
+                            }
                         } else {
                             // 保存构建的镜像列表
                             env.BUILT_IMAGES = builtImages.join(', ')
-                            
+
                             echo """
-                            
+
                             ╔════════════════════════════════════════╗
                             ║    所有镜像构建完成                     ║
                             ╚════════════════════════════════════════╝
                             已构建 ${builtImages.size()} 个镜像
                             """
+
+                            if (!failedModules.isEmpty()) {
+                                echo """
+
+                                ⚠️ 部分模块构建失败:
+                                """
+                                failedModules.each { module ->
+                                    echo "  - ${module.name}: ${module.reason}"
+                                }
+                            }
                         }
                     }
                 }
@@ -560,8 +648,8 @@ spec:
                 
                 if (params.BUILD_DOCKER_IMAGE && env.BUILT_IMAGES) {
                     echo """
-                    
-                    Docker 镜像已构建并推送到私有仓库:
+
+                    Docker 镜像已构建并推送到阿里云个人仓库:
                     ${env.BUILT_IMAGES.split(', ').collect { "  - ${it}" }.join('\n')}
                     ${env.BUILT_IMAGES.split(', ').collect { "  - ${it.replaceAll(':.*', ':latest')}" }.join('\n')}
                     """
@@ -652,26 +740,104 @@ def buildStep(String stepNum, String stepName, String command) {
 }
 
 /**
+ * 获取模块的 Maven 路径
+ *
+ * @param moduleName 模块名称
+ * @return Maven 模块路径
+ */
+def getMavenModulePath(String moduleName) {
+    def moduleMap = [
+        // 1_platform 平台模块
+        'nms4cloud-platform': 'nms4cloud-app/1_platform/nms4cloud-platform/nms4cloud-platform-app',
+        'nms4cloud-mq': 'nms4cloud-app/1_platform/nms4cloud-mq/nms4cloud-mq-app',
+        'nms4cloud-netty': 'nms4cloud-app/1_platform/nms4cloud-netty/nms4cloud-netty-app',
+        'nms4cloud-reg': 'nms4cloud-app/1_platform/nms4cloud-reg/nms4cloud-reg-app',
+        'nms4cloud-wechat': 'nms4cloud-app/1_platform/nms4cloud-wechat/nms4cloud-wechat-app',
+
+        // 2_business 业务模块
+        'nms4cloud-biz': 'nms4cloud-app/2_business/nms4cloud-biz/nms4cloud-biz-app',
+        'nms4cloud-crm': 'nms4cloud-app/2_business/nms4cloud-crm/nms4cloud-crm-app',
+        'nms4cloud-mall': 'nms4cloud-app/2_business/nms4cloud-mall/nms4cloud-mall-app',
+        'nms4cloud-payment': 'nms4cloud-app/2_business/nms4cloud-payment/nms4cloud-payment-app',
+        'nms4cloud-pos': 'nms4cloud-app/2_business/nms4cloud-pos/nms4cloud-pos-app',
+        'nms4cloud-product': 'nms4cloud-app/2_business/nms4cloud-product/nms4cloud-product-app',
+        'nms4cloud-scm': 'nms4cloud-app/2_business/nms4cloud-scm/nms4cloud-scm-app',
+
+        // 3_customer 客户模块
+        'nms4cloud-order': 'nms4cloud-app/3_customer/nms4cloud-order/nms4cloud-order-app',
+
+        // 独立仓库模块
+        'nms4cloud-bi': 'nms4cloud-bi/nms4cloud-bi-app',
+        'nms4cloud-wms': 'nms4cloud-wms/nms4cloud-wms-app'
+    ]
+
+    return moduleMap[moduleName]
+}
+
+/**
  * 获取需要构建镜像的模块列表
  *
  * @return 模块列表
  */
 def getDockerModules() {
-    def modules = [
+    def allModules = [
+        // 1_platform 平台模块
         [name: 'nms4cloud-platform', path: 'nms4cloud-app/1_platform/nms4cloud-platform/nms4cloud-platform-app'],
-        [name: 'nms4cloud-product', path: 'nms4cloud-app/2_business/nms4cloud-product/nms4cloud-product-app'],
+        [name: 'nms4cloud-mq', path: 'nms4cloud-app/1_platform/nms4cloud-mq/nms4cloud-mq-app'],
+        [name: 'nms4cloud-netty', path: 'nms4cloud-app/1_platform/nms4cloud-netty/nms4cloud-netty-app'],
+        [name: 'nms4cloud-reg', path: 'nms4cloud-app/1_platform/nms4cloud-reg/nms4cloud-reg-app'],
+        [name: 'nms4cloud-wechat', path: 'nms4cloud-app/1_platform/nms4cloud-wechat/nms4cloud-wechat-app'],
+
+        // 2_business 业务模块
+        [name: 'nms4cloud-biz', path: 'nms4cloud-app/2_business/nms4cloud-biz/nms4cloud-biz-app'],
         [name: 'nms4cloud-crm', path: 'nms4cloud-app/2_business/nms4cloud-crm/nms4cloud-crm-app'],
-        [name: 'nms4cloud-biz', path: 'nms4cloud-app/2_business/nms4cloud-biz/nms4cloud-biz-app']
+        [name: 'nms4cloud-mall', path: 'nms4cloud-app/2_business/nms4cloud-mall/nms4cloud-mall-app'],
+        [name: 'nms4cloud-payment', path: 'nms4cloud-app/2_business/nms4cloud-payment/nms4cloud-payment-app'],
+        [name: 'nms4cloud-pos', path: 'nms4cloud-app/2_business/nms4cloud-pos/nms4cloud-pos-app'],
+        [name: 'nms4cloud-product', path: 'nms4cloud-app/2_business/nms4cloud-product/nms4cloud-product-app'],
+        [name: 'nms4cloud-scm', path: 'nms4cloud-app/2_business/nms4cloud-scm/nms4cloud-scm-app'],
+
+        // 3_customer 客户模块
+        [name: 'nms4cloud-order', path: 'nms4cloud-app/3_customer/nms4cloud-order/nms4cloud-order-app']
     ]
 
     if (params.BUILD_BI) {
-        modules.add([name: 'nms4cloud-bi', path: 'nms4cloud-bi/nms4cloud-bi-app'])
+        allModules.add([name: 'nms4cloud-bi', path: 'nms4cloud-bi/nms4cloud-bi-app'])
     }
     if (params.BUILD_WMS) {
-        modules.add([name: 'nms4cloud-wms', path: 'nms4cloud-wms/nms4cloud-wms-app'])
+        allModules.add([name: 'nms4cloud-wms', path: 'nms4cloud-wms/nms4cloud-wms-app'])
     }
 
-    return modules
+    // 根据 BUILD_MODULE 参数决定构建哪些模块的镜像
+    def buildModule = params.BUILD_MODULE?.trim() ?: 'all'
+
+    // 如果是分隔符，跳过
+    if (buildModule.startsWith('---')) {
+        echo "⚠️ 警告: BUILD_MODULE 是分隔符，将构建所有模块"
+        return allModules
+    }
+
+    // 如果是 all 或 nms4cloud-app，构建所有模块
+    if (buildModule == 'all' || buildModule == 'nms4cloud-app') {
+        echo ">>> 构建所有模块的 Docker 镜像 (共 ${allModules.size()} 个)"
+        return allModules
+    }
+
+    // 如果是 nms4cloud-starter，不构建镜像
+    if (buildModule == 'nms4cloud-starter') {
+        echo ">>> nms4cloud-starter 没有 Dockerfile，跳过镜像构建"
+        return []
+    }
+
+    // 查找指定的单个模块
+    def selectedModule = allModules.find { it.name == buildModule }
+    if (selectedModule) {
+        echo ">>> 只构建选定模块的 Docker 镜像: ${buildModule}"
+        return [selectedModule]
+    } else {
+        echo "⚠️ 警告: 未找到模块 ${buildModule}，跳过镜像构建"
+        return []
+    }
 }
 
 /**
@@ -684,42 +850,55 @@ def getDockerModules() {
 def buildModuleImage(String moduleName, String modulePath) {
     def dockerfilePath = "${WORKSPACE}/${modulePath}/Dockerfile"
     def buildContext = "${WORKSPACE}/${modulePath}"
-    
-    // 检查 Dockerfile 是否存在
-    if (!fileExists(dockerfilePath)) {
-        echo "✗ 跳过 ${moduleName}: 未找到 Dockerfile"
-        return null
-    }
-    
-    echo "✓ 找到 Dockerfile: ${moduleName}"
-    
-    def dockerImageName = "${DOCKER_REGISTRY}/${moduleName}"
-    
+
     echo """
-    
+
     ════════════════════════════════════════
     开始构建模块: ${moduleName}
     ════════════════════════════════════════
-    镜像名称: ${dockerImageName}
-    镜像标签: ${DOCKER_IMAGE_TAG}, latest
+    模块路径: ${modulePath}
     构建上下文: ${buildContext}
     Dockerfile: ${dockerfilePath}
     """
-    
+
+    def dockerImageName = "${DOCKER_REGISTRY}/${DOCKER_NAMESPACE}/${moduleName}"
+
+    echo """
+    镜像名称: ${dockerImageName}
+    镜像标签: ${DOCKER_IMAGE_TAG}, latest
+    """
+
     try {
         sh """
-            echo ">>> 验证 JAR 文件"
-            find ${buildContext}/target -name "*.jar" -type f 2>/dev/null || echo "❌ 未找到 JAR 文件"
-            
+            echo ">>> 当前工作目录"
+            pwd
+            echo ">>> WORKSPACE: ${WORKSPACE}"
+
+            echo ">>> 验证构建上下文目录"
+            if [ ! -d "${buildContext}" ]; then
+                echo "❌ 错误: 构建上下文目录不存在: ${buildContext}"
+                exit 1
+            fi
+            echo "✓ 构建上下文目录存在"
+
             echo ">>> 验证 Dockerfile"
             if [ ! -f "${dockerfilePath}" ]; then
                 echo "❌ 错误: 未找到 Dockerfile: ${dockerfilePath}"
+                echo ">>> 列出构建上下文目录内容:"
+                ls -laR ${buildContext}/ | head -100
+                echo ">>> 检查 Git 状态:"
+                cd ${buildContext}
+                git ls-files | grep -i dockerfile || echo "Git 中没有 Dockerfile"
                 exit 1
             fi
-            
+            echo "✓ Dockerfile 存在"
+
             echo ">>> 显示 Dockerfile 内容"
             cat ${dockerfilePath}
-            
+
+            echo ">>> 验证 JAR 文件"
+            find ${buildContext}/target -name "*.jar" -type f 2>/dev/null || echo "❌ 未找到 JAR 文件"
+
             # 检查 JAR 文件
             JAR_COUNT=\$(find ${buildContext}/target -name "*.jar" -type f 2>/dev/null | wc -l)
             if [ "\$JAR_COUNT" -eq 0 ]; then
@@ -728,26 +907,77 @@ def buildModuleImage(String moduleName, String modulePath) {
                 ls -laR ${buildContext}/target/ || echo "target 目录不存在"
                 exit 1
             fi
-            
-            echo "✓ JAR 文件已就绪"
-            
-            # 使用 Kaniko 构建并推送镜像
-            /kaniko/executor \\
+
+            echo "✓ JAR 文件已就绪 (找到 \$JAR_COUNT 个)"
+            find ${buildContext}/target -name "*.jar" -type f
+
+            # 预估镜像大小
+            echo ""
+            echo "════════════════════════════════════════"
+            echo "镜像大小预估"
+            echo "════════════════════════════════════════"
+            JAR_SIZE=\$(find ${buildContext}/target -name "*.jar" -type f -exec du -sh {} \\; | awk '{print \$1}')
+            echo "JAR 文件大小: \$JAR_SIZE"
+            echo "预估镜像大小: ~\$(echo \$JAR_SIZE | sed 's/M/ MB/')"
+            echo ""
+
+            # 记录推送开始时间
+            PUSH_START=\$(date +%s)
+
+            # 使用 Kaniko 构建并推送镜像（启用最高压缩级别）
+            timeout 1800 /kaniko/executor \\
                 --context=${buildContext} \\
                 --dockerfile=${dockerfilePath} \\
                 --destination=${dockerImageName}:${DOCKER_IMAGE_TAG} \\
                 --destination=${dockerImageName}:latest \\
-                --insecure \\
-                --skip-tls-verify \\
+                --compression=gzip \\
+                --compression-level=9 \\
+                --push-retry=3 \\
                 --cache=false \\
-                --verbosity=info
-            
+                --verbosity=info \\
+                --skip-unused-stages=true \\
+                --single-snapshot=true
+
+            # 记录推送结束时间
+            PUSH_END=\$(date +%s)
+            PUSH_DURATION=\$((PUSH_END - PUSH_START))
+
+            # 显示推送统计
+            echo ""
+            echo "════════════════════════════════════════"
+            echo "镜像推送统计"
+            echo "════════════════════════════════════════"
+            echo "模块名称: ${moduleName}"
+            echo "镜像地址: ${dockerImageName}:${DOCKER_IMAGE_TAG}"
+            echo "推送耗时: \${PUSH_DURATION}秒 (\$((PUSH_DURATION / 60))分\$((PUSH_DURATION % 60))秒)"
+            echo "压缩级别: Level 9 (最高)"
+            echo "重试次数: 最多3次"
+            echo "超时设置: 1800秒 (30分钟)"
+            echo "════════════════════════════════════════"
+            echo ""
+
             echo "✓ 镜像构建并推送成功: ${dockerImageName}:${DOCKER_IMAGE_TAG}"
         """
-        
-        return "${dockerImageName}:${DOCKER_IMAGE_TAG}"
+
+        return [success: true, imageName: "${dockerImageName}:${DOCKER_IMAGE_TAG}", reason: ""]
     } catch (Exception e) {
-        echo "❌ 构建失败: ${moduleName} - ${e.message}"
-        return null
+        def errorMsg = e.message ?: "未知错误"
+        echo "❌ 构建失败: ${moduleName} - ${errorMsg}"
+
+        // 判断失败原因
+        def reason = "未知错误"
+        if (errorMsg.contains("exit code 143") || errorMsg.contains("timeout")) {
+            reason = "推送超时 (30分钟) - 阿里云个人仓库速度慢"
+        } else if (errorMsg.contains("Dockerfile")) {
+            reason = "未找到 Dockerfile"
+        } else if (errorMsg.contains("JAR") || errorMsg.contains("jar")) {
+            reason = "未找到 JAR 文件"
+        } else if (errorMsg.contains("exit code 1")) {
+            reason = "构建失败 - 检查日志"
+        } else {
+            reason = errorMsg.take(100)
+        }
+
+        return [success: false, imageName: null, reason: reason]
     }
 }

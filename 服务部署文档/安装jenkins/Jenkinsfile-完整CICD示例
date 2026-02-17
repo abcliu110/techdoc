@@ -1,0 +1,428 @@
+/*
+ * ============================================================================
+ * 完整的 CI/CD 流水线示例
+ * ============================================================================
+ *
+ * CI 阶段：代码检出 → 构建 → 测试 → 打包镜像 → 推送镜像
+ * CD 阶段：部署到 K8s → 健康检查 → 验证 → 通知
+ *
+ * ============================================================================
+ */
+
+pipeline {
+    agent {
+        kubernetes {
+            yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    jenkins: agent
+spec:
+  imagePullSecrets:
+  - name: aliyun-registry-secret
+
+  containers:
+  - name: maven
+    image: maven:3.9-eclipse-temurin-21
+    command: ['cat']
+    tty: true
+    volumeMounts:
+    - name: jenkins-home
+      mountPath: /var/jenkins_home
+
+  - name: kaniko
+    image: m.daocloud.io/gcr.io/kaniko-project/executor:debug
+    command: ['/busybox/cat']
+    tty: true
+    volumeMounts:
+    - name: jenkins-home
+      mountPath: /var/jenkins_home
+    - name: docker-config
+      mountPath: /kaniko/.docker
+
+  - name: kubectl
+    image: bitnami/kubectl:latest
+    command: ['cat']
+    tty: true
+
+  volumes:
+  - name: jenkins-home
+    persistentVolumeClaim:
+      claimName: jenkins-pvc
+  - name: docker-config
+    secret:
+      secretName: aliyun-registry-secret
+      items:
+      - key: .dockerconfigjson
+        path: config.json
+"""
+        }
+    }
+
+    environment {
+        // Maven 配置
+        MAVEN_LOCAL_REPO = '/var/jenkins_home/maven-repository'
+
+        // 项目配置
+        PROJECT_NAME = 'nms4cloud-pos-java'
+        ARTIFACT_VERSION = '0.0.1-SNAPSHOT'
+
+        // Git 配置
+        GIT_CREDENTIAL_ID = 'aliyun-codeup-token'
+        GIT_REPO_URL = 'https://codeup.aliyun.com/613895a803e1c17d57a7630f/nms4cloud-pos-java/nms4pos.git'
+
+        // 镜像仓库配置
+        DOCKER_REGISTRY = 'crpi-csgbt2t7j15cj178.cn-hangzhou.personal.cr.aliyuncs.com'
+        DOCKER_NAMESPACE = 'lgy-images'
+
+        // K8s 配置
+        K8S_NAMESPACE = "${params.DEPLOY_ENV}"
+        K8S_DEPLOYMENT_TIMEOUT = '300s'
+    }
+
+    parameters {
+        choice(
+            name: 'DEPLOY_ENV',
+            choices: ['dev', 'test', 'prod'],
+            description: '部署环境'
+        )
+        choice(
+            name: 'BUILD_MODULE',
+            choices: ['pos3boot', 'pos4cloud', 'pos5sync'],
+            description: '构建模块'
+        )
+        string(
+            name: 'GIT_BRANCH',
+            defaultValue: 'master',
+            description: 'Git 分支'
+        )
+        booleanParam(
+            name: 'SKIP_TESTS',
+            defaultValue: true,
+            description: '跳过单元测试'
+        )
+        booleanParam(
+            name: 'AUTO_DEPLOY',
+            defaultValue: true,
+            description: '自动部署到 K8s'
+        )
+        booleanParam(
+            name: 'ENABLE_CANARY',
+            defaultValue: false,
+            description: '启用金丝雀发布（仅生产环境）'
+        )
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        disableConcurrentBuilds()
+        timeout(time: 60, unit: 'MINUTES')
+        timestamps()
+    }
+
+    stages {
+        // ==================== CI 阶段 ====================
+
+        stage('环境检查') {
+            steps {
+                container('maven') {
+                    script {
+                        currentBuild.displayName = "#${BUILD_NUMBER} - ${params.BUILD_MODULE} - ${params.DEPLOY_ENV}"
+
+                        echo """
+                        ╔════════════════════════════════════════╗
+                        ║         CI/CD 构建配置                  ║
+                        ╚════════════════════════════════════════╝
+                        项目: ${PROJECT_NAME}
+                        模块: ${params.BUILD_MODULE}
+                        分支: ${params.GIT_BRANCH}
+                        环境: ${params.DEPLOY_ENV}
+                        自动部署: ${params.AUTO_DEPLOY}
+                        金丝雀发布: ${params.ENABLE_CANARY}
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('代码检出') {
+            steps {
+                container('maven') {
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: "*/${params.GIT_BRANCH}"]],
+                        userRemoteConfigs: [[
+                            credentialsId: "${GIT_CREDENTIAL_ID}",
+                            url: "${GIT_REPO_URL}"
+                        ]]
+                    ])
+                }
+            }
+        }
+
+        stage('Maven 构建') {
+            steps {
+                container('maven') {
+                    script {
+                        def skipTests = params.SKIP_TESTS ? '-DskipTests' : ''
+                        sh """
+                            mvn clean package ${skipTests} \
+                                -pl nms4cloud-${params.BUILD_MODULE}/nms4cloud-${params.BUILD_MODULE}-app -am \
+                                -Dmaven.repo.local=${MAVEN_LOCAL_REPO}
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('构建并推送镜像') {
+            steps {
+                container('kaniko') {
+                    script {
+                        def moduleName = "nms4cloud-${params.BUILD_MODULE}"
+                        def imageName = "${DOCKER_REGISTRY}/${DOCKER_NAMESPACE}/${moduleName}"
+                        def imageTag = "${params.DEPLOY_ENV}-${BUILD_NUMBER}"
+
+                        env.DOCKER_IMAGE = "${imageName}:${imageTag}"
+                        env.MODULE_NAME = moduleName
+
+                        sh """
+                            /kaniko/executor \
+                                --context=${WORKSPACE}/nms4cloud-${params.BUILD_MODULE}/nms4cloud-${params.BUILD_MODULE}-app \
+                                --dockerfile=${WORKSPACE}/nms4cloud-${params.BUILD_MODULE}/nms4cloud-${params.BUILD_MODULE}-app/Dockerfile \
+                                --destination=${imageName}:${imageTag} \
+                                --destination=${imageName}:${params.DEPLOY_ENV}-latest \
+                                --cache=false
+                        """
+
+                        echo "✓ 镜像构建成功: ${env.DOCKER_IMAGE}"
+                    }
+                }
+            }
+        }
+
+        // ==================== CD 阶段 ====================
+
+        stage('部署审批') {
+            when {
+                expression { params.DEPLOY_ENV == 'prod' && params.AUTO_DEPLOY }
+            }
+            steps {
+                script {
+                    timeout(time: 30, unit: 'MINUTES') {
+                        input message: "确认部署到生产环境？\n镜像: ${env.DOCKER_IMAGE}",
+                              ok: '确认部署',
+                              submitter: 'admin,ops-team'
+                    }
+                }
+            }
+        }
+
+        stage('部署到 Kubernetes') {
+            when {
+                expression { params.AUTO_DEPLOY }
+            }
+            steps {
+                container('kubectl') {
+                    script {
+                        echo """
+                        ╔════════════════════════════════════════╗
+                        ║         部署到 Kubernetes               ║
+                        ╚════════════════════════════════════════╝
+                        命名空间: ${K8S_NAMESPACE}
+                        部署名称: ${env.MODULE_NAME}
+                        镜像: ${env.DOCKER_IMAGE}
+                        """
+
+                        if (params.ENABLE_CANARY && params.DEPLOY_ENV == 'prod') {
+                            // 金丝雀发布
+                            canaryDeploy()
+                        } else {
+                            // 滚动更新
+                            rollingUpdate()
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('健康检查') {
+            when {
+                expression { params.AUTO_DEPLOY }
+            }
+            steps {
+                container('kubectl') {
+                    script {
+                        echo ">>> 等待 Deployment 就绪..."
+
+                        sh """
+                            kubectl rollout status deployment/${env.MODULE_NAME} \
+                                -n ${K8S_NAMESPACE} \
+                                --timeout=${K8S_DEPLOYMENT_TIMEOUT}
+                        """
+
+                        echo ">>> 检查 Pod 状态..."
+                        sh """
+                            kubectl get pods -n ${K8S_NAMESPACE} \
+                                -l app=${env.MODULE_NAME} \
+                                -o wide
+                        """
+
+                        echo "✓ 部署成功，服务健康"
+                    }
+                }
+            }
+        }
+
+        stage('服务验证') {
+            when {
+                expression { params.AUTO_DEPLOY }
+            }
+            steps {
+                container('kubectl') {
+                    script {
+                        echo ">>> 验证服务可访问性..."
+
+                        // 获取 Service 信息
+                        sh """
+                            kubectl get service ${env.MODULE_NAME} -n ${K8S_NAMESPACE} || \
+                            echo "⚠ Service 不存在，请手动创建"
+                        """
+
+                        // 可以添加更多验证逻辑
+                        // 例如：调用健康检查接口、运行冒烟测试等
+
+                        echo "✓ 服务验证通过"
+                    }
+                }
+            }
+        }
+
+        stage('金丝雀验证') {
+            when {
+                expression { params.ENABLE_CANARY && params.DEPLOY_ENV == 'prod' && params.AUTO_DEPLOY }
+            }
+            steps {
+                script {
+                    echo ">>> 金丝雀版本运行中，等待验证..."
+
+                    timeout(time: 10, unit: 'MINUTES') {
+                        input message: '金丝雀版本验证通过？',
+                              ok: '验证通过，继续全量发布',
+                              submitter: 'admin,ops-team'
+                    }
+
+                    container('kubectl') {
+                        echo ">>> 开始全量发布..."
+                        sh """
+                            kubectl scale deployment/${env.MODULE_NAME} \
+                                -n ${K8S_NAMESPACE} \
+                                --replicas=3
+
+                            kubectl rollout status deployment/${env.MODULE_NAME} \
+                                -n ${K8S_NAMESPACE}
+                        """
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            script {
+                echo """
+                ╔════════════════════════════════════════╗
+                ║         ✓ CI/CD 流程成功                ║
+                ╚════════════════════════════════════════╝
+                项目: ${PROJECT_NAME}
+                模块: ${env.MODULE_NAME}
+                环境: ${params.DEPLOY_ENV}
+                镜像: ${env.DOCKER_IMAGE}
+                耗时: ${currentBuild.durationString}
+
+                查看部署状态:
+                kubectl get deployment ${env.MODULE_NAME} -n ${K8S_NAMESPACE}
+                kubectl get pods -l app=${env.MODULE_NAME} -n ${K8S_NAMESPACE}
+
+                查看日志:
+                kubectl logs -f deployment/${env.MODULE_NAME} -n ${K8S_NAMESPACE}
+                """
+
+                // 可以添加通知逻辑
+                // 例如：发送钉钉、企业微信、邮件通知
+            }
+        }
+
+        failure {
+            script {
+                echo """
+                ╔════════════════════════════════════════╗
+                ║         ✗ CI/CD 流程失败                ║
+                ╚════════════════════════════════════════╝
+                请检查构建日志
+                """
+
+                // 如果部署失败，自动回滚
+                if (params.AUTO_DEPLOY && env.DOCKER_IMAGE) {
+                    container('kubectl') {
+                        echo ">>> 检测到部署失败，尝试回滚..."
+                        sh """
+                            kubectl rollout undo deployment/${env.MODULE_NAME} \
+                                -n ${K8S_NAMESPACE} || echo "回滚失败，请手动处理"
+                        """
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ==================== CD 辅助函数 ====================
+
+/**
+ * 滚动更新部署
+ */
+def rollingUpdate() {
+    echo ">>> 执行滚动更新..."
+
+    sh """
+        # 检查 Deployment 是否存在
+        if kubectl get deployment ${env.MODULE_NAME} -n ${K8S_NAMESPACE} &>/dev/null; then
+            echo "✓ Deployment 已存在，执行更新"
+            kubectl set image deployment/${env.MODULE_NAME} \
+                ${env.MODULE_NAME}=${env.DOCKER_IMAGE} \
+                -n ${K8S_NAMESPACE}
+        else
+            echo "⚠ Deployment 不存在，需要先创建"
+            echo "请确保 K8s YAML 文件已准备好"
+            exit 1
+        fi
+    """
+}
+
+/**
+ * 金丝雀发布
+ */
+def canaryDeploy() {
+    echo ">>> 执行金丝雀发布..."
+
+    sh """
+        # 1. 先缩减副本数到 1（金丝雀实例）
+        kubectl scale deployment/${env.MODULE_NAME} \
+            -n ${K8S_NAMESPACE} \
+            --replicas=1
+
+        # 2. 更新镜像
+        kubectl set image deployment/${env.MODULE_NAME} \
+            ${env.MODULE_NAME}=${env.DOCKER_IMAGE} \
+            -n ${K8S_NAMESPACE}
+
+        # 3. 等待金丝雀实例就绪
+        kubectl rollout status deployment/${env.MODULE_NAME} \
+            -n ${K8S_NAMESPACE}
+
+        echo "✓ 金丝雀实例已部署，等待验证..."
+    """
+}

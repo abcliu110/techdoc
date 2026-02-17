@@ -133,8 +133,9 @@ spec:
         booleanParam(
             name: 'BUILD_DOCKER_IMAGE',
             defaultValue: false,
-            description: '构建并推送 Docker 镜像'
+            description: '构建并推送 Docker 镜像（需要模块有 Dockerfile）'
         )
+
     }
 
     // ==================== 构建选项 ====================
@@ -285,86 +286,145 @@ spec:
         // ========== 阶段 6: 构建并推送 Docker 镜像 ==========
         stage('构建并推送 Docker 镜像') {
             when {
-                expression { params.BUILD_DOCKER_IMAGE && params.BUILD_MODULE != 'all' }
+                expression { params.BUILD_DOCKER_IMAGE }
             }
             steps {
                 container('kaniko') {
                     script {
-                        def moduleName = getModuleName(params.BUILD_MODULE)
-                        def dockerImageName = "${DOCKER_REGISTRY}/${moduleName}"
-                        def dockerfilePath = findDockerfilePath(params.BUILD_MODULE)
-                        def buildContext = getBuildContext(params.BUILD_MODULE)
-
+                        def modulesToBuild = []
+                        
+                        // 如果选择 'all'，扫描所有模块
+                        if (params.BUILD_MODULE == 'all') {
+                            def allModules = [
+                                'pos1starter',
+                                'pos2plugin',
+                                'pos3boot',
+                                'pos4cloud',
+                                'pos5sync',
+                                'pos6monitor',
+                                'pos8book',
+                                'pos9cash',
+                                'pos10printer'
+                            ]
+                            
+                            echo ">>> 扫描所有模块的 Dockerfile..."
+                            allModules.each { module ->
+                                def dockerfilePath = findDockerfilePath(module)
+                                if (fileExists(dockerfilePath)) {
+                                    modulesToBuild.add(module)
+                                    echo "✓ 找到 Dockerfile: ${module} -> ${dockerfilePath}"
+                                } else {
+                                    echo "✗ 未找到 Dockerfile: ${module}"
+                                }
+                            }
+                        } else {
+                            // 单个模块，检查是否有 Dockerfile
+                            def dockerfilePath = findDockerfilePath(params.BUILD_MODULE)
+                            if (fileExists(dockerfilePath)) {
+                                modulesToBuild.add(params.BUILD_MODULE)
+                                echo "✓ 找到 Dockerfile: ${params.BUILD_MODULE} -> ${dockerfilePath}"
+                            } else {
+                                echo "✗ 未找到 Dockerfile: ${params.BUILD_MODULE}"
+                            }
+                        }
+                        
+                        if (modulesToBuild.isEmpty()) {
+                            echo """
+                            ╔════════════════════════════════════════╗
+                            ║    跳过镜像构建 - 未找到 Dockerfile     ║
+                            ╚════════════════════════════════════════╝
+                            """
+                            return
+                        }
+                        
                         echo """
                         ╔════════════════════════════════════════╗
                         ║    构建并推送 Docker 镜像 (Kaniko)      ║
                         ╚════════════════════════════════════════╝
-                        模块: ${moduleName}
-                        镜像名称: ${dockerImageName}
-                        镜像标签: ${DOCKER_IMAGE_TAG}, latest
-                        推送到: ${DOCKER_REGISTRY}
-                        工作目录: ${WORKSPACE}
-                        构建上下文: ${buildContext}
-                        Dockerfile: ${dockerfilePath}
+                        将构建以下模块的镜像:
+                        ${modulesToBuild.collect { "  - ${it}" }.join('\n')}
                         """
-
-                        sh """
-                            echo ">>> 当前工作目录"
-                            pwd
+                        
+                        // 构建每个模块的镜像
+                        modulesToBuild.each { module ->
+                            def moduleName = getModuleName(module)
+                            def dockerImageName = "${DOCKER_REGISTRY}/${moduleName}"
+                            def dockerfilePath = findDockerfilePath(module)
+                            def buildContext = getBuildContext(module)
                             
-                            echo ">>> 强制删除 .dockerignore 文件（如果存在）"
-                            if [ -f "${WORKSPACE}/.dockerignore" ]; then
-                                echo "⚠ 发现 .dockerignore 文件，正在删除..."
-                                rm -f ${WORKSPACE}/.dockerignore
-                                echo "✓ .dockerignore 已删除"
-                            else
-                                echo "✓ .dockerignore 不存在"
-                            fi
+                            echo """
                             
-                            echo ">>> 列出构建上下文目录"
-                            ls -laR ${buildContext}/ | head -100
+                            ════════════════════════════════════════
+                            开始构建模块: ${moduleName}
+                            ════════════════════════════════════════
+                            镜像名称: ${dockerImageName}
+                            镜像标签: ${DOCKER_IMAGE_TAG}, latest
+                            构建上下文: ${buildContext}
+                            Dockerfile: ${dockerfilePath}
+                            """
                             
-                            echo ">>> 验证 JAR 文件"
-                            find ${buildContext} -name "*.jar" -type f 2>/dev/null || echo "❌ 未找到 JAR 文件"
-                            
-                            echo ">>> 验证 Dockerfile"
-                            if [ -f "${dockerfilePath}" ]; then
-                                echo "✓ 找到 Dockerfile: ${dockerfilePath}"
+                            sh """
+                                echo ">>> 当前工作目录"
+                                pwd
+                                
+                                echo ">>> 强制删除 .dockerignore 文件（如果存在）"
+                                if [ -f "${WORKSPACE}/.dockerignore" ]; then
+                                    echo "⚠ 发现 .dockerignore 文件，正在删除..."
+                                    rm -f ${WORKSPACE}/.dockerignore
+                                    echo "✓ .dockerignore 已删除"
+                                fi
+                                
+                                echo ">>> 验证 JAR 文件"
+                                find ${buildContext}/target -name "*.jar" -type f 2>/dev/null || echo "❌ 未找到 JAR 文件"
+                                
+                                echo ">>> 验证 Dockerfile"
+                                if [ ! -f "${dockerfilePath}" ]; then
+                                    echo "❌ 错误: 未找到 Dockerfile: ${dockerfilePath}"
+                                    exit 1
+                                fi
+                                
                                 echo ">>> 显示 Dockerfile 内容"
                                 cat ${dockerfilePath}
-                            else
-                                echo "❌ 错误: 未找到 Dockerfile: ${dockerfilePath}"
-                                exit 1
-                            fi
-                            
-                            # 检查 JAR 文件
-                            JAR_COUNT=\$(find ${buildContext}/target -name "*.jar" -type f 2>/dev/null | wc -l)
-                            if [ "\$JAR_COUNT" -eq 0 ]; then
-                                echo "❌ 错误: 未找到 JAR 文件"
-                                echo ">>> 列出 target 目录内容:"
-                                ls -laR ${buildContext}/target/ || echo "target 目录不存在"
-                                exit 1
-                            fi
-                            
-                            echo "✓ JAR 文件已就绪"
-                            
-                            # 使用 Kaniko 构建并推送镜像
-                            /kaniko/executor \\
-                                --context=${buildContext} \\
-                                --dockerfile=${dockerfilePath} \\
-                                --destination=${dockerImageName}:${DOCKER_IMAGE_TAG} \\
-                                --destination=${dockerImageName}:latest \\
-                                --insecure \\
-                                --skip-tls-verify \\
-                                --cache=false \\
-                                --verbosity=debug
-                            
-                            echo "✓ 镜像构建并推送成功"
+                                
+                                # 检查 JAR 文件
+                                JAR_COUNT=\$(find ${buildContext}/target -name "*.jar" -type f 2>/dev/null | wc -l)
+                                if [ "\$JAR_COUNT" -eq 0 ]; then
+                                    echo "❌ 错误: 未找到 JAR 文件"
+                                    echo ">>> 列出 target 目录内容:"
+                                    ls -laR ${buildContext}/target/ || echo "target 目录不存在"
+                                    exit 1
+                                fi
+                                
+                                echo "✓ JAR 文件已就绪"
+                                
+                                # 使用 Kaniko 构建并推送镜像
+                                /kaniko/executor \\
+                                    --context=${buildContext} \\
+                                    --dockerfile=${dockerfilePath} \\
+                                    --destination=${dockerImageName}:${DOCKER_IMAGE_TAG} \\
+                                    --destination=${dockerImageName}:latest \\
+                                    --insecure \\
+                                    --skip-tls-verify \\
+                                    --cache=false \\
+                                    --verbosity=info
+                                
+                                echo "✓ 镜像构建并推送成功: ${dockerImageName}:${DOCKER_IMAGE_TAG}"
+                            """
+                        }
+                        
+                        // 保存构建的镜像列表
+                        env.BUILT_IMAGES = modulesToBuild.collect { module ->
+                            def moduleName = getModuleName(module)
+                            "${DOCKER_REGISTRY}/${moduleName}:${DOCKER_IMAGE_TAG}"
+                        }.join(', ')
+                        
+                        echo """
+                        
+                        ╔════════════════════════════════════════╗
+                        ║    所有镜像构建完成                     ║
+                        ╚════════════════════════════════════════╝
+                        已构建 ${modulesToBuild.size()} 个镜像
                         """
-
-                        // 保存镜像信息供后续使用
-                        env.DOCKER_IMAGE_FULL = "${dockerImageName}:${DOCKER_IMAGE_TAG}"
-                        env.MODULE_NAME = moduleName
                     }
                 }
             }
@@ -386,23 +446,12 @@ spec:
                 耗时: ${currentBuild.durationString}
                 """
 
-                if (params.BUILD_DOCKER_IMAGE && env.DOCKER_IMAGE_FULL) {
+                if (params.BUILD_DOCKER_IMAGE && env.BUILT_IMAGES) {
                     echo """
                     
                     Docker 镜像已构建并推送到私有仓库:
-                    - ${env.DOCKER_IMAGE_FULL}
-                    - ${env.DOCKER_IMAGE_FULL.replaceAll(':.*', ':latest')}
-                    
-                    在 K8s 中使用镜像:
-                    kubectl set image deployment/${env.MODULE_NAME} \\
-                      ${env.MODULE_NAME}=${env.DOCKER_IMAGE_FULL} \\
-                      -n default
-                    
-                    或者在 Deployment YAML 中使用:
-                    spec:
-                      containers:
-                      - name: ${env.MODULE_NAME}
-                        image: ${env.DOCKER_IMAGE_FULL}
+                    ${env.BUILT_IMAGES.split(', ').collect { "  - ${it}" }.join('\n')}
+                    ${env.BUILT_IMAGES.split(', ').collect { "  - ${it.replaceAll(':.*', ':latest')}" }.join('\n')}
                     """
                 }
             }
