@@ -45,7 +45,6 @@ metadata:
 spec:
   # 镜像仓库认证
   imagePullSecrets:
-  - name: aliyun-registry-secret
   - name: harbor-registry-secret
 
   containers:
@@ -72,11 +71,9 @@ spec:
     volumeMounts:
     - name: jenkins-home
       mountPath: /var/jenkins_home
-    # 挂载镜像仓库认证配置
-    - name: aliyun-docker-config
-      mountPath: /kaniko/.docker/aliyun
-    - name: harbor-docker-config
-      mountPath: /kaniko/.docker/harbor
+    # 挂载Harbor镜像仓库认证配置
+    - name: docker-config
+      mountPath: /kaniko/.docker
     resources:
       requests:
         cpu: 500m
@@ -88,20 +85,13 @@ spec:
   - name: jenkins-home
     persistentVolumeClaim:
       claimName: jenkins-pvc
-  # 镜像仓库认证配置
-  - name: aliyun-docker-config
-    secret:
-      secretName: aliyun-registry-secret
-      items:
-      - key: .dockerconfigjson
-        path: config.json
-  - name: harbor-docker-config
+  # Harbor镜像仓库认证配置
+  - name: docker-config
     secret:
       secretName: harbor-registry-secret
       items:
       - key: .dockerconfigjson
         path: config.json
-      optional: true
 """
         }
     }
@@ -124,14 +114,10 @@ spec:
         // 部署配置
         DEPLOY_ENV = "${params.DEPLOY_ENV ?: 'dev'}"
 
-        // 阿里云镜像仓库配置（个人版公网地址）
-        ALIYUN_REGISTRY = 'crpi-csgbt2t7j15cj178.cn-hangzhou.personal.cr.aliyuncs.com'
-        ALIYUN_NAMESPACE = 'lgy-images'
-        
         // Harbor 本地镜像仓库配置
-        HARBOR_REGISTRY = 'harbor-core.harbor'
+        HARBOR_REGISTRY = 'harbor.harbor'
         HARBOR_PROJECT = 'library'
-        
+
         DOCKER_IMAGE_TAG = "${env.BUILD_NUMBER}"
     }
 
@@ -176,17 +162,7 @@ spec:
         booleanParam(
             name: 'BUILD_DOCKER_IMAGE',
             defaultValue: true,
-            description: '构建并推送 Docker 镜像'
-        )
-        booleanParam(
-            name: 'PUSH_TO_HARBOR',
-            defaultValue: true,
-            description: '推送镜像到 Harbor 本地仓库'
-        )
-        booleanParam(
-            name: 'PUSH_TO_ALIYUN',
-            defaultValue: true,
-            description: '推送镜像到阿里云镜像仓库'
+            description: '构建并推送 Docker 镜像到 Harbor'
         )
     }
 
@@ -226,11 +202,10 @@ spec:
                         跳过测试: ${params.SKIP_TESTS}
                         清理构建: ${params.CLEAN_BUILD}
                         构建镜像: ${params.BUILD_DOCKER_IMAGE}
-                        推送到 Harbor: ${params.PUSH_TO_HARBOR}
-                        推送到阿里云: ${params.PUSH_TO_ALIYUN}
                         """
 
                         sh '''
+                            set +x
                             echo "=== 环境信息 ==="
                             java -version
                             mvn -version

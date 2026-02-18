@@ -1,0 +1,655 @@
+/*
+ * ============================================================================
+ * NMS4Cloud POS Java 项目 Jenkins 构建流水线（Kubernetes 模式）- 优化版
+ * ============================================================================
+ *
+ * 版本: v4.0 - 2024
+ * 更新:
+ *   - 只推送到 Harbor 本地仓库
+ *   - 去掉阿里云镜像仓库配置
+ *   - 禁用命令回显，简化日志输出
+ *   - 简化Docker认证配置逻辑
+ *   - 修复Groovy字符串转义问题
+ *
+ * 前置要求：
+ *   1. Jenkins 安装 Kubernetes Plugin
+ *   2. 配置 Kubernetes Cloud（WebSocket 模式，无 Tunnel）
+ *   3. RKE2 配置镜像加速
+ *   4. Jenkins 使用 PVC 持久化存储
+ *   5. Maven 仓库缓存目录：/var/jenkins_home/maven-repository
+ *   6. 创建 Harbor 镜像仓库认证 Secret：
+ *        kubectl create secret docker-registry harbor-registry-secret \
+ *          --docker-server=harbor-core.harbor \
+ *          --docker-username=admin \
+ *          --docker-password=Harbor12345 \
+ *          -n jenkins
+ *
+ * ============================================================================
+ */
+
+pipeline {
+    agent {
+        kubernetes {
+            yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    jenkins: agent
+    project: nms4cloud-pos-java
+spec:
+  # 镜像仓库认证
+  imagePullSecrets:
+  - name: harbor-registry-secret
+
+  containers:
+  - name: maven
+    image: maven:3.9-eclipse-temurin-21
+    command:
+    - cat
+    tty: true
+    volumeMounts:
+    - name: jenkins-home
+      mountPath: /var/jenkins_home
+    resources:
+      requests:
+        cpu: 1000m
+        memory: 2Gi
+      limits:
+        cpu: 4000m
+        memory: 4Gi
+  - name: kaniko
+    image: m.daocloud.io/gcr.io/kaniko-project/executor:debug
+    command:
+    - /busybox/cat
+    tty: true
+    volumeMounts:
+    - name: jenkins-home
+      mountPath: /var/jenkins_home
+    # 挂载Harbor镜像仓库认证配置
+    - name: docker-config
+      mountPath: /kaniko/.docker
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 2000m
+        memory: 2Gi
+  volumes:
+  - name: jenkins-home
+    persistentVolumeClaim:
+      claimName: jenkins-pvc
+  # Harbor镜像仓库认证配置
+  - name: docker-config
+    secret:
+      secretName: harbor-registry-secret
+      items:
+      - key: .dockerconfigjson
+        path: config.json
+"""
+        }
+    }
+
+    // ==================== 环境变量配置 ====================
+    environment {
+        // Maven 配置（与其他项目共享同一个仓库）
+        MAVEN_LOCAL_REPO = '/var/jenkins_home/maven-repository'
+        MAVEN_OPTS = '-Xmx2048m -XX:+UseG1GC -XX:MaxMetaspaceSize=512m'
+
+        // 项目配置
+        PROJECT_NAME = 'nms4cloud-pos-java'
+        ARTIFACT_VERSION = '0.0.1-SNAPSHOT'
+
+        // Git 配置（阿里云效）
+        GIT_CREDENTIAL_ID = 'aliyun-codeup-token'
+        GIT_REPO_URL = 'https://codeup.aliyun.com/613895a803e1c17d57a7630f/nms4cloud-pos-java/nms4pos.git'
+        GIT_BRANCH = "${params.GIT_BRANCH ?: 'master'}"
+
+        // 部署配置
+        DEPLOY_ENV = "${params.DEPLOY_ENV ?: 'dev'}"
+
+        // Harbor 本地镜像仓库配置
+        HARBOR_REGISTRY = 'harbor-core.harbor'
+        HARBOR_PROJECT = 'library'
+
+        // Docker Hub镜像加速（使用Harbor代理，速度最快）
+        DOCKER_REGISTRY_MIRROR = 'harbor-core.harbor/dockerhub-proxy'
+
+        DOCKER_IMAGE_TAG = "${env.BUILD_NUMBER}"
+    }
+
+    // ==================== 参数化构建 ====================
+    parameters {
+        choice(
+            name: 'DEPLOY_ENV',
+            choices: ['dev', 'test', 'prod'],
+            description: '选择部署环境'
+        )
+        choice(
+            name: 'BUILD_MODULE',
+            choices: [
+                'all',
+                'pos1starter',
+                'pos2plugin',
+                'pos3boot',
+                'pos4cloud',
+                'pos5sync',
+                'pos6monitor',
+                'pos8book',
+                'pos9cash',
+                'pos10printer'
+            ],
+            description: '选择构建模块'
+        )
+        string(
+            name: 'GIT_BRANCH',
+            defaultValue: 'master',
+            description: 'Git 分支'
+        )
+        booleanParam(
+            name: 'SKIP_TESTS',
+            defaultValue: true,
+            description: '跳过单元测试'
+        )
+        booleanParam(
+            name: 'CLEAN_BUILD',
+            defaultValue: true,
+            description: '清理构建'
+        )
+        booleanParam(
+            name: 'BUILD_DOCKER_IMAGE',
+            defaultValue: true,
+            description: '构建并推送 Docker 镜像到 Harbor'
+        )
+        choice(
+            name: 'DOCKER_REGISTRY_SOURCE',
+            choices: [
+                'harbor-proxy',
+                'daocloud-mirror',
+                'docker-hub'
+            ],
+            description: '选择Docker镜像拉取源：harbor-proxy=Harbor代理(最快,推荐) | daocloud-mirror=DaoCloud国内镜像 | docker-hub=Docker Hub官方源'
+        )
+    }
+
+    // ==================== 构建选项 ====================
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        disableConcurrentBuilds()
+        timeout(time: 60, unit: 'MINUTES')
+        timestamps()
+    }
+
+    // ==================== 构建阶段 ====================
+    stages {
+        // ========== 阶段 1: 环境检查 ==========
+        stage('环境检查') {
+            steps {
+                container('maven') {
+                    script {
+                        currentBuild.displayName = "#${BUILD_NUMBER} - ${params.BUILD_MODULE}"
+                        currentBuild.description = "分支: ${GIT_BRANCH} | 环境: ${DEPLOY_ENV}"
+
+                        echo """
+                        ╔════════════════════════════════════════╗
+                        ║         构建配置                        ║
+                        ╚════════════════════════════════════════╝
+                        项目: ${PROJECT_NAME}
+                        版本: ${ARTIFACT_VERSION}
+                        分支: ${GIT_BRANCH}
+                        模块: ${params.BUILD_MODULE}
+                        环境: ${DEPLOY_ENV}
+                        跳过测试: ${params.SKIP_TESTS}
+                        清理构建: ${params.CLEAN_BUILD}
+                        构建镜像: ${params.BUILD_DOCKER_IMAGE}
+                        """
+
+                        sh '''
+                            set +x
+                            echo "=== 环境信息 ==="
+                            java -version
+                            mvn -version
+                        '''
+                    }
+                }
+            }
+        }
+
+        // ========== 阶段 2: 代码检出 ==========
+        stage('代码检出') {
+            steps {
+                container('maven') {
+                    script {
+                        echo "=== 代码检出 ==="
+                        checkout([
+                            $class: 'GitSCM',
+                            branches: [[name: "*/${GIT_BRANCH}"]],
+                            extensions: [
+                                [$class: 'CloneOption', depth: 1, shallow: true, timeout: 20],
+                                [$class: 'CheckoutOption', timeout: 20]
+                            ],
+                            userRemoteConfigs: [[
+                                credentialsId: "${GIT_CREDENTIAL_ID}",
+                                url: "${GIT_REPO_URL}"
+                            ]]
+                        ])
+                    }
+                }
+            }
+        }
+
+        // ========== 阶段 3: Maven 构建 ==========
+        stage('Maven 构建') {
+            steps {
+                container('maven') {
+                    script {
+                        def cleanCmd = params.CLEAN_BUILD ? 'clean' : ''
+                        def skipTests = params.SKIP_TESTS ? '-Dmaven.test.skip=true' : ''
+                        def mvnOpts = "-Dmaven.repo.local=${MAVEN_LOCAL_REPO} ${skipTests}".trim()
+
+                        echo """
+                        ╔════════════════════════════════════════╗
+                        ║         Maven 构建流程                  ║
+                        ╚════════════════════════════════════════╝
+                        Maven 仓库: ${MAVEN_LOCAL_REPO}
+                        构建模块: ${params.BUILD_MODULE}
+                        """
+
+                        // 临时移除各模块的 generator 测试依赖
+                        echo ">>> 移除 generator 依赖（临时修改，不影响 Git）"
+                        sh '''
+                            set +x
+                            # 查找所有包含 generator 依赖的 pom.xml 文件并移除
+                            find . -name "pom.xml" -type f -exec grep -l "nms4cloud-generator" {} \\; | while read pom; do
+                                echo "处理: $pom"
+                                perl -i.bak -0pe 's/<dependency>\\s*<groupId>com\\.nms4cloud<\\/groupId>\\s*<artifactId>nms4cloud-generator<\\/artifactId>.*?<\\/dependency>//gs' "$pom"
+                            done
+                            echo "✓ generator 依赖已移除"
+                        '''
+
+                        // 构建项目
+                        if (params.BUILD_MODULE == 'all') {
+                            echo "=== 构建所有模块 ==="
+                            sh "set +x\nmvn ${cleanCmd} install ${mvnOpts}"
+                        } else {
+                            echo "=== 构建模块: ${params.BUILD_MODULE} ==="
+                            sh "set +x\nmvn ${cleanCmd} install -pl ${params.BUILD_MODULE} -am ${mvnOpts}"
+                        }
+                    }
+                }
+            }
+        }
+
+        // ========== 阶段 4: 单元测试 ==========
+        stage('单元测试') {
+            when {
+                expression { !params.SKIP_TESTS }
+            }
+            steps {
+                container('maven') {
+                    script {
+                        echo "=== 执行单元测试 ==="
+                        sh "mvn test -Dmaven.repo.local=${MAVEN_LOCAL_REPO}"
+                    }
+                }
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        // ========== 阶段 5: 归档构建产物 ==========
+        stage('归档构建产物') {
+            steps {
+                container('maven') {
+                    script {
+                        echo "=== 归档构建产物 ==="
+                        archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true, allowEmptyArchive: true
+                    }
+                }
+            }
+        }
+
+        // ========== 阶段 6: 构建并推送 Docker 镜像 ==========
+        stage('构建并推送 Docker 镜像') {
+            when {
+                expression { params.BUILD_DOCKER_IMAGE }
+            }
+            steps {
+                container('kaniko') {
+                    script {
+                        // 如果选择 all，构建所有有 Dockerfile 的模块
+                        if (params.BUILD_MODULE == 'all') {
+                            def allModules = [
+                                'pos1starter', 'pos2plugin', 'pos3boot', 'pos4cloud',
+                                'pos5sync', 'pos6monitor', 'pos8book', 'pos9cash', 'pos10printer'
+                            ]
+
+                            echo """
+                            ╔════════════════════════════════════════╗
+                            ║    构建所有模块的 Docker 镜像           ║
+                            ╚════════════════════════════════════════╝
+                            """
+
+                            def builtImages = []
+
+                            for (module in allModules) {
+                                def dockerfilePath = findDockerfilePath(module)
+
+                                if (fileExists(dockerfilePath)) {
+                                    echo "\n>>> 开始构建模块: ${module}"
+                                    buildAndPushDockerImage(module)
+                                    builtImages.add(module)
+                                } else {
+                                    echo "⊗ 跳过模块 ${module}: 未找到 Dockerfile"
+                                }
+                            }
+
+                            echo """
+
+                            ╔════════════════════════════════════════╗
+                            ║         构建完成统计                    ║
+                            ╚════════════════════════════════════════╝
+                            成功构建的模块: ${builtImages.join(', ')}
+                            总计: ${builtImages.size()} 个镜像
+                            """
+
+                        } else {
+                            // 构建单个模块
+                            def dockerfilePath = findDockerfilePath(params.BUILD_MODULE)
+
+                            if (fileExists(dockerfilePath)) {
+                                buildAndPushDockerImage(params.BUILD_MODULE)
+                            } else {
+                                echo """
+                                ⊗ 跳过镜像构建: 模块 ${params.BUILD_MODULE} 未找到 Dockerfile
+                                Dockerfile 路径: ${dockerfilePath}
+                                """
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // ==================== 构建后处理 ====================
+    post {
+        success {
+            script {
+                echo """
+                ╔════════════════════════════════════════╗
+                ║         ✓ 构建成功                      ║
+                ╚════════════════════════════════════════╝
+                项目: ${PROJECT_NAME}
+                版本: ${ARTIFACT_VERSION}
+                分支: ${GIT_BRANCH}
+                模块: ${params.BUILD_MODULE}
+                耗时: ${currentBuild.durationString}
+                """
+
+                if (params.BUILD_DOCKER_IMAGE && env.DOCKER_IMAGE_FULL) {
+                    echo """
+
+                    Docker 镜像已推送到 Harbor:
+                    ${env.DOCKER_IMAGE_FULL}
+                    """
+                }
+            }
+        }
+        failure {
+            echo """
+            ╔════════════════════════════════════════╗
+            ║         ✗ 构建失败                      ║
+            ╚════════════════════════════════════════╝
+            请检查构建日志
+            """
+        }
+        always {
+            echo "=== 清理临时文件 ==="
+            cleanWs(
+                deleteDirs: true,
+                patterns: [[pattern: 'target/**', type: 'INCLUDE']]
+            )
+        }
+    }
+}
+
+// ==================== 辅助函数 ====================
+
+/**
+ * 构建并推送 Docker 镜像
+ */
+def buildAndPushDockerImage(String buildModule) {
+    def moduleName = getModuleName(buildModule)
+    def harborImageName = "${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${moduleName}"
+    def dockerfilePath = findDockerfilePath(buildModule)
+    def buildContext = getBuildContext(buildModule)
+
+    // 根据参数选择镜像源
+    def registryMirror = ''
+    def registrySourceName = ''
+    switch(params.DOCKER_REGISTRY_SOURCE) {
+        case 'harbor-proxy':
+            registryMirror = 'harbor-core.harbor/dockerhub-proxy'
+            registrySourceName = 'Harbor代理(本地缓存)'
+            break
+        case 'daocloud-mirror':
+            registryMirror = 'docker.m.daocloud.io'
+            registrySourceName = 'DaoCloud国内镜像'
+            break
+        case 'docker-hub':
+            registryMirror = ''
+            registrySourceName = 'Docker Hub官方源'
+            break
+        default:
+            registryMirror = 'harbor-core.harbor/dockerhub-proxy'
+            registrySourceName = 'Harbor代理(本地缓存,默认)'
+    }
+
+    echo """
+    ╔════════════════════════════════════════╗
+    ║    构建并推送 Docker 镜像 (Kaniko)      ║
+    ╚════════════════════════════════════════╝
+    模块: ${moduleName}
+    镜像源: ${registrySourceName}
+    推送目标: Harbor (${HARBOR_REGISTRY})
+    镜像标签: ${DOCKER_IMAGE_TAG}, latest
+    构建上下文: ${buildContext}
+    Dockerfile: ${dockerfilePath}
+    镜像名称: ${harborImageName}:${DOCKER_IMAGE_TAG}
+    """
+
+    sh """
+        set +x  # 禁用命令回显
+
+        # 强制删除 .dockerignore 文件（如果存在）
+        if [ -f "${WORKSPACE}/.dockerignore" ]; then
+            rm -f ${WORKSPACE}/.dockerignore
+            echo "✓ .dockerignore 已删除"
+        fi
+
+        # 验证构建上下文和 Dockerfile
+        if [ ! -d "${buildContext}" ]; then
+            echo "❌ 错误: 构建上下文目录不存在: ${buildContext}"
+            exit 1
+        fi
+
+        if [ ! -f "${dockerfilePath}" ]; then
+            echo "❌ 错误: 未找到 Dockerfile: ${dockerfilePath}"
+            ls -la ${buildContext}/ | head -20
+            exit 1
+        fi
+
+        echo "✓ 构建环境验证通过"
+
+        # 验证 JAR 文件
+        JAR_FILES=\$(find ${buildContext}/target -name "*.jar" -type f 2>/dev/null)
+        JAR_COUNT=\$(echo "\$JAR_FILES" | grep -c "\\\\.jar\\\$" 2>/dev/null || echo 0)
+
+        if [ "\$JAR_COUNT" -eq 0 ]; then
+            echo "❌ 错误: 未找到 JAR 文件"
+            ls -la ${buildContext}/target/ 2>/dev/null || echo "target 目录不存在"
+            exit 1
+        fi
+
+        echo "✓ JAR 文件已就绪 (找到 \$JAR_COUNT 个)"
+
+        # Docker 认证配置已通过 Secret 挂载到 /kaniko/.docker/config.json
+        if [ -f /kaniko/.docker/config.json ]; then
+            echo "✓ Docker 认证配置已就绪"
+        else
+            echo "❌ 错误: 未找到 Docker 认证配置"
+            exit 1
+        fi
+
+        # 构建 Kaniko 推送目标参数
+        DESTINATIONS="--destination=${harborImageName}:${DOCKER_IMAGE_TAG} --destination=${harborImageName}:latest"
+
+        echo "✓ 推送目标配置完成"
+        echo ""
+        echo ">>> 开始构建并推送镜像..."
+        echo "  镜像源: ${registrySourceName}"
+        START_TIME=\$(date +%s)
+
+        if [ -n "${registryMirror}" ]; then
+            timeout 1800 /kaniko/executor \\
+                --context=${buildContext} \\
+                --dockerfile=${dockerfilePath} \\
+                --registry-mirror=${registryMirror} \\
+                \${DESTINATIONS} \\
+                --insecure-registry=${HARBOR_REGISTRY} \\
+                --insecure-registry=harbor-core.harbor \\
+                --skip-tls-verify \\
+                --compression=gzip \\
+                --compression-level=9 \\
+                --push-retry=3 \\
+                --cache=false \\
+                --verbosity=info \\
+                --skip-unused-stages=true \\
+                --single-snapshot=true
+        else
+            timeout 1800 /kaniko/executor \\
+                --context=${buildContext} \\
+                --dockerfile=${dockerfilePath} \\
+                \${DESTINATIONS} \\
+                --insecure-registry=${HARBOR_REGISTRY} \\
+                --skip-tls-verify \\
+                --compression=gzip \\
+                --compression-level=9 \\
+                --push-retry=3 \\
+                --cache=false \\
+                --verbosity=info \\
+                --skip-unused-stages=true \\
+                --single-snapshot=true
+        fi
+
+        END_TIME=\$(date +%s)
+        DURATION=\$((END_TIME - START_TIME))
+
+        echo ""
+        echo "════════════════════════════════════════"
+        echo "镜像构建推送统计"
+        echo "════════════════════════════════════════"
+        echo "模块名称: ${moduleName}"
+        echo "总耗时:   \$((DURATION / 60))分\$((DURATION % 60))秒 (\${DURATION}秒)"
+        echo "压缩级别: Level 9 (最高)"
+        echo "重试次数: 最多3次"
+        echo "超时设置: 1800秒 (30分钟)"
+        echo "════════════════════════════════════════"
+        echo ""
+        echo "✓ 镜像已推送到Harbor:"
+        echo "  ${harborImageName}:${DOCKER_IMAGE_TAG}"
+        echo "  ${harborImageName}:latest"
+        echo ""
+    """
+
+    env.DOCKER_IMAGE_FULL = "${harborImageName}:${DOCKER_IMAGE_TAG}"
+}
+
+/**
+ * 获取模块名称
+ */
+def getModuleName(String buildModule) {
+    switch(buildModule) {
+        case 'pos1starter':
+            return 'nms4cloud-pos1starter'
+        case 'pos2plugin':
+            return 'nms4cloud-pos2plugin'
+        case 'pos3boot':
+            return 'nms4cloud-pos3boot'
+        case 'pos4cloud':
+            return 'nms4cloud-pos4cloud'
+        case 'pos5sync':
+            return 'nms4cloud-pos5sync'
+        case 'pos6monitor':
+            return 'nms4cloud-pos6monitor'
+        case 'pos8book':
+            return 'nms4cloud-pos8book'
+        case 'pos9cash':
+            return 'nms4cloud-pos9cash'
+        case 'pos10printer':
+            return 'nms4cloud-pos10printer'
+        default:
+            return 'nms4cloud-pos-java'
+    }
+}
+
+/**
+ * 查找 Dockerfile 路径
+ */
+def findDockerfilePath(String buildModule) {
+    switch(buildModule) {
+        case 'pos2plugin':
+            return "${WORKSPACE}/nms4cloud-pos2plugin/nms4cloud-pos2plugin-app/Dockerfile"
+        case 'pos3boot':
+            return "${WORKSPACE}/nms4cloud-pos3boot/nms4cloud-pos3boot-app/Dockerfile"
+        case 'pos4cloud':
+            return "${WORKSPACE}/nms4cloud-pos4cloud/nms4cloud-pos4cloud-app/Dockerfile"
+        case 'pos5sync':
+            return "${WORKSPACE}/nms4cloud-pos5sync/nms4cloud-pos5sync-app/Dockerfile"
+        case 'pos8book':
+            return "${WORKSPACE}/nms4cloud-pos8book/nms4cloud-pos8book-app/Dockerfile"
+        case 'pos9cash':
+            return "${WORKSPACE}/nms4cloud-pos9cash/nms4cloud-pos9cash-app/Dockerfile"
+        case 'pos10printer':
+            return "${WORKSPACE}/nms4cloud-pos10printer/nms4cloud-pos10printer-app/Dockerfile"
+        case 'pos1starter':
+            return "${WORKSPACE}/nms4cloud-pos1starter/Dockerfile"
+        case 'pos6monitor':
+            return "${WORKSPACE}/nms4cloud-pos6monitor/Dockerfile"
+        default:
+            return "${WORKSPACE}/Dockerfile"
+    }
+}
+
+/**
+ * 获取构建上下文
+ */
+def getBuildContext(String buildModule) {
+    switch(buildModule) {
+        case 'pos2plugin':
+            return "${WORKSPACE}/nms4cloud-pos2plugin/nms4cloud-pos2plugin-app"
+        case 'pos3boot':
+            return "${WORKSPACE}/nms4cloud-pos3boot/nms4cloud-pos3boot-app"
+        case 'pos4cloud':
+            return "${WORKSPACE}/nms4cloud-pos4cloud/nms4cloud-pos4cloud-app"
+        case 'pos5sync':
+            return "${WORKSPACE}/nms4cloud-pos5sync/nms4cloud-pos5sync-app"
+        case 'pos8book':
+            return "${WORKSPACE}/nms4cloud-pos8book/nms4cloud-pos8book-app"
+        case 'pos9cash':
+            return "${WORKSPACE}/nms4cloud-pos9cash/nms4cloud-pos9cash-app"
+        case 'pos10printer':
+            return "${WORKSPACE}/nms4cloud-pos10printer/nms4cloud-pos10printer-app"
+        case 'pos1starter':
+            return "${WORKSPACE}/nms4cloud-pos1starter"
+        case 'pos6monitor':
+            return "${WORKSPACE}/nms4cloud-pos6monitor"
+        default:
+            return "${WORKSPACE}"
+    }
+}
