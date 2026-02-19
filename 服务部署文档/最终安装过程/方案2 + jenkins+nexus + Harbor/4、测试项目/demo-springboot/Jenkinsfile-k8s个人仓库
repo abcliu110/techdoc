@@ -1,0 +1,387 @@
+/*
+ * ============================================================================
+ * Demo Spring Boot 项目 Jenkins 构建流水线（Kubernetes 模式）
+ * ============================================================================
+ *
+ * 使用 Kubernetes Plugin 在 RKE2 集群上动态创建 Pod 进行构建
+ * 使用 Kaniko 构建 Docker 镜像（无需 Docker daemon）
+ *
+ * 版本: v7.0 - 2024
+ * 更新: 使用持久化 Maven 仓库缓存（与 nms4cloud 共享）
+ *
+ * 前置要求：
+ *   1. Jenkins 安装 Kubernetes Plugin
+ *   2. 配置 Kubernetes Cloud（WebSocket 模式，无 Tunnel）
+ *   3. RKE2 配置镜像加速
+ *   4. Jenkins 使用 PVC 持久化存储
+ *   5. Maven 仓库缓存目录：/var/jenkins_home/maven-repository
+ *
+ * ============================================================================
+ */
+
+pipeline {
+    agent {
+        kubernetes {
+            yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    jenkins: agent
+    version: v7
+spec:
+  containers:
+  - name: maven
+    image: maven:3.9-eclipse-temurin-21
+    command:
+    - cat
+    tty: true
+    volumeMounts:
+    - name: jenkins-home
+      mountPath: /var/jenkins_home
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 2000m
+        memory: 2Gi
+  - name: kaniko
+    image: m.daocloud.io/gcr.io/kaniko-project/executor:debug
+    command:
+    - /busybox/cat
+    tty: true
+    volumeMounts:
+    - name: jenkins-home
+      mountPath: /var/jenkins_home
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 2000m
+        memory: 2Gi
+  volumes:
+  - name: jenkins-home
+    persistentVolumeClaim:
+      claimName: jenkins-pvc
+"""
+        }
+    }
+
+    // ==================== 环境变量配置 ====================
+    environment {
+        // Maven 配置（与 nms4cloud 共享同一个仓库）
+        MAVEN_LOCAL_REPO = '/var/jenkins_home/maven-repository'
+        MAVEN_OPTS = '-Xmx2048m -XX:+UseG1GC -XX:MaxMetaspaceSize=512m'
+        
+        // 项目配置
+        PROJECT_NAME = 'demo-springboot'
+        ARTIFACT_VERSION = '1.0.0'
+
+        // Git 配置
+        GIT_CREDENTIAL_ID = 'aliyun-codeup-token'
+        GIT_BRANCH = "${params.GIT_BRANCH ?: 'master'}"
+        GIT_REPO_URL = 'https://codeup.aliyun.com/613895a803e1c17d57a7630f/mytest.git'
+        
+        // Docker 私有仓库配置
+        DOCKER_REGISTRY = '192.168.80.100:30500'
+        DOCKER_IMAGE_NAME = "${DOCKER_REGISTRY}/${PROJECT_NAME}"
+        DOCKER_IMAGE_TAG = "${env.BUILD_NUMBER}"
+    }
+
+    // ==================== 参数化构建 ====================
+    parameters {
+        string(
+            name: 'GIT_BRANCH',
+            defaultValue: 'master',
+            description: 'Git 分支名称'
+        )
+        booleanParam(
+            name: 'SKIP_TESTS',
+            defaultValue: true,
+            description: '跳过单元测试'
+        )
+        booleanParam(
+            name: 'CLEAN_BUILD',
+            defaultValue: true,
+            description: '清理构建'
+        )
+        booleanParam(
+            name: 'BUILD_DOCKER_IMAGE',
+            defaultValue: true,
+            description: '构建并推送 Docker 镜像'
+        )
+    }
+
+    // ==================== 构建选项 ====================
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        disableConcurrentBuilds()
+        timeout(time: 45, unit: 'MINUTES')
+        timestamps()
+    }
+
+    // ==================== 构建阶段 ====================
+    stages {
+        // ========== 阶段 1: 环境检查 ==========
+        stage('环境检查') {
+            steps {
+                container('maven') {
+                    script {
+                        currentBuild.displayName = "#${BUILD_NUMBER} - ${GIT_BRANCH}"
+                        currentBuild.description = "分支: ${GIT_BRANCH}"
+
+                        echo """
+                        ╔════════════════════════════════════════╗
+                        ║         构建配置                        ║
+                        ╚════════════════════════════════════════╝
+                        项目: ${PROJECT_NAME}
+                        版本: ${ARTIFACT_VERSION}
+                        分支: ${GIT_BRANCH}
+                        跳过测试: ${params.SKIP_TESTS}
+                        清理构建: ${params.CLEAN_BUILD}
+                        构建镜像: ${params.BUILD_DOCKER_IMAGE}
+                        镜像名称: ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+                        """
+
+                        sh '''
+                            echo "=== 环境信息 ==="
+                            java -version
+                            mvn -version
+                        '''
+                    }
+                }
+            }
+        }
+
+        // ========== 阶段 2: 代码检出 ==========
+        stage('代码检出') {
+            steps {
+                container('maven') {
+                    script {
+                        echo "=== 代码检出 ==="
+                        checkout([
+                            $class: 'GitSCM',
+                            branches: [[name: "*/${GIT_BRANCH}"]],
+                            extensions: [
+                                [$class: 'CloneOption', depth: 1, shallow: true, timeout: 20]
+                            ],
+                            userRemoteConfigs: [[
+                                credentialsId: "${GIT_CREDENTIAL_ID}",
+                                url: "${GIT_REPO_URL}"
+                            ]]
+                        ])
+                        
+                        sh '''
+                            echo ">>> 代码检出完成"
+                            ls -la
+                        '''
+                    }
+                }
+            }
+        }
+
+        // ========== 阶段 3: Maven 构建 ==========
+        stage('Maven 构建') {
+            steps {
+                container('maven') {
+                    script {
+                        def cleanCmd = params.CLEAN_BUILD ? 'clean' : ''
+                        def skipTests = params.SKIP_TESTS ? '-DskipTests' : ''
+
+                        echo """
+                        ╔════════════════════════════════════════╗
+                        ║         Maven 构建流程                  ║
+                        ╚════════════════════════════════════════╝
+                        Maven 仓库: ${MAVEN_LOCAL_REPO}
+                        """
+
+                        sh """
+                            echo ">>> 配置 Maven 使用持久化仓库"
+                            mkdir -p ${MAVEN_LOCAL_REPO}
+                            
+                            echo ">>> 下载依赖"
+                            mvn dependency:go-offline -B ${skipTests} \\
+                                -Dmaven.repo.local=${MAVEN_LOCAL_REPO}
+                            
+                            echo ">>> 编译打包"
+                            mvn ${cleanCmd} package -B ${skipTests} \\
+                                -Dmaven.repo.local=${MAVEN_LOCAL_REPO}
+                            
+                            echo ">>> 查看构建产物"
+                            ls -lh target/*.jar
+                            
+                            echo ">>> Maven 仓库缓存统计"
+                            du -sh ${MAVEN_LOCAL_REPO} || echo "无法统计缓存大小"
+                        """
+                    }
+                }
+            }
+        }
+
+        // ========== 阶段 4: 单元测试 ==========
+        stage('单元测试') {
+            when {
+                expression { !params.SKIP_TESTS }
+            }
+            steps {
+                container('maven') {
+                    script {
+                        echo "=== 执行单元测试 ==="
+                        sh "mvn test -B -Dmaven.repo.local=${MAVEN_LOCAL_REPO}"
+                    }
+                }
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        // ========== 阶段 5: 归档构建产物 ==========
+        stage('归档构建产物') {
+            steps {
+                container('maven') {
+                    script {
+                        echo "=== 归档构建产物 ==="
+                        archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true, allowEmptyArchive: true
+                        
+                        echo ">>> 构建产物已保存在 Jenkins workspace，Kaniko Pod 将通过 PVC 访问"
+                    }
+                }
+            }
+        }
+
+        // ========== 阶段 6: 构建并推送 Docker 镜像 ==========
+        stage('构建并推送 Docker 镜像') {
+            when {
+                expression { params.BUILD_DOCKER_IMAGE }
+            }
+            steps {
+                container('kaniko') {
+                    script {
+                        echo """
+                        ╔════════════════════════════════════════╗
+                        ║    构建并推送 Docker 镜像 (Kaniko)      ║
+                        ╚════════════════════════════════════════╝
+                        镜像名称: ${DOCKER_IMAGE_NAME}
+                        镜像标签: ${DOCKER_IMAGE_TAG}, latest
+                        推送到: ${DOCKER_REGISTRY}
+                        工作目录: ${WORKSPACE}
+                        """
+
+                        sh """
+                            echo ">>> 当前工作目录"
+                            pwd
+                            
+                            echo ">>> 强制删除 .dockerignore 文件（如果存在）"
+                            if [ -f "${WORKSPACE}/.dockerignore" ]; then
+                                echo "⚠ 发现 .dockerignore 文件，正在删除..."
+                                rm -f ${WORKSPACE}/.dockerignore
+                                echo "✓ .dockerignore 已删除"
+                            else
+                                echo "✓ .dockerignore 不存在"
+                            fi
+                            
+                            echo ">>> 列出所有文件"
+                            ls -laR ${WORKSPACE}/ | head -100
+                            
+                            echo ">>> 验证 JAR 文件"
+                            ls -lh ${WORKSPACE}/target/*.jar || echo "❌ 未找到 JAR 文件"
+                            
+                            echo ">>> 验证 Dockerfile"
+                            ls -lh ${WORKSPACE}/Dockerfile || echo "❌ 未找到 Dockerfile"
+                            
+                            echo ">>> 显示 Dockerfile 内容"
+                            cat ${WORKSPACE}/Dockerfile
+                            
+                            echo ">>> 查找所有 JAR 文件"
+                            find ${WORKSPACE} -name "*.jar" -type f 2>/dev/null || echo "未找到 JAR 文件"
+                            
+                            # 检查 Dockerfile
+                            if [ ! -f "${WORKSPACE}/Dockerfile" ]; then
+                                echo "❌ 错误: 未找到 Dockerfile"
+                                exit 1
+                            fi
+                            
+                            # 检查 JAR 文件
+                            JAR_COUNT=\$(find ${WORKSPACE}/target -name "*.jar" -type f 2>/dev/null | wc -l)
+                            if [ "\$JAR_COUNT" -eq 0 ]; then
+                                echo "❌ 错误: 未找到 JAR 文件"
+                                echo ">>> 列出 target 目录内容:"
+                                ls -laR ${WORKSPACE}/target/ || echo "target 目录不存在"
+                                exit 1
+                            fi
+                            
+                            echo "✓ 使用项目中的 Dockerfile"
+                            echo "✓ JAR 文件已就绪"
+                            
+                            # 使用 Kaniko 构建并推送镜像（禁用缓存以确保使用最新文件）
+                            /kaniko/executor \\
+                                --context=${WORKSPACE} \\
+                                --dockerfile=${WORKSPACE}/Dockerfile \\
+                                --destination=${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} \\
+                                --destination=${DOCKER_IMAGE_NAME}:latest \\
+                                --insecure \\
+                                --skip-tls-verify \\
+                                --cache=false \\
+                                --verbosity=debug
+                            
+                            echo "✓ 镜像构建并推送成功"
+                        """
+                    }
+                }
+            }
+        }
+    }
+
+    // ==================== 构建后处理 ====================
+    post {
+        success {
+            echo """
+            ╔════════════════════════════════════════╗
+            ║         ✓ 构建成功                      ║
+            ╚════════════════════════════════════════╝
+            项目: ${PROJECT_NAME}
+            版本: ${ARTIFACT_VERSION}
+            分支: ${GIT_BRANCH}
+            耗时: ${currentBuild.durationString}
+            """
+            
+            script {
+                if (params.BUILD_DOCKER_IMAGE) {
+                    echo """
+                    
+                    Docker 镜像已构建并推送到私有仓库:
+                    - ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+                    - ${DOCKER_IMAGE_NAME}:latest
+                    
+                    在 K8s 中使用镜像:
+                    kubectl set image deployment/demo-springboot \\
+                      demo-springboot=${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} \\
+                      -n default
+                    
+                    或者在 Deployment YAML 中使用:
+                    spec:
+                      containers:
+                      - name: demo-springboot
+                        image: ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+                    """
+                }
+            }
+        }
+        failure {
+            echo """
+            ╔════════════════════════════════════════╗
+            ║         ✗ 构建失败                      ║
+            ╚════════════════════════════════════════╝
+            请检查构建日志
+            """
+        }
+        always {
+            echo "=== 构建完成 ==="
+        }
+    }
+}

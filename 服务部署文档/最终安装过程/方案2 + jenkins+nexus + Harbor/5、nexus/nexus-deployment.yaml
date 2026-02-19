@@ -1,0 +1,87 @@
+---
+# Nexus Repository Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nexus
+
+---
+# Nexus PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nexus-data
+  namespace: nexus
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 200Gi
+
+---
+# Nexus Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexus
+  namespace: nexus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nexus
+  template:
+    metadata:
+      labels:
+        app: nexus
+    spec:
+      containers:
+      - name: nexus
+        image: docker.io/sonatype/nexus3:3.68.1
+        ports:
+        - containerPort: 8081
+          name: web
+        - containerPort: 5000
+          name: docker
+        volumeMounts:
+        - name: data
+          mountPath: /nexus-data
+        env:
+        - name: INSTALL4J_ADD_VM_PARAMS
+          value: "-Xms1g -Xmx2g -XX:MaxDirectMemorySize=2g"
+        resources:
+          requests:
+            cpu: 1000m
+            memory: 2Gi
+          limits:
+            cpu: 2000m
+            memory: 4Gi
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: nexus-data
+
+---
+# Nexus Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexus
+  namespace: nexus
+spec:
+  type: NodePort
+  ports:
+  - name: web
+    port: 8081
+    targetPort: 8081
+    nodePort: 30002
+    protocol: TCP
+  - name: docker
+    port: 5000
+    targetPort: 5000
+    nodePort: 30005
+    protocol: TCP
+  selector:
+    app: nexus
