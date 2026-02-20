@@ -574,7 +574,11 @@ EOF
 # Kubernetes 内部的域名解析服务 (CoreDNS) 默认会读取宿主机的 /etc/hosts。所以你在服务器上改了，容器内部也就自动懂了。
 nano vi /etc/hosts
 
+# 5. 添加下面一行
+127.0.0.1  jjtestserver.local
+
 # 或者不修改主机名，直接 mDNS (多播 DNS)
+
 sudo apt update && sudo apt install avahi-daemon -y
 sudo systemctl enable avahi-daemon && sudo systemctl start avahi-daemon
 sudo hostnamectl set-hostname jjtestserver
@@ -583,11 +587,6 @@ sudo hostnamectl set-hostname jjtestserver
 # 全自动： 无论服务器换到哪个路由器下，IP 怎么变，你都不需要改任何地方。
 # 免配置： Windows (10及以上)、Mac、iOS 默认都支持 mDNS。
 # 局限性： 仅限同一个局域网内有效（跨网段通常不行）。
-
-
-
-# 5. 添加下面一行
-127.0.0.1  jjtestserver.local
 
 # 4. 启动 RKE2 并设置为开机自启
 sudo systemctl enable rke2-server.service

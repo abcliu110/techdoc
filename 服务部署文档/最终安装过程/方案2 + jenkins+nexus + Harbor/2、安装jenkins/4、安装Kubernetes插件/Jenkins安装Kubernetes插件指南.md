@@ -120,9 +120,42 @@ jenkins-plugin-cli --list | grep kubernetes
 | Kubernetes Namespace | `jenkins` | Agent Pod 运行的命名空间 |
 | Credentials | 留空或选择 SA 凭据 | 使用 Pod 的 ServiceAccount |
 | Jenkins URL | `http://jenkins.jenkins.svc.cluster.local:8080` | Agent 回连地址 |
-| Jenkins tunnel | `jenkins-agent.jenkins.svc.cluster.local:50000` | JNLP 端口（可选） |
+| WebSocket | 勾选（推荐） | 见下方说明 |
+| Jenkins tunnel | 留空（使用 WebSocket 时不需要） | 见下方说明 |
 
-### 3. 测试连接
+### 3. WebSocket 与 Jenkins 通道的区别
+
+**推荐使用 WebSocket 模式：**
+
+| 模式 | 端口 | 说明 |
+|------|------|------|
+| WebSocket（推荐）✅ | 8080 | 走标准 HTTP 协议，K8s 内部网络稳定，配置简单 |
+| Jenkins 通道（TCP） | 50000 | 需要额外暴露 50000 端口，配置复杂 |
+
+**使用 TCP 通道模式的前提条件：**
+
+1. Jenkins 开启 TCP Agent 监听：
+   ```
+   系统管理 → 全局安全配置 → Agent → TCP port for inbound agents → 固定 → 50000
+   ```
+
+2. Jenkins Service 必须暴露 50000 端口：
+   ```yaml
+   ports:
+   - name: http
+     port: 8080
+     targetPort: 8080
+   - name: agent
+     port: 50000
+     targetPort: 50000
+   ```
+
+3. Jenkins 通道填写格式（不能带 http://）：
+   ```
+   jenkins.jenkins.svc.cluster.local:50000
+   ```
+
+### 4. 测试连接
 
 点击 "Test Connection"，应该显示：
 ```
@@ -359,20 +392,38 @@ Jenkins URL 改为：http://jenkins.jenkins.svc.cluster.local:8080
 
 **错误信息：**
 ```
-Failed to pull image "jenkins/inbound-agent:latest"
+Failed to pull image "jenkins/inbound-agent:3355.v388858a_47b_33-3-jdk21"
+dial tcp xxx:443: connect: connection refused
 ```
 
-**解决方案1：使用国内镜像**
-```
-docker.m.daocloud.io/jenkins/inbound-agent:latest
-```
+**原因：**
+- Docker Hub 在国内无法访问
+- Jenkins Kubernetes 插件会自动根据 Jenkins 版本生成对应的 `inbound-agent` tag（格式：`<jenkins-version>-jdk<version>`），每次 Jenkins 升级 tag 就会变
 
-**解决方案2：提前拉取并推送到私有仓库**
+**解决方案1：推送到私有 Harbor（推荐）**
 ```bash
-docker pull jenkins/inbound-agent:latest
-docker tag jenkins/inbound-agent:latest your-registry/jenkins-inbound-agent:latest
-docker push your-registry/jenkins-inbound-agent:latest
+# 在能访问外网的机器上
+docker pull jenkins/inbound-agent:3355.v388858a_47b_33-3-jdk21
+
+docker tag jenkins/inbound-agent:3355.v388858a_47b_33-3-jdk21 \
+  <你的Harbor>/jenkins/inbound-agent:3355.v388858a_47b_33-3-jdk21
+
+docker push <你的Harbor>/jenkins/inbound-agent:3355.v388858a_47b_33-3-jdk21
 ```
+
+**解决方案2：在 Pod Template 中固定 jnlp 镜像地址**
+
+在 Kubernetes Cloud → Pod Templates → 容器列表中，找到 jnlp 容器，手动填写 Harbor 地址：
+```
+<你的Harbor>/jenkins/inbound-agent:3355.v388858a_47b_33-3-jdk21
+```
+不要留空，留空会自动使用 Jenkins 版本对应的 tag 从 Docker Hub 拉取。
+
+**解决方案3：使用国内镜像源**
+```bash
+docker pull m.daocloud.io/docker.io/jenkins/inbound-agent:latest
+```
+注意：国内镜像源不稳定，可能出现 503，建议用方案1。
 
 ---
 

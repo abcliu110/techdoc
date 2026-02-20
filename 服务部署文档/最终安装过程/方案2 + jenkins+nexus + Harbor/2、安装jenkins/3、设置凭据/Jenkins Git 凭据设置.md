@@ -138,6 +138,18 @@ Username: 你的阿里云账号邮箱或用户名（必须是真实的）
 Password: 粘贴生成的令牌字符串（不是令牌名称！）
 ID: aliyun-codeup-token
 Description: 阿里云效访问令牌
+
+
+例子：
+
+Kind: Username with password
+Scope: Global
+Username: abcliu110 你的阿里云账号邮箱或用户名（必须是真实的）
+Password: pt-MVu49KkiCuRVjDSwbIsvHsj3_22cf5814-2002-4005-a67b-e5c192f5b3eb 粘贴生成的令牌字符串（不是令牌名称！）
+ID: aliyun-codeup-token
+Description: 阿里云效访问令牌
+
+
 ```
 
 #### 使用账号密码
