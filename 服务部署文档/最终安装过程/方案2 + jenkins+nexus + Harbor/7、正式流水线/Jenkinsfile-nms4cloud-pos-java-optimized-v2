@@ -30,31 +30,78 @@
 // ==================== 共享函数 ====================
 
 /**
- * 生成 Maven settings.xml（含 Nexus 认证）
+ * 生成 Maven settings.xml 配置文件
+ * 修复点：显式添加 Profile 以开启 SNAPSHOT 支持
  */
 def generateMavenSettings() {
     sh """
-        cat > ${MAVEN_SETTINGS} <<EOF
+        cat > \${MAVEN_SETTINGS} <<EOF
 <settings>
+  <!-- 1. 配置镜像，将所有请求拦截到 Nexus -->
   <mirrors>
     <mirror>
-      <id>nexus</id>
+      <id>nexus-mirror</id>
       <mirrorOf>*</mirrorOf>
-      <url>${NEXUS_URL}/repository/${NEXUS_REPO_GROUP}/</url>
+      <url>\${NEXUS_URL}/repository/\${NEXUS_REPO_GROUP}/</url>
     </mirror>
   </mirrors>
+
+  <!-- 2. 配置认证信息 -->
   <servers>
     <server>
+      <!-- 注意：这里 ID 要和下面 profile 中的 repository id 对应，或者和 mirror id 对应 -->
+      <id>nexus-mirror</id>
+      <username>\${NEXUS_USER}</username>
+      <password>\${NEXUS_PASS}</password>
+    </server>
+    <server>
       <id>nexus-releases</id>
-      <username>${NEXUS_USER}</username>
-      <password>${NEXUS_PASS}</password>
+      <username>\${NEXUS_USER}</username>
+      <password>\${NEXUS_PASS}</password>
     </server>
     <server>
       <id>nexus-snapshots</id>
-      <username>${NEXUS_USER}</username>
-      <password>${NEXUS_PASS}</password>
+      <username>\${NEXUS_USER}</username>
+      <password>\${NEXUS_PASS}</password>
     </server>
   </servers>
+
+  <!-- 3. 关键修复：添加 Profile 显式启用 Snapshots -->
+  <profiles>
+    <profile>
+      <id>nexus-profile</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <repositories>
+        <repository>
+          <id>nexus-mirror</id> <!-- ID 必须与 Server 中的 ID 匹配以读取密码 -->
+          <url>\${NEXUS_URL}/repository/\${NEXUS_REPO_GROUP}/</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy> <!-- 强制每次构建都检查最新的 SNAPSHOT -->
+            <checksumPolicy>warn</checksumPolicy>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>nexus-mirror</id>
+          <url>\${NEXUS_URL}/repository/\${NEXUS_REPO_GROUP}/</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
 </settings>
 EOF
     """
