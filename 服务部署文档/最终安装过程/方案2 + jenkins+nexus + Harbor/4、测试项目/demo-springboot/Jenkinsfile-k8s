@@ -6,28 +6,80 @@
  * 使用 Kubernetes Plugin 在 RKE2 集群上动态创建 Pod 进行构建
  * 使用 Kaniko 构建 Docker 镜像（无需 Docker daemon）
  *
- * 版本: v11.0 - 2024
+ * 版本: v13.0 - 2026
  * 更新:
- *   - 仅推送到 Harbor 本地仓库
- *   - 使用构建参数控制构建行为
+ *   - 使用 Nexus 替代 PVC 本地缓存
+ *   - 优化代码结构，提取公共函数
+ *   - 推送镜像到 Harbor 本地仓库
+ *   - 使用构建参数控制推送目标
  *   - 启用最高压缩级别（Level 9）
+ *   - 添加镜像大小预估和推送统计
  *   - 添加超时和重试机制
+ *   - settings.xml 只生成一次，避免重复
+ *   - 统一 Nexus 仓库判断逻辑
+ *   - 改进错误处理和日志输出
  *
  * 前置要求：
  *   1. Jenkins 安装 Kubernetes Plugin
  *   2. 配置 Kubernetes Cloud（WebSocket 模式，无 Tunnel）
  *   3. RKE2 配置镜像加速
- *   4. Jenkins 使用 PVC 持久化存储
- *   5. Maven 仓库缓存目录：/var/jenkins_home/maven-repository
- *   6. 创建 Harbor 镜像仓库认证 Secret：
- *        kubectl create secret docker-registry harbor-registry-secret \
- *          --docker-server=<HARBOR_URL> \
- *          --docker-username=<USERNAME> \
- *          --docker-password=<PASSWORD> \
- *          -n default
+ *   4. Jenkins 使用 PVC 持久化存储（用于 workspace 共享）
+ *   5. Nexus 仓库配置（用于依赖管理和 JAR 存储）
+ *   6. Jenkins 凭据配置：
+ *      - nexus-credentials: Nexus 用户名密码
+ *      - harbor-registry-secret: Harbor 镜像仓库认证 Secret
  *
  * ============================================================================
  */
+
+// ==================== 共享函数 ====================
+
+/**
+ * 生成 Maven settings.xml 配置文件
+ * 包含 Nexus 镜像配置和服务器认证信息
+ */
+def generateMavenSettings() {
+    sh """
+        cat > ${MAVEN_SETTINGS} <<EOF
+<settings>
+  <mirrors>
+    <mirror>
+      <id>nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>${NEXUS_URL}/repository/${NEXUS_REPO_GROUP}/</url>
+    </mirror>
+  </mirrors>
+  <servers>
+    <server>
+      <id>nexus-releases</id>
+      <username>\${NEXUS_USER}</username>
+      <password>\${NEXUS_PASS}</password>
+    </server>
+    <server>
+      <id>nexus-snapshots</id>
+      <username>\${NEXUS_USER}</username>
+      <password>\${NEXUS_PASS}</password>
+    </server>
+  </servers>
+</settings>
+EOF
+    """
+}
+
+/**
+ * 读取 Maven 项目坐标信息
+ * @return 版本号字符串
+ */
+def getMavenCoordinates() {
+    def version = sh(
+        script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout -s ${MAVEN_SETTINGS}",
+        returnStdout: true
+    ).trim()
+    return version
+}
+
+
+// ==================== Pipeline 定义 ====================
 
 pipeline {
     agent {
@@ -38,7 +90,7 @@ kind: Pod
 metadata:
   labels:
     jenkins: agent
-    version: v8
+    version: v13
 spec:
   containers:
   - name: maven
@@ -79,7 +131,6 @@ spec:
   - name: jenkins-home
     persistentVolumeClaim:
       claimName: jenkins-pvc
-  # 镜像仓库认证配置
   - name: harbor-docker-config
     secret:
       secretName: harbor-registry-secret
@@ -92,10 +143,17 @@ spec:
 
     // ==================== 环境变量配置 ====================
     environment {
-        // Maven 配置（与 nms4cloud 共享同一个仓库）
-        MAVEN_LOCAL_REPO = '/var/jenkins_home/maven-repository'
+        // Maven 配置
         MAVEN_OPTS = '-Xmx2048m -XX:+UseG1GC -XX:MaxMetaspaceSize=512m'
-        
+        MAVEN_SETTINGS = '/tmp/maven-settings.xml'
+
+        // Nexus 配置
+        NEXUS_URL = 'http://nexus.nexus:8081'
+        NEXUS_REPO_GROUP = 'maven-public'
+        NEXUS_REPO_RELEASES = 'maven-releases'
+        NEXUS_REPO_SNAPSHOTS = 'maven-snapshots'
+        NEXUS_CRED_ID = 'nexus-credentials'
+
         // 项目配置
         PROJECT_NAME = 'demo-springboot'
         ARTIFACT_VERSION = '1.0.0'
@@ -104,11 +162,11 @@ spec:
         GIT_CREDENTIAL_ID = 'aliyun-codeup-token'
         GIT_BRANCH = "${params.GIT_BRANCH ?: 'master'}"
         GIT_REPO_URL = 'https://codeup.aliyun.com/613895a803e1c17d57a7630f/mytest.git'
-        
-        DOCKER_IMAGE_TAG = "${env.BUILD_NUMBER}"
 
-        HARBOR_REGISTRY = 'harbor-core.harbor'  // 使用 Kubernetes 服务名
-        HARBOR_PROJECT = 'library'  // 修改为实际的 Harbor 项目名称
+        // Docker 镜像配置
+        DOCKER_IMAGE_TAG = "${env.BUILD_NUMBER}"
+        HARBOR_REGISTRY = 'harbor-core.harbor'
+        HARBOR_PROJECT = 'library'
         HARBOR_REPOSITORY_NAME = 'demo-springboot'
         HARBOR_IMAGE_NAME = "${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${HARBOR_REPOSITORY_NAME}"
     }
@@ -139,6 +197,11 @@ spec:
             name: 'PUSH_TO_HARBOR',
             defaultValue: true,
             description: '推送镜像到 Harbor 本地仓库'
+        )
+        booleanParam(
+            name: 'DEPLOY_TO_NEXUS',
+            defaultValue: true,
+            description: '是否将构建产物推送到 Nexus 仓库（供其他项目依赖）'
         )
     }
 
@@ -171,6 +234,7 @@ spec:
                         清理构建: ${params.CLEAN_BUILD}
                         构建镜像: ${params.BUILD_DOCKER_IMAGE}
                         推送到 Harbor: ${params.PUSH_TO_HARBOR}
+                        推送到 Nexus: ${params.DEPLOY_TO_NEXUS}
                         """
 
                         if (params.BUILD_DOCKER_IMAGE && params.PUSH_TO_HARBOR) {
@@ -227,28 +291,36 @@ spec:
                         ╔════════════════════════════════════════╗
                         ║         Maven 构建流程                  ║
                         ╚════════════════════════════════════════╝
-                        Maven 仓库: ${MAVEN_LOCAL_REPO}
+                        Nexus 仓库: ${NEXUS_URL}
                         """
 
-                        sh """
-                            set +x
-                            echo ">>> 配置 Maven 使用持久化仓库"
-                            mkdir -p ${MAVEN_LOCAL_REPO}
+                        withCredentials([usernamePassword(
+                            credentialsId: "${NEXUS_CRED_ID}",
+                            usernameVariable: 'NEXUS_USER',
+                            passwordVariable: 'NEXUS_PASS'
+                        )]) {
+                            // 生成 Maven settings.xml（只生成一次）
+                            echo ">>> 生成 Maven settings.xml"
+                            generateMavenSettings()
 
-                            echo ">>> 下载依赖"
-                            mvn dependency:go-offline -B ${skipTests} \\
-                                -Dmaven.repo.local=${MAVEN_LOCAL_REPO}
+                            // 读取项目版本号
+                            echo ">>> 读取项目版本号"
+                            env.ARTIFACT_VERSION = getMavenCoordinates()
+                            echo ">>> 项目版本: ${env.ARTIFACT_VERSION}"
 
-                            echo ">>> 编译打包"
-                            mvn ${cleanCmd} package -B ${skipTests} \\
-                                -Dmaven.repo.local=${MAVEN_LOCAL_REPO}
-
-                            echo ">>> 查看构建产物"
-                            ls -lh target/*.jar
-
-                            echo ">>> Maven 仓库缓存统计"
-                            du -sh ${MAVEN_LOCAL_REPO} || echo "无法统计缓存大小"
-                        """
+                            // 编译打包（DEPLOY_TO_NEXUS=true 时直接推送到 Nexus）
+                            def mavenGoal = params.DEPLOY_TO_NEXUS ? 'deploy' : 'package'
+                            echo ">>> 编译打包 (goal: ${mavenGoal})"
+                            sh """
+                                set +x
+                                mvn ${cleanCmd} ${mavenGoal} -B ${skipTests} \\
+                                    -DaltSnapshotDeploymentRepository=nexus-snapshots::${NEXUS_URL}/repository/${NEXUS_REPO_SNAPSHOTS}/ \\
+                                    -DaltReleaseDeploymentRepository=nexus-releases::${NEXUS_URL}/repository/${NEXUS_REPO_RELEASES}/ \\
+                                    -s ${MAVEN_SETTINGS}
+                                echo ">>> 查看构建产物"
+                                ls -lh target/*.jar
+                            """
+                        }
                     }
                 }
             }
@@ -265,9 +337,10 @@ spec:
                         echo "=== 执行单元测试 ==="
                         sh """
                             set +x
-                            mvn test -B -Dmaven.repo.local=${MAVEN_LOCAL_REPO}
+                            mvn test -B -s ${MAVEN_SETTINGS}
                         """
-                    }                }
+                    }
+                }
             }
             post {
                 always {
@@ -283,8 +356,7 @@ spec:
                     script {
                         echo "=== 归档构建产物 ==="
                         archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true, allowEmptyArchive: true
-                        
-                        echo ">>> 构建产物已保存在 Jenkins workspace，Kaniko Pod 将通过 PVC 访问"
+                        echo ">>> 构建产物已保存在 Jenkins workspace"
                     }
                 }
             }
@@ -315,7 +387,7 @@ spec:
                             fi
 
                             # 检查 JAR 文件
-                            if [ ! -f ${WORKSPACE}/target/*.jar ]; then
+                            if ! ls ${WORKSPACE}/target/*.jar 1> /dev/null 2>&1; then
                                 echo "❌ 错误: 未找到 JAR 文件"
                                 exit 1
                             fi
@@ -382,7 +454,7 @@ spec:
             分支: ${GIT_BRANCH}
             耗时: ${currentBuild.durationString}
             """
-            
+
             script {
                 if (params.BUILD_DOCKER_IMAGE) {
                     echo """

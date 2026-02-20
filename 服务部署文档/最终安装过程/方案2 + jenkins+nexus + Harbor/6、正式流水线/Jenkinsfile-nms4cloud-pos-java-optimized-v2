@@ -27,6 +27,40 @@
  * ============================================================================
  */
 
+// ==================== 共享函数 ====================
+
+/**
+ * 生成 Maven settings.xml（含 Nexus 认证）
+ */
+def generateMavenSettings() {
+    sh """
+        cat > ${MAVEN_SETTINGS} <<EOF
+<settings>
+  <mirrors>
+    <mirror>
+      <id>nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>${NEXUS_URL}/repository/${NEXUS_REPO_GROUP}/</url>
+    </mirror>
+  </mirrors>
+  <servers>
+    <server>
+      <id>nexus-releases</id>
+      <username>${NEXUS_USER}</username>
+      <password>${NEXUS_PASS}</password>
+    </server>
+    <server>
+      <id>nexus-snapshots</id>
+      <username>${NEXUS_USER}</username>
+      <password>${NEXUS_PASS}</password>
+    </server>
+  </servers>
+</settings>
+EOF
+    """
+}
+
+
 pipeline {
     agent {
         kubernetes {
@@ -58,6 +92,9 @@ spec:
       limits:
         cpu: 4000m
         memory: 4Gi
+    env:
+    - name: MAVEN_OPTS
+      value: "-Xmx2048m -XX:+UseG1GC -XX:MaxMetaspaceSize=512m"
   - name: kaniko
     image: m.daocloud.io/gcr.io/kaniko-project/executor:debug
     command:
@@ -93,13 +130,21 @@ spec:
 
     // ==================== 环境变量配置 ====================
     environment {
-        // Maven 配置（与其他项目共享同一个仓库）
+        // Maven 配置（MAVEN_OPTS 由容器 env 定义，此处不重复）
         MAVEN_LOCAL_REPO = '/var/jenkins_home/maven-repository'
-        MAVEN_OPTS = '-Xmx2048m -XX:+UseG1GC -XX:MaxMetaspaceSize=512m'
+        MAVEN_SETTINGS = '/tmp/maven-settings.xml'
+
+        // Nexus 配置
+        NEXUS_URL = 'http://nexus.nexus:8081'
+        NEXUS_REPO_GROUP = 'maven-public'
+        NEXUS_REPO_RELEASES = 'maven-releases'
+        NEXUS_REPO_SNAPSHOTS = 'maven-snapshots'
+        NEXUS_CRED_ID = 'nexus-credentials'
 
         // 项目配置
         PROJECT_NAME = 'nms4cloud-pos-java'
-        ARTIFACT_VERSION = '0.0.1-SNAPSHOT'
+        // ARTIFACT_VERSION 在代码检出后从 pom.xml 动态读取，此处为初始占位值
+        ARTIFACT_VERSION = 'unknown'
 
         // Git 配置（阿里云效）
         GIT_CREDENTIAL_ID = 'aliyun-codeup-token'
@@ -162,6 +207,11 @@ spec:
             defaultValue: true,
             description: '构建并推送 Docker 镜像到 Harbor'
         )
+        booleanParam(
+            name: 'DEPLOY_TO_NEXUS',
+            defaultValue: true,
+            description: '推送构建产物到 Nexus 仓库（供其他项目依赖）'
+        )
         choice(
             name: 'DOCKER_REGISTRY_SOURCE',
             choices: [
@@ -177,7 +227,7 @@ spec:
     options {
         buildDiscarder(logRotator(numToKeepStr: '10'))
         disableConcurrentBuilds()
-        timeout(time: 60, unit: 'MINUTES')
+        timeout(time: 30, unit: 'MINUTES')
         timestamps()
     }
 
@@ -188,6 +238,16 @@ spec:
             steps {
                 container('maven') {
                     script {
+                        // 生成 Maven settings.xml（含 Nexus 认证）
+                        withCredentials([usernamePassword(
+                            credentialsId: "${NEXUS_CRED_ID}",
+                            usernameVariable: 'NEXUS_USER',
+                            passwordVariable: 'NEXUS_PASS'
+                        )]) {
+                            echo ">>> 生成 Maven settings.xml"
+                            generateMavenSettings()
+                        }
+
                         currentBuild.displayName = "#${BUILD_NUMBER} - ${params.BUILD_MODULE}"
                         currentBuild.description = "分支: ${GIT_BRANCH} | 环境: ${DEPLOY_ENV}"
 
@@ -203,6 +263,7 @@ spec:
                         跳过测试: ${params.SKIP_TESTS}
                         清理构建: ${params.CLEAN_BUILD}
                         构建镜像: ${params.BUILD_DOCKER_IMAGE}
+                        推送Nexus: ${params.DEPLOY_TO_NEXUS}
                         """
 
                         sh '''
@@ -247,6 +308,16 @@ spec:
                         def cleanCmd = params.CLEAN_BUILD ? 'clean' : ''
                         def skipTests = params.SKIP_TESTS ? '-Dmaven.test.skip=true' : ''
                         def mvnOpts = "-Dmaven.repo.local=${MAVEN_LOCAL_REPO} ${skipTests}".trim()
+                        // DEPLOY_TO_NEXUS=true 时用 deploy goal，Maven 自动路由 SNAPSHOT/Release
+                        def mavenGoal = params.DEPLOY_TO_NEXUS ? 'deploy' : 'install'
+                        def altRepos = "-DaltSnapshotDeploymentRepository=nexus-snapshots::${NEXUS_URL}/repository/${NEXUS_REPO_SNAPSHOTS}/ -DaltReleaseDeploymentRepository=nexus-releases::${NEXUS_URL}/repository/${NEXUS_REPO_RELEASES}/"
+
+                        // 从 pom.xml 动态读取版本号
+                        env.ARTIFACT_VERSION = sh(
+                            script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout -Dmaven.repo.local=${MAVEN_LOCAL_REPO} -s ${MAVEN_SETTINGS}",
+                            returnStdout: true
+                        ).trim()
+                        echo ">>> 项目版本: ${env.ARTIFACT_VERSION}"
 
                         echo """
                         ╔════════════════════════════════════════╗
@@ -254,6 +325,7 @@ spec:
                         ╚════════════════════════════════════════╝
                         Maven 仓库: ${MAVEN_LOCAL_REPO}
                         构建模块: ${params.BUILD_MODULE}
+                        推送 Nexus: ${params.DEPLOY_TO_NEXUS} (goal: ${mavenGoal})
                         """
 
                         // 临时移除各模块的 generator 测试依赖
@@ -263,7 +335,8 @@ spec:
                             # 查找所有包含 generator 依赖的 pom.xml 文件并移除
                             find . -name "pom.xml" -type f -exec grep -l "nms4cloud-generator" {} \\; | while read pom; do
                                 echo "处理: $pom"
-                                perl -i.bak -0pe 's/<dependency>\\s*<groupId>com\\.nms4cloud<\\/groupId>\\s*<artifactId>nms4cloud-generator<\\/artifactId>.*?<\\/dependency>//gs' "$pom"
+                                cp "$pom" "$pom.bak"
+                                perl -i -0pe 's|\\s*<dependency>\\s*<groupId>com\\.nms4cloud</groupId>\\s*<artifactId>nms4cloud-generator</artifactId>.*?</dependency>||gs' "$pom"
                             done
                             echo "✓ generator 依赖已移除"
                         '''
@@ -271,10 +344,10 @@ spec:
                         // 构建项目
                         if (params.BUILD_MODULE == 'all') {
                             echo "=== 构建所有模块 ==="
-                            sh "set +x\nmvn ${cleanCmd} install ${mvnOpts}"
+                            sh "set +x\nmvn ${cleanCmd} ${mavenGoal} ${mvnOpts} ${altRepos} -s ${MAVEN_SETTINGS}"
                         } else {
                             echo "=== 构建模块: ${params.BUILD_MODULE} ==="
-                            sh "set +x\nmvn ${cleanCmd} install -pl ${params.BUILD_MODULE} -am ${mvnOpts}"
+                            sh "set +x\nmvn ${cleanCmd} ${mavenGoal} -pl ${params.BUILD_MODULE} -am ${mvnOpts} ${altRepos} -s ${MAVEN_SETTINGS}"
                         }
                     }
                 }
@@ -313,7 +386,7 @@ spec:
             }
         }
 
-        // ========== 阶段 6: 构建并推送 Docker 镜像 ==========
+        // ========== 阶段 7: 构建并推送 Docker 镜像 ==========
         stage('构建并推送 Docker 镜像') {
             when {
                 expression { params.BUILD_DOCKER_IMAGE }
@@ -419,6 +492,17 @@ spec:
 }
 
 // ==================== 辅助函数 ====================
+
+/**
+ * 从 pom.xml 动态读取项目版本号
+ * 需在代码检出后调用
+ */
+def getMavenCoordinates() {
+    return sh(
+        script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout -Dmaven.repo.local=${MAVEN_LOCAL_REPO}",
+        returnStdout: true
+    ).trim()
+}
 
 /**
  * 构建并推送 Docker 镜像

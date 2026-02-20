@@ -26,9 +26,13 @@ kubectl get pods --watch                  # 实时监听变化
 
 # 常用资源类型
 kubectl get nodes                         # 查看节点
-kubectl get namespaces                    # 查看命名空间
+kubectl get namespaces                    # 查看命名空间（全称）
+kubectl get ns                            # 查看所有命名空间（缩写）
+kubectl get ns -o wide                    # 查看所有命名空间（含更多信息）
 kubectl get deployments                   # 查看部署
 kubectl get svc                           # 查看服务（services 缩写）
+kubectl get svc -n <namespace>            # 查看指定命名空间的服务
+kubectl get svc -A                        # 查看所有命名空间的服务
 kubectl get ingress                       # 查看 ingress
 kubectl get cm                            # 查看配置（configmap 缩写）
 kubectl get secret                        # 查看密钥

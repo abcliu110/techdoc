@@ -3,9 +3,11 @@
  * NMS4Cloud 项目 Jenkins 构建流水线
  * ============================================================================
  *
- * 版本: v3.0 - 2024
+ * 版本: v4.0 - 2026
  * 更新:
- *   - 支持双推送：Harbor 本地仓库 + 阿里云镜像仓库
+ *   - 使用 Nexus 替代 PVC 本地缓存
+ *   - 优化代码结构，提取公共函数
+ *   - 推送镜像到 Harbor 本地仓库
  *   - 使用构建参数控制推送目标
  *   - 启用最高压缩级别（Level 9）
  *   - 添加镜像大小预估和推送统计
@@ -62,6 +64,51 @@
  *
  * ============================================================================
  */
+
+// ==================== 共享函数 ====================
+
+/**
+ * 生成 Maven settings.xml 配置文件
+ * 包含 Nexus 镜像配置和服务器认证信息
+ */
+def generateMavenSettings() {
+    sh """
+        cat > ${MAVEN_SETTINGS} <<EOF
+<settings>
+  <mirrors>
+    <mirror>
+      <id>nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>${NEXUS_URL}/repository/${NEXUS_REPO_GROUP}/</url>
+    </mirror>
+  </mirrors>
+  <servers>
+    <server>
+      <id>nexus-releases</id>
+      <username>${NEXUS_USER}</username>
+      <password>${NEXUS_PASS}</password>
+    </server>
+    <server>
+      <id>nexus-snapshots</id>
+      <username>${NEXUS_USER}</username>
+      <password>${NEXUS_PASS}</password>
+    </server>
+  </servers>
+</settings>
+EOF
+    """
+}
+
+/**
+ * 从 pom.xml 动态读取项目版本号
+ * 需在代码检出后调用
+ */
+def getMavenCoordinates() {
+    return sh(
+        script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout -s ${MAVEN_SETTINGS}",
+        returnStdout: true
+    ).trim()
+}
 
 pipeline {
     agent {
@@ -152,14 +199,20 @@ spec:
 
     // ==================== 环境变量配置 ====================
     environment {
-        // Maven 配置（与其他项目共享同一个仓库）
-        MAVEN_LOCAL_REPO = '/var/jenkins_home/maven-repository'
-        MAVEN_OPTS = '-Xmx3072m -XX:+UseG1GC -XX:MaxMetaspaceSize=512m'
-        MAVEN_BASE_OPTS = "-Dmaven.repo.local=${MAVEN_LOCAL_REPO} -Dmaven.compile.fork=true"
+        // Maven 配置（MAVEN_OPTS 由容器 env 定义，此处不重复）
+        MAVEN_SETTINGS = '/tmp/maven-settings.xml'
+
+        // Nexus 配置
+        NEXUS_URL = 'http://nexus.nexus:8081'
+        NEXUS_REPO_GROUP = 'maven-public'
+        NEXUS_REPO_RELEASES = 'maven-releases'
+        NEXUS_REPO_SNAPSHOTS = 'maven-snapshots'
+        NEXUS_CRED_ID = 'nexus-credentials'
 
         // 项目配置
         PROJECT_NAME = 'nms4cloud'
-        ARTIFACT_VERSION = '0.0.1-SNAPSHOT'
+        // ARTIFACT_VERSION 在代码检出后从 pom.xml 动态读取，此处为初始占位值
+        ARTIFACT_VERSION = 'unknown'
 
         // Git 配置
         GIT_CREDENTIAL_ID = 'aliyun-codeup-token'
@@ -233,8 +286,13 @@ spec:
             description: '构建 WMS 模块'
         )
         booleanParam(
+            name: 'DEPLOY_TO_NEXUS',
+            defaultValue: true,
+            description: '将构建产物推送到 Nexus 仓库（供其他项目依赖）'
+        )
+        booleanParam(
             name: 'BUILD_DOCKER_IMAGE',
-            defaultValue: false,
+            defaultValue: true,
             description: '构建并推送 Docker 镜像到 Harbor（自动根据 BUILD_MODULE 参数决定构建哪些模块）'
         )
         choice(
@@ -252,7 +310,7 @@ spec:
     options {
         buildDiscarder(logRotator(numToKeepStr: '10'))  // 保留最近 10 次构建
         disableConcurrentBuilds()                        // 禁止并发构建
-        timeout(time: 45, unit: 'MINUTES')              // 构建超时 45 分钟
+        timeout(time: 30, unit: 'MINUTES')              // 构建超时 30 分钟
         timestamps()                                     // 显示时间戳
     }
 
@@ -263,6 +321,17 @@ spec:
             steps {
                 container('maven') {
                     script {
+                    // 生成 Maven settings.xml（使用 Nexus）
+                    withCredentials([usernamePassword(
+                        credentialsId: "${NEXUS_CRED_ID}",
+                        usernameVariable: 'NEXUS_USER',
+                        passwordVariable: 'NEXUS_PASS'
+                    )]) {
+                        echo ">>> 生成 Maven settings.xml"
+                        generateMavenSettings()
+                    }
+
+
                     // 设置构建显示名称和描述
                     currentBuild.displayName = "#${BUILD_NUMBER} - ${params.BUILD_MODULE}"
                     currentBuild.description = "分支: ${GIT_BRANCH}"
@@ -288,13 +357,12 @@ spec:
                         set +x
                         echo "=== 环境信息 ==="
                         java -version
-                        mvn -version
-                        echo "Maven 仓库: ${MAVEN_LOCAL_REPO}"
+                        mvn -version -s ${MAVEN_SETTINGS}
                     '''
+                    }
                 }
             }
         }
-    }
 
         // ========== 阶段 2: 代码检出 ==========
         stage('代码检出') {
@@ -354,13 +422,17 @@ spec:
                     // 构建参数
                     def cleanCmd = params.CLEAN_BUILD ? 'clean' : ''
                     def skipTests = params.SKIP_TESTS ? '-Dmaven.test.skip=true' : ''
-                    def mvnOpts = "${MAVEN_BASE_OPTS} ${skipTests}".trim()
+                    def mvnOpts = "${skipTests}".trim()
+                    // DEPLOY_TO_NEXUS=true 时用 deploy goal，Maven 自动路由 SNAPSHOT/Release
+                    def mavenGoal = params.DEPLOY_TO_NEXUS ? 'deploy' : 'install'
+                    def altRepos = "-DaltSnapshotDeploymentRepository=nexus-snapshots::${NEXUS_URL}/repository/${NEXUS_REPO_SNAPSHOTS}/ -DaltReleaseDeploymentRepository=nexus-releases::${NEXUS_URL}/repository/${NEXUS_REPO_RELEASES}/"
 
                     echo """
                     ╔════════════════════════════════════════╗
                     ║         Maven 构建流程                  ║
                     ╚════════════════════════════════════════╝
                     Maven 选项: ${mvnOpts}
+                    推送 Nexus: ${params.DEPLOY_TO_NEXUS} (goal: ${mavenGoal})
                     """
 
                     // ========================================
@@ -368,9 +440,13 @@ spec:
                     // ========================================
                     // 说明：安装根目录的 pom.xml，定义项目版本和依赖管理
                     // 依赖：无
-                    buildStep('1/9', '安装父 POM', """
-                        mvn install -N ${mvnOpts}
+                    buildStep('1/8', '安装父 POM', """
+                        mvn ${mavenGoal} -N ${mvnOpts} ${altRepos} -s ${MAVEN_SETTINGS}
                     """)
+
+                    // 从 pom.xml 动态读取版本号，覆盖占位值
+                    env.ARTIFACT_VERSION = getMavenCoordinates()
+                    echo ">>> 项目版本: ${env.ARTIFACT_VERSION}"
 
                     // ========================================
                     // 步骤 2: 构建 nms4cloud-starter
@@ -378,9 +454,9 @@ spec:
                     // 说明：构建所有基础组件（starter 模块）
                     // 依赖：父 POM
                     // 提供：基础组件给其他模块使用
-                    buildStep('2/9', '构建 nms4cloud-starter', """
+                    buildStep('2/8', '构建 nms4cloud-starter', """
                         cd nms4cloud-starter
-                        mvn ${cleanCmd} install ${mvnOpts}
+                        mvn ${cleanCmd} ${mavenGoal} ${mvnOpts} ${altRepos} -s ${MAVEN_SETTINGS}
                         cd ..
                     """)
 
@@ -396,9 +472,9 @@ spec:
                     //   - product-api/dao: 产品管理 API
                     //   - crm-api/dao: 客户关系管理 API
                     //   - biz-api/dao: 业务逻辑 API（WMS 依赖）
-                    buildStep('3/9', '构建 API 和 DAO 层', """
+                    buildStep('3/8', '构建 API 和 DAO 层', """
                         cd nms4cloud-app
-                        mvn ${cleanCmd} install -am \\
+                        mvn ${cleanCmd} ${mavenGoal} -am \\
                             -pl 1_platform/nms4cloud-platform/nms4cloud-platform-api,\\
 1_platform/nms4cloud-platform/nms4cloud-platform-dao,\\
 2_business/nms4cloud-product/nms4cloud-product-api,\\
@@ -409,7 +485,7 @@ spec:
 2_business/nms4cloud-biz/nms4cloud-biz-dao,\\
 2_business/nms4cloud-payment/nms4cloud-payment-api,\\
 2_business/nms4cloud-payment/nms4cloud-payment-dao \\
-                            ${mvnOpts}
+                            ${mvnOpts} ${altRepos} -s ${MAVEN_SETTINGS}
                         cd ..
                     """)
 
@@ -422,10 +498,10 @@ spec:
                     //
                     // 注意：bi-dao 依赖 wms-api，所以要在 WMS 之后构建
                     if (params.BUILD_BI) {
-                        buildStep('4/9', '构建 BI API 层', """
+                        buildStep('4/8', '构建 BI API 层', """
                             if [ -d "nms4cloud-bi" ]; then
                                 cd nms4cloud-bi
-                                mvn ${cleanCmd} install -pl nms4cloud-bi-api -am ${mvnOpts}
+                                mvn ${cleanCmd} ${mavenGoal} -pl nms4cloud-bi-api -am ${mvnOpts} ${altRepos} -s ${MAVEN_SETTINGS}
                                 cd ..
                             else
                                 echo "⚠️ nms4cloud-bi 目录不存在，跳过"
@@ -453,18 +529,19 @@ spec:
                     //   - 删除 pom.xml 中的 generator 依赖（临时修改）
                     //   - 使用 -Dmaven.test.skip=true 跳过测试
                     if (params.BUILD_WMS) {
-                        buildStep('5/9', '构建 WMS 模块', """
+                        buildStep('5/8', '构建 WMS 模块', """
                             if [ -d "nms4cloud-wms" ]; then
                                 cd nms4cloud-wms
 
                                 # 删除 generator 依赖（临时修改，不提交）
                                 echo ">>> 删除 wms-app 的 generator 依赖"
                                 if [ -f "nms4cloud-wms-app/pom.xml" ]; then
-                                    perl -i.bak -0pe 's/<dependency>\\s*<groupId>com\\.nms4cloud<\\/groupId>\\s*<artifactId>nms4cloud-generator<\\/artifactId>.*?<\\/dependency>//gs' nms4cloud-wms-app/pom.xml
+                                    cp nms4cloud-wms-app/pom.xml nms4cloud-wms-app/pom.xml.bak
+                                    perl -i -0pe 's|\\s*<dependency>\\s*<groupId>com\\.nms4cloud</groupId>\\s*<artifactId>nms4cloud-generator</artifactId>.*?</dependency>||gs' nms4cloud-wms-app/pom.xml
                                 fi
 
                                 # 构建 WMS 模块
-                                mvn ${cleanCmd} install ${mvnOpts}
+                                mvn ${cleanCmd} ${mavenGoal} ${mvnOpts} ${altRepos} -s ${MAVEN_SETTINGS}
                                 cd ..
                             else
                                 echo "⚠️ nms4cloud-wms 目录不存在，跳过"
@@ -486,18 +563,19 @@ spec:
                     //   - 删除 pom.xml 中的 generator 依赖（临时修改）
                     //   - 使用 -Dmaven.test.skip=true 跳过测试
                     if (params.BUILD_BI) {
-                        buildStep('6/9', '构建 BI 剩余模块', """
+                        buildStep('6/8', '构建 BI 剩余模块', """
                             if [ -d "nms4cloud-bi" ]; then
                                 cd nms4cloud-bi
 
                                 # 删除 generator 依赖（临时修改，不提交）
                                 echo ">>> 删除 bi-app 的 generator 依赖"
                                 if [ -f "nms4cloud-bi-app/pom.xml" ]; then
-                                    perl -i.bak -0pe 's/<dependency>\\s*<groupId>com\\.nms4cloud<\\/groupId>\\s*<artifactId>nms4cloud-generator<\\/artifactId>.*?<\\/dependency>//gs' nms4cloud-bi-app/pom.xml
+                                    cp nms4cloud-bi-app/pom.xml nms4cloud-bi-app/pom.xml.bak
+                                    perl -i -0pe 's|\\s*<dependency>\\s*<groupId>com\\.nms4cloud</groupId>\\s*<artifactId>nms4cloud-generator</artifactId>.*?</dependency>||gs' nms4cloud-bi-app/pom.xml
                                 fi
 
                                 # 构建 BI 剩余模块
-                                mvn install ${mvnOpts}
+                                mvn ${mavenGoal} ${mvnOpts} ${altRepos} -s ${MAVEN_SETTINGS}
                                 cd ..
                             else
                                 echo "⚠️ nms4cloud-bi 目录不存在，跳过"
@@ -517,9 +595,9 @@ spec:
                     // 包含的模块：
                     //   - *-service: 业务逻辑层
                     //   - *-app: 应用启动层
-                    buildStep('7/9', '构建 Service 和 App 层', """
+                    buildStep('7/8', '构建 Service 和 App 层', """
                         cd nms4cloud-app
-                        mvn install ${mvnOpts}
+                        mvn ${mavenGoal} ${mvnOpts} ${altRepos} -s ${MAVEN_SETTINGS}
                         cd ..
                     """)
 
@@ -532,8 +610,8 @@ spec:
                         // 获取模块的 Maven 路径
                         def modulePath = getMavenModulePath(params.BUILD_MODULE)
                         if (modulePath) {
-                            buildStep('8/9', "构建指定模块: ${params.BUILD_MODULE}", """
-                                mvn ${cleanCmd} install -pl ${modulePath} -am ${mvnOpts}
+                            buildStep('8/8', "构建指定模块: ${params.BUILD_MODULE}", """
+                                mvn ${cleanCmd} ${mavenGoal} -pl ${modulePath} -am ${mvnOpts} ${altRepos} -s ${MAVEN_SETTINGS}
                             """)
                         } else {
                             echo "⚠️ 警告: 未找到模块 ${params.BUILD_MODULE} 的 Maven 路径，跳过构建"
@@ -544,7 +622,7 @@ spec:
                 }
             }
         }
-    }
+        }
 
         // ========== 阶段 5: 单元测试 ==========
         stage('单元测试') {
@@ -555,7 +633,7 @@ spec:
                 container('maven') {
                     script {
                         echo "=== 执行单元测试 ==="
-                        sh "mvn test ${MAVEN_BASE_OPTS}"
+                        sh "mvn test -s ${MAVEN_SETTINGS}"
                     }
                 }
             }
@@ -573,7 +651,7 @@ spec:
                     script {
                         echo "=== 归档构建产物 ==="
                         archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true, allowEmptyArchive: true
-                        
+
                         echo ">>> 构建产物已保存在 Jenkins workspace，Kaniko Pod 将通过 PVC 访问"
                     }
                 }
@@ -1025,3 +1103,4 @@ def buildModuleImage(String moduleName, String modulePath) {
         return [success: false, imageName: null, reason: reason]
     }
 }
+
