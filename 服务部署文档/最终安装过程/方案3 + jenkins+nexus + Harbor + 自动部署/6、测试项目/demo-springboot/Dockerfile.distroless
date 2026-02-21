@@ -1,0 +1,20 @@
+# Distroless 版本 - 最小化镜像（约 150-180MB）
+# 适用于生产环境，安全性最高
+
+# 使用 DaoCloud 镜像源（国内访问更快）
+FROM m.daocloud.io/gcr.io/distroless/java21-debian12
+
+# 设置工作目录
+WORKDIR /app
+
+# 复制已构建的 jar 包
+COPY target/*.jar app.jar
+
+# 暴露端口
+EXPOSE 8080
+
+# JVM 参数优化（Distroless 使用 JAVA_TOOL_OPTIONS）
+ENV JAVA_TOOL_OPTIONS="-Xms256m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
+
+# 启动命令（Distroless 没有 shell，直接使用 java）
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]

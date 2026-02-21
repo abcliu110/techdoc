@@ -1,0 +1,48 @@
+# RKE2 镜像仓库配置
+# 文件位置: /etc/rancher/rke2/registries.yaml
+# 配置后需要重启 RKE2: sudo systemctl restart rke2-server
+
+mirrors:
+  # 私有 Docker Registry（HTTP 协议）
+  "192.168.80.101:30002":
+    endpoint:
+      - "http://192.168.80.101:30002"                # 私有仓库（HTTP）
+  
+  # 另一个私有 Docker Registry（HTTP 协议）
+  "192.168.80.100:30500":
+    endpoint:
+      - "http://192.168.80.100:30500"                # 私有仓库（HTTP）
+  
+  # Docker Hub 镜像加速
+  docker.io:
+    endpoint:
+      - "https://dockerproxy.com"                    # Docker 代理
+      - "https://docker.mirrors.ustc.edu.cn"         # 中科大镜像
+      - "https://hub-mirror.c.163.com"               # 网易镜像
+      - "https://mirror.ccs.tencentyun.com"          # 腾讯云镜像
+      - "https://registry.cn-hangzhou.aliyuncs.com"  # 阿里云镜像
+  
+  # Google Container Registry 镜像加速
+  gcr.io:
+    endpoint:
+      - "https://gcr.mirrors.ustc.edu.cn"            # 中科大 GCR 镜像
+      - "https://gcr.dockerproxy.com"                # GCR 代理
+  
+  # Kubernetes 镜像加速
+  k8s.gcr.io:
+    endpoint:
+      - "https://registry.cn-hangzhou.aliyuncs.com/google_containers"  # 阿里云 K8s 镜像
+  
+  # Quay.io 镜像加速
+  quay.io:
+    endpoint:
+      - "https://quay.mirrors.ustc.edu.cn"           # 中科大 Quay 镜像
+
+# 私有仓库配置（跳过 TLS 验证）
+configs:
+  "192.168.80.101:30002":
+    tls:
+      insecure_skip_verify: true
+  "192.168.80.100:30500":
+    tls:
+      insecure_skip_verify: true

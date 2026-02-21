@@ -1,0 +1,45 @@
+# Spring Boot 分层构建版本 - 更好的缓存利用
+# 适用于 Spring Boot 应用，构建更快
+
+# 阶段 1: 解压 JAR 包
+FROM m.daocloud.io/docker.io/eclipse-temurin:21-jre-alpine AS builder
+
+WORKDIR /app
+COPY target/*.jar app.jar
+
+# 解压 JAR 包（Spring Boot 分层）
+RUN java -Djarmode=layertools -jar app.jar extract
+
+# 阶段 2: 运行镜像
+FROM m.daocloud.io/docker.io/eclipse-temurin:21-jre-alpine
+
+# 系统配置
+RUN apk add --no-cache tzdata && \
+    cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    echo "Asia/Shanghai" > /etc/timezone && \
+    apk del tzdata && \
+    addgroup -S appuser && \
+    adduser -S appuser -G appuser
+
+WORKDIR /app
+
+# 按层复制（利用 Docker 缓存，依赖层不常变化）
+COPY --from=builder /app/dependencies/ ./
+COPY --from=builder /app/spring-boot-loader/ ./
+COPY --from=builder /app/snapshot-dependencies/ ./
+COPY --from=builder /app/application/ ./
+
+# 修改权限
+RUN chown -R appuser:appuser /app
+
+# 切换用户
+USER appuser
+
+# 暴露端口
+EXPOSE 8080
+
+# JVM 参数优化
+ENV JAVA_OPTS="-Xms256m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
+
+# 启动命令（使用 Spring Boot Loader）
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS org.springframework.boot.loader.launch.JarLauncher"]
