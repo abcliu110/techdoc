@@ -1,86 +1,8 @@
 /*
  * ============================================================================
- * Demo Spring Boot 项目 Jenkins 构建流水线（Kubernetes 模式）
- * ============================================================================
- *
- * 使用 Kubernetes Plugin 在 RKE2 集群上动态创建 Pod 进行构建
- * 使用 Kaniko 构建 Docker 镜像（无需 Docker daemon）
- *
- * 版本: v13.0 - 2026
- * 更新:
- *   - 使用 Nexus 替代 PVC 本地缓存
- *   - 优化代码结构，提取公共函数
- *   - 推送镜像到 Harbor 本地仓库
- *   - 使用构建参数控制推送目标
- *   - 启用最高压缩级别（Level 9）
- *   - 添加镜像大小预估和推送统计
- *   - 添加超时和重试机制
- *   - settings.xml 只生成一次，避免重复
- *   - 统一 Nexus 仓库判断逻辑
- *   - 改进错误处理和日志输出
- *
- * 前置要求：
- *   1. Jenkins 安装 Kubernetes Plugin
- *   2. 配置 Kubernetes Cloud（WebSocket 模式，无 Tunnel）
- *   3. RKE2 配置镜像加速
- *   4. Jenkins 使用 PVC 持久化存储（用于 workspace 共享）
- *   5. Nexus 仓库配置（用于依赖管理和 JAR 存储）
- *   6. Jenkins 凭据配置：
- *      - nexus-credentials: Nexus 用户名密码
- *      - harbor-registry-secret: Harbor 镜像仓库认证 Secret
- *
+ * Demo Spring Boot CI/CD 流水线 (自动构建 + 自动部署)
  * ============================================================================
  */
-
-// ==================== 共享函数 ====================
-
-/**
- * 生成 Maven settings.xml 配置文件
- * 包含 Nexus 镜像配置和服务器认证信息
- */
-def generateMavenSettings() {
-    sh """
-        cat > ${MAVEN_SETTINGS} <<EOF
-<settings>
-  <mirrors>
-    <mirror>
-      <id>nexus</id>
-      <mirrorOf>*</mirrorOf>
-      <url>${NEXUS_URL}/repository/${NEXUS_REPO_GROUP}/</url>
-    </mirror>
-  </mirrors>
-  <servers>
-    <server>
-      <id>nexus-releases</id>
-      <username>\${NEXUS_USER}</username>
-      <password>\${NEXUS_PASS}</password>
-    </server>
-    <server>
-      <id>nexus-snapshots</id>
-      <username>\${NEXUS_USER}</username>
-      <password>\${NEXUS_PASS}</password>
-    </server>
-  </servers>
-</settings>
-EOF
-    """
-}
-
-/**
- * 读取 Maven 项目坐标信息
- * @return 版本号字符串
- */
-def getMavenCoordinates() {
-    def version = sh(
-        script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout -s ${MAVEN_SETTINGS}",
-        returnStdout: true
-    ).trim()
-    return version
-}
-
-
-// ==================== Pipeline 定义 ====================
-
 pipeline {
     agent {
         kubernetes {
@@ -90,13 +12,15 @@ kind: Pod
 metadata:
   labels:
     jenkins: agent
-    version: v13
+    app: demo-springboot-cicd
 spec:
+  # 注意：此 ServiceAccount 必须有 K8s 的部署权限
+  serviceAccountName: default
   containers:
+  # 1. Maven 构建环境
   - name: maven
     image: maven:3.9-eclipse-temurin-21
-    command:
-    - cat
+    command: ["cat"]
     tty: true
     volumeMounts:
     - name: jenkins-home
@@ -109,216 +33,130 @@ spec:
         cpu: 2000m
         memory: 2Gi
 
+  # 2. Kaniko 镜像构建环境
   - name: kaniko
     image: m.daocloud.io/gcr.io/kaniko-project/executor:debug
-    command:
-    - /busybox/cat
+    command: ["/busybox/cat"]
     tty: true
     volumeMounts:
     - name: jenkins-home
       mountPath: /var/jenkins_home
-    - name: harbor-docker-config
-      mountPath: /kaniko/.docker
     resources:
       requests:
         cpu: 500m
-        memory: 1Gi
+        memory: 512Mi
       limits:
-        cpu: 2000m
-        memory: 2Gi
+        cpu: 1000m
+        memory: 1Gi
+
+  # 3. Kubectl 部署工具
+  - name: kubectl
+    image: bitnami/kubectl:latest
+    command: ["cat"]
+    tty: true
+    # 👇【修复点】: 强制以 root (UID 0) 身份运行，解决 Jenkins 脚本无权限写入导致没法启动进程的报错
+    securityContext:
+      runAsUser: 0
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
 
   volumes:
   - name: jenkins-home
     persistentVolumeClaim:
       claimName: jenkins-pvc
-  - name: harbor-docker-config
-    secret:
-      secretName: harbor-registry-secret
-      items:
-      - key: .dockerconfigjson
-        path: config.json
 """
         }
     }
 
-    // ==================== 环境变量配置 ====================
     environment {
-        // Maven 配置
-        MAVEN_OPTS = '-Xmx2048m -XX:+UseG1GC -XX:MaxMetaspaceSize=512m'
-        MAVEN_SETTINGS = '/tmp/maven-settings.xml'
-
+        // ========== 全局配置 ==========
+        // 项目基础信息
+        APP_NAME = "demo-springboot"
+        APP_PORT = "8080"
+        DEPLOY_NAMESPACE = "default" // 部署到哪个 K8s 命名空间
+        
+        // 仓库配置
+        GIT_URL = 'https://codeup.aliyun.com/613895a803e1c17d57a7630f/mytest.git'
+        GIT_CRED_ID = 'aliyun-codeup-token'
+        
         // Nexus 配置
         NEXUS_URL = 'http://nexus.nexus:8081'
-        NEXUS_REPO_GROUP = 'maven-public'
-        NEXUS_REPO_RELEASES = 'maven-releases'
-        NEXUS_REPO_SNAPSHOTS = 'maven-snapshots'
         NEXUS_CRED_ID = 'nexus-credentials'
-
-        // 项目配置
-        PROJECT_NAME = 'demo-springboot'
-        ARTIFACT_VERSION = '1.0.0'
-
-        // Git 配置
-        GIT_CREDENTIAL_ID = 'aliyun-codeup-token'
-        GIT_BRANCH = "${params.GIT_BRANCH ?: 'master'}"
-        GIT_REPO_URL = 'https://codeup.aliyun.com/613895a803e1c17d57a7630f/mytest.git'
-
-        // Docker 镜像配置
-        DOCKER_IMAGE_TAG = "${env.BUILD_NUMBER}"
-        HARBOR_REGISTRY = 'harbor-core.harbor'
-        HARBOR_PROJECT = 'library'
-        HARBOR_REPOSITORY_NAME = 'demo-springboot'
-        HARBOR_IMAGE_NAME = "${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${HARBOR_REPOSITORY_NAME}"
+        
+        // Harbor 配置 (强制使用内部域名 harbor.harbor)
+        HARBOR_HOST = "harbor.harbor"  
+        HARBOR_PROJECT = "library"
+        HARBOR_CRED_ID = "harbor-user-auth"
     }
 
-    // ==================== 参数化构建 ====================
-    parameters {
-        string(
-            name: 'GIT_BRANCH',
-            defaultValue: 'master',
-            description: 'Git 分支名称'
-        )
-        booleanParam(
-            name: 'SKIP_TESTS',
-            defaultValue: true,
-            description: '跳过单元测试'
-        )
-        booleanParam(
-            name: 'CLEAN_BUILD',
-            defaultValue: true,
-            description: '清理构建'
-        )
-        booleanParam(
-            name: 'BUILD_DOCKER_IMAGE',
-            defaultValue: true,
-            description: '构建并推送 Docker 镜像'
-        )
-        booleanParam(
-            name: 'PUSH_TO_HARBOR',
-            defaultValue: true,
-            description: '推送镜像到 Harbor 本地仓库'
-        )
-        booleanParam(
-            name: 'DEPLOY_TO_NEXUS',
-            defaultValue: true,
-            description: '是否将构建产物推送到 Nexus 仓库（供其他项目依赖）'
-        )
-    }
-
-    // ==================== 构建选项 ====================
-    options {
-        buildDiscarder(logRotator(numToKeepStr: '10'))
-        disableConcurrentBuilds()
-        timeout(time: 45, unit: 'MINUTES')
-        timestamps()
-    }
-
-    // ==================== 构建阶段 ====================
     stages {
-        // ========== 阶段 1: 环境检查 ==========
-        stage('环境检查') {
-            steps {
-                container('maven') {
-                    script {
-                        currentBuild.displayName = "#${BUILD_NUMBER} - ${GIT_BRANCH}"
-                        currentBuild.description = "分支: ${GIT_BRANCH}"
-
-                        echo """
-                        ╔════════════════════════════════════════╗
-                        ║         构建配置                        ║
-                        ╚════════════════════════════════════════╝
-                        项目: ${PROJECT_NAME}
-                        版本: ${ARTIFACT_VERSION}
-                        分支: ${GIT_BRANCH}
-                        跳过测试: ${params.SKIP_TESTS}
-                        清理构建: ${params.CLEAN_BUILD}
-                        构建镜像: ${params.BUILD_DOCKER_IMAGE}
-                        推送到 Harbor: ${params.PUSH_TO_HARBOR}
-                        推送到 Nexus: ${params.DEPLOY_TO_NEXUS}
-                        """
-
-                        if (params.BUILD_DOCKER_IMAGE && params.PUSH_TO_HARBOR) {
-                            echo "Harbor 镜像: ${HARBOR_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
-                        }
-
-                        sh '''
-                            set +x
-                            echo "=== 环境信息 ==="
-                            java -version
-                            mvn -version
-                        '''
-                    }
-                }
-            }
-        }
-
-        // ========== 阶段 2: 代码检出 ==========
+        // ========== 阶段 1: 拉取代码 ==========
         stage('代码检出') {
             steps {
                 container('maven') {
-                    script {
-                        echo "=== 代码检出 ==="
-                        checkout([
-                            $class: 'GitSCM',
-                            branches: [[name: "*/${GIT_BRANCH}"]],
-                            extensions: [
-                                [$class: 'CloneOption', depth: 1, shallow: true, timeout: 20]
-                            ],
-                            userRemoteConfigs: [[
-                                credentialsId: "${GIT_CREDENTIAL_ID}",
-                                url: "${GIT_REPO_URL}"
-                            ]]
-                        ])
-                        sh '''
-                            set +x
-                            echo ">>> 代码检出完成"
-                            ls -la
-                        '''
-                    }
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: "*/master"]],
+                        extensions: [[$class: 'CloneOption', depth: 1, shallow: true, timeout: 20]],
+                        userRemoteConfigs: [[credentialsId: "${GIT_CRED_ID}", url: "${GIT_URL}"]]
+                    ])
                 }
             }
         }
 
-        // ========== 阶段 3: Maven 构建 ==========
+        // ========== 阶段 2: 编译打包 ==========
         stage('Maven 构建') {
             steps {
                 container('maven') {
                     script {
-                        def cleanCmd = params.CLEAN_BUILD ? 'clean' : ''
-                        def skipTests = params.SKIP_TESTS ? '-DskipTests' : ''
-
-                        echo """
-                        ╔════════════════════════════════════════╗
-                        ║         Maven 构建流程                  ║
-                        ╚════════════════════════════════════════╝
-                        Nexus 仓库: ${NEXUS_URL}
+                        def settingsPath = "/tmp/settings.xml"
+                        // 动态生成 Maven 配置
+                        sh """
+                            echo '<settings><mirrors><mirror><id>nexus</id><mirrorOf>*</mirrorOf><url>${NEXUS_URL}/repository/maven-public/</url></mirror></mirrors><servers><server><id>nexus-releases</id><username>\${NEXUS_USER}</username><password>\${NEXUS_PASS}</password></server><server><id>nexus-snapshots</id><username>\${NEXUS_USER}</username><password>\${NEXUS_PASS}</password></server></servers></settings>' > ${settingsPath}
                         """
+                        withCredentials([usernamePassword(credentialsId: "${NEXUS_CRED_ID}", usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
+                            sh "mvn clean package -B -DskipTests -s ${settingsPath}"
+                        }
+                    }
+                }
+            }
+        }
 
-                        withCredentials([usernamePassword(
-                            credentialsId: "${NEXUS_CRED_ID}",
-                            usernameVariable: 'NEXUS_USER',
-                            passwordVariable: 'NEXUS_PASS'
-                        )]) {
-                            // 生成 Maven settings.xml（只生成一次）
-                            echo ">>> 生成 Maven settings.xml"
-                            generateMavenSettings()
-
-                            // 读取项目版本号
-                            echo ">>> 读取项目版本号"
-                            env.ARTIFACT_VERSION = getMavenCoordinates()
-                            echo ">>> 项目版本: ${env.ARTIFACT_VERSION}"
-
-                            // 编译打包（DEPLOY_TO_NEXUS=true 时直接推送到 Nexus）
-                            def mavenGoal = params.DEPLOY_TO_NEXUS ? 'deploy' : 'package'
-                            echo ">>> 编译打包 (goal: ${mavenGoal})"
+        // ========== 阶段 3: 构建并推送镜像 ==========
+        stage('镜像构建推送') {
+            steps {
+                container('kaniko') {
+                    withCredentials([usernamePassword(credentialsId: "${HARBOR_CRED_ID}", usernameVariable: 'HB_USER', passwordVariable: 'HB_PASS')]) {
+                        script {
+                            // 计算镜像全名: harbor.harbor/library/demo-springboot
+                            def fullImageName = "${HARBOR_HOST}/${HARBOR_PROJECT}/${APP_NAME}"
+                            
+                            echo ">>> 生成认证信息 (Target: ${HARBOR_HOST})..."
+                            // 👇【优化点】: 增加了对变量的 \ 转义，避免明文凭据注入 Groovy 字符串引发 Jenkins 安全告警
                             sh """
-                                set +x
-                                mvn ${cleanCmd} ${mavenGoal} -B ${skipTests} \\
-                                    -DaltSnapshotDeploymentRepository=nexus-snapshots::${NEXUS_URL}/repository/${NEXUS_REPO_SNAPSHOTS}/ \\
-                                    -DaltReleaseDeploymentRepository=nexus-releases::${NEXUS_URL}/repository/${NEXUS_REPO_RELEASES}/ \\
-                                    -s ${MAVEN_SETTINGS}
-                                echo ">>> 查看构建产物"
-                                ls -lh target/*.jar
+                                mkdir -p /kaniko/.docker
+                                AUTH=\$(echo -n "\${HB_USER}:\${HB_PASS}" | base64)
+                                echo "{\\"auths\\":{\\"${HARBOR_HOST}\\":{\\"auth\\":\\"\$AUTH\\"}}}" > /kaniko/.docker/config.json
+                            """
+
+                            if (!fileExists('Dockerfile')) { error "❌ 未找到 Dockerfile" }
+
+                            echo ">>> 构建镜像: ${fullImageName}:${BUILD_NUMBER}"
+                            sh """
+                                /kaniko/executor \
+                                    --context=${WORKSPACE} \
+                                    --dockerfile=${WORKSPACE}/Dockerfile \
+                                    --destination=${fullImageName}:${BUILD_NUMBER} \
+                                    --destination=${fullImageName}:latest \
+                                    --insecure \
+                                    --insecure-pull \
+                                    --skip-tls-verify \
+                                    --insecure-registry=${HARBOR_HOST} \
+                                    --registry-mirror=${HARBOR_HOST}/dockerhub-proxy \
+                                    --cache=false \
+                                    --verbosity=info
                             """
                         }
                     }
@@ -326,166 +164,78 @@ spec:
             }
         }
 
-        // ========== 阶段 4: 单元测试 ==========
-        stage('单元测试') {
-            when {
-                expression { !params.SKIP_TESTS }
-            }
+        // ========== 阶段 4: 部署到 K8s (自动生成 YAML) ==========
+        stage('自动部署到集群') {
             steps {
-                container('maven') {
+                container('kubectl') {
                     script {
-                        echo "=== 执行单元测试 ==="
-                        sh """
-                            set +x
-                            mvn test -B -s ${MAVEN_SETTINGS}
+                        echo ">>> 开始部署应用到 Namespace: ${DEPLOY_NAMESPACE}"
+                        
+                        def fullImageName = "${HARBOR_HOST}/${HARBOR_PROJECT}/${APP_NAME}"
+                        def imageTag = "${fullImageName}:${BUILD_NUMBER}"
+                        
+                        // 生成 Deployment YAML
+                        sh """ cat <<EOF > deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${APP_NAME}
+  namespace: ${DEPLOY_NAMESPACE}
+  labels:
+    app: ${APP_NAME}
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: ${APP_NAME}
+  template:
+    metadata:
+      labels:
+        app: ${APP_NAME}
+    spec:
+      containers:
+      - name: ${APP_NAME}
+        image: ${imageTag}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: ${APP_PORT}
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 1024Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${APP_NAME}-svc
+  namespace: ${DEPLOY_NAMESPACE}
+spec:
+  type: NodePort
+  selector:
+    app: ${APP_NAME}
+  ports:
+  - port: ${APP_PORT}
+    targetPort: ${APP_PORT}
+    nodePort: 30090
+EOF
                         """
+
+                        echo ">>> 应用 YAML 配置..."
+                        sh "kubectl apply -f deployment.yaml"
+
+                        echo ">>> 检查滚动更新状态..."
+                        // 等待 Deployment 更新完成，超时时间 2 分钟
+                        sh "kubectl rollout status deployment/${APP_NAME} -n ${DEPLOY_NAMESPACE} --timeout=120s"
+                        
+                        echo ">>> 获取 Pod 状态..."
+                        sh "kubectl get pods -n ${DEPLOY_NAMESPACE} -l app=${APP_NAME}"
                     }
                 }
             }
-            post {
-                always {
-                    junit '**/target/surefire-reports/*.xml'
-                }
-            }
-        }
-
-        // ========== 阶段 5: 归档构建产物 ==========
-        stage('归档构建产物') {
-            steps {
-                container('maven') {
-                    script {
-                        echo "=== 归档构建产物 ==="
-                        archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true, allowEmptyArchive: true
-                        echo ">>> 构建产物已保存在 Jenkins workspace"
-                    }
-                }
-            }
-        }
-
-        // ========== 阶段 6: 构建并推送 Docker 镜像 ==========
-        stage('构建并推送 Docker 镜像') {
-            when {
-                expression { params.BUILD_DOCKER_IMAGE }
-            }
-            steps {
-                container('kaniko') {
-                    script {
-                        echo """
-                        ╔════════════════════════════════════════╗
-                        ║    构建并推送 Docker 镜像 (Kaniko)      ║
-                        ╚════════════════════════════════════════╝
-                        镜像: ${HARBOR_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
-                        工作目录: ${WORKSPACE}
-                        """
-
-                        sh """
-                            set +x
-                            # 检查 Dockerfile
-                            if [ ! -f "${WORKSPACE}/Dockerfile" ]; then
-                                echo "❌ 错误: 未找到 Dockerfile"
-                                exit 1
-                            fi
-
-                            # 检查 JAR 文件
-                            if ! ls ${WORKSPACE}/target/*.jar 1> /dev/null 2>&1; then
-                                echo "❌ 错误: 未找到 JAR 文件"
-                                exit 1
-                            fi
-
-                            echo "✓ Dockerfile 和 JAR 文件已就绪"
-
-                            JAR_SIZE_MB=\$(find ${WORKSPACE}/target -name "*.jar" -type f -exec du -sm {} \\; | awk '{sum+=\$1} END {print sum}')
-                            echo ">>> JAR 文件大小: \${JAR_SIZE_MB} MB"
-                            echo ""
-
-                            echo ">>> 开始构建并推送镜像..."
-                            echo "    Docker Hub 镜像将通过 RKE2 配置的 Harbor 代理拉取"
-                            START_TIME=\$(date +%s)
-
-                            timeout 1800 /kaniko/executor \\
-                                --context=${WORKSPACE} \\
-                                --dockerfile=${WORKSPACE}/Dockerfile \\
-                                --destination=${HARBOR_IMAGE_NAME}:${DOCKER_IMAGE_TAG} \\
-                                --destination=${HARBOR_IMAGE_NAME}:latest \\
-                                --insecure-registry=${HARBOR_REGISTRY} \\
-                                --insecure-registry=harbor-core.harbor \\
-                                --registry-mirror=harbor-core.harbor/dockerhub-proxy \\
-                                --skip-tls-verify \\
-                                --compressed-caching=true \\
-                                --compression=gzip \\
-                                --compression-level=9 \\
-                                --push-retry=3 \\
-                                --cache=false \\
-                                --verbosity=info \\
-                                --image-fs-extract-retry=3 \\
-                                --push-ignore-immutable-tag-errors || {
-                                    echo "❌ 构建或推送失败"
-                                    exit 1
-                                }
-
-                            END_TIME=\$(date +%s)
-                            DURATION=\$((END_TIME - START_TIME))
-                            DURATION_MIN=\$((DURATION / 60))
-                            DURATION_SEC=\$((DURATION % 60))
-
-                            echo ""
-                            echo "╔════════════════════════════════════════╗"
-                            echo "║         构建推送完成统计                ║"
-                            echo "╚════════════════════════════════════════╝"
-                            echo ">>> 总耗时: \${DURATION_MIN} 分 \${DURATION_SEC} 秒"
-                            echo "✓ ${HARBOR_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
-                            echo "✓ ${HARBOR_IMAGE_NAME}:latest"
-                        """
-                    }
-                }
-            }
-        }
-    }
-
-    // ==================== 构建后处理 ====================
-    post {
-        success {
-            echo """
-            ╔════════════════════════════════════════╗
-            ║         ✓ 构建成功                      ║
-            ╚════════════════════════════════════════╝
-            项目: ${PROJECT_NAME}
-            版本: ${ARTIFACT_VERSION}
-            分支: ${GIT_BRANCH}
-            耗时: ${currentBuild.durationString}
-            """
-
-            script {
-                if (params.BUILD_DOCKER_IMAGE) {
-                    echo """
-                    Docker 镜像已构建并推送到 Harbor:
-                    - ${HARBOR_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
-                    - ${HARBOR_IMAGE_NAME}:latest
-
-                    在 K8s 中更新镜像:
-                    kubectl set image deployment/demo-springboot \\
-                      demo-springboot=${HARBOR_IMAGE_NAME}:${DOCKER_IMAGE_TAG} \\
-                      -n default
-
-                    或者在 Deployment YAML 中使用:
-                    spec:
-                      containers:
-                      - name: demo-springboot
-                        image: ${HARBOR_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
-                    """
-                }
-            }
-        }
-        failure {
-            echo """
-            ╔════════════════════════════════════════╗
-            ║         ✗ 构建失败                      ║
-            ╚════════════════════════════════════════╝
-            请检查构建日志
-            """
-        }
-        always {
-            echo "=== 构建完成 ==="
         }
     }
 }

@@ -606,43 +606,59 @@ sudo crictl info | grep -A 10 registry
 
 ### 1. 创建 Harbor Registry Secret
 
-Jenkins 使用 Kaniko 构建镜像时需要 Harbor 认证 Secret：
+Jenkins 使用 Kaniko 构建镜像时需要 Harbor 认证 Secret。根据访问方式的不同，有两种 Secret 配置方式：
+
+#### 方式1：集群内部访问（推荐，适用于 Jenkins/Kaniko 在集群内）
+
+> **优势**：无需 TLS 证书，使用 HTTP 协议，配置简单，性能更好
+> **适用场景**：Jenkins 和 Harbor 都在同一个 Kubernetes 集群内
 
 ```bash
-# 创建 harbor-registry-secret（使用 HTTPS，server 改为你的实际地址）
-
+# 创建集群内部访问的 Secret（使用 harbor-core.harbor:80）
+# Harbor 在 harbor 命名空间，Jenkins 在 jenkins 命名空间，可以跨命名空间访问
 kubectl create secret docker-registry harbor-registry-secret \
-  --docker-server=YOUR_NODE_IP:30009 \
+  --docker-server=harbor-core.harbor:80 \
   --docker-username=admin \
   --docker-password=Harbor12345 \
   -n jenkins
 
+# 在其他命名空间也创建（如果需要）
 kubectl create secret docker-registry harbor-registry-secret \
-  --docker-server=YOUR_NODE_IP:30009 \
+  --docker-server=harbor-core.harbor:80 \
   --docker-username=admin \
   --docker-password=Harbor12345 \
   -n demo
 
 kubectl create secret docker-registry harbor-registry-secret \
-  --docker-server=YOUR_NODE_IP:30009 \
+  --docker-server=harbor-core.harbor:80 \
   --docker-username=admin \
   --docker-password=Harbor12345 \
   -n default
+
+# 批量创建多个命名空间
+for ns in jenkins demo test prod default; do
+  kubectl create secret docker-registry harbor-registry-secret \
+    --docker-server=harbor-core.harbor:80 \
+    --docker-username=admin \
+    --docker-password=Harbor12345 \
+    -n $ns
+  echo "✓ Secret created in namespace: $ns"
+done
 
 # 验证 Secret 创建成功
 kubectl get secret harbor-registry-secret -n default
 kubectl get secret harbor-registry-secret -n jenkins
 kubectl get secret harbor-registry-secret -n demo
 
-# 查看 Secret 内容
+# 查看 Secret 内容（集群内部地址）
 kubectl get secret harbor-registry-secret -n default -o jsonpath='{.data.\.dockerconfigjson}' | base64 -d | jq .
 ```
 
-**预期输出：**
+**预期输出（集群内部地址）：**
 ```json
 {
   "auths": {
-    "harbor-core.harbor": {
+    "harbor-core.harbor:80": {
       "username": "admin",
       "password": "Harbor12345",
       "auth": "YWRtaW46SGFyYm9yMTIzNDU="
@@ -650,6 +666,49 @@ kubectl get secret harbor-registry-secret -n default -o jsonpath='{.data.\.docke
   }
 }
 ```
+
+**说明：**
+- `harbor-core.harbor:80`：`harbor-core` 是 Service 名称，`harbor` 是命名空间，`:80` 是 HTTP 端口
+- 集群内会自动解析为 `harbor-core.harbor.svc.cluster.local:80`
+- 使用 HTTP 协议，无需 TLS 证书，无需 `--insecure` 参数
+
+#### 方式2：集群外部访问（适用于客户端在集群外）
+
+> **说明**：需要配置 TLS 证书，使用 HTTPS 协议
+> **适用场景**：Docker 客户端在集群外访问 Harbor
+
+```bash
+# 创建集群外部访问的 Secret（使用 HTTPS，server 改为你的实际地址）
+kubectl create secret docker-registry harbor-registry-secret \
+  --docker-server=YOUR_NODE_IP:30009 \
+  --docker-username=admin \
+  --docker-password=Harbor12345 \
+  -n default
+```
+
+**预期输出（集群外部地址）：**
+```json
+{
+  "auths": {
+    "YOUR_NODE_IP:30009": {
+      "username": "admin",
+      "password": "Harbor12345",
+      "auth": "YWRtaW46SGFyYm9yMTIzNDU="
+    }
+  }
+}
+```
+
+**重要区别对比：**
+
+| 项目 | 集群内部访问 | 集群外部访问 |
+|------|-------------|-------------|
+| 地址格式 | `harbor-core.harbor:80` | `YOUR_NODE_IP:30009` |
+| 协议 | HTTP | HTTPS |
+| TLS 证书 | 不需要 | 需要配置 |
+| 适用场景 | Jenkins/Kaniko 在集群内 | Docker 客户端在集群外 |
+| 性能 | 更快（直连） | 较慢（需绕出集群） |
+| 配置复杂度 | 简单 | 较复杂 |
 
 ### 2. 在 Harbor 中创建项目
 
@@ -663,30 +722,69 @@ kubectl get secret harbor-registry-secret -n default -o jsonpath='{.data.\.docke
 
 ### 3. 配置 Jenkinsfile
 
-在 Jenkinsfile 中配置 Harbor HTTPS 地址（替换为你的实际地址）：
+在 Jenkinsfile 中配置 Harbor 地址。根据 Secret 配置方式，选择对应的地址：
+
+#### 方式1：使用集群内部地址（推荐）
 
 ```groovy
-// Harbor HTTPS 本地镜像仓库配置
+// Harbor 集群内部访问配置（Jenkins/Kaniko 在集群内）
+HARBOR_REGISTRY = 'harbor-core.harbor:80'  // ✅ 集群内部 HTTP 地址
+HARBOR_PROJECT = 'library'
+HARBOR_REPOSITORY_NAME = 'demo-springboot'
+HARBOR_IMAGE_NAME = "${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${HARBOR_REPOSITORY_NAME}"
+```
+
+#### 方式2：使用集群外部地址
+
+```groovy
+// Harbor 集群外部访问配置（Docker 客户端在集群外）
 HARBOR_REGISTRY = 'YOUR_NODE_IP:30009'  // 替换为实际IP或域名
 HARBOR_PROJECT = 'library'
 HARBOR_REPOSITORY_NAME = 'demo-springboot'
 HARBOR_IMAGE_NAME = "${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${HARBOR_REPOSITORY_NAME}"
 ```
 
-### 4. Kaniko 推送到 Harbor（HTTPS）
+### 4. Kaniko 推送到 Harbor
 
-由于 Harbor 使用 HTTPS，Kaniko 不需要 insecure registry 参数：
+根据访问方式选择不同的 Kaniko 配置：
+
+#### 方式1：集群内部访问（推荐）
 
 ```groovy
-// Kaniko executor 命令（HTTPS 不需要 --insecure-registry，替换为你的实际地址）
-/kaniko/executor \
+// Kaniko executor 命令（集群内部访问，无需 TLS）
+timeout 1800 /kaniko/executor \
   --context=${WORKSPACE} \
   --dockerfile=${WORKSPACE}/Dockerfile \
-  --destination=YOUR_NODE_IP:30009/library/demo-springboot:latest \
+  --destination=harbor-core.harbor:80/library/demo-springboot:latest \
   --compressed-caching=true \
   --compression=gzip \
   --compression-level=9
 ```
+
+**说明**：
+- 使用 HTTP 协议，无需 `--insecure` 或 `--skip-tls-verify`
+- Secret 中配置的是 `harbor-core.harbor:80`
+- 集群内直接通信，性能最佳
+
+#### 方式2：集群外部访问
+
+```groovy
+// Kaniko executor 命令（集群外部访问，需要 TLS）
+timeout 1800 /kaniko/executor \
+  --context=${WORKSPACE} \
+  --dockerfile=${WORKSPACE}/Dockerfile \
+  --destination=YOUR_NODE_IP:30009/library/demo-springboot:latest \
+  --insecure-registry=YOUR_NODE_IP:30009 \
+  --skip-tls-verify \
+  --compressed-caching=true \
+  --compression=gzip \
+  --compression-level=9
+```
+
+**说明**：
+- 使用 HTTPS 协议，需要 `--insecure-registry` 和 `--skip-tls-verify`
+- Secret 中配置的是 `YOUR_NODE_IP:30009`
+- 需要跳过 TLS 验证（自签名证书）
 
 ### 5. 验证镜像推送
 
@@ -699,14 +797,14 @@ HARBOR_IMAGE_NAME = "${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${HARBOR_REPOSITORY_NA
 curl -k -u admin:Harbor12345 \
   https://YOUR_NODE_IP:30009/api/v2.0/projects/library/repositories
 
-# 方法 3：使用 Docker CLI（替换为你的实际地址）
+# 方法 3：使用 Docker CLI（集群外部访问，替换为你的实际地址）
 docker login YOUR_NODE_IP:30009
 docker pull YOUR_NODE_IP:30009/library/demo-springboot:latest
 ```
 
 ### 6. 常见问题排查
 
-#### 问题 1：TLS 证书错误
+#### 问题 1：TLS 证书错误（集群外部访问）
 
 **错误信息：**
 ```
@@ -721,6 +819,8 @@ x509: certificate signed by unknown authority
 sudo cp harbor-core.harbor.crt /etc/rancher/rke2/harbor-ca.crt
 ```
 
+**推荐方案：** 使用集群内部访问 `harbor-core.harbor:80`，无需 TLS 证书
+
 #### 问题 2：unauthorized: authentication required
 
 **错误信息：**
@@ -731,17 +831,84 @@ unauthorized: authentication required
 **原因：** harbor-registry-secret 不存在或配置错误
 
 **解决：**
+
+**集群内部访问：**
 ```bash
-# 重新创建 Secret
+# 重新创建 Secret（使用集群内部地址）
 kubectl delete secret harbor-registry-secret -n default
 kubectl create secret docker-registry harbor-registry-secret \
-  --docker-server=harbor-core.harbor \
+  --docker-server=harbor-core.harbor:80 \
   --docker-username=admin \
   --docker-password=Harbor12345 \
   -n default
 ```
 
-#### 问题 3：project library not found
+**集群外部访问：**
+```bash
+# 重新创建 Secret（使用集群外部地址）
+kubectl delete secret harbor-registry-secret -n default
+kubectl create secret docker-registry harbor-registry-secret \
+  --docker-server=YOUR_NODE_IP:30009 \
+  --docker-username=admin \
+  --docker-password=Harbor12345 \
+  -n default
+```
+
+#### 问题 3：http: server gave HTTP response to HTTPS client
+
+**错误信息：**
+```
+error checking push permissions: Get "https://192.168.80.101:30009/v2/": http: server gave HTTP response to HTTPS client
+```
+
+**原因：** Secret 配置的地址与实际访问方式不匹配
+- Secret 中配置的是 HTTPS 地址，但实际访问的是 HTTP 端口
+- 或 Secret 中配置的是外部地址，但需要集群内部访问
+
+**解决：**
+
+**方案1：删除旧 Secret，创建集群内部 Secret（推荐）**
+```bash
+# 删除所有旧 Secret
+kubectl delete secret harbor-registry-secret --all-namespaces 2>/dev/null || true
+
+# 批量创建集群内部访问 Secret
+for ns in jenkins demo test prod default; do
+  kubectl create secret docker-registry harbor-registry-secret \
+    --docker-server=harbor-core.harbor:80 \
+    --docker-username=admin \
+    --docker-password=Harbor12345 \
+    -n $ns
+  echo "✓ Secret created in namespace: $ns"
+done
+```
+
+**方案2：使用 Jenkins 凭据动态生成配置**
+```groovy
+// 在 Jenkinsfile 中使用 withCredentials 动态生成配置
+withCredentials([usernamePassword(
+    credentialsId: 'harbor-credentials',
+    usernameVariable: 'HARBOR_USER',
+    passwordVariable: 'HARBOR_PASS'
+)]) {
+    sh """
+        mkdir -p /kaniko/.docker
+        echo -n "\${HARBOR_USER}:\${HARBOR_PASS}" | base64 > /tmp/harbor_auth
+        cat > /kaniko/.docker/config.json <<EOF
+{
+  "auths": {
+    "harbor-core.harbor:80": {
+      "auth": "\$(cat /tmp/harbor_auth)"
+    }
+  }
+}
+EOF
+        rm -f /tmp/harbor_auth
+    """
+}
+```
+
+#### 问题 4：project library not found
 
 **错误信息：**
 ```
@@ -760,6 +927,32 @@ curl -X POST "https://YOUR_NODE_IP:30009/api/v2.0/projects" \
     "project_name": "library",
     "public": true
   }'
+```
+
+#### 问题 5：跨命名空间访问失败
+
+**错误信息：**
+```
+dial tcp: lookup harbor-core.harbor: no such host
+```
+
+**原因：** Service 名称或命名空间错误
+
+**解决：**
+```bash
+# 检查 Harbor Service 名称
+kubectl get svc -n harbor
+
+# 检查 Harbor 所在命名空间
+kubectl get ns | grep harbor
+
+# 正确的跨命名空间访问格式：
+# <service-name>.<namespace>.svc.cluster.local
+# 或简写为：<service-name>.<namespace>
+# 例如：harbor-core.harbor
+
+# 如果 Service 名称不是 harbor-core，需要修改
+# 例如：如果是 harbor，则使用 harbor.harbor:80
 ```
 
 ### 7. 测试完整流程
@@ -783,8 +976,12 @@ curl -k -u admin:Harbor12345 \
 
 # 5. 验证镜像已推送（替换为你的实际地址）
 curl -k -u admin:Harbor12345 \
-  https://YOUR_NODE_IP:3009/api/v2.0/projects/library/repositories/demo-springboot/artifacts
+  https://YOUR_NODE_IP:30009/api/v2.0/projects/library/repositories/demo-springboot/artifacts
 # 预期输出: 镜像的 artifacts 列表
+
+# 6. 验证集群内部访问（在集群内执行）
+curl http://harbor-core.harbor/v2/
+# 预期输出: {}
 ```
 
 ---
