@@ -17,12 +17,9 @@
  *   3. RKE2 配置镜像加速
  *   4. Jenkins 使用 PVC 持久化存储
  *   5. Maven 仓库缓存目录：/var/jenkins_home/maven-repository
- *   6. 创建 Harbor 镜像仓库认证 Secret：
- *        kubectl create secret docker-registry harbor-registry-secret \
- *          --docker-server=harbor-core.harbor \
- *          --docker-username=admin \
- *          --docker-password=Harbor12345 \
- *          -n jenkins
+ *   6. Jenkins 凭据配置：
+ *        - nexus-credentials (用户名密码)
+ *        - harbor-user-auth (用户名密码)
  *
  * ============================================================================
  */
@@ -119,9 +116,8 @@ metadata:
     jenkins: agent
     project: nms4cloud-pos-java
 spec:
-  # 镜像仓库认证
-  imagePullSecrets:
-  - name: harbor-registry-secret
+  # ServiceAccount 配置（必须有 K8s 部署权限）
+  serviceAccountName: default
 
   containers:
   - name: maven
@@ -150,9 +146,6 @@ spec:
     volumeMounts:
     - name: jenkins-home
       mountPath: /var/jenkins_home
-    # 挂载Harbor镜像仓库认证配置
-    - name: docker-config
-      mountPath: /kaniko/.docker
     resources:
       requests:
         cpu: 500m
@@ -164,13 +157,6 @@ spec:
   - name: jenkins-home
     persistentVolumeClaim:
       claimName: jenkins-pvc
-  # Harbor镜像仓库认证配置
-  - name: docker-config
-    secret:
-      secretName: harbor-registry-secret
-      items:
-      - key: .dockerconfigjson
-        path: config.json
 """
         }
     }
@@ -201,12 +187,13 @@ spec:
         // 部署配置
         DEPLOY_ENV = "${params.DEPLOY_ENV ?: 'dev'}"
 
-        // Harbor 本地镜像仓库配置
-        HARBOR_REGISTRY = 'harbor-core.harbor'
+        // Harbor 本地镜像仓库配置（使用集群内部域名）
+        HARBOR_REGISTRY = 'harbor.harbor'
         HARBOR_PROJECT = 'library'
+        HARBOR_CRED_ID = 'harbor-user-auth'  // Jenkins 凭据 ID
 
         // Docker Hub镜像加速（使用Harbor代理，速度最快）
-        DOCKER_REGISTRY_MIRROR = 'harbor-core.harbor/dockerhub-proxy'
+        DOCKER_REGISTRY_MIRROR = 'harbor.harbor/dockerhub-proxy'
 
         DOCKER_IMAGE_TAG = "${env.BUILD_NUMBER}"
     }
@@ -565,7 +552,7 @@ def buildAndPushDockerImage(String buildModule) {
     def registrySourceName = ''
     switch(params.DOCKER_REGISTRY_SOURCE) {
         case 'harbor-proxy':
-            registryMirror = 'harbor-core.harbor/dockerhub-proxy'
+            registryMirror = 'harbor.harbor/dockerhub-proxy'
             registrySourceName = 'Harbor代理(本地缓存)'
             break
         case 'daocloud-mirror':
@@ -577,7 +564,7 @@ def buildAndPushDockerImage(String buildModule) {
             registrySourceName = 'Docker Hub官方源'
             break
         default:
-            registryMirror = 'harbor-core.harbor/dockerhub-proxy'
+            registryMirror = 'harbor.harbor/dockerhub-proxy'
             registrySourceName = 'Harbor代理(本地缓存,默认)'
     }
 
@@ -594,10 +581,22 @@ def buildAndPushDockerImage(String buildModule) {
     镜像名称: ${harborImageName}:${DOCKER_IMAGE_TAG}
     """
 
-    sh """
-        set +x  # 禁用命令回显
+    // 使用 withCredentials 动态生成 Harbor 认证配置
+    withCredentials([usernamePassword(
+        credentialsId: "${HARBOR_CRED_ID}",
+        usernameVariable: 'HB_USER',
+        passwordVariable: 'HB_PASS'
+    )]) {
+        sh """
+            set +x  # 禁用命令回显
 
-        # 强制删除 .dockerignore 文件（如果存在）
+            # 生成 Harbor 认证配置
+            echo ">>> 生成 Harbor 认证配置 (Target: ${HARBOR_REGISTRY})..."
+            mkdir -p /kaniko/.docker
+            AUTH=\$(echo -n "\${HB_USER}:\${HB_PASS}" | base64)
+            echo "{\\"auths\\":{\\"${HARBOR_REGISTRY}\\":{\\"auth\\":\\"\$AUTH\\"}}}" > /kaniko/.docker/config.json
+
+            # 强制删除 .dockerignore 文件（如果存在）
         if [ -f "${WORKSPACE}/.dockerignore" ]; then
             rm -f ${WORKSPACE}/.dockerignore
             echo "✓ .dockerignore 已删除"
@@ -629,14 +628,6 @@ def buildAndPushDockerImage(String buildModule) {
 
         echo "✓ JAR 文件已就绪 (找到 \$JAR_COUNT 个)"
 
-        # Docker 认证配置已通过 Secret 挂载到 /kaniko/.docker/config.json
-        if [ -f /kaniko/.docker/config.json ]; then
-            echo "✓ Docker 认证配置已就绪"
-        else
-            echo "❌ 错误: 未找到 Docker 认证配置"
-            exit 1
-        fi
-
         # 构建 Kaniko 推送目标参数
         DESTINATIONS="--destination=${harborImageName}:${DOCKER_IMAGE_TAG} --destination=${harborImageName}:latest"
 
@@ -652,9 +643,10 @@ def buildAndPushDockerImage(String buildModule) {
                 --dockerfile=${dockerfilePath} \\
                 --registry-mirror=${registryMirror} \\
                 \${DESTINATIONS} \\
-                --insecure-registry=${HARBOR_REGISTRY} \\
-                --insecure-registry=harbor-core.harbor \\
+                --insecure \\
+                --insecure-pull \\
                 --skip-tls-verify \\
+                --insecure-registry=${HARBOR_REGISTRY} \\
                 --compression=gzip \\
                 --compression-level=9 \\
                 --push-retry=3 \\
@@ -667,8 +659,10 @@ def buildAndPushDockerImage(String buildModule) {
                 --context=${buildContext} \\
                 --dockerfile=${dockerfilePath} \\
                 \${DESTINATIONS} \\
-                --insecure-registry=${HARBOR_REGISTRY} \\
+                --insecure \\
+                --insecure-pull \\
                 --skip-tls-verify \\
+                --insecure-registry=${HARBOR_REGISTRY} \\
                 --compression=gzip \\
                 --compression-level=9 \\
                 --push-retry=3 \\
@@ -696,7 +690,8 @@ def buildAndPushDockerImage(String buildModule) {
         echo "  ${harborImageName}:${DOCKER_IMAGE_TAG}"
         echo "  ${harborImageName}:latest"
         echo ""
-    """
+        """
+    }  // 关闭 withCredentials
 
     env.DOCKER_IMAGE_FULL = "${harborImageName}:${DOCKER_IMAGE_TAG}"
 }

@@ -121,9 +121,8 @@ metadata:
     jenkins: agent
     project: nms4cloud
 spec:
-  # 镜像仓库认证
-  imagePullSecrets:
-  - name: harbor-registry-secret
+  # ServiceAccount 配置（必须有 K8s 部署权限）
+  serviceAccountName: default
 
   # 节点选择器（可选，根据实际情况调整）
   # nodeSelector:
@@ -170,9 +169,6 @@ spec:
     volumeMounts:
     - name: jenkins-home
       mountPath: /var/jenkins_home
-    # 挂载Harbor镜像仓库认证配置
-    - name: docker-config
-      mountPath: /kaniko/.docker
     # Kaniko 容器资源配置（镜像构建优化）
     resources:
       requests:
@@ -186,13 +182,6 @@ spec:
   - name: jenkins-home
     persistentVolumeClaim:
       claimName: jenkins-pvc
-  # Harbor镜像仓库认证配置
-  - name: docker-config
-    secret:
-      secretName: harbor-registry-secret
-      items:
-      - key: .dockerconfigjson
-        path: config.json
 """
         }
     }
@@ -223,12 +212,13 @@ spec:
         REPO_BI = 'https://codeup.aliyun.com/613895a803e1c17d57a7630f/nms4cloud-pos-java/nms4cloud-bi.git'
         REPO_WMS = 'https://codeup.aliyun.com/613895a803e1c17d57a7630f/nms4cloud-pos-java/nms4cloud-wms.git'
 
-        // Harbor 本地镜像仓库配置
-        HARBOR_REGISTRY = 'harbor-core.harbor'
+        // Harbor 本地镜像仓库配置（使用集群内部域名）
+        HARBOR_REGISTRY = 'harbor.harbor'
         HARBOR_PROJECT = 'library'
+        HARBOR_CRED_ID = 'harbor-user-auth'  // Jenkins 凭据 ID
 
         // Docker Hub镜像加速（使用Harbor代理，速度最快）
-        DOCKER_REGISTRY_MIRROR = 'harbor-core.harbor/dockerhub-proxy'
+        DOCKER_REGISTRY_MIRROR = 'harbor.harbor/dockerhub-proxy'
 
         DOCKER_IMAGE_TAG = "${env.BUILD_NUMBER}"
     }
@@ -302,7 +292,7 @@ spec:
                 'daocloud-mirror',
                 'docker-hub'
             ],
-            description: '选择Docker镜像拉取源：harbor-proxy=Harbor代理(最快,推荐) | daocloud-mirror=DaoCloud国内镜像 | docker-hub=Docker Hub官方源'
+            description: '选择Docker镜像拉取源：harbor-proxy=Harbor代理(最快,推荐,使用harbor.harbor) | daocloud-mirror=DaoCloud国内镜像 | docker-hub=Docker Hub官方源'
         )
     }
 
@@ -954,7 +944,7 @@ def buildModuleImage(String moduleName, String modulePath) {
     def registrySourceName = ''
     switch(params.DOCKER_REGISTRY_SOURCE) {
         case 'harbor-proxy':
-            registryMirror = 'harbor-core.harbor/dockerhub-proxy'
+            registryMirror = 'harbor.harbor/dockerhub-proxy'
             registrySourceName = 'Harbor代理(本地缓存)'
             break
         case 'daocloud-mirror':
@@ -966,7 +956,7 @@ def buildModuleImage(String moduleName, String modulePath) {
             registrySourceName = 'Docker Hub官方源'
             break
         default:
-            registryMirror = 'harbor-core.harbor/dockerhub-proxy'
+            registryMirror = 'harbor.harbor/dockerhub-proxy'
             registrySourceName = 'Harbor代理(本地缓存,默认)'
     }
 
@@ -983,19 +973,31 @@ def buildModuleImage(String moduleName, String modulePath) {
     """
 
     try {
-        sh """
-            set +x  # 禁用命令回显
+        // 使用 withCredentials 动态生成 Harbor 认证配置
+        withCredentials([usernamePassword(
+            credentialsId: "${HARBOR_CRED_ID}",
+            usernameVariable: 'HB_USER',
+            passwordVariable: 'HB_PASS'
+        )]) {
+            sh """
+                set +x  # 禁用命令回显
 
-            # 验证构建上下文和 Dockerfile
-            if [ ! -d "${buildContext}" ]; then
-                echo "❌ 错误: 构建上下文目录不存在: ${buildContext}"
-                exit 1
-            fi
+                # 生成 Harbor 认证配置（覆盖 volume mount 的配置）
+                echo ">>> 生成 Harbor 认证配置 (Target: ${HARBOR_REGISTRY})..."
+                mkdir -p /kaniko/.docker
+                AUTH=\$(echo -n "\${HB_USER}:\${HB_PASS}" | base64)
+                echo "{\\"auths\\":{\\"${HARBOR_REGISTRY}\\":{\\"auth\\":\\"\$AUTH\\"}}}" > /kaniko/.docker/config.json
 
-            if [ ! -f "${dockerfilePath}" ]; then
-                echo "❌ 错误: 未找到 Dockerfile: ${dockerfilePath}"
-                ls -la ${buildContext}/ | head -20
-                exit 1
+                # 验证构建上下文和 Dockerfile
+                if [ ! -d "${buildContext}" ]; then
+                    echo "❌ 错误: 构建上下文目录不存在: ${buildContext}"
+                    exit 1
+                fi
+
+                if [ ! -f "${dockerfilePath}" ]; then
+                    echo "❌ 错误: 未找到 Dockerfile: ${dockerfilePath}"
+                    ls -la ${buildContext}/ | head -20
+                    exit 1
             fi
 
             echo "✓ 构建环境验证通过"
@@ -1035,9 +1037,10 @@ def buildModuleImage(String moduleName, String modulePath) {
                     --dockerfile=${dockerfilePath} \\
                     --registry-mirror=${registryMirror} \\
                     \${DESTINATIONS} \\
-                    --insecure-registry=${HARBOR_REGISTRY} \\
-                    --insecure-registry=harbor-core.harbor \\
+                    --insecure \\
+                    --insecure-pull \\
                     --skip-tls-verify \\
+                    --insecure-registry=${HARBOR_REGISTRY} \\
                     --compression=gzip \\
                     --compression-level=9 \\
                     --push-retry=3 \\
@@ -1050,8 +1053,10 @@ def buildModuleImage(String moduleName, String modulePath) {
                     --context=${buildContext} \\
                     --dockerfile=${dockerfilePath} \\
                     \${DESTINATIONS} \\
-                    --insecure-registry=${HARBOR_REGISTRY} \\
+                    --insecure \\
+                    --insecure-pull \\
                     --skip-tls-verify \\
+                    --insecure-registry=${HARBOR_REGISTRY} \\
                     --compression=gzip \\
                     --compression-level=9 \\
                     --push-retry=3 \\
@@ -1079,7 +1084,8 @@ def buildModuleImage(String moduleName, String modulePath) {
             echo "  ${harborImageName}:${DOCKER_IMAGE_TAG}"
             echo "  ${harborImageName}:latest"
             echo ""
-        """
+            """
+        }  // 关闭 withCredentials
 
         return [success: true, imageName: "${harborImageName}:${DOCKER_IMAGE_TAG}", reason: ""]
     } catch (Exception e) {

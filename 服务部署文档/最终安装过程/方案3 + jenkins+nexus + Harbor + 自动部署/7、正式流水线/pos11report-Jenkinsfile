@@ -27,12 +27,9 @@
  *   3. RKE2 配置镜像加速
  *   4. Jenkins 使用 PVC 持久化存储
  *   5. Maven 仓库缓存目录：/var/jenkins_home/maven-repository
- *   6. 创建 Harbor 镜像仓库认证 Secret：
- *        kubectl create secret docker-registry harbor-registry-secret \
- *          --docker-server=harbor-core.harbor \
- *          --docker-username=admin \
- *          --docker-password=Harbor12345 \
- *          -n jenkins
+ *   6. Jenkins 凭据配置：
+ *        - nexus-credentials (用户名密码)
+ *        - harbor-user-auth (用户名密码)
  *
  * ============================================================================
  */
@@ -141,9 +138,8 @@ metadata:
     jenkins: agent
     project: nms4cloud-pos11report
 spec:
-  # 镜像仓库认证
-  imagePullSecrets:
-  - name: harbor-registry-secret
+  # ServiceAccount 配置（必须有 K8s 部署权限）
+  serviceAccountName: default
 
   containers:
   - name: maven
@@ -172,9 +168,6 @@ spec:
     volumeMounts:
     - name: jenkins-home
       mountPath: /var/jenkins_home
-    # 挂载Harbor镜像仓库认证配置
-    - name: docker-config
-      mountPath: /kaniko/.docker
     resources:
       requests:
         cpu: 500m
@@ -186,13 +179,6 @@ spec:
   - name: jenkins-home
     persistentVolumeClaim:
       claimName: jenkins-pvc
-  # 镜像仓库认证配置
-  - name: docker-config
-    secret:
-      secretName: harbor-registry-secret
-      items:
-      - key: .dockerconfigjson
-        path: config.json
 """
         }
     }
@@ -221,9 +207,10 @@ spec:
 
         DOCKER_IMAGE_TAG = "\${env.BUILD_NUMBER}"
 
-        // Harbor 本地镜像仓库配置
-        HARBOR_REGISTRY = 'harbor-core.harbor'
+        // Harbor 本地镜像仓库配置（使用集群内部域名）
+        HARBOR_REGISTRY = 'harbor.harbor'
         HARBOR_PROJECT = 'library'
+        HARBOR_CRED_ID = 'harbor-user-auth'  // Jenkins 凭据 ID
         HARBOR_IMAGE_NAME = "\${HARBOR_REGISTRY}/\${HARBOR_PROJECT}/\${PROJECT_NAME}"
     }
 
@@ -282,7 +269,7 @@ spec:
                     script {
                         // 生成 Maven settings.xml（使用 Nexus）
                         withCredentials([usernamePassword(
-                            credentialsId: "\${NEXUS_CRED_ID}",
+                            credentialsId: "${NEXUS_CRED_ID}",
                             usernameVariable: 'NEXUS_USER',
                             passwordVariable: 'NEXUS_PASS'
                         )]) {
@@ -451,7 +438,7 @@ spec:
                         def registrySourceName = ''
                         switch(params.DOCKER_REGISTRY_SOURCE) {
                             case 'harbor-proxy':
-                                registryMirror = 'harbor-core.harbor/dockerhub-proxy'
+                                registryMirror = 'harbor.harbor/dockerhub-proxy'
                                 registrySourceName = 'Harbor代理(本地缓存)'
                                 break
                             case 'daocloud-mirror':
@@ -463,7 +450,7 @@ spec:
                                 registrySourceName = 'Docker Hub官方源'
                                 break
                             default:
-                                registryMirror = 'harbor-core.harbor/dockerhub-proxy'
+                                registryMirror = 'harbor.harbor/dockerhub-proxy'
                                 registrySourceName = 'Harbor代理(本地缓存,默认)'
                         }
 
@@ -477,10 +464,22 @@ spec:
                         工作目录: \${buildContext}
                         """
 
-                        sh """
-                            set +x
+                        // 使用 withCredentials 动态生成 Harbor 认证配置
+                        withCredentials([usernamePassword(
+                            credentialsId: "${HARBOR_CRED_ID}",
+                            usernameVariable: 'HB_USER',
+                            passwordVariable: 'HB_PASS'
+                        )]) {
+                            sh """
+                                set +x
 
-                            # 验证构建上下文和 Dockerfile
+                                # 生成 Harbor 认证配置
+                                echo ">>> 生成 Harbor 认证配置 (Target: ${HARBOR_REGISTRY})..."
+                                mkdir -p /kaniko/.docker
+                                AUTH=\\\$(echo -n "\\\${HB_USER}:\\\${HB_PASS}" | base64)
+                                echo "{\\\\"auths\\\\":{\\\\"${HARBOR_REGISTRY}\\\\":{\\\\"auth\\\\":\\\\"\\\$AUTH\\\\"}}}" > /kaniko/.docker/config.json
+
+                                # 验证构建上下文和 Dockerfile
                             if [ ! -d "\${buildContext}" ]; then
                                 echo "❌ 错误: 构建上下文目录不存在: \${buildContext}"
                                 exit 1
@@ -506,14 +505,6 @@ spec:
 
                             echo "✓ JAR 文件已就绪 (找到 \\\$JAR_COUNT 个)"
 
-                            # Docker 认证配置已通过 Secret 挂载到 /kaniko/.docker/config.json
-                            if [ -f /kaniko/.docker/config.json ]; then
-                                echo "✓ Docker 认证配置已就绪"
-                            else
-                                echo "❌ 错误: 未找到 Docker 认证配置"
-                                exit 1
-                            fi
-
                             # 构建 Kaniko 推送目标参数
                             DESTINATIONS="--destination=\${HARBOR_IMAGE_NAME}:\${DOCKER_IMAGE_TAG} --destination=\${HARBOR_IMAGE_NAME}:latest"
 
@@ -529,9 +520,10 @@ spec:
                                     --dockerfile=\${dockerfilePath} \\
                                     --registry-mirror=\${registryMirror} \\
                                     \\\${DESTINATIONS} \\
-                                    --insecure-registry=\${HARBOR_REGISTRY} \\
-                                    --insecure-registry=harbor-core.harbor \\
+                                    --insecure \\
+                                    --insecure-pull \\
                                     --skip-tls-verify \\
+                                    --insecure-registry=\${HARBOR_REGISTRY} \\
                                     --compression=gzip \\
                                     --compression-level=9 \\
                                     --push-retry=3 \\
@@ -544,8 +536,10 @@ spec:
                                     --context=\${buildContext} \\
                                     --dockerfile=\${dockerfilePath} \\
                                     \\\${DESTINATIONS} \\
-                                    --insecure-registry=\${HARBOR_REGISTRY} \\
+                                    --insecure \\
+                                    --insecure-pull \\
                                     --skip-tls-verify \\
+                                    --insecure-registry=\${HARBOR_REGISTRY} \\
                                     --compression=gzip \\
                                     --compression-level=9 \\
                                     --push-retry=3 \\
@@ -573,7 +567,8 @@ spec:
                             echo "  \${HARBOR_IMAGE_NAME}:\${DOCKER_IMAGE_TAG}"
                             echo "  \${HARBOR_IMAGE_NAME}:latest"
                             echo ""
-                        """
+                            """
+                        }  // 关闭 withCredentials
                     }
                 }
             }
