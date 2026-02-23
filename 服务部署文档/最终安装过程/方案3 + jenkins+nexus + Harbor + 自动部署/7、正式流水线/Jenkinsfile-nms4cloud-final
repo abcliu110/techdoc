@@ -3,7 +3,7 @@
  * NMS4Cloud 项目 Jenkins 构建流水线
  * ============================================================================
  *
- * 版本: v4.0 - 2026
+ * 版本: v5.0 - 2026
  * 更新:
  *   - 使用 Nexus 替代 PVC 本地缓存
  *   - 优化代码结构，提取公共函数
@@ -12,6 +12,8 @@
  *   - 启用最高压缩级别（Level 9）
  *   - 添加镜像大小预估和推送统计
  *   - 添加超时和重试机制
+ *   - 修复 Nexus mirror 认证缺失问题
+ *   - 优化代码可读性：移除冗余 parallel、明确 cleanCmd 省略原因、修正 BUILD_MODULE 逻辑
  *
  * 项目结构：
  *   nms4cloud/
@@ -90,6 +92,11 @@ def generateMavenSettings() {
     </server>
     <server>
       <id>nexus-snapshots</id>
+      <username>${NEXUS_USER}</username>
+      <password>${NEXUS_PASS}</password>
+    </server>
+    <server>
+      <id>nexus</id>
       <username>${NEXUS_USER}</username>
       <password>${NEXUS_PASS}</password>
     </server>
@@ -356,16 +363,12 @@ spec:
 
         // ========== 阶段 2: 代码检出 ==========
         stage('代码检出') {
-            parallel {
-                stage('检出主项目') {
-                    steps {
-                        container('maven') {
-                            script {
-                                echo "=== 清理工作空间 ==="
-                                deleteDir()
-                                checkoutRepo('主项目', REPO_MAIN, '.')
-                            }
-                        }
+            steps {
+                container('maven') {
+                    script {
+                        echo "=== 清理工作空间 ==="
+                        deleteDir()
+                        checkoutRepo('主项目', REPO_MAIN, '.')
                     }
                 }
             }
@@ -565,6 +568,7 @@ spec:
                                 fi
 
                                 # 构建 BI 剩余模块
+                                # 注意：不使用 clean，避免清除前面步骤已构建的 API 层产物
                                 mvn ${mavenGoal} ${mvnOpts} ${altRepos} -s ${MAVEN_SETTINGS}
                                 cd ..
                             else
@@ -587,27 +591,18 @@ spec:
                     //   - *-app: 应用启动层
                     buildStep('7/8', '构建 Service 和 App 层', """
                         cd nms4cloud-app
+                        # 注意：不使用 clean，避免清除前面步骤已构建的 API 层产物
                         mvn ${mavenGoal} ${mvnOpts} ${altRepos} -s ${MAVEN_SETTINGS}
                         cd ..
                     """)
 
-                    // ========================================
-                    // 步骤 8: 构建指定模块（可选）
-                    // ========================================
-                    // 说明：根据参数选择性构建特定模块
-                    // 依赖：所有前置模块
+                    // 步骤 8: 单模块构建说明
+                    // BUILD_MODULE 参数用于控制 Docker 镜像构建范围，不影响 Maven 构建阶段
+                    // Maven 构建阶段始终全量构建以确保依赖完整性
                     if (params.BUILD_MODULE != 'all' && params.BUILD_MODULE != 'nms4cloud-app' && params.BUILD_MODULE != 'nms4cloud-starter' && !params.BUILD_MODULE.startsWith('---')) {
-                        // 获取模块的 Maven 路径
-                        def modulePath = getMavenModulePath(params.BUILD_MODULE)
-                        if (modulePath) {
-                            buildStep('8/8', "构建指定模块: ${params.BUILD_MODULE}", """
-                                mvn ${cleanCmd} ${mavenGoal} -pl ${modulePath} -am ${mvnOpts} ${altRepos} -s ${MAVEN_SETTINGS}
-                            """)
-                        } else {
-                            echo "⚠️ 警告: 未找到模块 ${params.BUILD_MODULE} 的 Maven 路径，跳过构建"
-                        }
+                        echo ">>> BUILD_MODULE=${params.BUILD_MODULE}：Maven 全量构建已完成，Docker 镜像将只构建此模块"
                     } else {
-                        echo ">>> 跳过单模块构建（BUILD_MODULE=${params.BUILD_MODULE}，已构建所有模块）"
+                        echo ">>> 全量构建完成"
                     }
                 }
             }

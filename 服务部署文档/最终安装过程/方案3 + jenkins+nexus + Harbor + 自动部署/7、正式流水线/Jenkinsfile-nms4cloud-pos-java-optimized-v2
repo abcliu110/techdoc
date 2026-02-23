@@ -164,7 +164,6 @@ spec:
     // ==================== 环境变量配置 ====================
     environment {
         // Maven 配置（MAVEN_OPTS 由容器 env 定义，此处不重复）
-        MAVEN_LOCAL_REPO = '/var/jenkins_home/maven-repository'
         MAVEN_SETTINGS = '/tmp/maven-settings.xml'
 
         // Nexus 配置
@@ -341,14 +340,14 @@ spec:
                     script {
                         def cleanCmd = params.CLEAN_BUILD ? 'clean' : ''
                         def skipTests = params.SKIP_TESTS ? '-Dmaven.test.skip=true' : ''
-                        def mvnOpts = "-Dmaven.repo.local=${MAVEN_LOCAL_REPO} ${skipTests}".trim()
+                        def mvnOpts = "${skipTests}".trim()
                         // DEPLOY_TO_NEXUS=true 时用 deploy goal，Maven 自动路由 SNAPSHOT/Release
                         def mavenGoal = params.DEPLOY_TO_NEXUS ? 'deploy' : 'install'
                         def altRepos = "-DaltSnapshotDeploymentRepository=nexus-snapshots::${NEXUS_URL}/repository/${NEXUS_REPO_SNAPSHOTS}/ -DaltReleaseDeploymentRepository=nexus-releases::${NEXUS_URL}/repository/${NEXUS_REPO_RELEASES}/"
 
                         // 从 pom.xml 动态读取版本号
                         env.ARTIFACT_VERSION = sh(
-                            script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout -Dmaven.repo.local=${MAVEN_LOCAL_REPO} -s ${MAVEN_SETTINGS}",
+                            script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout -s ${MAVEN_SETTINGS}",
                             returnStdout: true
                         ).trim()
                         echo ">>> 项目版本: ${env.ARTIFACT_VERSION}"
@@ -357,7 +356,6 @@ spec:
                         ╔════════════════════════════════════════╗
                         ║         Maven 构建流程                  ║
                         ╚════════════════════════════════════════╝
-                        Maven 仓库: ${MAVEN_LOCAL_REPO}
                         构建模块: ${params.BUILD_MODULE}
                         推送 Nexus: ${params.DEPLOY_TO_NEXUS} (goal: ${mavenGoal})
                         """
@@ -397,7 +395,7 @@ spec:
                 container('maven') {
                     script {
                         echo "=== 执行单元测试 ==="
-                        sh "mvn test -Dmaven.repo.local=${MAVEN_LOCAL_REPO}"
+                        sh "mvn test"
                     }
                 }
             }
@@ -533,7 +531,7 @@ spec:
  */
 def getMavenCoordinates() {
     return sh(
-        script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout -Dmaven.repo.local=${MAVEN_LOCAL_REPO}",
+        script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout ",
         returnStdout: true
     ).trim()
 }

@@ -2,7 +2,7 @@
 
 ## 概述
 
-本文档介绍如何在 Jenkins 中添加nexus的访问凭据, 用于构建产物推送到nexus仓库。
+本文档介绍如何在 Jenkins 中添加harbor的访问凭据, 用于构建产物推送到Harbor仓库。
 
 ---
 
