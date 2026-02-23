@@ -170,11 +170,24 @@ spec:
                 container('kubectl') {
                     script {
                         echo ">>> 开始部署应用到 Namespace: ${DEPLOY_NAMESPACE}"
-                        
+
                         def fullImageName = "${HARBOR_HOST}/${HARBOR_PROJECT}/${APP_NAME}"
                         def imageTag = "${fullImageName}:${BUILD_NUMBER}"
-                        
-                        // 生成 Deployment YAML
+
+                        // 创建 Harbor 认证 Secret（如果不存在）
+                        echo ">>> 配置 Harbor 镜像拉取认证..."
+                        withCredentials([usernamePassword(credentialsId: "${HARBOR_CRED_ID}", usernameVariable: 'HB_USER', passwordVariable: 'HB_PASS')]) {
+                            sh """
+                                kubectl get secret harbor-registry-secret -n ${DEPLOY_NAMESPACE} 2>/dev/null || \
+                                kubectl create secret docker-registry harbor-registry-secret \
+                                    --docker-server=${HARBOR_HOST} \
+                                    --docker-username=\${HB_USER} \
+                                    --docker-password=\${HB_PASS} \
+                                    -n ${DEPLOY_NAMESPACE}
+                            """
+                        }
+
+                        // 生成 Deployment YAML（包含 imagePullSecrets）
                         sh """ cat <<EOF > deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -194,6 +207,8 @@ spec:
       labels:
         app: ${APP_NAME}
     spec:
+      imagePullSecrets:
+      - name: harbor-registry-secret
       containers:
       - name: ${APP_NAME}
         image: ${imageTag}
@@ -230,7 +245,7 @@ EOF
                         echo ">>> 检查滚动更新状态..."
                         // 等待 Deployment 更新完成，超时时间 2 分钟
                         sh "kubectl rollout status deployment/${APP_NAME} -n ${DEPLOY_NAMESPACE} --timeout=120s"
-                        
+
                         echo ">>> 获取 Pod 状态..."
                         sh "kubectl get pods -n ${DEPLOY_NAMESPACE} -l app=${APP_NAME}"
                     }

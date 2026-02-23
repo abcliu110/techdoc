@@ -1,5 +1,25 @@
 # Harbor HTTPS Helm 部署完整指南
 
+## 📋 部署流程概览
+
+本文档提供 Harbor HTTPS 版本的完整部署指南，包含以下关键步骤：
+
+1. **安装 Helm** - Kubernetes 包管理工具
+2. **准备工作** - 清理旧部署、检查环境
+3. **生成 TLS 证书** - 创建自签名证书（包含正确的 SAN）
+4. **创建 TLS Secret** - 将证书导入 Kubernetes
+5. **⚠️ 配置 RKE2 节点信任证书** - **关键步骤，必须执行**
+6. **创建配置文件** - Harbor Helm Values
+7. **部署 Harbor** - 使用 Helm 安装
+8. **验证和测试** - 确认部署成功
+9. **配置 Docker（可选）** - 仅集群外 Docker 客户端需要
+10. **配置 Jenkins/Kaniko** - CI/CD 流水线集成
+
+> **重要提示**：第 5 步"配置 RKE2 节点信任 Harbor 证书"是必须执行的关键步骤。
+> 如果跳过此步骤，Kubernetes 将无法从 Harbor 拉取镜像，报错 `ImagePullBackOff`。
+
+---
+
 ## 重要提示
 
 > 本文档中使用的 `YOUR_NODE_IP` 是占位符，请根据你的实际环境替换为：
@@ -87,13 +107,10 @@ for ns in $(kubectl get ns -o name | cut -d/ -f2); do
   kubectl delete secret harbor-registry-secret -n $ns 2>/dev/null || true
 done
 
-# 8. 删除 Docker 证书（如果使用 Docker 客户端，替换为你的实际地址）
-sudo rm -rf /etc/docker/certs.d/YOUR_NODE_IP:30009 2>/dev/null || echo "Docker 证书目录不存在"
-
-# 9. 删除 RKE2 中的 Harbor 配置（所有节点，如果之前配置过）
+# 8. 删除 RKE2 中的 Harbor 配置（所有节点，如果之前配置过）
 # 编辑 /etc/rancher/rke2/registries.yaml，删除 Harbor 相关配置
 # 然后重启 RKE2
-sudo systemctl restart rke2-server 2>/dev/null || true
+sudo systemctl restart rke2-server 2>/dev/null || true  # 仅在确认 Harbor 配置存在时才编辑并重启 RKE2
 
 # 等待清理完成
 sleep 10
@@ -131,23 +148,86 @@ helm repo update
 
 ## 三、生成自签名 TLS 证书
 
+> **重要说明**：
+> - 证书中的 **内部域名**（harbor-core.harbor, harbor.harbor, harbor）是必需的，用于 Harbor 内部服务间通信
+> - 证书中的 **IP 地址** 是可选的，用于集群外部访问，可以根据实际需求添加或省略
+> - 如果只需要集群内部访问，可以省略 IP；如果需要集群外部访问（NodePort 方式），需要添加节点 IP
+
+### 前置准备
+在生成证书前，先清理旧文件并进入工作目录，避免干扰：
 ```bash
-# 创建临时目录
+rm -rf /tmp/harbor-cert
 mkdir -p /tmp/harbor-cert
+cd /tmp/harbor-cert
+```
+
+### 方式1：仅内部域名访问（推荐，证书更简洁）
+```bash
+# 生成私钥
+openssl genrsa -out harbor-core.harbor.key 2048
+
+# 生成自签名证书（有效期 10 年，仅包含内部域名，兼容 OpenSSL 1.0.x）
+cat > san.cnf <<EOF
+[san_section]
+subjectAltName = DNS:harbor-core.harbor,DNS:harbor.harbor,DNS:harbor
+EOF
+
+openssl req -new -x509 -days 3650 \
+  -key harbor-core.harbor.key \
+  -out harbor-core.harbor.crt \
+  -subj "/CN=harbor-core.harbor/O=harbor" \
+  -config <(cat /etc/ssl/openssl.cnf <(printf "\n[san_section]\n%s" "$(cat san.cnf)")) \
+  -extensions san_section
+
+# 验证证书（一定能看到 SAN）
+openssl x509 -in harbor-core.harbor.crt -noout -text | grep -A 5 "Subject Alternative Name"
+# 预期输出包含：
+# DNS:harbor-core.harbor, DNS:harbor.harbor, DNS:harbor
+```
+
+### 方式2：包含 IP 地址访问（如果需要集群外部访问）
+```bash
+# 确保已进入工作目录（前置准备已创建并进入，如未进入请执行）
 cd /tmp/harbor-cert
 
 # 生成私钥
 openssl genrsa -out harbor-core.harbor.key 2048
 
-# 生成证书签名请求
-openssl req -new -key harbor-core.harbor.key -out harbor-core.harbor.csr -subj "/CN=harbor-core.harbor/O=harbor"
+# 替换为你的实际节点 IP 地址，例如: 192.168.80.101
+NODE_IP="192.168.80.101"
 
-# 生成自签名证书（有效期 10 年）
-openssl x509 -req -days 3650 -in harbor-core.harbor.csr -signkey harbor-core.harbor.key -out harbor-core.harbor.crt
+# 生成自签名证书（有效期 10 年，包含内部域名和 IP，兼容 OpenSSL 1.0.x）
+cat > san.cnf <<EOF
+[san_section]
+subjectAltName = DNS:harbor-core.harbor,DNS:harbor.harbor,DNS:harbor$([ "$NODE_IP" != "" ] && echo ",IP:$NODE_IP")
+EOF
 
-# 验证证书
-openssl x509 -in harbor-core.harbor.crt -text -noout
+openssl req -new -x509 -days 3650 \
+  -key harbor-core.harbor.key \
+  -out harbor-core.harbor.crt \
+  -subj "/CN=harbor-core.harbor/O=harbor" \
+  -config <(cat /etc/ssl/openssl.cnf <(printf "\n[san_section]\n%s" "$(cat san.cnf)")) \
+  -extensions san_section
+
+# 验证证书（一定能看到 SAN）
+openssl x509 -in harbor-core.harbor.crt -noout -text | grep -A 5 "Subject Alternative Name"
+# 预期输出包含：
+# DNS:harbor-core.harbor, DNS:harbor.harbor, DNS:harbor, IP Address:192.168.80.101
 ```
+
+> **说明**：
+> - 使用 `san.cnf` 配置文件方式，可在 OpenSSL 1.0.x 与 1.1.x 中均正确写入 SAN
+> - **内部域名**是必需的：`harbor-core.harbor`、`harbor.harbor`、`harbor`
+> - **IP 地址**根据需要添加，替换 `NODE_IP` 为实际节点 IP
+> - 如果使用域名访问 Harbor，可以将 IP 替换为域名
+
+
+> **说明**：
+> - `-addext` 参数直接在命令行添加 Subject Alternative Names（SANs）
+> - 不需要额外的配置文件，命令更简洁
+> - **内部域名**是必需的：`harbor-core.harbor`、`harbor.harbor`、`harbor`
+> - **IP 地址**根据需要添加，替换 `YOUR_NODE_IP` 为实际节点 IP
+> - 如果使用域名访问 Harbor，可以将 IP 替换为域名
 
 ---
 
@@ -157,22 +237,246 @@ openssl x509 -in harbor-core.harbor.crt -text -noout
 # 1. 创建 Harbor 命名空间（如果不存在）
 kubectl create namespace harbor
 
-# 2. 在 Harbor 命名空间创建 TLS Secret
+# 2. 删除旧的 TLS Secret（如果存在）
+kubectl delete secret harbor-tls -n harbor 2>/dev/null || echo "Secret 不存在，跳过"
+
+# 3. 在 Harbor 命名空间创建 TLS Secret（使用证书文件）
 kubectl create secret tls harbor-tls \
   --cert=harbor-core.harbor.crt \
   --key=harbor-core.harbor.key \
   -n harbor
 
-# 3. 验证 Secret 创建成功
+# 4. 验证证书内容（确认 SANs 配置）
+openssl x509 -in harbor-core.harbor.crt -text -noout | grep -A1 "Subject Alternative Name"
+# 预期输出应包含：
+# DNS:harbor-core.harbor, DNS:harbor.harbor, DNS:harbor, IP Address:192.168.80.101
+
+# 5. 验证 Secret 创建成功
 kubectl get secret harbor-tls -n harbor
 kubectl describe secret harbor-tls -n harbor
+
+# 6. 验证 Secret 中的证书是否正确（验证 SANs）
+kubectl get secret harbor-tls -n harbor -o jsonpath='{.data.tls\.crt}' | base64 -d | openssl x509 -text -noout | grep -A1 "Subject Alternative Name"
+# 预期输出应包含：DNS:harbor-core.harbor, DNS:harbor.harbor, DNS:harbor, IP Address:192.168.80.101
+
+# 7. 【重要】将 CA 证书添加到 Secret 中（用于 RKE2 节点信任）
+kubectl patch secret harbor-tls -n harbor --type='json' -p='[{"op": "add", "path": "/data/ca.crt", "value": "'$(base64 -w 0 harbor-core.harbor.crt)'"}]'
+
+# 8. 验证 CA 证书已添加
+kubectl get secret harbor-tls -n harbor -o jsonpath='{.data.ca\.crt}' | base64 -d | openssl x509 -noout -subject
+# 预期输出：subject=CN = harbor-core.harbor, O = harbor
+
+> **注意**：上述验证步骤完成后，**请勿在此处重启 Harbor 服务或执行证书访问验证**。
+> 这些操作应在 Harbor 部署完成后再进行，以避免在服务尚未启动时产生错误。
 ```
 
 ---
 
-## 五、创建 HTTPS 配置文件
+## 五、配置 RKE2 节点信任 Harbor 证书
+
+> **关键步骤**：此步骤是 Kubernetes 节点能够从 Harbor 拉取镜像的前提条件。
+> 如果跳过此步骤，部署到 Kubernetes 的应用将无法拉取 Harbor 镜像，报错 `ImagePullBackOff` 和 `x509: certificate signed by unknown authority`。
+
+### 为什么需要此步骤？
+
+当 Kubernetes 节点（RKE2）尝试从 Harbor 拉取镜像时，containerd 会验证 Harbor 的 TLS 证书。由于我们使用的是自签名证书，节点默认不信任该证书，导致镜像拉取失败。
+
+### 配置步骤
+
+**在所有 RKE2 节点上执行以下操作**（如果是单节点集群，只需在该节点执行）：
+
+#### 1. 复制 CA 证书到 RKE2 配置目录
+
+```bash
+# 确保当前在证书目录
+cd /tmp/harbor-cert
+
+# 复制 CA 证书到 RKE2 配置目录
+sudo cp harbor-core.harbor.crt /etc/rancher/rke2/harbor-ca.crt
+
+# 验证文件已复制
+ls -lh /etc/rancher/rke2/harbor-ca.crt
+
+# 验证证书内容
+openssl x509 -in /etc/rancher/rke2/harbor-ca.crt -noout -subject -dates
+```
+
+#### 2. 配置 containerd 使用 Harbor 证书
+
+创建或编辑 `/etc/rancher/rke2/registries.yaml` 文件：
+
+```bash
+# 备份现有配置（如果存在）
+sudo cp /etc/rancher/rke2/registries.yaml /etc/rancher/rke2/registries.yaml.bak 2>/dev/null || true
+
+# 注意：将 YOUR_NODE_IP 替换为实际的节点 IP（例如：192.168.80.101）
+# 使用 sudo tee 写入（sudo 对 > 重定向无效，必须用 tee）
+sudo tee /etc/rancher/rke2/registries.yaml << EOF
+mirrors:
+  YOUR_NODE_IP:30009:
+    endpoint:
+      - https://YOUR_NODE_IP:30009
+  harbor.harbor:
+    endpoint:
+      - https://YOUR_NODE_IP:30009
+
+configs:
+  YOUR_NODE_IP:30009:
+    tls:
+      ca_file: /etc/rancher/rke2/harbor-ca.crt
+      insecure_skip_verify: false
+  harbor.harbor:
+    tls:
+      ca_file: /etc/rancher/rke2/harbor-ca.crt
+      insecure_skip_verify: false
+EOF
+```
+
+**配置原理说明（重要，必读）：**
+
+**为什么 `harbor.harbor` 的 endpoint 必须指向 NodePort 地址？**
+
+- `harbor.harbor` 是 Kubernetes Service 的 DNS 名称，只能在集群内部的 Pod 中解析（通过 CoreDNS）
+- containerd 运行在节点（宿主机）上，不在 Pod 内，因此**无法通过 CoreDNS 解析 `harbor.harbor`**
+- 如果 endpoint 写成 `https://harbor.harbor`，containerd 会因 DNS 解析失败而无法拉取镜像
+- 正确做法：将 `harbor.harbor` 的 endpoint 指向 NodePort 地址（`https://YOUR_NODE_IP:30009`），containerd 通过 NodePort 访问 Harbor，同时使用 `ca_file` 验证证书
+
+**为什么不能在 `/etc/hosts` 中添加 `harbor.harbor` 条目？**
+
+- 如果在 `/etc/hosts` 中添加 `192.168.80.101 harbor.harbor`，节点 DNS 会将 `harbor.harbor` 解析为节点 IP
+- containerd 会直接连接 `192.168.80.101:443`（默认 HTTPS 端口），而不是 NodePort `30009`
+- 这会导致连接失败或绕过 `registries.yaml` 中的 CA 证书配置，出现 `x509` 证书错误
+- **结论：绝对不要在 `/etc/hosts` 中添加 `harbor.harbor` 条目**
+
+**配置字段说明：**
+- `mirrors`: 定义镜像仓库的镜像源
+  - `YOUR_NODE_IP:30009`: 外部访问地址（NodePort），endpoint 指向自身
+  - `harbor.harbor`: 集群内部域名，endpoint **必须指向 NodePort 地址**，不能指向 `harbor.harbor` 本身
+- `configs`: 定义仓库的 TLS 配置
+  - `ca_file`: 指向 CA 证书文件路径，containerd 用此证书验证 Harbor 的 TLS 证书
+  - `insecure_skip_verify: false`: 启用证书验证（推荐）
+
+#### 3. 验证配置文件
+
+```bash
+# 查看配置文件内容
+cat /etc/rancher/rke2/registries.yaml
+
+# 检查 YAML 语法是否正确
+sudo rke2 server --dry-run 2>&1 | grep -i registry || echo "配置语法正确"
+```
+
+#### 4. 重启 RKE2 服务
+
+```bash
+# 重启 RKE2 服务以加载新配置
+sudo systemctl restart rke2-server
+
+# 等待 RKE2 完全启动（通常需要 1-2 分钟）
+echo "等待 RKE2 启动..."
+sleep 60
+
+# 验证 RKE2 服务状态
+sudo systemctl status rke2-server
+
+# 验证 Kubernetes 节点状态
+kubectl get nodes
+```
+
+#### 5. 验证 containerd 配置生效（可选）
+
+```bash
+# 方法1: 使用 crictl（如果命令可用）
+sudo /var/lib/rancher/rke2/bin/crictl --runtime-endpoint unix:///run/k3s/containerd/containerd.sock info 2>/dev/null | grep -A 20 registry
+
+# 方法2: 直接查看 containerd 配置文件
+cat /var/lib/rancher/rke2/agent/etc/containerd/config.toml | grep -A 30 -i registry
+
+# 方法3: 验证 registries.yaml 配置正确
+cat /etc/rancher/rke2/registries.yaml
+
+# 方法4: 检查 RKE2 服务状态
+systemctl status rke2-server | grep Active
+```
+
+> **注意**：如果 `crictl` 命令找不到或报错，可以跳过此步骤。
+> 只要 `registries.yaml` 配置正确且 RKE2 已重启，配置就会生效。
+> 最终验证会在 Harbor 部署后通过实际拉取镜像来确认。
+
+#### 6. 测试证书验证（可选）
+
+```bash
+# 测试从节点访问 Harbor API（Harbor 部署后才能测试）
+# 注意：此步骤需要在 Harbor 部署完成后执行，现在会连接失败
+# curl -v https://YOUR_NODE_IP:30009/v2/ 2>&1 | grep -E "SSL certificate|subject|issuer"
+
+# 预期输出应包含证书信息，不应有 "certificate verify failed" 错误
+```
+
+> **重要**：此测试需要在 Harbor 部署完成后才能执行。
+> 现在执行会显示"Connection refused"，这是正常的。
+
+### 多节点集群配置
+
+如果你的 RKE2 集群有多个节点（master 或 worker），需要在**每个节点**上重复上述步骤：
+
+```bash
+# 在每个节点上执行
+for node in node1 node2 node3; do
+  echo "配置节点: $node"
+
+  # 复制证书到节点（使用 scp 或其他方式）
+  scp /tmp/harbor-cert/harbor-core.harbor.crt root@$node:/etc/rancher/rke2/harbor-ca.crt
+
+  # 复制 registries.yaml 到节点
+  scp /etc/rancher/rke2/registries.yaml root@$node:/etc/rancher/rke2/registries.yaml
+
+  # 重启节点上的 RKE2 服务
+  ssh root@$node "systemctl restart rke2-server || systemctl restart rke2-agent"
+done
+```
+
+### 常见问题
+
+**Q1: 重启 RKE2 后 Pod 无法启动？**
+
+A: 这是正常现象，RKE2 重启会导致所有 Pod 重启。等待 1-2 分钟后，Pod 会自动恢复。
+
+```bash
+# 查看 Pod 状态
+kubectl get pods --all-namespaces
+```
+
+**Q2: 如何验证配置是否成功？**
+
+A: 在部署 Harbor 后，尝试从集群内拉取镜像：
+
+```bash
+# 部署 Harbor 后执行
+kubectl run test-pull --image=harbor.harbor/library/nginx:latest --rm -it --restart=Never
+```
+
+如果 Pod 成功启动，说明配置正确。
+
+**Q3: 是否可以使用 insecure_skip_verify: true？**
+
+A: 可以，但不推荐。这会跳过证书验证，存在安全风险：
+
+```yaml
+configs:
+  "YOUR_NODE_IP:30009":
+    tls:
+      insecure_skip_verify: true  # 不推荐，仅用于测试
+```
+
+---
+
+## 六、创建 HTTPS 配置文件
 
 ### 方法1: 使用 cat 命令创建
+
+> **重要提示**：
+> 如果仅需外部 HTTPS 访问 Harbor，不需要组件间内部加密，请将 `internalTLS.enabled` 设置为 `false`，否则会因缺少内部证书导致部署失败。
 
 ```bash
 cat > harbor-helm-values-https.yaml <<'EOF'
@@ -242,6 +546,14 @@ trivy:
   enabled: false  # 漏洞扫描（可选）
 notary:
   enabled: false  # 镜像签名（可选）
+
+# ==================== 内部 TLS 配置 ====================
+# Harbor 内部组件之间的 TLS 通信配置
+# 推荐设置为 false，避免内部证书配置复杂性
+internalTLS:
+  enabled: false
+
+# ==================== Helm Chart 仓库配置 ====================
 chartmuseum:
   enabled: false  # Helm Chart 仓库（可选）
 
@@ -308,7 +620,7 @@ cat harbor-helm-values-https.yaml | grep -E "nodePort|externalURL"
 
 ---
 
-## 六、部署 Harbor（HTTPS）
+## 七、部署 Harbor（HTTPS）
 
 ### 重要提示
 
@@ -349,7 +661,7 @@ REVISION: 1
 
 ---
 
-## 七、查看部署状态
+## 八、查看部署状态
 
 ### 1. 查看 Pod 状态（等待 3-5 分钟）
 
@@ -389,7 +701,7 @@ kubectl get svc -n harbor
 
 ---
 
-## 八、访问 Harbor
+## 九、访问 Harbor
 
 ### 1. 访问 Web UI（HTTPS）
 
@@ -413,7 +725,11 @@ kubectl get svc -n harbor
 
 ---
 
-## 九、配置 Docker 使用 Harbor
+## 十、配置 Docker 使用 Harbor（可选）
+
+> **说明**：此章节仅适用于需要在**集群外**使用 Docker 客户端推送镜像的场景（例如开发者本地电脑）。
+>
+> **如果你的场景是 Jenkins + Kaniko 在集群内构建推送，Kubernetes 从 Harbor 拉取镜像，可以跳过本章节。**
 
 ### 1. 复制 CA 证书到 Docker
 
@@ -602,7 +918,7 @@ sudo crictl info | grep -A 10 registry
 
 ---
 
-## 十、配置 Jenkins/Kaniko 使用 Harbor
+## 十一、配置 Jenkins/Kaniko 使用 Harbor
 
 ### 1. 创建 Harbor Registry Secret
 
@@ -986,38 +1302,6 @@ curl http://harbor-core.harbor/v2/
 
 ---
 
-## 十一、配置 RKE2 使用 HTTPS Harbor
-
-在每个 RKE2 节点上执行：
-
-```bash
-# 创建 registries.yaml（替换为你的实际IP或域名）
-sudo mkdir -p /etc/rancher/rke2
-sudo tee /etc/rancher/rke2/registries.yaml > /dev/null <<EOF
-mirrors:
-  "YOUR_NODE_IP:30009":
-    endpoint:
-      - "https://YOUR_NODE_IP:30009"
-
-configs:
-  "YOUR_NODE_IP:30009":
-    tls:
-      ca_file: /etc/rancher/rke2/harbor-ca.crt
-      insecure_skip_verify: false
-EOF
-
-# 复制证书
-sudo cp /tmp/harbor-cert/harbor-core.harbor.crt /etc/rancher/rke2/harbor-ca.crt
-
-# 重启 RKE2
-sudo systemctl restart rke2-server  # 或 rke2-agent
-
-# 验证配置
-sudo crictl info | grep -A 10 registry
-```
-
----
-
 ## 十二、常用管理命令
 
 ### Helm 命令
@@ -1117,18 +1401,14 @@ sudo systemctl restart rke2-server
 ### 4. 镜像推送失败
 
 **检查项：**
-- [ ] Docker 证书是否已配置
-- [ ] 是否已登录 Harbor
+- [ ] harbor-registry-secret 是否已创建
+- [ ] Secret 中的 docker-server 地址是否正确
 - [ ] 项目是否已创建
 - [ ] Registry Pod 是否正常
 
 ```bash
-# 检查 Docker 证书（替换为你的实际地址）
-ls -la /etc/docker/certs.d/YOUR_NODE_IP:30009/
-
-# 重新登录（替换为你的实际地址）
-docker logout YOUR_NODE_IP:30009
-docker login YOUR_NODE_IP:30009
+# 检查 Secret（集群内部地址）
+kubectl get secret harbor-registry-secret -n jenkins -o jsonpath='{.data.\.dockerconfigjson}' | base64 -d
 
 # 检查 Registry Pod
 kubectl logs -n harbor -l app=harbor-registry
@@ -1327,9 +1607,8 @@ Helm 卸载会**自动删除**以下资源（无需手动清理）：
 **需要手动清理的资源：**
 - ❌ PVC（持久化数据，默认不删除）
 - ❌ 跨命名空间的 Secret（如其他 ns 中的 harbor-registry-secret）
-- ❌ RKE2 配置文件
-- ❌ Docker 客户端证书
-- ❌ 本地证书文件
+- ❌ RKE2 配置文件（/etc/rancher/rke2/registries.yaml、harbor-ca.crt）
+- ❌ 本地证书文件（/tmp/harbor-cert）
 
 ### 卸载步骤
 
@@ -1358,9 +1637,7 @@ sudo systemctl restart rke2-server  # 或 rke2-agent
 
 # 7. 删除证书文件（可选）
 rm -rf /tmp/harbor-cert
-
-# 8. 删除 Docker 证书（如果使用 Docker 客户端）
-sudo rm -rf /etc/docker/certs.d/YOUR_NODE_IP:30009
+sudo rm -f /etc/rancher/rke2/harbor-ca.crt
 ```
 
 ### 清理后验证
@@ -1553,7 +1830,7 @@ helm upgrade harbor harbor/harbor \
 
 ---
 
-## 附录：完整部署脚本
+## 十九、附录：完整部署脚本
 
 ```bash
 #!/bin/bash
@@ -1584,21 +1861,78 @@ mkdir -p /tmp/harbor-cert
 cd /tmp/harbor-cert
 
 openssl genrsa -out ${DOMAIN}.key 2048
-openssl req -new -key ${DOMAIN}.key -out ${DOMAIN}.csr -subj "/CN=${DOMAIN}/O=harbor"
-openssl x509 -req -days 3650 -in ${DOMAIN}.csr -signkey ${DOMAIN}.key -out ${DOMAIN}.crt
+
+cat > san.cnf <<EOF2
+[san_section]
+subjectAltName = DNS:harbor-core.harbor,DNS:harbor.harbor,DNS:harbor,IP:${NODE_IP}
+EOF2
+
+openssl req -new -x509 -days 3650 \
+  -key ${DOMAIN}.key \
+  -out ${DOMAIN}.crt \
+  -subj "/CN=${DOMAIN}/O=harbor" \
+  -config <(cat /etc/ssl/openssl.cnf <(printf "\n[san_section]\n%s" "$(cat san.cnf)")) \
+  -extensions san_section
 
 echo "✓ TLS 证书生成完成"
+openssl x509 -in ${DOMAIN}.crt -noout -text | grep -A 5 "Subject Alternative Name"
 
 # 4. 创建 TLS Secret
 echo ">>> 创建 TLS Secret..."
+kubectl create namespace harbor 2>/dev/null || true
+kubectl delete secret harbor-tls -n harbor 2>/dev/null || true
 kubectl create secret tls harbor-tls \
   --cert=${DOMAIN}.crt \
   --key=${DOMAIN}.key \
-  -n harbor --dry-run=client -o yaml | kubectl apply -f -
+  -n harbor
+
+# 将 CA 证书添加到 Secret 中
+kubectl patch secret harbor-tls -n harbor --type='json' -p='[{"op": "add", "path": "/data/ca.crt", "value": "'$(base64 -w 0 ${DOMAIN}.crt)'"}]'
 
 echo "✓ TLS Secret 创建完成"
 
-# 5. 创建配置文件
+# 5. 配置 RKE2 节点信任 Harbor 证书（关键步骤）
+echo ">>> 配置 RKE2 节点信任 Harbor 证书..."
+
+# 复制 CA 证书到 RKE2 配置目录
+sudo cp ${DOMAIN}.crt /etc/rancher/rke2/harbor-ca.crt
+
+# 配置 containerd 使用 Harbor 证书
+# 注意：harbor.harbor 的 endpoint 必须指向 NodePort，不能指向 harbor.harbor 本身
+# 因为 containerd 运行在节点上，无法通过 CoreDNS 解析 harbor.harbor
+sudo tee /etc/rancher/rke2/registries.yaml << REGEOF
+mirrors:
+  ${NODE_IP}:30009:
+    endpoint:
+      - https://${NODE_IP}:30009
+  harbor.harbor:
+    endpoint:
+      - https://${NODE_IP}:30009
+
+configs:
+  ${NODE_IP}:30009:
+    tls:
+      ca_file: /etc/rancher/rke2/harbor-ca.crt
+      insecure_skip_verify: false
+  harbor.harbor:
+    tls:
+      ca_file: /etc/rancher/rke2/harbor-ca.crt
+      insecure_skip_verify: false
+REGEOF
+
+echo "✓ registries.yaml 配置完成"
+
+# 重启 RKE2 以加载新配置
+echo ">>> 重启 RKE2 服务..."
+sudo systemctl restart rke2-server
+echo "等待 RKE2 启动（60秒）..."
+sleep 60
+sudo systemctl status rke2-server | grep Active
+kubectl get nodes
+
+echo "✓ RKE2 节点证书配置完成"
+
+# 6. 创建配置文件
 echo ">>> 创建配置文件..."
 cat > harbor-helm-values-https.yaml <<EOF
 expose:
@@ -1647,9 +1981,13 @@ notary:
   enabled: false
 chartmuseum:
   enabled: false
+
+# 内部 TLS 配置（推荐关闭，简化配置）
+internalTLS:
+  enabled: false
 EOF
 
-# 6. 部署 Harbor
+# 7. 部署 Harbor
 echo ">>> 部署 Harbor（HTTPS）..."
 helm install harbor harbor/harbor \
   -n harbor \
@@ -1659,14 +1997,14 @@ helm install harbor harbor/harbor \
 
 echo "✓ Harbor 部署完成"
 
-# 7. 等待 Pod 就绪
+# 8. 等待 Pod 就绪
 echo ">>> 等待 Pod 就绪..."
 kubectl wait --for=condition=ready pod \
   -l app=harbor \
   -n harbor \
   --timeout=600s || true
 
-# 8. 显示访问信息
+# 9. 显示访问信息
 echo ""
 echo "=== Harbor HTTPS 部署完成 ==="
 echo "HTTPS 访问地址: https://${NODE_IP}:30009"
@@ -1688,6 +2026,100 @@ echo ""
 chmod +x deploy-harbor-https.sh
 ./deploy-harbor-https.sh
 ```
+
+---
+
+## 二十、更新 Harbor TLS 证书
+
+> **说明**：本文档使用 `internalTLS.enabled: false`，Harbor 内部组件间通过 HTTP 通信，只有外部访问使用 HTTPS（通过 nginx 终止 TLS）。
+> 更新证书只需更新外部 TLS Secret 并重启 Harbor 服务即可。
+
+### 更新证书步骤
+
+如果需要更新 Harbor 的 TLS 证书（例如添加新的域名或 IP 地址），请按照以下步骤操作：
+
+```bash
+# 1. 生成新的自签名证书（包含所有需要的 SANs）
+cd /tmp/harbor-cert
+openssl genrsa -out harbor-core.harbor.key 2048
+
+openssl req -new -x509 -days 3650 \
+  -key harbor-core.harbor.key \
+  -out harbor-core.harbor.crt \
+  -subj "/CN=harbor-core.harbor/O=harbor" \
+  -addext "subjectAltName=DNS:harbor-core.harbor,DNS:harbor.harbor,DNS:harbor,IP:192.168.80.101"
+
+# 2. 验证证书内容
+openssl x509 -in harbor-core.harbor.crt -text -noout | grep -A1 "Subject Alternative Name"
+
+# 3. 删除旧的 TLS Secret
+kubectl delete secret harbor-tls -n harbor
+
+# 4. 创建新的 TLS Secret
+kubectl create secret tls harbor-tls \
+  --cert=harbor-core.harbor.crt \
+  --key=harbor-core.harbor.key \
+  -n harbor
+
+# 5. 验证 Secret 中的证书
+kubectl get secret harbor-tls -n harbor -o jsonpath='{.data.tls\.crt}' | base64 -d | openssl x509 -text -noout | grep -A1 "Subject Alternative Name"
+
+# 6. 重启所有 Harbor 服务使新证书生效
+kubectl rollout restart deployment/harbor-core -n harbor
+kubectl rollout restart deployment/harbor-nginx -n harbor
+kubectl rollout restart deployment/harbor-portal -n harbor
+kubectl rollout restart deployment/harbor-registry -n harbor
+kubectl rollout restart deployment/harbor-jobservice -n harbor
+
+# 7. 等待所有服务重启完成
+kubectl rollout status deployment/harbor-core -n harbor --timeout=120s
+kubectl rollout status deployment/harbor-nginx -n harbor --timeout=120s
+kubectl rollout status deployment/harbor-portal -n harbor --timeout=120s
+kubectl rollout status deployment/harbor-registry -n harbor --timeout=120s
+kubectl rollout status deployment/harbor-jobservice -n harbor --timeout=120s
+
+# 8. 验证 core 使用的证书
+kubectl exec -n harbor deployment/harbor-core -- cat /etc/harbor/tls/core.crt 2>/dev/null | openssl x509 -noout -text | grep -A1 "Subject Alternative Name"
+
+# 9. 测试访问 Harbor Registry API
+curl -k -u admin:Harbor12345 https://harbor.harbor/v2/
+```
+
+### 验证证书是否生效
+
+```bash
+# 方法1: 使用 curl 测试
+curl -k https://harbor.harbor/v2/_catalog
+
+# 方法2: 使用 kubectl 检查 Pod 证书文件
+kubectl exec -n harbor deployment/harbor-core -- cat /etc/harbor/tls/harbor-core.crt | openssl x509 -noout -text | grep -A1 "Subject Alternative Name"
+
+# 方法3: 从集群内测试镜像拉取
+kubectl run test-pod --image=harbor.harbor/library/demo-springboot:latest --dry-run=client -o yaml | kubectl apply -f -
+```
+
+### 常见问题
+
+**问题1: 证书验证失败 "x509: certificate is valid for ingress.local, not harbor.harbor"**
+
+解决方法：
+- 确认新生成的证书包含正确的 SANs（DNS:harbor.harbor）
+- 确认 Secret 已经更新：`kubectl get secret harbor-tls -n harbor -o jsonpath='{.data.tls\.crt}' | base64 -d | openssl x509 -noout -text | grep -A1 "Subject Alternative Name"`
+- 确认所有 Harbor 服务都已重启
+
+**问题2: Kubernetes Pod 无法拉取 Harbor 镜像**
+
+解决方法：
+- 确认 Kubernetes 节点信任 Harbor 证书
+- 或者创建 docker-registry secret：
+```bash
+kubectl create secret docker-registry harbor-registry-secret \
+  --docker-server=harbor.harbor \
+  --docker-username=admin \
+  --docker-password=Harbor12345 \
+  -n <your-namespace>
+```
+- 在 Deployment 中添加 imagePullSecrets
 
 ---
 

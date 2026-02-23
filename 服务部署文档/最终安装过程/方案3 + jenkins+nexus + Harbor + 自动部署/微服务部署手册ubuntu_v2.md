@@ -315,6 +315,8 @@ network:
   version: 2
 EOF
 
+
+
 # 应用配置
 sudo netplan apply
 
