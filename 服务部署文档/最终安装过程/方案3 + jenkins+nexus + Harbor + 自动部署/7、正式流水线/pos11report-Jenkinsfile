@@ -277,8 +277,8 @@ spec:
                             generateMavenSettings()
                         }
 
-                        currentBuild.displayName = "#\${BUILD_NUMBER} - \${GIT_BRANCH}"
-                        currentBuild.description = "分支: \${GIT_BRANCH}"
+                        currentBuild.displayName = "#${BUILD_NUMBER} - ${GIT_BRANCH}"
+                        currentBuild.description = "分支: ${GIT_BRANCH}"
 
                         echo """
                         ╔════════════════════════════════════════╗
