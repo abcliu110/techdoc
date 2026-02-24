@@ -23,10 +23,10 @@
 ```
 Kind: Username with password
 Scope: Global
-Username: admin 
-Password: st11338
-ID: nexus-credentials
-Description: nexus 
+Username: admin
+Password: Harbor12345
+ID: harbor-user-auth
+Description: nexus
 
 
 ```
