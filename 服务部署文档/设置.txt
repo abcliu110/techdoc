@@ -15,8 +15,11 @@ https://packages.aliyun.com/maven/repo-tbmiu/guide
 https://www.yuque.com/ningmengshuzongbuzhangyubiao/gav3c4/mog71i6oa7q3o2kk?singleDoc# 《前端入职指引》
 
 
-https://www.yuque.com/ningmengshuzongbuzhangyubiao/gav3c4/dfudpzdgzkvnyb0y?singleDoc#
+https://www.yuque.com/ningmengshuzongbuzhangyubiao/gav3c4/dfudpzdgzkvnyb0y?singleDoc#  《后端入职指引》
 
+npm login --registry=https://packages.aliyun.com/613895a803e1c17d57a7630f/npm/npm-registry/ -u 6965eee7df2584eb75b5ec13 -p 4q3ovDG3_Fga
+
+npm login -u 6965eee7df2584eb75b5ec13 -p 4q3ovDG3_Fga
 
 
 https://shop.gzjjzhy.com/welcome
