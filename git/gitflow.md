@@ -5,6 +5,8 @@
 
 ## gitflow
 
+winget install --id "GitTower.GitFlowNext"
+
 GitHub Flow 之所以比 Git Flow **迭代速度更快**，核心原因在于它**消除了“等待”**，并将**批量作业（Batch Processing）变成了流式作业（Streaming Processing）**。
 
 我们可以从**结构成本、集成模式、心理负担**和**自动化程度**四个维度来深度剖析：
@@ -389,6 +391,8 @@ git push origin develop
 git push --tags
 ```
 
+
+
 `git rebase -i HEAD~3` 是 Git 中最强大、最常用的“后悔药”命令之一。
 
 简单来说，它的作用是：**“开启交互模式，让你重新整理最近的 3 次提交。”**
@@ -511,6 +515,56 @@ pick 8f0e3a4 ...
 *   它可以**合并**、**修改**、**删除**提交。
 *   原理是**重写历史**（生成新提交）。
 *   **只能在自己的私有分支上用**。
+
+
+出现这个错误是因为 `git-flow-next` 是一个**独立的可执行程序**，它在 Windows 上安装后，Git 并不知道如何将其作为子命令（即 `git flow` 中间的空格）来调用。
+
+你需要通过以下两步来完成配置：
+
+### 第一步：找到安装路径
+在 PowerShell 中运行以下命令，找到 `git-flow-next` 到底被安装到了哪里：
+
+```powershell
+Get-Command git-flow* | Select-Object -ExpandProperty Source
+```
+
+你会看到类似这样的路径（每个人可能略有不同）：
+`C:\Users\你的用户名\AppData\Local\Microsoft\WinGet\Packages\GitTower.GitFlowNext_...\git-flow-v0.1.1-windows-amd64.exe`
+
+### 第二步：设置 Git 别名 (Alias)
+将上面的路径复制下来，替换下面命令中的 `[你的路径]`，然后在终端执行：
+
+```powershell
+# 注意：路径中的反斜杠 \ 建议换成斜杠 / 或者使用双反斜杠 \\
+git config --global alias.flow '!f(){ "[你的路径]" "$@"; }; f'
+```
+
+**示例（假设你的路径是 C:/Tools/git-flow.exe）：**
+```powershell
+git config --global alias.flow '!f(){ "C:/Tools/git-flow.exe" "$@"; }; f'
+```
+
+---
+
+### 为什么会出现这个问题？
+1.  **独立运行**：`git-flow-next` 是用 Go 语言重写的现代版本，它本身是一个名为 `git-flow.exe` 的文件。
+2.  **Git 机制**：Git 默认只认自己内部的命令。如果要让 `git flow`（带空格）工作，Git 需要在它的配置里知道 `flow` 对应哪个外部程序。
+3.  **环境变化**：旧版的 Git for Windows 曾内置了 git-flow，但新版本（v2.51+）已经移除了内置支持，所以现在必须手动配置。
+
+### 验证是否成功
+配置完成后，重新打开一个终端窗口，输入：
+```bash
+git flow version
+```
+如果能看到 `git-flow-next version x.x.x`，说明已经完美对接！
+
+### 备选方案：直接使用
+如果你不想设置别名，你也可以直接输入带连字符的命令（前提是安装路径已在系统 PATH 中）：
+```bash
+git-flow version
+git-flow init
+```
+*不过，为了保持习惯，建议按上述步骤设置别名，这样就可以继续使用 `git flow` 了。*
 
 <!-- 跳转链接 -->
 [⬆️ 返回目录](#catalog)  |  [文章开头 ➡️](#chap-gitflow)
