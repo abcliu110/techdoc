@@ -21,6 +21,8 @@ npm login --registry=https://packages.aliyun.com/613895a803e1c17d57a7630f/npm/np
 
 npm login -u 6965eee7df2584eb75b5ec13 -p 4q3ovDG3_Fga
 
+安装依赖
+mvn dependency:get -DgroupId=com.nms4cloud -DartifactId=nms4cloud -Dversion=0.0.1-SNAPSHOT -Dtype=pom -U
 
 https://shop.gzjjzhy.com/welcome
 
@@ -37,6 +39,18 @@ st11338
 yszx
 admin
 st11338
+
+收钱吧全来店销售手册
+https://sqb.feishu.cn/wiki/SJqswDpQCiK5Ngkh9IocfNp8nvf
+https://sqb.feishu.cn/wiki/MMFIwd0J6ibOgjkWIhPc7MF8nSe  https://sqb.feishu.cn/wiki/MMFIwd0J6ibOgjkWIhPc7MF8nSe
+
+
+http://shop-kaci.shouqianba.com/
+主账号gzsq
+子账号admin
+密码a12345678
+
+winget install --id GitTower.GitFlowNext --source winget
 
 
 
