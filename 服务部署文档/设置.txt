@@ -42,7 +42,8 @@ st11338
 
 收钱吧全来店销售手册
 https://sqb.feishu.cn/wiki/SJqswDpQCiK5Ngkh9IocfNp8nvf
-https://sqb.feishu.cn/wiki/MMFIwd0J6ibOgjkWIhPc7MF8nSe  https://sqb.feishu.cn/wiki/MMFIwd0J6ibOgjkWIhPc7MF8nSe
+https://sqb.feishu.cn/wiki/MMFIwd0J6ibOgjkWIhPc7MF8nSe  
+https://sqb.feishu.cn/wiki/MMFIwd0J6ibOgjkWIhPc7MF8nSe
 
 
 http://shop-kaci.shouqianba.com/
@@ -52,5 +53,8 @@ http://shop-kaci.shouqianba.com/
 
 winget install --id GitTower.GitFlowNext --source winget
 
+claude --dangerously-skip-permissions
 
+PS C:\Windows\System32> python3 -c "import sys; print(sys.prefix)"
+C:\Users\16555\.pyenv\pyenv-win\versions\3.11.4
 
