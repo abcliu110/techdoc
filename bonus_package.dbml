@@ -1,0 +1,138 @@
+// Generated from 需求分析.md
+
+Table bonus_package {
+  id bigint [pk, increment, note: '主键']
+  package_name varchar(100) [not null, note: '套餐名称/活动名称']
+  category_id bigint [null, note: '套餐分类ID（可新增分类）']
+  brand_id bigint [null, note: '品牌ID/组织范围标识']
+  status enum('draft','enabled','disabled') [not null, default: 'draft', note: '状态：草稿/启用/停用']
+  remark varchar(255) [null, note: '备注说明']
+  version int [not null, default: 1, note: '乐观锁版本号']
+  created_by bigint [null, note: '创建人']
+  updated_by bigint [null, note: '更新人']
+  created_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: '创建时间']
+  updated_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: '更新时间']
+
+  Indexes {
+    (package_name, brand_id) [unique, name: 'uk_package_name_brand']
+  }
+
+  Note: '储值套餐主表，描述套餐基础信息与状态'
+}
+
+Table bonus_package_category {
+  id bigint [pk, increment, note: '主键']
+  name varchar(60) [not null, note: '分类名称']
+  brand_id bigint [null, note: '品牌ID/组织范围标识']
+  remark varchar(255) [null, note: '分类备注']
+  created_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: '创建时间']
+  updated_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: '更新时间']
+
+  Note: '套餐分类，支持新增'
+}
+
+Table bonus_package_fixed_amount {
+  id bigint [pk, increment, note: '主键']
+  package_id bigint [not null, note: '所属套餐ID']
+  amount decimal(10,2) [not null, note: '充值金额档位']
+  bonus_amount decimal(10,2) [null, note: '赠送金额']
+  bonus_points int [null, note: '赠送积分']
+  sort_no int [not null, default: 0, note: '排序号']
+  created_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: '创建时间']
+  updated_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: '更新时间']
+
+  Indexes {
+    package_id [name: 'idx_fixed_amount_pkg']
+  }
+
+  Note: '固定金额档位配置（一个套餐可有多个档位）'
+}
+
+Table bonus_package_channel {
+  id bigint [pk, increment, note: '主键']
+  package_id bigint [not null, note: '所属套餐ID']
+  channel_code varchar(40) [not null, note: '渠道编码（POS/小程序/商户中心等）']
+  created_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: '创建时间']
+
+  Indexes {
+    (package_id, channel_code) [unique, name: 'uk_pkg_channel']
+  }
+
+  Note: '适用渠道（多选）'
+}
+
+Table bonus_package_org_scope {
+  id bigint [pk, increment, note: '主键']
+  package_id bigint [not null, note: '所属套餐ID']
+  scope_type enum('all','store','region') [not null, default: 'all', note: '组织范围：全部/指定门店/指定区域']
+  created_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: '创建时间']
+
+  Indexes {
+    package_id [unique, name: 'uk_pkg_scope']
+  }
+
+  Note: '组织范围选择（单选）'
+}
+
+Table bonus_package_org_store {
+  id bigint [pk, increment, note: '主键']
+  package_id bigint [not null, note: '所属套餐ID']
+  store_id bigint [not null, note: '门店ID']
+  created_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: '创建时间']
+
+  Indexes {
+    (package_id, store_id) [unique, name: 'uk_pkg_store']
+  }
+
+  Note: '组织范围为指定门店时的门店清单'
+}
+
+Table bonus_package_org_region {
+  id bigint [pk, increment, note: '主键']
+  package_id bigint [not null, note: '所属套餐ID']
+  region_id bigint [not null, note: '区域ID']
+  created_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: '创建时间']
+
+  Indexes {
+    (package_id, region_id) [unique, name: 'uk_pkg_region']
+  }
+
+  Note: '组织范围为指定区域时的区域清单'
+}
+
+Table bonus_package_miniprogram_whitelist {
+  id bigint [pk, increment, note: '主键']
+  package_id bigint [not null, note: '所属套餐ID']
+  app_code varchar(60) [not null, note: '小程序入口编码']
+  created_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: '创建时间']
+
+  Indexes {
+    (package_id, app_code) [unique, name: 'uk_pkg_app']
+  }
+
+  Note: '小程序白名单（当选择小程序渠道时）'
+}
+
+Table bonus_package_audit {
+  id bigint [pk, increment, note: '主键']
+  package_id bigint [not null, note: '所属套餐ID']
+  action varchar(40) [not null, note: '操作类型（启用/停用/保存等）']
+  operator_id bigint [null, note: '操作人']
+  payload json [null, note: '变更快照']
+  created_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: '创建时间']
+
+  Indexes {
+    package_id [name: 'idx_audit_pkg']
+  }
+
+  Note: '审计日志'
+}
+
+Ref: bonus_package_category.id < bonus_package.category_id
+Ref: bonus_package.id < bonus_package_fixed_amount.package_id
+Ref: bonus_package.id < bonus_package_channel.package_id
+Ref: bonus_package.id < bonus_package_org_scope.package_id
+Ref: bonus_package.id < bonus_package_org_store.package_id
+Ref: bonus_package.id < bonus_package_org_region.package_id
+Ref: bonus_package.id < bonus_package_miniprogram_whitelist.package_id
+Ref: bonus_package.id < bonus_package_audit.package_id
