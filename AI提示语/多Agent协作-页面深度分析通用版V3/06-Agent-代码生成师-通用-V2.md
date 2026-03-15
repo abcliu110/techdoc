@@ -19,8 +19,8 @@
 > **输入：** 你将收到：
 > 1. 页面截图（原型图）
 > 2. Agent-0 增强输入包：用户确认的业务上下文、数据边界、集成依赖等（V2 新增）
-> 3. Agent-1 交接摘要：实体清单、字段定义（含英文字段名）
-> 4. Agent-2 交接摘要：业务规则、约束分级
+> 3. Agent-1 交接摘要：实体层级关系、按实体分表的字段字典、保存事务边界、枚举值定义表
+> 4. Agent-2 交接摘要：业务规则、约束分级、规则执行层分类、保存接口请求体结构
 > 5. Agent-3 交接摘要：API 清单、状态机、并发方案、权限矩阵
 > 6. Agent-1/2/3 推理备忘录（如有）：关注其中与技术实现相关的决策（V2 新增）
 >
@@ -29,6 +29,14 @@
 > - 增强输入包中确认的集成依赖 → 影响 Service 层的外部调用设计
 > - 推理备忘录中标记为 `[⚠️ 假设]` 的技术决策 → 在代码中加注释标注假设，便于后续确认
 > - 增强输入包中标记的"高风险缺口" → 对应代码段加 `// TODO: 需确认` 注释
+>
+> **V3 增强指令（面向数据容器层级）：**
+> - ★ Agent-1 的「实体层级关系」是代码生成的核心输入——每个 [OWN] 实体生成 Entity + Mapper
+> - ★ Agent-1 的「枚举值定义表」直接生成 Java 枚举类
+> - ★ Agent-2 的「保存接口请求体结构」直接生成嵌套 DTO 类
+> - ★ Agent-2 的「规则执行层分类」决定规则代码放在哪一层
+> - ★ Agent-1 的「保存事务边界」决定 @Transactional 的范围和写入策略
+> - ★ 标记为 [REF] 的引用实体不生成 Entity/Mapper，只在 DTO 中用 Long xxxId 引用
 >
 > **任务：** 严格按照以下规范，生成完整的后端代码。
 >
@@ -107,9 +115,15 @@
 >   ErrorCode.java            错误码枚举（本次业务的错误码）
 >   GlobalExceptionHandler.java  全局异常处理
 >
-> 每个业务模块生成：
->   Entity        → DTO（Create/Update/Query）→ VO（Resp/Detail）
->   → Mapper → Convert → Service接口 → ServiceImpl → Controller
+> 每个业务模块（按实体层级关系生成）：
+>   1. 枚举类 — 按「枚举值定义表」生成所有 XxxEnum
+>   2. Entity — 按「实体层级关系」从主表到子表依次生成（仅 [OWN] 实体）
+>   3. DTO — 主表 CreateReqDTO（嵌套子表 DTO List）、UpdateReqDTO、QueryReqDTO
+>   4. VO — 主表 RespVO、DetailRespVO（DetailRespVO 嵌套子表 VO List）
+>   5. Mapper — 每个 [OWN] 实体一个 Mapper
+>   6. Convert — 每个 [OWN] 实体一个 Convert
+>   7. Service — 主实体一个 Service（内部注入所有子表 Mapper）
+>   8. Controller — 主实体一个 Controller
 > ```
 >
 > 如果基础设施层已存在，告知 AI "基础设施层已存在，只生成业务代码，ErrorCode 枚举追加新错误码"。
@@ -122,12 +136,25 @@
 > - 加 `@TableName("t_{业务名}")`
 > - ID 字段加 `@TableId(type = IdType.AUTO)` + `@JsonSerialize(using = ToStringSerializer.class)`
 > - 必须包含：`create_time`、`update_time`（`@TableField(fill = ...)`）、`deleted`（`@TableLogic`）
-> - 字段来自 Agent-1 的实体清单，字段名用英文下划线
+> - ★ 按 Agent-1 实体层级关系，为每个 [OWN] 实体生成独立的 Entity 类
+> - ★ 子表 Entity 必须包含父表外键字段（如 package_id、tier_id）
+> - ★ [REF] 引用实体不生成 Entity，只在关联的 [OWN] 实体中用 Long xxxId 字段
 >
 > **DTO 层**
 > - 校验注解来自 Agent-2 的约束分级（BLOCK级 → `@NotNull/@NotBlank`，范围约束 → `@Min/@Max/@Size`）
 > - 条件必填（Agent-2 的 RULE 规则）在 Service 层校验，不在 DTO 注解中处理
 > - （V2 增强）增强输入包中用户确认的字段长度限制 → `@Size(max = N)`；确认的取值范围 → `@Min/@Max`
+> - ★ CreateReqDTO 必须按 Agent-2 的「保存接口请求体结构」生成嵌套结构
+>   - 主表 DTO 包含子表 DTO 的 List
+>   - 子表 DTO 包含孙表 DTO 的 List
+>   - 关联表用 `List<Long> xxxIds` 表示
+> - ★ UpdateReqDTO 的明细列表中每个元素增加可选的 id 字段（有 id = 更新，无 id = 新增）
+>
+> **枚举层（V3 新增）**
+> - ★ 按 Agent-1 的「枚举值定义表」为每个枚举字段生成独立的枚举类
+> - 命名：`XxxEnum`（如 `DateTypeEnum`、`GiftTypeEnum`）
+> - 必须包含：`code(int)`、`label(String)`、构造器、`getByCode` 静态方法
+> - Entity 中枚举字段类型用 `Integer`，不直接用枚举类型（兼容 MyBatis-Plus）
 >
 > **VO 层**
 > - 字段满足前端展示需求（枚举有 label、时间有格式、Long ID 转 String）

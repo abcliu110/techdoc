@@ -122,6 +122,7 @@ Q-{编号}：{用截图原文描述的问题}
 
 当回答揭示了新界面（弹窗、新出现的字段/按钮），必须严格执行以下步骤：
 
+0. ★ 数据容器回更新：判断新界面是否包含新的数据容器（[P]弹窗子实体/[G]弹窗内表格/[D]可重复明细），如有则更新数据容器层级图
 1. 暂停主清单
 2. 对新界面重新执行穷举扫描，生成「子清单」并输出给用户
    - 扫描规则与阶段一完全相同：逐个 UI 元素，下拉框/Checkbox/Radio/按钮/Toggle/Tab 一个不漏
@@ -231,6 +232,16 @@ Q-{编号}：{用截图原文描述的问题}
 
 用树形缩进表示父子关系，层级必须与数据容器识别的层级一致。
 
+★ 区分"拥有实体"与"引用实体"：
+- [OWN] 拥有实体：本页面创建和管理的数据，需要生成 Entity + Mapper + Service 代码
+- [REF] 引用实体：本页面仅通过 ID 引用的已有数据（如品牌、会员方案、优惠券等），不需要生成代码
+
+格式示例：
+储值套餐(stored_value_package) [M][OWN]
+  └─ 储值档位(stored_value_tier) [D][OWN]
+品牌(brand) [REF] — 仅存 brand_id
+会员方案(member_plan) [REF] — 仅存 member_plan_id
+
 2-2 字段字典（★ 按实体分表输出，每个实体单独一张表）
 
 ★ 关键要求：不要把所有字段混在一起。每个数据库实体单独一张字段表。
@@ -249,6 +260,21 @@ Q-{编号}：{用截图原文描述的问题}
 - date_type: "=1时 start_date/end_date 必填"
 - gift_type: "决定 tier_gift / tier_gift_bundle 是否有数据"
 - org_scope: "=全部门店时 package_organization 表无数据"
+
+2-2.5 枚举值定义表（★ 面向代码生成，必须输出）
+
+为所有枚举/判别字段定义明确的数值映射，代码生成器将直接用此表生成 Java 枚举类。
+
+| 字段名 | 所属表 | 枚举值 | 含义 | 说明 |
+|--------|-------|--------|------|------|
+| date_type | stored_value_package | 1 | 指定日期 | 默认值 |
+| date_type | stored_value_package | 2 | 永久有效 | - |
+| gift_type | stored_value_tier | 0 | 不赠送 | 默认值 |
+| gift_type | stored_value_tier | 1 | 优惠券 | - |
+| gift_type | stored_value_tier | 2 | 券包 | - |
+
+★ 每个 Radio、单选下拉框、Toggle 类型的字段都必须列入此表。
+★ 数值从 0 或 1 开始，不要用中文作为存储值。
 
 2-3 实体关系图（ER图文本表示）
 
@@ -270,6 +296,35 @@ Q-{编号}：{用截图原文描述的问题}
 |---------|-----------|-----------|
 
 "数据层影响"说明该判别字段如何影响数据库存储（字段是否允许NULL、子表是否有数据等）
+
+2-7 DDL 预览（★ 验证数据模型正确性的最佳手段）
+
+基于字段字典和枚举表，为每个 [OWN] 实体输出 CREATE TABLE 语句。
+作用：1) 验证数据模型设计无遗漏 2) 代码生成器可直接使用 3) 开发可直接执行建表
+
+要求：
+- 表名前缀 t_（如 t_stored_value_package）
+- 主键 id BIGINT AUTO_INCREMENT
+- 外键字段加注释标明关联表
+- 枚举字段加注释标明枚举值含义
+- 必须包含 create_time, update_time, create_by, deleted 审计字段
+- 为外键字段添加索引（idx_{表名}_{字段名}）
+
+格式示例：
+CREATE TABLE t_stored_value_package (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  activity_name VARCHAR(100) NOT NULL COMMENT '活动名称',
+  date_type TINYINT NOT NULL DEFAULT 1 COMMENT '活动日期类型: 1=指定日期 2=永久有效',
+  start_date DATE NULL COMMENT '开始日期, date_type=1时必填',
+  ...
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  create_by BIGINT NOT NULL COMMENT '创建人ID',
+  deleted TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0=未删除 1=已删除'
+) COMMENT='储值套餐主表';
+
+CREATE INDEX idx_svp_create_by ON t_stored_value_package(create_by);
+
 
 
 ──── 第三层：业务规则 ────
@@ -304,7 +359,13 @@ VALIDATION-{编号}: {条件} 校验时机：前端/提交/异步
 嵌套层级必须与 2-1 的实体层级完全对应。
 代码生成器可以直接从此结构生成 DTO 类。
 
-格式：
+★ 必须同时输出三种结构：
+
+A. 新增请求体 (POST)：明细记录没有 id
+B. 编辑请求体 (PUT)：明细记录有 id（已有记录）或没有 id（新增记录），传空数组 = 全部删除
+C. 详情响应体 (GET)：返回完整嵌套数据供前端回填表单
+
+--- A. 新增请求 ---
 POST /api/{主实体}
 {
   // ─── 主表字段 ───
@@ -322,6 +383,49 @@ POST /api/{主实体}
   // ─── 关联表：{关联名称} ───
   "relatedIds": [1, 2, 3]
 }
+
+--- B. 编辑请求（差异说明）---
+PUT /api/{主实体}/{id}
+{
+  // 主表字段同上
+  "details": [
+    { "id": 101, "detailField1": "修改值" },  // 有id = 更新已有记录
+    { "detailField1": "新值" }                  // 无id = 新增记录
+    // 原有 id=102 的记录未出现 = 删除
+  ]
+}
+
+--- C. 详情响应（★ 前端回填表单所需）---
+GET /api/{主实体}/{id}
+{
+  "id": 1,
+  // ─── 主表字段 ───
+  "field1": "value",
+  "field1Label": "展示值",  // 枚举字段同时返回 label
+
+  // ─── 明细表 ───
+  "details": [
+    {
+      "id": 101,
+      "detailField1": "value",
+      "subDetails": [ { "id": 201, ... } ]
+    }
+  ],
+
+  // ─── 关联数据（含名称，不只是 ID）───
+  "brands": [ { "id": 1, "name": "品牌A" } ],
+  "orgIds": [1001, 1002],
+
+  // ─── 审计信息 ───
+  "createTime": "2024-01-01 00:00:00",
+  "updateTime": "2024-01-02 00:00:00"
+}
+
+★ 详情响应与新增请求的区别：
+- 所有记录都有 id
+- 枚举字段同时返回 code 和 label
+- 关联数据返回完整对象（含名称），不只是 ID 数组
+- 包含审计字段
 
 
 ──── 第四层：约束矩阵 ────
@@ -381,10 +485,12 @@ E-4 埋点（如需）
   3.1 数据容器识别（UI层级 → 表层级映射）
   3.2 实体层级与关系图（含 PK/FK/基数/UI来源）
   3.3 字段字典（★ 按实体分表输出，每表含主键、外键、审计字段）
-  3.4 判别字段汇总（含数据层影响）
-  3.5 跨区依赖
-  3.6 保存事务边界
-  3.7 实体关系图（ER图文本表示）
+  3.4 枚举值定义表（面向代码生成）
+  3.5 判别字段汇总（含数据层影响）
+  3.6 跨区依赖
+  3.7 保存事务边界
+  3.8 实体关系图（ER图文本表示）
+  3.9 DDL 预览（CREATE TABLE 语句，含索引和外键注释）
 四、业务规则
   4.1 UI联动规则（RULE穷举）
   4.2 不变量
