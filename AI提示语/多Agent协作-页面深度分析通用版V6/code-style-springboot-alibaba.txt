@@ -1,0 +1,547 @@
+# 代码规范：Spring Boot + MyBatis-Plus + 阿里巴巴 Java 开发规范
+
+> 本文件是「代码生成器通用框架」的可插拔代码规范文件。
+> 代码生成器读取本文件后，按此处的技术栈约定生成 Spring Boot 后端代码。
+> 替换本文件为其他代码规范（如 code-style-dotnet.txt），同一份需求文档可对接不同技术栈。
+
+
+## 技术栈
+
+- 语言：Java 17+
+- 框架：Spring Boot 3.x / Spring Cloud（如涉及）
+- ORM：MyBatis-Plus
+- API 文档：Springdoc OpenAPI (io.swagger.v3.oas.annotations)
+- 对象转换：MapStruct
+- 构建工具：Maven / Gradle
+- 数据库：MySQL 8.x
+
+
+## 架构哲学（所有规则的源头）
+
+以下 7 条原则决定了所有具体规则的方向。
+遇到规则未覆盖的场景时，回到这 7 条原则做判断。
+
+P-1 单向依赖，禁止逆流
+    Controller → Service → Mapper/Repository
+    上层可以调用下层，下层绝不反向依赖上层。
+    Service 之间可以互调（同层），但禁止循环依赖。
+    实际约束：Controller 不出现 Mapper；Entity 不出现 DTO/VO。
+
+P-2 契约驱动，代码即文档
+    前后端的唯一契约是 DTO/VO 的结构 + @Schema 注解。
+    写完代码 = 写完文档 = Apifox 可直接导入。
+    目标：前后端联调零口头沟通，所有约定在注解中自描述。
+
+P-3 显式优于隐式
+    枚举值写明含义，不靠口头约定。
+    条件校验写在代码里，不靠文档描述。
+    字段类型转换写在固定位置（Convert 层），不在各处散落。
+    错误提示是完整的中文句子，不是 error code 需要查表。
+
+P-4 变更局部化
+    改一个业务规则，只改一个文件。
+    枚举定义集中、校验规则集中、转换逻辑集中。
+    禁止同一逻辑散布在 Controller + Service + Mapper 三层。
+
+P-5 防御性编码，快速失败
+    入口校验（@Valid + JSR-303）拦截非法数据，不让脏数据穿透到 Service。
+    Service 层校验业务规则，不让非法状态穿透到数据库。
+    数据库层约束是最后防线，不是唯一防线。
+
+P-6 安全零信任
+    不信任前端传来的任何数据——ID 可能被篡改、枚举值可能越界、用户可能伪造身份。
+    每一层都假设上一层可能失守。数据归属必须校验，不能只靠前端隐藏按钮。
+
+P-7 可演进性
+    今天写的代码，半年后另一个人来改。
+    枚举可以加值但不改旧值、接口可以加字段但不删旧字段、表可以加列但不改旧列。
+    向后兼容是默认选择，破坏兼容需要显式版本号。
+
+
+## 分层职责（严格执行，不可越层）
+
+┌─ Controller 层 ──────────────────────────────────────┐
+│ 职责：接收请求 → 参数校验(@Valid) → 调用Service → 包装响应  │
+│ 禁止：写业务逻辑、直接调Mapper、做数据转换              │
+│ 原则：Controller 是薄的，只做"接线员"                   │
+└──────────────────────────────────────────────────────┘
+           ↓ 只传 DTO，不传 Entity/VO
+┌─ Service 层 ─────────────────────────────────────────┐
+│ 职责：业务逻辑、事务管理、条件校验、调用 Mapper/其他 Service │
+│ 原则：所有业务规则的唯一归属地                          │
+│ 返回：Entity 或 内部对象，不返回 VO                     │
+└──────────────────────────────────────────────────────┘
+           ↓ 只操作 Entity
+┌─ Mapper 层 ──────────────────────────────────────────┐
+│ 职责：数据访问，SQL 执行                               │
+│ 禁止：写业务逻辑、抛业务异常                            │
+│ 原则：Mapper 是纯粹的数据通道                          │
+└──────────────────────────────────────────────────────┘
+
+┌─ Convert 层（横切）──────────────────────────────────┐
+│ 职责：DTO ↔ Entity ↔ VO 的对象转换（MapStruct）       │
+│ ★ 枚举 code→label 的转换在此层统一处理                 │
+│ 禁止：使用 BeanUtils.copyProperties（无编译期检查）     │
+└──────────────────────────────────────────────────────┘
+
+
+## 包结构（约定大于配置）
+
+com.{company}.{project}
+  ├── common/              ← 全局基础设施（整个项目共享）
+  │   ├── result/          ← Result、PageRespVO、ErrorCode
+  │   ├── exception/       ← BusinessException、GlobalExceptionHandler
+  │   ├── config/          ← 全局配置（Jackson、MyBatis-Plus、Swagger）
+  │   └── util/            ← 工具类（严格限制数量，不做万能工具箱）
+  ├── module/
+  │   └── {业务模块}/       ← 如 storedvalue、order、member
+  │       ├── controller/
+  │       ├── service/
+  │       │   └── impl/
+  │       ├── mapper/
+  │       ├── entity/
+  │       ├── dto/
+  │       ├── vo/
+  │       ├── convert/
+  │       └── enums/
+  └── Application.java
+
+★ 每个业务模块内部自治，模块间通过 Service 接口通信，不跨模块访问 Mapper。
+
+
+## 命名规范（消除歧义，一眼看出用途）
+
+| 类型 | 命名规则 | 示例 |
+|------|---------|------|
+| Entity | 业务名（单数） | StoredValuePackage |
+| CreateDTO | Xxx + CreateReqDTO | StoredValuePackageCreateReqDTO |
+| UpdateDTO | Xxx + UpdateReqDTO | StoredValuePackageUpdateReqDTO |
+| QueryDTO | Xxx + QueryReqDTO | StoredValuePackageQueryReqDTO |
+| 列表VO | Xxx + RespVO | StoredValuePackageRespVO |
+| 详情VO | Xxx + DetailRespVO | StoredValuePackageDetailRespVO |
+| Convert | Xxx + Convert | StoredValuePackageConvert |
+| 枚举 | Xxx + Enum | DateTypeEnum |
+| 错误码 | ErrorCode（统一枚举，按模块分区） | ErrorCode.PACKAGE_NOT_FOUND |
+| 数据库表 | t_{模块}_{业务名} | t_stored_value_package |
+| 方法-创建 | create | createPackage |
+| 方法-更新 | update | updatePackage |
+| 方法-查详情 | getDetail | getPackageDetail |
+| 方法-查列表 | getPage / list | getPackagePage |
+| 方法-删除 | delete | deletePackage |
+
+★ 禁止的命名：add（用create）、modify（用update）、remove（用delete）、query（用getXxx）
+★ Boolean 字段：is 前缀（isEnabled），禁止用 flag / status 做 Boolean。
+
+
+## 数据类型映射（通用SQL → MySQL → Java）
+
+代码生成器使用此表将需求文档中的通用SQL类型翻译为 MySQL 建表类型和 Java 字段类型：
+
+| 通用SQL类型 | MySQL 类型 | Java 类型 | 说明 |
+|------------|-----------|-----------|------|
+| VARCHAR(N) | VARCHAR(N) | String | 变长字符串 |
+| INTEGER | INT | Integer | 整数（枚举值等） |
+| BIGINT | BIGINT | Long | 长整数（主键、外键） |
+| DECIMAL(p,s) | DECIMAL(p,s) | BigDecimal | 精确小数（金额等） |
+| BOOLEAN | TINYINT(1) | Integer | MyBatis-Plus 兼容，代码中用 0/1 |
+| DATE | DATE | LocalDate | 日期 |
+| TIMESTAMP | DATETIME | LocalDateTime | 时间戳 |
+| TEXT | TEXT | String | 长文本 |
+
+
+## 主键策略
+
+MySQL AUTO_INCREMENT + @TableId(type = IdType.AUTO)
+
+
+## 审计字段模板
+
+每个 [OWN] 实体的数据库表必须包含以下审计字段：
+
+```sql
+create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+create_by BIGINT NOT NULL COMMENT '创建人ID',
+deleted TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0=未删除 1=已删除'
+```
+
+对应 Entity 字段：
+- createTime: LocalDateTime, @TableField(fill = FieldFill.INSERT)
+- updateTime: LocalDateTime, @TableField(fill = FieldFill.INSERT_UPDATE)
+- createBy: Long
+- deleted: Integer, @TableLogic
+
+
+## 物理模型优化规则
+
+★ 此章节定义从逻辑模型到物理模型的优化策略。
+  代码生成器在「物理模型决策」步骤中使用这些规则。
+
+核心问题：MyBatis-Plus 中每张表 = Entity + Mapper + Service + Controller 全套代码，
+表过多会导致启动加载慢、事务链路复杂、代码维护成本高。
+目标：一个功能模块的物理表控制在 3-5 张。
+
+■ 合并为 JSON 的判定条件（满足任意一条即可合并）：
+  - 纯 ID 列表（多选关联的ID） → brand_ids JSON [1,2,3]
+  - 只有 1-2 个业务字段的子记录 → periods JSON [{"start":"09:00","end":"12:00"}]
+  - 简单值列表（日期、编码等） → exclude_dates JSON ["2026-04-05"]
+  - 数量有限（< 20）且不需要独立查询
+  - 只随主表一起读写，不被其他模块引用
+
+■ 必须独立建表的条件（满足任意一条即不可合并）：
+  - 子记录有 3+ 个业务字段（不含 id/FK/审计字段）
+  - 需要按子记录字段做条件查询或报表统计
+  - 子记录有独立状态或生命周期
+  - 子记录数量可能很大（100+）
+  - 子记录被其他业务模块通过 FK 引用
+
+■ 实现要点：
+  - JSON 字段用 MySQL JSON 类型
+  - MyBatis-Plus 用 @TableField(typeHandler = JacksonTypeHandler.class) 映射
+  - DTO/VO 结构不变（前端仍提交嵌套 JSON），只是存储层合并
+  - 保存逻辑简化：合并的子数据不需要 DELETE+INSERT，直接更新父表 JSON 列
+  - 逻辑模型中的实体关系仍然成立，只是物理存储方式变了
+
+
+## 契约规范（前后端零沟通成本）
+
+★ 核心目标：后端代码写完 → Apifox 导入 → 前端直接开发，中间不需要任何口头沟通。
+
+### 统一响应结构
+
+所有接口必须返回统一包装：Result.success(data) / Result.fail(ErrorCode.XXX)
+
+```json
+{
+  "code": 0,
+  "message": "操作成功",
+  "data": { ... }
+}
+```
+
+### DTO / VO 分离（入参出参严格分开）
+
+- DTO：接收前端请求，命名 XxxCreateReqDTO / XxxUpdateReqDTO / XxxQueryReqDTO
+- VO：返回给前端，命名 XxxRespVO / XxxDetailRespVO
+- 禁止：Entity 直接暴露给前端；同一个类既做入参又做出参
+
+### 枚举值一致性（★ DTO 与 VO 必须对称）
+
+- DTO 入参枚举字段：Integer 类型，字段名 xxxCode（如 dateTypeCode）
+- VO 出参枚举字段：同时返回 xxxCode(Integer) + xxxLabel(String)
+- ★ DTO 的 xxxCode 与 VO 的 xxxCode 必须完全同名
+- 嵌套 DTO/VO 中的枚举字段递归遵循同样规则
+- code→label 转换统一在 Convert 层处理
+
+### 字段序列化（防前端踩坑）
+
+| 字段类型 | 处理方式 | 原因 |
+|---------|---------|------|
+| Long ID | @JsonSerialize(using = ToStringSerializer.class) | JS 精度丢失 |
+| BigDecimal | @JsonSerialize(using = ToStringSerializer.class) | JS 精度丢失 |
+| LocalDateTime | @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+8") | 格式统一 |
+| 枚举 | xxxCode(Integer) + xxxLabel(String) | 前端直接展示 |
+| Boolean | isXxx 命名 | 语义清晰 |
+
+### 分页规范
+
+所有列表查询继承 PageReqDTO，响应用 PageRespVO<T> 包装：
+- PageReqDTO 固定字段：pageNum(int, 默认1)、pageSize(int, 默认10, 最大100)
+- PageRespVO<T> 固定字段：total(long)、list(List<T>)、pageNum(int)、pageSize(int)
+
+### API 文档注解（代码 = 文档，不可省略）
+
+使用 Springdoc OpenAPI 注解体系：
+- Controller 类：@Tag(name, description)
+- Controller 方法：@Operation(summary, description) + @ApiResponse
+- DTO/VO 类：@Schema(description)
+- DTO/VO 每个字段（无一例外）：@Schema(description, example, requiredMode)
+- 枚举字段 description 必须列出所有值
+- 嵌套对象说明约束（如"最多5个"）
+
+### 错误码规范
+
+错误码用统一枚举管理，格式：模块编号(4位) + 序号(3位)，如 1001001。
+错误信息必须是完整的中文句子。
+禁止在代码中硬编码错误信息字符串。
+
+
+## 代码质量规范
+
+### 参数校验（三道防线）
+
+第一道 — Controller 入口（@Valid + JSR-303）：
+  - DTO 必须加 @NotNull / @NotBlank / @Size / @Min / @Max
+  - message 必须中文：@NotBlank(message = "活动名称不能为空")
+
+第二道 — Service 业务校验：
+  - 条件必填（RULE 规则）在 Service 层用 if 校验
+  - 业务规则冲突抛 BusinessException(ErrorCode.XXX)
+
+第三道 — 数据库约束（最后防线）：
+  - NOT NULL、UNIQUE、外键约束
+
+### 事务管理
+
+- 写操作：@Transactional(rollbackFor = Exception.class)
+- 只读操作：@Transactional(readOnly = true)
+- ★ @Transactional 只加在 Service 实现类的 public 方法上
+- ★ 事务方法内禁止调用外部 HTTP/RPC
+- ★ 大批量数据操作拆分小事务
+
+### 数据访问（MyBatis-Plus 最佳实践）
+
+- 批量插入用 saveBatch()
+- 批量更新用 updateBatchById()
+- 删除子表用 remove(Wrappers.<T>lambdaQuery().eq(T::getParentId, parentId))
+- ★ 禁止 SELECT *，查列表用 select(字段列表)
+- ★ 分页必须用 MyBatis-Plus 的 Page 对象
+- ★ 防止 N+1 查询：子表数据用 IN 批量查
+
+### 并发安全
+
+- 库存/配额/余额：Redis INCR + LUA 脚本保证原子性
+- 关键数据：数据库乐观锁（@Version）或悲观锁（SELECT FOR UPDATE）
+- 幂等接口：唯一请求ID（requestId）+ Redis 去重
+
+### 异常处理
+
+- 业务异常：throw new BusinessException(ErrorCode.XXX)
+- 系统异常：log.error() 记录完整堆栈后，返回通用错误提示
+- ★ 禁止 catch(Exception e) 后不处理（空 catch）
+
+### 日志规范
+
+- 类级别加 @Slf4j
+- 日志消息用 {} 占位符
+- 禁止打印敏感信息
+- 格式统一：log.info("[{操作名}] {关键参数}={},...", value)
+
+必须打日志的节点：
+  1. Service 层写操作入口和完成
+  2. 关键业务分支（if/switch 走了哪条路）
+  3. 状态变更（前后状态）
+  4. 外部调用（调用前+调用后/异常）
+  5. 异常处理（业务异常WARN + 系统异常ERROR带堆栈）
+
+### 注释规范
+
+必须有：类 Javadoc、Entity 对应表名、Service 每个 public 方法 Javadoc、枚举类用途
+禁止：// getter setter、代码能自解释的地方不加注释
+
+### 安全编码
+
+- 数据归属校验：UPDATE/DELETE 必须先查数据 → 校验归属
+- 多租户隔离：Entity 含 tenant_id，查询自动拼接
+- 敏感数据脱敏：VO 中返回脱敏格式
+- 输入防注入：LambdaQueryWrapper 优先，自定义SQL用 #{}
+- 接口防刷：写接口加频率限制
+
+### 逻辑删除的查询陷阱
+
+- 唯一性校验要考虑已删除数据：UNIQUE(name, deleted) 或删除时改名
+- JOIN 子表需手动加 AND sub.deleted = 0
+
+### 领域事件
+
+业务操作完成后触发其他动作时用 Spring 事件机制解耦：
+- applicationEventPublisher.publishEvent(new XxxEvent(id))
+- @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+
+### 依赖注入规范
+
+- ★ 必须使用构造器注入（@RequiredArgsConstructor），禁止 @Autowired 字段注入
+- 依赖超过 5 个时考虑拆分 Service
+- 禁止用 @Lazy 掩盖循环依赖
+
+### 嵌套 DTO 校验传递
+
+嵌套的子 DTO List 必须加 @Valid：
+```java
+@Valid
+@NotEmpty(message = "至少需要一个档位")
+@Size(max = 5, message = "档位最多5个")
+private List<TierCreateReqDTO> tiers;
+```
+★ 多层嵌套时每层都要加 @Valid
+
+### 定时任务规范
+
+- 多实例部署必须用分布式锁（Redisson / ShedLock）
+- 每次执行记录日志：开始+结束+处理数量
+
+### 接口幂等实现
+
+方案一：Token 令牌（表单提交）— GET /api/idempotent/token + Header Idempotent-Token
+方案二：业务唯一键 — UNIQUE 约束 + catch DuplicateKeyException
+★ 每个 POST 写接口必须选择其中一种
+
+### CORS 跨域配置
+
+前后端分离必须配置，生产环境 allowedOriginPatterns 配具体域名。
+
+### 全局请求拦截
+
+AccessLogInterceptor：自动记录访问日志 + 慢接口告警（>3s）。
+
+### 可演进性
+
+- 枚举：新增值加在末尾，不改已有值的 code
+- 接口：新增可选字段，不删旧字段
+- 数据库：加列给默认值，禁止删列/改列类型
+
+
+## 微服务规范（如涉及）
+
+### 服务间通信
+- 同步：OpenFeign，接口命名 XxxClient
+- 异步：消息队列（RocketMQ/RabbitMQ），消费者做幂等
+- 禁止微服务间共享数据库
+
+### 弹性设计
+- 远程调用必须配超时 + 关键调用加熔断 + 非关键调用加降级
+
+### 配置管理
+- 配置分层：yml → profile yml → 配置中心
+- 敏感配置放配置中心或环境变量
+- 用 @ConfigurationProperties 绑定
+
+### 健康检查与优雅停机
+- /actuator/health + server.shutdown=graceful
+
+### 链路追踪
+- Micrometer Tracing，日志含 traceId
+
+
+## 各层生成规范
+
+### Entity 层
+- @TableName("t_{业务名}")
+- ID：@TableId(type = IdType.AUTO) + @JsonSerialize(using = ToStringSerializer.class)
+- 必含：create_time、update_time（@TableField(fill=...)）、deleted（@TableLogic）
+- 多租户含 tenant_id
+- 加 @Schema 类注解 + Javadoc
+- ★ 每个 [OWN] 实体生成独立 Entity
+- ★ 子表 Entity 含父表外键字段
+- ★ [REF] 引用实体不生成 Entity
+- ★ 逻辑删除+唯一约束：UNIQUE(name, deleted)
+
+### DTO 层
+- 每个类和字段加 @Schema
+- 枚举字段用 Integer，字段名 xxxCode
+- 校验注解：BLOCK 级约束 → @NotNull/@NotBlank；范围 → @Min/@Max/@Size
+- message 必须中文
+- 条件必填在 Service 层校验
+- ★ 嵌套结构按接口数据结构生成
+- ★ UpdateReqDTO 的明细列表元素含可选 id
+
+### 枚举层
+- ★ 按枚举值定义表为每个枚举字段生成独立枚举类
+- 含：code(int)、label(String)、构造器、getByCode、getLabelByCode
+- 加 @Schema + Javadoc
+- Entity 中枚举字段用 Integer
+
+### VO 层
+- 每个类和字段加 @Schema
+- ★ 枚举字段同时返回 xxxCode + xxxLabel
+- xxxLabel 加 accessMode = READ_ONLY
+- 详情 VO 嵌套子表 VO 的 List
+
+### Convert 层（MapStruct）
+- 每个 [OWN] 实体一个 Convert 接口
+- ★ 枚举 code→label 转换在此层
+- DTO→Entity、Entity→VO、Entity→DetailVO 各一个方法
+
+### Service 层
+- 写操作 @Transactional(rollbackFor = Exception.class)
+- 查询 @Transactional(readOnly = true)
+- ★ 保存方法按事务边界处理：主表操作 → 子表整体替换 → 关联表整体替换
+- ★ 后端业务层规则在此实现
+- ★ UPDATE/DELETE 先查数据 → 校验归属 → 再操作
+
+### Controller 层
+- @Tag + @Operation + @ApiResponse
+- 参数加 @Valid
+
+
+## 测试工具适配
+
+测试用例输出为 Apifox 可导入格式。
+
+每条用例含：
+- 用例编号和名称
+- 接口 Method + Path
+- 完整请求体 JSON
+- 预期状态码和响应
+- 覆盖的规则编号
+
+覆盖率自检表中额外检查：
+- 每个 DTO/VO 类有 @Schema 类注解
+- 每个字段有 @Schema 字段注解（含 description + example）
+- Controller 有 @Tag + @Operation + @ApiResponse
+- 枚举字段 description 含完整枚举值说明
+- 响应体嵌套结构完整
+
+
+## 建表脚本模板（MySQL 方言）
+
+将需求文档中的通用SQL逻辑建表预览，翻译为 MySQL 方言：
+
+```sql
+-- 通用SQL → MySQL 翻译规则：
+-- BIGINT PRIMARY KEY          → BIGINT AUTO_INCREMENT PRIMARY KEY
+-- INTEGER NOT NULL DEFAULT 1  → TINYINT NOT NULL DEFAULT 1 （枚举字段用TINYINT）
+-- INTEGER NOT NULL            → INT NOT NULL （普通整数用INT）
+-- BOOLEAN NOT NULL DEFAULT FALSE → TINYINT NOT NULL DEFAULT 0
+-- TIMESTAMP NOT NULL          → DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+-- 更新时间字段追加            → ON UPDATE CURRENT_TIMESTAMP
+-- 字段注释用                  → COMMENT '...'
+-- 表注释用                    → COMMENT='...'
+-- 引擎指定                    → ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+
+-- 示例：
+CREATE TABLE t_stored_value_package (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  activity_name VARCHAR(100) NOT NULL COMMENT '活动名称',
+  date_type TINYINT NOT NULL DEFAULT 1 COMMENT '活动日期类型: 1=指定日期 2=永久有效',
+  start_date DATE NULL COMMENT '开始日期, date_type=1时必填',
+  end_date DATE NULL COMMENT '结束日期, date_type=1时必填',
+  status TINYINT NOT NULL DEFAULT 0 COMMENT '状态: 0=草稿 1=启用 2=停用',
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  create_by BIGINT NOT NULL COMMENT '创建人ID',
+  deleted TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0=未删除 1=已删除'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='储值套餐主表';
+
+CREATE INDEX idx_svp_create_by ON t_stored_value_package(create_by);
+```
+
+
+## 代码生成顺序
+
+第一次使用（基础设施层）：
+  Result.java / PageReqDTO.java / PageRespVO.java
+  BusinessException.java / ErrorCode.java / GlobalExceptionHandler.java
+  JacksonConfig.java / MyBatisPlusConfig.java / CorsConfig.java
+  AccessLogInterceptor.java / BaseEntity.java / AsyncConfig.java
+  IdempotentInterceptor.java（如需）
+
+每个业务模块：
+  1. 枚举类 → 2. Entity → 3. DTO → 4. VO → 5. Mapper → 6. Convert → 7. Service → 8. Controller → 9. 建表脚本 → 10. 测试用例
+
+
+## 输出格式要求
+
+1. 每个文件前标注完整路径
+2. DTO 字段覆盖需求文档所有输入项
+3. VO 字段满足前端展示需求
+4. 涉及并发的方法加注释说明防护方案
+5. 基于假设的代码加 // [⚠️ 假设] 注释
+6. 输出「前端联调说明」：
+   - 统一响应格式示例
+   - 分页约定
+   - 字段类型注意事项（ID→String、金额→String、时间格式）
+   - ★ 枚举字段约定 + 枚举值速查表
+   - 错误码对照表
+   - 假设标记说明
+7. ★ Apifox 导入验证清单
