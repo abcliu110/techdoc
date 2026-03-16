@@ -37,6 +37,15 @@ R-2 DTO / VO 分离原则
 - VO：返回给前端，命名 XxxRespVO / XxxDetailRespVO
 - 禁止：Entity 直接暴露给前端；同一个类既做入参又做出参
 
+R-2.5 枚举值一致性规范（★ DTO 与 VO 必须统一）
+- DTO 入参中的枚举字段：用 Integer 类型接收 code 值，字段名为 xxxCode（如 dateTypeCode）
+- VO 出参中的枚举字段：必须同时返回 xxxCode(Integer) 和 xxxLabel(String)
+- ★ 一致性要求：DTO 入参的枚举字段名必须与 VO 出参的 code 字段名完全一致
+  - 正确：DTO 用 dateTypeCode → VO 用 dateTypeCode + dateTypeLabel
+  - 错误：DTO 用 dateType → VO 用 dateTypeCode + dateTypeLabel（名称不一致）
+- 枚举的 code→label 转换统一在 Convert 层（MapStruct）处理，不在 Controller 或 Service 中散落
+- 嵌套 DTO/VO 中的枚举字段也必须遵循同样规则（递归一致）
+
 R-3 分页规范
 所有列表查询继承 PageReqDTO，响应用 PageRespVO<T> 包装：
   public class XxxQueryReqDTO extends PageReqDTO { ... }
@@ -46,7 +55,7 @@ R-4 字段序列化规范
 - Long 类型 ID：加 @JsonSerialize(using = ToStringSerializer.class)（防 JS 精度丢失）
 - BigDecimal 金额：加 @JsonSerialize(using = ToStringSerializer.class)
 - 时间字段：用 LocalDateTime，加 @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-- 枚举字段：同时返回 xxxCode（int）和 xxxLabel（String）
+- 枚举字段：DTO 入参用 Integer xxxCode，VO 出参同时返回 xxxCode(Integer) + xxxLabel(String)
 
 R-5 参数校验规范
 - DTO 必须加 JSR-303 注解（@NotNull / @NotBlank / @Size / @Min / @Max）
@@ -80,6 +89,62 @@ R-10 日志规范
 - 关键业务操作记录 INFO 日志：操作类型 | 操作人ID | 业务ID | 关键参数
 - 异常记录 ERROR 日志，包含完整堆栈
 
+R-11 API 文档注解规范（★ 面向 Apifox / Swagger，必须执行）
+- 目标：代码注解即文档，导入 Apifox 或 Swagger UI 后无需手动补充
+- 使用 Springdoc OpenAPI (io.swagger.v3.oas.annotations) 注解体系
+
+Controller 类注解：
+  @Tag(name = "储值套餐管理", description = "储值套餐的新增、编辑、查询、删除等操作")
+
+Controller 方法注解：
+  @Operation(summary = "新增储值套餐", description = "创建一个新的储值套餐，包含档位和礼品配置")
+  @ApiResponse(responseCode = "200", description = "创建成功")
+
+DTO / VO 类注解：
+  @Schema(description = "新增储值套餐请求体")
+  public class StoredValuePackageCreateReqDTO { ... }
+
+DTO / VO 字段注解（★ 每个字段必须加，不可省略）：
+  @Schema(description = "活动名称", example = "双十一储值活动", requiredMode = Schema.RequiredMode.REQUIRED)
+  private String activityName;
+
+  @Schema(description = "活动日期类型: 1=指定日期 2=永久有效", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
+  private Integer dateTypeCode;
+
+  @Schema(description = "活动日期类型名称", example = "指定日期", accessMode = Schema.AccessMode.READ_ONLY)
+  private String dateTypeLabel;
+
+  @Schema(description = "品牌ID列表", example = "[1,2,3]")
+  private List<Long> brandIds;
+
+  @Schema(description = "储值档位列表，最多5个")
+  private List<TierCreateReqDTO> tiers;
+
+枚举类注解：
+  @Schema(description = "活动日期类型枚举")
+  public enum DateTypeEnum { ... }
+
+★ @Schema 注解要求：
+  - description 必须用中文，简洁描述业务含义
+  - 枚举字段的 description 必须列出所有枚举值含义（如 "1=指定日期 2=永久有效"）
+  - example 必须给出合理的示例值
+  - 必填字段加 requiredMode = Schema.RequiredMode.REQUIRED
+  - 只读字段（VO 中的 label 等）加 accessMode = Schema.AccessMode.READ_ONLY
+  - 嵌套对象字段的 description 说明子对象的业务含义和约束（如"最多5个"）
+
+R-12 类与方法注释规范
+- 每个类必须有 Javadoc 类注释，说明业务含义和使用场景：
+  /**
+   * 储值套餐 - 新增请求 DTO
+   * <p>
+   * 对应页面：会员中心 > 储值活动 > 新增储值套餐
+   * 包含主表字段 + 嵌套的档位列表 + 关联的品牌/协议ID列表
+   */
+- Entity 类注释说明对应的数据库表和业务含义
+- Service 接口的每个方法加 Javadoc 说明业务逻辑要点
+- 枚举类注释说明枚举用途和所属字段
+- 禁止无意义注释（如 // getter setter、// 构造方法）
+
 
 ========== 二、各层生成规范 ==========
 
@@ -92,6 +157,10 @@ Entity 层
 - ★ [REF] 引用实体不生成 Entity，只在关联的 [OWN] 实体中用 Long xxxId 字段
 
 DTO 层
+- 每个 DTO 类必须加 @Schema(description = "...") 类注解 + Javadoc 类注释
+- 每个字段必须加 @Schema(description, example, requiredMode) 注解
+- 枚举字段统一用 Integer 类型，字段名为 xxxCode（如 dateTypeCode）
+  - @Schema 的 description 中必须列出所有枚举值含义
 - 校验注解来自 Agent-2 的约束分级（BLOCK级 → @NotNull/@NotBlank，范围约束 → @Min/@Max/@Size）
 - 条件必填（Agent-2 的 RULE 规则）在 Service 层校验，不在 DTO 注解中处理
 - 增强输入包中用户确认的字段长度限制 → @Size(max = N)；确认的取值范围 → @Min/@Max
@@ -104,13 +173,21 @@ DTO 层
 枚举层（V3 新增）
 - ★ 按 Agent-1 的「枚举值定义表」为每个枚举字段生成独立的枚举类
 - 命名：XxxEnum（如 DateTypeEnum、GiftTypeEnum）
-- 必须包含：code(int)、label(String)、构造器、getByCode 静态方法
+- 必须包含：code(int)、label(String)、构造器、getByCode 静态方法、getLabelByCode 静态方法
+- 加 @Schema(description = "...") 类注解 + Javadoc 类注释
 - Entity 中枚举字段类型用 Integer，不直接用枚举类型（兼容 MyBatis-Plus）
+- ★ 枚举类提供 getLabelByCode(Integer code) 方法，供 Convert 层统一调用
 
 VO 层
-- 字段满足前端展示需求（枚举有 label、时间有格式、Long ID 转 String）
+- 每个 VO 类必须加 @Schema(description = "...") 类注解 + Javadoc 类注释
+- 每个字段必须加 @Schema(description, example) 注解
+- 枚举字段必须同时返回 xxxCode(Integer) + xxxLabel(String)：
+  - xxxCode 的 @Schema description 与对应 DTO 的枚举字段完全一致
+  - xxxLabel 加 accessMode = Schema.AccessMode.READ_ONLY
+- ★ 枚举字段命名必须与 DTO 入参一致（DTO 用 dateTypeCode，VO 也用 dateTypeCode）
+- 详情 VO（XxxDetailRespVO）嵌套子表 VO 的 List
 - 列表 VO（XxxRespVO）只包含列表展示字段
-- 详情 VO（XxxDetailRespVO）包含所有字段
+- 字段满足前端展示需求（Long ID 转 String、时间有格式）
 
 Service 层
 - 接口只定义方法签名
@@ -127,9 +204,11 @@ Service 层
 - ★ 涉及多实体保存时，只需一个主 Service（如 StoredValuePackageService），子表操作通过注入子表 Mapper 完成
 
 Controller 层
-- 加 @Tag(name = "{模块名}") 用于 Swagger 分组
-- 每个方法加 @Operation(summary = "{接口说明}")
+- 加 @Tag(name = "{模块中文名}", description = "{模块功能描述}") 用于 Swagger/Apifox 分组
+- 每个方法加 @Operation(summary = "{接口说明}", description = "{详细描述}")
+- 每个方法加 @ApiResponse(responseCode = "200", description = "操作成功")
 - API 路径和 Method 来自 Agent-3 的 API 清单
+- Javadoc 注释说明接口的业务场景和注意事项
 
 
 ========== 三、代码生成顺序 ==========
@@ -161,7 +240,14 @@ Controller 层
 6. 最后输出「前端联调说明」，包含：
    - 统一响应格式示例
    - 分页请求/响应约定
-   - 字段类型注意事项（ID转String、金额转String、时间格式、枚举code+label）
+   - 字段类型注意事项（ID转String、金额转String、时间格式）
+   - ★ 枚举字段约定：入参用 xxxCode(Integer)，出参同时返回 xxxCode + xxxLabel，入参出参字段名一致
+   - ★ 枚举值速查表：所有枚举字段的 code→label 映射（前端下拉框/Radio可直接使用）
    - 错误码对照表
    - 本模块特殊约定
    - 假设标记说明（代码中 [⚠️ 假设] 标记的含义及处理方式）
+7. ★ 生成的代码必须可直接导入 Apifox（通过 Swagger/OpenAPI），验证方式：
+   - 每个 DTO/VO 类有 @Schema 类注解
+   - 每个字段有 @Schema 字段注解（含 description + example）
+   - Controller 有 @Tag + @Operation + @ApiResponse
+   - 枚举字段的 description 包含完整的枚举值说明
