@@ -1,0 +1,695 @@
+# 代码规范：nms4cloud 柠檬树SAAS平台（Spring Boot + MyBatis-Flex + 阿里巴巴 Java 开发规范）
+
+可插拔代码规范文件，供代码生成器/Claude Code 读取。基于 nms4cloud 多租户SAAS平台实际技术栈定制。
+
+## 技术栈
+
+| 技术 | 版本 | 说明 |
+|------|------|------|
+| Java | 21 | LTS 版本 |
+| Spring Boot | 3.4.1 | 基础框架 |
+| Spring Cloud | 2024.0.0 | 微服务框架 |
+| Spring Cloud Alibaba | 2022.0.0.0-RC2 | Nacos/RocketMQ 等 |
+| MyBatis-Flex | 1.10.5 | ORM（兼容 MyBatis-Plus 注解） |
+| Sa-Token | 1.34.0 | 认证授权 |
+| Hutool | 5.8.15 | 工具库 |
+| Guava | 33.2.1-jre | Google 工具库 |
+| Forest | 1.5.36 | HTTP 客户端 |
+| Yitter IdGenerator | 1.0.6 | 雪花算法 ID 生成器 |
+| MapStruct | 1.5.5.Final | 对象映射 |
+| Springdoc OpenAPI | io.swagger.v3.oas.annotations | API 文档 |
+| H2 | 2.1.214 | 开发环境数据库 |
+| ClickHouse | 0.3.2 | 分析数据库 |
+| Fastjson2 | — | JSON 序列化 |
+| Docker + Kubernetes | — | 容器化部署（StatefulSet） |
+| Nacos | — | 服务注册与配置中心 |
+| RocketMQ | — | 异步消息 |
+
+## 架构哲学（所有规则的源头，未覆盖场景回到此处判断）
+
+P-1 单向依赖，禁止逆流
+  Controller → Service → Mapper/Repository，下层不反向依赖上层。Service间可互调但禁止循环依赖。Controller不出现Mapper；Entity不出现DTO/VO。
+
+P-2 契约驱动，代码即文档
+  前后端唯一契约=DTO/VO结构+@Schema注解。写完代码=写完文档=Apifox可直接导入。联调零口头沟通。
+
+P-3 显式优于隐式
+  枚举值写明含义；条件校验写在代码里；类型转换在Convert层；错误提示是完整中文句子。
+
+P-4 变更局部化
+  改一个业务规则只改一个文件。枚举/校验/转换逻辑集中。禁止同一逻辑散布三层。
+
+P-5 防御性编码，快速失败
+  入口@Valid+JSR-303拦截非法数据→Service校验业务规则→数据库约束是最后防线非唯一防线。
+
+P-6 安全零信任
+  不信任前端任何数据（ID可能篡改、枚举可能越界、身份可能伪造）。每层假设上层可能失守。数据归属必须校验。
+
+P-7 可演进性
+  枚举可加值不改旧值、接口可加字段不删旧字段、表可加列不改旧列。向后兼容为默认，破坏兼容需显式版本号。
+
+P-8 多租户隔离
+  每张业务表强制包含 mid（商户ID）+ sid（门店ID），数据访问层自动拼接租户条件。跨租户数据不可见、不可改。
+
+## 项目结构
+
+项目采用多模块 Maven 架构，分为三个主要层次：
+
+### 1. nms4cloud-starter（基础设施层）
+通用 starter 模块，提供可复用的基础能力：
+- `nms4cloud-starter-parent`: 父依赖（Web, AOP, Validation, Actuator, Sa-Token, Lombok, Fastjson2, Hutool, Forest, MapStruct 等）
+- `nms4cloud-starter-redis`: Redis 集成
+- `nms4cloud-starter-mybatis-flex`: MyBatis-Flex 集成
+- `nms4cloud-starter-oss`: 对象存储
+- `nms4cloud-starter-rocketmq`: RocketMQ 集成
+- `nms4cloud-starter-mongodb`: MongoDB 集成
+- `nms4cloud-starter-xxjob`: XXL-Job 定时任务
+- `nms4cloud-starter-cloud`: Spring Cloud 集成
+- 其他：mqtt, pdf, shardingsphere 等
+
+### 2. nms4cloud-app（应用层）
+业务应用模块，按业务域划分：
+
+| 层级 | 服务 | 说明 |
+|------|------|------|
+| 1_platform | nms4cloud-platform, nms4cloud-netty, nms4cloud-mq, nms4cloud-reg, nms4cloud-wechat | 平台核心 |
+| 2_business | nms4cloud-biz, nms4cloud-crm, nms4cloud-mall, nms4cloud-payment, nms4cloud-pos, nms4cloud-product, nms4cloud-scm | 业务服务 |
+| 3_customer | nms4cloud-order | 客户侧服务 |
+
+### 服务模块四层结构（每个服务统一遵循）
+```
+nms4cloud-{service}/
+  {service}-api/       ← 对外接口定义（DTO, VO, Feign 接口）
+  {service}-dao/       ← 数据访问层（Entity, Mapper）
+  {service}-service/   ← 业务逻辑层（Service 实现）
+  {service}-app/       ← 应用启动层（Controller, 启动类, 配置文件）
+```
+
+★ 跨服务调用通过 api 模块的 Feign 接口，不跨服务访问 Mapper。
+
+## 分层职责（严格执行，不可越层）
+
+Controller层：接收请求→参数校验(@Valid)→调用Service→包装响应。禁止写业务逻辑、直接调Mapper、做数据转换。Controller是薄的"接线员"。
+  ↓ 只传DTO，不传Entity/VO
+Service层：业务逻辑、事务管理、条件校验、调用Mapper/其他Service。所有业务规则唯一归属地。返回Entity或内部对象，不返回VO。
+  ↓ 只操作Entity
+Mapper层：数据访问，SQL执行。禁止写业务逻辑、抛业务异常。纯数据通道。
+
+Convert层（横切）：DTO↔Entity↔VO对象转换（MapStruct）。★ 枚举code→label转换在此层统一处理。禁止BeanUtils.copyProperties（无编译期检查）。
+
+## 包结构
+
+```
+com.nms4cloud.{module}
+  common/              ← 全局基础设施
+    result/            ← NmsResult、PageResult
+    exception/         ← BusinessException、GlobalExceptionHandler
+    config/            ← 全局配置（Jackson、MyBatis-Flex、Swagger）
+    util/              ← 工具类（严格限制数量）
+  module/
+    {业务模块}/         ← 如 product、order、member
+      controller/ service/impl/ mapper/ entity/ dto/ vo/ convert/ enums/
+  Application.java
+```
+
+★ 每个业务模块内部自治，模块间通过Service接口通信，不跨模块访问Mapper。
+
+## 命名规范
+
+| 类型 | 命名规则 | 示例 |
+|------|---------|------|
+| Entity | 业务名（单数） | Product |
+| 新增DTO | XxxAddDTO | ProductAddDTO |
+| 修改DTO | XxxUpdateDTO | ProductUpdateDTO |
+| 查询DTO | XxxQueryDTO | ProductQueryDTO |
+| 列表VO | XxxListVO | ProductListVO |
+| 详情VO | XxxVO | ProductVO |
+| Convert | XxxConvert | ProductConvert |
+| 枚举 | XxxEnum | ProductStatusEnum |
+| 错误码 | ErrorCode（统一枚举，按模块分区） | ErrorCode.PRODUCT_NOT_FOUND |
+| 数据库表 | {模块}_{业务名}（无 t_ 前缀） | product_category |
+| 方法-创建 | create | createProduct |
+| 方法-更新 | update | updateProduct |
+| 方法-查详情 | getDetail | getProductDetail |
+| 方法-查列表 | getPage / list | getProductPage |
+| 方法-删除 | delete | deleteProduct |
+
+★ 禁止命名：add（用create）、modify（用update）、remove（用delete）、query（用getXxx）
+★ Boolean字段：is前缀（isEnabled），数据库用 is_ 前缀（is_enabled），禁止用flag/status做Boolean。
+
+## 数据类型映射（通用SQL → MySQL → Java）
+
+| 通用SQL类型 | MySQL类型 | Java类型 | 说明 |
+|------------|-----------|-----------|------|
+| VARCHAR(N) | VARCHAR(N) | String | 变长字符串 |
+| INTEGER | INT | Integer | 整数（枚举值等） |
+| BIGINT | BIGINT | Long | 长整数（主键、外键） |
+| DECIMAL(p,s) | DECIMAL(p,s) | BigDecimal | 精确小数（金额等） |
+| BOOLEAN | TINYINT(1) | Integer | 数据库存 0/1，Java 用 Integer |
+| DATE | DATE | LocalDate | 日期 |
+| TIMESTAMP | DATETIME | LocalDateTime | 时间戳 |
+| TEXT | TEXT | String | 长文本 |
+| JSON | JSON | String / 自定义对象 | JSON字段，配合 TypeHandler |
+
+★ Boolean 字段：数据库用 TINYINT，Java 用 Integer（0/1），字段名 is_ 开头。
+
+## 主键与ID策略（pid / mid / sid / lid 四ID体系）
+
+nms4cloud 采用四种ID，每张表必须全部包含：
+
+| ID | 类型 | 生成方式 | 用途 |
+|----|------|---------|------|
+| pid | BIGINT AUTO_INCREMENT | 数据库自增 | 物理主键，仅用于内部索引，不暴露给前端 |
+| mid | BIGINT | 登录上下文注入 | 商户ID，多租户隔离 |
+| sid | BIGINT | 登录上下文注入 | 门店ID，门店数据隔离 |
+| lid | BIGINT UNIQUE | Yitter IdGenerator 雪花算法 | 逻辑编号，全局唯一，作为业务层面的主键 |
+
+★ 关键规则：
+- 前端看到的"ID"一律是 lid，不是 pid
+- 表间外键关联必须使用 lid，禁止使用 pid
+- lid 必须同时在字段定义标记 UNIQUE + 建立 UNIQUE INDEX uk_lid (lid)
+- mid/sid 必须建立普通索引 INDEX idx_mid (mid), INDEX idx_sid (sid)
+
+Entity 对应注解：
+```java
+@Id(keyType = KeyType.Auto)
+private Long pid;
+
+private Long mid;
+private Long sid;
+
+// lid 由 Yitter IdGenerator 生成，插入前赋值
+private Long lid;
+```
+
+## 审计字段模板
+
+每张业务表必须包含以下审计字段：
+
+```sql
+created_by VARCHAR(100) COMMENT '创建人',
+created_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+updated_by VARCHAR(100) COMMENT '更新人',
+updated_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+deleted TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除(0-否,1-是)',
+revision INT NOT NULL DEFAULT 0 COMMENT '乐观锁版本号',
+```
+
+对应Entity字段（MyBatis-Flex）：
+```java
+private String createdBy;        // 创建人，插入时从上下文注入
+private LocalDateTime createdTime;  // @Column(onInsertValue = "now()")
+private String updatedBy;        // 更新人，更新时从上下文注入
+private LocalDateTime updatedTime;  // @Column(onInsertValue = "now()", onUpdateValue = "now()")
+@Column(isLogicDelete = true)
+private Integer deleted;         // 逻辑删除
+@Column(version = true)
+private Integer revision;        // 乐观锁版本号
+```
+
+★ 与旧规范的区别：
+- created_by / updated_by 为 VARCHAR(100)（非 BIGINT），存储用户名
+- 强制 revision（乐观锁），每张表必须有
+- 无 create_by（用 created_by），无 update_time（用 updated_time）
+
+## 多租户规范
+
+### 数据隔离
+- 每张业务表必须包含 mid（商户ID）和 sid（门店ID）
+- 查询时自动拼接 mid/sid 条件（通过拦截器或 MyBatis-Flex 的多租户插件）
+- 写入时自动从登录上下文注入 mid/sid
+
+### 安全规则
+- UPDATE/DELETE 操作必须先查数据 → 校验 mid/sid 归属 → 再操作
+- 跨租户数据不可见、不可改
+- 禁止通过 SQL 跳过租户隔离（如手动拼接不带 mid 的查询）
+
+### Entity 示例
+```java
+@Table("product")
+public class Product {
+    @Id(keyType = KeyType.Auto)
+    private Long pid;
+    private Long mid;      // 商户ID
+    private Long sid;      // 门店ID
+    private Long lid;      // 逻辑编号(雪花算法)
+
+    // 业务字段...
+
+    private String createdBy;
+    private LocalDateTime createdTime;
+    private String updatedBy;
+    private LocalDateTime updatedTime;
+    @Column(isLogicDelete = true)
+    private Integer deleted;
+    @Column(version = true)
+    private Integer revision;
+}
+```
+
+## 物理模型优化规则
+
+★ 从逻辑模型到物理模型的优化策略，用于「物理模型决策」步骤。
+核心问题：每张表=Entity+Mapper+Service+Controller全套，表过多导致启动慢、事务复杂、维护成本高。目标：每功能模块3-5张表。
+
+合并为JSON的条件（满足任一即可合并）：
+- 纯ID列表（多选关联ID）→ brand_ids JSON [1,2,3]
+- 只有1-2个业务字段的子记录 → periods JSON [{"start":"09:00","end":"12:00"}]
+- 简单值列表（日期、编码等）→ exclude_dates JSON ["2026-04-05"]
+- 数量有限(<20)且不需独立查询
+- 只随主表读写，不被其他模块引用
+
+必须独立建表的条件（满足任一即不可合并）：
+- 子记录有3+个业务字段（不含pid/FK/审计字段）
+- 需按子记录字段做条件查询或报表统计
+- 子记录有独立状态或生命周期
+- 子记录数量可能很大(100+)
+- 子记录被其他模块通过FK引用
+
+实现要点：
+- JSON字段用MySQL JSON类型
+- MyBatis-Flex 用 @Column(typeHandler = JacksonTypeHandler.class) 映射
+- DTO/VO结构不变（前端仍提交嵌套JSON），只是存储层合并
+- 合并的子数据不需DELETE+INSERT，直接更新父表JSON列
+- 逻辑模型实体关系仍成立，只是物理存储方式变了
+
+## 契约规范（前后端零沟通成本）
+
+★ 后端写完→Apifox导入→前端直接开发，无需口头沟通。
+
+统一响应：所有接口返回 NmsResult.success(data) / NmsResult.fail(ErrorCode.XXX)
+```json
+{"code": 0, "message": "操作成功", "data": { ... }}
+```
+
+DTO/VO分离（入参出参严格分开）：
+- DTO接收请求：XxxAddDTO / XxxUpdateDTO / XxxQueryDTO
+- VO返回前端：XxxListVO / XxxVO
+- 禁止：Entity直接暴露给前端；同一类既做入参又做出参
+
+枚举值一致性（★ DTO与VO必须对称）：
+- DTO入参枚举字段：Integer类型，字段名xxxCode（如dateTypeCode）
+- VO出参枚举字段：同时返回xxxCode(Integer)+xxxLabel(String)
+- ★ DTO的xxxCode与VO的xxxCode必须完全同名
+- 嵌套DTO/VO中枚举字段递归遵循同样规则
+- code→label转换统一在Convert层
+
+字段序列化：
+| 字段类型 | 处理方式 | 原因 |
+|---------|---------|------|
+| Long ID | @JsonSerialize(using = ToStringSerializer.class) | JS精度丢失 |
+| BigDecimal | @JsonSerialize(using = ToStringSerializer.class) | JS精度丢失 |
+| LocalDateTime | @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+8") | 格式统一 |
+| 枚举 | xxxCode(Integer) + xxxLabel(String) | 前端直接展示 |
+| Boolean | isXxx命名 | 语义清晰 |
+
+分页规范：
+- 列表查询继承 PageReqDTO，响应用 PageResult<T> 包装
+- PageReqDTO：pageNum(int,默认1)、pageSize(int,默认10,最大100)
+- PageResult<T>：total(long)、list(List<T>)、pageNum(int)、pageSize(int)
+
+API文档注解（不可省略）：
+- Controller类：@Tag(name, description)
+- Controller方法：@Operation(summary, description) + @ApiResponse
+- DTO/VO类：@Schema(description)
+- DTO/VO每个字段（无一例外）：@Schema(description, example, requiredMode)
+- 枚举字段description必须列出所有值
+- 嵌套对象说明约束（如"最多5个"）
+
+错误码规范：
+- 统一枚举管理，格式：模块编号(4位)+序号(3位)，如1001001
+- 错误信息必须是完整中文句子
+- 禁止硬编码错误信息字符串
+
+## 枚举类型规范
+
+### 数据库存储
+枚举值在数据库中存储数字编码，多语言翻译由前端语言包或后端 i18n 资源文件负责：
+```sql
+-- ✅ 正确：数据库只存数字编码
+status TINYINT NOT NULL DEFAULT 1 COMMENT '状态：0-禁用，1-启用'
+```
+
+### Java 枚举定义
+所有枚举实现 CommonEnum 接口（如项目已定义），包含：
+- code(int)、label(String)、构造器、getByCode、getLabelByCode
+- 加@Schema+Javadoc
+- Entity中枚举字段用Integer
+
+```java
+@Getter
+@AllArgsConstructor
+public enum ProductStatusEnum {
+    DISABLED(0, "禁用"),
+    ENABLED(1, "启用");
+
+    private final int code;
+    private final String label;
+
+    public static ProductStatusEnum getByCode(int code) {
+        return Arrays.stream(values())
+            .filter(e -> e.code == code)
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("未知的状态编码: " + code));
+    }
+
+    public static String getLabelByCode(int code) {
+        return getByCode(code).label;
+    }
+}
+```
+
+### 最佳实践
+```sql
+-- ✅ 推荐：完整枚举值描述
+tenant_type TINYINT NOT NULL COMMENT '租户类型：1-平台，2-服务商，3-商户'
+
+-- ❌ 不推荐：只有一个枚举值
+is_admin TINYINT COMMENT '是否管理员：1-是'
+
+-- ❌ 不推荐：枚举值描述不完整
+tenant_type TINYINT COMMENT '租户类型'
+
+-- ❌ 不推荐：没有数字编码
+status TINYINT COMMENT '状态：禁用、启用、暂停'
+```
+
+## 国际化（i18n）规范
+
+### 核心原则
+数据库中存储的是数据，不是展示文本。需要多语言展示的场景：
+
+### 枚举的多语言
+枚举的 label 展示由前端语言包负责，数据库和后端只存数字编码：
+```
+// 前端语言包
+common.enum.status.enabled = '启用' / 'Enabled'
+common.enum.status.disabled = '禁用' / 'Disabled'
+```
+
+### 需要多语言的文本字段
+
+**方案一：多字段方案（推荐，字段少时使用）**
+```sql
+CREATE TABLE category (
+  pid BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '物理编号',
+  lid BIGINT NOT NULL UNIQUE COMMENT '逻辑编号(雪花算法)',
+  name VARCHAR(100) NOT NULL COMMENT '名称(中文)',
+  name_en VARCHAR(100) COMMENT '名称(英文)'
+) COMMENT='分类表';
+```
+
+**方案二：JSON 字段方案（字段多时使用）**
+```sql
+CREATE TABLE product (
+  pid BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '物理编号',
+  lid BIGINT NOT NULL UNIQUE COMMENT '逻辑编号(雪花算法)',
+  name_i18n JSON NOT NULL COMMENT '名称(多语言JSON: {"zh-CN":"中文名","en-US":"English Name"})',
+  description_i18n JSON COMMENT '描述(多语言JSON)'
+) COMMENT='商品表';
+```
+
+### 不需要多语言的字段
+系统内部字段、编码字段、技术字段不需要多语言：
+```sql
+code VARCHAR(50) NOT NULL COMMENT '编码'           -- 系统编码，不展示给用户
+created_by VARCHAR(100) COMMENT '创建人'            -- 内部记录
+remark VARCHAR(500) COMMENT '备注'                  -- 管理员内部备注
+```
+
+## 代码质量规范
+
+参数校验三道防线：
+1. Controller入口（@Valid+JSR-303）：DTO加@NotNull/@NotBlank/@Size/@Min/@Max，message必须中文如@NotBlank(message="活动名称不能为空")
+2. Service业务校验：条件必填(RULE规则)用if校验，冲突抛BusinessException(ErrorCode.XXX)
+3. 数据库约束（最后防线）：NOT NULL、UNIQUE、外键
+
+事务管理：
+- 写操作：@Transactional(rollbackFor = Exception.class)
+- 只读：@Transactional(readOnly = true)
+- ★ @Transactional只加在Service实现类public方法上
+- ★ 事务方法内禁止调外部HTTP/RPC
+- ★ 大批量数据操作拆分小事务
+
+数据访问（MyBatis-Flex）：
+- 链式查询优先：QueryChain.of(mapper).where(...).list()
+- 链式更新：UpdateChain.of(mapper).set(...).where(...).update()
+- 批量插入 saveBatch()，批量更新 updateBatch()
+- 删除子表用 QueryChain 构造条件删除
+- ★ 禁止SELECT *，查列表用select(字段列表)
+- ★ 分页必须用 MyBatis-Flex 的 Page 对象
+- ★ 防N+1查询：子表数据用IN批量查
+
+并发安全：
+- 库存/配额/余额：Redis INCR + LUA脚本保证原子性
+- 关键数据：revision 乐观锁（每张表已强制包含）或 SELECT FOR UPDATE
+- 幂等接口：唯一requestId + Redis去重
+
+异常处理：
+- 业务异常：throw new BusinessException(ErrorCode.XXX)
+- 系统异常：log.error()记完整堆栈后返回通用错误提示
+- ★ 禁止空catch
+
+日志规范：
+- 类加@Slf4j，用{}占位符，禁止打印敏感信息
+- 格式：log.info("[{操作名}] {关键参数}={},...", value)
+- 必须打日志：Service写操作入口和完成、关键业务分支、状态变更（前后状态）、外部调用（调用前+后/异常）、异常处理（业务WARN+系统ERROR带堆栈）
+
+注释规范：
+- 必须有：类Javadoc、Entity对应表名、Service每个public方法Javadoc、枚举类用途
+- 禁止：// getter setter、代码能自解释处不加注释
+
+安全编码：
+- 数据归属校验：UPDATE/DELETE先查数据→校验 mid/sid 归属
+- 多租户：Entity含 mid/sid，查询自动拼接
+- 敏感数据：VO返回脱敏格式
+- 防注入：QueryChain/LambdaQuery 优先，自定义SQL用#{}
+- 接口防刷：写接口加频率限制
+
+逻辑删除查询陷阱：
+- 唯一性校验考虑已删除数据：UNIQUE(name, deleted)或删除时改名
+- JOIN子表需手动加AND sub.deleted = 0
+
+领域事件：
+- applicationEventPublisher.publishEvent(new XxxEvent(id))
+- @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+
+依赖注入：
+- ★ 必须构造器注入(@RequiredArgsConstructor)，禁止@Autowired字段注入
+- 依赖超5个时考虑拆分Service
+- 禁止@Lazy掩盖循环依赖
+
+嵌套DTO校验传递：
+```java
+@Valid
+@NotEmpty(message = "至少需要一个档位")
+@Size(max = 5, message = "档位最多5个")
+private List<TierAddDTO> tiers;
+```
+★ 多层嵌套每层都要加@Valid
+
+定时任务：多实例部署必须用分布式锁（Redisson），每次记录日志：开始+结束+处理数量。XXL-Job 作为任务调度平台。
+
+接口幂等：
+- 方案一：Token令牌（表单提交）— GET /api/idempotent/token + Header Idempotent-Token
+- 方案二：业务唯一键 — UNIQUE约束 + catch DuplicateKeyException
+- ★ 每个POST写接口必须选其中一种
+
+CORS：前后端分离必须配置，生产环境allowedOriginPatterns配具体域名。
+
+全局请求拦截：AccessLogInterceptor自动记录访问日志+慢接口告警(>3s)。
+
+可演进性：
+- 枚举：新增值加末尾，不改已有code
+- 接口：新增可选字段，不删旧字段
+- 数据库：加列给默认值，禁止删列/改列类型
+
+## 微服务规范
+
+### 服务间通信
+- 同步：OpenFeign，接口定义在 {service}-api 模块，命名 XxxClient
+- 异步：RocketMQ，消费者做幂等
+- 禁止微服务间共享数据库
+
+### 服务注册与配置
+- 注册中心：Nacos
+- 配置中心：Nacos，共享配置 nms4cloud-shared.yaml
+- 配置文件：bootstrap.yml
+- 敏感配置放 Nacos 配置中心或环境变量
+- 用@ConfigurationProperties绑定
+
+### 认证授权
+- Sa-Token 1.34.0 统一认证
+- 服务间调用通过内部 Token 鉴权
+
+### 弹性设计
+- 远程调用必须配超时+关键调用加熔断（Resilience4j）+非关键调用加降级
+- 使用 Redisson 实现分布式锁
+
+### 健康检查与优雅停机
+- /actuator/health + server.shutdown=graceful
+- Micrometer + Prometheus 采集指标
+- Logstash Logback Encoder 输出结构化日志
+
+### 链路追踪
+- Micrometer Tracing，日志含traceId
+
+## 各层生成规范
+
+Entity层（MyBatis-Flex）：
+- @Table("product")  （表名无 t_ 前缀）
+- 主键：@Id(keyType = KeyType.Auto) private Long pid;
+- 必含四ID：pid, mid, sid, lid
+- 必含审计字段：createdBy, createdTime, updatedBy, updatedTime, deleted(@Column(isLogicDelete=true)), revision(@Column(version=true))
+- lid 字段加 @JsonSerialize(using = ToStringSerializer.class)
+- 加@Schema类注解+Javadoc
+- ★ 每个[OWN]实体生成独立Entity
+- ★ 子表Entity含父表 lid 作为外键字段
+- ★ [REF]引用实体不生成Entity
+- ★ 逻辑删除+唯一约束：UNIQUE(name, deleted)
+
+DTO层：
+- 每个类和字段加@Schema
+- 枚举字段用Integer，字段名xxxCode
+- 校验注解：BLOCK级→@NotNull/@NotBlank；范围→@Min/@Max/@Size
+- message必须中文
+- 条件必填在Service层校验
+- ★ 嵌套结构按接口数据结构生成
+- ★ UpdateDTO的明细列表元素含可选lid（用于区分新增/更新）
+
+枚举层：
+- ★ 按枚举值定义表为每个枚举字段生成独立枚举类
+- 含：code(int)、label(String)、构造器、getByCode、getLabelByCode
+- 加@Schema+Javadoc
+- Entity中枚举字段用Integer
+
+VO层：
+- 每个类和字段加@Schema
+- ★ 枚举字段同时返回xxxCode+xxxLabel
+- xxxLabel加accessMode=READ_ONLY
+- 详情VO嵌套子表VO的List
+- XxxListVO 用于分页列表，XxxVO 用于详情
+
+Convert层（MapStruct）：
+- 每个[OWN]实体一个Convert接口
+- ★ 枚举code→label转换在此层
+- DTO→Entity、Entity→ListVO、Entity→VO各一个方法
+
+Service层：
+- 写操作@Transactional(rollbackFor = Exception.class)
+- 查询@Transactional(readOnly = true)
+- ★ 保存按事务边界：主表操作→子表整体替换→关联表整体替换
+- ★ 后端业务层规则在此实现
+- ★ UPDATE/DELETE先查数据→校验 mid/sid 归属→再操作
+- ★ lid 在 create 方法中通过 IdGenerator 生成并赋值
+
+Controller层：@Tag+@Operation+@ApiResponse，参数加@Valid
+
+## 建表脚本模板（MySQL方言）
+
+标准表模板（所有业务表必须遵循）：
+```sql
+CREATE TABLE {module}_{business_name} (
+  pid BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '物理编号',
+  mid BIGINT NOT NULL COMMENT '商户ID',
+  sid BIGINT NOT NULL COMMENT '门店ID',
+  lid BIGINT NOT NULL UNIQUE COMMENT '逻辑编号(雪花算法)',
+
+  -- 业务字段...
+  name VARCHAR(100) NOT NULL COMMENT '名称',
+  status TINYINT NOT NULL DEFAULT 1 COMMENT '状态：0-禁用，1-启用',
+
+  created_by VARCHAR(100) COMMENT '创建人',
+  created_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  updated_by VARCHAR(100) COMMENT '更新人',
+  updated_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  deleted TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除(0-否,1-是)',
+  revision INT NOT NULL DEFAULT 0 COMMENT '乐观锁版本号',
+
+  INDEX idx_mid (mid),
+  INDEX idx_sid (sid),
+  UNIQUE INDEX uk_lid (lid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='表说明';
+```
+
+通用SQL→MySQL翻译规则：
+```sql
+-- BIGINT PRIMARY KEY          → BIGINT AUTO_INCREMENT PRIMARY KEY
+-- INTEGER NOT NULL DEFAULT 1  → TINYINT NOT NULL DEFAULT 1 （枚举字段用TINYINT）
+-- INTEGER NOT NULL            → INT NOT NULL （普通整数用INT）
+-- BOOLEAN NOT NULL DEFAULT FALSE → TINYINT NOT NULL DEFAULT 0
+-- TIMESTAMP NOT NULL          → DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+-- 更新时间字段追加            → ON UPDATE CURRENT_TIMESTAMP
+-- 字段注释                    → COMMENT '...'
+-- 表注释                      → COMMENT='...'
+-- 引擎                        → ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+```
+
+索引命名规范：
+| 索引类型 | 命名规则 | 示例 |
+|----------|----------|------|
+| 普通索引 | idx_{字段名} | idx_mid |
+| 唯一索引 | uk_{字段名} | uk_lid |
+| 复合索引 | idx_{字段1}_{字段2} | idx_mid_status |
+
+## 新增表检查清单
+
+- [ ] 是否包含所有标准字段（pid, mid, sid, lid, created_by, created_time, updated_by, updated_time, deleted, revision）
+- [ ] lid 字段是否设置了唯一索引（字段 UNIQUE + UNIQUE INDEX uk_lid）
+- [ ] 外键关联是否使用 lid 而非 pid
+- [ ] mid/sid 是否建立索引
+- [ ] 索引命名是否符合规范（idx_/uk_ 前缀）
+- [ ] 枚举字段是否只存数字编码，COMMENT 包含完整枚举值说明
+- [ ] 布尔字段是否以 is_ 开头，类型 TINYINT，COMMENT 包含 0-否，1-是
+- [ ] 表名无 t_ 前缀
+- [ ] 是否有需要面向多语言用户展示的文本字段
+- [ ] 如果有多语言需求，是否选择了合适的存储方案（多字段 or JSON）
+- [ ] revision 字段是否包含（乐观锁强制）
+
+## 测试工具适配
+
+输出为Apifox可导入格式。每条用例含：用例编号和名称、接口Method+Path、完整请求体JSON、预期状态码和响应、覆盖的规则编号。
+
+覆盖率自检额外检查：每个DTO/VO类有@Schema类注解、每个字段有@Schema(含description+example)、Controller有@Tag+@Operation+@ApiResponse、枚举字段description含完整枚举值说明、响应体嵌套结构完整。
+
+## 代码生成顺序
+
+首次（基础设施层）：
+  NmsResult.java / PageReqDTO.java / PageResult.java
+  BusinessException.java / ErrorCode.java / GlobalExceptionHandler.java
+  JacksonConfig.java / MyBatisFlexConfig.java / CorsConfig.java
+  AccessLogInterceptor.java / BaseEntity.java / AsyncConfig.java
+  IdempotentInterceptor.java（如需）
+
+每个业务模块：
+  1.枚举类→2.Entity→3.DTO→4.VO→5.Mapper→6.Convert→7.Service→8.Controller→9.建表脚本→10.测试用例
+
+## 部署规范
+
+### 本地开发
+1. 确保 Java 21 JDK
+2. 启动 Redis
+3. 启动 Nacos 配置中心
+4. 配置 bootstrap.yml 中的 Nacos 地址
+5. 运行服务：mvn spring-boot:run（在 *-app 模块目录下）
+
+### Kubernetes 部署
+1. 构建 Docker 镜像（在 *-app 模块目录下）
+2. 推送到镜像仓库
+3. 应用 K8s 配置：kubectl apply -f k8s/
+4. 使用 StatefulSet 部署有状态服务（如 netty）
+5. 环境变量：NODE_ID, POD_IP, REDIS_HOST, REDIS_PORT 等
+
+### Maven 仓库
+- 阿里云私有仓库：repo-tbmiu
+- URL: https://packages.aliyun.com/613895a803e1c17d57a7630f/maven/repo-tbmiu
+
+## 输出格式要求
+
+1. 每个文件前标注完整路径（含模块层级：api/dao/service/app）
+2. DTO字段覆盖需求文档所有输入项
+3. VO字段满足前端展示需求
+4. 涉及并发的方法加注释说明防护方案（revision乐观锁为默认方案）
+5. 基于假设的代码加 // [⚠️ 假设] 注释
+6. 输出「前端联调说明」：统一响应格式示例、分页约定、字段类型注意事项（lid→String、金额→String、时间格式）、★枚举字段约定+枚举值速查表、错误码对照表、假设标记说明
+7. ★ Apifox导入验证清单

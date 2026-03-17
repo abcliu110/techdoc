@@ -1,0 +1,928 @@
+# 代码规范：nms4cloud-crm 会员模块（Spring Boot + MyBatis-Plus + 阿里巴巴 Java 开发规范）
+
+可插拔代码规范文件，供代码生成器/Claude Code 读取。基于 nms4cloud-crm 会员模块实际代码模式定制。
+
+★ 本规范从 nms4cloud-crm 真实源码中提炼，所有注解、命名、模式均以项目实际使用为准。
+
+## 技术栈
+
+| 技术 | 版本 | 说明 |
+|------|------|------|
+| Java | 21 | LTS 版本 |
+| Spring Boot | 3.4.1 | 基础框架 |
+| Spring Cloud | 2024.0.0 | 微服务框架 |
+| Spring Cloud Alibaba | 2022.0.0.0-RC2 | Nacos/RocketMQ 等 |
+| **MyBatis-Plus** | **3.5.x** | **ORM框架（CRM模块实际使用）** |
+| Sa-Token | 1.34.0 | 认证授权（@SaBizCheckPermission） |
+| Hutool | 5.8.15 | 工具库 |
+| Guava | 33.2.1-jre | Google 工具库 |
+| Forest | 1.5.36 | HTTP 客户端 |
+| Yitter IdGenerator | 1.0.6 | 雪花算法 ID 生成器 |
+| BeanUtilsPlus | 内部工具 | 对象映射（非 MapStruct） |
+| Springdoc OpenAPI | io.swagger.v3.oas.annotations | API 文档 |
+| EasyExcel | alibaba | Excel 导入导出 |
+| Fastjson2 | — | JSON 序列化（@JSONField） |
+| ShardingSphere | — | 分库分表（dao层引入） |
+| Docker + Kubernetes | — | 容器化部署 |
+| Nacos | — | 服务注册与配置中心 |
+| RocketMQ | — | 异步消息 |
+
+★ CRM 模块使用 MyBatis-Plus（com.baomidou），不是 MyBatis-Flex。注解体系为 @TableName/@TableId/@TableField/@TableLogic。
+
+## 架构哲学（所有规则的源头，未覆盖场景回到此处判断）
+
+P-1 单向依赖，禁止逆流
+  Controller → ServicePlus → IService/Mapper，下层不反向依赖上层。ServicePlus间可互调但禁止循环依赖。Controller不出现Mapper；Entity不出现DTO/VO。
+
+P-2 契约驱动，代码即文档
+  前后端唯一契约=DTO/VO结构+@Schema注解。写完代码=写完文档=Apifox可直接导入。联调零口头沟通。
+
+P-3 显式优于隐式
+  枚举值写明含义；条件校验写在代码里；类型转换统一处理；错误提示是完整中文句子。
+
+P-4 变更局部化
+  改一个业务规则只改一个文件。枚举/校验/转换逻辑集中。禁止同一逻辑散布三层。
+
+P-5 防御性编码，快速失败
+  入口@Valid+JSR-303拦截非法数据→Service校验业务规则→数据库约束是最后防线非唯一防线。
+
+P-6 安全零信任
+  不信任前端任何数据（ID可能篡改、枚举可能越界、身份可能伪造）。每层假设上层可能失守。数据归属必须校验。
+
+P-7 可演进性
+  枚举可加值不改旧值、接口可加字段不删旧字段、表可加列不改旧列。向后兼容为默认，破坏兼容需显式版本号。
+
+P-8 多租户隔离
+  每张业务表强制包含 mid（商户ID）+ sid（门店ID），数据访问层拼接租户条件。跨租户数据不可见、不可改。
+
+## 项目结构（nms4cloud-crm 四层模块）
+
+```
+nms4cloud-crm/                        ← 父 POM（会员模块）
+  nms4cloud-crm-api/                  ← 对外接口定义
+    com.nms4cloud.crm.api/
+      dto/                            ← 请求DTO（474+类）
+      vo/                             ← 响应VO（88+类）
+      enums/                          ← 枚举定义（50+类）
+      constant/                       ← 常量
+      feign/                          ← Feign 远程接口
+      model/                          ← 领域模型
+  nms4cloud-crm-dao/                  ← 数据访问层
+    com.nms4cloud.crm.dao/
+      entity/                         ← 实体类（80+类）
+      mapper/                         ← MyBatis-Plus Mapper接口（82+类）
+      service/                        ← IService 接口及实现
+    resources/mapper/                  ← MyBatis XML（多为空模板，SQL由MP生成）
+  nms4cloud-crm-service/              ← 业务逻辑层
+    com.nms4cloud.crm.service/
+      *ServicePlus.java               ← 标准业务服务
+      balance/                        ← 卡余额服务
+      biz/                            ← 业务聚合服务
+      card/                           ← 卡操作服务
+      charge/                         ← 充值服务
+      property/                       ← 配置属性
+      sync/                           ← 数据同步/导入
+      user/                           ← 用户登录/注册
+  nms4cloud-crm-app/                  ← 应用启动层
+    com.nms4cloud.crm.app/
+      controller/                     ← REST控制器（68+类）
+        biz/                          ← 业务聚合
+        card/                         ← 卡操作
+        charge/                       ← 充值
+        deal/                         ← 交易（Lock/Unlock/Commit/Cancel/Preview/Rollback）
+        debug/                        ← 调试
+        rebate/                       ← 返利
+        report/                       ← 报表
+        user/                         ← 用户端
+    resources/
+      bootstrap.yml                   ← Nacos 配置
+      logback-spring.xml              ← 日志配置
+```
+
+### 依赖链
+```
+nms4cloud-crm-app
+  → nms4cloud-crm-service
+      → nms4cloud-crm-dao
+      │   → nms4cloud-crm-api
+      │   → nms4cloud-starter-shardingsphere
+      → nms4cloud-platform-api
+      → nms4cloud-wechat-api
+      → nms4cloud-biz-api
+      → nms4cloud-payment-api
+      → nms4cloud-order-api
+      → nms4cloud-starter-rocketmq
+```
+
+★ 跨服务调用通过 api 模块的 Feign 接口，不跨服务访问 Mapper。
+
+## 分层职责（严格执行，不可越层）
+
+Controller层（controller/）：接收请求→@Valid参数校验→调用ServicePlus→返回NmsResult。禁止写业务逻辑、直接调Mapper。Controller是薄的"接线员"。
+  ↓ 只传DTO，不传Entity/VO
+ServicePlus层（service/）：业务逻辑、事务管理、条件校验、调用IService/其他ServicePlus。所有业务规则唯一归属地。返回NmsResult<VO>。
+  ↓ 通过IService操作Entity
+IService/Mapper层（dao/）：数据访问，MyBatis-Plus CRUD。禁止写业务逻辑、抛业务异常。纯数据通道。
+
+对象转换：使用 BeanUtilsPlus.mapBean(source, TargetClass.class)（非 MapStruct）。
+
+## 命名规范（CRM 实际使用模式）
+
+| 类型 | 命名规则 | 示例 |
+|------|---------|------|
+| Entity | Crm+业务名（单数） | CrmCard, CrmCoupon, CrmMember |
+| 新增DTO | Crm+XxxAddDTO | CrmCardAddDTO, CrmCouponAddDTO |
+| 修改DTO | Crm+XxxUpdateDTO | CrmCardUpdateDTO |
+| 查询DTO | Crm+XxxQueryDTO | CrmCardQueryDTO |
+| 获取DTO | Crm+XxxGetDTO | CrmCardGetDTO |
+| 删除DTO | Crm+XxxDelDTO | CrmCardDelDTO |
+| 列表/详情VO | Crm+XxxVO | CrmCardVO, CrmCouponVO |
+| 枚举 | XxxEnum（实现CommonEnum） | CardStatusEnum, CouponTypeEnum |
+| 常量 | Crm+XxxConstant | CrmDepositPlanConstant |
+| IService | ICrm+XxxService | ICrmCardService |
+| ServicePlus | Crm+XxxServicePlus | CrmCardServicePlus |
+| Controller | Crm+XxxController | CrmCardController |
+| Mapper | Crm+XxxMapper | CrmCardMapper |
+| 数据库表 | 无固定前缀 | crm_card, crm_coupon |
+| 路由 | /crm_{entity} | /crm_card/add, /crm_card/list |
+| 方法-新增 | add | addCrmCard |
+| 方法-修改 | update | updateCrmCard |
+| 方法-查详情 | get | getCrmCard |
+| 方法-查列表 | list | listCrmCard |
+| 方法-删除 | del | delCrmCard |
+
+★ CRM 项目方法名用 add/update/get/list/del（非 create/getDetail/getPage/delete）。
+★ 所有类名带 Crm 前缀。
+★ Boolean字段：is前缀（isEnabled），数据库用 is_ 前缀（is_enabled）。
+
+## 数据类型映射
+
+| MySQL类型 | Java类型 | 说明 |
+|-----------|-----------|------|
+| VARCHAR(N) | String | 变长字符串 |
+| INT | Integer | 整数（枚举值等） |
+| BIGINT | Long | 长整数（主键、外键） |
+| DECIMAL(p,s) | BigDecimal | 精确小数（金额、余额、积分等） |
+| TINYINT(1) | Integer | 布尔/枚举，代码中用 0/1 |
+| DATE | LocalDate | 日期 |
+| DATETIME | LocalDateTime | 时间戳 |
+| TEXT | String | 长文本 |
+| JSON | String / 自定义对象 | JSON字段，配合 TypeHandler |
+
+★ CRM 中金额字段（balance, points, faceValue 等）统一使用 BigDecimal。
+
+## 主键与ID策略（pid / mid / sid / lid 四ID体系）
+
+CRM 采用四种ID，实体表中命名略有差异但语义一致：
+
+| ID | 实体字段名 | 数据库列名 | 类型 | 生成方式 | 用途 |
+|----|-----------|-----------|------|---------|------|
+| pid | pid | pid | BIGINT AUTO_INCREMENT | 数据库自增 | 物理主键 |
+| mid | mid | company_id | BIGINT | 登录上下文 | 商户ID |
+| sid | sid | shop_id | BIGINT | 登录上下文 | 门店ID |
+| lid | lid | lmnid | BIGINT UNIQUE | Yitter IdGenerator | 逻辑编号 |
+
+★ CRM 中 mid 对应数据库列 company_id，sid 对应 shop_id，lid 对应 lmnid。
+★ 前端看到的"ID"一律是 lid（lmnid），不是 pid。
+★ 表间外键关联必须使用 lid（lmnid），禁止使用 pid。
+
+Entity 对应注解（MyBatis-Plus）：
+```java
+@TableId(value = "pid", type = IdType.AUTO)
+private Long pid;
+
+@TableField("company_id")
+private Long mid;
+
+@TableField("shop_id")
+private Long sid;
+
+@TableField("lmnid")
+private Long lid;
+```
+
+## 审计字段与逻辑删除
+
+CRM 实体的审计字段和逻辑删除模式：
+
+```sql
+created_by VARCHAR(100) COMMENT '创建人',
+created_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+updated_by VARCHAR(100) COMMENT '更新人',
+updated_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+deleted TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除(0-否,1-是)',
+revision INT NOT NULL DEFAULT 0 COMMENT '乐观锁版本号',
+```
+
+Entity 对应字段：
+```java
+private String createdBy;
+private LocalDateTime createdTime;
+private String updatedBy;
+private LocalDateTime updatedTime;
+
+// CRM 逻辑删除：注意 value/delval 方向
+@TableField(value = "status_")
+@TableLogic(value = "1", delval = "0")
+private Integer status;
+// 或者用 deleted 字段：
+// @TableLogic
+// private Integer deleted;
+
+private Integer revision;  // 乐观锁版本号
+```
+
+★ CRM 部分表用 status_ 列做逻辑删除（value="1"正常, delval="0"删除），部分用 deleted 列。新建表统一用 deleted 字段。
+
+## 多租户规范
+
+### 数据隔离
+- 每张业务表必须包含 mid（company_id）和 sid（shop_id）
+- 查询时拼接 mid/sid 条件
+- 写入时从登录上下文注入 mid/sid
+
+### 安全规则
+- UPDATE/DELETE 操作必须先查数据 → 校验 mid/sid 归属 → 再操作
+- 跨租户数据不可见、不可改
+
+### 查询示例
+```java
+final LambdaQueryWrapper<CrmDepositPlan> query = new QueryWrapper<CrmDepositPlan>().lambda();
+query.eq(CrmDepositPlan::getMid, request.getMid());
+query.eq(CrmDepositPlan::getLid, request.getLid());
+final CrmDepositPlan entity = iService.getOne(query);
+```
+
+## 物理模型优化规则
+
+★ 从逻辑模型到物理模型的优化策略。目标：每功能模块3-5张表。
+
+合并为JSON的条件（满足任一即可合并）：
+- 纯ID列表（多选关联ID）→ brand_ids JSON [1,2,3]
+- 只有1-2个业务字段的子记录 → periods JSON [{"start":"09:00","end":"12:00"}]
+- 简单值列表（日期、编码等）→ exclude_dates JSON ["2026-04-05"]
+- 数量有限(<20)且不需独立查询
+- 只随主表读写，不被其他模块引用
+
+必须独立建表的条件（满足任一即不可合并）：
+- 子记录有3+个业务字段（不含pid/FK/审计字段）
+- 需按子记录字段做条件查询或报表统计
+- 子记录有独立状态或生命周期
+- 子记录数量可能很大(100+)
+- 子记录被其他模块通过FK引用
+
+实现要点：
+- JSON字段用MySQL JSON类型
+- MyBatis-Plus 用 @TableField(typeHandler = JacksonTypeHandler.class) 映射
+- DTO/VO结构不变（前端仍提交嵌套JSON），只是存储层合并
+
+## 契约规范（前后端零沟通成本）
+
+★ 后端写完→Apifox导入→前端直接开发。
+
+统一响应：所有接口返回 NmsResult<T>
+```json
+{"success": true, "code": 0, "status": "ok", "data": { ... }}
+```
+
+NmsResult 关键字段：
+```java
+boolean success;       // 业务请求是否成功
+Integer code;          // 0=成功, -1=失败
+String status;         // "ok" 或 "error"
+T data;                // 业务数据
+String errorMessage;   // 错误信息
+Long total;            // 分页总数
+Long current;          // 当前页
+Long pageSize;         // 页大小
+Long pages;            // 总页数
+Boolean compressed;    // 数据是否压缩
+List<String> columns;  // 压缩模式的列名
+```
+
+DTO/VO分离（入参出参严格分开）：
+- DTO接收请求：CrmXxxAddDTO / CrmXxxUpdateDTO / CrmXxxQueryDTO / CrmXxxGetDTO / CrmXxxDelDTO
+- VO返回前端：CrmXxxVO
+- 禁止：Entity直接暴露给前端
+
+枚举值处理（CRM 实际模式）：
+- Entity 中枚举字段直接使用枚举类型（如 CouponTypeEnum couponType）
+- DTO 中枚举字段也使用枚举类型（非Integer）
+- VO 中可包含 xxxName 派生字段用于前端展示
+
+字段序列化：
+| 字段类型 | 处理方式 | 原因 |
+|---------|---------|------|
+| Long ID | @JsonSerialize(using = ToStringSerializer.class) | JS精度丢失 |
+| BigDecimal | @JsonSerialize(using = ToStringSerializer.class) | JS精度丢失 |
+| LocalDateTime | @JSONField(format="yyyy-MM-dd HH:mm:ss") | Fastjson2格式 |
+| 敏感数据 | @FieldSensitive + @SensitiveType | 脱敏处理 |
+
+分页规范（CRM 实际模式）：
+- QueryDTO 实现 IQueryDTO 接口，包含 current/pageSize 字段
+- current: Long（当前页，@Min(0)），pageSize: Long（页大小，@Max(50)）
+- 响应用 NmsResult<List<VO>>，分页信息在 NmsResult 的 total/current/pageSize/pages 字段
+- 工具方法：IPageUtil.toResult(page, VO.class) 自动转换
+
+API文档注解（不可省略）：
+- Controller类：@Tag(name = "会员卡管理")
+- Controller方法：@Operation(summary = "获取会员卡详情")
+- DTO/VO每个字段：@Schema(title = "字段说明")
+- ★ CRM 用 @Schema(title=...) 而非 @Schema(description=...)
+
+错误码规范：
+- NmsResult.error("错误信息") 直接返回
+- 常量类定义错误信息：CrmXxxConstant.MSG_XXX_NOT_FOUND
+- Assert.isTrue(condition, MSG_XXX) 快速校验
+
+## 枚举类型规范
+
+### 数据库存储
+枚举值在数据库中存储数字编码：
+```sql
+status TINYINT NOT NULL DEFAULT 1 COMMENT '状态：1-正常，2-丢失，3-注销，4-冻结，5-退卡'
+coupon_type TINYINT NOT NULL COMMENT '优惠券类型：1-现金券，2-买赠券，3-实物券，4-折扣券'
+```
+
+### Java 枚举定义（CRM 实际模式）
+所有枚举实现 CommonEnum 接口：
+```java
+@Getter
+@RequiredArgsConstructor
+public enum CardStatusEnum implements CommonEnum {
+    NORMAL(1, "正常"),
+    LOSED(2, "丢失"),
+    INVALID(3, "注销"),
+    FREEZED(4, "冻结"),
+    RETURN(5, "退卡");
+
+    private final int code;
+    private final String desc;    // ★ CRM 用 desc 而非 label
+
+    private static final Map<Integer, CardStatusEnum> CODE_LOOK_UP = new ConcurrentHashMap<>();
+
+    static {
+        for (CardStatusEnum type : CardStatusEnum.values()) {
+            CODE_LOOK_UP.put(type.code, type);
+        }
+    }
+
+    @Override
+    public CardStatusEnum getByCode(int code) {
+        return CODE_LOOK_UP.get(code);
+    }
+}
+```
+
+### CommonEnum 接口
+```java
+public interface CommonEnum {
+    int getCode();
+    String getDesc();
+    CommonEnum getByCode(int code);
+}
+```
+
+★ CRM 枚举特点：
+- 字段名用 desc（非 label）
+- 用 ConcurrentHashMap 静态查找表（非 Arrays.stream）
+- 部分枚举用 @EnumValue 标注（MyBatis-Plus 自动映射）
+- Entity 中直接用枚举类型（如 CouponTypeEnum couponType），MyBatis-Plus 自动映射
+
+## 国际化（i18n）规范
+
+### 核心原则
+数据库中存储的是数据，不是展示文本。
+
+### 需要多语言的文本字段
+
+**方案一：多字段方案（推荐，字段少时使用）**
+```sql
+name VARCHAR(100) NOT NULL COMMENT '名称(中文)',
+name_en VARCHAR(100) COMMENT '名称(英文)'
+```
+
+**方案二：JSON 字段方案（字段多时使用）**
+```sql
+name_i18n JSON NOT NULL COMMENT '名称(多语言JSON: {"zh-CN":"中文名","en-US":"English Name"})'
+```
+
+### 不需要多语言的字段
+```sql
+code VARCHAR(50) NOT NULL COMMENT '编码'
+created_by VARCHAR(100) COMMENT '创建人'
+remark VARCHAR(500) COMMENT '备注'
+```
+
+## 代码质量规范
+
+参数校验三道防线：
+1. Controller入口（@Valid+JSR-303）：DTO加@NotNull/@NotBlank/@Size/@Min/@Max，message必须中文
+2. Service业务校验：Assert.isTrue(condition, MSG_XXX) 或 if + NmsResult.error()
+3. 数据库约束（最后防线）：NOT NULL、UNIQUE
+
+事务管理（CRM 实际模式）：
+- ★ CRM 使用 @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+- 读写操作统一用 Propagation.SUPPORTS（已有事务则加入，无事务则非事务执行）
+- @Transactional只加在ServicePlus方法上
+
+数据访问（MyBatis-Plus）：
+- QueryWrapper + LambdaQueryWrapper 优先
+- 批量插入 saveBatch()，批量更新 updateBatchById()
+- 分页用 MyBatis-Plus 的 Page<T> 对象
+- 示例：
+```java
+final QueryWrapper<CrmCard> query = new QueryWrapper<CrmCard>()
+    .eq(LID, request.getLid());
+final CrmCard entity = iCrmCardService.getOne(query, false);
+```
+```java
+final LambdaQueryWrapper<CrmCard> query = new QueryWrapper<CrmCard>().lambda();
+query.eq(CrmCard::getMid, request.getMid());
+query.eq(CrmCard::getName, request.getName());
+long count = iCrmCardService.count(query);
+```
+```java
+final Page<CrmCard> page = new Page<>(request.current, request.pageSize);
+return IPageUtil.toResult(iCrmCardService.page(page, query), CrmCardVO.class);
+```
+- ★ 禁止SELECT *，查列表用select(字段列表)
+- ★ 防N+1查询：子表数据用IN批量查
+
+并发安全：
+- 库存/配额/余额：Redis INCR + LUA脚本保证原子性
+- 关键数据：revision 乐观锁或 SELECT FOR UPDATE
+- 幂等接口：唯一requestId + Redis去重
+
+异常处理：
+- 业务异常：return NmsResult.error("错误信息") 或 throw BizException
+- 系统异常：log.error()记完整堆栈后返回通用错误提示
+- ★ 禁止空catch
+
+日志规范：
+- 类加@Slf4j，用{}占位符，禁止打印敏感信息
+- 格式：log.info("[{操作名}] {关键参数}={},...", value)
+
+注释规范：
+- 必须有：类Javadoc、Entity对应表名、ServicePlus每个public方法Javadoc、枚举类用途
+- 禁止：// getter setter、代码能自解释处不加注释
+
+安全编码：
+- 数据归属校验：UPDATE/DELETE先查数据→校验 mid/sid 归属
+- 敏感数据：VO加 @FieldSensitive + @SensitiveType 脱敏
+- 防注入：LambdaQueryWrapper优先，自定义SQL用#{}
+- 接口防刷：写接口加频率限制
+
+逻辑删除查询陷阱：
+- 唯一性校验考虑已删除数据：UNIQUE(name, deleted)或删除时改名
+- JOIN子表需手动加AND sub.deleted = 0
+
+依赖注入（CRM 实际模式）：
+- ★ CRM 使用 @Autowired 字段注入（项目现有风格）
+- 新代码建议用构造器注入(@RequiredArgsConstructor)，但与现有代码保持一致优先
+
+接口幂等：
+- 方案一：Token令牌（表单提交）
+- 方案二：业务唯一键 — UNIQUE约束 + catch DuplicateKeyException
+- ★ 每个POST写接口必须选其中一种
+
+可演进性：
+- 枚举：新增值加末尾，不改已有code
+- 接口：新增可选字段，不删旧字段
+- 数据库：加列给默认值，禁止删列/改列类型
+
+## 微服务规范
+
+### 服务信息
+- 服务名：nms4cloud-crm
+- Nacos 配置命名空间：56a75109-dbdc-4c5a-8fc1-b2300cef7f4a
+- 共享配置：nms4cloud-shared.yaml
+
+### 服务间通信
+- 同步：OpenFeign，接口定义在 crm-api 模块的 feign/ 包
+- 异步：RocketMQ，消费者做幂等
+- 依赖的远程服务：platform-api, wechat-api, biz-api, payment-api, order-api, netty-api
+- 禁止微服务间共享数据库
+
+### 认证授权（Sa-Token）
+```java
+@SaBizCheckPermission(value = "crm:card:list", orRole = ADMIN)  // 权限校验
+@SaBizCheckLogin                                                  // 登录校验
+@OpLog(businessType = BusinessTypeEnum.ADD)                       // 操作日志
+```
+
+权限命名规则：crm:{module}:{action}（如 crm:card:add, crm:card:list, crm:coupon:update）
+
+### 弹性设计
+- 远程调用配超时+熔断（Resilience4j）
+- 分布式锁：Redisson
+- 日志：Logstash Logback Encoder → ELK
+
+## 各层生成规范（CRM 实际模式）
+
+### Entity层（MyBatis-Plus）
+```java
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
+@TableName("crm_card")
+public class CrmCard extends BaseEntity {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    @TableId(value = "pid", type = IdType.AUTO)
+    private Long pid;
+
+    @TableField("company_id")
+    private Long mid;
+
+    @TableField("shop_id")
+    private Long sid;
+
+    @TableField("lmnid")
+    private Long lid;
+
+    @TableField("name")
+    private String name;
+
+    @TableField("balance")
+    private BigDecimal balance;
+
+    // 枚举字段直接用枚举类型
+    @TableField("coupon_type")
+    private CouponTypeEnum couponType;
+
+    // 逻辑删除（部分表用 status_ 列）
+    @TableField(value = "status_")
+    @TableLogic(value = "1", delval = "0")
+    private Integer status;
+}
+```
+
+★ Entity 关键点：
+- 继承 BaseEntity
+- 6个Lombok注解：@Data, @Builder, @NoArgsConstructor, @AllArgsConstructor, @ToString, @EqualsAndHashCode(callSuper=true)
+- @Accessors(chain = true) 支持链式设置
+- @Serial serialVersionUID
+- 每个字段用 @TableField("column_name") 显式映射
+- mid→company_id, sid→shop_id, lid→lmnid
+
+### DTO层
+```java
+@Data
+@ToString
+@Accessors(chain = true)
+@EqualsAndHashCode(callSuper = true)
+public class CrmCardAddDTO extends BaseDTO {
+    @Schema(title = "会员卡名称")
+    private String name;
+
+    @Schema(title = "卡类型lid")
+    private Long cardTypeLid;
+
+    // 嵌套子表DTO
+    @Schema(title = "优惠券关联")
+    private List<CrmCouponMapAddDTO> couponMaps;
+}
+```
+
+```java
+// 查询DTO 带分页
+@Data
+@ToString
+@Accessors(chain = true)
+@EqualsAndHashCode(callSuper = true)
+public class CrmCardQueryDTO extends BaseDTO implements IQueryDTO {
+    @NotNull
+    @Min(0)
+    public Long current;
+
+    @NotNull
+    @Min(1)
+    @Max(50)
+    public Long pageSize;
+
+    @Schema(title = "会员卡名称")
+    private String name;
+
+    @Schema(title = "状态")
+    private Integer status;
+}
+```
+
+★ DTO 关键点：
+- 继承 BaseDTO
+- QueryDTO 实现 IQueryDTO，current/pageSize 为 public 字段
+- pageSize 最大50（非100）
+- @Schema(title=...) 用 title 属性
+- @ExcelProperty 支持 Excel 导入
+
+### VO层
+```java
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
+public class CrmCardVO extends BaseVO {
+    @ExcelProperty(value = "会员卡名称")
+    @Schema(title = "会员卡名称")
+    private String name;
+
+    @Schema(title = "余额")
+    private BigDecimal balance;
+
+    // 派生字段（不在Entity中）
+    @Schema(title = "卡状态名称")
+    private String cardStatusName;
+
+    // 嵌套子表VO
+    @Schema(title = "优惠券订单")
+    private List<CrmCouponOrderVO> couponOrders;
+}
+```
+
+★ VO 关键点：
+- 继承 BaseVO（含 createdBy, createdTime, updatedBy, updatedTime, deleted）
+- 6个Lombok注解 + @Accessors(chain=true)
+- @ExcelProperty 支持 Excel 导出
+- 派生字段：xxxName 展示字段（如 cardStatusName, discountName）
+- @FieldSensitive + @SensitiveType 敏感数据脱敏
+
+### ServicePlus层
+```java
+@Slf4j
+@Service
+public class CrmCardServicePlus extends BaseService {
+
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+    public NmsResult<CrmCardVO> get(CrmCardGetDTO request) {
+        final QueryWrapper<CrmCard> query = new QueryWrapper<CrmCard>()
+            .eq(LID, request.getLid());
+        final CrmCard entity = iCrmCardService.getOne(query, false);
+        return NmsResult.data(BeanUtilsPlus.mapBean(entity, CrmCardVO.class));
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+    public NmsResult<List<CrmCardVO>> list(CrmCardQueryDTO request) {
+        final QueryWrapper<CrmCard> query = new QueryWrapper<>();
+        // 构造查询条件...
+        final Page<CrmCard> page = new Page<>(request.current, request.pageSize);
+        return IPageUtil.toResult(iCrmCardService.page(page, query), CrmCardVO.class);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+    public NmsResult<CrmCardVO> add(CrmCardAddDTO request) {
+        // 唯一性校验
+        QueryWrapper<CrmCard> query = new QueryWrapper<>(
+            new CrmCard().setName(request.getName()));
+        Assert.isTrue(iCrmCardService.count(query) == 0, VERIFY_NAME_CAN_NOT_REPEAT);
+
+        // DTO → Entity
+        final CrmCard entity = BeanUtilsPlus.mapBean(request, CrmCard.class);
+        assertIsTrue(iCrmCardService.save(entity));
+
+        // Entity → VO 返回
+        return NmsResult.data(BeanUtilsPlus.mapBean(entity, CrmCardVO.class));
+    }
+
+    @Autowired
+    private ICrmCardService iCrmCardService;
+}
+```
+
+★ ServicePlus 关键点：
+- 继承 BaseService
+- @Slf4j + @Service
+- 所有方法 @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+- 返回 NmsResult<VO> 而非原始 Entity
+- BeanUtilsPlus.mapBean(source, TargetClass.class) 做对象转换
+- Assert.isTrue() 做业务校验
+- @Autowired 字段注入 IService
+
+### Controller层
+```java
+@Slf4j
+@RestController
+@RequestMapping("/crm_card")
+@Tag(name = "会员卡管理")
+public class CrmCardController extends BaseController {
+
+    @Operation(summary = "获取会员卡详情")
+    @SaBizCheckPermission(value = "crm:card:list", orRole = ADMIN)
+    @PostMapping(value = "/get")
+    public NmsResult<CrmCardVO> getCrmCard(@Valid @RequestBody CrmCardGetDTO request) {
+        return crmCardServicePlus.get(request);
+    }
+
+    @Operation(summary = "分页查询会员卡")
+    @SaBizCheckPermission(value = "crm:card:list", orRole = ADMIN)
+    @PostMapping(value = "/list")
+    public NmsResult<List<CrmCardVO>> listCrmCard(@Valid @RequestBody CrmCardQueryDTO request) {
+        return crmCardServicePlus.list(request);
+    }
+
+    @OpLog(businessType = BusinessTypeEnum.ADD)
+    @Operation(summary = "新增会员卡")
+    @SaBizCheckPermission(value = "crm:card:add", orRole = ADMIN)
+    @PostMapping(value = "/add")
+    public NmsResult<CrmCardVO> addCrmCard(@Valid @RequestBody CrmCardAddDTO request) {
+        return crmCardServicePlus.add(request);
+    }
+
+    @Autowired
+    private CrmCardServicePlus crmCardServicePlus;
+}
+```
+
+★ Controller 关键点：
+- 继承 BaseController
+- @Slf4j + @RestController + @RequestMapping("/crm_{entity}")
+- @Tag(name = "中文模块名")
+- 所有接口用 @PostMapping（包括查询）
+- @SaBizCheckPermission 权限控制，orRole = ADMIN 管理员放行
+- @OpLog(businessType = BusinessTypeEnum.ADD/UPDATE/DELETE) 写操作记录日志
+- 返回 NmsResult<T>
+- ★ CRM 所有接口统一用 POST，不用 GET/PUT/DELETE
+
+### Mapper层
+```java
+public interface CrmCardMapper extends BaseMapper<CrmCard> {
+    // 大多数为空接口，CRUD 由 MyBatis-Plus 自动生成
+    // 复杂查询在对应 XML 文件中定义
+}
+```
+
+## 基类体系
+
+### BaseEntity
+```java
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class BaseEntity extends BasePOJO implements Serializable {
+    // 提供 mid/sid/lid 的 getter/setter 虚方法
+    // 子类通过 @TableField 覆盖实际列映射
+}
+```
+
+### BaseDTO
+```java
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class BaseDTO extends BasePOJO implements Serializable {}
+```
+
+### BaseVO
+```java
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class BaseVO extends BasePOJO implements Serializable {
+    @Schema(title = "创建人")
+    private String createdBy;
+    @Schema(title = "创建时间")
+    private LocalDateTime createdTime;
+    @Schema(title = "更新人")
+    private String updatedBy;
+    @Schema(title = "更新时间")
+    private LocalDateTime updatedTime;
+    @Schema(title = "是否删除")
+    private Short deleted;
+}
+```
+
+### IQueryDTO
+```java
+public interface IQueryDTO {
+    Long getCurrent();
+    Object setCurrent(final @NotNull Long current);
+    Long getPageSize();
+    Object setPageSize(final @NotNull Long pageSize);
+}
+```
+
+## 建表脚本模板（MySQL方言）
+
+标准表模板（CRM 新建业务表必须遵循）：
+```sql
+CREATE TABLE crm_{business_name} (
+  pid BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '物理编号',
+  company_id BIGINT NOT NULL COMMENT '商户ID',
+  shop_id BIGINT NOT NULL COMMENT '门店ID',
+  lmnid BIGINT NOT NULL UNIQUE COMMENT '逻辑编号(雪花算法)',
+
+  -- 业务字段...
+  name VARCHAR(100) NOT NULL COMMENT '名称',
+  status TINYINT NOT NULL DEFAULT 1 COMMENT '状态：0-禁用，1-启用',
+
+  created_by VARCHAR(100) COMMENT '创建人',
+  created_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  updated_by VARCHAR(100) COMMENT '更新人',
+  updated_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  deleted TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除(0-否,1-是)',
+  revision INT NOT NULL DEFAULT 0 COMMENT '乐观锁版本号',
+
+  INDEX idx_company_id (company_id),
+  INDEX idx_shop_id (shop_id),
+  UNIQUE INDEX uk_lmnid (lmnid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='表说明';
+```
+
+★ CRM 建表列名用 company_id/shop_id/lmnid（非 mid/sid/lid），与 Entity @TableField 映射对应。
+
+索引命名规范：
+| 索引类型 | 命名规则 | 示例 |
+|----------|----------|------|
+| 普通索引 | idx_{字段名} | idx_company_id |
+| 唯一索引 | uk_{字段名} | uk_lmnid |
+| 复合索引 | idx_{字段1}_{字段2} | idx_company_id_status |
+
+## CRM 业务域速查
+
+| 业务域 | 核心实体 | 说明 |
+|--------|---------|------|
+| 会员卡 | CrmCard, CrmCardType, CrmCardLevel | 卡片管理、卡类型、等级 |
+| 会员 | CrmMember | 会员信息 |
+| 优惠券 | CrmCoupon, CrmCouponMap, CrmCouponOrder | 券发放、核销、购买 |
+| 奖励规则 | CrmRewardRule, CrmRewardRecord | 奖励配置与记录 |
+| 储蓄规则 | CrmSaveRule, CrmSaveRuleInterval | 充值赠送 |
+| 生日规则 | CrmBirthdayRule, CrmBirthdayRecord | 生日特权 |
+| 积分兑换 | CrmPointExchange | 积分兑换配置 |
+| 返现 | CrmCashBack, CrmCashBackFood | 消费返现 |
+| 活动 | CrmLargeTurntable, CrmJoinActivity | 大转盘、参与活动 |
+| 广告方案 | CrmAdvertisingScheme | 广告投放 |
+| 筛选器 | CrmFilter, CrmFilterItem | 会员筛选条件 |
+| 红包 | CrmRedEnvelope | 红包配置 |
+| 新客礼 | CrmNewGift, CrmNewGiftStore | 新客户赠礼 |
+| 霸王餐 | CrmOverlordOnce, CrmOverlordStore | 免费试吃活动 |
+| 储值计划 | CrmDepositPlan, CrmDepositPlanCycle | 定期储值 |
+| 交易 | deal/ 包（Lock/Unlock/Commit/Cancel/Preview/Rollback） | 交易状态机 |
+| 股东分账 | CrmShareholder, CrmStoreDivideRecord | 股东分红 |
+
+## 新增表检查清单
+
+- [ ] 是否包含所有标准字段（pid, company_id, shop_id, lmnid, created_by, created_time, updated_by, updated_time, deleted, revision）
+- [ ] lmnid 字段是否设置了唯一索引（字段 UNIQUE + UNIQUE INDEX uk_lmnid）
+- [ ] 外键关联是否使用 lmnid 而非 pid
+- [ ] company_id/shop_id 是否建立索引
+- [ ] 索引命名是否符合规范（idx_/uk_ 前缀）
+- [ ] 枚举字段是否只存数字编码，COMMENT 包含完整枚举值说明
+- [ ] 布尔字段是否以 is_ 开头，类型 TINYINT，COMMENT 包含 0-否，1-是
+- [ ] 是否有需要面向多语言用户展示的文本字段
+- [ ] revision 字段是否包含（乐观锁）
+- [ ] 对应 Entity 类是否有正确的 @TableField 列映射
+
+## 测试工具适配
+
+输出为Apifox可导入格式。每条用例含：用例编号和名称、接口 POST Method+Path、完整请求体JSON、预期状态码和响应。
+
+覆盖率自检：每个DTO/VO类有@Schema注解、每个字段有@Schema(title=...)、Controller有@Tag+@Operation、响应体嵌套结构完整。
+
+## 代码生成顺序
+
+已有基础设施（不需重新生成）：
+  NmsResult / BaseEntity / BaseDTO / BaseVO / IQueryDTO / BaseService / BaseController
+  BeanUtilsPlus / IPageUtil / CommonEnum
+
+每个新业务功能：
+  1.枚举类→2.Entity→3.DTO（Add/Update/Query/Get/Del）→4.VO→5.Mapper→6.IService→7.ServicePlus→8.Controller→9.建表脚本→10.测试用例
+
+## 输出格式要求
+
+1. 每个文件前标注完整路径（含模块层级：api/dao/service/app）
+2. DTO字段覆盖需求文档所有输入项
+3. VO字段满足前端展示需求（含派生展示字段如xxxName）
+4. 涉及并发的方法加注释说明防护方案（revision乐观锁为默认方案）
+5. 基于假设的代码加 // [⚠️ 假设] 注释
+6. 所有接口统一用 @PostMapping
+7. 输出「前端联调说明」：NmsResult 结构说明、分页约定（current/pageSize/total/pages）、lid→String 注意事项、枚举值速查表
+8. ★ Apifox导入验证清单
+
+## 与 code-style-nms4cloud.txt 的差异摘要
+
+| 项目 | nms4cloud 通用规范 | CRM 实际模式 |
+|------|-------------------|-------------|
+| ORM | MyBatis-Flex | **MyBatis-Plus**（@TableName/@TableId/@TableField/@TableLogic） |
+| Entity注解 | @Table/@Id/@Column | **@TableName/@TableId(type=IdType.AUTO)/@TableField** |
+| 逻辑删除 | @Column(isLogicDelete=true) | **@TableLogic(value="1", delval="0")** |
+| 乐观锁 | @Column(version=true) | **revision 字段（无注解或@Version）** |
+| 对象映射 | MapStruct Convert | **BeanUtilsPlus.mapBean()** |
+| 查询API | QueryChain/UpdateChain | **QueryWrapper/LambdaQueryWrapper** |
+| Service命名 | XxxService | **CrmXxxServicePlus extends BaseService** |
+| DTO命名 | XxxAddDTO | **CrmXxxAddDTO（含Crm前缀）** |
+| VO命名 | XxxListVO + XxxVO | **CrmXxxVO（统一，无ListVO/DetailVO之分）** |
+| 方法命名 | create/update/delete | **add/update/del** |
+| HTTP方法 | RESTful GET/POST/PUT/DELETE | **统一 POST** |
+| 分页 | PageReqDTO(pageNum/pageSize) | **IQueryDTO(current/pageSize)** |
+| 分页响应 | PageResult<T> | **NmsResult<List<T>>（分页信息在NmsResult字段中）** |
+| 依赖注入 | 构造器注入 | **@Autowired 字段注入** |
+| Schema注解 | @Schema(description=...) | **@Schema(title=...)** |
+| 事务传播 | REQUIRED | **Propagation.SUPPORTS** |
+| Excel | 无 | **@ExcelProperty（EasyExcel导入导出）** |
+| 脱敏 | 无 | **@FieldSensitive + @SensitiveType** |
+| DB列名 | mid/sid/lid | **company_id/shop_id/lmnid** |
