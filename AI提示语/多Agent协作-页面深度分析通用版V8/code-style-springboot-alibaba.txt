@@ -391,3 +391,236 @@ CREATE INDEX idx_svp_create_by ON t_stored_value_package(create_by);
 5. 基于假设的代码加 // [⚠️ 假设] 注释
 6. 输出「前端联调说明」：统一响应格式示例、分页约定、字段类型注意事项（ID→String、金额→String、时间格式）、★枚举字段约定+枚举值速查表、错误码对照表、假设标记说明
 7. ★ Apifox导入验证清单
+
+## 数值与类型安全规范（AI生成代码必须遵守）
+
+★ 本章节是 AI 代码生成的高频陷阱清单，生成每一段业务代码前必须自检。
+
+### 一、金额/浮点数空值语义
+
+**规则：前端传入的 BigDecimal 金额字段，null 和 0 均视为"未传值/无意义"。**
+
+```java
+// ✅ 正确：金额有效性判断
+boolean hasAmount = amount != null && amount.compareTo(BigDecimal.ZERO) > 0;
+
+// ❌ 错误：只判 null，0 会被误认为有效金额
+boolean hasAmount = amount != null;
+
+// ❌ 错误：不能用 > 运算符（BigDecimal 不支持）
+boolean hasAmount = amount > 0;
+```
+
+适用场景：储值金额、优惠门槛、折扣金额、封顶金额等一切金额字段的条件判断。
+
+### 二、BigDecimal 比较必须用 compareTo
+
+```java
+// ✅ 正确
+a.compareTo(b) == 0   // 相等
+a.compareTo(b) > 0    // a > b
+
+// ❌ 错误：equals 在 scale 不同时返回 false（1.0 != 1.00）
+a.equals(b);
+```
+
+### 三、BigDecimal 构造必须用字符串或 valueOf
+
+```java
+// ✅ 正确
+new BigDecimal("0.1")
+BigDecimal.valueOf(0.1)
+
+// ❌ 错误：浮点精度丢失
+new BigDecimal(0.1)  // 实际值为 0.1000000000000000055511151231257827021181583404541015625
+```
+
+### 四、BigDecimal 除法必须指定精度和舍入模式
+
+```java
+// ✅ 正确
+a.divide(b, 2, RoundingMode.HALF_UP)
+
+// ❌ 错误：无限小数时抛 ArithmeticException
+a.divide(b)
+```
+
+### 五、金额累加全程使用 BigDecimal
+
+```java
+// ✅ 正确
+BigDecimal total = BigDecimal.ZERO;
+for (Item item : items) {
+    total = total.add(item.getPrice());
+}
+
+// ❌ 错误：double 累加有精度误差
+double total = 0;
+for (Item item : items) {
+    total += item.getPrice().doubleValue();
+}
+```
+
+### 六、负数金额必须拦截
+
+```java
+// ✅ DTO 层：注解拦截
+@DecimalMin(value = "0.01", message = "金额必须大于0")
+private BigDecimal amount;
+
+// ✅ Service 层：业务校验
+if (amount != null && amount.compareTo(BigDecimal.ZERO) <= 0) {
+    throw new BusinessException(ErrorCode.INVALID_AMOUNT);
+}
+```
+
+### 七、Long ID 序列化防精度丢失
+
+JS Number 最大安全整数为 2^53，Long 超出后截断。
+
+```java
+// ✅ VO 中所有 Long 类型 ID 必须加
+@JsonSerialize(using = ToStringSerializer.class)
+private Long id;
+```
+
+### 八、枚举 null 必须显式兜底
+
+```java
+// ✅ 正确：getByCode 返回 null 时抛异常
+StatusEnum status = StatusEnum.getByCode(dto.getStatusCode());
+if (status == null) {
+    throw new BusinessException(ErrorCode.INVALID_STATUS, "无效的状态值: " + dto.getStatusCode());
+}
+
+// ❌ 错误：null 静默传递，后续 NPE
+StatusEnum status = StatusEnum.getByCode(dto.getStatusCode());
+entity.setStatus(status);  // status 可能为 null
+```
+
+### 九、逻辑删除唯一索引必须含 deleted 列
+
+```sql
+-- ✅ 正确：软删除后同名记录可重新创建
+UNIQUE KEY uk_name_deleted (name, deleted)
+
+-- ❌ 错误：软删除后 name 仍被唯一索引占用
+UNIQUE KEY uk_name (name)
+```
+
+### 十、字符串空值判断用 isNotBlank
+
+```java
+// ✅ 正确：同时覆盖 null、""、"   "
+if (StringUtils.isNotBlank(dto.getName())) { ... }
+
+// ❌ 错误：前端传 "" 或 "   " 时漏过校验
+if (dto.getName() != null) { ... }
+```
+
+字符串入参在 Service 层统一 trim，或 DTO 用 @NotBlank 自动拒绝纯空格。
+
+### 十一、字符串转 BigDecimal 必须 catch 异常
+
+```java
+// ✅ 正确
+try {
+    BigDecimal amount = new BigDecimal(str);
+} catch (NumberFormatException e) {
+    throw new BusinessException(ErrorCode.INVALID_AMOUNT, "金额格式错误");
+}
+
+// ❌ 错误：Double 中转损失精度
+BigDecimal amount = BigDecimal.valueOf(Double.parseDouble(str));
+```
+
+### 十二、分页 pageSize 必须有上限
+
+```java
+// ✅ DTO 层注解
+@Max(value = 100, message = "每页最多查询100条")
+private Integer pageSize;
+
+// ✅ Service 层兜底
+if (pageSize > 100) pageSize = 100;
+```
+
+### 十三、批量操作 List 必须限制数量
+
+```java
+// ✅ DTO 层
+@Size(max = 500, message = "批量操作最多500条")
+@NotEmpty(message = "列表不能为空")
+private List<Long> ids;
+
+// ✅ Service 层兜底
+if (CollectionUtils.isEmpty(ids)) return Collections.emptyList();
+```
+
+### 十四、空集合 IN 查询必须前置判断
+
+```java
+// ✅ 正确：避免 WHERE id IN () 语法错误
+if (CollectionUtils.isEmpty(ids)) {
+    return Collections.emptyList();
+}
+List<Entity> list = mapper.selectList(
+    new LambdaQueryWrapper<Entity>().in(Entity::getId, ids)
+);
+
+// ❌ 错误：ids 为空时直接查询，SQL 报错或全表扫描
+```
+
+### 十五、列表查询禁止返回 null
+
+```java
+// ✅ 正确
+List<Entity> list = mapper.selectList(wrapper);
+return list != null ? list : Collections.emptyList();
+
+// 或 MyBatis-Plus selectList 本身不返回 null，但 stream/filter 后要注意
+
+// ❌ 错误：返回 null 导致调用方 NPE
+return mapper.selectList(wrapper);  // 若封装层可能返回 null
+```
+
+### 十六、开始/结束日期必须校验顺序
+
+```java
+// ✅ Service 层必须校验
+if (dto.getStartDate() != null && dto.getEndDate() != null
+        && dto.getStartDate().isAfter(dto.getEndDate())) {
+    throw new BusinessException(ErrorCode.INVALID_DATE_RANGE, "开始日期不能晚于结束日期");
+}
+```
+
+### 十七、批量操作必须校验数据归属（防越权）
+
+```java
+// ✅ 正确：WHERE 条件带 mid/sid，只操作本租户数据
+mapper.selectList(
+    new LambdaQueryWrapper<Entity>()
+        .in(Entity::getId, ids)
+        .eq(Entity::getMid, currentMid)   // ★ 必须带租户条件
+        .eq(Entity::getSid, currentSid)
+);
+
+// ❌ 错误：仅按 id 批量操作，可能越权访问其他租户数据
+mapper.selectList(
+    new LambdaQueryWrapper<Entity>().in(Entity::getId, ids)
+);
+```
+
+### 十八、对外接口禁止用自增 pid 做查询条件
+
+```java
+// ✅ 正确：对外只暴露雪花 ID（lid）
+public Result getById(Long lid) {
+    wrapper.eq(Entity::getLid, lid);
+}
+
+// ❌ 错误：pid 自增可遍历，暴露给前端存在安全风险
+public Result getById(Long pid) {
+    wrapper.eq(Entity::getPid, pid);
+}
+```
