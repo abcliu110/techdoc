@@ -253,28 +253,167 @@ query.eq(CrmDepositPlan::getLid, request.getLid());
 final CrmDepositPlan entity = iService.getOne(query);
 ```
 
-## 物理模型优化规则
+## 物理模型优化规则（★ 核心规则 — 减少表数量）
 
-★ 从逻辑模型到物理模型的优化策略。目标：每功能模块3-5张表。
+★ MyBatis-Plus 每张表 = Entity + Mapper + IService + ServicePlus + Controller 全套，表过多导致启动慢、事务复杂、维护成本高。
+★ 核心策略：把明细表/子表的数据作为 JSON 字段存入主表，从而减少独立表的数量。目标：每功能模块 3-5 张表。
 
-合并为JSON的条件（满足任一即可合并）：
-- 纯ID列表（多选关联ID）→ brand_ids JSON [1,2,3]
-- 只有1-2个业务字段的子记录 → periods JSON [{"start":"09:00","end":"12:00"}]
-- 简单值列表（日期、编码等）→ exclude_dates JSON ["2026-04-05"]
-- 数量有限(<20)且不需独立查询
-- 只随主表读写，不被其他模块引用
+### 判定规则
+
+合并为JSON的条件（满足任一即应合并）：
+- 纯ID列表（多选关联ID）→ brand_ids JSON `[1,2,3]`
+- 只有1-2个业务字段的子记录 → items JSON `[{"name":"x","value":1}]`
+- 简单值列表（日期、编码等）→ exclude_dates JSON `["2026-04-05"]`
+- 数量有限(<20条)且不需独立按子记录字段做 WHERE 查询
+- 只随主表读写，不被其他模块通过外键引用
+- 子记录没有独立的状态或生命周期
 
 必须独立建表的条件（满足任一即不可合并）：
-- 子记录有3+个业务字段（不含pid/FK/审计字段）
-- 需按子记录字段做条件查询或报表统计
-- 子记录有独立状态或生命周期
+- 子记录有3+个业务字段（不含pid/FK/审计字段）且业务逻辑复杂
+- 需按子记录字段做条件查询（WHERE item.xxx = ?）或报表统计（GROUP BY）
+- 子记录有独立状态、独立的增删改操作、独立生命周期
 - 子记录数量可能很大(100+)
 - 子记录被其他模块通过FK引用
+- 子记录本身还有下级子表
 
-实现要点：
-- JSON字段用MySQL JSON类型
-- MyBatis-Plus 用 @TableField(typeHandler = JacksonTypeHandler.class) 映射
-- DTO/VO结构不变（前端仍提交嵌套JSON），只是存储层合并
+### CRM 项目已有的 JSON 合并实践（参考范例）
+
+**CrmDepositPlan（储值计划）— 最佳参考**
+
+已将多个本应独立建表的明细合并为 JSON 字段：
+```java
+@TableName(value = "crm_deposit_plan", autoResultMap = true)
+public class CrmDepositPlan extends BaseEntity {
+    // ... 主表字段 ...
+
+    // ★ 以下全部是 JSON 字段，替代了独立子表
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private List<Long> agreementLids;           // 协议ID列表
+
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private CycleRule cycleRule;                 // 周期规则（替代 crm_deposit_plan_cycle 表）
+
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private TimePeriodRule timePeriods;          // 时段规则
+
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private ChannelRule channels;               // 渠道规则
+
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private StoreRule applicableOrgs;           // 适用门店规则
+
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private BrandRule brandRule;                // 品牌规则
+
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private MemberLevelRule memberLevelRule;    // 会员等级规则
+
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private PurchaseLimitRule purchaseLimitRule;// 购买限制规则
+
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private DepositTierRule tierRule;           // 档位规则
+
+    @TableField(typeHandler = LocalDateListTypeHandler.class)
+    private List<LocalDate> excludeDates;       // 排除日期列表（替代 crm_deposit_plan_exclude_date 表）
+}
+```
+
+**CrmDepositCategory（储值分类）：**
+```java
+@TableField(typeHandler = JacksonTypeHandler.class)
+private List<Long> brandIds;                   // 品牌ID列表
+```
+
+### JSON 字段实现模板
+
+#### 1. 简单值列表（List<Long>, List<String>, List<LocalDate>）
+```java
+// Entity
+@TableField(typeHandler = JacksonTypeHandler.class)
+private List<Long> shopLids;                   // 适用门店
+
+@TableField(typeHandler = LocalDateListTypeHandler.class)
+private List<LocalDate> excludeDates;          // 排除日期
+```
+```sql
+-- 建表
+shop_lids JSON COMMENT '适用门店lid列表',
+exclude_dates JSON COMMENT '排除日期列表',
+```
+
+#### 2. 对象列表（替代明细子表）
+```java
+// 内部模型类（放在 api/model/ 包下）
+@Data
+public class TurntableItemModel implements Serializable {
+    private String name;
+    private BigDecimal probability;
+    private Integer limitNumber;
+    private Long giftCouponLid;
+    private BigDecimal giftPoints;
+    private String imgUrl;
+}
+
+// Entity
+@TableField(typeHandler = JacksonTypeHandler.class)
+private List<TurntableItemModel> items;        // 转盘奖品项（替代 crm_large_turntable_item 表）
+```
+```sql
+-- 建表
+items JSON COMMENT '转盘奖品项列表',
+```
+
+#### 3. 规则对象（替代配置子表）
+```java
+// 内部模型类
+@Data
+public class CycleRule implements Serializable {
+    private Integer cycleType;       // 周期类型
+    private Integer cycleValue;      // 周期值
+}
+
+// Entity
+@TableField(typeHandler = JacksonTypeHandler.class)
+private CycleRule cycleRule;                   // 周期规则
+```
+
+### 关键实现要点
+
+1. **Entity 注解**：`@TableName(value = "xxx", autoResultMap = true)` — autoResultMap=true 是 JSON TypeHandler 正常工作的前提
+2. **字段注解**：`@TableField(typeHandler = JacksonTypeHandler.class)` — 每个 JSON 字段必须标注
+3. **自定义 TypeHandler**：特殊类型如 List<LocalDate> 需自定义（参考 CRM 的 LocalDateListTypeHandler）
+4. **模型类位置**：JSON 对应的内部模型类放在 `{service}-api/src/main/java/com/nms4cloud/crm/api/model/` 包下，必须实现 Serializable
+5. **DTO/VO 不变**：前端仍提交/接收嵌套 JSON 结构，只是存储层从子表改为主表 JSON 列
+6. **更新策略**：合并后的 JSON 数据整体替换（不需要子表的 DELETE + INSERT），直接 UPDATE 主表 JSON 列
+7. **MySQL JSON 类型**：支持 JSON_EXTRACT 查询，但应避免频繁按 JSON 内部字段做 WHERE 条件
+
+### CRM 中适合 JSON 合并的候选子表
+
+| 候选子表 | 合并到 | 业务字段数 | 理由 |
+|---------|--------|-----------|------|
+| CrmCouponDish | CrmCoupon | 2（dishLid,dishName） | 券关联菜品，纯映射 |
+| CrmCouponFestival | CrmCoupon | 2（festivalCode,festival） | 券关联节日，纯映射 |
+| CrmCouponHours | CrmCoupon | 2（hoursBeginTime,hoursEndTime） | 券使用时段，简单区间 |
+| CrmFilterItem | CrmFilter | 3（filterType,optType,val） | 筛选条件项，随主表读写 |
+| CrmLargeTurntableItem | CrmLargeTurntable | 5（probability,limit,gift...） | 转盘奖品，数量有限 |
+| CrmAdvertisingSchemeItem | CrmAdvertisingScheme | 4（imgUrl,jumpUrl,jumpType,position） | 广告素材项，随主表读写 |
+| CrmDepositPlanCycle | CrmDepositPlan | 2（cycleType,cycleValue） | **已合并**（cycleRule JSON） |
+| CrmDepositPlanExcludeDate | CrmDepositPlan | 1（excludeDate） | **已合并**（excludeDates JSON） |
+| CrmCouponProportionItem | 父表 | 4（min/maxAmount,proportionMin/Max） | 比例配置项，数量有限 |
+
+### 决策流程图
+
+```
+新增"明细/子表"需求 →
+  ├─ 子记录 ≤2 个业务字段？ → 合并为 JSON
+  ├─ 子记录 3-5 个字段且数量有限(<20)？
+  │    ├─ 不需独立查询/统计？ → 合并为 JSON
+  │    └─ 需独立 WHERE/GROUP BY？ → 独立建表
+  ├─ 子记录被其他模块FK引用？ → 独立建表
+  ├─ 子记录有独立生命周期/状态机？ → 独立建表
+  └─ 子记录数量可能 >100？ → 独立建表
+```
 
 ## 契约规范（前后端零沟通成本）
 
