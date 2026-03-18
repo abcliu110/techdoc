@@ -828,7 +828,30 @@ private List<Long> ids;
 if (CollectionUtils.isEmpty(ids)) return Collections.emptyList();
 ```
 
-### 十四、空集合 IN 查询必须前置判断
+### 十四、数组/集合入参空值语义
+
+**规则：前端传入的数组/集合字段，null 和空集合（size=0）均视为"用户未输入"，语义等价。后端校验必须同时覆盖两种情况。**
+
+与金额规则对称：金额字段 null/0 → 未传值；集合字段 null/[] → 未传值。
+
+```java
+// ✅ 正确：用 CollectionUtils.isEmpty 一次性覆盖 null 和 []
+if (CollectionUtils.isEmpty(dto.getTagIds())) {
+    throw new BusinessException(ErrorCode.INVALID_PARAM, "请至少选择一个标签");
+}
+
+// ❌ 错误：只判 null，前端传 [] 时漏过校验，后续 IN 查询报错或语义错误
+if (dto.getTagIds() == null) {
+    throw new BusinessException(...);
+}
+
+// ❌ 错误：直接 .size() 未判 null，前端传 null 时 NPE
+if (dto.getTagIds().size() == 0) { ... }
+```
+
+适用场景：标签列表、门店列表、商品列表、权限列表等一切集合/数组类入参字段的**必填校验**和**条件筛选**。
+
+### 十五、空集合 IN 查询必须前置判断
 
 ```java
 // ✅ 正确：避免 WHERE id IN () 语法错误
