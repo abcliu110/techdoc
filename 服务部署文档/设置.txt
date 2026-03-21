@@ -35,6 +35,11 @@ gzsnfw
 admin
 st11338
 
+lemontree
+1000
+1000
+
+
 演示中心
 yszx
 admin
@@ -57,4 +62,6 @@ claude --dangerously-skip-permissions
 
 PS C:\Windows\System32> python3 -c "import sys; print(sys.prefix)"
 C:\Users\16555\.pyenv\pyenv-win\versions\3.11.4
+
+https://x-superflash.com/
 
