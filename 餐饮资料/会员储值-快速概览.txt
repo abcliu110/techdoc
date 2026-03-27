@@ -1,0 +1,208 @@
+会员储值功能完整分析 - 快速概览
+
+================================
+
+📊 分析结果概况：
+✓ 分析了 nms4cloud-crm 中的会员储值功能
+✓ 找到了 7 张核心数据表
+✓ 识别了 8 个复杂 JSON 字段
+✓ 生成了 4 份详细文档
+
+🎯 核心业务流程（3个）：
+1. 储值方案配置 - 商户定义规则
+2. 会员储值执行 - 会员选择并支付
+3. 余额消费 - 会员在消费时使用
+
+💾 核心数据表（7张）：
+
+表1: crm_deposit_plan（储值方案主表）
+  ├─ 方案基础信息（名称、分类、状态、有效期）
+  ├─ 8个 JSON 规则字段（最复杂）
+  │  ├─ tier_rule - 储值档位规则（包含赠送、优惠券、券包等）
+  │  ├─ purchase_limit_rule - 购买限制规则
+  │  ├─ cycle_rule - 周期规则
+  │  ├─ time_periods - 时段规则
+  │  ├─ exclude_dates - 排除日期
+  │  ├─ channels - 渠道规则
+  │  ├─ applicable_orgs - 门店/地区规则
+  │  └─ member_level_rule - 会员等级规则
+  ├─ 统计字段（total_sold_count, total_sold_amount）
+  └─ 标准字段（mid, sid, lid, created_by, created_time等）
+
+表2: crm_deposit_category（方案分类表）
+  └─ 对方案进行分类管理
+
+表3: crm_deposit_agreement（储值协议表）
+  └─ 储值时用户需要同意的条款
+
+表4: crm_card_balance（会员卡余额表）⚠️ 关键表
+  ├─ principal（本金余额）
+  ├─ gift（赠送金额余额）
+  ├─ total = principal + gift（总余额）
+  ├─ revision（乐观锁版本号）← 必须使用！
+  └─ source（来源）
+
+表5: crm_card_balance_task（余额操作记录表）
+  └─ 记录每次储值/消费操作
+
+表6: crm_card_record（卡交易流水表）
+  ├─ balance_before/after（交易前后余额）
+  ├─ principal_before/after（本金前后）
+  └─ give_amount_before/after（赠送前后）
+
+表7: crm_member_gift_record（礼品发放记录表）
+  └─ 记录优惠券等赠品的发放
+
+🔑 关键业务概念：
+
+余额组成方程：
+  total = principal + gift
+
+  例：储值100元，赠50元
+    → principal = 100
+    → gift = 50
+    → total = 150
+
+消费顺序：
+  优先扣除 gift（赠送）→ 再扣除 principal（本金）
+
+  例：余额 principal=100, gift=50, total=150
+      消费120元
+    → 先扣 gift(50)
+    → 再扣 principal(70)
+    → 结果：principal=30, gift=0, total=30
+
+⚠️ 并发控制（重要！）：
+  UPDATE crm_card_balance
+  SET principal = principal + ?,
+      gift = gift + ?,
+      revision = revision + 1
+  WHERE lid = ? AND revision = ?  ← 版本号必须匹配！
+
+  如果版本号不匹配，说明有其他线程已更新，需要重试。
+  这是防止在高并发下导致余额计算错误的关键机制。
+
+🔍 可用方案查询过滤顺序（9个条件）：
+  1. 状态必须启用 (status=1)
+  2. 在有效期内 (begin_time ≤ now ≤ end_time)
+  3. 满足周期规则 (今天在 cycle_rule 的 values 中)
+  4. 不在排除日期中 (今天不在 exclude_dates 中)
+  5. 满足时段规则 (现在在 time_periods 中)
+  6. 满足渠道规则 (当前渠道在 channels 中)
+  7. 满足门店规则 (当前门店在 applicable_orgs 中)
+  8. 满足品牌规则 (当前品牌在 brand_rule 中)
+  9. 满足会员等级规则 (会员等级在 member_level_rule 中)
+
+  ⚠️ 任何一个条件不满足都要排除该方案！
+
+📈 购买限制规则四个层级：
+
+  perUserTotalLimit：
+    → 单个会员的总购买次数限制
+    → 例：新人礼只能买1次
+
+  perUserPeriodLimit：
+    → 单个会员的周期购买限制
+    → 例：每天最多买5次
+
+  totalSaleLimit：
+    → 全局的总销售次数限制
+    → 例：这个方案最多卖1000次
+
+  totalSalePeriodLimit：
+    → 全局的周期销售限制
+    → 例：每天全局最多卖100次
+
+💡 真实业务场景（5个）：
+
+场景1：新人首充礼
+  - isFirstChargeOnly=true（仅首充）
+  - perUserTotalLimit=1（只能1次）
+  - 提供更高的赠送比例（如50%）
+
+场景2：周末促销储值
+  - cycle_rule={"type":"WEEKLY","values":[6,7]}（仅周六日）
+  - time_periods={"startMin":600,"endMin":1200}（10:00-20:00）
+
+场景3：VIP会员分层
+  - member_level_rule 限制会员等级
+  - 不同等级的赠送不同
+
+场景4：渠道差异化
+  - POS渠道赠送25%
+  - 小程序渠道赠送20%
+
+场景5：限量秒杀
+  - date_type=1, begin_time=2026-03-20 09:00, end_time=2026-03-20 23:59:59
+  - time_periods 限制为1小时（9:00-10:00）
+  - totalSaleLimit=100（全局100次）
+  - perUserTotalLimit=1（每人1次）
+
+📚 生成的文档（4份）：
+
+1. 会员储值完整功能分析.md（推荐入门）
+   ├─ 业务流程详解
+   ├─ 7张表的完整结构说明
+   ├─ JSON字段详细格式
+   ├─ 5个真实场景示例
+   └─ 技术实现细节
+
+2. 会员储值-表关系图.md（推荐理解模型）
+   ├─ 3层架构图
+   ├─ 表间关系和联接
+   ├─ JSON字段包含结构
+   ├─ 数据流向说明
+   └─ 查询优化建议
+
+3. 会员储值-字段详解.md（推荐开发参考）
+   ├─ 每个字段的类型、长度、必填性
+   ├─ 字段说明和取值示例
+   ├─ JSON嵌套结构详解
+   └─ 约束和关联关系
+
+4. memory/MEMBER_DEPOSIT_TABLES.md（快速参考）
+   ├─ 表结构快速对照
+   ├─ 关键字段含义
+   ├─ 过滤顺序提醒
+   ├─ 核心操作流程
+   └─ 重要约束提示
+
+🎓 学习建议：
+
+新手入门：
+  1. 阅读《会员储值完整功能分析.md》概述和流程部分
+  2. 查看《会员储值-表关系图.md》理解表关系
+  3. 开发时查阅《会员储值-字段详解.md》
+
+高级开发：
+  1. 阅读源代码中的Service类
+  2. 关注并发控制和性能优化
+  3. 理解JSON字段的复杂规则
+
+⚠️ 常见坑点：
+
+1. 忘记使用乐观锁
+   → 导致并发扣减不正确
+
+2. 混淆 principal 和 gift
+   → 导致消费顺序错误
+
+3. 未按顺序检查过滤条件
+   → 导致方案被意外隐藏
+
+4. JSON字段解析错误
+   → 导致规则不生效
+
+5. 未更新统计字段
+   → 导致数据不一致
+
+✅ 下一步工作：
+
+1. 集成到支付流程 - 目前是独立的
+2. 实现赠送逻辑 - 多券、券包、升级等
+3. 性能优化 - JSON查询、缓存等
+4. 数据迁移 - 从旧CrmSaveRule迁移
+
+====================================
+分析日期：2026-03-19
+文档版本：1.0

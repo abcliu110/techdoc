@@ -1,0 +1,221 @@
+旧会员储值系统 - 快速总结
+
+============================
+
+📊 系统规模：
+✓ 7 张核心数据表
+✓ 3 个主要服务类
+✓ 19 种操作类型
+✓ 7 种支付状态
+
+💾 核心数据表：
+
+表1: CrmSaveRule (储值规则)
+  - 定义储值套餐（本金、赠送、优惠券）
+  - 单个规则对应一个套餐
+  - 支持有效期、门店限制、升卡选项等
+
+表2: CrmSaveRuleInterval (储值区间)
+  - 定义阶梯式赠送规则
+  - 不同金额范围的不同赠送比例
+
+表3: CrmCard (会员卡)
+  - 存储余额汇总
+  - balance = principal_balance + give_balance
+  - 包含 10+ 个统计字段
+  - 使用乐观锁 (revision) 防止并发问题
+
+表4: CrmCardBalance (余额变动)
+  - 记录每次的余额变动
+  - source 字段标记来源（Charge/Consume等）
+  - 与 CrmCard 配合提供完整的变动历史
+
+表5: CrmCardRecord (交易流水)
+  - 最详细的审计记录
+  - 包含交易前后的完整状态
+  - 用于财务对账和纠纷处理
+  - 包含 50+ 个字段，非常详尽
+
+表6: CrmDealTask (交易主任务)
+  - 每次储值/消费/退款的主记录
+  - 支持多种 operation_model（Charge/Consume等）
+  - 支持支付状态追踪 (trade_state)
+  - 关联 WeChat 支付订单 (out_trade_no)
+
+表7: CrmDealTaskItem (交易明细)
+  - 一个任务可有多条明细
+  - 每条明细对应一个规则
+  - 支持同时选择多个规则进行储值
+
+🎯 核心业务流程（4个）：
+
+流程1: 规则配置
+  商户 → 创建 CrmSaveRule → 启用 → 会员可选
+
+流程2: 储值执行（最重要）
+  会员选择规则
+  → ChargeService.commit() 提交
+  → 计算：principal = ∑save_amount, gift = ∑give_amount
+  → 创建 CrmDealTask 和 CrmDealTaskItem
+  → 跳转 WeChat 支付
+  → 支付成功回调
+  → ChargeService.success() 更新余额
+  → 创建 CrmCardBalance
+  → 创建 CrmCardRecord
+  → 发放优惠券和积分
+
+流程3: 消费使用
+  会员购物 → 选择使用储值
+  → 优先扣 give_balance → 再扣 principal_balance
+  → 更新 CrmCard 余额
+  → 创建审计记录
+
+流程4: 退款处理
+  会员申请退款
+  → 标记 CrmDealTask.canceled=true
+  → 扣除卡余额
+  → 发起支付退款
+  → 创建审计记录
+
+🔑 关键概念：
+
+余额组成方程：
+  balance = principal_balance + give_balance
+
+  例：储值 100 元，赠送 20 元
+  → principal_balance = 100
+  → give_balance = 20
+  → balance = 120
+
+消费顺序（重要！）：
+  优先扣赠送(give) → 再扣本金(principal)
+
+  例：balance=120 (principal=100, gift=20)
+      消费 50 元
+  → 先扣 gift: 20 → 0
+  → 再扣 principal: 100 → 80
+  → 结果：balance=80 (principal=80, gift=0)
+
+分期金额：
+  IF unpaid_amount 存在：
+    分期金额 = unpaid_amount (固定值)
+  ELSE IF unpaid_rate 存在：
+    分期金额 = 总金额 * unpaid_rate (按比例)
+  ELSE:
+    分期金额 = 0
+
+⚡ 核心服务：
+
+ChargeService:
+  - commit(rules) → 提交储值，返回支付链接
+  - success(out_trade_no) → 支付成功回调处理
+  - queryChargeStatus(out_trade_no) → 查询支付状态
+
+CrmSaveRuleServicePlus:
+  - list() → 列出所有规则
+  - listSign() → 列出结账用规则
+  - listByWx() → 列出小程序规则
+  - add/update/delete → CRUD 操作
+
+🔒 数据一致性：
+
+乐观锁（Optimistic Lock）：
+  UPDATE crm_card
+  SET balance = balance + ?,
+      revision = revision + 1
+  WHERE lid = ? AND revision = ?
+
+  如果版本号不匹配，说明有其他线程更新，需重试
+  这防止了并发扣减时的余额错误
+
+完整审计：
+  每次变动都记录到 CrmCardRecord，包含：
+  - 变动前后的完整状态
+  - 操作人和操作时间
+  - 关联的交易 ID
+  - 详细的交易信息
+
+📋 枚举值：
+
+OperationModelEnum（操作类型）：
+  1=Charge(储值)
+  2=ChargeCancel(取消)
+  3=Consume(消费)
+  4=CancelOrder(订单取消)
+  5=Refund(退款)
+  6=LevelUpg(升级)
+  ...更多 19 种
+
+TradeStateEnum（支付状态）：
+  NOTPAY(未支付)
+  SUCCESS(成功)
+  REFUND(已退款)
+  CLOSED(已关闭)
+  USERPAYING(支付中)
+  PAYERROR(支付错误)
+
+📊 旧系统 vs 新系统对比：
+
+特性                旧系统              新系统(CrmDepositPlan)
+数据结构            扁平化              JSON 规则存储
+规则配置            简单直观            极其灵活
+支持的限制          少（时间、门店）   多（周期、时段、渠道、品牌等）
+多档位支持          通过 Interval       原生支持
+赠送方式            金额+积分+券        金额+积分+券+券包+升级
+优惠券发放          一次性              一次性+周期性
+成熟度              ✓✓✓ 生产环境        ✗ 开发阶段
+集成度              ✓✓✓ 完全集成        ✗ 尚未集成
+
+🎓 学习建议：
+
+新手：
+  1. 阅读《旧会员储值系统-完整分析.md》
+  2. 理解 7 个表的关系
+  3. 重点掌握 CrmCard 和 CrmCardBalance 的区别
+  4. 理解消费时的扣减顺序
+
+开发：
+  1. 关注 ChargeService 和 CrmSaveRuleServicePlus
+  2. 使用乐观锁防止并发问题
+  3. 每次操作都创建完整的审计记录
+  4. 支付回调时必须幂等（可被多次调用）
+
+性能优化：
+  1. CrmCardRecord 表会很大，需要定期归档
+  2. 查询可用规则时，使用 status_ 和 begin_time 索引
+  3. 计算消费时，先查询 CrmCard 确认余额
+
+⚠️ 常见坑点：
+
+1. 混淆 principal 和 give
+   → 导致消费顺序错误
+
+2. 忘记使用乐观锁
+   → 并发扣减时余额计算错误
+
+3. 支付回调未做幂等
+   → 重复调用导致余额重复增加
+
+4. 未创建审计记录
+   → 出现问题无法追溯
+
+5. 规则有效期检查不完整
+   → 过期规则仍被使用
+
+✅ 与新系统的迁移方案：
+
+短期：
+  旧系统继续支持生产
+  新系统 (CrmDepositPlan) 并行开发
+
+中期：
+  新系统集成到支付流程
+  支持旧系统数据迁移
+
+长期：
+  旧系统逐步废弃
+  完全切换到新系统
+
+============================
+分析日期：2026-03-19
+系统状态：生产环境正常运行
