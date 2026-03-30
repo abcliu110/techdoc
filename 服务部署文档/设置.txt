@@ -65,3 +65,24 @@ C:\Users\16555\.pyenv\pyenv-win\versions\3.11.4
 
 https://x-superflash.com/
 
+
+测试服务器ip: 192.168.1.119
+用户名jj, 密码123456
+
+rancher登录地址： https://jjtestserver
+用户名:admin 密码:st11338st11338
+
+http://192.168.1.119:30090/
+jenkins: 用户名jj  密码: st11338
+
+//制品库
+nexus: http://192.168.1.119:30002/
+用户名:admin 密码:st11338
+
+Harbor 镜像库
+http://192.168.1.119:30020/
+用户名: admin 密码:Harbor12345
+
+http://192.168.1.119:8848/nacos
+
+用户名: nacos 密码:nacos

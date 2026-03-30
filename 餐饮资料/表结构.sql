@@ -5,7 +5,8 @@ select * from sc_store ss  where ss.shop_id  = 159426147207078756
 select * from a_wechat.wx_app_config
 
 --发券表
-select * from  sc_mall_coupon_order 
+select * from  gylregdb.sc_mall_coupon_order where openid = 'o2SeR5TNG1V4Jjpm_3QDbMBdxifw'
+
 
 --会员卡表
 select * from gylregdb.crm_card where phone = '18923865943'
