@@ -30,3 +30,14 @@ select * from gylregdb.crm_card where phone = '18923865943'
   
   
   select cc.merchant_name,c.* from pay_store_and_channel c inner join pay_channel cc on c.channel_no  = cc.lid and c.mid = 159411180237043484 and c.sid = 159411180237074902
+  
+-- 大类表
+select * from gylregdb.sc_dish_type 
+
+-- 食品表
+select * from gylregdb.sc_dish sd
+
+
+-- 角色表
+select * from a_platform.sys_role
+

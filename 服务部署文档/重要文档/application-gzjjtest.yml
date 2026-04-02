@@ -28,7 +28,8 @@ oss:
 
 
 
-
-
-
+          pt_dish_price_special:
+            actual-data-nodes: pos.pt_dish_price_special            
+          pt_festival:
+            actual-data-nodes: pos.pt_festival
 

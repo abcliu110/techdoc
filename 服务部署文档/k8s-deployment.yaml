@@ -759,3 +759,424 @@ spec:
     targetPort: 18138
     nodePort: 30139
     protocol: TCP
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nms4cloud-mq
+  namespace: nms4cloud
+  labels:
+    app: nms4cloud-mq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nms4cloud-mq
+  template:
+    metadata:
+      labels:
+        app: nms4cloud-mq
+    spec:
+      imagePullSecrets:
+      - name: tencent-ccr-secret
+      initContainers:
+      - name: wait-for-nacos
+        image: curlimages/curl:7.85.0
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for Nacos to be ready..."
+          until curl -sf http://nacos:8848/nacos/v1/console/health/readiness; do
+            echo "Nacos is not ready yet, retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Nacos is ready!"
+      containers:
+      - name: nms4cloud-mq
+        image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_mq_latest
+        ports:
+        - containerPort: 18120
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: nacos
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nms4cloud-mq
+  namespace: nms4cloud
+spec:
+  type: NodePort
+  selector:
+    app: nms4cloud-mq
+  ports:
+  - name: port-18120
+    port: 18120
+    targetPort: 18120
+    nodePort: 30120
+    protocol: TCP
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nms4cloud-product
+  namespace: nms4cloud
+  labels:
+    app: nms4cloud-product
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nms4cloud-product
+  template:
+    metadata:
+      labels:
+        app: nms4cloud-product
+    spec:
+      imagePullSecrets:
+      - name: tencent-ccr-secret
+      initContainers:
+      - name: wait-for-nacos
+        image: curlimages/curl:7.85.0
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for Nacos to be ready..."
+          until curl -sf http://nacos:8848/nacos/v1/console/health/readiness; do
+            echo "Nacos is not ready yet, retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Nacos is ready!"
+      containers:
+      - name: nms4cloud-product
+        image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_product_latest
+        ports:
+        - containerPort: 18135
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: nacos
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nms4cloud-product
+  namespace: nms4cloud
+spec:
+  type: NodePort
+  selector:
+    app: nms4cloud-product
+  ports:
+  - port: 18135
+    targetPort: 18135
+    nodePort: 30135
+    protocol: TCP
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nms4cloud-order
+  namespace: nms4cloud
+  labels:
+    app: nms4cloud-order
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nms4cloud-order
+  template:
+    metadata:
+      labels:
+        app: nms4cloud-order
+    spec:
+      imagePullSecrets:
+      - name: tencent-ccr-secret
+      initContainers:
+      - name: wait-for-nacos
+        image: curlimages/curl:7.85.0
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for Nacos to be ready..."
+          until curl -sf http://nacos:8848/nacos/v1/console/health/readiness; do
+            echo "Nacos is not ready yet, retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Nacos is ready!"
+      containers:
+      - name: nms4cloud-order
+        image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_order_latest
+        ports:
+        - containerPort: 18139
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: nacos
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nms4cloud-order
+  namespace: nms4cloud
+spec:
+  type: NodePort
+  selector:
+    app: nms4cloud-order
+  ports:
+  - port: 18139
+    targetPort: 18139
+    nodePort: 30139
+    protocol: TCP
+---
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nms4cloud-mall
+  namespace: nms4cloud
+  labels:
+    app: nms4cloud-mall
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nms4cloud-mall
+  template:
+    metadata:
+      labels:
+        app: nms4cloud-mall
+    spec:
+      imagePullSecrets:
+      - name: tencent-ccr-secret
+      initContainers:
+      - name: wait-for-nacos
+        image: curlimages/curl:7.85.0
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for Nacos to be ready..."
+          until curl -sf http://nacos:8848/nacos/v1/console/health/readiness; do
+            echo "Nacos is not ready yet, retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Nacos is ready!"
+      containers:
+      - name: nms4cloud-mall
+        image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_mall_latest
+        ports:
+        - containerPort: 80
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: nacos
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nms4cloud-mall
+  namespace: nms4cloud
+spec:
+  type: NodePort
+  selector:
+    app: nms4cloud-mall
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+---
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nms4cloud-pos5sync
+  namespace: nms4cloud
+  labels:
+    app: nms4cloud-pos5sync
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nms4cloud-pos5sync
+  template:
+    metadata:
+      labels:
+        app: nms4cloud-pos5sync
+    spec:
+      imagePullSecrets:
+      - name: tencent-ccr-secret
+      initContainers:
+      - name: wait-for-nacos
+        image: curlimages/curl:7.85.0
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for Nacos to be ready..."
+          until curl -sf http://nacos:8848/nacos/v1/console/health/readiness; do
+            echo "Nacos is not ready yet, retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Nacos is ready!"
+      containers:
+      - name: nms4cloud-pos5sync
+        image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_pos5sync_latest
+        ports:
+        - containerPort: 80
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: nacos
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nms4cloud-pos5sync
+  namespace: nms4cloud
+spec:
+  type: NodePort
+  selector:
+    app: nms4cloud-pos5sync
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+---
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nms4cloud-pos8book
+  namespace: nms4cloud
+  labels:
+    app: nms4cloud-pos8book
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nms4cloud-pos8book
+  template:
+    metadata:
+      labels:
+        app: nms4cloud-pos8book
+    spec:
+      imagePullSecrets:
+      - name: tencent-ccr-secret
+      initContainers:
+      - name: wait-for-nacos
+        image: curlimages/curl:7.85.0
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for Nacos to be ready..."
+          until curl -sf http://nacos:8848/nacos/v1/console/health/readiness; do
+            echo "Nacos is not ready yet, retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Nacos is ready!"
+      containers:
+      - name: nms4cloud-pos8book
+        image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud-pos8book:latest
+        ports:
+        - containerPort: 80
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: nacos
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nms4cloud-pos8book
+  namespace: nms4cloud
+spec:
+  type: NodePort
+  selector:
+    app: nms4cloud-pos8book
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+---
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nms4cloud-pos9cash
+  namespace: nms4cloud
+  labels:
+    app: nms4cloud-pos9cash
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nms4cloud-pos9cash
+  template:
+    metadata:
+      labels:
+        app: nms4cloud-pos9cash
+    spec:
+      imagePullSecrets:
+      - name: tencent-ccr-secret
+      initContainers:
+      - name: wait-for-nacos
+        image: curlimages/curl:7.85.0
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for Nacos to be ready..."
+          until curl -sf http://nacos:8848/nacos/v1/console/health/readiness; do
+            echo "Nacos is not ready yet, retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Nacos is ready!"
+      containers:
+      - name: nms4cloud-pos9cash
+        image: ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud-pos9cash:latest
+        ports:
+        - containerPort: 80
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: nacos
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nms4cloud-pos9cash
+  namespace: nms4cloud
+spec:
+  type: NodePort
+  selector:
+    app: nms4cloud-pos9cash
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+---
