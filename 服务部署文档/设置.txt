@@ -123,3 +123,12 @@ eM@aTvvU4RFzo*
   # 4. 推送
   docker push 10.43.92.252/library/emqx:5.4.1
 
+主账号ID 100042037431 
+用户名 liuguoyun
+SecretId - 
+SecretKey - 
+快捷登录 https://cloud.tencent.com/login/subAccount/100042037431?type=subAccount&username=liuguoyun
+
+106.55.226.252
+administrator
+123eM@aTvvU4RFzo*PPL
