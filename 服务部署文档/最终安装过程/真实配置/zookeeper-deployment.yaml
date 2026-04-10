@@ -1,0 +1,101 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: zookeeper-data
+  namespace: nms4cloud
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: zookeeper-datalog
+  namespace: nms4cloud
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zookeeper
+  namespace: nms4cloud
+  labels:
+    k8s-app: zookeeper
+    qcloud-app: zookeeper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: zookeeper
+      qcloud-app: zookeeper
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        k8s-app: zookeeper
+        qcloud-app: zookeeper
+    spec:
+      containers:
+      - name: zookeeper
+        image: 192.168.1.119:30020/library/zookeeper:3.9.3
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+          limits:
+            cpu: 250m
+            memory: 512Mi
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: datalog
+          mountPath: /datalog
+      imagePullSecrets:
+      - name: docker-secret
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: zookeeper-data
+      - name: datalog
+        persistentVolumeClaim:
+          claimName: zookeeper-datalog
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper
+  namespace: nms4cloud
+  labels:
+    k8s-app: zookeeper
+spec:
+  selector:
+    k8s-app: zookeeper
+    qcloud-app: zookeeper
+  ports:
+  - name: client
+    port: 2181
+    targetPort: 2181
+  - name: follower
+    port: 2888
+    targetPort: 2888
+  - name: election
+    port: 3888
+    targetPort: 3888
+  type: ClusterIP

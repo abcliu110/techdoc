@@ -1,5 +1,6 @@
 -- ads_department_by_day definition
 
+DROP TABLE IF EXISTS bi.ads_department_by_day;
 CREATE TABLE bi.ads_department_by_day
 (
 
@@ -96,6 +97,7 @@ COMMENT '部门日销售汇总';
 
 -- ads_food_by_week_hour definition
 
+DROP TABLE IF EXISTS bi.ads_food_by_week_hour;
 CREATE TABLE bi.ads_food_by_week_hour
 (
 
@@ -190,6 +192,7 @@ COMMENT '每周各个小时汇总';
 
 -- ads_pay_by_day definition
 
+DROP TABLE IF EXISTS bi.ads_pay_by_day;
 CREATE TABLE bi.ads_pay_by_day
 (
 
@@ -253,6 +256,7 @@ COMMENT '支付名称类型汇总表';
 
 -- caishifa definition
 
+DROP TABLE IF EXISTS bi.caishifa;
 CREATE TABLE bi.caishifa
 (
 
@@ -337,6 +341,7 @@ COMMENT '';
 
 -- canal_event_log definition
 
+DROP TABLE IF EXISTS bi.canal_event_log;
 CREATE TABLE bi.canal_event_log
 (
 
@@ -376,6 +381,7 @@ COMMENT 'canal消费日志表';
 
 -- crm_card definition
 
+DROP TABLE IF EXISTS bi.crm_card;
 CREATE TABLE bi.crm_card
 (
 
@@ -513,6 +519,7 @@ SETTINGS index_granularity = 8192;
 
 -- crm_card_balance definition
 
+DROP TABLE IF EXISTS bi.crm_card_balance;
 CREATE TABLE bi.crm_card_balance
 (
 
@@ -570,6 +577,7 @@ COMMENT '卡余额';
 
 -- crm_card_level definition
 
+DROP TABLE IF EXISTS bi.crm_card_level;
 CREATE TABLE bi.crm_card_level
 (
 
@@ -700,6 +708,7 @@ COMMENT '';
 
 -- crm_card_op_record definition
 
+DROP TABLE IF EXISTS bi.crm_card_op_record;
 CREATE TABLE bi.crm_card_op_record
 (
 
@@ -779,6 +788,7 @@ COMMENT '';
 
 -- crm_card_points_record definition
 
+DROP TABLE IF EXISTS bi.crm_card_points_record;
 CREATE TABLE bi.crm_card_points_record
 (
 
@@ -881,6 +891,7 @@ COMMENT '';
 
 -- crm_card_record definition
 
+DROP TABLE IF EXISTS bi.crm_card_record;
 CREATE TABLE bi.crm_card_record
 (
 
@@ -1038,6 +1049,7 @@ SETTINGS index_granularity = 8192;
 
 -- crm_card_type definition
 
+DROP TABLE IF EXISTS bi.crm_card_type;
 CREATE TABLE bi.crm_card_type
 (
 
@@ -1186,6 +1198,7 @@ COMMENT '';
 
 -- crm_member definition
 
+DROP TABLE IF EXISTS bi.crm_member;
 CREATE TABLE bi.crm_member
 (
 
@@ -1276,6 +1289,7 @@ SETTINGS index_granularity = 8192;
 
 -- dwd_bill definition
 
+DROP TABLE IF EXISTS bi.dwd_bill;
 CREATE TABLE bi.dwd_bill
 (
 
@@ -1465,6 +1479,7 @@ COMMENT '账单明细';
 
 -- dwd_bill_mid definition
 
+DROP TABLE IF EXISTS bi.dwd_bill_mid;
 CREATE TABLE bi.dwd_bill_mid
 (
 
@@ -1655,6 +1670,7 @@ COMMENT '账单明细';
 
 -- dwd_food definition
 
+DROP TABLE IF EXISTS bi.dwd_food;
 CREATE TABLE bi.dwd_food
 (
 
@@ -1847,6 +1863,7 @@ COMMENT '菜品销售明细';
 
 -- dwd_food_mid definition
 
+DROP TABLE IF EXISTS bi.dwd_food_mid;
 CREATE TABLE bi.dwd_food_mid
 (
 
@@ -2040,6 +2057,7 @@ COMMENT '菜品销售明细';
 
 -- dwd_income definition
 
+DROP TABLE IF EXISTS bi.dwd_income;
 CREATE TABLE bi.dwd_income
 (
 
@@ -2118,6 +2136,7 @@ COMMENT '收入明细表';
 
 -- dwd_invoice_bill definition
 
+DROP TABLE IF EXISTS bi.dwd_invoice_bill;
 CREATE TABLE bi.dwd_invoice_bill
 (
 
@@ -2215,6 +2234,7 @@ COMMENT '发票订单';
 
 -- dwd_pay definition
 
+DROP TABLE IF EXISTS bi.dwd_pay;
 CREATE TABLE bi.dwd_pay
 (
 
@@ -2318,6 +2338,7 @@ COMMENT '支付明细表';
 
 -- dwd_pay_mid definition
 
+DROP TABLE IF EXISTS bi.dwd_pay_mid;
 CREATE TABLE bi.dwd_pay_mid
 (
 
@@ -2422,6 +2443,7 @@ COMMENT '支付明细表';
 
 -- dwd_taste definition
 
+DROP TABLE IF EXISTS bi.dwd_taste;
 CREATE TABLE bi.dwd_taste
 (
 
@@ -2508,6 +2530,7 @@ COMMENT '口味做法明细';
 
 -- dws_bill_by_area_name definition
 
+DROP TABLE IF EXISTS bi.dws_bill_by_area_name;
 CREATE TABLE bi.dws_bill_by_area_name
 (
 
@@ -2560,6 +2583,7 @@ COMMENT '桌台区域分布';
 
 -- dws_bill_by_checkout_time_name definition
 
+DROP TABLE IF EXISTS bi.dws_bill_by_checkout_time_name;
 CREATE TABLE bi.dws_bill_by_checkout_time_name
 (
 
@@ -2612,6 +2636,7 @@ COMMENT '餐段分布';
 
 -- dws_bill_by_consumption definition
 
+DROP TABLE IF EXISTS bi.dws_bill_by_consumption;
 CREATE TABLE bi.dws_bill_by_consumption
 (
 
@@ -2664,6 +2689,7 @@ COMMENT '客单价';
 
 -- dws_bill_by_day definition
 
+DROP TABLE IF EXISTS bi.dws_bill_by_day;
 CREATE TABLE bi.dws_bill_by_day
 (
 
@@ -2757,6 +2783,7 @@ COMMENT '账单天汇总';
 
 -- dws_bill_by_duration definition
 
+DROP TABLE IF EXISTS bi.dws_bill_by_duration;
 CREATE TABLE bi.dws_bill_by_duration
 (
 
@@ -2809,6 +2836,7 @@ COMMENT '消费时长统计';
 
 -- dws_bill_by_hour definition
 
+DROP TABLE IF EXISTS bi.dws_bill_by_hour;
 CREATE TABLE bi.dws_bill_by_hour
 (
 
@@ -2861,6 +2889,7 @@ COMMENT '账单小时汇总';
 
 -- dws_bill_by_order_sub_type definition
 
+DROP TABLE IF EXISTS bi.dws_bill_by_order_sub_type;
 CREATE TABLE bi.dws_bill_by_order_sub_type
 (
 
@@ -2913,6 +2942,7 @@ COMMENT '账单类型分布';
 
 -- dws_bill_by_price definition
 
+DROP TABLE IF EXISTS bi.dws_bill_by_price;
 CREATE TABLE bi.dws_bill_by_price
 (
 
@@ -2965,6 +2995,7 @@ COMMENT '单均价';
 
 -- dws_crm_activity definition
 
+DROP TABLE IF EXISTS bi.dws_crm_activity;
 CREATE TABLE bi.dws_crm_activity
 (
 
@@ -3014,6 +3045,7 @@ COMMENT '会员活跃度';
 
 -- dws_crm_by_day definition
 
+DROP TABLE IF EXISTS bi.dws_crm_by_day;
 CREATE TABLE bi.dws_crm_by_day
 (
 
@@ -3070,6 +3102,7 @@ COMMENT '会员数据按天汇总';
 
 -- dws_crm_card_summary definition
 
+DROP TABLE IF EXISTS bi.dws_crm_card_summary;
 CREATE TABLE bi.dws_crm_card_summary
 (
 
@@ -3115,6 +3148,7 @@ COMMENT '会员卡汇总表';
 
 -- dws_crm_day_snapshoot definition
 
+DROP TABLE IF EXISTS bi.dws_crm_day_snapshoot;
 CREATE TABLE bi.dws_crm_day_snapshoot
 (
 
@@ -3224,6 +3258,7 @@ COMMENT '会员余额每日快照';
 
 -- dws_crm_day_summary definition
 
+DROP TABLE IF EXISTS bi.dws_crm_day_summary;
 CREATE TABLE bi.dws_crm_day_summary
 (
 
@@ -3337,6 +3372,7 @@ COMMENT '会员余额每日汇总';
 
 -- dws_crm_day_summary_with_sid definition
 
+DROP TABLE IF EXISTS bi.dws_crm_day_summary_with_sid;
 CREATE TABLE bi.dws_crm_day_summary_with_sid
 (
 
@@ -3454,6 +3490,7 @@ COMMENT '会员余额每日汇总';
 
 -- dws_crm_income_of_store definition
 
+DROP TABLE IF EXISTS bi.dws_crm_income_of_store;
 CREATE TABLE bi.dws_crm_income_of_store
 (
 
@@ -3519,6 +3556,7 @@ COMMENT '会员连锁门店收支报表';
 
 -- dws_crm_member_join_by_day definition
 
+DROP TABLE IF EXISTS bi.dws_crm_member_join_by_day;
 CREATE TABLE bi.dws_crm_member_join_by_day
 (
 
@@ -3562,6 +3600,7 @@ COMMENT '每日新增会员';
 
 -- dws_crm_settlement_of_store definition
 
+DROP TABLE IF EXISTS bi.dws_crm_settlement_of_store;
 CREATE TABLE bi.dws_crm_settlement_of_store
 (
 
@@ -3632,6 +3671,7 @@ COMMENT '跨门店结算报表';
 
 -- dws_crm_sex definition
 
+DROP TABLE IF EXISTS bi.dws_crm_sex;
 CREATE TABLE bi.dws_crm_sex
 (
 
@@ -3669,6 +3709,7 @@ COMMENT '会员性别分析表';
 
 -- dws_crm_summary definition
 
+DROP TABLE IF EXISTS bi.dws_crm_summary;
 CREATE TABLE bi.dws_crm_summary
 (
 
@@ -3723,6 +3764,7 @@ COMMENT '会员汇总表';
 
 -- dws_department_by_day definition
 
+DROP TABLE IF EXISTS bi.dws_department_by_day;
 CREATE TABLE bi.dws_department_by_day
 (
 
@@ -3816,6 +3858,7 @@ COMMENT '部门日销售汇总';
 
 -- dws_depart_sale_profit definition
 
+DROP TABLE IF EXISTS bi.dws_depart_sale_profit;
 CREATE TABLE bi.dws_depart_sale_profit
 (
 
@@ -3884,6 +3927,7 @@ COMMENT '部门销售利润统计';
 
 -- dws_food_by_cook definition
 
+DROP TABLE IF EXISTS bi.dws_food_by_cook;
 CREATE TABLE bi.dws_food_by_cook
 (
 
@@ -3974,6 +4018,7 @@ COMMENT '厨师统计';
 
 -- dws_food_by_day definition
 
+DROP TABLE IF EXISTS bi.dws_food_by_day;
 CREATE TABLE bi.dws_food_by_day
 (
 
@@ -4082,6 +4127,7 @@ COMMENT '菜品日销售汇总';
 
 -- dws_food_by_day_crm definition
 
+DROP TABLE IF EXISTS bi.dws_food_by_day_crm;
 CREATE TABLE bi.dws_food_by_day_crm
 (
 
@@ -4176,6 +4222,7 @@ COMMENT '会员菜品日销售汇总';
 
 -- dws_food_by_day_mid definition
 
+DROP TABLE IF EXISTS bi.dws_food_by_day_mid;
 CREATE TABLE bi.dws_food_by_day_mid
 (
 
@@ -4284,6 +4331,7 @@ COMMENT '菜品日销售汇总';
 
 -- dws_food_category_by_day definition
 
+DROP TABLE IF EXISTS bi.dws_food_category_by_day;
 CREATE TABLE bi.dws_food_category_by_day
 (
 
@@ -4372,6 +4420,7 @@ COMMENT '菜小类日销售汇总';
 
 -- dws_food_super_category_by_day definition
 
+DROP TABLE IF EXISTS bi.dws_food_super_category_by_day;
 CREATE TABLE bi.dws_food_super_category_by_day
 (
 
@@ -4458,6 +4507,7 @@ COMMENT '菜大类日销售汇总';
 
 -- dws_pay_by_day definition
 
+DROP TABLE IF EXISTS bi.dws_pay_by_day;
 CREATE TABLE bi.dws_pay_by_day
 (
 
@@ -4523,6 +4573,7 @@ COMMENT '支付名称类型汇总表';
 
 -- dws_pay_by_name definition
 
+DROP TABLE IF EXISTS bi.dws_pay_by_name;
 CREATE TABLE bi.dws_pay_by_name
 (
 
@@ -4573,6 +4624,7 @@ COMMENT '支付名称汇总表';
 
 -- dws_pay_by_type definition
 
+DROP TABLE IF EXISTS bi.dws_pay_by_type;
 CREATE TABLE bi.dws_pay_by_type
 (
 
@@ -4623,6 +4675,7 @@ COMMENT '支付类型汇总表';
 
 -- dws_product_sale_profit definition
 
+DROP TABLE IF EXISTS bi.dws_product_sale_profit;
 CREATE TABLE bi.dws_product_sale_profit
 (
 
@@ -4703,6 +4756,7 @@ COMMENT '菜品销售利润统计';
 
 -- dwt_daily_by_day definition
 
+DROP TABLE IF EXISTS bi.dwt_daily_by_day;
 CREATE TABLE bi.dwt_daily_by_day
 (
 
@@ -4755,6 +4809,7 @@ COMMENT '营业日报';
 
 -- export_record definition
 
+DROP TABLE IF EXISTS bi.export_record;
 CREATE TABLE bi.export_record
 (
 
@@ -4800,6 +4855,7 @@ COMMENT '报表导出记录';
 
 -- fukuanqingkuang definition
 
+DROP TABLE IF EXISTS bi.fukuanqingkuang;
 CREATE TABLE bi.fukuanqingkuang
 (
 
@@ -4977,6 +5033,7 @@ SETTINGS index_granularity = 8192;
 
 -- jiaobanxinxi definition
 
+DROP TABLE IF EXISTS bi.jiaobanxinxi;
 CREATE TABLE bi.jiaobanxinxi
 (
 
@@ -5074,6 +5131,7 @@ COMMENT '';
 
 -- kouwei definition
 
+DROP TABLE IF EXISTS bi.kouwei;
 CREATE TABLE bi.kouwei
 (
 
@@ -5123,6 +5181,7 @@ COMMENT '';
 
 -- sc_product_sale_cost definition
 
+DROP TABLE IF EXISTS bi.sc_product_sale_cost;
 CREATE TABLE bi.sc_product_sale_cost
 (
 
@@ -5224,6 +5283,7 @@ COMMENT '菜品成本明细';
 
 -- sms_send_record definition
 
+DROP TABLE IF EXISTS bi.sms_send_record;
 CREATE TABLE bi.sms_send_record
 (
 
@@ -5265,6 +5325,7 @@ COMMENT '报表导出记录';
 
 -- xiaofeicaiping definition
 
+DROP TABLE IF EXISTS bi.xiaofeicaiping;
 CREATE TABLE bi.xiaofeicaiping
 (
 
@@ -5628,6 +5689,7 @@ SETTINGS index_granularity = 8192;
 
 -- xiaofeidan definition
 
+DROP TABLE IF EXISTS bi.xiaofeidan;
 CREATE TABLE bi.xiaofeidan
 (
 
@@ -6047,6 +6109,7 @@ SETTINGS index_granularity = 8192;
 
 -- yaoqiuinshifa definition
 
+DROP TABLE IF EXISTS bi.yaoqiuinshifa;
 CREATE TABLE bi.yaoqiuinshifa
 (
 
@@ -6112,6 +6175,7 @@ COMMENT '';
 
 -- zuofainshifa definition
 
+DROP TABLE IF EXISTS bi.zuofainshifa;
 CREATE TABLE bi.zuofainshifa
 (
 

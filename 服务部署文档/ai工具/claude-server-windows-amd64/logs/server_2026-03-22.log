@@ -1,0 +1,1771 @@
+[INFO] 2026/03/22 16:49:50 logger.go:92: 日志系统初始化成功，日志文件: logs\server_2026-03-22.log
+[INFO] 2026/03/22 16:49:50 main.go:68: === Claude 无限畅享版 dev 服务器启动中 ===
+[INFO] 2026/03/22 16:49:50 main.go:72: 系统时区: Asia/Shanghai
+[INFO] 2026/03/22 16:49:50 logger.go:121: 调试日志已禁用
+[INFO] 2026/03/22 16:49:50 main.go:100: 配置已加载 - 默认端口: 62311, 配置文件端口: 62311, 命令行端口: 0, 控制台: true
+[INFO] 2026/03/22 16:49:50 main.go:104: 开源版本 - 最大账号数: 999999
+[INFO] 2026/03/22 16:49:50 database.go:131: 开始自动迁移数据库结构...
+[INFO] 2026/03/22 16:49:50 database.go:183: 创建表: settings
+[INFO] 2026/03/22 16:49:50 database.go:183: 创建表: accounts
+[INFO] 2026/03/22 16:49:50 database.go:183: 创建表: users
+[INFO] 2026/03/22 16:49:50 database.go:183: 创建表: user_token_usage
+[INFO] 2026/03/22 16:49:50 database.go:183: 创建表: request_logs
+[INFO] 2026/03/22 16:49:50 database.go:183: 创建表: blocked_ips
+[INFO] 2026/03/22 16:49:50 database.go:183: 创建表: ip_configs
+[INFO] 2026/03/22 16:49:50 database.go:183: 创建表: imported_accounts
+[INFO] 2026/03/22 16:49:50 database.go:183: 创建表: proxies
+[INFO] 2026/03/22 16:49:50 database.go:193: 数据库结构迁移完成
+[INFO] 2026/03/22 16:49:50 main.go:113: 数据库初始化成功
+[INFO] 2026/03/22 16:49:50 main.go:125: 账号数量检查通过: 0/999999
+[INFO] 2026/03/22 16:49:50 main.go:150: 使用配置文件端口: 62311
+[INFO] 2026/03/22 16:49:50 main.go:161: 使用配置文件主机: 0.0.0.0
+[INFO] 2026/03/22 16:49:50 client.go:303: HTTP 连接池已优化 - MaxIdleConns: 200, MaxIdleConnsPerHost: 100, IdleConnTimeout: 2m0s
+[INFO] 2026/03/22 16:49:50 server.go:1551: 数据库写 worker 已启动 - 数量: 3
+[INFO] 2026/03/22 16:49:50 main.go:181: HTTP 服务器监听中 - 地址: http://0.0.0.0:62311
+[INFO] 2026/03/22 16:49:50 server.go:225: 缓存系统已启动 - 账号池刷新间隔: 10s, 设置缓存TTL: 30s
+[INFO] 2026/03/22 16:49:50 main.go:300: 已自动打开浏览器访问: http://localhost:62311
+[INFO] 2026/03/22 16:49:51 logger.go:160: GET / from ::1 - Status: 302 - Duration: 0s
+[INFO] 2026/03/22 16:49:51 logger.go:160: GET /login from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 16:49:56 main.go:254: 收到关闭信号,正在优雅关闭服务器...
+[INFO] 2026/03/22 16:49:56 main.go:270: === Claude 无限畅享版 dev 服务器已停止 ===
+[INFO] 2026/03/22 16:50:07 logger.go:92: 日志系统初始化成功，日志文件: logs\server_2026-03-22.log
+[INFO] 2026/03/22 16:50:07 main.go:68: === Claude 无限畅享版 dev 服务器启动中 ===
+[INFO] 2026/03/22 16:50:07 main.go:72: 系统时区: Asia/Shanghai
+[INFO] 2026/03/22 16:50:07 logger.go:121: 调试日志已禁用
+[INFO] 2026/03/22 16:50:07 main.go:100: 配置已加载 - 默认端口: 62311, 配置文件端口: 62311, 命令行端口: 0, 控制台: true
+[INFO] 2026/03/22 16:50:07 main.go:104: 开源版本 - 最大账号数: 999999
+[INFO] 2026/03/22 16:50:07 database.go:131: 开始自动迁移数据库结构...
+[INFO] 2026/03/22 16:50:07 database.go:193: 数据库结构迁移完成
+[INFO] 2026/03/22 16:50:07 main.go:113: 数据库初始化成功
+[INFO] 2026/03/22 16:50:07 main.go:125: 账号数量检查通过: 0/999999
+[INFO] 2026/03/22 16:50:07 main.go:150: 使用配置文件端口: 62311
+[INFO] 2026/03/22 16:50:07 main.go:161: 使用配置文件主机: 0.0.0.0
+[INFO] 2026/03/22 16:50:07 client.go:303: HTTP 连接池已优化 - MaxIdleConns: 200, MaxIdleConnsPerHost: 100, IdleConnTimeout: 2m0s
+[INFO] 2026/03/22 16:50:07 server.go:1551: 数据库写 worker 已启动 - 数量: 3
+[INFO] 2026/03/22 16:50:07 main.go:181: HTTP 服务器监听中 - 地址: http://0.0.0.0:62311
+[INFO] 2026/03/22 16:50:07 server.go:225: 缓存系统已启动 - 账号池刷新间隔: 10s, 设置缓存TTL: 30s
+[INFO] 2026/03/22 16:50:08 main.go:300: 已自动打开浏览器访问: http://localhost:62311
+[INFO] 2026/03/22 16:50:08 logger.go:160: GET / from ::1 - Status: 302 - Duration: 0s
+[INFO] 2026/03/22 16:50:08 logger.go:160: GET /login from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 16:50:13 server.go:1060: 登录尝试 - 来源: ::1
+[WARN] 2026/03/22 16:50:13 server.go:1076: 登录失败 - 无效密码 - 来源: ::1
+[INFO] 2026/03/22 16:50:13 logger.go:160: POST /api/login from ::1 - Status: 200 - Duration: 1.7797ms
+[INFO] 2026/03/22 16:50:44 server.go:1060: 登录尝试 - 来源: ::1
+[INFO] 2026/03/22 16:50:44 server.go:1072: 登录成功 - 来源: ::1
+[INFO] 2026/03/22 16:50:44 logger.go:160: POST /api/login from ::1 - Status: 200 - Duration: 1.0748ms
+[INFO] 2026/03/22 16:50:44 logger.go:160: GET / from ::1 - Status: 200 - Duration: 524.5µs
+[INFO] 2026/03/22 16:50:45 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 16:50:45 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 16:50:45 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 1.0399ms
+[INFO] 2026/03/22 16:50:45 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 16:50:45 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 16:50:45 handlers.go:441: 成功列出 0 个账号 (页码: 1/0, 总数: 0)
+[INFO] 2026/03/22 16:50:45 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 2.536ms
+[INFO] 2026/03/22 16:50:45 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 16:50:46 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.3077476s
+[INFO] 2026/03/22 16:51:02 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 16:51:02 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 16:51:02 handlers.go:441: 成功列出 0 个账号 (页码: 1/0, 总数: 0)
+[INFO] 2026/03/22 16:51:02 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 1.6852ms
+[INFO] 2026/03/22 16:51:13 oidc.go:125: OIDC: 开始注册客户端
+[INFO] 2026/03/22 16:51:15 oidc.go:153: OIDC: 客户端注册成功 - ClientID: JcvaB8eFaH-wOGjzuejIW3VzLWVhc3QtMQ
+[INFO] 2026/03/22 16:51:15 oidc.go:161: OIDC: 开始设备授权流程 - ClientID: JcvaB8eFaH-wOGjzuejIW3VzLWVhc3QtMQ
+[INFO] 2026/03/22 16:51:15 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 16:51:15 oidc.go:177: OIDC: 设备授权成功 - UserCode: NRFP-WLCK, DeviceCode: eNY_GWed...
+[INFO] 2026/03/22 16:51:15 logger.go:160: POST /v2/auth/start from ::1 - Status: 200 - Duration: 2.047282s
+[INFO] 2026/03/22 16:51:21 oidc.go:186: OIDC: 开始轮询令牌 - 间隔: 1s, 超时: 600s
+[INFO] 2026/03/22 16:51:25 oidc.go:186: OIDC: 开始轮询令牌 - 间隔: 1s, 超时: 600s
+[INFO] 2026/03/22 16:51:30 oidc.go:186: OIDC: 开始轮询令牌 - 间隔: 1s, 超时: 600s
+[INFO] 2026/03/22 16:51:36 oidc.go:186: OIDC: 开始轮询令牌 - 间隔: 1s, 超时: 600s
+[INFO] 2026/03/22 16:51:40 oidc.go:186: OIDC: 开始轮询令牌 - 间隔: 1s, 超时: 600s
+[INFO] 2026/03/22 16:55:09 main.go:254: 收到关闭信号,正在优雅关闭服务器...
+[INFO] 2026/03/22 16:55:09 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 4m24.6891384s
+[WARN] 2026/03/22 16:55:13 oidc.go:208: OIDC: 令牌轮询被取消 - 已轮询 40 次
+[INFO] 2026/03/22 16:55:13 logger.go:160: POST /v2/auth/claim/d516f507-1bf9-44d2-89cb-a3f30a43cb9b from ::1 - Status: 502 - Duration: 3m32.7581982s
+[WARN] 2026/03/22 16:55:14 oidc.go:208: OIDC: 令牌轮询被取消 - 已轮询 42 次
+[INFO] 2026/03/22 16:55:14 logger.go:160: POST /v2/auth/claim/d516f507-1bf9-44d2-89cb-a3f30a43cb9b from ::1 - Status: 502 - Duration: 3m43.6617771s
+[WARN] 2026/03/22 16:55:14 oidc.go:208: OIDC: 令牌轮询被取消 - 已轮询 43 次
+[INFO] 2026/03/22 16:55:14 logger.go:160: POST /v2/auth/claim/d516f507-1bf9-44d2-89cb-a3f30a43cb9b from ::1 - Status: 502 - Duration: 3m48.6878744s
+[INFO] 2026/03/22 16:55:26 logger.go:92: 日志系统初始化成功，日志文件: logs\server_2026-03-22.log
+[INFO] 2026/03/22 16:55:26 main.go:68: === Claude 无限畅享版 dev 服务器启动中 ===
+[INFO] 2026/03/22 16:55:26 main.go:72: 系统时区: Asia/Shanghai
+[INFO] 2026/03/22 16:55:26 logger.go:121: 调试日志已禁用
+[INFO] 2026/03/22 16:55:26 main.go:100: 配置已加载 - 默认端口: 62311, 配置文件端口: 62311, 命令行端口: 0, 控制台: true
+[INFO] 2026/03/22 16:55:26 main.go:104: 开源版本 - 最大账号数: 999999
+[INFO] 2026/03/22 16:55:26 database.go:131: 开始自动迁移数据库结构...
+[INFO] 2026/03/22 16:55:26 database.go:193: 数据库结构迁移完成
+[INFO] 2026/03/22 16:55:26 main.go:113: 数据库初始化成功
+[INFO] 2026/03/22 16:55:26 main.go:125: 账号数量检查通过: 0/999999
+[INFO] 2026/03/22 16:55:26 main.go:150: 使用配置文件端口: 62311
+[INFO] 2026/03/22 16:55:26 main.go:161: 使用配置文件主机: 0.0.0.0
+[INFO] 2026/03/22 16:55:26 client.go:303: HTTP 连接池已优化 - MaxIdleConns: 200, MaxIdleConnsPerHost: 100, IdleConnTimeout: 2m0s
+[INFO] 2026/03/22 16:55:26 server.go:1551: 数据库写 worker 已启动 - 数量: 3
+[INFO] 2026/03/22 16:55:26 main.go:181: HTTP 服务器监听中 - 地址: http://0.0.0.0:62311
+[INFO] 2026/03/22 16:55:26 server.go:225: 缓存系统已启动 - 账号池刷新间隔: 10s, 设置缓存TTL: 30s
+[INFO] 2026/03/22 16:55:27 main.go:300: 已自动打开浏览器访问: http://localhost:62311
+[INFO] 2026/03/22 16:55:27 logger.go:160: GET / from ::1 - Status: 200 - Duration: 530.1µs
+[INFO] 2026/03/22 16:55:27 logger.go:160: GET /login from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 16:55:32 server.go:1060: 登录尝试 - 来源: ::1
+[INFO] 2026/03/22 16:55:32 server.go:1072: 登录成功 - 来源: ::1
+[INFO] 2026/03/22 16:55:32 logger.go:160: POST /api/login from ::1 - Status: 200 - Duration: 1.1188ms
+[INFO] 2026/03/22 16:55:32 logger.go:160: GET / from ::1 - Status: 200 - Duration: 515.7µs
+[INFO] 2026/03/22 16:55:32 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 16:55:32 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 16:55:32 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 1.6963ms
+[INFO] 2026/03/22 16:55:33 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 16:55:33 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 16:55:33 handlers.go:441: 成功列出 0 个账号 (页码: 1/0, 总数: 0)
+[INFO] 2026/03/22 16:55:33 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 1.0491ms
+[INFO] 2026/03/22 16:55:33 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 16:55:35 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.0013667s
+[INFO] 2026/03/22 16:55:39 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 16:55:39 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 16:55:39 handlers.go:441: 成功列出 0 个账号 (页码: 1/0, 总数: 0)
+[INFO] 2026/03/22 16:55:39 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 2.9143ms
+[INFO] 2026/03/22 16:55:41 oidc.go:125: OIDC: 开始注册客户端
+[INFO] 2026/03/22 16:55:42 oidc.go:153: OIDC: 客户端注册成功 - ClientID: 9fFdlQo2cVa_0bqNi_AyNHVzLWVhc3QtMQ
+[INFO] 2026/03/22 16:55:42 oidc.go:161: OIDC: 开始设备授权流程 - ClientID: 9fFdlQo2cVa_0bqNi_AyNHVzLWVhc3QtMQ
+[INFO] 2026/03/22 16:55:43 oidc.go:177: OIDC: 设备授权成功 - UserCode: HMSS-RBWQ, DeviceCode: I7IuHOny...
+[INFO] 2026/03/22 16:55:43 logger.go:160: POST /v2/auth/start from ::1 - Status: 200 - Duration: 1.9815912s
+[INFO] 2026/03/22 16:55:49 oidc.go:186: OIDC: 开始轮询令牌 - 间隔: 1s, 超时: 600s
+[INFO] 2026/03/22 16:55:54 oidc.go:186: OIDC: 开始轮询令牌 - 间隔: 1s, 超时: 600s
+[INFO] 2026/03/22 16:55:59 oidc.go:186: OIDC: 开始轮询令牌 - 间隔: 1s, 超时: 600s
+[INFO] 2026/03/22 16:56:03 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 16:56:04 oidc.go:186: OIDC: 开始轮询令牌 - 间隔: 1s, 超时: 600s
+[INFO] 2026/03/22 16:56:09 oidc.go:186: OIDC: 开始轮询令牌 - 间隔: 1s, 超时: 600s
+[INFO] 2026/03/22 16:56:41 oidc.go:218: OIDC: 令牌轮询成功 - 共轮询 7 次
+[INFO] 2026/03/22 16:56:41 logger.go:160: POST /v2/auth/claim/623835db-84da-4654-b28d-67c842d91532 from ::1 - Status: 200 - Duration: 32.6339693s
+[INFO] 2026/03/22 16:56:41 logger.go:160: POST /v2/auth/claim/623835db-84da-4654-b28d-67c842d91532 from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 16:56:41 logger.go:160: POST /v2/auth/claim/623835db-84da-4654-b28d-67c842d91532 from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 16:56:41 logger.go:160: POST /v2/auth/claim/623835db-84da-4654-b28d-67c842d91532 from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 16:56:41 logger.go:160: POST /v2/auth/claim/623835db-84da-4654-b28d-67c842d91532 from ::1 - Status: 200 - Duration: 565.6µs
+[INFO] 2026/03/22 16:56:41 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[ERROR] 2026/03/22 16:56:41 oidc.go:106: OIDC: 请求失败 - 状态码: 400, 响应: {"error":"invalid_grant","error_description":"Session is already associated with device"}
+[ERROR] 2026/03/22 16:56:41 oidc.go:229: OIDC: 令牌轮询失败: HTTP 400: {"error":"invalid_grant","error_description":"Session is already associated with device"}
+[INFO] 2026/03/22 16:56:41 logger.go:160: POST /v2/auth/claim/623835db-84da-4654-b28d-67c842d91532 from ::1 - Status: 502 - Duration: 37.7756813s
+[INFO] 2026/03/22 16:56:41 logger.go:160: POST /v2/auth/claim/623835db-84da-4654-b28d-67c842d91532 from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 16:56:41 logger.go:160: POST /v2/auth/claim/623835db-84da-4654-b28d-67c842d91532 from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 16:56:41 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 16:56:41 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 16:56:41 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 16:56:41 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 2.1612ms
+[INFO] 2026/03/22 16:56:41 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 16:56:41 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 16:56:41 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 16:56:41 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 16:56:41 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 16:56:41 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 16:56:41 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 16:56:41 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 16:56:41 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 16:56:41 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 16:56:41 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 16:56:41 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 589µs
+[INFO] 2026/03/22 16:56:42 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 16:56:42 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 16:56:42 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 1.1438ms
+[INFO] 2026/03/22 16:56:42 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 16:56:42 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 16:56:42 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 552.2µs
+[INFO] 2026/03/22 16:56:42 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 16:56:42 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 16:56:42 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 665.3µs
+[INFO] 2026/03/22 16:56:42 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 16:56:42 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 16:56:42 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 1.2669ms
+[ERROR] 2026/03/22 16:56:42 oidc.go:106: OIDC: 请求失败 - 状态码: 400, 响应: {"error":"invalid_grant","error_description":"Device code already redeemed"}
+[ERROR] 2026/03/22 16:56:42 oidc.go:229: OIDC: 令牌轮询失败: HTTP 400: {"error":"invalid_grant","error_description":"Device code already redeemed"}
+[INFO] 2026/03/22 16:56:42 logger.go:160: POST /v2/auth/claim/623835db-84da-4654-b28d-67c842d91532 from ::1 - Status: 502 - Duration: 43.2937974s
+[INFO] 2026/03/22 16:56:42 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 16:56:42 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 16:56:42 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 16:56:42 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 2.239ms
+[INFO] 2026/03/22 16:56:42 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 16:56:42 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 16:56:42 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 1.3146ms
+[ERROR] 2026/03/22 16:56:42 oidc.go:106: OIDC: 请求失败 - 状态码: 400, 响应: {"error":"invalid_grant","error_description":"Device code already redeemed"}
+[ERROR] 2026/03/22 16:56:42 oidc.go:229: OIDC: 令牌轮询失败: HTTP 400: {"error":"invalid_grant","error_description":"Device code already redeemed"}
+[INFO] 2026/03/22 16:56:42 logger.go:160: POST /v2/auth/claim/623835db-84da-4654-b28d-67c842d91532 from ::1 - Status: 502 - Duration: 48.4113859s
+[INFO] 2026/03/22 16:56:42 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 16:56:42 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 16:56:42 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 16:56:42 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 3.3539ms
+[INFO] 2026/03/22 16:56:42 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 16:56:42 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 16:56:42 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 1.0979ms
+[INFO] 2026/03/22 16:56:42 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 975.4058ms
+[ERROR] 2026/03/22 16:56:43 oidc.go:106: OIDC: 请求失败 - 状态码: 400, 响应: {"error":"invalid_grant","error_description":"Device code already redeemed"}
+[ERROR] 2026/03/22 16:56:43 oidc.go:229: OIDC: 令牌轮询失败: HTTP 400: {"error":"invalid_grant","error_description":"Device code already redeemed"}
+[INFO] 2026/03/22 16:56:43 logger.go:160: POST /v2/auth/claim/623835db-84da-4654-b28d-67c842d91532 from ::1 - Status: 502 - Duration: 54.4602512s
+[INFO] 2026/03/22 16:56:43 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 16:56:43 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 16:56:43 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 16:56:43 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 1.8544ms
+[INFO] 2026/03/22 16:56:43 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 16:56:43 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 16:56:43 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 1.632ms
+[INFO] 2026/03/22 16:57:00 logger.go:160: GET /v2/users from ::1 - Status: 200 - Duration: 1.0714ms
+[INFO] 2026/03/22 16:57:02 handlers.go:3491: 获取被封禁IP列表 - 来源: ::1
+[INFO] 2026/03/22 16:57:02 handlers.go:3537: 获取访问IP列表 - 来源: ::1
+[INFO] 2026/03/22 16:57:02 logger.go:160: GET /v2/ips/blocked from ::1 - Status: 200 - Duration: 1.2288ms
+[INFO] 2026/03/22 16:57:02 logger.go:160: GET /v2/ips/visitors from ::1 - Status: 200 - Duration: 2.6444ms
+[INFO] 2026/03/22 16:57:03 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 16:57:20 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 16:57:20 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 16:57:20 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 16:57:20 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 2.7149ms
+[INFO] 2026/03/22 16:57:20 handlers.go:1839: 获取模型列表 - 请求来源: ::1
+[INFO] 2026/03/22 16:57:20 logger.go:160: GET /v2/models from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 16:57:32 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 16:57:32 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 16:57:32 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 2.3197ms
+[INFO] 2026/03/22 16:57:32 handlers.go:2984: 控制台 Claude 测试请求（thinking 支持）- 来源: ::1
+[INFO] 2026/03/22 16:57:33 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[ERROR] 2026/03/22 16:57:33 client.go:395: Q 返回错误 - 状态码: 403, 响应体: {"__type":"com.amazon.aws.codewhisperer#AccessDeniedException","message":"Your User ID (449834a8-a061-7005-67d5-3f1e7b03f526) temporarily is suspended. We've locked your account as a security precaution. To restore access, please contact our support team to verify your identity: https://support.aws.amazon.com/#/contacts/kiro","reason":"TEMPORARILY_SUSPENDED"}
+[WARN] 2026/03/22 16:57:33 client.go:399: 检测到不可重试错误: TEMPORARILY_SUSPENDED - 当前通道临时受限 (提示: 老板您好～当前使用的通道被上游临时限制了，系统正在为您自动切换其他通道。如果问题持续，请稍后再试。非常抱歉给您带来不便！🙏)
+[WARN] 2026/03/22 16:57:33 handlers.go:2233: 检测到账号错误: TEMPORARILY_SUSPENDED - 当前通道临时受限，尝试换号
+[WARN] 2026/03/22 16:57:33 handlers.go:115: 账号 e99ef581-f494-49d5-b898-d5e00ff76c46 状态变更为 suspended - 原因: 账号被封控
+[INFO] 2026/03/22 16:57:33 handlers.go:2239: 账号 e99ef581-f494-49d5-b898-d5e00ff76c46 请求失败，换号重试 - 重试次数: 1
+[WARN] 2026/03/22 16:57:33 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 16:57:33 logger.go:160: POST /v2/test/messages from ::1 - Status: 503 - Duration: 1.6761481s
+[INFO] 2026/03/22 16:57:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 944.5636ms
+[INFO] 2026/03/22 16:57:47 handlers.go:2984: 控制台 Claude 测试请求（thinking 支持）- 来源: ::1
+[WARN] 2026/03/22 16:57:47 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 0
+[INFO] 2026/03/22 16:57:47 logger.go:160: POST /v2/test/messages from ::1 - Status: 503 - Duration: 2.3277ms
+[INFO] 2026/03/22 16:57:59 handlers.go:1497: 查询账号配额 - ID: e99ef581-f494-49d5-b898-d5e00ff76c46, 资源类型: AGENTIC_REQUEST, 强制刷新: true, 请求来源: ::1
+[ERROR] 2026/03/22 16:57:59 client.go:631: 配额查询失败 - 状态码: 403, 耗时: 288ms, 原始响应: {"message":"Your User ID (449834a8-a061-7005-67d5-3f1e7b03f526) temporarily is suspended. We've locked your account as a security precaution. To restore access, please contact our support team to verify your identity: https://support.aws.amazon.com/#/contacts/kiro","reason":"TEMPORARILY_SUSPENDED"}
+[ERROR] 2026/03/22 16:57:59 client.go:654: 配额查询解析结果 - 错误码: SUSPENDED, 友好提示: 账号已被封控
+[ERROR] 2026/03/22 16:57:59 handlers.go:1544: 查询配额失败 - ID: e99ef581-f494-49d5-b898-d5e00ff76c46, 错误码: SUSPENDED, 原因: 账号已被封控
+[WARN] 2026/03/22 16:57:59 handlers.go:115: 账号 e99ef581-f494-49d5-b898-d5e00ff76c46 状态变更为 suspended - 原因: 账号被封控
+[INFO] 2026/03/22 16:57:59 logger.go:160: GET /v2/accounts/e99ef581-f494-49d5-b898-d5e00ff76c46/quota from ::1 - Status: 200 - Duration: 303.0851ms
+[INFO] 2026/03/22 16:58:00 handlers.go:1497: 查询账号配额 - ID: e99ef581-f494-49d5-b898-d5e00ff76c46, 资源类型: AGENTIC_REQUEST, 强制刷新: true, 请求来源: ::1
+[ERROR] 2026/03/22 16:58:00 client.go:631: 配额查询失败 - 状态码: 403, 耗时: 313ms, 原始响应: {"message":"Your User ID (449834a8-a061-7005-67d5-3f1e7b03f526) temporarily is suspended. We've locked your account as a security precaution. To restore access, please contact our support team to verify your identity: https://support.aws.amazon.com/#/contacts/kiro","reason":"TEMPORARILY_SUSPENDED"}
+[ERROR] 2026/03/22 16:58:00 client.go:654: 配额查询解析结果 - 错误码: SUSPENDED, 友好提示: 账号已被封控
+[ERROR] 2026/03/22 16:58:00 handlers.go:1544: 查询配额失败 - ID: e99ef581-f494-49d5-b898-d5e00ff76c46, 错误码: SUSPENDED, 原因: 账号已被封控
+[WARN] 2026/03/22 16:58:00 handlers.go:115: 账号 e99ef581-f494-49d5-b898-d5e00ff76c46 状态变更为 suspended - 原因: 账号被封控
+[INFO] 2026/03/22 16:58:00 logger.go:160: GET /v2/accounts/e99ef581-f494-49d5-b898-d5e00ff76c46/quota from ::1 - Status: 200 - Duration: 325.6895ms
+[INFO] 2026/03/22 16:58:03 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 786.9µs
+[INFO] 2026/03/22 16:58:29 handlers.go:1410: 删除所有封控账号 - 请求来源: ::1
+[INFO] 2026/03/22 16:58:29 handlers.go:1422: 成功删除封控账号 - 数量: 1
+[INFO] 2026/03/22 16:58:29 logger.go:160: DELETE /v2/accounts/suspended from ::1 - Status: 200 - Duration: 2.5167ms
+[INFO] 2026/03/22 16:58:30 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 16:58:30 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 16:58:30 handlers.go:441: 成功列出 0 个账号 (页码: 1/0, 总数: 0)
+[INFO] 2026/03/22 16:58:30 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 2.9355ms
+[INFO] 2026/03/22 16:58:33 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 16:58:34 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.4857884s
+[INFO] 2026/03/22 16:58:37 oidc.go:125: OIDC: 开始注册客户端
+[INFO] 2026/03/22 16:58:39 oidc.go:153: OIDC: 客户端注册成功 - ClientID: vv494cJbGaCPlWQbU893MHVzLWVhc3QtMQ
+[INFO] 2026/03/22 16:58:39 oidc.go:161: OIDC: 开始设备授权流程 - ClientID: vv494cJbGaCPlWQbU893MHVzLWVhc3QtMQ
+[INFO] 2026/03/22 16:58:39 oidc.go:177: OIDC: 设备授权成功 - UserCode: LKQJ-RFGJ, DeviceCode: Fnyjkg5t...
+[INFO] 2026/03/22 16:58:39 logger.go:160: POST /v2/auth/start from ::1 - Status: 200 - Duration: 1.6240434s
+[INFO] 2026/03/22 16:58:45 oidc.go:186: OIDC: 开始轮询令牌 - 间隔: 1s, 超时: 600s
+[INFO] 2026/03/22 16:58:49 oidc.go:186: OIDC: 开始轮询令牌 - 间隔: 1s, 超时: 600s
+[INFO] 2026/03/22 16:58:50 oidc.go:218: OIDC: 令牌轮询成功 - 共轮询 1 次
+[INFO] 2026/03/22 16:58:50 logger.go:160: POST /v2/auth/claim/57007004-e4dd-4702-89d9-815ba6832364 from ::1 - Status: 200 - Duration: 565.5006ms
+[INFO] 2026/03/22 16:58:50 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 16:58:50 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 16:58:50 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 16:58:50 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 1.0508ms
+[INFO] 2026/03/22 16:58:50 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 16:58:50 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 16:58:50 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 1.5036ms
+[ERROR] 2026/03/22 16:58:50 oidc.go:106: OIDC: 请求失败 - 状态码: 400, 响应: {"error":"invalid_grant","error_description":"Device code already redeemed"}
+[ERROR] 2026/03/22 16:58:50 oidc.go:229: OIDC: 令牌轮询失败: HTTP 400: {"error":"invalid_grant","error_description":"Device code already redeemed"}
+[INFO] 2026/03/22 16:58:50 logger.go:160: POST /v2/auth/claim/57007004-e4dd-4702-89d9-815ba6832364 from ::1 - Status: 502 - Duration: 5.6650727s
+[INFO] 2026/03/22 16:58:50 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 16:58:50 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 16:58:50 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 16:58:50 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 2.8289ms
+[INFO] 2026/03/22 16:58:50 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 16:58:50 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 16:58:50 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 1.2749ms
+[INFO] 2026/03/22 16:58:56 handlers.go:1478: 刷新账号令牌 - ID: 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0, 请求来源: ::1
+[INFO] 2026/03/22 16:58:57 accounts.go:403: 账号 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0 令牌刷新成功，状态恢复为 normal
+[INFO] 2026/03/22 16:58:57 handlers.go:1486: 账号令牌刷新成功 - ID: 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0
+[INFO] 2026/03/22 16:58:57 logger.go:160: POST /v2/accounts/8b9b2a8f-0cce-4748-9b12-6c457a01d2f0/refresh from ::1 - Status: 200 - Duration: 622.5345ms
+[INFO] 2026/03/22 16:58:57 handlers.go:1497: 查询账号配额 - ID: 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0, 资源类型: AGENTIC_REQUEST, 强制刷新: true, 请求来源: ::1
+[ERROR] 2026/03/22 16:58:58 client.go:631: 配额查询失败 - 状态码: 403, 耗时: 601ms, 原始响应: {"message":"Your User ID (449834a8-a061-7005-67d5-3f1e7b03f526) temporarily is suspended. We've locked your account as a security precaution. To restore access, please contact our support team to verify your identity: https://support.aws.amazon.com/#/contacts/kiro","reason":"TEMPORARILY_SUSPENDED"}
+[ERROR] 2026/03/22 16:58:58 client.go:654: 配额查询解析结果 - 错误码: SUSPENDED, 友好提示: 账号已被封控
+[ERROR] 2026/03/22 16:58:58 handlers.go:1544: 查询配额失败 - ID: 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0, 错误码: SUSPENDED, 原因: 账号已被封控
+[WARN] 2026/03/22 16:58:58 handlers.go:115: 账号 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0 状态变更为 suspended - 原因: 账号被封控
+[INFO] 2026/03/22 16:58:58 logger.go:160: GET /v2/accounts/8b9b2a8f-0cce-4748-9b12-6c457a01d2f0/quota from ::1 - Status: 200 - Duration: 607.1666ms
+[INFO] 2026/03/22 16:59:00 handlers.go:1293: 更新账号 - ID: 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0, 请求来源: ::1
+[INFO] 2026/03/22 16:59:00 handlers.go:1336: 正在更新账号 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0 - 字段: map[enabled:false]
+[INFO] 2026/03/22 16:59:00 handlers.go:1347: 账号更新成功 - ID: 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0
+[INFO] 2026/03/22 16:59:00 logger.go:160: PATCH /v2/accounts/8b9b2a8f-0cce-4748-9b12-6c457a01d2f0 from ::1 - Status: 200 - Duration: 4.5277ms
+[INFO] 2026/03/22 16:59:02 handlers.go:1293: 更新账号 - ID: 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0, 请求来源: ::1
+[INFO] 2026/03/22 16:59:02 handlers.go:1336: 正在更新账号 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0 - 字段: map[enabled:true]
+[INFO] 2026/03/22 16:59:02 handlers.go:1347: 账号更新成功 - ID: 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0
+[INFO] 2026/03/22 16:59:02 logger.go:160: PATCH /v2/accounts/8b9b2a8f-0cce-4748-9b12-6c457a01d2f0 from ::1 - Status: 200 - Duration: 1.65ms
+[INFO] 2026/03/22 16:59:02 handlers.go:1497: 查询账号配额 - ID: 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0, 资源类型: AGENTIC_REQUEST, 强制刷新: true, 请求来源: ::1
+[ERROR] 2026/03/22 16:59:02 client.go:631: 配额查询失败 - 状态码: 403, 耗时: 277ms, 原始响应: {"message":"Your User ID (449834a8-a061-7005-67d5-3f1e7b03f526) temporarily is suspended. We've locked your account as a security precaution. To restore access, please contact our support team to verify your identity: https://support.aws.amazon.com/#/contacts/kiro","reason":"TEMPORARILY_SUSPENDED"}
+[ERROR] 2026/03/22 16:59:02 client.go:654: 配额查询解析结果 - 错误码: SUSPENDED, 友好提示: 账号已被封控
+[ERROR] 2026/03/22 16:59:02 handlers.go:1544: 查询配额失败 - ID: 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0, 错误码: SUSPENDED, 原因: 账号已被封控
+[WARN] 2026/03/22 16:59:02 handlers.go:115: 账号 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0 状态变更为 suspended - 原因: 账号被封控
+[INFO] 2026/03/22 16:59:02 logger.go:160: GET /v2/accounts/8b9b2a8f-0cce-4748-9b12-6c457a01d2f0/quota from ::1 - Status: 200 - Duration: 280.08ms
+[INFO] 2026/03/22 16:59:03 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 16:59:33 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 16:59:34 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 990.7573ms
+[INFO] 2026/03/22 16:59:46 handlers.go:3283: 获取请求日志 - 来源: ::1
+[INFO] 2026/03/22 16:59:46 logger.go:160: GET /v2/logs from ::1 - Status: 200 - Duration: 1.721ms
+[INFO] 2026/03/22 16:59:48 handlers.go:3283: 获取请求日志 - 来源: ::1
+[INFO] 2026/03/22 16:59:48 logger.go:160: GET /v2/logs from ::1 - Status: 200 - Duration: 1.185ms
+[INFO] 2026/03/22 16:59:49 handlers.go:3283: 获取请求日志 - 来源: ::1
+[INFO] 2026/03/22 16:59:49 logger.go:160: GET /v2/logs from ::1 - Status: 200 - Duration: 1.1626ms
+[INFO] 2026/03/22 16:59:58 handlers.go:3283: 获取请求日志 - 来源: ::1
+[INFO] 2026/03/22 16:59:58 logger.go:160: GET /v2/logs from ::1 - Status: 200 - Duration: 1.3251ms
+[INFO] 2026/03/22 16:59:59 handlers.go:3283: 获取请求日志 - 来源: ::1
+[INFO] 2026/03/22 16:59:59 logger.go:160: GET /v2/logs from ::1 - Status: 200 - Duration: 1.6546ms
+[INFO] 2026/03/22 17:00:03 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:00:33 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:00:33 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m0.0044636s
+[INFO] 2026/03/22 17:00:34 handlers.go:3491: 获取被封禁IP列表 - 来源: ::1
+[INFO] 2026/03/22 17:00:34 handlers.go:3537: 获取访问IP列表 - 来源: ::1
+[INFO] 2026/03/22 17:00:34 logger.go:160: GET /v2/ips/blocked from ::1 - Status: 200 - Duration: 580.1µs
+[INFO] 2026/03/22 17:00:34 logger.go:160: GET /v2/ips/visitors from ::1 - Status: 200 - Duration: 1.2182ms
+[INFO] 2026/03/22 17:00:34 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.0598301s
+[INFO] 2026/03/22 17:00:36 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 1.115ms
+[INFO] 2026/03/22 17:01:03 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:01:32 handlers.go:2984: 控制台 Claude 测试请求（thinking 支持）- 来源: ::1
+[WARN] 2026/03/22 17:01:32 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 0
+[INFO] 2026/03/22 17:01:32 logger.go:160: POST /v2/test/messages from ::1 - Status: 503 - Duration: 1.7666ms
+[INFO] 2026/03/22 17:01:33 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:01:34 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.3928942s
+[INFO] 2026/03/22 17:01:44 handlers.go:1478: 刷新账号令牌 - ID: 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0, 请求来源: ::1
+[INFO] 2026/03/22 17:01:46 accounts.go:403: 账号 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0 令牌刷新成功，状态恢复为 normal
+[INFO] 2026/03/22 17:01:46 handlers.go:1486: 账号令牌刷新成功 - ID: 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0
+[INFO] 2026/03/22 17:01:46 logger.go:160: POST /v2/accounts/8b9b2a8f-0cce-4748-9b12-6c457a01d2f0/refresh from ::1 - Status: 200 - Duration: 1.8497122s
+[INFO] 2026/03/22 17:01:46 handlers.go:1497: 查询账号配额 - ID: 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0, 资源类型: AGENTIC_REQUEST, 强制刷新: true, 请求来源: ::1
+[INFO] 2026/03/22 17:01:46 logger.go:160: GET /v2/devtools/claude-code/config from ::1 - Status: 200 - Duration: 1.0807ms
+[ERROR] 2026/03/22 17:01:47 client.go:631: 配额查询失败 - 状态码: 403, 耗时: 1226ms, 原始响应: {"message":"Your User ID (449834a8-a061-7005-67d5-3f1e7b03f526) temporarily is suspended. We've locked your account as a security precaution. To restore access, please contact our support team to verify your identity: https://support.aws.amazon.com/#/contacts/kiro","reason":"TEMPORARILY_SUSPENDED"}
+[ERROR] 2026/03/22 17:01:47 client.go:654: 配额查询解析结果 - 错误码: SUSPENDED, 友好提示: 账号已被封控
+[ERROR] 2026/03/22 17:01:47 handlers.go:1544: 查询配额失败 - ID: 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0, 错误码: SUSPENDED, 原因: 账号已被封控
+[WARN] 2026/03/22 17:01:47 handlers.go:115: 账号 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0 状态变更为 suspended - 原因: 账号被封控
+[INFO] 2026/03/22 17:01:47 logger.go:160: GET /v2/accounts/8b9b2a8f-0cce-4748-9b12-6c457a01d2f0/quota from ::1 - Status: 200 - Duration: 1.2316762s
+[INFO] 2026/03/22 17:02:03 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:02:24 handlers.go:1357: 删除账号 - ID: 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0, 请求来源: ::1
+[INFO] 2026/03/22 17:02:24 handlers.go:1368: 账号删除成功 - ID: 8b9b2a8f-0cce-4748-9b12-6c457a01d2f0
+[INFO] 2026/03/22 17:02:24 logger.go:160: DELETE /v2/accounts/8b9b2a8f-0cce-4748-9b12-6c457a01d2f0 from ::1 - Status: 200 - Duration: 6.0811ms
+[INFO] 2026/03/22 17:02:26 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 17:02:26 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 17:02:26 handlers.go:441: 成功列出 0 个账号 (页码: 1/0, 总数: 0)
+[INFO] 2026/03/22 17:02:26 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 3.0383ms
+[INFO] 2026/03/22 17:02:33 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:02:34 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 996.8396ms
+[INFO] 2026/03/22 17:02:35 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 17:02:35 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 17:02:35 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 1.3714ms
+[INFO] 2026/03/22 17:02:35 handlers.go:2984: 控制台 Claude 测试请求（thinking 支持）- 来源: ::1
+[WARN] 2026/03/22 17:02:35 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 0
+[INFO] 2026/03/22 17:02:35 logger.go:160: POST /v2/test/messages from ::1 - Status: 503 - Duration: 2.0901ms
+[INFO] 2026/03/22 17:02:36 handlers.go:2984: 控制台 Claude 测试请求（thinking 支持）- 来源: ::1
+[WARN] 2026/03/22 17:02:36 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 0
+[INFO] 2026/03/22 17:02:36 logger.go:160: POST /v2/test/messages from ::1 - Status: 503 - Duration: 1.6187ms
+[INFO] 2026/03/22 17:02:47 logger.go:160: GET /login from ::1 - Status: 200 - Duration: 514.9µs
+[INFO] 2026/03/22 17:02:47 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 2m11.184691s
+[INFO] 2026/03/22 17:17:29 server.go:1060: 登录尝试 - 来源: ::1
+[INFO] 2026/03/22 17:17:29 server.go:1072: 登录成功 - 来源: ::1
+[INFO] 2026/03/22 17:17:29 logger.go:160: POST /api/login from ::1 - Status: 200 - Duration: 1.6133ms
+[INFO] 2026/03/22 17:17:30 logger.go:160: GET / from ::1 - Status: 200 - Duration: 687.6µs
+[INFO] 2026/03/22 17:17:30 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 17:17:30 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 17:17:30 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 1.0873ms
+[INFO] 2026/03/22 17:17:30 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 17:17:30 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 17:17:30 handlers.go:441: 成功列出 0 个账号 (页码: 1/0, 总数: 0)
+[INFO] 2026/03/22 17:17:30 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 1.6036ms
+[INFO] 2026/03/22 17:17:30 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:17:32 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.7143259s
+[INFO] 2026/03/22 17:17:35 logger.go:160: GET /v2/users from ::1 - Status: 200 - Duration: 1.0592ms
+[INFO] 2026/03/22 17:17:35 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 17:17:35 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 17:17:35 handlers.go:441: 成功列出 0 个账号 (页码: 1/0, 总数: 0)
+[INFO] 2026/03/22 17:17:35 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 1.6747ms
+[INFO] 2026/03/22 17:17:40 oidc.go:125: OIDC: 开始注册客户端
+[INFO] 2026/03/22 17:17:43 oidc.go:153: OIDC: 客户端注册成功 - ClientID: vK6PsujYgu02Lww2ybiCDXVzLWVhc3QtMQ
+[INFO] 2026/03/22 17:17:43 oidc.go:161: OIDC: 开始设备授权流程 - ClientID: vK6PsujYgu02Lww2ybiCDXVzLWVhc3QtMQ
+[INFO] 2026/03/22 17:17:44 oidc.go:177: OIDC: 设备授权成功 - UserCode: MQPF-JJPT, DeviceCode: vxaoyOT6...
+[INFO] 2026/03/22 17:17:44 logger.go:160: POST /v2/auth/start from ::1 - Status: 200 - Duration: 3.341225s
+[INFO] 2026/03/22 17:17:49 oidc.go:186: OIDC: 开始轮询令牌 - 间隔: 1s, 超时: 600s
+[INFO] 2026/03/22 17:17:54 oidc.go:186: OIDC: 开始轮询令牌 - 间隔: 1s, 超时: 600s
+[INFO] 2026/03/22 17:17:59 oidc.go:186: OIDC: 开始轮询令牌 - 间隔: 1s, 超时: 600s
+[INFO] 2026/03/22 17:18:01 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:18:05 oidc.go:186: OIDC: 开始轮询令牌 - 间隔: 1s, 超时: 600s
+[INFO] 2026/03/22 17:18:10 oidc.go:186: OIDC: 开始轮询令牌 - 间隔: 1s, 超时: 600s
+[INFO] 2026/03/22 17:21:53 main.go:254: 收到关闭信号,正在优雅关闭服务器...
+[INFO] 2026/03/22 17:21:53 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 4m22.8814767s
+[WARN] 2026/03/22 17:21:55 oidc.go:208: OIDC: 令牌轮询被取消 - 已轮询 44 次
+[INFO] 2026/03/22 17:21:55 logger.go:160: POST /v2/auth/claim/1721a438-3a9f-4079-90b9-87396cafaa72 from ::1 - Status: 502 - Duration: 3m56.7397833s
+[WARN] 2026/03/22 17:21:55 oidc.go:208: OIDC: 令牌轮询被取消 - 已轮询 45 次
+[INFO] 2026/03/22 17:21:55 logger.go:160: POST /v2/auth/claim/1721a438-3a9f-4079-90b9-87396cafaa72 from ::1 - Status: 502 - Duration: 4m1.7631566s
+[WARN] 2026/03/22 17:21:56 oidc.go:208: OIDC: 令牌轮询被取消 - 已轮询 46 次
+[INFO] 2026/03/22 17:21:56 logger.go:160: POST /v2/auth/claim/1721a438-3a9f-4079-90b9-87396cafaa72 from ::1 - Status: 502 - Duration: 4m6.7880205s
+[INFO] 2026/03/22 17:22:43 logger.go:92: 日志系统初始化成功，日志文件: logs\server_2026-03-22.log
+[INFO] 2026/03/22 17:22:43 main.go:68: === Claude 无限畅享版 dev 服务器启动中 ===
+[INFO] 2026/03/22 17:22:43 main.go:72: 系统时区: Asia/Shanghai
+[INFO] 2026/03/22 17:22:43 logger.go:121: 调试日志已禁用
+[INFO] 2026/03/22 17:22:43 main.go:100: 配置已加载 - 默认端口: 62311, 配置文件端口: 62311, 命令行端口: 0, 控制台: true
+[INFO] 2026/03/22 17:22:43 main.go:104: 开源版本 - 最大账号数: 999999
+[INFO] 2026/03/22 17:22:43 database.go:131: 开始自动迁移数据库结构...
+[INFO] 2026/03/22 17:22:43 database.go:193: 数据库结构迁移完成
+[INFO] 2026/03/22 17:22:43 main.go:113: 数据库初始化成功
+[INFO] 2026/03/22 17:22:43 main.go:125: 账号数量检查通过: 0/999999
+[INFO] 2026/03/22 17:22:43 main.go:150: 使用配置文件端口: 62311
+[INFO] 2026/03/22 17:22:43 main.go:161: 使用配置文件主机: 0.0.0.0
+[INFO] 2026/03/22 17:22:43 client.go:303: HTTP 连接池已优化 - MaxIdleConns: 200, MaxIdleConnsPerHost: 100, IdleConnTimeout: 2m0s
+[INFO] 2026/03/22 17:22:43 server.go:1551: 数据库写 worker 已启动 - 数量: 3
+[INFO] 2026/03/22 17:22:43 main.go:181: HTTP 服务器监听中 - 地址: http://0.0.0.0:62311
+[INFO] 2026/03/22 17:22:43 server.go:225: 缓存系统已启动 - 账号池刷新间隔: 10s, 设置缓存TTL: 30s
+[INFO] 2026/03/22 17:22:43 main.go:300: 已自动打开浏览器访问: http://localhost:62311
+[INFO] 2026/03/22 17:22:44 logger.go:160: GET / from ::1 - Status: 200 - Duration: 541.8µs
+[INFO] 2026/03/22 17:22:44 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 17:22:44 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 17:22:44 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 1.422ms
+[INFO] 2026/03/22 17:22:44 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 17:22:44 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 17:22:44 handlers.go:441: 成功列出 0 个账号 (页码: 1/0, 总数: 0)
+[INFO] 2026/03/22 17:22:44 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 2.0942ms
+[INFO] 2026/03/22 17:22:44 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:22:46 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.7253753s
+[INFO] 2026/03/22 17:22:51 handlers.go:634: 导入账号数据 - 请求来源: ::1
+[INFO] 2026/03/22 17:22:51 handlers.go:789: 导入账号完成 - 总计: 1, 有效: 0, 重复: 0, 无效: 1, 成功导入: 0, 限制已达: false
+[INFO] 2026/03/22 17:22:51 logger.go:160: POST /v2/accounts/import from ::1 - Status: 200 - Duration: 505µs
+[INFO] 2026/03/22 17:22:51 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 17:22:51 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 17:22:51 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 520.1µs
+[INFO] 2026/03/22 17:22:53 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 17:22:53 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 17:22:53 handlers.go:441: 成功列出 0 个账号 (页码: 1/0, 总数: 0)
+[INFO] 2026/03/22 17:22:53 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 1.5373ms
+[INFO] 2026/03/22 17:22:55 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 17:22:55 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 17:22:55 handlers.go:441: 成功列出 0 个账号 (页码: 1/0, 总数: 0)
+[INFO] 2026/03/22 17:22:55 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 6.7143ms
+[INFO] 2026/03/22 17:22:57 logger.go:160: GET /v2/users from ::1 - Status: 200 - Duration: 1.1358ms
+[INFO] 2026/03/22 17:22:59 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 17:22:59 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 17:22:59 handlers.go:441: 成功列出 0 个账号 (页码: 1/0, 总数: 0)
+[INFO] 2026/03/22 17:22:59 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 4.0934ms
+[INFO] 2026/03/22 17:23:02 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 17:23:02 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 17:23:02 handlers.go:441: 成功列出 0 个账号 (页码: 1/0, 总数: 0)
+[INFO] 2026/03/22 17:23:02 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 5.8571ms
+[INFO] 2026/03/22 17:23:03 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 17:23:03 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 17:23:03 handlers.go:441: 成功列出 0 个账号 (页码: 1/0, 总数: 0)
+[INFO] 2026/03/22 17:23:03 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 5.8417ms
+[INFO] 2026/03/22 17:23:04 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 17:23:04 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 17:23:04 handlers.go:441: 成功列出 0 个账号 (页码: 1/0, 总数: 0)
+[INFO] 2026/03/22 17:23:04 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 2.7582ms
+[INFO] 2026/03/22 17:23:08 handlers.go:634: 导入账号数据 - 请求来源: ::1
+[INFO] 2026/03/22 17:23:08 handlers.go:789: 导入账号完成 - 总计: 1, 有效: 0, 重复: 0, 无效: 1, 成功导入: 0, 限制已达: false
+[INFO] 2026/03/22 17:23:08 logger.go:160: POST /v2/accounts/import from ::1 - Status: 200 - Duration: 670.6µs
+[INFO] 2026/03/22 17:23:09 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 17:23:09 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 17:23:09 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 503µs
+[INFO] 2026/03/22 17:23:11 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 17:23:11 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 17:23:11 handlers.go:441: 成功列出 0 个账号 (页码: 1/0, 总数: 0)
+[INFO] 2026/03/22 17:23:11 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 2.1941ms
+[INFO] 2026/03/22 17:23:14 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:23:16 handlers.go:806: 通过 Token 导入账号 - 请求来源: ::1
+[INFO] 2026/03/22 17:23:16 kiro.go:288: Kiro: 开始验证 Token 并获取用户信息
+[INFO] 2026/03/22 17:23:16 kiro.go:65: Kiro: 开始刷新社交登录 Token
+[INFO] 2026/03/22 17:23:17 kiro.go:121: Kiro: Token 刷新成功 - 有效期: 3600 秒
+[INFO] 2026/03/22 17:23:17 kiro.go:146: Kiro: 开始获取用户信息
+[INFO] 2026/03/22 17:23:18 kiro.go:269: Kiro: 获取用户信息成功 - Email: giang0977912878@gmail.com, UserID: d-9067c98495.44782448-20e1-70b6-15d5-78223c56129b
+[INFO] 2026/03/22 17:23:19 handlers.go:1083: Token导入: 成功导入账号 - 索引: 0, Email: giang0977912878@gmail.com, UserID: d-9067c98495.44782448-20e1-70b6-15d5-78223c56129b
+[INFO] 2026/03/22 17:23:19 handlers.go:1116: Token导入完成 - 总计: 1, 成功: 1, 失败: 0, 重复: 0, 限制已达: false
+[INFO] 2026/03/22 17:23:19 logger.go:160: POST /v2/accounts/import-by-token from ::1 - Status: 200 - Duration: 2.6788775s
+[INFO] 2026/03/22 17:23:19 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 17:23:19 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 17:23:19 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 748µs
+[INFO] 2026/03/22 17:23:20 server.go:252: [自动刷新] 导入账号配额刷新完成 - 共 1 个
+[INFO] 2026/03/22 17:23:23 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 17:23:23 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 17:23:23 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 17:23:23 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 2.9259ms
+[INFO] 2026/03/22 17:23:29 handlers.go:1478: 刷新账号令牌 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59, 请求来源: ::1
+[INFO] 2026/03/22 17:23:29 kiro.go:65: Kiro: 开始刷新社交登录 Token
+[INFO] 2026/03/22 17:23:31 handlers.go:1478: 刷新账号令牌 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59, 请求来源: ::1
+[INFO] 2026/03/22 17:23:31 kiro.go:121: Kiro: Token 刷新成功 - 有效期: 3600 秒
+[INFO] 2026/03/22 17:23:31 accounts.go:403: 账号 69e55529-0add-4a2e-8ae0-2ebf724c0e59 令牌刷新成功，状态恢复为 normal
+[INFO] 2026/03/22 17:23:31 handlers.go:1486: 账号令牌刷新成功 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59
+[INFO] 2026/03/22 17:23:31 logger.go:160: POST /v2/accounts/69e55529-0add-4a2e-8ae0-2ebf724c0e59/refresh from ::1 - Status: 200 - Duration: 1.7917963s
+[INFO] 2026/03/22 17:23:31 handlers.go:1486: 账号令牌刷新成功 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59
+[INFO] 2026/03/22 17:23:31 logger.go:160: POST /v2/accounts/69e55529-0add-4a2e-8ae0-2ebf724c0e59/refresh from ::1 - Status: 200 - Duration: 203.0974ms
+[INFO] 2026/03/22 17:23:31 handlers.go:1497: 查询账号配额 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59, 资源类型: AGENTIC_REQUEST, 强制刷新: true, 请求来源: ::1
+[INFO] 2026/03/22 17:23:31 logger.go:160: GET /v2/accounts/69e55529-0add-4a2e-8ae0-2ebf724c0e59/quota from ::1 - Status: 200 - Duration: 446.8407ms
+[INFO] 2026/03/22 17:23:31 handlers.go:1497: 查询账号配额 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59, 资源类型: AGENTIC_REQUEST, 强制刷新: true, 请求来源: ::1
+[INFO] 2026/03/22 17:23:32 logger.go:160: GET /v2/accounts/69e55529-0add-4a2e-8ae0-2ebf724c0e59/quota from ::1 - Status: 200 - Duration: 400.8627ms
+[INFO] 2026/03/22 17:23:36 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 17:23:36 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 17:23:36 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 17:23:36 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 3.7353ms
+[INFO] 2026/03/22 17:23:36 handlers.go:1839: 获取模型列表 - 请求来源: ::1
+[INFO] 2026/03/22 17:23:36 logger.go:160: GET /v2/models from ::1 - Status: 200 - Duration: 1.697ms
+[INFO] 2026/03/22 17:23:41 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 17:23:41 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 17:23:41 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 2.446ms
+[INFO] 2026/03/22 17:23:41 handlers.go:2984: 控制台 Claude 测试请求（thinking 支持）- 来源: ::1
+[ERROR] 2026/03/22 17:23:43 client.go:395: Q 返回错误 - 状态码: 400, 响应体: {"__type":"com.amazon.aws.codewhisperer#ValidationException","message":"Invalid model. Please select a different model to continue.","reason":"INVALID_MODEL_ID"}
+[WARN] 2026/03/22 17:23:43 client.go:399: 检测到不可重试错误: INVALID_MODEL - 请求的模型不可用 (提示: 老板您好～您请求的模型当前不可用或不受支持。请尝试使用其他模型，如 claude-sonnet-4-5-20250929。给您添麻烦了！🙏)
+[WARN] 2026/03/22 17:23:43 handlers.go:2223: 检测到请求错误，终止重试 - 错误: 请求的模型不可用, 提示: 老板您好～您请求的模型当前不可用或不受支持。请尝试使用其他模型，如 claude-sonnet-4-5-20250929。给您添麻烦了！🙏
+[INFO] 2026/03/22 17:23:43 logger.go:160: POST /v2/test/messages from ::1 - Status: 400 - Duration: 1.8669607s
+[INFO] 2026/03/22 17:23:44 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:23:46 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.5571864s
+[INFO] 2026/03/22 17:23:57 handlers.go:2984: 控制台 Claude 测试请求（thinking 支持）- 来源: ::1
+[INFO] 2026/03/22 17:23:59 handlers.go:2325: 控制台流式响应完成 - 来源: ::1, 模型: claude-sonnet-4.5, 消息数: 7, 输入token: 158, 输出token: 15, 耗时: 1851ms
+[INFO] 2026/03/22 17:23:59 logger.go:160: POST /v2/test/messages from ::1 - Status: 200 - Duration: 1.8530632s
+[INFO] 2026/03/22 17:24:14 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 806.5µs
+[INFO] 2026/03/22 17:24:14 handlers.go:2984: 控制台 Claude 测试请求（thinking 支持）- 来源: ::1
+[INFO] 2026/03/22 17:24:17 handlers.go:2325: 控制台流式响应完成 - 来源: ::1, 模型: claude-sonnet-4.5, 消息数: 9, 输入token: 193, 输出token: 68, 耗时: 2929ms
+[INFO] 2026/03/22 17:24:17 logger.go:160: POST /v2/test/messages from ::1 - Status: 200 - Duration: 2.934848s
+[INFO] 2026/03/22 17:24:44 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 913.8µs
+[INFO] 2026/03/22 17:24:45 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1548042s
+[INFO] 2026/03/22 17:25:14 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:25:26 logger.go:160: GET /v2/devtools/claude-code/config from ::1 - Status: 200 - Duration: 1.3878ms
+[INFO] 2026/03/22 17:25:39 handlers.go:2984: 控制台 Claude 测试请求（thinking 支持）- 来源: ::1
+[ERROR] 2026/03/22 17:25:39 client.go:395: Q 返回错误 - 状态码: 400, 响应体: {"__type":"com.amazon.aws.codewhisperer#ValidationException","message":"Invalid model. Please select a different model to continue.","reason":"INVALID_MODEL_ID"}
+[WARN] 2026/03/22 17:25:39 client.go:399: 检测到不可重试错误: INVALID_MODEL - 请求的模型不可用 (提示: 老板您好～您请求的模型当前不可用或不受支持。请尝试使用其他模型，如 claude-sonnet-4-5-20250929。给您添麻烦了！🙏)
+[WARN] 2026/03/22 17:25:39 handlers.go:2223: 检测到请求错误，终止重试 - 错误: 请求的模型不可用, 提示: 老板您好～您请求的模型当前不可用或不受支持。请尝试使用其他模型，如 claude-sonnet-4-5-20250929。给您添麻烦了！🙏
+[INFO] 2026/03/22 17:25:39 logger.go:160: POST /v2/test/messages from ::1 - Status: 400 - Duration: 418.0416ms
+[INFO] 2026/03/22 17:25:44 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:25:45 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.4394803s
+[INFO] 2026/03/22 17:25:52 handlers.go:2984: 控制台 Claude 测试请求（thinking 支持）- 来源: ::1
+[INFO] 2026/03/22 17:25:55 handlers.go:2325: 控制台流式响应完成 - 来源: ::1, 模型: claude-haiku-4.5, 消息数: 9, 输入token: 291, 输出token: 40, 耗时: 2949ms
+[INFO] 2026/03/22 17:25:55 logger.go:160: POST /v2/test/messages from ::1 - Status: 200 - Duration: 2.9520116s
+[INFO] 2026/03/22 17:26:14 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:26:45 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:26:47 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.0409267s
+[INFO] 2026/03/22 17:26:59 handlers.go:3717: Claude Code 配置已更新 - BaseUrl: http://localhost:62311
+[INFO] 2026/03/22 17:26:59 logger.go:160: POST /v2/devtools/claude-code/config from ::1 - Status: 200 - Duration: 1.5681ms
+[INFO] 2026/03/22 17:27:15 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:27:45 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:27:45 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m0.6580349s
+[INFO] 2026/03/22 17:27:46 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 977.5014ms
+[INFO] 2026/03/22 17:27:49 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 950.9248ms
+[INFO] 2026/03/22 17:28:15 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-haiku-4-5-20251001, 消息数: 1, 输入token: 6, 输出token: 89, 耗时: 2828ms
+[INFO] 2026/03/22 17:28:15 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 2.8293897s
+[INFO] 2026/03/22 17:28:21 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 1, 输入token: 539, 输出token: 159, 耗时: 8786ms
+[INFO] 2026/03/22 17:28:21 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 8.7883609s
+[INFO] 2026/03/22 17:28:27 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:28:35 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-haiku-4-5-20251001, 消息数: 1, 输入token: 9, 输出token: 64, 耗时: 1586ms
+[INFO] 2026/03/22 17:28:35 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 1.5868016s
+[INFO] 2026/03/22 17:28:42 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 3, 输入token: 584, 输出token: 301, 耗时: 8872ms
+[INFO] 2026/03/22 17:28:42 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 8.8728708s
+[INFO] 2026/03/22 17:28:44 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 418.8µs
+[INFO] 2026/03/22 17:28:45 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 982.5639ms
+[INFO] 2026/03/22 17:29:15 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:29:45 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:29:46 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2920803s
+[INFO] 2026/03/22 17:30:15 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:30:45 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 589.8µs
+[INFO] 2026/03/22 17:30:46 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.030239s
+[INFO] 2026/03/22 17:31:15 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:32:16 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:32:17 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.4631119s
+[INFO] 2026/03/22 17:33:17 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:33:17 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m27.9974038s
+[INFO] 2026/03/22 17:33:18 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1335145s
+[INFO] 2026/03/22 17:33:21 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 897.8639ms
+[INFO] 2026/03/22 17:34:19 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:34:20 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.015368s
+[INFO] 2026/03/22 17:35:20 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:35:21 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 977.0811ms
+[INFO] 2026/03/22 17:35:27 handlers.go:1478: 刷新账号令牌 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59, 请求来源: ::1
+[INFO] 2026/03/22 17:35:27 kiro.go:65: Kiro: 开始刷新社交登录 Token
+[INFO] 2026/03/22 17:35:28 kiro.go:121: Kiro: Token 刷新成功 - 有效期: 3600 秒
+[INFO] 2026/03/22 17:35:28 accounts.go:403: 账号 69e55529-0add-4a2e-8ae0-2ebf724c0e59 令牌刷新成功，状态恢复为 normal
+[INFO] 2026/03/22 17:35:28 handlers.go:1486: 账号令牌刷新成功 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59
+[INFO] 2026/03/22 17:35:28 logger.go:160: POST /v2/accounts/69e55529-0add-4a2e-8ae0-2ebf724c0e59/refresh from ::1 - Status: 200 - Duration: 1.4283565s
+[INFO] 2026/03/22 17:35:28 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 17:35:28 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 17:35:28 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 17:35:28 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 2.6654ms
+[INFO] 2026/03/22 17:35:38 handlers.go:1497: 查询账号配额 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59, 资源类型: AGENTIC_REQUEST, 强制刷新: true, 请求来源: ::1
+[INFO] 2026/03/22 17:35:39 logger.go:160: GET /v2/accounts/69e55529-0add-4a2e-8ae0-2ebf724c0e59/quota from ::1 - Status: 200 - Duration: 1.4332324s
+[INFO] 2026/03/22 17:35:39 handlers.go:1497: 查询账号配额 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59, 资源类型: AGENTIC_REQUEST, 强制刷新: true, 请求来源: ::1
+[INFO] 2026/03/22 17:35:40 logger.go:160: GET /v2/accounts/69e55529-0add-4a2e-8ae0-2ebf724c0e59/quota from ::1 - Status: 200 - Duration: 331.4089ms
+[INFO] 2026/03/22 17:35:40 handlers.go:1497: 查询账号配额 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59, 资源类型: AGENTIC_REQUEST, 强制刷新: true, 请求来源: ::1
+[INFO] 2026/03/22 17:35:40 logger.go:160: GET /v2/accounts/69e55529-0add-4a2e-8ae0-2ebf724c0e59/quota from ::1 - Status: 200 - Duration: 336.9002ms
+[INFO] 2026/03/22 17:35:40 handlers.go:1497: 查询账号配额 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59, 资源类型: AGENTIC_REQUEST, 强制刷新: true, 请求来源: ::1
+[INFO] 2026/03/22 17:35:41 logger.go:160: GET /v2/accounts/69e55529-0add-4a2e-8ae0-2ebf724c0e59/quota from ::1 - Status: 200 - Duration: 343.4541ms
+[INFO] 2026/03/22 17:35:46 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:35:48 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.3623304s
+[INFO] 2026/03/22 17:36:16 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:36:46 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 1.0096ms
+[INFO] 2026/03/22 17:36:47 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.0291423s
+[INFO] 2026/03/22 17:37:16 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:37:46 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:37:47 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 947.1113ms
+[INFO] 2026/03/22 17:38:00 logger.go:160: GET /v2/users from ::1 - Status: 200 - Duration: 514.8µs
+[INFO] 2026/03/22 17:38:01 logger.go:160: GET /v2/users from ::1 - Status: 200 - Duration: 1.2853ms
+[INFO] 2026/03/22 17:38:08 handlers.go:3491: 获取被封禁IP列表 - 来源: ::1
+[INFO] 2026/03/22 17:38:08 handlers.go:3537: 获取访问IP列表 - 来源: ::1
+[INFO] 2026/03/22 17:38:08 logger.go:160: GET /v2/ips/blocked from ::1 - Status: 200 - Duration: 1.3967ms
+[INFO] 2026/03/22 17:38:08 logger.go:160: GET /v2/ips/visitors from ::1 - Status: 200 - Duration: 4.2588ms
+[INFO] 2026/03/22 17:38:16 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:38:46 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:38:46 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m23.3629278s
+[INFO] 2026/03/22 17:38:47 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.043395s
+[INFO] 2026/03/22 17:38:49 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 995.6µs
+[INFO] 2026/03/22 17:39:16 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:39:46 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:39:47 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 975.6991ms
+[INFO] 2026/03/22 17:40:16 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:40:46 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:40:48 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.4753247s
+[INFO] 2026/03/22 17:41:16 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 644µs
+[INFO] 2026/03/22 17:41:46 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:41:47 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.3671957s
+[INFO] 2026/03/22 17:42:16 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:42:46 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:42:47 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2798527s
+[INFO] 2026/03/22 17:43:16 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:43:46 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:43:47 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1164587s
+[INFO] 2026/03/22 17:44:16 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:44:16 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m26.9587956s
+[INFO] 2026/03/22 17:44:19 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 613.1µs
+[INFO] 2026/03/22 17:44:46 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:44:47 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 987.7042ms
+[INFO] 2026/03/22 17:45:16 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 608.1µs
+[INFO] 2026/03/22 17:45:46 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:45:48 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.1083852s
+[INFO] 2026/03/22 17:46:16 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:46:46 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:46:47 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.0296784s
+[INFO] 2026/03/22 17:47:16 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:47:46 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:47:47 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 981.0571ms
+[INFO] 2026/03/22 17:48:16 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:48:46 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 566.3µs
+[INFO] 2026/03/22 17:48:47 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.002205s
+[INFO] 2026/03/22 17:49:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:49:28 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m9.6458701s
+[INFO] 2026/03/22 17:49:32 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 966.2919ms
+[INFO] 2026/03/22 17:50:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:50:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.9190149s
+[INFO] 2026/03/22 17:51:11 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:51:12 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 946.2471ms
+[INFO] 2026/03/22 17:51:16 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:51:46 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:51:48 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.3850113s
+[INFO] 2026/03/22 17:52:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:53:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:53:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1278432s
+[INFO] 2026/03/22 17:53:53 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 17:53:54 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.0527781s
+[INFO] 2026/03/22 18:29:49 logger.go:92: 日志系统初始化成功，日志文件: logs\server_2026-03-22.log
+[INFO] 2026/03/22 18:29:49 main.go:68: === Claude 无限畅享版 dev 服务器启动中 ===
+[INFO] 2026/03/22 18:29:49 main.go:72: 系统时区: Asia/Shanghai
+[INFO] 2026/03/22 18:29:49 logger.go:121: 调试日志已禁用
+[INFO] 2026/03/22 18:29:49 main.go:100: 配置已加载 - 默认端口: 62311, 配置文件端口: 62311, 命令行端口: 0, 控制台: true
+[INFO] 2026/03/22 18:29:49 main.go:104: 开源版本 - 最大账号数: 999999
+[INFO] 2026/03/22 18:29:49 database.go:131: 开始自动迁移数据库结构...
+[INFO] 2026/03/22 18:29:49 database.go:193: 数据库结构迁移完成
+[INFO] 2026/03/22 18:29:49 main.go:113: 数据库初始化成功
+[INFO] 2026/03/22 18:29:49 main.go:125: 账号数量检查通过: 1/999999
+[INFO] 2026/03/22 18:29:49 main.go:150: 使用配置文件端口: 62311
+[INFO] 2026/03/22 18:29:49 main.go:161: 使用配置文件主机: 0.0.0.0
+[INFO] 2026/03/22 18:29:49 client.go:303: HTTP 连接池已优化 - MaxIdleConns: 200, MaxIdleConnsPerHost: 100, IdleConnTimeout: 2m0s
+[INFO] 2026/03/22 18:29:49 server.go:1551: 数据库写 worker 已启动 - 数量: 3
+[INFO] 2026/03/22 18:29:49 main.go:181: HTTP 服务器监听中 - 地址: http://0.0.0.0:62311
+[INFO] 2026/03/22 18:29:49 server.go:225: 缓存系统已启动 - 账号池刷新间隔: 10s, 设置缓存TTL: 30s
+[INFO] 2026/03/22 18:29:50 main.go:300: 已自动打开浏览器访问: http://localhost:62311
+[INFO] 2026/03/22 18:29:50 logger.go:160: GET / from ::1 - Status: 200 - Duration: 1.0607ms
+[INFO] 2026/03/22 18:29:50 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 18:29:50 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 18:29:50 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 2.1156ms
+[INFO] 2026/03/22 18:29:51 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 18:29:51 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 18:29:51 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 18:29:51 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 5.6532ms
+[INFO] 2026/03/22 18:29:51 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 18:29:52 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.0487279s
+[INFO] 2026/03/22 18:29:54 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 18:30:02 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 18:30:02 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 18:30:02 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 18:30:02 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 1.6332ms
+[INFO] 2026/03/22 18:30:05 handlers.go:1478: 刷新账号令牌 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59, 请求来源: ::1
+[INFO] 2026/03/22 18:30:05 kiro.go:65: Kiro: 开始刷新社交登录 Token
+[ERROR] 2026/03/22 18:30:06 kiro.go:104: Kiro: Token 刷新失败 - 状态码: 401, 响应: {"message":"Bad credentials"}
+[ERROR] 2026/03/22 18:30:06 handlers.go:1481: 账号 69e55529-0add-4a2e-8ae0-2ebf724c0e59 令牌刷新失败: 社交登录刷新失败: HTTP 401: {"message":"Bad credentials"}
+[INFO] 2026/03/22 18:30:06 logger.go:160: POST /v2/accounts/69e55529-0add-4a2e-8ae0-2ebf724c0e59/refresh from ::1 - Status: 400 - Duration: 1.0779142s
+[INFO] 2026/03/22 18:30:06 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 18:30:06 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 18:30:06 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 18:30:06 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 1.7072ms
+[INFO] 2026/03/22 18:30:07 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 16.0696697s
+[INFO] 2026/03/22 18:30:07 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 17.9883996s
+[INFO] 2026/03/22 18:30:08 handlers.go:1478: 刷新账号令牌 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59, 请求来源: ::1
+[ERROR] 2026/03/22 18:30:08 handlers.go:1481: 账号 69e55529-0add-4a2e-8ae0-2ebf724c0e59 令牌刷新失败: 社交登录刷新失败: HTTP 401: {"message":"Bad credentials"}
+[INFO] 2026/03/22 18:30:08 logger.go:160: POST /v2/accounts/69e55529-0add-4a2e-8ae0-2ebf724c0e59/refresh from ::1 - Status: 400 - Duration: 622.7µs
+[INFO] 2026/03/22 18:30:08 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 18:30:08 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 18:30:08 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 18:30:08 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 549.9µs
+[INFO] 2026/03/22 18:30:09 handlers.go:1478: 刷新账号令牌 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59, 请求来源: ::1
+[ERROR] 2026/03/22 18:30:09 handlers.go:1481: 账号 69e55529-0add-4a2e-8ae0-2ebf724c0e59 令牌刷新失败: 社交登录刷新失败: HTTP 401: {"message":"Bad credentials"}
+[INFO] 2026/03/22 18:30:09 logger.go:160: POST /v2/accounts/69e55529-0add-4a2e-8ae0-2ebf724c0e59/refresh from ::1 - Status: 400 - Duration: 747.7µs
+[INFO] 2026/03/22 18:30:09 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 18:30:09 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 18:30:09 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 18:30:09 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 2.1771ms
+[INFO] 2026/03/22 18:30:10 handlers.go:1478: 刷新账号令牌 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59, 请求来源: ::1
+[ERROR] 2026/03/22 18:30:10 handlers.go:1481: 账号 69e55529-0add-4a2e-8ae0-2ebf724c0e59 令牌刷新失败: 社交登录刷新失败: HTTP 401: {"message":"Bad credentials"}
+[INFO] 2026/03/22 18:30:10 logger.go:160: POST /v2/accounts/69e55529-0add-4a2e-8ae0-2ebf724c0e59/refresh from ::1 - Status: 400 - Duration: 506.7µs
+[INFO] 2026/03/22 18:30:10 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 18:30:10 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 18:30:10 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 18:30:10 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 2.0333ms
+[INFO] 2026/03/22 18:30:11 handlers.go:1478: 刷新账号令牌 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59, 请求来源: ::1
+[ERROR] 2026/03/22 18:30:11 handlers.go:1481: 账号 69e55529-0add-4a2e-8ae0-2ebf724c0e59 令牌刷新失败: 社交登录刷新失败: HTTP 401: {"message":"Bad credentials"}
+[INFO] 2026/03/22 18:30:11 logger.go:160: POST /v2/accounts/69e55529-0add-4a2e-8ae0-2ebf724c0e59/refresh from ::1 - Status: 400 - Duration: 1.1513ms
+[INFO] 2026/03/22 18:30:11 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 18:30:11 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 18:30:11 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 18:30:11 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 7.1109ms
+[INFO] 2026/03/22 18:30:12 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 4.4904816s
+[INFO] 2026/03/22 18:30:16 logger.go:92: 日志系统初始化成功，日志文件: logs\server_2026-03-22.log
+[INFO] 2026/03/22 18:30:16 main.go:68: === Claude 无限畅享版 dev 服务器启动中 ===
+[INFO] 2026/03/22 18:30:16 main.go:72: 系统时区: Asia/Shanghai
+[INFO] 2026/03/22 18:30:16 logger.go:121: 调试日志已禁用
+[INFO] 2026/03/22 18:30:16 main.go:100: 配置已加载 - 默认端口: 62311, 配置文件端口: 62311, 命令行端口: 0, 控制台: true
+[INFO] 2026/03/22 18:30:16 main.go:104: 开源版本 - 最大账号数: 999999
+[INFO] 2026/03/22 18:30:16 database.go:131: 开始自动迁移数据库结构...
+[INFO] 2026/03/22 18:30:16 database.go:193: 数据库结构迁移完成
+[INFO] 2026/03/22 18:30:16 main.go:113: 数据库初始化成功
+[INFO] 2026/03/22 18:30:16 main.go:125: 账号数量检查通过: 1/999999
+[INFO] 2026/03/22 18:30:16 main.go:150: 使用配置文件端口: 62311
+[INFO] 2026/03/22 18:30:16 main.go:161: 使用配置文件主机: 0.0.0.0
+[INFO] 2026/03/22 18:30:16 client.go:303: HTTP 连接池已优化 - MaxIdleConns: 200, MaxIdleConnsPerHost: 100, IdleConnTimeout: 2m0s
+[INFO] 2026/03/22 18:30:16 server.go:1551: 数据库写 worker 已启动 - 数量: 3
+[INFO] 2026/03/22 18:30:16 main.go:181: HTTP 服务器监听中 - 地址: http://0.0.0.0:62311
+[INFO] 2026/03/22 18:30:16 server.go:225: 缓存系统已启动 - 账号池刷新间隔: 10s, 设置缓存TTL: 30s
+[ERROR] 2026/03/22 18:30:16 main.go:183: HTTP 服务器启动失败: listen tcp 0.0.0.0:62311: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.
+[INFO] 2026/03/22 18:30:29 logger.go:92: 日志系统初始化成功，日志文件: logs\server_2026-03-22.log
+[INFO] 2026/03/22 18:30:29 main.go:68: === Claude 无限畅享版 dev 服务器启动中 ===
+[INFO] 2026/03/22 18:30:29 main.go:72: 系统时区: Asia/Shanghai
+[INFO] 2026/03/22 18:30:29 logger.go:121: 调试日志已禁用
+[INFO] 2026/03/22 18:30:29 main.go:100: 配置已加载 - 默认端口: 62311, 配置文件端口: 62311, 命令行端口: 0, 控制台: true
+[INFO] 2026/03/22 18:30:29 main.go:104: 开源版本 - 最大账号数: 999999
+[INFO] 2026/03/22 18:30:29 database.go:131: 开始自动迁移数据库结构...
+[INFO] 2026/03/22 18:30:29 database.go:193: 数据库结构迁移完成
+[INFO] 2026/03/22 18:30:29 main.go:113: 数据库初始化成功
+[INFO] 2026/03/22 18:30:29 main.go:125: 账号数量检查通过: 1/999999
+[INFO] 2026/03/22 18:30:29 main.go:150: 使用配置文件端口: 62311
+[INFO] 2026/03/22 18:30:29 main.go:161: 使用配置文件主机: 0.0.0.0
+[INFO] 2026/03/22 18:30:29 client.go:303: HTTP 连接池已优化 - MaxIdleConns: 200, MaxIdleConnsPerHost: 100, IdleConnTimeout: 2m0s
+[INFO] 2026/03/22 18:30:29 server.go:1551: 数据库写 worker 已启动 - 数量: 3
+[INFO] 2026/03/22 18:30:29 main.go:181: HTTP 服务器监听中 - 地址: http://0.0.0.0:62311
+[INFO] 2026/03/22 18:30:29 server.go:225: 缓存系统已启动 - 账号池刷新间隔: 10s, 设置缓存TTL: 30s
+[ERROR] 2026/03/22 18:30:29 main.go:183: HTTP 服务器启动失败: listen tcp 0.0.0.0:62311: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.
+[INFO] 2026/03/22 18:30:35 main.go:254: 收到关闭信号,正在优雅关闭服务器...
+[INFO] 2026/03/22 18:30:35 main.go:270: === Claude 无限畅享版 dev 服务器已停止 ===
+[INFO] 2026/03/22 18:30:37 logger.go:92: 日志系统初始化成功，日志文件: logs\server_2026-03-22.log
+[INFO] 2026/03/22 18:30:37 main.go:68: === Claude 无限畅享版 dev 服务器启动中 ===
+[INFO] 2026/03/22 18:30:37 main.go:72: 系统时区: Asia/Shanghai
+[INFO] 2026/03/22 18:30:37 logger.go:121: 调试日志已禁用
+[INFO] 2026/03/22 18:30:37 main.go:100: 配置已加载 - 默认端口: 62311, 配置文件端口: 62311, 命令行端口: 0, 控制台: true
+[INFO] 2026/03/22 18:30:37 main.go:104: 开源版本 - 最大账号数: 999999
+[INFO] 2026/03/22 18:30:37 database.go:131: 开始自动迁移数据库结构...
+[INFO] 2026/03/22 18:30:37 database.go:193: 数据库结构迁移完成
+[INFO] 2026/03/22 18:30:37 main.go:113: 数据库初始化成功
+[INFO] 2026/03/22 18:30:37 main.go:125: 账号数量检查通过: 1/999999
+[INFO] 2026/03/22 18:30:37 main.go:150: 使用配置文件端口: 62311
+[INFO] 2026/03/22 18:30:37 main.go:161: 使用配置文件主机: 0.0.0.0
+[INFO] 2026/03/22 18:30:37 client.go:303: HTTP 连接池已优化 - MaxIdleConns: 200, MaxIdleConnsPerHost: 100, IdleConnTimeout: 2m0s
+[INFO] 2026/03/22 18:30:37 server.go:1551: 数据库写 worker 已启动 - 数量: 3
+[INFO] 2026/03/22 18:30:37 main.go:181: HTTP 服务器监听中 - 地址: http://0.0.0.0:62311
+[INFO] 2026/03/22 18:30:37 server.go:225: 缓存系统已启动 - 账号池刷新间隔: 10s, 设置缓存TTL: 30s
+[INFO] 2026/03/22 18:30:37 main.go:300: 已自动打开浏览器访问: http://localhost:62311
+[INFO] 2026/03/22 18:30:38 logger.go:160: GET / from ::1 - Status: 200 - Duration: 3.0052ms
+[INFO] 2026/03/22 18:30:38 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 18:30:38 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 18:30:38 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 1.0024ms
+[INFO] 2026/03/22 18:30:38 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 18:30:38 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 18:30:38 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 18:30:38 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 2.1255ms
+[INFO] 2026/03/22 18:30:38 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 18:30:39 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.0586901s
+[INFO] 2026/03/22 18:30:40 handlers.go:1478: 刷新账号令牌 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59, 请求来源: ::1
+[INFO] 2026/03/22 18:30:40 kiro.go:65: Kiro: 开始刷新社交登录 Token
+[ERROR] 2026/03/22 18:30:41 kiro.go:104: Kiro: Token 刷新失败 - 状态码: 401, 响应: {"message":"Bad credentials"}
+[ERROR] 2026/03/22 18:30:41 handlers.go:1481: 账号 69e55529-0add-4a2e-8ae0-2ebf724c0e59 令牌刷新失败: 社交登录刷新失败: HTTP 401: {"message":"Bad credentials"}
+[INFO] 2026/03/22 18:30:41 logger.go:160: POST /v2/accounts/69e55529-0add-4a2e-8ae0-2ebf724c0e59/refresh from ::1 - Status: 400 - Duration: 1.1445083s
+[INFO] 2026/03/22 18:30:41 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 18:30:41 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 18:30:41 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 18:30:41 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 5.2613ms
+[INFO] 2026/03/22 18:31:08 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[WARN] 2026/03/22 18:31:31 handlers.go:2178: 账号 69e55529-0add-4a2e-8ae0-2ebf724c0e59 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 18:31:31 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 18:31:31 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 140.298ms
+[WARN] 2026/03/22 18:31:31 handlers.go:2178: 账号 69e55529-0add-4a2e-8ae0-2ebf724c0e59 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 18:31:31 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 18:31:31 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 125.5031ms
+[WARN] 2026/03/22 18:31:31 handlers.go:2178: 账号 69e55529-0add-4a2e-8ae0-2ebf724c0e59 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 18:31:31 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 18:31:31 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 2.3417ms
+[WARN] 2026/03/22 18:31:32 handlers.go:2178: 账号 69e55529-0add-4a2e-8ae0-2ebf724c0e59 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 18:31:32 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 18:31:32 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 33.9107ms
+[WARN] 2026/03/22 18:31:33 handlers.go:2178: 账号 69e55529-0add-4a2e-8ae0-2ebf724c0e59 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 18:31:33 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 18:31:33 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 2.7064ms
+[WARN] 2026/03/22 18:31:33 handlers.go:2178: 账号 69e55529-0add-4a2e-8ae0-2ebf724c0e59 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 18:31:33 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 18:31:33 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 5.8649ms
+[WARN] 2026/03/22 18:31:35 handlers.go:2178: 账号 69e55529-0add-4a2e-8ae0-2ebf724c0e59 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 18:31:35 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 18:31:35 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 17.4105ms
+[WARN] 2026/03/22 18:31:35 handlers.go:2178: 账号 69e55529-0add-4a2e-8ae0-2ebf724c0e59 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 18:31:35 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 18:31:35 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 3.2037ms
+[INFO] 2026/03/22 18:31:38 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 18:31:40 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2114679s
+[INFO] 2026/03/22 18:32:08 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 18:32:10 logger.go:160: GET /v2/users from ::1 - Status: 200 - Duration: 1.0766ms
+[INFO] 2026/03/22 18:32:11 logger.go:160: GET /v2/devtools/claude-code/config from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 18:32:18 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 18:32:18 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 18:32:18 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 18:32:18 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 2.3048ms
+[INFO] 2026/03/22 18:32:18 handlers.go:1839: 获取模型列表 - 请求来源: ::1
+[INFO] 2026/03/22 18:32:18 logger.go:160: GET /v2/models from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 18:32:31 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 18:32:31 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 18:32:31 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 1.5912ms
+[INFO] 2026/03/22 18:32:31 handlers.go:2984: 控制台 Claude 测试请求（thinking 支持）- 来源: ::1
+[WARN] 2026/03/22 18:32:31 handlers.go:2178: 账号 69e55529-0add-4a2e-8ae0-2ebf724c0e59 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 18:32:31 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 18:32:31 logger.go:160: POST /v2/test/messages from ::1 - Status: 503 - Duration: 2.9617ms
+[INFO] 2026/03/22 18:32:38 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 18:32:39 handlers.go:1293: 更新账号 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59, 请求来源: ::1
+[INFO] 2026/03/22 18:32:39 handlers.go:1336: 正在更新账号 69e55529-0add-4a2e-8ae0-2ebf724c0e59 - 字段: map[enabled:true]
+[INFO] 2026/03/22 18:32:39 handlers.go:1347: 账号更新成功 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59
+[INFO] 2026/03/22 18:32:39 logger.go:160: PATCH /v2/accounts/69e55529-0add-4a2e-8ae0-2ebf724c0e59 from ::1 - Status: 200 - Duration: 9.7024ms
+[INFO] 2026/03/22 18:32:39 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 18:32:39 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 18:32:39 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 18:32:39 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 2.9772ms
+[INFO] 2026/03/22 18:32:39 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2529411s
+[INFO] 2026/03/22 18:32:48 handlers.go:2984: 控制台 Claude 测试请求（thinking 支持）- 来源: ::1
+[WARN] 2026/03/22 18:32:48 handlers.go:2178: 账号 69e55529-0add-4a2e-8ae0-2ebf724c0e59 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 18:32:48 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 18:32:48 logger.go:160: POST /v2/test/messages from ::1 - Status: 503 - Duration: 6.7827ms
+[INFO] 2026/03/22 18:32:56 handlers.go:1478: 刷新账号令牌 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59, 请求来源: ::1
+[INFO] 2026/03/22 18:32:56 kiro.go:65: Kiro: 开始刷新社交登录 Token
+[ERROR] 2026/03/22 18:32:57 kiro.go:104: Kiro: Token 刷新失败 - 状态码: 401, 响应: {"message":"Bad credentials"}
+[ERROR] 2026/03/22 18:32:57 handlers.go:1481: 账号 69e55529-0add-4a2e-8ae0-2ebf724c0e59 令牌刷新失败: 社交登录刷新失败: HTTP 401: {"message":"Bad credentials"}
+[INFO] 2026/03/22 18:32:57 logger.go:160: POST /v2/accounts/69e55529-0add-4a2e-8ae0-2ebf724c0e59/refresh from ::1 - Status: 400 - Duration: 1.1610197s
+[INFO] 2026/03/22 18:33:04 handlers.go:1357: 删除账号 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59, 请求来源: ::1
+[INFO] 2026/03/22 18:33:04 handlers.go:1368: 账号删除成功 - ID: 69e55529-0add-4a2e-8ae0-2ebf724c0e59
+[INFO] 2026/03/22 18:33:04 logger.go:160: DELETE /v2/accounts/69e55529-0add-4a2e-8ae0-2ebf724c0e59 from ::1 - Status: 200 - Duration: 2.7033ms
+[INFO] 2026/03/22 18:33:08 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 18:33:38 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 18:33:39 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1098857s
+[INFO] 2026/03/22 18:33:42 handlers.go:806: 通过 Token 导入账号 - 请求来源: ::1
+[INFO] 2026/03/22 18:33:42 kiro.go:288: Kiro: 开始验证 Token 并获取用户信息
+[INFO] 2026/03/22 18:33:42 kiro.go:65: Kiro: 开始刷新社交登录 Token
+[INFO] 2026/03/22 18:33:43 kiro.go:121: Kiro: Token 刷新成功 - 有效期: 3600 秒
+[INFO] 2026/03/22 18:33:43 kiro.go:146: Kiro: 开始获取用户信息
+[INFO] 2026/03/22 18:33:44 kiro.go:269: Kiro: 获取用户信息成功 - Email: giang0977912878@gmail.com, UserID: d-9067c98495.44782448-20e1-70b6-15d5-78223c56129b
+[INFO] 2026/03/22 18:33:44 handlers.go:1083: Token导入: 成功导入账号 - 索引: 0, Email: giang0977912878@gmail.com, UserID: d-9067c98495.44782448-20e1-70b6-15d5-78223c56129b
+[INFO] 2026/03/22 18:33:44 handlers.go:1116: Token导入完成 - 总计: 1, 成功: 1, 失败: 0, 重复: 0, 限制已达: false
+[INFO] 2026/03/22 18:33:44 logger.go:160: POST /v2/accounts/import-by-token from ::1 - Status: 200 - Duration: 2.3166461s
+[INFO] 2026/03/22 18:33:44 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 18:33:44 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 18:33:44 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 672.2µs
+[INFO] 2026/03/22 18:33:45 server.go:252: [自动刷新] 导入账号配额刷新完成 - 共 1 个
+[INFO] 2026/03/22 18:33:48 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 18:33:48 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 18:33:48 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 18:33:48 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 2.8881ms
+[INFO] 2026/03/22 18:33:54 handlers.go:2984: 控制台 Claude 测试请求（thinking 支持）- 来源: ::1
+[INFO] 2026/03/22 18:33:55 handlers.go:2325: 控制台流式响应完成 - 来源: ::1, 模型: claude-sonnet-4.5, 消息数: 5, 输入token: 68, 输出token: 1, 耗时: 1359ms
+[INFO] 2026/03/22 18:33:55 logger.go:160: POST /v2/test/messages from ::1 - Status: 200 - Duration: 1.3613916s
+[INFO] 2026/03/22 18:34:08 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 18:34:14 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-haiku-4-5-20251001, 消息数: 1, 输入token: 6, 输出token: 89, 耗时: 1793ms
+[INFO] 2026/03/22 18:34:14 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 1.7950017s
+[INFO] 2026/03/22 18:34:18 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 1, 输入token: 539, 输出token: 179, 耗时: 5824ms
+[INFO] 2026/03/22 18:34:18 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 5.8268379s
+[INFO] 2026/03/22 18:34:38 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 18:34:40 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1882643s
+[INFO] 2026/03/22 18:34:49 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 4m10.9485833s
+[INFO] 2026/03/22 19:01:57 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 19:01:57 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 10.5897ms
+[INFO] 2026/03/22 19:01:57 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 74.5582ms
+[INFO] 2026/03/22 19:02:01 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 3.6201428s
+[INFO] 2026/03/22 20:59:15 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 20:59:15 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 182.149ms
+[INFO] 2026/03/22 20:59:16 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1891228s
+[INFO] 2026/03/22 21:00:15 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:00:17 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.3844046s
+[INFO] 2026/03/22 21:01:16 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:01:18 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.3433252s
+[INFO] 2026/03/22 21:02:17 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:02:20 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.1435225s
+[INFO] 2026/03/22 21:03:18 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:03:20 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.5095273s
+[INFO] 2026/03/22 21:04:19 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:04:19 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m4.5647974s
+[INFO] 2026/03/22 21:04:21 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2753593s
+[INFO] 2026/03/22 21:04:23 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 952.5558ms
+[INFO] 2026/03/22 21:05:20 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:05:22 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1034891s
+[INFO] 2026/03/22 21:06:21 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:06:23 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1675285s
+[INFO] 2026/03/22 21:07:22 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:07:24 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.6863354s
+[INFO] 2026/03/22 21:08:23 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:08:26 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.5244673s
+[INFO] 2026/03/22 21:09:24 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:09:24 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m0.9891944s
+[INFO] 2026/03/22 21:09:26 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.5287184s
+[INFO] 2026/03/22 21:09:28 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 966.7818ms
+[INFO] 2026/03/22 21:10:25 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 696µs
+[INFO] 2026/03/22 21:10:27 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.0873294s
+[INFO] 2026/03/22 21:11:26 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:11:29 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.1043636s
+[INFO] 2026/03/22 21:12:27 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 315.2µs
+[INFO] 2026/03/22 21:12:29 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1956461s
+[INFO] 2026/03/22 21:13:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 512.6µs
+[INFO] 2026/03/22 21:13:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2101301s
+[INFO] 2026/03/22 21:14:13 main.go:254: 收到关闭信号,正在优雅关闭服务器...
+[INFO] 2026/03/22 21:14:13 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 4m44.7761692s
+[INFO] 2026/03/22 21:14:13 main.go:270: === Claude 无限畅享版 dev 服务器已停止 ===
+[INFO] 2026/03/22 21:22:58 logger.go:92: 日志系统初始化成功，日志文件: logs\server_2026-03-22.log
+[INFO] 2026/03/22 21:22:58 main.go:68: === Claude 无限畅享版 dev 服务器启动中 ===
+[INFO] 2026/03/22 21:22:58 main.go:72: 系统时区: Asia/Shanghai
+[INFO] 2026/03/22 21:22:58 logger.go:121: 调试日志已禁用
+[INFO] 2026/03/22 21:22:58 main.go:100: 配置已加载 - 默认端口: 62311, 配置文件端口: 62311, 命令行端口: 0, 控制台: true
+[INFO] 2026/03/22 21:22:58 main.go:104: 开源版本 - 最大账号数: 999999
+[INFO] 2026/03/22 21:22:58 database.go:131: 开始自动迁移数据库结构...
+[INFO] 2026/03/22 21:22:58 database.go:193: 数据库结构迁移完成
+[INFO] 2026/03/22 21:22:58 main.go:113: 数据库初始化成功
+[INFO] 2026/03/22 21:22:58 main.go:125: 账号数量检查通过: 1/999999
+[INFO] 2026/03/22 21:22:58 main.go:150: 使用配置文件端口: 62311
+[INFO] 2026/03/22 21:22:58 main.go:161: 使用配置文件主机: 0.0.0.0
+[INFO] 2026/03/22 21:22:58 client.go:303: HTTP 连接池已优化 - MaxIdleConns: 200, MaxIdleConnsPerHost: 100, IdleConnTimeout: 2m0s
+[INFO] 2026/03/22 21:22:58 server.go:1551: 数据库写 worker 已启动 - 数量: 3
+[INFO] 2026/03/22 21:22:58 main.go:181: HTTP 服务器监听中 - 地址: http://0.0.0.0:62311
+[INFO] 2026/03/22 21:22:58 server.go:225: 缓存系统已启动 - 账号池刷新间隔: 10s, 设置缓存TTL: 30s
+[INFO] 2026/03/22 21:22:59 main.go:300: 已自动打开浏览器访问: http://localhost:62311
+[INFO] 2026/03/22 21:22:59 logger.go:160: GET / from ::1 - Status: 200 - Duration: 1.0279ms
+[INFO] 2026/03/22 21:22:59 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 21:22:59 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 21:22:59 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 1.0528ms
+[INFO] 2026/03/22 21:22:59 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 21:22:59 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 21:22:59 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 21:22:59 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 1.8176ms
+[INFO] 2026/03/22 21:22:59 handlers.go:1839: 获取模型列表 - 请求来源: ::1
+[INFO] 2026/03/22 21:22:59 logger.go:160: GET /v2/models from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:23:00 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:23:04 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 4.1764584s
+[INFO] 2026/03/22 21:23:06 kiro.go:65: Kiro: 开始刷新社交登录 Token
+[INFO] 2026/03/22 21:23:07 kiro.go:121: Kiro: Token 刷新成功 - 有效期: 3600 秒
+[INFO] 2026/03/22 21:23:07 accounts.go:403: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 令牌刷新成功，状态恢复为 normal
+[INFO] 2026/03/22 21:23:11 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-haiku-4-5-20251001, 消息数: 1, 输入token: 11, 输出token: 150, 耗时: 4964ms
+[INFO] 2026/03/22 21:23:11 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 4.9644512s
+[INFO] 2026/03/22 21:23:19 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 1, 输入token: 87, 输出token: 241, 耗时: 9290ms
+[INFO] 2026/03/22 21:23:19 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 9.2911021s
+[INFO] 2026/03/22 21:23:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:23:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.5055253s
+[INFO] 2026/03/22 21:23:30 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:23:53 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 3, 输入token: 120, 输出token: 566, 耗时: 13205ms
+[INFO] 2026/03/22 21:23:53 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 13.2070274s
+[INFO] 2026/03/22 21:24:00 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:24:03 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.7279302s
+[INFO] 2026/03/22 21:24:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:24:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.5023464s
+[INFO] 2026/03/22 21:24:30 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:25:00 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:25:02 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2790781s
+[INFO] 2026/03/22 21:25:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:25:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2167671s
+[INFO] 2026/03/22 21:25:30 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:26:00 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:26:02 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.3877002s
+[INFO] 2026/03/22 21:26:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:26:30 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:26:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.5876281s
+[INFO] 2026/03/22 21:27:00 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:27:01 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.5250502s
+[INFO] 2026/03/22 21:27:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:27:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1025896s
+[INFO] 2026/03/22 21:27:30 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:28:00 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:28:00 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m1.4284939s
+[INFO] 2026/03/22 21:28:00 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m0.873167s
+[INFO] 2026/03/22 21:28:02 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.150673s
+[INFO] 2026/03/22 21:28:04 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 986.7572ms
+[INFO] 2026/03/22 21:28:04 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 986.7572ms
+[INFO] 2026/03/22 21:28:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 2.3627ms
+[INFO] 2026/03/22 21:28:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2018212s
+[INFO] 2026/03/22 21:29:01 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:29:02 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2022326s
+[INFO] 2026/03/22 21:29:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:29:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.4746802s
+[INFO] 2026/03/22 21:30:02 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:30:04 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.5875984s
+[INFO] 2026/03/22 21:30:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:30:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2130322s
+[INFO] 2026/03/22 21:31:03 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:31:05 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.0843154s
+[INFO] 2026/03/22 21:31:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:31:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1469411s
+[INFO] 2026/03/22 21:32:04 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:32:07 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.7185907s
+[INFO] 2026/03/22 21:32:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:32:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.095839s
+[INFO] 2026/03/22 21:33:05 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:33:05 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m0.999627s
+[INFO] 2026/03/22 21:33:05 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m1.0046081s
+[INFO] 2026/03/22 21:33:08 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.2048961s
+[INFO] 2026/03/22 21:33:09 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 966.3182ms
+[INFO] 2026/03/22 21:33:09 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 982.8612ms
+[INFO] 2026/03/22 21:33:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:33:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.9035488s
+[INFO] 2026/03/22 21:34:06 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:34:07 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.078355s
+[INFO] 2026/03/22 21:34:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:34:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.4449989s
+[INFO] 2026/03/22 21:35:07 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:35:09 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.3990024s
+[INFO] 2026/03/22 21:35:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:35:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.5491821s
+[INFO] 2026/03/22 21:36:08 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:36:10 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.5515527s
+[INFO] 2026/03/22 21:36:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:36:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1612366s
+[INFO] 2026/03/22 21:37:09 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:37:12 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.1099905s
+[INFO] 2026/03/22 21:37:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:37:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1118748s
+[INFO] 2026/03/22 21:38:10 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:38:10 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m1.0030067s
+[INFO] 2026/03/22 21:38:10 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m1.0038792s
+[INFO] 2026/03/22 21:38:12 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.5285389s
+[INFO] 2026/03/22 21:38:14 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 978.4814ms
+[INFO] 2026/03/22 21:38:14 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 978.4442ms
+[INFO] 2026/03/22 21:38:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:38:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1560436s
+[INFO] 2026/03/22 21:39:11 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:39:14 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.5168174s
+[INFO] 2026/03/22 21:39:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:39:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1778451s
+[INFO] 2026/03/22 21:40:12 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:40:14 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1339723s
+[INFO] 2026/03/22 21:40:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:40:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.5462065s
+[INFO] 2026/03/22 21:41:13 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:41:15 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1048345s
+[INFO] 2026/03/22 21:41:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:41:32 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 3.2420503s
+[INFO] 2026/03/22 21:42:14 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:42:16 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1388116s
+[INFO] 2026/03/22 21:42:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:42:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.0970839s
+[INFO] 2026/03/22 21:43:15 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:43:15 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m0.9990615s
+[INFO] 2026/03/22 21:43:15 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m0.9998449s
+[INFO] 2026/03/22 21:43:17 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2958408s
+[INFO] 2026/03/22 21:43:19 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 964.2662ms
+[INFO] 2026/03/22 21:43:19 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 980.4491ms
+[INFO] 2026/03/22 21:43:26 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-haiku-4-5-20251001, 消息数: 1, 输入token: 20, 输出token: 140, 耗时: 2792ms
+[INFO] 2026/03/22 21:43:26 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 2.7939717s
+[INFO] 2026/03/22 21:43:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:43:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.0965474s
+[INFO] 2026/03/22 21:43:31 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 5, 输入token: 356, 输出token: 140, 耗时: 7481ms
+[INFO] 2026/03/22 21:43:31 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 7.4812694s
+[INFO] 2026/03/22 21:43:36 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 7, 输入token: 389, 输出token: 68, 耗时: 5606ms
+[INFO] 2026/03/22 21:43:36 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 5.6070621s
+[INFO] 2026/03/22 21:43:45 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 9, 输入token: 397, 输出token: 168, 耗时: 8593ms
+[INFO] 2026/03/22 21:43:45 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 8.5939214s
+[INFO] 2026/03/22 21:43:56 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 11, 输入token: 405, 输出token: 410, 耗时: 10588ms
+[INFO] 2026/03/22 21:43:56 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 10.5894026s
+[INFO] 2026/03/22 21:44:16 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:44:18 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.0998662s
+[INFO] 2026/03/22 21:44:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:44:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.9866949s
+[INFO] 2026/03/22 21:44:55 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-haiku-4-5-20251001, 消息数: 1, 输入token: 507, 输出token: 234, 耗时: 2883ms
+[INFO] 2026/03/22 21:44:55 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 2.8839502s
+[INFO] 2026/03/22 21:45:04 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 13, 输入token: 1249, 输出token: 415, 耗时: 11608ms
+[INFO] 2026/03/22 21:45:04 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 11.6092988s
+[INFO] 2026/03/22 21:45:15 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 15, 输入token: 1399, 输出token: 122, 耗时: 7617ms
+[INFO] 2026/03/22 21:45:15 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 7.6180434s
+[INFO] 2026/03/22 21:45:17 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:45:19 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.8254569s
+[INFO] 2026/03/22 21:45:20 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 17, 输入token: 1444, 输出token: 64, 耗时: 5020ms
+[INFO] 2026/03/22 21:45:20 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 5.0211992s
+[INFO] 2026/03/22 21:45:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:45:30 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 19, 输入token: 1452, 输出token: 32, 耗时: 10024ms
+[INFO] 2026/03/22 21:45:30 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 10.0254242s
+[INFO] 2026/03/22 21:45:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.7772103s
+[INFO] 2026/03/22 21:46:18 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:46:20 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1222322s
+[INFO] 2026/03/22 21:46:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:46:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 4.9557164s
+[INFO] 2026/03/22 21:47:19 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:47:21 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1899401s
+[INFO] 2026/03/22 21:47:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:47:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.1568396s
+[INFO] 2026/03/22 21:47:36 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 21, 输入token: 1490, 输出token: 18, 耗时: 5345ms
+[INFO] 2026/03/22 21:47:36 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 5.3460731s
+[INFO] 2026/03/22 21:48:17 kiro.go:65: Kiro: 开始刷新社交登录 Token
+[INFO] 2026/03/22 21:48:18 kiro.go:121: Kiro: Token 刷新成功 - 有效期: 3600 秒
+[INFO] 2026/03/22 21:48:18 accounts.go:403: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 令牌刷新成功，状态恢复为 normal
+[INFO] 2026/03/22 21:48:20 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:48:20 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m1.0069075s
+[INFO] 2026/03/22 21:48:20 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m1.0061532s
+[INFO] 2026/03/22 21:48:22 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.0984959s
+[INFO] 2026/03/22 21:48:24 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 960.6678ms
+[INFO] 2026/03/22 21:48:24 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 977.1535ms
+[INFO] 2026/03/22 21:48:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:48:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.1699153s
+[INFO] 2026/03/22 21:48:31 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 23, 输入token: 1514, 输出token: 492, 耗时: 13992ms
+[INFO] 2026/03/22 21:48:31 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 13.9932766s
+[INFO] 2026/03/22 21:48:42 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 25, 输入token: 1799, 输出token: 45, 耗时: 6414ms
+[INFO] 2026/03/22 21:48:42 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 6.4148563s
+[INFO] 2026/03/22 21:48:47 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 27, 输入token: 1848, 输出token: 16, 耗时: 5487ms
+[INFO] 2026/03/22 21:48:47 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 5.4872291s
+[INFO] 2026/03/22 21:48:55 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 29, 输入token: 1870, 输出token: 249, 耗时: 7674ms
+[INFO] 2026/03/22 21:48:55 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 7.6745935s
+[INFO] 2026/03/22 21:48:57 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-haiku-4-5-20251001, 消息数: 1, 输入token: 238, 输出token: 138, 耗时: 1981ms
+[INFO] 2026/03/22 21:48:57 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 1.9823718s
+[INFO] 2026/03/22 21:49:04 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 31, 输入token: 2338, 输出token: 209, 耗时: 9416ms
+[INFO] 2026/03/22 21:49:04 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 9.4169112s
+[INFO] 2026/03/22 21:49:21 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:49:22 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.0754055s
+[INFO] 2026/03/22 21:49:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:49:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.13784s
+[INFO] 2026/03/22 21:50:11 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:50:12 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.0792855s
+[INFO] 2026/03/22 21:50:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:50:30 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:50:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.6030251s
+[INFO] 2026/03/22 21:51:00 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:51:02 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.5975701s
+[INFO] 2026/03/22 21:51:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:51:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.9887555s
+[INFO] 2026/03/22 21:52:01 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:52:03 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.5710987s
+[INFO] 2026/03/22 21:52:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:52:30 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:52:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1300522s
+[INFO] 2026/03/22 21:53:00 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:53:03 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 3.1971414s
+[INFO] 2026/03/22 21:53:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:53:28 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m3.999647s
+[INFO] 2026/03/22 21:53:28 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m3.9980736s
+[INFO] 2026/03/22 21:53:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.4327539s
+[INFO] 2026/03/22 21:53:30 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:53:32 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 933.9856ms
+[INFO] 2026/03/22 21:53:32 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 981.7273ms
+[INFO] 2026/03/22 21:54:00 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:54:01 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.4225031s
+[INFO] 2026/03/22 21:54:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 512.3µs
+[INFO] 2026/03/22 21:54:30 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 634µs
+[INFO] 2026/03/22 21:54:32 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 3.3395271s
+[INFO] 2026/03/22 21:55:00 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:55:02 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2242538s
+[INFO] 2026/03/22 21:55:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 707µs
+[INFO] 2026/03/22 21:55:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1256555s
+[INFO] 2026/03/22 21:55:30 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:56:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:56:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:56:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.3982943s
+[INFO] 2026/03/22 21:56:32 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.0764369s
+[INFO] 2026/03/22 21:57:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:57:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:57:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1687336s
+[INFO] 2026/03/22 21:57:32 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.1938567s
+[INFO] 2026/03/22 21:58:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 552.4µs
+[INFO] 2026/03/22 21:58:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:58:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1056371s
+[INFO] 2026/03/22 21:58:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.4025905s
+[INFO] 2026/03/22 21:59:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:59:28 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m56.0050154s
+[INFO] 2026/03/22 21:59:28 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m56.0050154s
+[INFO] 2026/03/22 21:59:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:59:32 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 937.3819ms
+[INFO] 2026/03/22 21:59:32 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 954.8457ms
+[INFO] 2026/03/22 21:59:35 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 6.3534281s
+[INFO] 2026/03/22 21:59:37 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.8489699s
+[INFO] 2026/03/22 21:59:38 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-haiku-4-5-20251001, 消息数: 1, 输入token: 226, 输出token: 118, 耗时: 3094ms
+[INFO] 2026/03/22 21:59:38 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 3.0957874s
+[INFO] 2026/03/22 21:59:43 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 33, 输入token: 2767, 输出token: 125, 耗时: 8006ms
+[INFO] 2026/03/22 21:59:43 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 8.0081296s
+[INFO] 2026/03/22 21:59:44 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 21:59:45 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1431236s
+[INFO] 2026/03/22 21:59:57 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 35, 输入token: 2775, 输出token: 504, 耗时: 13121ms
+[INFO] 2026/03/22 21:59:57 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 13.1216849s
+[INFO] 2026/03/22 22:00:00 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:00:02 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.5727603s
+[INFO] 2026/03/22 22:00:08 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:00:30 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:00:38 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:00:40 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.4419615s
+[INFO] 2026/03/22 22:01:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:01:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:01:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1237814s
+[INFO] 2026/03/22 22:02:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:02:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:02:29 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.0745136s
+[INFO] 2026/03/22 22:02:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.4443624s
+[INFO] 2026/03/22 22:03:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:03:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:03:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.5571441s
+[INFO] 2026/03/22 22:03:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.178573s
+[INFO] 2026/03/22 22:04:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:04:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:04:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.119316s
+[INFO] 2026/03/22 22:04:32 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.4517934s
+[INFO] 2026/03/22 22:05:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:05:28 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m56.0104432s
+[INFO] 2026/03/22 22:05:28 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m56.0114713s
+[INFO] 2026/03/22 22:05:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:05:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.0309976s
+[INFO] 2026/03/22 22:05:32 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.3776867s
+[INFO] 2026/03/22 22:05:32 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 907.3697ms
+[INFO] 2026/03/22 22:05:32 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 924.5433ms
+[INFO] 2026/03/22 22:06:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:06:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 536.7µs
+[INFO] 2026/03/22 22:06:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.2271067s
+[INFO] 2026/03/22 22:06:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.4811701s
+[INFO] 2026/03/22 22:07:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:07:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:07:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2014207s
+[INFO] 2026/03/22 22:07:32 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.8806087s
+[INFO] 2026/03/22 22:08:22 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-haiku-4-5-20251001, 消息数: 1, 输入token: 14, 输出token: 105, 耗时: 3829ms
+[INFO] 2026/03/22 22:08:22 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 3.8303002s
+[INFO] 2026/03/22 22:08:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 997.2µs
+[INFO] 2026/03/22 22:08:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 634.2µs
+[INFO] 2026/03/22 22:08:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1247167s
+[INFO] 2026/03/22 22:08:30 logger.go:160: POST /v1/messages/count_tokens from ::1 - Status: 200 - Duration: 38.3618ms
+[INFO] 2026/03/22 22:08:30 logger.go:160: POST /v1/messages/count_tokens from ::1 - Status: 200 - Duration: 2.5967ms
+[INFO] 2026/03/22 22:08:30 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 37, 输入token: 3047, 输出token: 275, 耗时: 11869ms
+[INFO] 2026/03/22 22:08:30 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 11.8709733s
+[INFO] 2026/03/22 22:08:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 3.0489331s
+[INFO] 2026/03/22 22:08:42 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 39, 输入token: 3082, 输出token: 250, 耗时: 11503ms
+[INFO] 2026/03/22 22:08:42 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 11.5045958s
+[INFO] 2026/03/22 22:08:49 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 41, 输入token: 3090, 输出token: 31, 耗时: 6568ms
+[INFO] 2026/03/22 22:08:49 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 6.5700466s
+[INFO] 2026/03/22 22:08:55 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 43, 输入token: 3098, 输出token: 14, 耗时: 5910ms
+[INFO] 2026/03/22 22:08:55 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 5.911536s
+[INFO] 2026/03/22 22:09:02 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 45, 输入token: 3118, 输出token: 81, 耗时: 7646ms
+[INFO] 2026/03/22 22:09:02 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 7.6483591s
+[INFO] 2026/03/22 22:09:18 handlers.go:2377: 读取流错误 - 来源: ::1, 错误: context canceled
+[INFO] 2026/03/22 22:09:18 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 47, 输入token: 3126, 输出token: 567, 耗时: 15355ms
+[INFO] 2026/03/22 22:09:18 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 15.3557566s
+[INFO] 2026/03/22 22:09:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:09:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:09:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.0936597s
+[INFO] 2026/03/22 22:09:34 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 4.1718799s
+[INFO] 2026/03/22 22:10:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:10:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:10:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2298313s
+[INFO] 2026/03/22 22:10:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.0568752s
+[INFO] 2026/03/22 22:11:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:11:28 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m55.987438s
+[INFO] 2026/03/22 22:11:28 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m55.9841627s
+[INFO] 2026/03/22 22:11:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:11:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.0834815s
+[INFO] 2026/03/22 22:11:32 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.1571578s
+[INFO] 2026/03/22 22:11:32 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 968.0149ms
+[INFO] 2026/03/22 22:11:32 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 952.2829ms
+[INFO] 2026/03/22 22:12:08 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-haiku-4-5-20251001, 消息数: 1, 输入token: 15, 输出token: 85, 耗时: 2630ms
+[INFO] 2026/03/22 22:12:08 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 2.6336004s
+[INFO] 2026/03/22 22:12:20 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 1, 输入token: 548, 输出token: 671, 耗时: 14721ms
+[INFO] 2026/03/22 22:12:20 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 14.7227999s
+[INFO] 2026/03/22 22:12:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:12:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 598.2µs
+[INFO] 2026/03/22 22:12:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.124409s
+[INFO] 2026/03/22 22:12:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2997265s
+[INFO] 2026/03/22 22:13:18 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-haiku-4-5-20251001, 消息数: 1, 输入token: 12, 输出token: 82, 耗时: 2168ms
+[INFO] 2026/03/22 22:13:18 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 2.1696312s
+[INFO] 2026/03/22 22:13:27 handlers.go:2399: Claude 流式响应完成 - 来源: ::1, 模型: claude-sonnet-4-5-20250929-thinking, 消息数: 3, 输入token: 914, 输出token: 542, 耗时: 10792ms
+[INFO] 2026/03/22 22:13:27 logger.go:160: POST /v1/messages from ::1 - Status: 200 - Duration: 10.7936491s
+[INFO] 2026/03/22 22:13:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:13:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 464.8µs
+[INFO] 2026/03/22 22:13:32 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 3.8337616s
+[INFO] 2026/03/22 22:13:34 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.0448265s
+[INFO] 2026/03/22 22:14:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:14:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:14:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2826371s
+[INFO] 2026/03/22 22:14:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.6029321s
+[INFO] 2026/03/22 22:15:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:15:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:15:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.5624967s
+[INFO] 2026/03/22 22:15:32 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.4593396s
+[INFO] 2026/03/22 22:16:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:16:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:16:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.4801079s
+[INFO] 2026/03/22 22:16:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.6462167s
+[INFO] 2026/03/22 22:16:33 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m0.135828s
+[INFO] 2026/03/22 22:16:33 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m0.1379665s
+[INFO] 2026/03/22 22:16:36 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 847.2332ms
+[INFO] 2026/03/22 22:16:36 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 815.9287ms
+[INFO] 2026/03/22 22:17:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:17:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:17:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.5541279s
+[INFO] 2026/03/22 22:17:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.4670347s
+[INFO] 2026/03/22 22:18:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:18:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:18:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.7879576s
+[INFO] 2026/03/22 22:18:34 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.9291534s
+[INFO] 2026/03/22 22:19:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:19:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:19:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.4787759s
+[INFO] 2026/03/22 22:19:32 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.7072786s
+[INFO] 2026/03/22 22:20:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:20:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:20:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.5654536s
+[INFO] 2026/03/22 22:20:32 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.8297826s
+[INFO] 2026/03/22 22:21:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:21:29 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:21:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 5.0316967s
+[INFO] 2026/03/22 22:21:38 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 5.0406256s
+[INFO] 2026/03/22 22:21:38 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m2.0636027s
+[INFO] 2026/03/22 22:21:38 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m2.0636027s
+[INFO] 2026/03/22 22:21:42 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 809.4994ms
+[INFO] 2026/03/22 22:21:42 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 921.2897ms
+[INFO] 2026/03/22 22:22:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 724.2µs
+[INFO] 2026/03/22 22:22:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:22:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 5.0255923s
+[INFO] 2026/03/22 22:22:38 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 5.0230288s
+[INFO] 2026/03/22 22:23:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:23:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:23:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.9959385s
+[INFO] 2026/03/22 22:23:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.1728037s
+[INFO] 2026/03/22 22:24:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:24:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:24:32 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 3.322226s
+[INFO] 2026/03/22 22:24:38 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 6.727772s
+[INFO] 2026/03/22 22:25:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:25:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:25:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 4.1198118s
+[INFO] 2026/03/22 22:25:38 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 5.0061471s
+[INFO] 2026/03/22 22:26:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:26:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:26:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 4.5006417s
+[INFO] 2026/03/22 22:26:35 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.5132564s
+[INFO] 2026/03/22 22:27:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 369µs
+[INFO] 2026/03/22 22:27:28 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m46.0059934s
+[INFO] 2026/03/22 22:27:28 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m46.0030337s
+[INFO] 2026/03/22 22:27:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:27:32 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 885.9602ms
+[INFO] 2026/03/22 22:27:32 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 904.1039ms
+[INFO] 2026/03/22 22:27:38 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 10.0281342s
+[INFO] 2026/03/22 22:27:47 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 8.2378038s
+[INFO] 2026/03/22 22:28:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:28:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:28:35 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 6.1728076s
+[INFO] 2026/03/22 22:28:39 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 4.733902s
+[INFO] 2026/03/22 22:29:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:29:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 707.2µs
+[INFO] 2026/03/22 22:29:34 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 5.2235681s
+[INFO] 2026/03/22 22:29:39 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 5.7986556s
+[INFO] 2026/03/22 22:30:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:30:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:30:36 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 7.9611312s
+[INFO] 2026/03/22 22:30:37 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.0330313s
+[INFO] 2026/03/22 22:31:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:31:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:31:38 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 10.0004663s
+[INFO] 2026/03/22 22:31:45 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 6.3936031s
+[INFO] 2026/03/22 22:32:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 560.4µs
+[INFO] 2026/03/22 22:32:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:32:38 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 10.0007193s
+[INFO] 2026/03/22 22:32:38 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m5.9988151s
+[INFO] 2026/03/22 22:32:38 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m5.9988151s
+[INFO] 2026/03/22 22:32:42 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 972.3463ms
+[INFO] 2026/03/22 22:32:42 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 980.2297ms
+[INFO] 2026/03/22 22:32:45 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 6.8238564s
+[INFO] 2026/03/22 22:33:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:33:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:33:38 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 10.0006144s
+[INFO] 2026/03/22 22:33:48 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 10.0000911s
+[INFO] 2026/03/22 22:34:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:34:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:34:34 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 5.6548612s
+[INFO] 2026/03/22 22:34:42 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 7.6524179s
+[INFO] 2026/03/22 22:35:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:35:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:35:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.3329603s
+[INFO] 2026/03/22 22:35:40 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 10.0001825s
+[INFO] 2026/03/22 22:36:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:36:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:36:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 4.7355653s
+[INFO] 2026/03/22 22:36:35 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.4397172s
+[INFO] 2026/03/22 22:37:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:37:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:37:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 4.9867527s
+[INFO] 2026/03/22 22:37:35 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.6958884s
+[INFO] 2026/03/22 22:38:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 604.9µs
+[INFO] 2026/03/22 22:38:28 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m46.0050326s
+[INFO] 2026/03/22 22:38:28 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m46.0045548s
+[INFO] 2026/03/22 22:38:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:38:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.720963s
+[INFO] 2026/03/22 22:38:32 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 919.0349ms
+[INFO] 2026/03/22 22:38:32 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 903.2108ms
+[INFO] 2026/03/22 22:38:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.2829724s
+[INFO] 2026/03/22 22:39:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:39:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:39:32 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 3.203846s
+[INFO] 2026/03/22 22:39:34 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.8181628s
+[INFO] 2026/03/22 22:40:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:40:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:40:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 3.0755845s
+[INFO] 2026/03/22 22:40:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.8935679s
+[INFO] 2026/03/22 22:41:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:41:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:41:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.683248s
+[INFO] 2026/03/22 22:41:34 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.9415425s
+[INFO] 2026/03/22 22:42:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:42:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:42:38 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 10.0004531s
+[INFO] 2026/03/22 22:42:48 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 10.0007815s
+[INFO] 2026/03/22 22:43:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:43:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:43:38 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 10.0002058s
+[INFO] 2026/03/22 22:43:38 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m5.9983961s
+[INFO] 2026/03/22 22:43:38 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m5.9992187s
+[INFO] 2026/03/22 22:43:42 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 982.8493ms
+[INFO] 2026/03/22 22:43:42 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 974.2908ms
+[INFO] 2026/03/22 22:43:48 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 10.0008099s
+[INFO] 2026/03/22 22:44:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:44:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:44:38 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 10.0012637s
+[INFO] 2026/03/22 22:44:48 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 10.0005979s
+[INFO] 2026/03/22 22:45:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:45:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:45:38 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 10.0004485s
+[INFO] 2026/03/22 22:45:43 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 5.0182606s
+[INFO] 2026/03/22 22:46:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:46:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:46:38 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 10.0009193s
+[INFO] 2026/03/22 22:46:41 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.0953364s
+[INFO] 2026/03/22 22:47:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:47:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:47:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2982366s
+[INFO] 2026/03/22 22:47:32 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.7815672s
+[INFO] 2026/03/22 22:48:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 512.5µs
+[INFO] 2026/03/22 22:48:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:48:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 3.0020817s
+[INFO] 2026/03/22 22:48:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.3691775s
+[INFO] 2026/03/22 22:49:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:49:28 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m46.0229014s
+[INFO] 2026/03/22 22:49:28 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m46.0169141s
+[INFO] 2026/03/22 22:49:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 627.1µs
+[INFO] 2026/03/22 22:49:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.4393695s
+[INFO] 2026/03/22 22:49:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2249588s
+[INFO] 2026/03/22 22:49:32 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 868.28ms
+[INFO] 2026/03/22 22:49:32 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 853.8834ms
+[INFO] 2026/03/22 22:50:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:50:29 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 502µs
+[INFO] 2026/03/22 22:50:32 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 3.1199836s
+[INFO] 2026/03/22 22:50:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.6191023s
+[INFO] 2026/03/22 22:51:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:51:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:51:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 4.2854553s
+[INFO] 2026/03/22 22:51:34 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.409845s
+[INFO] 2026/03/22 22:52:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:52:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:52:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.9332352s
+[INFO] 2026/03/22 22:52:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.7613691s
+[INFO] 2026/03/22 22:53:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 627.2µs
+[INFO] 2026/03/22 22:53:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:53:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.7718084s
+[INFO] 2026/03/22 22:53:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.2665961s
+[INFO] 2026/03/22 22:54:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:54:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:54:38 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 10.0003268s
+[INFO] 2026/03/22 22:54:38 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m5.9931252s
+[INFO] 2026/03/22 22:54:38 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m5.9924602s
+[INFO] 2026/03/22 22:54:40 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.3641831s
+[INFO] 2026/03/22 22:54:42 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 976.3543ms
+[INFO] 2026/03/22 22:54:42 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 976.3543ms
+[INFO] 2026/03/22 22:55:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:55:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:55:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.5297842s
+[INFO] 2026/03/22 22:55:32 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.0935971s
+[INFO] 2026/03/22 22:56:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:56:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:56:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.5338804s
+[INFO] 2026/03/22 22:56:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.6861938s
+[INFO] 2026/03/22 22:57:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:57:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:57:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.926377s
+[INFO] 2026/03/22 22:57:32 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2005073s
+[INFO] 2026/03/22 22:58:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:58:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:58:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.3050604s
+[INFO] 2026/03/22 22:58:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.4399696s
+[INFO] 2026/03/22 22:59:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:59:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 22:59:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.1837495s
+[INFO] 2026/03/22 22:59:34 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.9986013s
+[INFO] 2026/03/22 23:00:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:00:28 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m46.0254478s
+[INFO] 2026/03/22 23:00:28 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 5m46.0259579s
+[INFO] 2026/03/22 23:00:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:00:32 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 872.8867ms
+[INFO] 2026/03/22 23:00:32 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 839.059ms
+[INFO] 2026/03/22 23:00:35 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 7.0125855s
+[INFO] 2026/03/22 23:00:41 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 5.2501436s
+[INFO] 2026/03/22 23:01:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:01:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:01:38 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 10.0083906s
+[INFO] 2026/03/22 23:01:48 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 10.0007387s
+[INFO] 2026/03/22 23:02:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:02:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:02:32 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 3.4709165s
+[INFO] 2026/03/22 23:02:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2438701s
+[INFO] 2026/03/22 23:03:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:03:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:03:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2362735s
+[INFO] 2026/03/22 23:03:38 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 8.2101292s
+[INFO] 2026/03/22 23:04:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:04:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:04:33 kiro.go:65: Kiro: 开始刷新社交登录 Token
+[INFO] 2026/03/22 23:04:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 4.3815357s
+[ERROR] 2026/03/22 23:04:33 kiro.go:104: Kiro: Token 刷新失败 - 状态码: 401, 响应: {"message":"Bad credentials"}
+[WARN] 2026/03/22 23:04:33 server.go:2110: [被动刷新] 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 令牌刷新失败: 社交登录刷新失败: HTTP 401: {"message":"Bad credentials"}
+[WARN] 2026/03/22 23:04:33 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 令牌刷新失败: 社交登录刷新失败: HTTP 401: {"message":"Bad credentials"}，尝试换号
+[WARN] 2026/03/22 23:04:33 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:04:33 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 626.393ms
+[WARN] 2026/03/22 23:04:33 server.go:2110: [被动刷新] 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 令牌刷新失败: 社交登录刷新失败: HTTP 401: {"message":"Bad credentials"}
+[WARN] 2026/03/22 23:04:33 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 令牌刷新失败: 社交登录刷新失败: HTTP 401: {"message":"Bad credentials"}，尝试换号
+[WARN] 2026/03/22 23:04:33 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:04:33 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 716.758ms
+[WARN] 2026/03/22 23:04:34 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:04:34 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:04:34 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 2.631ms
+[WARN] 2026/03/22 23:04:34 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:04:34 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:04:34 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 8.5663ms
+[WARN] 2026/03/22 23:04:35 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:04:35 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:04:35 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 4.5602ms
+[WARN] 2026/03/22 23:04:35 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:04:35 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:04:35 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 1.8554ms
+[INFO] 2026/03/22 23:04:36 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 3.2833065s
+[WARN] 2026/03/22 23:04:37 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:04:37 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:04:37 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 10.0705ms
+[WARN] 2026/03/22 23:04:37 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:04:37 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:04:37 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 3.5921ms
+[WARN] 2026/03/22 23:04:41 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:04:41 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:04:41 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 9.2094ms
+[WARN] 2026/03/22 23:04:42 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:04:42 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:04:42 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 2.3003ms
+[WARN] 2026/03/22 23:04:50 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:04:50 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:04:50 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 10.6548ms
+[WARN] 2026/03/22 23:04:51 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:04:51 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:04:51 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 3.2504ms
+[WARN] 2026/03/22 23:05:10 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:05:10 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:05:10 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 20.1276ms
+[WARN] 2026/03/22 23:05:11 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:05:11 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:05:11 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 6.5898ms
+[INFO] 2026/03/22 23:05:14 main.go:254: 收到关闭信号,正在优雅关闭服务器...
+[INFO] 2026/03/22 23:05:14 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 4m41.2563402s
+[INFO] 2026/03/22 23:05:14 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 4m41.2557851s
+[INFO] 2026/03/22 23:05:14 main.go:270: === Claude 无限畅享版 dev 服务器已停止 ===
+[INFO] 2026/03/22 23:05:42 logger.go:92: 日志系统初始化成功，日志文件: logs\server_2026-03-22.log
+[INFO] 2026/03/22 23:05:42 main.go:68: === Claude 无限畅享版 dev 服务器启动中 ===
+[INFO] 2026/03/22 23:05:42 main.go:72: 系统时区: Asia/Shanghai
+[INFO] 2026/03/22 23:05:42 logger.go:121: 调试日志已禁用
+[INFO] 2026/03/22 23:05:42 main.go:100: 配置已加载 - 默认端口: 62311, 配置文件端口: 62311, 命令行端口: 0, 控制台: true
+[INFO] 2026/03/22 23:05:42 main.go:104: 开源版本 - 最大账号数: 999999
+[INFO] 2026/03/22 23:05:42 database.go:131: 开始自动迁移数据库结构...
+[INFO] 2026/03/22 23:05:42 database.go:193: 数据库结构迁移完成
+[INFO] 2026/03/22 23:05:42 main.go:113: 数据库初始化成功
+[INFO] 2026/03/22 23:05:42 main.go:125: 账号数量检查通过: 1/999999
+[INFO] 2026/03/22 23:05:42 main.go:150: 使用配置文件端口: 62311
+[INFO] 2026/03/22 23:05:42 main.go:161: 使用配置文件主机: 0.0.0.0
+[INFO] 2026/03/22 23:05:42 client.go:303: HTTP 连接池已优化 - MaxIdleConns: 200, MaxIdleConnsPerHost: 100, IdleConnTimeout: 2m0s
+[INFO] 2026/03/22 23:05:42 server.go:1551: 数据库写 worker 已启动 - 数量: 3
+[INFO] 2026/03/22 23:05:42 main.go:181: HTTP 服务器监听中 - 地址: http://0.0.0.0:62311
+[INFO] 2026/03/22 23:05:42 server.go:225: 缓存系统已启动 - 账号池刷新间隔: 10s, 设置缓存TTL: 30s
+[INFO] 2026/03/22 23:05:42 main.go:300: 已自动打开浏览器访问: http://localhost:62311
+[INFO] 2026/03/22 23:05:42 logger.go:160: GET / from 127.0.0.1 - Status: 200 - Duration: 1.0014ms
+[INFO] 2026/03/22 23:05:43 handlers.go:1770: 获取系统设置 - 请求来源: 127.0.0.1
+[INFO] 2026/03/22 23:05:43 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 23:05:43 logger.go:160: GET /v2/settings from 127.0.0.1 - Status: 200 - Duration: 509.9µs
+[INFO] 2026/03/22 23:05:43 handlers.go:311: 列出账号列表 - 请求来源: 127.0.0.1
+[INFO] 2026/03/22 23:05:43 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 23:05:43 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 23:05:43 logger.go:160: GET /v2/accounts from 127.0.0.1 - Status: 200 - Duration: 1.5977ms
+[INFO] 2026/03/22 23:05:43 handlers.go:1839: 获取模型列表 - 请求来源: 127.0.0.1
+[INFO] 2026/03/22 23:05:43 logger.go:160: GET /v2/models from 127.0.0.1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:05:43 logger.go:160: GET /v2/stats/online from 127.0.0.1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:05:44 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.3894203s
+[WARN] 2026/03/22 23:05:44 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:05:44 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:05:44 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 156.554ms
+[INFO] 2026/03/22 23:05:46 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 23:05:46 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 23:05:46 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 23:05:46 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 1.1689ms
+[INFO] 2026/03/22 23:05:49 handlers.go:311: 列出账号列表 - 请求来源: ::1
+[INFO] 2026/03/22 23:05:49 handlers.go:347: 列出账号过滤条件 - 状态: , 排序字段: created_at, 降序: true, 页码: 1, 每页: 100
+[INFO] 2026/03/22 23:05:49 handlers.go:441: 成功列出 1 个账号 (页码: 1/1, 总数: 1)
+[INFO] 2026/03/22 23:05:49 logger.go:160: GET /v2/accounts from ::1 - Status: 200 - Duration: 3.4403ms
+[WARN] 2026/03/22 23:05:50 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:05:50 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:05:50 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 2.6617ms
+[INFO] 2026/03/22 23:05:57 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 15.645765s
+[INFO] 2026/03/22 23:05:57 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 15.662083s
+[INFO] 2026/03/22 23:06:01 handlers.go:1770: 获取系统设置 - 请求来源: ::1
+[INFO] 2026/03/22 23:06:01 handlers.go:1788: 成功获取系统设置
+[INFO] 2026/03/22 23:06:01 logger.go:160: GET /v2/settings from ::1 - Status: 200 - Duration: 1.6355ms
+[INFO] 2026/03/22 23:06:01 handlers.go:2984: 控制台 Claude 测试请求（thinking 支持）- 来源: ::1
+[WARN] 2026/03/22 23:06:01 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:06:01 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:06:01 logger.go:160: POST /v2/test/messages from ::1 - Status: 503 - Duration: 824.3µs
+[INFO] 2026/03/22 23:06:10 handlers.go:1478: 刷新账号令牌 - ID: a207959e-1139-42bd-b380-4f63e5bbfa70, 请求来源: ::1
+[INFO] 2026/03/22 23:06:10 kiro.go:65: Kiro: 开始刷新社交登录 Token
+[INFO] 2026/03/22 23:06:11 handlers.go:1478: 刷新账号令牌 - ID: a207959e-1139-42bd-b380-4f63e5bbfa70, 请求来源: ::1
+[ERROR] 2026/03/22 23:06:12 kiro.go:104: Kiro: Token 刷新失败 - 状态码: 401, 响应: {"message":"Bad credentials"}
+[ERROR] 2026/03/22 23:06:12 handlers.go:1481: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 令牌刷新失败: 社交登录刷新失败: HTTP 401: {"message":"Bad credentials"}
+[INFO] 2026/03/22 23:06:12 logger.go:160: POST /v2/accounts/a207959e-1139-42bd-b380-4f63e5bbfa70/refresh from ::1 - Status: 400 - Duration: 1.641718s
+[ERROR] 2026/03/22 23:06:12 handlers.go:1481: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 令牌刷新失败: 社交登录刷新失败: HTTP 401: {"message":"Bad credentials"}
+[INFO] 2026/03/22 23:06:12 logger.go:160: POST /v2/accounts/a207959e-1139-42bd-b380-4f63e5bbfa70/refresh from ::1 - Status: 400 - Duration: 810.5289ms
+[INFO] 2026/03/22 23:06:12 handlers.go:1293: 更新账号 - ID: a207959e-1139-42bd-b380-4f63e5bbfa70, 请求来源: ::1
+[INFO] 2026/03/22 23:06:12 handlers.go:1336: 正在更新账号 a207959e-1139-42bd-b380-4f63e5bbfa70 - 字段: map[enabled:false]
+[INFO] 2026/03/22 23:06:12 handlers.go:1347: 账号更新成功 - ID: a207959e-1139-42bd-b380-4f63e5bbfa70
+[INFO] 2026/03/22 23:06:12 logger.go:160: PATCH /v2/accounts/a207959e-1139-42bd-b380-4f63e5bbfa70 from ::1 - Status: 200 - Duration: 7.4571ms
+[INFO] 2026/03/22 23:06:13 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:06:13 handlers.go:1478: 刷新账号令牌 - ID: a207959e-1139-42bd-b380-4f63e5bbfa70, 请求来源: ::1
+[ERROR] 2026/03/22 23:06:13 handlers.go:1481: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 令牌刷新失败: 社交登录刷新失败: HTTP 401: {"message":"Bad credentials"}
+[INFO] 2026/03/22 23:06:13 logger.go:160: POST /v2/accounts/a207959e-1139-42bd-b380-4f63e5bbfa70/refresh from ::1 - Status: 400 - Duration: 506.7µs
+[WARN] 2026/03/22 23:06:24 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:06:24 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:06:24 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 6.3598ms
+[WARN] 2026/03/22 23:06:25 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:06:25 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:06:25 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 5.0729ms
+[INFO] 2026/03/22 23:06:26 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:06:28 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.9758325s
+[INFO] 2026/03/22 23:06:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:06:31 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 34.0899466s
+[INFO] 2026/03/22 23:06:33 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 35.1222344s
+[INFO] 2026/03/22 23:06:33 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 4.1549414s
+[INFO] 2026/03/22 23:06:43 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:06:45 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.2721659s
+[WARN] 2026/03/22 23:06:58 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:06:58 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:06:58 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 5.3127ms
+[WARN] 2026/03/22 23:07:00 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:07:00 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:07:00 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 8.4507ms
+[INFO] 2026/03/22 23:07:13 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[WARN] 2026/03/22 23:07:37 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:07:37 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:07:37 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 3.9614ms
+[WARN] 2026/03/22 23:07:39 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:07:39 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:07:39 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 31.3677ms
+[WARN] 2026/03/22 23:07:39 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:07:39 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:07:39 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 1.4697ms
+[WARN] 2026/03/22 23:07:39 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:07:39 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:07:39 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 6.2174ms
+[WARN] 2026/03/22 23:07:40 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:07:40 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:07:40 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 2.7912ms
+[WARN] 2026/03/22 23:07:40 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:07:40 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:07:40 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 13.226ms
+[WARN] 2026/03/22 23:07:41 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:07:41 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:07:41 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 7.9819ms
+[WARN] 2026/03/22 23:07:41 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:07:41 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:07:41 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 21.4455ms
+[WARN] 2026/03/22 23:07:43 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:07:43 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:07:43 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 4.2749ms
+[WARN] 2026/03/22 23:07:43 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:07:43 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:07:43 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 11.0732ms
+[INFO] 2026/03/22 23:07:43 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:07:45 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.4501035s
+[WARN] 2026/03/22 23:07:48 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:07:48 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:07:48 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 2.6266ms
+[WARN] 2026/03/22 23:07:48 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:07:48 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:07:48 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 514.8µs
+[WARN] 2026/03/22 23:07:56 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:07:56 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:07:56 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 5.3803ms
+[WARN] 2026/03/22 23:07:57 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:07:57 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:07:57 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 32.2954ms
+[INFO] 2026/03/22 23:08:13 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[WARN] 2026/03/22 23:08:14 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:08:14 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:08:14 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 79.1751ms
+[WARN] 2026/03/22 23:08:16 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:08:16 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:08:16 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 3.5486ms
+[INFO] 2026/03/22 23:08:43 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:08:45 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.61366s
+[WARN] 2026/03/22 23:08:51 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:08:51 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:08:51 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 24.5135ms
+[WARN] 2026/03/22 23:08:53 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:08:53 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:08:53 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 3.9237ms
+[INFO] 2026/03/22 23:09:13 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[WARN] 2026/03/22 23:09:26 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:09:26 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:09:26 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 9.9848ms
+[WARN] 2026/03/22 23:09:30 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:09:30 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:09:30 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 8.2313ms
+[INFO] 2026/03/22 23:09:43 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:09:45 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.3215604s
+[WARN] 2026/03/22 23:10:03 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:10:03 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:10:03 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 19.9645ms
+[WARN] 2026/03/22 23:10:07 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:10:07 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:10:07 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 2.8479ms
+[INFO] 2026/03/22 23:10:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[WARN] 2026/03/22 23:10:42 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:10:42 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:10:42 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 3.124ms
+[WARN] 2026/03/22 23:10:42 handlers.go:2178: 账号 a207959e-1139-42bd-b380-4f63e5bbfa70 被动刷新失败: 账号缺少访问令牌，尝试换号
+[WARN] 2026/03/22 23:10:42 handlers.go:2166: 无可用账号 - 来源: ::1, 已尝试: 1
+[INFO] 2026/03/22 23:10:42 logger.go:160: POST /v1/messages from ::1 - Status: 503 - Duration: 38.3408ms
+[INFO] 2026/03/22 23:10:47 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 4.0518903s
+[INFO] 2026/03/22 23:10:47 logger.go:160: GET /v2/server-logs/stream from 127.0.0.1 - Status: 200 - Duration: 5m4.6415709s
+[INFO] 2026/03/22 23:10:51 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 908.774ms
+[INFO] 2026/03/22 23:11:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:11:46 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.9092418s
+[INFO] 2026/03/22 23:12:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:13:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:13:30 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 1.8018926s
+[INFO] 2026/03/22 23:14:28 logger.go:160: GET /v2/stats/online from ::1 - Status: 200 - Duration: 0s
+[INFO] 2026/03/22 23:14:31 logger.go:160: GET /v2/health/aws-latency from ::1 - Status: 200 - Duration: 2.7552348s
+[INFO] 2026/03/22 23:14:39 logger.go:160: GET /v2/server-logs/stream from ::1 - Status: 200 - Duration: 3m47.4668251s

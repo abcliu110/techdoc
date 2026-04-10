@@ -131,4 +131,17 @@ SecretKey -
 
 106.55.226.252
 administrator
-123eM@aTvvU4RFzo*PPL
+123c:\Users\16555\Desktop\nacos_config_export_20260402162831.zipPPL
+
+http://119.29.228.21:30002/nacos
+
+
+# 1. 先打标签
+docker tag xuxueli/xxl-job-admin:2.4.1 192.168.1.119:30020/library/xxl-job-admin:2.4.1
+
+# 2. 再推送
+docker push 192.168.1.119:30020/library/xxl-job-admin:2.4.1
+
+1c4388778a2e2002
+
+https://wx.gzjjzhy.com/lemontree?code=1c4388778a2e2002&p=0&mid=lemontree
