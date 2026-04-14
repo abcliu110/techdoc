@@ -1,5 +1,13 @@
+-- 商户表
+select * from sc_merchant sm where sm.company_id   = 159411180237043484
+-- 门店表
+select * from sc_store ss  where ss.company_id   = 159411180237043484
+
 --门店表
 select * from sc_store ss  where ss.shop_id  = 159426147207078756
+
+-- 设备表
+select * from pos_dev where mid = 159411180237043484 and sid = 159426147207078756
 
 --微信小程序配置表
 select * from a_wechat.wx_app_config
@@ -40,4 +48,6 @@ select * from gylregdb.sc_dish sd
 
 -- 角色表
 select * from a_platform.sys_role
+
+
 

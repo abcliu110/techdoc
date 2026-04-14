@@ -145,3 +145,7 @@ docker push 192.168.1.119:30020/library/xxl-job-admin:2.4.1
 1c4388778a2e2002
 
 https://wx.gzjjzhy.com/lemontree?code=1c4388778a2e2002&p=0&mid=lemontree
+
+令牌名:镜像仓库
+Git Username:cnb
+Token:1M1c5dVH3It8WR9lpvi39ufKRHB

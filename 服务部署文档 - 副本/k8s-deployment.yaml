@@ -564,3 +564,86 @@ spec:
     targetPort: 18138
     nodePort: 30139
     protocol: TCP
+
+
+# kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml \
+#     create secret docker-registry docker-secret \
+#     --namespace=nms4cloud \
+#     --docker-server=ccr.ccs.tencentyun.com \
+#     --docker-username=57455363 \
+#     --docker-password='Lemontree556@'    
+
+  apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: a00-yd4cloud-platform
+  namespace: nms4cloud
+  labels:
+    k8s-app: a00-yd4cloud-platform
+    qcloud-app: a00-yd4cloud-platform
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: a00-yd4cloud-platform
+  template:
+    metadata:
+      labels:
+        k8s-app: a00-yd4cloud-platform
+        qcloud-app: a00-yd4cloud-platform
+    spec:
+      containers:
+        - name: platform
+          image: ccr.ccs.tencentyun.com/lemontree/ktv:yd4cloud_nms_latest
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: nacos
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+              tke.cloud.tencent.com/eni-ip: "1"
+            limits:
+              cpu: "1"
+              memory: 1Gi
+              tke.cloud.tencent.com/eni-ip: "1"
+          livenessProbe:
+            httpGet:
+              path: /health-check
+              port: 80
+            initialDelaySeconds: 240
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health-check
+              port: 80
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 40
+          securityContext:
+            privileged: false
+      imagePullSecrets:
+        - name: docker-secret
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: a00-yd4cloud-platform
+  namespace: nms4cloud
+  labels:
+    k8s-app: a00-yd4cloud-platform
+    qcloud-app: a00-yd4cloud-platform
+spec:
+  selector:
+    k8s-app: a00-yd4cloud-platform
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP
+
