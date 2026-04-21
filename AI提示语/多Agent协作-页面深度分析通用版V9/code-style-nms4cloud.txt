@@ -51,6 +51,9 @@ P-7 可演进性
 P-8 多租户隔离
   每张业务表强制包含 mid（商户ID）+ sid（门店ID），数据访问层自动拼接租户条件。跨租户数据不可见、不可改。
 
+P-9 枚举闭环落地
+  一旦识别出业务字段属于固定选项，必须在 DTO、VO、Entity、Service 判断、接口文档五处一致落地，禁止只定义枚举类而调用链继续使用裸 `Integer`。
+
 ## 项目结构
 
 项目采用多模块 Maven 架构，分为三个主要层次：
@@ -152,6 +155,47 @@ com.nms4cloud.{module}
 | JSON | JSON | String / 自定义对象 | JSON字段，配合 TypeHandler |
 
 ★ Boolean 字段：数据库用 TINYINT，Java 用 Integer（0/1），字段名 is_ 开头。
+
+## 枚举建模规范（平台统一）
+
+### 必须使用枚举的字段类型
+
+- 状态类字段
+- 开关类字段
+- 模式类字段
+- 范围类字段
+- 类型类字段
+
+### 不应使用枚举的字段类型
+
+- 主键、逻辑编号、租户编号、门店编号等 ID 字段
+- 金额、比例、数量、次数、天数、倍率等数值字段
+- 名称、备注、说明、日期字符串、逗号分隔字符串等文本字段
+- 列表、明细、时间段等集合字段
+
+### 代码落地要求
+
+- DTO / VO / Entity 对同一业务枚举字段必须保持类型一致
+- MyBatis-Flex / MyBatis-Plus 均应以枚举 `code` 持久化，不存枚举名
+- Service / Convert 中禁止使用魔法值 `1/2/3` 直接判断业务语义
+- 枚举类和枚举值都必须补中文注释
+
+### 前端协议约定
+
+- 接口传参统一传枚举 `code`
+- 响应默认返回枚举 `code`
+- 不以枚举常量名作为接口协议
+
+### 文档约定
+
+- OpenAPI / Apifox 中必须写明“该字段使用哪个枚举的编码”
+- 同时列出编码值与中文含义，避免只写数字不写语义
+
+### 评审关注点
+
+- 是否存在“枚举类已定义，但 DTO/Entity/Service 未接入”的半完成状态
+- 是否残留魔法值判断
+- 是否只改后端代码而未同步接口文档
 
 ## 主键与ID策略（pid / mid / sid / lid 四ID体系）
 
@@ -932,3 +976,141 @@ public Result getById(Long lid) {
 5. 基于假设的代码加 // [⚠️ 假设] 注释
 6. 输出「前端联调说明」：统一响应格式示例、分页约定、字段类型注意事项（lid→String、金额→String、时间格式）、★枚举字段约定+枚举值速查表、错误码对照表、假设标记说明
 7. ★ Apifox导入验证清单
+
+
+## 多值字段 JSON 数组化规范
+
+### 适用场景
+
+当一个字段需要存储"多选"业务值时（如多选场景、多选渠道、多选星期、多选日期），必须使用 JSON 数组存储，禁止使用逗号分隔字符串。
+
+### 判断规则
+
+| 情况 | 存储方式 |
+|------|---------|
+| 多选枚举值（场景、渠道、星期、日期等） | JSON 数字数组 `[1, 2, 3]` |
+| 单选枚举值 | 枚举 code（TINYINT） |
+| 逗号分隔字符串 | ❌ 禁止使用 |
+
+### Java 落地要求
+
+**Entity（MyBatis-Plus）：**
+```java
+// ✅ 正确
+@TableName(value = "crm_xxx", autoResultMap = true)  // autoResultMap=true 必须
+public class CrmXxx {
+    @TableField(value = "scene_limit", typeHandler = JacksonTypeHandler.class)
+    private List<Integer> sceneLimit;
+}
+```
+
+**DTO / VO：**
+```java
+// ✅ 正确：前端传数字数组，@Schema 说明合法值
+@Schema(title = "场景限制，传数字数组，合法值：1-堂食，2-外卖，3-自提，4-外带")
+private List<Integer> sceneLimit;
+```
+
+**Service 校验：**
+```java
+// ✅ 正确：数字范围校验
+if (!CollectionUtils.isEmpty(sceneLimit)) {
+    for (Integer scene : sceneLimit) {
+        Assert.notNull(scene, "场景值不能为null");
+        Assert.isTrue(scene >= 1 && scene <= 4, "场景值非法：" + scene);
+    }
+}
+```
+
+### 前后端协议约定
+
+- 前端传参：`"sceneLimit": [1, 3]`（数字数组）
+- 禁止传字符串枚举名：`"sceneLimit": "DINE_IN,DELIVERY"`
+- 空值语义：`null` 和 `[]` 均表示"不限制"
+
+### 数据库约定
+
+```sql
+-- ✅ 正确
+scene_limit JSON COMMENT '场景限制，JSON数字数组，1-堂食，2-外卖，3-自提，4-外带'
+
+-- ❌ 错误
+scene_limit VARCHAR(200) COMMENT '场景限制，逗号分隔'
+```
+
+
+## 互斥字段清空规范
+
+### 核心原则
+
+保存时，由主控字段决定哪些从属字段有意义。**无意义的从属字段必须在 Convert/Service 层清空（置 null），不应该校验它们，也不应该把前端传来的脏数据存入数据库。**
+
+### 典型场景
+
+```
+// ❌ 错误：earningMode=1 时校验商品列表 → 报"商品不存在"
+if (!CollectionUtils.isEmpty(earningSpecifiedProductLids)) {
+    validateProducts(earningSpecifiedProductLids);
+}
+
+// ✅ 正确：earningMode != BY_PRODUCT 时直接清空，不进入校验
+if (earningMode != BY_PRODUCT) {
+    entity.setEarningProductScopeType(null);
+    entity.setEarningSpecifiedProductLids(null);
+}
+```
+
+### 实现位置
+
+互斥字段清空逻辑放在 **Convert 层的 `toEntity()` 方法**中（或 Service 保存前），在字段映射之后、校验之前执行。
+
+### 规则
+
+1. 主控字段为关闭/不适用时，所有从属字段置 null
+2. 校验方法只校验"有值时的合法性"，不校验互斥字段
+3. 清空逻辑按层级递进：上层关闭则下层全部清空，不需要逐一判断
+
+### 评审检查项
+
+- 是否存在"主控字段关闭但从属字段仍被校验"的情况
+- 数据库中互斥字段是否存的是 null
+- 校验报错信息是否因互斥字段脏数据导致误报
+
+
+## 接口文档规范
+
+### 核心原则
+
+接口文档（OpenAPI JSON + 接口逻辑 MD）必须与代码保持严格同步，做到"文档即契约"。
+
+### 请求体规范
+
+1. **全量字段**：请求体示例必须列出 DTO 中所有字段
+2. **互斥字段说明**：有主控/从属关系的字段，必须在注释或 description 中说明互斥规则
+   - 格式：`// 仅当 xxx=N 时必填；其他情况后端自动清空`
+3. **枚举字段**：必须列出所有合法值及中文含义
+4. **多值字段**：说明数组格式和合法值范围
+
+### 响应体规范
+
+1. **全量字段**：响应示例必须列出 VO 中所有字段
+2. **条件说明**：每个字段必须说明在什么情况下有值、什么情况下为 null
+   - 格式：`// 仅当 xxx=N 时有值；其他情况为 null`
+
+### DTO 字段命名规范
+
+**GetDTO / UpdateDTO / DelDTO** 中用于定位记录的 `lid` 字段，必须命名为 `{业务名}Lid`，禁止直接使用裸 `lid`：
+
+| DTO 类型 | 规则 | 示例 |
+|---------|------|------|
+| `CrmXxxUpdateDTO` | `xxxLid`（必填，定位待修改记录） | `pointsRuleLid`、`depositPlanLid` |
+| `CrmXxxDelDTO` | `xxxLid`（必填，定位待删除记录） | `couponLid`、`cardLid` |
+| `CrmXxxGetDTO` | `xxxLid`（可选，精准查询用） | `pointsRuleLid`、`memberLid` |
+| `CrmXxxAddDTO` | 保持 `lid`（新增时可选传入） | `lid` |
+| `CrmXxxVO` | 保持 `lid`（响应字段），`@Schema` 注释说明业务含义 | `lid` |
+
+**原因**：裸 `lid` 在 GetDTO/UpdateDTO/DelDTO 中语义不明确，前端开发者无法直接判断这个 `lid` 指的是哪个业务实体的编号。
+
+### 多用例规范
+
+同一接口有多种典型场景时，必须提供多个独立用例，每个用例对应一种场景，请求体只包含该场景下有意义的字段。

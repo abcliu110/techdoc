@@ -1,0 +1,1795 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "CRM 积分权益接口",
+    "version": "1.0.0",
+    "description": "积分权益规则 OpenAPI 文档，可直接通过 Apifox 的 OpenAPI/Swagger 方式导入。"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8080",
+      "description": "本地开发环境"
+    }
+  ],
+  "tags": [
+    {
+      "name": "积分权益设置管理",
+      "description": "CRM 积分权益规则相关接口"
+    }
+  ],
+  "paths": {
+    "/crm_points_rule/add": {
+      "post": {
+        "tags": [
+          "积分权益设置管理"
+        ],
+        "summary": "新增积分权益规则-按付款方式",
+        "description": "新增积分权益规则。需要后台登录态与权限 `crm:pointsRule:add`。同一商户/门店/会员方案下只允许存在一条积分权益规则。 earningMode=1：按支付方式实收积分，不需要指定商品范围。",
+        "operationId": "addCrmPointsRuleByPayment",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Nms4TokenBizHeader"
+          },
+          {
+            "$ref": "#/components/parameters/Nms4TokenPlatformHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrmPointsRuleAddDTO"
+              },
+              "example": {
+                "lid": null,
+                "mid": 10001,
+                "sid": 20001,
+                "planLid": 30001,
+                "pointsRuleEnabled": 1,
+                "earningEnabled": 1,
+                "earningMode": 1,
+                "earningProductScopeType": null,
+                "earningSpecifiedProductLids": null,
+                "levelRates": [
+                  {
+                    "memberLevelId": 40001,
+                    "consumeAmount": 100,
+                    "earnPoints": 10,
+                    "sortOrder": 1
+                  }
+                ],
+                "singleEarnLimitType": 1,
+                "singleEarnLimitValue": null,
+                "bonusEnabled": 0,
+                "birthdayEnabled": null,
+                "birthdayPeriod": null,
+                "birthdayMultiplier": null,
+                "memberDayEnabled": null,
+                "memberDayPeriod": null,
+                "memberDayMultiplier": null,
+                "availableCycle": 1,
+                "availableDaysOfWeek": null,
+                "availableDaysOfMonth": null,
+                "availableTimeType": 1,
+                "availableTimeSlots": null,
+                "wecomExclusiveEnabled": 0,
+                "wecomExclusiveType": null,
+                "orderSceneLimit": [
+                  1,
+                  2
+                ],
+                "orderChannelLimit": [
+                  1,
+                  2
+                ],
+                "deductionEnabled": 1,
+                "deductionRate": 100,
+                "minDeductionType": 1,
+                "minDeductionValue": null,
+                "deductionMultipleType": 1,
+                "deductionMultipleValue": null,
+                "deductionRounding": 1,
+                "deductionCeilingType": 1,
+                "deductionCeilingPoints": null,
+                "deductionCeilingRatio": null,
+                "deductCycle": 1,
+                "deductDaysOfWeek": null,
+                "deductDaysOfMonth": null,
+                "deductTimeType": 1,
+                "deductTimeSlots": null,
+                "productLimitEnabled": 0,
+                "productScopeType": null,
+                "deductSpecifiedProductLids": null,
+                "deductPosCategoryLids": null,
+                "deductMiniappCategoryLids": null,
+                "deductExcludeProductLids": null,
+                "deductSceneLimit": [
+                  1,
+                  2
+                ],
+                "deductChannelLimit": [
+                  1
+                ],
+                "expiryEnabled": 0,
+                "expiryMode": null,
+                "expiryDuration": null,
+                "expiryFrequency": null,
+                "expiryAnnualYears": null,
+                "expiryAnnualDate": null,
+                "expiryNotifyEnabled": 0,
+                "expiryRemindDays": null,
+                "ruleDescription": "按支付方式积分，全商品可抵扣。"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CrmPointsRuleSingleResponse"
+          }
+        }
+      }
+    },
+    "/crm_points_rule/add#by-product": {
+      "post": {
+        "tags": [
+          "积分权益设置管理"
+        ],
+        "summary": "新增积分权益规则-按商品(指定商品)",
+        "description": "新增积分权益规则。需要后台登录态与权限 `crm:pointsRule:add`。同一商户/门店/会员方案下只允许存在一条积分权益规则。 earningMode=2：按商品实收积分，productScopeType=2 指定商品参与。",
+        "operationId": "addCrmPointsRuleByProduct",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Nms4TokenBizHeader"
+          },
+          {
+            "$ref": "#/components/parameters/Nms4TokenPlatformHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrmPointsRuleAddDTO"
+              },
+              "example": {
+                "lid": null,
+                "mid": 10001,
+                "sid": 20001,
+                "planLid": 30001,
+                "pointsRuleEnabled": 1,
+                "earningEnabled": 1,
+                "earningMode": 2,
+                "earningProductScopeType": 2,
+                "earningSpecifiedProductLids": [
+                  50001,
+                  50002
+                ],
+                "levelRates": [
+                  {
+                    "memberLevelId": 40001,
+                    "consumeAmount": 100,
+                    "earnPoints": 10,
+                    "sortOrder": 1
+                  }
+                ],
+                "singleEarnLimitType": 2,
+                "singleEarnLimitValue": 500,
+                "bonusEnabled": 1,
+                "birthdayEnabled": 1,
+                "birthdayPeriod": 1,
+                "birthdayMultiplier": 2,
+                "memberDayEnabled": 1,
+                "memberDayPeriod": 4,
+                "memberDayMultiplier": 3,
+                "availableCycle": 2,
+                "availableDaysOfWeek": [
+                  1,
+                  3,
+                  5
+                ],
+                "availableDaysOfMonth": null,
+                "availableTimeType": 2,
+                "availableTimeSlots": [
+                  {
+                    "startTime": "10:00",
+                    "endTime": "22:00"
+                  }
+                ],
+                "wecomExclusiveEnabled": 1,
+                "wecomExclusiveType": 1,
+                "orderSceneLimit": [
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "orderChannelLimit": [
+                  1,
+                  2
+                ],
+                "deductionEnabled": 1,
+                "deductionRate": 100,
+                "minDeductionType": 2,
+                "minDeductionValue": 100,
+                "deductionMultipleType": 2,
+                "deductionMultipleValue": 100,
+                "deductionRounding": 2,
+                "deductionCeilingType": 3,
+                "deductionCeilingPoints": null,
+                "deductionCeilingRatio": 30,
+                "deductCycle": 1,
+                "deductDaysOfWeek": null,
+                "deductDaysOfMonth": null,
+                "deductTimeType": 2,
+                "deductTimeSlots": [
+                  {
+                    "startTime": "10:00",
+                    "endTime": "21:30"
+                  }
+                ],
+                "productLimitEnabled": 1,
+                "productScopeType": 2,
+                "deductSpecifiedProductLids": [
+                  50001,
+                  50002
+                ],
+                "deductPosCategoryLids": null,
+                "deductMiniappCategoryLids": null,
+                "deductExcludeProductLids": null,
+                "deductSceneLimit": [
+                  1,
+                  2
+                ],
+                "deductChannelLimit": [
+                  1
+                ],
+                "expiryEnabled": 1,
+                "expiryMode": 1,
+                "expiryDuration": "12M",
+                "expiryFrequency": 2,
+                "expiryAnnualYears": null,
+                "expiryAnnualDate": null,
+                "expiryNotifyEnabled": 1,
+                "expiryRemindDays": 7,
+                "ruleDescription": "按商品积分，指定商品可抵扣。"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CrmPointsRuleSingleResponse"
+          }
+        }
+      }
+    },
+    "/crm_points_rule/add#by-category": {
+      "post": {
+        "tags": [
+          "积分权益设置管理"
+        ],
+        "summary": "新增积分权益规则-按商品(指定分类)",
+        "description": "新增积分权益规则。需要后台登录态与权限 `crm:pointsRule:add`。同一商户/门店/会员方案下只允许存在一条积分权益规则。 earningMode=2：按商品实收积分，productScopeType=4 指定分类参与。",
+        "operationId": "addCrmPointsRuleByCategory",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Nms4TokenBizHeader"
+          },
+          {
+            "$ref": "#/components/parameters/Nms4TokenPlatformHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrmPointsRuleAddDTO"
+              },
+              "example": {
+                "lid": null,
+                "mid": 10001,
+                "sid": 20001,
+                "planLid": 30001,
+                "pointsRuleEnabled": 1,
+                "earningEnabled": 1,
+                "earningMode": 2,
+                "earningProductScopeType": 2,
+                "earningSpecifiedProductLids": [
+                  50001
+                ],
+                "levelRates": [
+                  {
+                    "memberLevelId": 40001,
+                    "consumeAmount": 100,
+                    "earnPoints": 10,
+                    "sortOrder": 1
+                  }
+                ],
+                "singleEarnLimitType": 1,
+                "singleEarnLimitValue": null,
+                "bonusEnabled": 0,
+                "birthdayEnabled": null,
+                "birthdayPeriod": null,
+                "birthdayMultiplier": null,
+                "memberDayEnabled": null,
+                "memberDayPeriod": null,
+                "memberDayMultiplier": null,
+                "availableCycle": 1,
+                "availableDaysOfWeek": null,
+                "availableDaysOfMonth": null,
+                "availableTimeType": 1,
+                "availableTimeSlots": null,
+                "wecomExclusiveEnabled": 0,
+                "wecomExclusiveType": null,
+                "orderSceneLimit": [
+                  1,
+                  2
+                ],
+                "orderChannelLimit": [
+                  1,
+                  2
+                ],
+                "deductionEnabled": 1,
+                "deductionRate": 100,
+                "minDeductionType": 1,
+                "minDeductionValue": null,
+                "deductionMultipleType": 1,
+                "deductionMultipleValue": null,
+                "deductionRounding": 1,
+                "deductionCeilingType": 1,
+                "deductionCeilingPoints": null,
+                "deductionCeilingRatio": null,
+                "deductCycle": 1,
+                "deductDaysOfWeek": null,
+                "deductDaysOfMonth": null,
+                "deductTimeType": 1,
+                "deductTimeSlots": null,
+                "productLimitEnabled": 1,
+                "productScopeType": 4,
+                "deductSpecifiedProductLids": null,
+                "deductPosCategoryLids": [
+                  60001
+                ],
+                "deductMiniappCategoryLids": [
+                  70001
+                ],
+                "deductExcludeProductLids": [
+                  80001
+                ],
+                "deductSceneLimit": [
+                  1,
+                  2
+                ],
+                "deductChannelLimit": [
+                  1
+                ],
+                "expiryEnabled": 0,
+                "expiryMode": null,
+                "expiryDuration": null,
+                "expiryFrequency": null,
+                "expiryAnnualYears": null,
+                "expiryAnnualDate": null,
+                "expiryNotifyEnabled": 0,
+                "expiryRemindDays": null,
+                "ruleDescription": "按商品积分，指定分类可抵扣，排除指定商品。"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CrmPointsRuleSingleResponse"
+          }
+        }
+      }
+    },
+    "/crm_points_rule/update": {
+      "post": {
+        "tags": [
+          "积分权益设置管理"
+        ],
+        "summary": "更新积分权益规则",
+        "description": "更新已存在的积分权益规则。需要后台登录态与权限 `crm:pointsRule:update`。按 `mid + sid + lid` 精确定位要修改的规则。",
+        "operationId": "updateCrmPointsRule",
+        "x-apifox-orders": [
+          "用例1-按支付方式积分-不限制商品",
+          "用例2-按商品积分-指定商品参与",
+          "用例3-按商品积分-指定分类参与"
+        ],
+        "x-apifox-cases": {
+          "用例1-按支付方式积分-不限制商品": {
+            "summary": "earningMode=1，productLimitEnabled=0，最简场景",
+            "requestBody": {
+              "pointsRuleLid": 90001,
+              "mid": 10001,
+              "sid": 20001,
+              "planLid": 30001,
+              "pointsRuleEnabled": 1,
+              "earningEnabled": 1,
+              "earningMode": 1,
+              "levelRates": [
+                {
+                  "memberLevelId": 40001,
+                  "consumeAmount": 100,
+                  "earnPoints": 10,
+                  "sortOrder": 1
+                }
+              ],
+              "singleEarnLimitType": 1,
+              "bonusEnabled": 0,
+              "availableCycle": 1,
+              "availableTimeType": 1,
+              "wecomExclusiveEnabled": 0,
+              "orderSceneLimit": [
+                1,
+                2
+              ],
+              "orderChannelLimit": [
+                1,
+                2
+              ],
+              "deductionEnabled": 1,
+              "deductionRate": 100,
+              "minDeductionType": 1,
+              "deductionMultipleType": 1,
+              "deductionRounding": 1,
+              "deductionCeilingType": 1,
+              "deductCycle": 1,
+              "deductTimeType": 1,
+              "productLimitEnabled": 0,
+              "expiryEnabled": 0,
+              "ruleDescription": "按支付方式积分，全商品可抵扣。"
+            }
+          },
+          "用例2-按商品积分-指定商品参与": {
+            "summary": "earningMode=2，productScopeType=2，指定商品参与抵扣",
+            "requestBody": {
+              "pointsRuleLid": 90001,
+              "mid": 10001,
+              "sid": 20001,
+              "planLid": 30001,
+              "pointsRuleEnabled": 1,
+              "earningEnabled": 1,
+              "earningMode": 2,
+              "earningProductScopeType": 2,
+              "earningSpecifiedProductLids": [
+                50001,
+                50002
+              ],
+              "levelRates": [
+                {
+                  "memberLevelId": 40001,
+                  "consumeAmount": 100,
+                  "earnPoints": 10,
+                  "sortOrder": 1
+                }
+              ],
+              "singleEarnLimitType": 2,
+              "singleEarnLimitValue": 500,
+              "bonusEnabled": 1,
+              "birthdayEnabled": 1,
+              "birthdayPeriod": 1,
+              "birthdayMultiplier": 2,
+              "memberDayEnabled": 1,
+              "memberDayPeriod": 4,
+              "memberDayMultiplier": 3,
+              "availableCycle": 2,
+              "availableDaysOfWeek": [
+                1,
+                3,
+                5
+              ],
+              "availableTimeType": 2,
+              "availableTimeSlots": [
+                {
+                  "startTime": "10:00",
+                  "endTime": "22:00"
+                }
+              ],
+              "wecomExclusiveEnabled": 1,
+              "wecomExclusiveType": 1,
+              "orderSceneLimit": [
+                1,
+                2,
+                3,
+                4
+              ],
+              "orderChannelLimit": [
+                1,
+                2
+              ],
+              "deductionEnabled": 1,
+              "deductionRate": 100,
+              "minDeductionType": 2,
+              "minDeductionValue": 100,
+              "deductionMultipleType": 2,
+              "deductionMultipleValue": 100,
+              "deductionRounding": 2,
+              "deductionCeilingType": 3,
+              "deductionCeilingRatio": 30,
+              "deductCycle": 1,
+              "deductTimeType": 2,
+              "deductTimeSlots": [
+                {
+                  "startTime": "10:00",
+                  "endTime": "21:30"
+                }
+              ],
+              "productLimitEnabled": 1,
+              "productScopeType": 2,
+              "deductSpecifiedProductLids": [
+                50001,
+                50002
+              ],
+              "deductSceneLimit": [
+                1,
+                2
+              ],
+              "deductChannelLimit": [
+                1
+              ],
+              "expiryEnabled": 1,
+              "expiryMode": 1,
+              "expiryDuration": "12M",
+              "expiryFrequency": 2,
+              "expiryNotifyEnabled": 1,
+              "expiryRemindDays": 7,
+              "ruleDescription": "按商品积分，指定商品可抵扣。"
+            }
+          },
+          "用例3-按商品积分-指定分类参与": {
+            "summary": "earningMode=2，productScopeType=4，指定分类参与抵扣",
+            "requestBody": {
+              "pointsRuleLid": 90001,
+              "mid": 10001,
+              "sid": 20001,
+              "planLid": 30001,
+              "pointsRuleEnabled": 1,
+              "earningEnabled": 1,
+              "earningMode": 2,
+              "earningProductScopeType": 2,
+              "earningSpecifiedProductLids": [
+                50001
+              ],
+              "levelRates": [
+                {
+                  "memberLevelId": 40001,
+                  "consumeAmount": 100,
+                  "earnPoints": 10,
+                  "sortOrder": 1
+                }
+              ],
+              "singleEarnLimitType": 1,
+              "bonusEnabled": 0,
+              "availableCycle": 1,
+              "availableTimeType": 1,
+              "wecomExclusiveEnabled": 0,
+              "orderSceneLimit": [
+                1,
+                2
+              ],
+              "orderChannelLimit": [
+                1,
+                2
+              ],
+              "deductionEnabled": 1,
+              "deductionRate": 100,
+              "minDeductionType": 1,
+              "deductionMultipleType": 1,
+              "deductionRounding": 1,
+              "deductionCeilingType": 1,
+              "deductCycle": 1,
+              "deductTimeType": 1,
+              "productLimitEnabled": 1,
+              "productScopeType": 4,
+              "deductPosCategoryLids": [
+                60001
+              ],
+              "deductMiniappCategoryLids": [
+                70001
+              ],
+              "deductExcludeProductLids": [
+                80001
+              ],
+              "deductSceneLimit": [
+                1,
+                2
+              ],
+              "deductChannelLimit": [
+                1
+              ],
+              "expiryEnabled": 0,
+              "ruleDescription": "按商品积分，指定分类可抵扣，排除指定商品。"
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Nms4TokenBizHeader"
+          },
+          {
+            "$ref": "#/components/parameters/Nms4TokenPlatformHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrmPointsRuleUpdateDTO"
+              },
+              "example": {
+                "mid": 10001,
+                "sid": 20001,
+                "planLid": 30001,
+                "pointsRuleEnabled": 1,
+                "earningEnabled": 1,
+                "earningMode": 2,
+                "earningProductScopeType": 2,
+                "earningSpecifiedProductLids": [
+                  50001
+                ],
+                "levelRates": [
+                  {
+                    "memberLevelId": 40001,
+                    "consumeAmount": 100,
+                    "earnPoints": 10,
+                    "sortOrder": 1
+                  }
+                ],
+                "singleEarnLimitType": 2,
+                "singleEarnLimitValue": 500,
+                "bonusEnabled": 1,
+                "birthdayEnabled": 1,
+                "birthdayPeriod": 1,
+                "birthdayMultiplier": 2,
+                "memberDayEnabled": 0,
+                "memberDayPeriod": null,
+                "memberDayMultiplier": null,
+                "availableCycle": 2,
+                "availableDaysOfWeek": [
+                  1,
+                  3,
+                  5
+                ],
+                "availableDaysOfMonth": null,
+                "availableTimeType": 2,
+                "availableTimeSlots": [
+                  {
+                    "startTime": "10:00",
+                    "endTime": "22:00"
+                  }
+                ],
+                "wecomExclusiveEnabled": 0,
+                "wecomExclusiveType": null,
+                "orderSceneLimit": [
+                  1,
+                  2
+                ],
+                "orderChannelLimit": [
+                  1,
+                  2
+                ],
+                "deductionEnabled": 1,
+                "deductionRate": 100,
+                "minDeductionType": 1,
+                "minDeductionValue": null,
+                "deductionMultipleType": 1,
+                "deductionMultipleValue": null,
+                "deductionRounding": 1,
+                "deductionCeilingType": 1,
+                "deductionCeilingPoints": null,
+                "deductionCeilingRatio": null,
+                "deductCycle": 1,
+                "deductDaysOfWeek": null,
+                "deductDaysOfMonth": null,
+                "deductTimeType": 1,
+                "deductTimeSlots": null,
+                "productLimitEnabled": 1,
+                "productScopeType": 2,
+                "deductSpecifiedProductLids": [
+                  50001
+                ],
+                "deductPosCategoryLids": null,
+                "deductMiniappCategoryLids": null,
+                "deductExcludeProductLids": null,
+                "deductSceneLimit": [
+                  1,
+                  2
+                ],
+                "deductChannelLimit": [
+                  1
+                ],
+                "expiryEnabled": 1,
+                "expiryMode": 1,
+                "expiryDuration": "12M",
+                "expiryFrequency": 2,
+                "expiryAnnualYears": null,
+                "expiryAnnualDate": null,
+                "expiryNotifyEnabled": 1,
+                "expiryRemindDays": 7,
+                "ruleDescription": "修改积分权益规则示例。",
+                "pointsRuleLid": 900001
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CrmPointsRuleSingleResponse"
+          }
+        }
+      }
+    },
+    "/crm_points_rule/del": {
+      "post": {
+        "tags": [
+          "积分权益设置管理"
+        ],
+        "summary": "删除积分权益规则",
+        "description": "删除积分权益规则。需要后台登录态与权限 `crm:pointsRule:del`。按 `mid + sid + lid` 定位后删除。",
+        "operationId": "delCrmPointsRule",
+        "x-apifox-orders": [
+          "用例1-按lid删除"
+        ],
+        "x-apifox-cases": {
+          "用例1-按lid删除": {
+            "summary": "按 lid 删除指定规则",
+            "requestBody": {
+              "mid": 10001,
+              "sid": 20001,
+              "pointsRuleLid": 90001
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Nms4TokenBizHeader"
+          },
+          {
+            "$ref": "#/components/parameters/Nms4TokenPlatformHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrmPointsRuleDelDTO"
+              },
+              "example": {
+                "mid": 10001,
+                "sid": 20001,
+                "pointsRuleLid": 90001
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/StringResponse"
+          }
+        }
+      }
+    },
+    "/crm_points_rule/get": {
+      "post": {
+        "tags": [
+          "积分权益设置管理"
+        ],
+        "summary": "获取积分权益规则详情",
+        "description": "获取积分权益规则详情。需要后台登录态与权限 `crm:pointsRule:list`。支持两种查询方式：1) 传 `pointsRuleLid` 精准查询；2) 传 `planLid` 按会员方案查询。两者至少传一个，同时传时优先使用 `pointsRuleLid`。",
+        "operationId": "getCrmPointsRule",
+        "x-apifox-orders": [
+          "用例1-按lid查询",
+          "用例2-按planLid查询"
+        ],
+        "x-apifox-cases": {
+          "用例1-按lid查询": {
+            "summary": "按规则逻辑编号精准查询（同时传planLid也可以，优先用pointsRuleLid）",
+            "requestBody": {
+              "mid": 10001,
+              "sid": 20001,
+              "pointsRuleLid": 90001,
+              "planLid": 30001
+            }
+          },
+          "用例2-按planLid查询": {
+            "summary": "按会员方案编号查询（不知道pointsRuleLid时使用）",
+            "requestBody": {
+              "mid": 10001,
+              "sid": 20001,
+              "pointsRuleLid": null,
+              "planLid": 30001
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Nms4TokenBizHeader"
+          },
+          {
+            "$ref": "#/components/parameters/Nms4TokenPlatformHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrmPointsRuleGetDTO"
+              },
+              "examples": {
+                "byLid": {
+                  "summary": "按逻辑编号查询（优先）",
+                  "value": {
+                    "mid": 10001,
+                    "sid": 20001,
+                    "pointsRuleLid": 90001,
+                    "planLid": 30001
+                  }
+                },
+                "byPlanLid": {
+                  "summary": "按方案编号查询（不知道pointsRuleLid时使用）",
+                  "value": {
+                    "mid": 10001,
+                    "sid": 20001,
+                    "pointsRuleLid": null,
+                    "planLid": 30001
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CrmPointsRuleSingleResponse"
+          }
+        }
+      }
+    },
+    "/crm_points_rule/list": {
+      "post": {
+        "tags": [
+          "积分权益设置管理"
+        ],
+        "summary": "分页查询积分权益规则列表",
+        "description": "分页查询积分权益规则列表。接口使用登录态补齐当前商户/门店信息。控制器返回签名为 `NmsResult<List<CrmPointsRuleVO>>`，此文档按 `data` 为数组结构描述。",
+        "operationId": "listCrmPointsRule",
+        "x-apifox-orders": [
+          "用例1-按planLid查询列表",
+          "用例2-查询全部"
+        ],
+        "x-apifox-cases": {
+          "用例1-按planLid查询列表": {
+            "summary": "按会员方案编号查询该方案下的积分规则",
+            "requestBody": {
+              "mid": 10001,
+              "sid": 20001,
+              "planLid": 30001,
+              "current": 1,
+              "pageSize": 10
+            }
+          },
+          "用例2-查询全部": {
+            "summary": "查询当前商户门店下所有积分规则（不按方案过滤）",
+            "requestBody": {
+              "mid": 10001,
+              "sid": 20001,
+              "planLid": null,
+              "current": 1,
+              "pageSize": 10
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Nms4TokenBizHeader"
+          },
+          {
+            "$ref": "#/components/parameters/Nms4TokenPlatformHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrmPointsRuleQueryDTO"
+              },
+              "example": {
+                "mid": 10001,
+                "sid": 20001,
+                "planLid": null,
+                "current": 1,
+                "pageSize": 10
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CrmPointsRuleListResponse"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "parameters": {
+      "Nms4TokenBizHeader": {
+        "name": "nms4token-biz",
+        "in": "header",
+        "required": false,
+        "description": "业务侧透传令牌，按现网网关要求填写。",
+        "example": "{{nms4token-biz}}",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "Nms4TokenPlatformHeader": {
+        "name": "nms4token-platform",
+        "in": "header",
+        "required": false,
+        "description": "平台侧透传令牌，建议在 Apifox 中通过环境变量填写。",
+        "example": "{{nms4token-platform}}",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "responses": {
+      "CrmPointsRuleSingleResponse": {
+        "description": "成功返回单个积分权益规则对象",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NmsResultCrmPointsRuleVO"
+            }
+          }
+        }
+      },
+      "CrmPointsRuleListResponse": {
+        "description": "成功返回积分权益规则列表",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NmsResultCrmPointsRuleVOList"
+            }
+          }
+        }
+      },
+      "StringResponse": {
+        "description": "成功返回通用字符串结果",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NmsResultString"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "CrmPointsRuleBaseDTO": {
+        "type": "object",
+        "description": "积分权益规则基础请求。所有开关/模式/范围类字段均按后端枚举的 `code` 传数字值。若 `pointsRuleEnabled=0`，获取/抵现/清零规则字段可不填；若开启，则需按各自规则补齐必填项。\n\n**互斥字段自动清空**：后端保存时会根据主控字段自动将无意义的从属字段置为 null，前端无需手动清空。例如 `earningMode=1` 时，即使传了 `earningSpecifiedProductLids`，后端也会忽略并清空；`availableCycle=1` 时，`availableDaysOfWeek` 和 `availableDaysOfMonth` 会被自动清空。",
+        "required": [
+          "mid",
+          "planLid"
+        ],
+        "properties": {
+          "lid": {
+            "type": "integer",
+            "format": "int64",
+            "description": "逻辑编号（lid）。新增时可不传，服务端自动生成；更新时必填。"
+          },
+          "mid": {
+            "type": "integer",
+            "format": "int64",
+            "description": "商户ID（mid）。虽然控制器会按当前登录账号覆盖，但参数校验阶段仍要求传值。",
+            "example": 10001
+          },
+          "sid": {
+            "type": "integer",
+            "format": "int64",
+            "description": "门店ID（sid）。门店级规则建议传实际门店编号；总部级规则可留空。",
+            "example": 20001
+          },
+          "planLid": {
+            "type": "integer",
+            "format": "int64",
+            "description": "所属会员方案逻辑编号（planLid）。同一 mid+sid+planLid 仅允许一条积分权益规则。保存时校验该 planLid 在当前商户下存在且有效（RULE-029，已实现校验）。",
+            "example": 30001
+          },
+          "pointsRuleEnabled": {
+            "type": "integer",
+            "description": "积分规则总开关，使用 `CrmPointsSwitchEnum` 的编码。0-关闭，1-开启。",
+            "enum": [
+              0,
+              1
+            ]
+          },
+          "earningEnabled": {
+            "type": "integer",
+            "description": "是否启用消费送积分，使用 `CrmPointsSwitchEnum` 的编码。0-否，1-是。",
+            "enum": [
+              0,
+              1
+            ]
+          },
+          "earningMode": {
+            "type": "integer",
+            "description": "积分模式，使用 `CrmPointsEarningModeEnum` 的编码。1-按支付方式实收积分，2-按商品实收积分。`earningEnabled=1` 时应填写。",
+            "enum": [
+              1,
+              2
+            ]
+          },
+          "earningProductScopeType": {
+            "type": "integer",
+            "description": "适用商品范围，使用 `CrmPointsScopeTypeEnum` 的编码。仅 `earningMode=2` 时有意义。1-全部商品参与，2-指定商品参与，3-指定商品不参与。",
+            "enum": [
+              1,
+              2,
+              3
+            ]
+          },
+          "earningSpecifiedProductLids": {
+            "type": "array",
+            "description": "获取积分时指定的商品逻辑ID数组。仅 `earningProductScopeType=2/3` 时必填。保存时校验所有商品 ID 在当前商户下存在且有效（RULE-030，已实现校验）。`earningMode!=2` 时后端自动清空此字段。",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "levelRates": {
+            "type": "array",
+            "description": "会员等级赠分规则列表。`earningEnabled=1` 时必填，且同一会员等级不能重复配置。",
+            "items": {
+              "$ref": "#/components/schemas/MemberLevelRateRule"
+            }
+          },
+          "singleEarnLimitType": {
+            "type": "integer",
+            "description": "单笔获取上限类型，使用 `CrmPointsLimitTypeEnum` 的编码。1-不限制，2-限制。",
+            "enum": [
+              1,
+              2
+            ]
+          },
+          "singleEarnLimitValue": {
+            "type": "number",
+            "description": "单笔获取上限积分值。`singleEarnLimitType=2` 时必填，且必须大于0。",
+            "example": 500
+          },
+          "bonusEnabled": {
+            "type": "integer",
+            "description": "多倍积分总开关，使用 `CrmPointsSwitchEnum` 的编码。0-否，1-是。开启后，生日多倍积分和会员日多倍积分至少启用一项（RULE-005，已实现校验）。",
+            "enum": [
+              0,
+              1
+            ]
+          },
+          "birthdayEnabled": {
+            "type": "integer",
+            "description": "生日多倍积分开关，使用 `CrmPointsSwitchEnum` 的编码。0-否，1-是。",
+            "enum": [
+              0,
+              1
+            ]
+          },
+          "birthdayPeriod": {
+            "type": "integer",
+            "description": "生日范围，使用 `CrmPointsPeriodEnum` 的编码。`birthdayEnabled=1` 时必填，且仅允许：1-当天，2-当周，3-当月。",
+            "enum": [
+              1,
+              2,
+              3
+            ]
+          },
+          "birthdayMultiplier": {
+            "type": "number",
+            "description": "生日积分倍数。`birthdayEnabled=1` 时必填，且必须大于0。",
+            "example": 2
+          },
+          "memberDayEnabled": {
+            "type": "integer",
+            "description": "会员日多倍积分开关，使用 `CrmPointsSwitchEnum` 的编码。0-否，1-是。",
+            "enum": [
+              0,
+              1
+            ]
+          },
+          "memberDayPeriod": {
+            "type": "integer",
+            "description": "会员日周期，使用 `CrmPointsPeriodEnum` 的编码。`memberDayEnabled=1` 时必填，且仅允许：4-每周，5-每月。",
+            "enum": [
+              4,
+              5
+            ]
+          },
+          "memberDayMultiplier": {
+            "type": "number",
+            "description": "会员日积分倍数。`memberDayEnabled=1` 时必填，且必须大于0。",
+            "example": 3
+          },
+          "availableCycle": {
+            "type": "integer",
+            "description": "积分获取规则可用周期，使用 `CrmPointsAvailableCycleEnum` 的编码。1-按日，2-按周，3-按月。`earningEnabled=1` 时必填。",
+            "enum": [
+              1,
+              2,
+              3
+            ]
+          },
+          "availableDaysOfWeek": {
+            "type": "array",
+            "description": "按周生效的星期，数字数组。仅 `availableCycle=2` 时必填。合法值：1-周一，2-周二，3-周三，4-周四，5-周五，6-周六，7-周日。示例：`[1,3,5]`。",
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 7
+            }
+          },
+          "availableDaysOfMonth": {
+            "type": "array",
+            "description": "按月生效的日期，数字数组。仅 `availableCycle=3` 时必填。合法值：1-31。示例：`[1,15,28]`。",
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 31
+            }
+          },
+          "availableTimeType": {
+            "type": "integer",
+            "description": "积分获取可用时段类型，使用 `CrmPointsTimeTypeEnum` 的编码。1-全天，2-指定时段。`earningEnabled=1` 时必填。",
+            "enum": [
+              1,
+              2
+            ]
+          },
+          "availableTimeSlots": {
+            "type": "array",
+            "description": "积分获取指定时段列表。仅 `availableTimeType=2` 时必填。多段时段之间不可重叠（RULE-011，已实现校验）。",
+            "items": {
+              "$ref": "#/components/schemas/PointsRuleTimeSlot"
+            }
+          },
+          "wecomExclusiveEnabled": {
+            "type": "integer",
+            "description": "企微会员专享开关，使用 `CrmPointsSwitchEnum` 的编码。0-否，1-是。",
+            "enum": [
+              0,
+              1
+            ]
+          },
+          "wecomExclusiveType": {
+            "type": "integer",
+            "description": "企微专享类型，使用 `CrmWecomExclusiveTypeEnum` 的编码。仅 `wecomExclusiveEnabled=1` 时必填。1-企微好友或企微群客，2-企微好友，3-企微群客，4-企微双粉。"
+          },
+          "orderSceneLimit": {
+            "type": "array",
+            "description": "订单场景限制，数字数组（RULE-013，已实现合法性校验）。合法值：1-堂食，2-外卖，3-自提，4-外带。示例：`[1,2]`。空数组或不传表示不限制。",
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4
+            }
+          },
+          "orderChannelLimit": {
+            "type": "array",
+            "description": "订单渠道限制，数字数组（RULE-013，已实现合法性校验）。合法值：1-门店POS，2-微信小程序，3-支付宝小程序，4-抖音小程序，5-商户中心，6-自助大屏，7-码牌收银。示例：`[1,2]`。空数组或不传表示不限制。",
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 7
+            }
+          },
+          "deductionEnabled": {
+            "type": "integer",
+            "description": "是否启用积分抵现，使用 `CrmPointsSwitchEnum` 的编码。0-否，1-是。",
+            "enum": [
+              0,
+              1
+            ]
+          },
+          "deductionRate": {
+            "type": "number",
+            "description": "积分抵扣比例，表示 X积分=1元。`deductionEnabled=1` 时必填，且必须大于0。",
+            "example": 100
+          },
+          "minDeductionType": {
+            "type": "integer",
+            "description": "起扣积分限制类型，使用 `CrmPointsLimitTypeEnum` 的编码。1-不限制，2-限制。",
+            "enum": [
+              1,
+              2
+            ]
+          },
+          "minDeductionValue": {
+            "type": "number",
+            "description": "起扣积分数。仅 `minDeductionType=2` 时必填，且必须大于0。",
+            "example": 100
+          },
+          "deductionMultipleType": {
+            "type": "integer",
+            "description": "抵扣倍数类型，使用 `CrmPointsLimitTypeEnum` 的编码。1-不限制，2-限制。",
+            "enum": [
+              1,
+              2
+            ]
+          },
+          "deductionMultipleValue": {
+            "type": "integer",
+            "description": "抵扣整数倍数值。仅 `deductionMultipleType=2` 时必填，且必须大于0。",
+            "example": 100
+          },
+          "deductionRounding": {
+            "type": "integer",
+            "description": "抵扣金额取整方式，使用 `CrmPointsRoundingEnum` 的编码。1-不取整，2-向下取整（去角分）。",
+            "enum": [
+              1,
+              2
+            ]
+          },
+          "deductionCeilingType": {
+            "type": "integer",
+            "description": "抵扣上限类型，使用 `CrmPointsCeilingTypeEnum` 的编码。1-不限制，2-固定积分上限，3-账单比例上限。",
+            "enum": [
+              1,
+              2,
+              3
+            ]
+          },
+          "deductionCeilingPoints": {
+            "type": "number",
+            "description": "固定积分上限。仅 `deductionCeilingType=2` 时必填，范围 0.01 到 999999。"
+          },
+          "deductionCeilingRatio": {
+            "type": "number",
+            "description": "账单比例上限（%）。仅 `deductionCeilingType=3` 时必填，范围 0.01 到 100。",
+            "example": 30
+          },
+          "deductCycle": {
+            "type": "integer",
+            "description": "积分抵现可用周期，使用 `CrmPointsAvailableCycleEnum` 的编码。1-按日，2-按周，3-按月。`deductionEnabled=1` 时必填。",
+            "enum": [
+              1,
+              2,
+              3
+            ]
+          },
+          "deductDaysOfWeek": {
+            "type": "array",
+            "description": "抵扣按周时生效的星期，数字数组。仅 `deductCycle=2` 时必填。合法值：1-周一，2-周二，3-周三，4-周四，5-周五，6-周六，7-周日。",
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 7
+            }
+          },
+          "deductDaysOfMonth": {
+            "type": "array",
+            "description": "抵扣按月时生效的日期，数字数组。仅 `deductCycle=3` 时必填。合法值：1-31。",
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 31
+            }
+          },
+          "deductTimeType": {
+            "type": "integer",
+            "description": "积分抵现时段类型，使用 `CrmPointsTimeTypeEnum` 的编码。1-全天，2-指定时段。`deductionEnabled=1` 时必填。",
+            "enum": [
+              1,
+              2
+            ]
+          },
+          "deductTimeSlots": {
+            "type": "array",
+            "description": "积分抵现指定时段列表。仅 `deductTimeType=2` 时必填。多段时段之间不可重叠（RULE-011，已实现校验）。",
+            "items": {
+              "$ref": "#/components/schemas/PointsRuleTimeSlot"
+            }
+          },
+          "productLimitEnabled": {
+            "type": "integer",
+            "description": "抵扣商品限制开关，使用 `CrmPointsSwitchEnum` 的编码。0-否，1-是。",
+            "enum": [
+              0,
+              1
+            ]
+          },
+          "productScopeType": {
+            "type": "integer",
+            "description": "抵扣商品范围，使用 `CrmPointsScopeTypeEnum` 的编码。仅 `productLimitEnabled=1` 时必填。1-全部商品，2-指定商品参与，3-指定商品不参与，4-指定分类参与，5-指定分类不参与。",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "deductSpecifiedProductLids": {
+            "type": "array",
+            "description": "抵扣指定商品ID数组。仅 `productScopeType=2/3` 时必填。保存时校验所有商品 ID 在当前商户下存在且有效（RULE-030，已实现校验）。`productScopeType!=2/3` 时后端自动清空此字段。",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "deductPosCategoryLids": {
+            "type": "array",
+            "description": "POS 分类ID数组。仅 `productScopeType=4/5` 时有意义，与 `deductMiniappCategoryLids` 至少传一个。",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "deductMiniappCategoryLids": {
+            "type": "array",
+            "description": "小程序分类ID数组。仅 `productScopeType=4/5` 时有意义，与 `deductPosCategoryLids` 至少传一个。",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "deductExcludeProductLids": {
+            "type": "array",
+            "description": "分类模式下排除的商品ID数组，选填。保存时校验所有商品 ID 在当前商户下存在且有效（RULE-030，已实现校验）。",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "deductSceneLimit": {
+            "type": "array",
+            "description": "抵扣订单场景限制，数字数组（RULE-013，已实现合法性校验）。合法值：1-堂食，2-外卖，3-自提，4-外带。空数组或不传表示不限制。",
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4
+            }
+          },
+          "deductChannelLimit": {
+            "type": "array",
+            "description": "抵扣订单渠道限制，数字数组（RULE-013，已实现合法性校验）。合法值：1-门店POS，2-微信小程序，3-支付宝小程序，4-抖音小程序，5-商户中心，6-自助大屏，7-码牌收银。空数组或不传表示不限制。",
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 7
+            }
+          },
+          "expiryEnabled": {
+            "type": "integer",
+            "description": "积分清零总开关，使用 `CrmPointsSwitchEnum` 的编码。0-否，1-是。",
+            "enum": [
+              0,
+              1
+            ]
+          },
+          "expiryMode": {
+            "type": "integer",
+            "description": "清零模式，使用 `CrmPointsExpiryModeEnum` 的编码。1-自发放日起清零，2-按年度清零。`expiryEnabled=1` 时必填。",
+            "enum": [
+              1,
+              2
+            ]
+          },
+          "expiryDuration": {
+            "type": "string",
+            "description": "自发放清零时限。仅 `expiryMode=1` 时必填，示例：`3M`、`6M`、`1Y`。"
+          },
+          "expiryFrequency": {
+            "type": "integer",
+            "description": "清零频次，使用 `CrmPointsExpiryFreqEnum` 的编码。仅 `expiryMode=1` 时必填。1-日清，2-月清。",
+            "enum": [
+              1,
+              2
+            ]
+          },
+          "expiryAnnualYears": {
+            "type": "integer",
+            "description": "年度清零时的下N年。仅 `expiryMode=2` 时必填，且必须大于0。",
+            "example": 1
+          },
+          "expiryAnnualDate": {
+            "type": "string",
+            "description": "年度清零日期。仅 `expiryMode=2` 时必填，建议传 `MM-dd`，例如 `12-31`。"
+          },
+          "expiryNotifyEnabled": {
+            "type": "integer",
+            "description": "到期提醒开关，使用 `CrmPointsSwitchEnum` 的编码。0-否，1-是。",
+            "enum": [
+              0,
+              1
+            ]
+          },
+          "expiryRemindDays": {
+            "type": "integer",
+            "description": "提前通知天数。仅 `expiryNotifyEnabled=1` 时必填，且必须大于0。",
+            "example": 7
+          },
+          "ruleDescription": {
+            "type": "string",
+            "description": "规则公示说明。最多 600 个 UTF-8 字节，约等于 200 个汉字。"
+          }
+        }
+      },
+      "CrmPointsRuleAddDTO": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CrmPointsRuleBaseDTO"
+          }
+        ],
+        "description": "新增积分权益规则请求。"
+      },
+      "CrmPointsRuleUpdateDTO": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CrmPointsRuleBaseDTO"
+          },
+          {
+            "type": "object",
+            "required": [
+              "pointsRuleLid"
+            ]
+          }
+        ],
+        "description": "更新积分权益规则请求。更新时 `lid` 必填。"
+      },
+      "CrmPointsRuleGetDTO": {
+        "type": "object",
+        "required": [
+          "mid"
+        ],
+        "description": "获取积分权益规则详情请求。必须至少传 `lid` 或 `planLid` 中的一个；若同时传 `lid`，优先按 `lid` 查询。",
+        "properties": {
+          "mid": {
+            "type": "integer",
+            "format": "int64",
+            "description": "商户ID（mid）。必填。",
+            "example": 10001
+          },
+          "sid": {
+            "type": "integer",
+            "format": "int64",
+            "description": "门店ID（sid）。"
+          },
+          "planLid": {
+            "type": "integer",
+            "format": "int64",
+            "description": "所属会员方案逻辑编号（planLid）。当 `lid` 为空时，可用此字段查询。"
+          },
+          "pointsRuleLid": {
+            "type": "integer",
+            "format": "int64",
+            "description": "积分权益规则逻辑编号（pointsRuleLid）。直接精准查询用。"
+          }
+        }
+      },
+      "CrmPointsRuleDelDTO": {
+        "type": "object",
+        "required": [
+          "mid",
+          "pointsRuleLid"
+        ],
+        "description": "删除积分权益规则请求。",
+        "properties": {
+          "mid": {
+            "type": "integer",
+            "format": "int64",
+            "description": "商户ID（mid）。必填。",
+            "example": 10001
+          },
+          "sid": {
+            "type": "integer",
+            "format": "int64",
+            "description": "门店ID（sid）。"
+          },
+          "pointsRuleLid": {
+            "type": "integer",
+            "format": "int64",
+            "description": "积分权益规则逻辑编号（pointsRuleLid）。必填，指定要删除的规则。",
+            "example": 90001
+          }
+        }
+      },
+      "CrmPointsRuleQueryDTO": {
+        "type": "object",
+        "required": [
+          "current",
+          "pageSize"
+        ],
+        "description": "分页查询积分权益规则列表请求。",
+        "properties": {
+          "mid": {
+            "type": "integer",
+            "format": "int64",
+            "description": "商户ID（mid）。控制器会用当前登录账号覆盖。"
+          },
+          "sid": {
+            "type": "integer",
+            "format": "int64",
+            "description": "门店ID（sid）。"
+          },
+          "planLid": {
+            "type": "integer",
+            "format": "int64",
+            "description": "所属会员方案逻辑编号（planLid）。可按方案过滤。"
+          },
+          "current": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "description": "当前页，从 0 开始校验。",
+            "example": 1
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int64",
+            "maximum": 50,
+            "description": "分页大小，最大 50。",
+            "example": 10
+          }
+        }
+      },
+      "MemberLevelRateRule": {
+        "type": "object",
+        "description": "会员等级送积分规则。",
+        "required": [
+          "memberLevelId",
+          "consumeAmount",
+          "earnPoints"
+        ],
+        "properties": {
+          "memberLevelId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "会员等级ID。",
+            "example": 40001
+          },
+          "consumeAmount": {
+            "type": "number",
+            "description": "消费金额基数，即每消费 X 元。",
+            "example": 100
+          },
+          "earnPoints": {
+            "type": "number",
+            "description": "赠送积分，即获得 Y 积分。",
+            "example": 10
+          },
+          "sortOrder": {
+            "type": "integer",
+            "description": "排序号。",
+            "example": 1
+          }
+        }
+      },
+      "PointsRuleTimeSlot": {
+        "type": "object",
+        "description": "积分权益规则时段。时间格式必须为 `HH:mm`，且 `endTime` 必须晚于 `startTime`。多段时段之间不可重叠（RULE-011，已实现校验）。",
+        "properties": {
+          "startTime": {
+            "type": "string",
+            "description": "开始时间，格式 `HH:mm`。",
+            "example": "10:00"
+          },
+          "endTime": {
+            "type": "string",
+            "description": "结束时间，格式 `HH:mm`，必须晚于开始时间。",
+            "example": "22:00"
+          }
+        }
+      },
+      "CrmPointsRuleVO": {
+        "type": "object",
+        "description": "积分权益规则返回对象。商品列表字段（earningSpecifiedProducts / deductSpecifiedProducts / deductExcludeProducts）返回 PointsRuleProductVO 数组，包含商品编码、名称、售卖单位、当前状态、所属小类等展示信息。",
+        "properties": {
+          "lid": {
+            "type": "integer",
+            "format": "int64",
+            "description": "逻辑编号。"
+          },
+          "mid": {
+            "type": "integer",
+            "format": "int64",
+            "description": "商户ID。"
+          },
+          "sid": {
+            "type": "integer",
+            "format": "int64",
+            "description": "门店ID。"
+          },
+          "planLid": {
+            "type": "integer",
+            "format": "int64",
+            "description": "所属会员方案逻辑编号。保存时需校验该 planLid 在当前商户下存在且有效（RULE-029，当前代码尚未实现）。"
+          },
+          "name": {
+            "type": "string",
+            "description": "规则名称。"
+          },
+          "pointsRuleEnabled": {
+            "type": "integer",
+            "description": "积分规则总开关，返回 `CrmPointsSwitchEnum` 的编码值。"
+          },
+          "earningSpecifiedProducts": {
+            "type": "array",
+            "description": "获取积分_指定商品列表（含展示信息）。仅当 earningProductScopeType=2/3 时有值。商品 ID 存在性已实现校验（RULE-030）。",
+            "items": {
+              "$ref": "#/components/schemas/PointsRuleProductVO"
+            }
+          },
+          "deductSpecifiedProducts": {
+            "type": "array",
+            "description": "抵扣_指定商品列表（含展示信息）。仅当 productScopeType=2/3 时有值。商品 ID 存在性已实现校验（RULE-030）。",
+            "items": {
+              "$ref": "#/components/schemas/PointsRuleProductVO"
+            }
+          },
+          "deductExcludeProducts": {
+            "type": "array",
+            "description": "抵扣_分类模式下排除的商品列表（含展示信息）。仅当 productScopeType=4/5 且配置了排除商品时有值。保存时需校验所有商品 ID 在当前商户下存在且有效（RULE-030，当前代码尚未实现）。",
+            "items": {
+              "$ref": "#/components/schemas/PointsRuleProductVO"
+            }
+          },
+          "revision": {
+            "type": "integer",
+            "description": "版本控制号。"
+          }
+        }
+      },
+      "PointsRuleProductVO": {
+        "type": "object",
+        "description": "积分规则关联商品展示对象。用于商品列表的前端展示，字段来源于商品基础信息。",
+        "properties": {
+          "dishLid": {
+            "type": "integer",
+            "format": "int64",
+            "description": "商品逻辑ID（lid）。"
+          },
+          "dishCode": {
+            "type": "string",
+            "description": "商品编码，如 B020101001。",
+            "example": "B020101001"
+          },
+          "dishName": {
+            "type": "string",
+            "description": "商品名称。",
+            "example": "土豆猪肉盖饭"
+          },
+          "unit": {
+            "type": "string",
+            "description": "售卖单位，如 份、箱。",
+            "example": "份"
+          },
+          "status": {
+            "type": "integer",
+            "description": "当前状态：0-禁用，1-启用。",
+            "enum": [
+              0,
+              1
+            ],
+            "example": 1
+          },
+          "dishType": {
+            "type": "string",
+            "description": "所属小类名称。"
+          },
+          "dishTypeCode": {
+            "type": "string",
+            "description": "所属小类编码。"
+          }
+        }
+      },
+      "NmsResultCrmPointsRuleVO": {
+        "type": "object",
+        "description": "通用响应包装对象，`data` 为单个积分权益规则。",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "响应码。"
+          },
+          "msg": {
+            "type": "string",
+            "description": "响应消息。"
+          },
+          "data": {
+            "$ref": "#/components/schemas/CrmPointsRuleVO"
+          }
+        }
+      },
+      "NmsResultCrmPointsRuleVOList": {
+        "type": "object",
+        "description": "通用响应包装对象，`data` 为积分权益规则列表。",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "响应码。"
+          },
+          "msg": {
+            "type": "string",
+            "description": "响应消息。"
+          },
+          "data": {
+            "type": "array",
+            "description": "积分权益规则列表。",
+            "items": {
+              "$ref": "#/components/schemas/CrmPointsRuleVO"
+            }
+          }
+        }
+      },
+      "NmsResultString": {
+        "type": "object",
+        "description": "通用响应包装对象，`data` 为字符串或空值。",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "响应码。"
+          },
+          "msg": {
+            "type": "string",
+            "description": "响应消息。"
+          },
+          "data": {
+            "type": "string",
+            "nullable": true,
+            "description": "响应数据。删除成功时通常为空字符串或空值。"
+          }
+        }
+      }
+    }
+  }
+}
