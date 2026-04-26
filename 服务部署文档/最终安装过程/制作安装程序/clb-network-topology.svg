@@ -1,0 +1,105 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="1380" height="860" viewBox="0 0 1380 860">
+  <defs>
+    <style>
+      .title { font: 700 28px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #172033; }
+      .group-title { font: 700 18px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #263247; }
+      .text { font: 15px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #263247; }
+      .small { font: 13px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #536071; }
+      .box { fill: #ffffff; stroke: #b8c3d6; stroke-width: 1.4; rx: 8; }
+      .group { fill: #f7f9fc; stroke: #d7deea; stroke-width: 1.6; rx: 10; }
+      .dns { fill: #eef5ff; stroke: #8bb6ff; }
+      .clb { fill: #eefaf4; stroke: #6cc98b; }
+      .vpc { fill: #fff7ea; stroke: #e5ad55; }
+      .special { fill: #fff0f0; stroke: #de7777; }
+      .line { fill: none; stroke: #536071; stroke-width: 1.6; marker-end: url(#arrow); }
+      .line2 { fill: none; stroke: #2f6fed; stroke-width: 2; marker-end: url(#arrowBlue); }
+      .line3 { fill: none; stroke: #d07a00; stroke-width: 2; marker-end: url(#arrowOrange); }
+      .tag { fill: #eef2f8; stroke: #c8d1df; rx: 5; }
+      .tag-text { font: 12px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #3b4658; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#536071"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#2f6fed"/>
+    </marker>
+    <marker id="arrowOrange" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#d07a00"/>
+    </marker>
+  </defs>
+
+  <rect width="1380" height="860" fill="#ffffff"/>
+  <text x="40" y="48" class="title">gzjjzhy.com 网络拓扑图</text>
+  <text x="40" y="78" class="small">基于腾讯云 DNS、CLB、CDN、CVM 截图整理</text>
+
+  <rect x="40" y="120" width="180" height="90" class="box"/>
+  <text x="82" y="155" class="group-title">访问端</text>
+  <text x="72" y="182" class="text">用户 / 浏览器</text>
+  <text x="74" y="202" class="small">小程序 / App</text>
+
+  <rect x="280" y="105" width="300" height="360" class="group dns"/>
+  <text x="305" y="140" class="group-title">腾讯云 DNS 解析</text>
+  <text x="305" y="172" class="text">api / h5 / mp / p</text>
+  <text x="305" y="198" class="text">shop / test / wx</text>
+  <rect x="305" y="220" width="220" height="34" class="tag"/>
+  <text x="324" y="242" class="tag-text">CNAME 到 CLB 域名</text>
+
+  <text x="305" y="294" class="text">img.gzjjzhy.com</text>
+  <rect x="305" y="312" width="220" height="34" class="tag"/>
+  <text x="324" y="334" class="tag-text">CNAME 到 CDN</text>
+
+  <text x="305" y="386" class="text">bosswx.gzjjzhy.com</text>
+  <rect x="305" y="404" width="220" height="34" class="tag"/>
+  <text x="324" y="426" class="tag-text">A 记录: 43.135.175.71</text>
+
+  <rect x="650" y="120" width="300" height="100" class="box clb"/>
+  <text x="690" y="154" class="group-title">CLB 域名</text>
+  <text x="682" y="183" class="small">lb-8l49ku5e-6thp178dbie2g9zl</text>
+  <text x="700" y="203" class="small">.clb.gz-tencentclb.com</text>
+
+  <rect x="650" y="280" width="300" height="190" class="group clb"/>
+  <text x="685" y="316" class="group-title">腾讯云 CLB</text>
+  <text x="685" y="342" class="small">lb-8l49ku5e / gzjjzhy.com</text>
+  <rect x="690" y="368" width="220" height="38" class="box"/>
+  <text x="728" y="392" class="text">HTTPS 监听器: 443</text>
+  <rect x="690" y="420" width="220" height="38" class="box"/>
+  <text x="725" y="444" class="text">TCP 监听器: 9080</text>
+
+  <rect x="1030" y="115" width="300" height="300" class="group vpc"/>
+  <text x="1060" y="150" class="group-title">Default-VPC</text>
+  <text x="1060" y="176" class="small">网段: 172.16.0.0/16</text>
+  <rect x="1060" y="210" width="230" height="78" class="box"/>
+  <text x="1085" y="236" class="text">linux2 / ins-8gxi9rgu</text>
+  <text x="1085" y="260" class="small">公网: 159.75.146.242</text>
+  <text x="1085" y="280" class="small">内网: 172.16.0.4</text>
+  <rect x="1060" y="312" width="230" height="78" class="box"/>
+  <text x="1085" y="338" class="text">linux1 / ins-p028dne4</text>
+  <text x="1085" y="362" class="small">公网: 119.29.228.216</text>
+  <text x="1085" y="382" class="small">内网: 172.16.0.2</text>
+
+  <rect x="650" y="555" width="300" height="92" class="box special"/>
+  <text x="725" y="588" class="group-title">腾讯云 CDN</text>
+  <text x="688" y="618" class="small">img.gzjjzhy.com.cdn.dnsv1.com</text>
+
+  <rect x="1030" y="555" width="300" height="92" class="box special"/>
+  <text x="1105" y="588" class="group-title">独立公网服务</text>
+  <text x="1120" y="618" class="small">43.135.175.71</text>
+
+  <path d="M220 165 C245 165, 255 165, 280 165" class="line"/>
+  <path d="M580 237 C610 237, 620 170, 650 170" class="line2"/>
+  <path d="M800 220 C800 242, 800 255, 800 280" class="line2"/>
+  <path d="M950 385 C990 385, 995 248, 1030 248" class="line2"/>
+  <path d="M950 435 C990 435, 995 350, 1030 350" class="line2"/>
+  <path d="M580 329 C620 329, 620 600, 650 600" class="line3"/>
+  <path d="M580 421 C810 421, 820 600, 1030 600" class="line3"/>
+
+  <text x="602" y="118" class="small">业务子域名统一进入 CLB</text>
+  <text x="968" y="224" class="small">转发到双 CVM</text>
+  <text x="606" y="540" class="small">图片域名走 CDN</text>
+  <text x="862" y="540" class="small">bosswx 不走 CLB</text>
+
+  <rect x="40" y="710" width="1290" height="100" class="group"/>
+  <text x="68" y="744" class="group-title">关键结论</text>
+  <text x="68" y="774" class="text">api/h5/mp/p/shop/test/wx 通过 CNAME 指向同一个 CLB；img 走 CDN；bosswx 通过 A 记录直连 43.135.175.71。</text>
+  <text x="68" y="802" class="text">CLB 再根据监听器把 HTTPS 与 TCP 流量分别转发到 linux1 和 linux2。</text>
+</svg>

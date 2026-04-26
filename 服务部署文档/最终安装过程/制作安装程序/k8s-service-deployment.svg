@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1380" height="900" viewBox="0 0 1380 900">
+  <defs>
+    <style>
+      .title { font: 700 28px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #172033; }
+      .group-title { font: 700 18px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #263247; }
+      .text { font: 15px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #263247; }
+      .small { font: 13px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #536071; }
+      .box { fill: #ffffff; stroke: #b8c3d6; stroke-width: 1.4; rx: 8; }
+      .group { fill: #f7f9fc; stroke: #d7deea; stroke-width: 1.6; rx: 10; }
+      .clb { fill: #eefaf4; stroke: #6cc98b; }
+      .node { fill: #fff7ea; stroke: #e5ad55; }
+      .k8s { fill: #eef5ff; stroke: #7baaf7; }
+      .svc { fill: #ffffff; stroke: #7baaf7; }
+      .pod { fill: #ffffff; stroke: #9fb2ca; }
+      .https { fill: none; stroke: #2f6fed; stroke-width: 2.2; marker-end: url(#arrowBlue); }
+      .tcp { fill: none; stroke: #d07a00; stroke-width: 2.2; marker-end: url(#arrowOrange); }
+      .inside { fill: none; stroke: #536071; stroke-width: 1.6; marker-end: url(#arrow); }
+      .badge443 { fill: #e9f1ff; stroke: #9abcf5; rx: 5; }
+      .badge9080 { fill: #fff1df; stroke: #e3aa60; rx: 5; }
+      .badge-text { font: 700 12px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #263247; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#536071"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#2f6fed"/>
+    </marker>
+    <marker id="arrowOrange" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#d07a00"/>
+    </marker>
+  </defs>
+
+  <rect width="1380" height="900" fill="#ffffff"/>
+  <text x="40" y="48" class="title">CLB 到 TKE/K8s 服务部署图</text>
+  <text x="40" y="78" class="small">基于 CLB 后端端口和腾讯云容器服务“服务与路由”截图整理</text>
+
+  <rect x="40" y="130" width="250" height="210" class="group clb"/>
+  <text x="92" y="166" class="group-title">腾讯云 CLB</text>
+  <text x="73" y="194" class="small">lb-8l49ku5e / gzjjzhy.com</text>
+  <rect x="75" y="225" width="180" height="42" class="box"/>
+  <text x="111" y="252" class="text">HTTPS:443</text>
+  <rect x="75" y="285" width="180" height="42" class="box"/>
+  <text x="116" y="312" class="text">TCP:9080</text>
+
+  <rect x="370" y="105" width="300" height="285" class="group node"/>
+  <text x="480" y="140" class="group-title">CVM 节点</text>
+  <rect x="405" y="175" width="230" height="72" class="box"/>
+  <text x="432" y="202" class="text">linux2 / 172.16.0.4</text>
+  <text x="432" y="228" class="small">公网: 159.75.146.242</text>
+  <rect x="405" y="280" width="230" height="72" class="box"/>
+  <text x="432" y="307" class="text">linux1 / 172.16.0.2</text>
+  <text x="432" y="333" class="small">公网: 119.29.228.216</text>
+
+  <rect x="760" y="80" width="560" height="705" class="group k8s"/>
+  <text x="955" y="116" class="group-title">TKE / Kubernetes 集群</text>
+  <text x="966" y="144" class="small">集群: gzjj，地域: 广州，状态: 运行中</text>
+
+  <rect x="800" y="180" width="480" height="155" class="svc"/>
+  <text x="830" y="214" class="group-title">a00-nms4cloud-netty</text>
+  <text x="830" y="242" class="small">Service 类型: NodePort</text>
+  <text x="830" y="266" class="small">ClusterIP: 192.168.12.154</text>
+  <rect x="1015" y="217" width="185" height="28" class="badge443"/>
+  <text x="1032" y="236" class="badge-text">TCP/80:30011</text>
+  <rect x="1015" y="258" width="185" height="28" class="badge9080"/>
+  <text x="1030" y="277" class="badge-text">TCP/9999:30012</text>
+  <text x="830" y="306" class="small">截图可确认 30012 是 Netty 的 NodePort 端口</text>
+
+  <rect x="800" y="385" width="220" height="82" class="svc"/>
+  <text x="830" y="416" class="text">a00-nms4cloud-crm</text>
+  <text x="830" y="442" class="small">ClusterIP / TCP:80</text>
+
+  <rect x="1060" y="385" width="220" height="82" class="svc"/>
+  <text x="1090" y="416" class="text">a00-nms4cloud-mall</text>
+  <text x="1090" y="442" class="small">ClusterIP / TCP:80</text>
+
+  <rect x="800" y="500" width="220" height="82" class="svc"/>
+  <text x="830" y="531" class="text">a00-nms4cloud-mq</text>
+  <text x="830" y="557" class="small">ClusterIP / TCP:80</text>
+
+  <rect x="1060" y="500" width="220" height="82" class="svc"/>
+  <text x="1090" y="531" class="text">a00-nms4cloud-order</text>
+  <text x="1090" y="557" class="small">ClusterIP / TCP:80</text>
+
+  <rect x="910" y="635" width="260" height="80" class="pod"/>
+  <text x="985" y="666" class="group-title">后端 Pod</text>
+  <text x="958" y="694" class="small">由各 Service 负载到实际工作负载</text>
+
+  <path d="M255 246 C305 246, 325 220, 405 211" class="https"/>
+  <path d="M255 306 C305 306, 325 316, 405 316" class="tcp"/>
+  <path d="M635 211 C700 211, 720 231, 800 231" class="https"/>
+  <path d="M635 316 C700 316, 720 276, 800 276" class="tcp"/>
+
+  <path d="M1040 335 C1040 356, 910 360, 910 385" class="inside"/>
+  <path d="M1040 335 C1040 356, 1170 360, 1170 385" class="inside"/>
+  <path d="M1040 335 C1040 475, 910 475, 910 500" class="inside"/>
+  <path d="M1040 335 C1040 475, 1170 475, 1170 500" class="inside"/>
+  <path d="M910 467 C910 550, 990 590, 1010 635" class="inside"/>
+  <path d="M1170 467 C1170 550, 1090 590, 1070 635" class="inside"/>
+  <path d="M910 582 C910 610, 965 620, 1010 635" class="inside"/>
+  <path d="M1170 582 C1170 610, 1115 620, 1070 635" class="inside"/>
+
+  <rect x="300" y="210" width="92" height="26" class="badge443"/>
+  <text x="313" y="228" class="badge-text">CLB 443</text>
+  <rect x="300" y="296" width="92" height="26" class="badge9080"/>
+  <text x="310" y="314" class="badge-text">CLB 9080</text>
+  <rect x="680" y="258" width="92" height="26" class="badge9080"/>
+  <text x="691" y="276" class="badge-text">NodePort</text>
+
+  <rect x="40" y="820" width="1280" height="46" class="group"/>
+  <text x="68" y="849" class="text">当前可确认：Netty 链路是 CLB TCP 9080 -> CVM NodePort 30012 -> K8s Service a00-nms4cloud-netty -> Pod。</text>
+</svg>

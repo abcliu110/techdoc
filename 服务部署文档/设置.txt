@@ -149,3 +149,28 @@ https://wx.gzjjzhy.com/lemontree?code=1c4388778a2e2002&p=0&mid=lemontree
 令牌名:镜像仓库
 Git Username:cnb
 Token:1M1c5dVH3It8WR9lpvi39ufKRHB
+
+
+
+4、打包环境 
+	http://192.168.1.241:8080
+	打包账号密码
+	用户：user
+	密码：Lemontree556
+5、下载winscp,查看打包内容：登陆winscp  
+	IP 192.168.1.214 
+	端口22
+	用户
+	rduser
+	密码
+	rduser123456
+  路径：/home/rduser/jenkins
+   @柠檬树-彭海淇
+
+  root
+a4CpgDmx!dGeRG2GZv
+
+
+巨焦BOSS
+wxa1617c32d294e518
+e052e0c219664cdce155f81ab561583f

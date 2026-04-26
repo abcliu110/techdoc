@@ -1128,7 +1128,7 @@
           },
           "birthdayPeriod": {
             "type": "integer",
-            "description": "生日范围，使用 `CrmPointsPeriodEnum` 的编码。`birthdayEnabled=1` 时必填，且仅允许：1-当天，2-当周，3-当月。",
+            "description": "生日范围，使用 `CrmPointsBirthdayPeriodEnum` 的编码。`birthdayEnabled=1` 时必填，且仅允许：1-当天，2-当周，3-当月。",
             "enum": [
               1,
               2,
@@ -1150,7 +1150,7 @@
           },
           "memberDayPeriod": {
             "type": "integer",
-            "description": "会员日周期，使用 `CrmPointsPeriodEnum` 的编码。`memberDayEnabled=1` 时必填，且仅允许：4-每周，5-每月。",
+            "description": "会员日周期，使用 `CrmPointsMemberDayPeriodEnum` 的编码。`memberDayEnabled=1` 时必填，且仅允许：1-每周，2-每月。",
             "enum": [
               4,
               5

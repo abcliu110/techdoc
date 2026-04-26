@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <dontWrapJar>true</dontWrapJar>
+  <headerType>console</headerType>
+  <jar></jar>
+  <outfile>../runtime/app-server/server.exe</outfile>
+  <errTitle>Launch4j external libs demo startup failed</errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>https://adoptium.net/temurin/releases/?version=21</downloadUrl>
+  <supportUrl></supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>false</restartOnCrash>
+  <manifest></manifest>
+  <icon></icon>
+  <classPath>
+    <mainClass>org.springframework.boot.loader.launch.JarLauncher</mainClass>
+    <cp>..\libs\launch4j-spring-demo-1.0.0.jar</cp>
+  </classPath>
+  <jre>
+    <path>../jdk-21.0.5</path>
+    <requiresJdk>false</requiresJdk>
+    <requires64Bit>true</requires64Bit>
+    <minVersion>21</minVersion>
+    <maxVersion></maxVersion>
+  </jre>
+</launch4jConfig>
