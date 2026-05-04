@@ -93,6 +93,7 @@ jdbc:mysql://192.168.1.119:3306/gylregdb?allowMultiQueries=true&useUnicode=true&
 用户名:root 密码:st11338
 
 http://192.168.1.119:30080/user/login
+http://bosswx.gzjjzhy.com:30080/user/login
 
 主账号ID 100042037431 
 用户名 liuguoyun 
@@ -107,21 +108,31 @@ administrator
 
 eM@aTvvU4RFzo*
 
-  方案一：重新推送镜像到私有仓库（推荐）
+• # 1. 从官方仓库拉取 nginx 镜像到你本机的 Docker
+  docker pull nginx:1.25.3
 
-  在一台能访问外网或已有该镜像的机器上执行：
+  # 2. 登录服务器 192.168.1.119 上的 Harbor 镜像仓库
+  # 用户名：admin
+  # 密码：Harbor12345
+  docker login 192.168.1.119:30020
 
-  # 1. 拉取官方镜像
-  docker pull emqx/emqx:5.4.1
+  # 3. 给本地 nginx 镜像打上 Harbor 仓库标签
+  # 格式：Harbor地址/项目名/镜像名:版本
+  docker tag nginx:1.25.3 192.168.1.119:30020/library/nginx:1.25.3
 
-  # 2. 打标签
-  docker tag emqx/emqx:5.4.1 10.43.92.252/library/emqx:5.4.1
+  # 4. 将镜像推送到 192.168.1.119 的 Harbor 仓库
+  docker push 192.168.1.119:30020/library/nginx:1.25.3
 
-  # 3. 登录私有仓库
-  docker login 10.43.92.252
+  # 5. 使用修改后的 Kubernetes 部署文件重新部署 nginx
+  kubectl apply -f D:\mywork\techdoc\服务部署文档\nginx最新部署\nginx-deployment-online-like.yaml
 
-  # 4. 推送
-  docker push 10.43.92.252/library/emqx:5.4.1
+  # 6. 重启 deployment，让 Pod 重新拉取 Harbor 中的新镜像
+  kubectl rollout restart deployment nginx
+
+  # 7. 查看 Pod 状态，确认镜像拉取和启动是否成功
+  kubectl get pod -o wide
+
+
 
 主账号ID 100042037431 
 用户名 liuguoyun
