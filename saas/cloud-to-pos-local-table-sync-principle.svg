@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1700 1120" width="1700" height="1120">
+  <style>
+    text { font-family: 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+  </style>
+  <defs>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/>
+    </marker>
+    <marker id="arrow-orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ea580c"/>
+    </marker>
+    <marker id="arrow-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#9333ea"/>
+    </marker>
+    <marker id="arrow-gray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="125%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+  </defs>
+  <rect width="1700" height="1120" fill="#ffffff"/>
+  <text x="850.0" y="38" fill="#111827" font-size="25" font-weight="800" text-anchor="middle">云端表数据同步到 POS 本地表的原理</text>
+  <text x="850.0" y="66" fill="#6b7280" font-size="14" font-weight="500" text-anchor="middle">第一步由 POS 本地程序建表/升级结构；第二步把云端表变更转成事件，按门店 sid 下发并写入本地同名表。</text>
+  <rect x="40" y="95" width="360" height="835" rx="14" fill="#f8fff9" stroke="#86efac" stroke-width="1.5" stroke-dasharray="7 5"/>
+  <text x="58" y="125" fill="#111827" font-size="17" font-weight="700" text-anchor="start">阶段 1：本地先建表</text>
+  <text x="58" y="149" fill="#6b7280" font-size="12" font-weight="500" text-anchor="start">只准备结构，不复制云端数据</text>
+  <rect x="430" y="95" width="1225" height="700" rx="14" fill="#f8fbff" stroke="#93c5fd" stroke-width="1.5" stroke-dasharray="7 5"/>
+  <text x="448" y="125" fill="#111827" font-size="17" font-weight="700" text-anchor="start">阶段 2A：实时增量同步</text>
+  <text x="448" y="149" fill="#6b7280" font-size="12" font-weight="500" text-anchor="start">云端表发生 INSERT / UPDATE / DELETE 后，转成 CanalEvent 下发到对应 POS</text>
+  <rect x="430" y="825" width="1225" height="220" rx="14" fill="#fbf8ff" stroke="#c4b5fd" stroke-width="1.5" stroke-dasharray="7 5"/>
+  <text x="448" y="855" fill="#111827" font-size="17" font-weight="700" text-anchor="start">阶段 2B：补偿/全量增量同步</text>
+  <text x="448" y="879" fill="#6b7280" font-size="12" font-weight="500" text-anchor="start">POS 主动分页拉取历史 CanalEvent，复用同一个 handleEvent() 写库逻辑</text>
+  <rect x="80" y="155" width="280" height="68" rx="10" fill="#ffffff" stroke="#bbf7d0" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="92" y="169" width="34" height="34" rx="8" fill="#dcfce7" stroke="#bbf7d0" stroke-width="1"/>
+  <circle cx="109" cy="186" r="8" fill="none" stroke="#2563eb" stroke-width="2"/>
+  <circle cx="109" cy="186" r="3" fill="#2563eb"/>
+  <text x="138" y="184" fill="#111827" font-size="14" font-weight="700" text-anchor="start">POS 启动或手动升级</text>
+  <text x="138" y="205" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">Pos3BootApplication</text>
+  <text x="138" y="221" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">/SystemSettingController.upgrade</text>
+  <rect x="80" y="250" width="280" height="72" rx="10" fill="#ffffff" stroke="#bbf7d0" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="92" y="264" width="34" height="34" rx="8" fill="#dcfce7" stroke="#bbf7d0" stroke-width="1"/>
+  <circle cx="109" cy="281" r="8" fill="none" stroke="#2563eb" stroke-width="2"/>
+  <circle cx="109" cy="281" r="3" fill="#2563eb"/>
+  <text x="138" y="279" fill="#111827" font-size="14" font-weight="700" text-anchor="start">VerMgrServer.upgrade()</text>
+  <text x="138" y="300" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">版本判断：verInfo.ini vs sys_config_data</text>
+  <rect x="80" y="350" width="280" height="78" rx="10" fill="#ffffff" stroke="#bbf7d0" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="92" y="364" width="34" height="34" rx="8" fill="#dcfce7" stroke="#bbf7d0" stroke-width="1"/>
+  <path d="M 100,371 H 114 L 119,377 V 391 H 100 Z" fill="none" stroke="#16a34a" stroke-width="2"/>
+  <path d="M 114,371 V 377 H 119" fill="none" stroke="#16a34a" stroke-width="2"/>
+  <text x="138" y="379" fill="#111827" font-size="14" font-weight="700" text-anchor="start">扫描本地 Entity</text>
+  <text x="138" y="400" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">@Table 得表名</text>
+  <text x="138" y="416" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">@Column / @ColumnPlus 得字段</text>
+  <rect x="80" y="458" width="280" height="78" rx="10" fill="#ffffff" stroke="#bbf7d0" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="92" y="472" width="34" height="34" rx="8" fill="#dcfce7" stroke="#bbf7d0" stroke-width="1"/>
+  <path d="M 100,479 H 114 L 119,485 V 499 H 100 Z" fill="none" stroke="#16a34a" stroke-width="2"/>
+  <path d="M 114,479 V 485 H 119" fill="none" stroke="#16a34a" stroke-width="2"/>
+  <text x="138" y="487" fill="#111827" font-size="14" font-weight="700" text-anchor="start">读取 MySQL 元数据</text>
+  <text x="138" y="508" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">information_schema.columns</text>
+  <text x="138" y="524" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">information_schema.statistics</text>
+  <rect x="80" y="566" width="280" height="82" rx="10" fill="#ffffff" stroke="#bbf7d0" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="92" y="580" width="34" height="34" rx="8" fill="#dcfce7" stroke="#bbf7d0" stroke-width="1"/>
+  <circle cx="109" cy="597" r="8" fill="none" stroke="#2563eb" stroke-width="2"/>
+  <circle cx="109" cy="597" r="3" fill="#2563eb"/>
+  <text x="138" y="595" fill="#111827" font-size="14" font-weight="700" text-anchor="start">生成并执行 DDL</text>
+  <text x="138" y="616" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">CREATE TABLE</text>
+  <text x="138" y="632" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">ALTER TABLE / ADD INDEX</text>
+  <path d="M 83,713 C 83,698 357,698 357,713 V 793 C 357,812 83,812 83,793 Z" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5" filter="url(#shadow)"/>
+  <ellipse cx="220.0" cy="713" rx="137.0" ry="18" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+  <path d="M 83,793 C 83,812 357,812 357,793" fill="none" stroke="#86efac" stroke-width="1.5"/>
+  <text x="220.0" y="740" fill="#111827" font-size="15" font-weight="700" text-anchor="middle">本地表结构就绪</text>
+  <text x="220.0" y="763" fill="#6b7280" font-size="12" font-weight="500" text-anchor="middle">空表或旧表已升级</text>
+  <text x="220.0" y="780" fill="#6b7280" font-size="12" font-weight="500" text-anchor="middle">等待同步数据写入</text>
+  <rect x="72" y="852" width="296" height="82" rx="10" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="84" y="866" width="34" height="34" rx="8" fill="#fef3c7" stroke="#fde68a" stroke-width="1"/>
+  <path d="M 92,873 H 106 L 111,879 V 893 H 92 Z" fill="none" stroke="#16a34a" stroke-width="2"/>
+  <path d="M 106,873 V 879 H 111" fill="none" stroke="#16a34a" stroke-width="2"/>
+  <text x="130" y="881" fill="#111827" font-size="14" font-weight="700" text-anchor="start">关键点</text>
+  <text x="130" y="902" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">建表机制不是执行 SQL 目录脚本</text>
+  <text x="130" y="918" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">它根据 Java 实体反射生成 DDL</text>
+  <path d="M 220,223 L 220,250" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-orange)"/>
+  <rect x="241.0" y="224.0" width="66" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="274" y="241" fill="#ea580c" font-size="12" font-weight="600" text-anchor="middle">触发升级</text>
+  <path d="M 220,322 L 220,350" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-orange)"/>
+  <rect x="242.0" y="325.0" width="66" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="275" y="342" fill="#ea580c" font-size="12" font-weight="600" text-anchor="middle">扫描实体</text>
+  <path d="M 220,428 L 220,458" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-orange)"/>
+  <rect x="242.0" y="431.0" width="66" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="275" y="448" fill="#ea580c" font-size="12" font-weight="600" text-anchor="middle">读取现状</text>
+  <path d="M 220,536 L 220,566" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-orange)"/>
+  <rect x="242.0" y="539.0" width="66" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="275" y="556" fill="#ea580c" font-size="12" font-weight="600" text-anchor="middle">差异对比</text>
+  <path d="M 220,648 L 220,695" fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-green)"/>
+  <rect x="244.0" y="664.0" width="84" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="286" y="681" fill="#16a34a" font-size="12" font-weight="600" text-anchor="middle">创建/升级表</text>
+  <path d="M 465,173 C 465,158 670,158 670,173 V 222 C 670,241 465,241 465,222 Z" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5" filter="url(#shadow)"/>
+  <ellipse cx="567.5" cy="173" rx="102.5" ry="18" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+  <path d="M 465,222 C 465,241 670,241 670,222" fill="none" stroke="#bfdbfe" stroke-width="1.5"/>
+  <text x="567.5" y="200" fill="#111827" font-size="15" font-weight="700" text-anchor="middle">云端业务表</text>
+  <text x="567.5" y="223" fill="#6b7280" font-size="12" font-weight="500" text-anchor="middle">例如菜品/桌台/设备</text>
+  <text x="567.5" y="240" fill="#6b7280" font-size="12" font-weight="500" text-anchor="middle">真实数据源</text>
+  <rect x="725" y="155" width="205" height="85" rx="10" fill="#ffffff" stroke="#bfdbfe" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="737" y="169" width="34" height="34" rx="8" fill="#dbeafe" stroke="#bfdbfe" stroke-width="1"/>
+  <path d="M 745,176 H 759 L 764,182 V 196 H 745 Z" fill="none" stroke="#16a34a" stroke-width="2"/>
+  <path d="M 759,176 V 182 H 764" fill="none" stroke="#16a34a" stroke-width="2"/>
+  <text x="783" y="184" fill="#111827" font-size="14" font-weight="700" text-anchor="start">MySQL binlog</text>
+  <text x="783" y="205" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">记录行变更</text>
+  <text x="783" y="221" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">INSERT / UPDATE / DELETE</text>
+  <rect x="990" y="145" width="245" height="105" rx="10" fill="#ffffff" stroke="#bfdbfe" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="1002" y="159" width="34" height="34" rx="8" fill="#dbeafe" stroke="#bfdbfe" stroke-width="1"/>
+  <circle cx="1019" cy="176" r="8" fill="none" stroke="#2563eb" stroke-width="2"/>
+  <circle cx="1019" cy="176" r="3" fill="#2563eb"/>
+  <text x="1048" y="174" fill="#111827" font-size="14" font-weight="700" text-anchor="start">CanalEventService</text>
+  <text x="1048" y="195" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">只处理 ROWDATA</text>
+  <text x="1048" y="211" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">过滤 needSync(table/sid)</text>
+  <text x="1048" y="227" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">生成 CanalEvent</text>
+  <rect x="1285" y="155" width="275" height="85" rx="10" fill="#ffffff" stroke="#e9d5ff" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="1297" y="169" width="34" height="34" rx="8" fill="#ede9fe" stroke="#e9d5ff" stroke-width="1"/>
+  <path d="M 1305,179 H 1323 M 1305,186 H 1323 M 1305,193 H 1323" stroke="#9333ea" stroke-width="2" stroke-linecap="round"/>
+  <text x="1343" y="184" fill="#111827" font-size="14" font-weight="700" text-anchor="start">Kafka Topic</text>
+  <text x="1343" y="205" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">nms4cloud-pos5sync</text>
+  <text x="1343" y="221" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">消息体含 tbl/type/content/log</text>
+  <rect x="1285" y="310" width="275" height="85" rx="10" fill="#ffffff" stroke="#e9d5ff" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="1297" y="324" width="34" height="34" rx="8" fill="#ede9fe" stroke="#e9d5ff" stroke-width="1"/>
+  <path d="M 1305,334 H 1323 M 1305,341 H 1323 M 1305,348 H 1323" stroke="#9333ea" stroke-width="2" stroke-linecap="round"/>
+  <text x="1343" y="339" fill="#111827" font-size="14" font-weight="700" text-anchor="start">云端 Kafka 监听器</text>
+  <text x="1343" y="360" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">KafkaListenerForSync</text>
+  <text x="1343" y="376" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">封装 url=/sync/syncByCanalEvent</text>
+  <rect x="990" y="310" width="245" height="85" rx="10" fill="#ffffff" stroke="#fed7aa" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="1002" y="324" width="34" height="34" rx="8" fill="#ffedd5" stroke="#fed7aa" stroke-width="1"/>
+  <path d="M 1011,333 L 1027,341 L 1011,349" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="1048" y="339" fill="#111827" font-size="14" font-weight="700" text-anchor="start">Netty 下发</text>
+  <text x="1048" y="360" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">sendWithMono</text>
+  <text x="1048" y="376" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">topic = sid + &quot;_server&quot;</text>
+  <rect x="725" y="310" width="205" height="85" rx="10" fill="#ffffff" stroke="#fed7aa" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="737" y="324" width="34" height="34" rx="8" fill="#ffedd5" stroke="#fed7aa" stroke-width="1"/>
+  <path d="M 746,333 L 762,341 L 746,349" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="783" y="339" fill="#111827" font-size="14" font-weight="700" text-anchor="start">POS Netty 客户端</text>
+  <text x="783" y="360" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">门店在线连接</text>
+  <text x="783" y="376" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">接收对应 sid 消息</text>
+  <rect x="465" y="310" width="215" height="85" rx="10" fill="#ffffff" stroke="#fed7aa" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="477" y="324" width="34" height="34" rx="8" fill="#ffedd5" stroke="#fed7aa" stroke-width="1"/>
+  <circle cx="494" cy="341" r="8" fill="none" stroke="#2563eb" stroke-width="2"/>
+  <circle cx="494" cy="341" r="3" fill="#2563eb"/>
+  <text x="523" y="339" fill="#111827" font-size="13" font-weight="700" text-anchor="start">SyncDataController</text>
+  <text x="523" y="360" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">POST /sync/syncByCanalEvent</text>
+  <text x="523" y="376" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">只入本地消息队列</text>
+  <rect x="465" y="485" width="215" height="78" rx="10" fill="#ffffff" stroke="#e9d5ff" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="477" y="499" width="34" height="34" rx="8" fill="#ede9fe" stroke="#e9d5ff" stroke-width="1"/>
+  <path d="M 485,509 H 503 M 485,516 H 503 M 485,523 H 503" stroke="#9333ea" stroke-width="2" stroke-linecap="round"/>
+  <text x="523" y="514" fill="#111827" font-size="14" font-weight="700" text-anchor="start">本地 MQ</text>
+  <text x="523" y="535" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">SYNC_BY_CANAL_EVENT</text>
+  <text x="523" y="551" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">异步削峰/解耦</text>
+  <rect x="725" y="485" width="245" height="78" rx="10" fill="#ffffff" stroke="#e9d5ff" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="737" y="499" width="34" height="34" rx="8" fill="#ede9fe" stroke="#e9d5ff" stroke-width="1"/>
+  <path d="M 745,509 H 763 M 745,516 H 763 M 745,523 H 763" stroke="#9333ea" stroke-width="2" stroke-linecap="round"/>
+  <text x="783" y="514" fill="#111827" font-size="14" font-weight="700" text-anchor="start">本地事件消费者</text>
+  <text x="783" y="535" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">SyncByCanalEventConsumer</text>
+  <text x="783" y="551" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">解析 SyncByCanalEventRequest</text>
+  <rect x="1020" y="475" width="285" height="100" rx="10" fill="#ffffff" stroke="#bbf7d0" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="1032" y="489" width="34" height="34" rx="8" fill="#dcfce7" stroke="#bbf7d0" stroke-width="1"/>
+  <circle cx="1049" cy="506" r="8" fill="none" stroke="#2563eb" stroke-width="2"/>
+  <circle cx="1049" cy="506" r="3" fill="#2563eb"/>
+  <text x="1078" y="504" fill="#111827" font-size="14" font-weight="700" text-anchor="start">增量同步服务</text>
+  <text x="1078" y="525" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">IncrementalSyncDataService</text>
+  <text x="1078" y="541" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">CLASS_MAP 找实体类</text>
+  <text x="1078" y="557" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">handleEvent() 统一落库</text>
+  <rect x="1350" y="465" width="245" height="118" rx="10" fill="#ffffff" stroke="#bbf7d0" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="1362" y="479" width="34" height="34" rx="8" fill="#dcfce7" stroke="#bbf7d0" stroke-width="1"/>
+  <path d="M 1370,486 H 1384 L 1389,492 V 506 H 1370 Z" fill="none" stroke="#16a34a" stroke-width="2"/>
+  <path d="M 1384,486 V 492 H 1389" fill="none" stroke="#16a34a" stroke-width="2"/>
+  <text x="1408" y="494" fill="#111827" font-size="14" font-weight="700" text-anchor="start">本地写库策略</text>
+  <text x="1408" y="515" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">DELETE: mid/sid/lid 删除</text>
+  <text x="1408" y="531" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">UPDATE: 按 lid 更新</text>
+  <text x="1408" y="547" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">INSERT: 更新不到再插入</text>
+  <path d="M 1165,668 C 1165,653 1525,653 1525,668 V 747 C 1525,766 1165,766 1165,747 Z" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5" filter="url(#shadow)"/>
+  <ellipse cx="1345.0" cy="668" rx="180.0" ry="18" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+  <path d="M 1165,747 C 1165,766 1525,766 1525,747" fill="none" stroke="#86efac" stroke-width="1.5"/>
+  <text x="1345.0" y="695" fill="#111827" font-size="15" font-weight="700" text-anchor="middle">POS 本地 MySQL 同名表</text>
+  <text x="1345.0" y="718" fill="#6b7280" font-size="12" font-weight="500" text-anchor="middle">结构来自阶段 1</text>
+  <text x="1345.0" y="735" fill="#6b7280" font-size="12" font-weight="500" text-anchor="middle">数据来自阶段 2 的事件写入</text>
+  <path d="M 670,198 L 725,198" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+  <rect x="671.0" y="171.0" width="54" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="698" y="188" fill="#2563eb" font-size="12" font-weight="600" text-anchor="middle">行变更</text>
+  <path d="M 930,198 L 990,198" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+  <rect x="919.5" y="171.0" width="81" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="960" y="188" fill="#2563eb" font-size="12" font-weight="600" text-anchor="middle">Canal 解析</text>
+  <path d="M 1235,198 L 1285,198" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+  <rect x="1205.0" y="171.0" width="110" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="1260" y="188" fill="#2563eb" font-size="12" font-weight="600" text-anchor="middle">ProducerRecord</text>
+  <path d="M 1422,240 L 1422,310" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+  <rect x="1447.5" y="264.0" width="81" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="1488" y="281" fill="#2563eb" font-size="12" font-weight="600" text-anchor="middle">Kafka 消费</text>
+  <path d="M 1285,352 L 1235,352" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+  <rect x="1227.0" y="325.0" width="66" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="1260" y="342" fill="#2563eb" font-size="12" font-weight="600" text-anchor="middle">封装请求</text>
+  <path d="M 990,352 L 930,352" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+  <rect x="916.5" y="325.0" width="87" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="960" y="342" fill="#2563eb" font-size="12" font-weight="600" text-anchor="middle">按 sid 路由</text>
+  <path d="M 725,352 L 680,352" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+  <rect x="668.0" y="325.0" width="68" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="702" y="342" fill="#2563eb" font-size="12" font-weight="600" text-anchor="middle">进入 POS</text>
+  <path d="M 572,395 L 572,485" fill="none" stroke="#9333ea" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-purple)"/>
+  <rect x="593.5" y="431.0" width="77" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="632" y="448" fill="#9333ea" font-size="12" font-weight="600" text-anchor="middle">asyncSend</text>
+  <path d="M 680,524 L 725,524" fill="none" stroke="#9333ea" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-purple)"/>
+  <rect x="671.0" y="497.0" width="66" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="704" y="514" fill="#9333ea" font-size="12" font-weight="600" text-anchor="middle">本地消费</text>
+  <path d="M 970,524 L 1020,524" fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-green)"/>
+  <rect x="934.5" y="497.0" width="121" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="995" y="514" fill="#16a34a" font-size="12" font-weight="600" text-anchor="middle">调用 handleEvent</text>
+  <path d="M 1305,524 L 1350,524" fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-green)"/>
+  <rect x="1284.0" y="497.0" width="88" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="1328" y="514" fill="#16a34a" font-size="12" font-weight="600" text-anchor="middle">转换 Entity</text>
+  <path d="M 1472,583 L 1472,650" fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-green)"/>
+  <rect x="1491.0" y="605.0" width="78" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="1530" y="622" fill="#16a34a" font-size="12" font-weight="600" text-anchor="middle">写入本地表</text>
+  <path d="M 357,753 L 430,753 L 430,782 L 1165,782 L 1165,718" fill="none" stroke="#16a34a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-green)" stroke-dasharray="6 4"/>
+  <rect x="735.0" y="756.0" width="90" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="780" y="773" fill="#16a34a" font-size="12" font-weight="600" text-anchor="middle">表结构先就绪</text>
+  <rect x="990" y="265" width="570" height="34" rx="10" fill="#f8fafc" stroke="#e5e7eb" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="1006" y="294" fill="#111827" font-size="14" font-weight="700" text-anchor="start">CanalEvent 关键字段：mid / sid / lid / tbl_name / type / log_file_name / content</text>
+  <rect x="465" y="606" width="590" height="92" rx="10" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="477" y="620" width="34" height="34" rx="8" fill="#fef3c7" stroke="#fde68a" stroke-width="1"/>
+  <path d="M 485,627 H 499 L 504,633 V 647 H 485 Z" fill="none" stroke="#16a34a" stroke-width="2"/>
+  <path d="M 499,627 V 633 H 504" fill="none" stroke="#16a34a" stroke-width="2"/>
+  <text x="523" y="635" fill="#111827" font-size="14" font-weight="700" text-anchor="start">同步的本质</text>
+  <text x="523" y="656" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">不是“云端表结构直接复制到本地”。</text>
+  <text x="523" y="672" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">云端表的行变更先被抽象成事件；</text>
+  <text x="523" y="688" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">POS 本地按 tbl_name 找实体和 Mapper，再按 lid 写入已建好的本地表。</text>
+  <rect x="1085" y="590" width="380" height="54" rx="10" fill="#f8fafc" stroke="#e5e7eb" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="1101" y="619" fill="#111827" font-size="14" font-weight="700" text-anchor="start">删除事件使用 beforeColumns</text>
+  <text x="1101" y="640" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">INSERT/UPDATE 使用 afterColumns；DELETE 使用变更前字段。</text>
+  <rect x="465" y="895" width="235" height="78" rx="10" fill="#ffffff" stroke="#ddd6fe" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="477" y="909" width="34" height="34" rx="8" fill="#ede9fe" stroke="#ddd6fe" stroke-width="1"/>
+  <circle cx="494" cy="926" r="8" fill="none" stroke="#2563eb" stroke-width="2"/>
+  <circle cx="494" cy="926" r="3" fill="#2563eb"/>
+  <text x="523" y="924" fill="#111827" font-size="14" font-weight="700" text-anchor="start">手动/启动补偿入口</text>
+  <text x="523" y="945" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">/sync/incrementalSyncData</text>
+  <text x="523" y="961" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">避免漏事件或初始化差异</text>
+  <rect x="755" y="895" width="245" height="78" rx="10" fill="#ffffff" stroke="#ddd6fe" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="767" y="909" width="34" height="34" rx="8" fill="#ede9fe" stroke="#ddd6fe" stroke-width="1"/>
+  <path d="M 775,916 H 789 L 794,922 V 936 H 775 Z" fill="none" stroke="#16a34a" stroke-width="2"/>
+  <path d="M 789,916 V 922 H 794" fill="none" stroke="#16a34a" stroke-width="2"/>
+  <text x="813" y="924" fill="#111827" font-size="14" font-weight="700" text-anchor="start">分页拉取历史事件</text>
+  <text x="813" y="945" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">POST pos4cloud</text>
+  <text x="813" y="961" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">/canal_event/list</text>
+  <rect x="1055" y="895" width="245" height="78" rx="10" fill="#ffffff" stroke="#ddd6fe" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="1067" y="909" width="34" height="34" rx="8" fill="#ede9fe" stroke="#ddd6fe" stroke-width="1"/>
+  <circle cx="1084" cy="926" r="8" fill="none" stroke="#2563eb" stroke-width="2"/>
+  <circle cx="1084" cy="926" r="3" fill="#2563eb"/>
+  <text x="1113" y="924" fill="#111827" font-size="14" font-weight="700" text-anchor="start">合并同 lid 事件</text>
+  <text x="1113" y="945" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">同一 lid 只保留</text>
+  <text x="1113" y="961" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">logFileName 最大的一条</text>
+  <rect x="1360" y="895" width="235" height="78" rx="10" fill="#ffffff" stroke="#bbf7d0" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="1372" y="909" width="34" height="34" rx="8" fill="#dcfce7" stroke="#bbf7d0" stroke-width="1"/>
+  <circle cx="1389" cy="926" r="8" fill="none" stroke="#2563eb" stroke-width="2"/>
+  <circle cx="1389" cy="926" r="3" fill="#2563eb"/>
+  <text x="1418" y="924" fill="#111827" font-size="14" font-weight="700" text-anchor="start">复用同一写库逻辑</text>
+  <text x="1418" y="945" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">map.values()</text>
+  <text x="1418" y="961" fill="#6b7280" font-size="11.5" font-weight="400" text-anchor="start">-&gt; handleEvent()</text>
+  <path d="M 700,934 L 755,934" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-gray)" stroke-dasharray="5 4"/>
+  <rect x="695.0" y="907.0" width="66" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="728" y="924" fill="#6b7280" font-size="12" font-weight="600" text-anchor="middle">分页请求</text>
+  <path d="M 1000,934 L 1055,934" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-gray)" stroke-dasharray="5 4"/>
+  <rect x="979.5" y="907.0" width="97" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="1028" y="924" fill="#6b7280" font-size="12" font-weight="600" text-anchor="middle">CanalEventVO</text>
+  <path d="M 1300,934 L 1360,934" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-gray)" stroke-dasharray="5 4"/>
+  <rect x="1297.0" y="907.0" width="66" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="1330" y="924" fill="#6b7280" font-size="12" font-weight="600" text-anchor="middle">压缩事件</text>
+  <path d="M 1478,895 L 1478,765" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-green)" stroke-dasharray="5 4"/>
+  <rect x="1505.0" y="813.0" width="66" height="22" rx="5" fill="#ffffff" opacity="0.96" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="1538" y="830" fill="#16a34a" font-size="12" font-weight="600" text-anchor="middle">补偿写入</text>
+  <g transform="translate(60, 1060)">
+    <line x1="0" y1="10" x2="36" y2="10" stroke="#2563eb" stroke-width="2.2" marker-end="url(#arrow-blue)"/>
+    <text x="46" y="14" fill="#6b7280" font-size="12">实时数据事件流</text>
+    <line x1="178" y1="10" x2="214" y2="10" stroke="#16a34a" stroke-width="2.2" marker-end="url(#arrow-green)"/>
+    <text x="224" y="14" fill="#6b7280" font-size="12">本地建表/写库</text>
+    <line x1="340" y1="10" x2="376" y2="10" stroke="#9333ea" stroke-width="2.2" marker-end="url(#arrow-purple)"/>
+    <text x="386" y="14" fill="#6b7280" font-size="12">本地队列解耦</text>
+    <line x1="525" y1="10" x2="561" y2="10" stroke="#6b7280" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrow-gray)"/>
+    <text x="571" y="14" fill="#6b7280" font-size="12">补偿/全量增量拉取</text>
+  </g>
+  <text x="1635" y="1082" fill="#9ca3af" font-size="11" font-weight="400" text-anchor="end">依据源码：VerMgrServer / CanalEventService / KafkaListenerForSync / SyncDataController / SyncByCanalEventConsumer / IncrementalSyncDataService</text>
+</svg>

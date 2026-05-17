@@ -4,6 +4,14 @@
 >
 > 依据：当前 `nms4cloud-crm`、`nms4cloud-pos2plugin`、`nms4cloud-pos3boot` 代码现状
 
+> ⚠️ **勘误（2026-05-04）**：本文档第 4 节的部分设计与实际实现不符，请以 `CrmPointsRule同步链路改造复盘.md` 为权威版本。主要差异点：
+>
+> - **Section 4.1 CRM 接口**：本文档计划在 `CrmCardOpController` 下新增 `/crm_card_op/listPointsRule`，实际实现在 `CrmPointsRuleController` 中新增了 `/crm_points_rule/listSync`（`@Inner` 注解），详见复盘文档 Section 2.1。
+> - **Section 4.2 POS 侧调用方式**：本文档计划扩展 `Nms4CloudCrmService`（Forest 接口），实际实现采用了 `CrmPointsRuleSyncRemoteService` 抽象接口 + `@Primary` 策略模式，pos4cloud 走 ReactiveFeign + Nacos 服务发现，详见复盘文档 Section 3。
+> - **Section 4.3 / 4.4 / 同步链路**：其余设计（如本地表结构、classMapper 注册、全量同步流程）与实际实现一致。
+>
+> 本文档保留作为「历史设计上下文」，复盘文档为当前事实。
+
 ## 1. 背景与目标
 
 当前门店 POS 已经具备部分“会员相关配置”的本地下发能力，例如会员价、折扣规则、积分支付规则、菜品积分参与规则等，但仍然缺少 CRM 积分权益主表的本地落地能力。

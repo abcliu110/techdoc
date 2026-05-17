@@ -1,0 +1,29 @@
+1、nacos导出的配置文件所在的目录C:\Users\16555\Desktop\nacos_config_export_20260402162831\DEFAULT_GROUP1， 可以分析查询的逻辑表和物理表的对应关系。
+2、数据库连接信息
+
+  --测试服务器ip
+  url: jdbc:mysql://192.168.1.119:3306/gylregdb?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+  username: root
+  password: st11338
+
+
+
+
+  --柠檬树服务器ip
+    url: jdbc:mysql://192.168.1.119:3306/a_crm?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+    username: root
+    password: st11338
+
+---本地pos门店数据库
+    url: jdbc:mysql://127.0.0.1:8066/nms?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: LemontreeSaas
+    type: com.zaxxer.hikari.HikariDataSource   
+
+
+源码路径:
+门店pos前端:D:\mywork\nms4pos-ui
+门店pos后端:D:\mywork\nms4pos
+
+商户端前端代码:D:\mywork\nms4cloud-biz-ui
+商户端后端代码:D:\mywork\nms4cloud

@@ -11,6 +11,13 @@
 
 当前系统具备完整的积分账务落账能力（`CardBalanceService` 已可处理 `givePoint`），CRM 已配置 `crm_points_rule` 规则并下发至 POS 本地，但消费结账主链路中**从未读取规则、从未计算积分、从未透传 givePoint**。
 
+> 2026-05-06 更新：
+>
+> - 线下 POS 已补上本地消费赠分计算与 CRM 补记链路。
+> - 当前 POS 本地消费赠分不再按 `orderChannelLimit` 做拦截判断。
+> - 当前 POS 本地消费赠分不再按 `earningMode` 分支拒绝计算，按现行页面口径统一按“按支付方式实收积分”计算。
+> - 本文其余涉及“待接入/待实现”的内容保留为历史方案记录，仅供追溯。
+
 ### 两端缺口一致
 
 | 缺口项 | 小程序线上（PayOrderServiceImpl） | 线下 POS（DwdBillOpsServiceImpl） |
@@ -113,6 +120,12 @@ earnedPoints = floor(basePoints)
 | 订单渠道 `orderChannel` | CRM 消费接口中传入 |
 
 > **⚠️ 注意**：`CrmCardType` 有两个标识字段：`id`（String）和 `lmnid`（Long）。`integralPlanCode` 是 String 类型，不参与规则匹配。匹配统一走 `CrmCard.cardTypeCode(Long) → CrmCardType.lmnid(Long) → crm_points_rule.planLid`。
+
+### 待处理约束（2026-05-05）
+
+- 当前 `PointsEarnService` 的生日、会员日、可用时段判断仍基于服务端 `now()`，尚未切换为“交易完成时间/业务交易时间”口径。
+- 这会影响跨午夜重试、异步补偿、延迟回放等场景下的积分命中结果。
+- 在未完成修复前，应把该问题视为已知限制，避免误认为积分命中完全按交易发生时刻计算。
 
 ### 复用已有能力（不重复造轮子）
 

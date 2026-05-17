@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="880" viewBox="0 0 1500 880">
+  <style>
+    text { font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', 'Microsoft JhengHei', 'SimHei', sans-serif; }
+    .title { font-size: 28px; font-weight: 700; fill: #111827; }
+    .sub { font-size: 14px; fill: #6b7280; }
+    .box { rx: 14; ry: 14; fill: #ffffff; stroke-width: 2; }
+    .client { stroke: #93c5fd; fill: #eff6ff; }
+    .order { stroke: #c084fc; fill: #faf5ff; }
+    .crm { stroke: #86efac; fill: #f0fdf4; }
+    .pay { stroke: #c4b5fd; fill: #f5f3ff; }
+    .pos { stroke: #fdba74; fill: #fff7ed; }
+    .backend { stroke: #cbd5e1; fill: #f8fafc; }
+    .label { font-size: 18px; font-weight: 700; fill: #111827; }
+    .desc { font-size: 14px; fill: #374151; }
+    .small { font-size: 12px; fill: #6b7280; }
+    .arrowMain { stroke: #2563eb; stroke-width: 3; fill: none; marker-end: url(#arrowBlue); }
+    .arrowGreen { stroke: #16a34a; stroke-width: 3; fill: none; marker-end: url(#arrowGreen); }
+    .arrowPurple { stroke: #9333ea; stroke-width: 3; fill: none; marker-end: url(#arrowPurple); }
+    .arrowRed { stroke: #dc2626; stroke-width: 3; fill: none; marker-end: url(#arrowRed); }
+    .arrowDash { stroke: #9333ea; stroke-width: 3; fill: none; stroke-dasharray: 8 6; marker-end: url(#arrowPurple); }
+    .legendText { font-size: 13px; fill: #6b7280; }
+  </style>
+  <defs>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/>
+    </marker>
+    <marker id="arrowPurple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#9333ea"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/>
+    </marker>
+  </defs>
+  <rect width="1500" height="880" fill="#ffffff"/>
+  <text x="60" y="52" class="title">线上订单链路</text>
+  <text x="60" y="80" class="sub">顾客先到 order；order 负责权益编排和支付收口，再把门店执行指令发给 POS</text>
+
+  <rect x="60" y="160" width="220" height="120" class="box client"/>
+  <text x="170" y="196" text-anchor="middle" class="label">顾客端</text>
+  <text x="170" y="224" text-anchor="middle" class="desc">taro-mall / H5 / 扫码点餐</text>
+  <text x="170" y="248" text-anchor="middle" class="small">crt_order / get_available_coupon / pay_order</text>
+
+  <rect x="340" y="145" width="310" height="150" class="box order"/>
+  <text x="495" y="182" text-anchor="middle" class="label">nms4cloud-order</text>
+  <text x="495" y="210" text-anchor="middle" class="desc">云端订单事实中心</text>
+  <text x="495" y="238" text-anchor="middle" class="small">订单号 / 菜品快照 / 支付状态 / 门店消息桥</text>
+  <text x="495" y="262" text-anchor="middle" class="small">paySuccess 后投 PT_ORDER_CLOSE_QUEUE</text>
+
+  <rect x="700" y="65" width="250" height="120" class="box crm"/>
+  <text x="825" y="102" text-anchor="middle" class="label">nms4cloud-crm</text>
+  <text x="825" y="130" text-anchor="middle" class="desc">会员权益账本</text>
+  <text x="825" y="154" text-anchor="middle" class="small">券核销 / 会员卡扣款 / 积分抵现</text>
+
+  <rect x="700" y="255" width="250" height="120" class="box pay"/>
+  <text x="825" y="292" text-anchor="middle" class="label">payment</text>
+  <text x="825" y="320" text-anchor="middle" class="desc">微信支付申请与回调</text>
+  <text x="825" y="344" text-anchor="middle" class="small">notifyUrl = PT_ORDER_CLOSE_QUEUE</text>
+
+  <rect x="1030" y="145" width="290" height="150" class="box pos"/>
+  <text x="1175" y="182" text-anchor="middle" class="label">nms4pos</text>
+  <text x="1175" y="210" text-anchor="middle" class="desc">门店本地执行端</text>
+  <text x="1175" y="238" text-anchor="middle" class="small">DO_ORDER / CASH_PAY / confirm_order</text>
+  <text x="1175" y="262" text-anchor="middle" class="small">本地落单、结账、打印、同步</text>
+
+  <rect x="1030" y="395" width="290" height="120" class="box backend"/>
+  <text x="1175" y="432" text-anchor="middle" class="label">商户后台</text>
+  <text x="1175" y="460" text-anchor="middle" class="desc">订单中心 / 详情 / 重推</text>
+  <text x="1175" y="484" text-anchor="middle" class="small">listForMerchant / orderDetailForMerchantSign</text>
+
+  <path d="M 280 220 C 300 220, 312 220, 340 220" class="arrowMain"/>
+  <text x="295" y="196" class="legendText">创建订单 / 提交支付</text>
+
+  <path d="M 650 190 C 675 185, 685 165, 700 150" class="arrowGreen"/>
+  <text x="640" y="150" class="legendText">券核销 / 会员卡扣款 / 积分抵现</text>
+
+  <path d="M 650 230 C 675 240, 685 270, 700 300" class="arrowPurple"/>
+  <text x="635" y="286" class="legendText">申请微信支付</text>
+
+  <path d="M 825 255 C 825 225, 820 205, 825 185" class="arrowDash"/>
+  <text x="850" y="230" class="legendText">支付结果回调</text>
+
+  <path d="M 650 220 C 720 220, 900 220, 1030 220" class="arrowMain"/>
+  <text x="845" y="206" class="legendText">DO_ORDER / CASH_PAY</text>
+
+  <path d="M 1175 295 C 1175 330, 760 330, 650 220" class="arrowDash"/>
+  <text x="900" y="336" class="legendText">confirm_order / cash_post_order 回写</text>
+
+  <path d="M 1030 445 C 900 445, 750 420, 650 260" class="arrowMain"/>
+  <text x="840" y="408" class="legendText">后台查单依赖 order</text>
+
+  <path d="M 1070 395 C 1020 360, 920 345, 825 345" class="arrowRed"/>
+  <text x="945" y="372" class="legendText">门店结账完成后的状态回传</text>
+
+  <g transform="translate(60, 760)">
+    <line x1="0" y1="8" x2="26" y2="8" class="arrowMain"/>
+    <text x="38" y="13" class="legendText">主链路</text>
+    <line x1="128" y1="8" x2="154" y2="8" class="arrowGreen"/>
+    <text x="166" y="13" class="legendText">CRM 权益执行</text>
+    <line x1="292" y1="8" x2="318" y2="8" class="arrowPurple"/>
+    <text x="330" y="13" class="legendText">支付申请</text>
+    <line x1="420" y1="8" x2="446" y2="8" class="arrowDash"/>
+    <text x="458" y="13" class="legendText">异步回调 / 回写</text>
+  </g>
+</svg>

@@ -1,0 +1,127 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="1900" height="1480" viewBox="0 0 1900 1480">
+<style>text{font-family:'Helvetica Neue',Helvetica,Arial,'PingFang SC','Microsoft YaHei','Microsoft JhengHei','SimHei',sans-serif;}</style>
+<defs>
+<marker id="arrow-blue" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#2563eb"/></marker>
+<marker id="arrow-green" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#16a34a"/></marker>
+<marker id="arrow-purple" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#7c3aed"/></marker>
+<marker id="arrow-orange" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#ea580c"/></marker>
+<marker id="arrow-red" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#dc2626"/></marker>
+</defs>
+<rect width="1900" height="1480" fill="#ffffff"/>
+<text x="70" y="60" text-anchor="start" font-size="34" font-weight="900" fill="#111827" opacity="1">储值方案配置图</text>
+<text x="72" y="96" text-anchor="start" font-size="17" font-weight="400" fill="#6b7280" opacity="1">只展示储值方案配置内容：主表字段、JSON规则、外部对象引用。不包含支付入账、实际发券、撤销补偿流程。</text>
+<rect x="75" y="157" width="520" height="250" rx="14" fill="#0f172a" opacity="0.07"/>
+<rect x="70" y="150" width="520" height="250" rx="14" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+<text x="94" y="186" text-anchor="start" font-size="23" font-weight="800" fill="#111827" opacity="1">1. 基础信息与状态</text>
+<text x="94" y="213" text-anchor="start" font-size="14" font-weight="600" fill="#6b7280" opacity="1">CrmDepositPlanAddDTO / UpdateDTO</text>
+<text x="98" y="246" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">plan_type: 1分期送礼 / 2智能储值 / 3储值套餐</text>
+<text x="98" y="272" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">name: 活动名称；category_lid: 活动分类</text>
+<text x="98" y="298" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">status: 0禁用 / 1启用；save_type: 固定/区间档位</text>
+<text x="98" y="324" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">sort_no: 排序；description: 活动说明</text>
+<text x="98" y="350" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">is_mini_program_recommend: 小程序下单页推荐</text>
+<rect x="75" y="452" width="520" height="330" rx="14" fill="#0f172a" opacity="0.07"/>
+<rect x="70" y="445" width="520" height="330" rx="14" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+<text x="94" y="481" text-anchor="start" font-size="23" font-weight="800" fill="#111827" opacity="1">2. 时间可用性</text>
+<text x="94" y="508" text-anchor="start" font-size="14" font-weight="600" fill="#6b7280" opacity="1">date + cycle + time window</text>
+<text x="98" y="541" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">date_type: 指定日期 / 永久有效</text>
+<text x="98" y="567" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">begin_time / end_time: 指定日期时生效</text>
+<text x="98" y="593" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">cycle_rule.type: DAILY / WEEKLY / MONTHLY</text>
+<text x="98" y="619" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">cycle_rule.values: 周几或每月几号</text>
+<text x="98" y="645" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">time_periods.type: ALL_DAY / SPECIFIED</text>
+<text x="98" y="671" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">time_periods.periods: startMin / endMin</text>
+<text x="98" y="697" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">exclude_dates: 排除不可用日期</text>
+<rect x="1315" y="157" width="520" height="310" rx="14" fill="#0f172a" opacity="0.07"/>
+<rect x="1310" y="150" width="520" height="310" rx="14" fill="#f0fdfa" stroke="#16a34a" stroke-width="2"/>
+<text x="1334" y="186" text-anchor="start" font-size="23" font-weight="800" fill="#111827" opacity="1">3. 适用范围</text>
+<text x="1334" y="213" text-anchor="start" font-size="14" font-weight="600" fill="#6b7280" opacity="1">brand / store / channel / member</text>
+<text x="1338" y="246" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">brand_rule: 全部品牌或指定品牌</text>
+<text x="1338" y="272" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">applicable_orgs: 指定门店 / 指定区域</text>
+<text x="1338" y="298" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">channels: POS、小程序、商户中心、自助屏等</text>
+<text x="1338" y="324" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">member_level_rule: 不限 / 会员方案 / 会员等级</text>
+<text x="1338" y="350" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">该块决定哪些入口、门店、会员能看到或购买方案</text>
+<rect x="1315" y="517" width="520" height="290" rx="14" fill="#0f172a" opacity="0.07"/>
+<rect x="1310" y="510" width="520" height="290" rx="14" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+<text x="1334" y="546" text-anchor="start" font-size="23" font-weight="800" fill="#111827" opacity="1">4. 购买与可用金额限制</text>
+<text x="1334" y="573" text-anchor="start" font-size="14" font-weight="600" fill="#6b7280" opacity="1">PurchaseLimitRule + AmountLimitTypeEnum</text>
+<text x="1338" y="606" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">perUserTotalLimit: 单人总次数限制</text>
+<text x="1338" y="632" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">perUserPeriodLimit: 单人每日/每周/每月限制</text>
+<text x="1338" y="658" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">totalSaleLimit: 方案总售卖数量限制</text>
+<text x="1338" y="684" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">totalSalePeriodLimit: 周期售卖数量限制</text>
+<text x="1338" y="710" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">amount_limit_type: 不限 / 当日 / 当餐</text>
+<text x="1338" y="736" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">max_amount_value: 可用储值金额比例</text>
+<rect x="125" y="867" width="760" height="380" rx="14" fill="#0f172a" opacity="0.07"/>
+<rect x="120" y="860" width="760" height="380" rx="14" fill="#faf5ff" stroke="#7c3aed" stroke-width="2"/>
+<text x="144" y="896" text-anchor="start" font-size="23" font-weight="800" fill="#111827" opacity="1">5. 储值档位与权益规则</text>
+<text x="144" y="923" text-anchor="start" font-size="14" font-weight="600" fill="#6b7280" opacity="1">tier_rule.tiers[] / DepositTierRule</text>
+<text x="148" y="956" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">save_amount: 储值金额；gift_amount: 赠送金额</text>
+<text x="148" y="982" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">gift_points: 赠送积分；isFirstChargeOnly: 仅限首充</text>
+<text x="148" y="1008" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">isUpgradeMemberLevel + upgradeMemberLevels: 升级会员等级</text>
+<text x="148" y="1034" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">isLevelDelay + levelDelayDays: 等级延期</text>
+<text x="148" y="1060" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">isGiftEnabled: 是否赠送礼品</text>
+<text x="148" y="1086" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">coupons / couponPackages: 优惠券或券包配置</text>
+<text x="148" y="1112" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">issueRuleType: ONE_TIME一次性 / PERIODIC周期性</text>
+<text x="148" y="1138" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">issueCycleType / values / issueTime / issueTimes</text>
+<rect x="1025" y="867" width="760" height="450" rx="14" fill="#0f172a" opacity="0.07"/>
+<rect x="1020" y="860" width="760" height="450" rx="14" fill="#f9fafb" stroke="#9ca3af" stroke-width="2"/>
+<text x="1044" y="896" text-anchor="start" font-size="23" font-weight="800" fill="#111827" opacity="1">6. 协议与外部对象引用</text>
+<text x="1044" y="923" text-anchor="start" font-size="14" font-weight="600" fill="#6b7280" opacity="1">reference only, not execution records</text>
+<text x="1048" y="956" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">agreement_enabled + agreement_lids: 是否要求储值协议</text>
+<text x="1048" y="982" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">category_lid: 关联活动分类</text>
+<text x="1048" y="1008" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">member_level_rule / upgradeMemberLevels: 关联会员方案和等级</text>
+<text x="1048" y="1034" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">coupons / couponPackages: 关联优惠券和券包</text>
+<text x="1048" y="1060" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">brand_rule / applicable_orgs: 关联品牌、门店、区域</text>
+<text x="1048" y="1086" text-anchor="start" font-size="15" font-weight="400" fill="#111827" opacity="1">这些关系用于配置校验和展示，不代表发券或入账已发生</text>
+<rect x="707" y="479" width="500" height="300" rx="18" fill="#0f172a" opacity="0.18"/>
+<rect x="700" y="470" width="500" height="300" rx="18" fill="#143b73" stroke="#2563eb" stroke-width="3"/>
+<text x="950.0" y="514" text-anchor="middle" font-size="31" font-weight="900" fill="#ffffff" opacity="1">crm_deposit_plan</text>
+<text x="950.0" y="548" text-anchor="middle" font-size="20" font-weight="800" fill="#dbeafe" opacity="1">储值方案配置主表</text>
+<text x="734" y="590" text-anchor="start" font-size="14" font-weight="600" fill="#bfdbfe" opacity="1">pid / lid / mid / sid</text>
+<text x="734" y="613" text-anchor="start" font-size="14" font-weight="600" fill="#bfdbfe" opacity="1">plan_type / name / status / save_type</text>
+<text x="734" y="636" text-anchor="start" font-size="14" font-weight="600" fill="#bfdbfe" opacity="1">category_lid / agreement_enabled / agreement_lids</text>
+<text x="734" y="659" text-anchor="start" font-size="14" font-weight="600" fill="#bfdbfe" opacity="1">date_type / begin_time / end_time</text>
+<text x="734" y="682" text-anchor="start" font-size="14" font-weight="600" fill="#bfdbfe" opacity="1">cycle_rule / time_periods / exclude_dates</text>
+<text x="734" y="705" text-anchor="start" font-size="14" font-weight="600" fill="#bfdbfe" opacity="1">brand_rule / applicable_orgs / channels</text>
+<text x="734" y="728" text-anchor="start" font-size="14" font-weight="600" fill="#bfdbfe" opacity="1">member_level_rule / purchase_limit_rule / tier_rule</text>
+<text x="734" y="751" text-anchor="start" font-size="14" font-weight="600" fill="#bfdbfe" opacity="1">amount_limit_type / max_amount_value</text>
+<rect x="726" y="727" width="448" height="28" rx="8" fill="#0f2e5c" stroke="#60a5fa" stroke-width="1"/>
+<text x="950.0" y="746" text-anchor="middle" font-size="13" font-weight="700" fill="#dbeafe" opacity="1">total_sold_count / total_sold_amount 是运行统计，不是配置输入</text>
+<path d="M700,540 C 645.0,540 645.0,270 590,270" fill="none" stroke="#2563eb" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<rect x="591.0" y="367" width="78" height="28" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="1.2" opacity="0.96"/>
+<text x="630" y="386" text-anchor="middle" font-size="13" font-weight="800" fill="#2563eb" opacity="1">基础字段</text>
+<path d="M700,640 C 645.0,640 645.0,610 590,610" fill="none" stroke="#16a34a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-green)"/>
+<rect x="601.0" y="632" width="78" height="28" rx="8" fill="#ffffff" stroke="#16a34a" stroke-width="1.2" opacity="0.96"/>
+<text x="640" y="651" text-anchor="middle" font-size="13" font-weight="800" fill="#16a34a" opacity="1">时间规则</text>
+<path d="M1200,540 C 1255.0,540 1255.0,310 1310,310" fill="none" stroke="#16a34a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-green)"/>
+<rect x="1223.0" y="372" width="78" height="28" rx="8" fill="#ffffff" stroke="#16a34a" stroke-width="1.2" opacity="0.96"/>
+<text x="1262" y="391" text-anchor="middle" font-size="13" font-weight="800" fill="#16a34a" opacity="1">适用条件</text>
+<path d="M1200,650 C 1255.0,650 1255.0,650 1310,650" fill="none" stroke="#ea580c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-orange)"/>
+<rect x="1221.0" y="602" width="78" height="28" rx="8" fill="#ffffff" stroke="#ea580c" stroke-width="1.2" opacity="0.96"/>
+<text x="1260" y="621" text-anchor="middle" font-size="13" font-weight="800" fill="#ea580c" opacity="1">限制规则</text>
+<path d="M850,770 C 675.0,770 675.0,860 500,860" fill="none" stroke="#7c3aed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-purple)"/>
+<rect x="611.0" y="812" width="78" height="28" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="1.2" opacity="0.96"/>
+<text x="650" y="831" text-anchor="middle" font-size="13" font-weight="800" fill="#7c3aed" opacity="1">档位权益</text>
+<path d="M1070,770 C 1230.0,770 1230.0,860 1390,860" fill="none" stroke="#9ca3af" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-green)" stroke-dasharray="8 7"/>
+<rect x="1196.0" y="812" width="78" height="28" rx="8" fill="#ffffff" stroke="#9ca3af" stroke-width="1.2" opacity="0.96"/>
+<text x="1235" y="831" text-anchor="middle" font-size="13" font-weight="800" fill="#9ca3af" opacity="1">配置引用</text>
+<rect x="1060" y="1120" width="210" height="72" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
+<text x="1165.0" y="1148" text-anchor="middle" font-size="16" font-weight="800" fill="#111827" opacity="1">crm_deposit_category</text>
+<text x="1165.0" y="1172" text-anchor="middle" font-size="13" font-weight="600" fill="#6b7280" opacity="1">方案分类</text>
+<rect x="1295" y="1120" width="220" height="72" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
+<text x="1405.0" y="1148" text-anchor="middle" font-size="16" font-weight="800" fill="#111827" opacity="1">crm_deposit_agreement</text>
+<text x="1405.0" y="1172" text-anchor="middle" font-size="13" font-weight="600" fill="#6b7280" opacity="1">储值协议</text>
+<rect x="1540" y="1120" width="200" height="72" rx="12" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.8"/>
+<text x="1640.0" y="1148" text-anchor="middle" font-size="16" font-weight="800" fill="#111827" opacity="1">crm_coupon / map</text>
+<text x="1640.0" y="1172" text-anchor="middle" font-size="13" font-weight="600" fill="#6b7280" opacity="1">券 / 券包</text>
+<rect x="1060" y="1210" width="210" height="72" rx="12" fill="#f0fdfa" stroke="#16a34a" stroke-width="1.8"/>
+<text x="1165.0" y="1238" text-anchor="middle" font-size="16" font-weight="800" fill="#111827" opacity="1">crm_card_type</text>
+<text x="1165.0" y="1262" text-anchor="middle" font-size="13" font-weight="600" fill="#6b7280" opacity="1">会员方案</text>
+<rect x="1295" y="1210" width="220" height="72" rx="12" fill="#f0fdfa" stroke="#16a34a" stroke-width="1.8"/>
+<text x="1405.0" y="1238" text-anchor="middle" font-size="16" font-weight="800" fill="#111827" opacity="1">crm_card_level</text>
+<text x="1405.0" y="1262" text-anchor="middle" font-size="13" font-weight="600" fill="#6b7280" opacity="1">适用/升级等级</text>
+<rect x="1540" y="1210" width="200" height="72" rx="12" fill="#f0fdfa" stroke="#16a34a" stroke-width="1.8"/>
+<text x="1640.0" y="1238" text-anchor="middle" font-size="16" font-weight="800" fill="#111827" opacity="1">brand/store/region</text>
+<text x="1640.0" y="1262" text-anchor="middle" font-size="13" font-weight="600" fill="#6b7280" opacity="1">品牌/门店/区域</text>
+<rect x="70" y="1350" width="1760" height="78" rx="14" fill="#f8fafc" stroke="#e5e7eb" stroke-width="1.5"/>
+<text x="95" y="1382" text-anchor="start" font-size="16" font-weight="700" fill="#111827" opacity="1">边界：本图是“配置视图”。crm_deposit_charge_record、crm_deal_task、crm_card_record、crm_coupon_order等属于交易/入账/发放结果，不放在这张配置图里。</text>
+<text x="95" y="1412" text-anchor="start" font-size="15" font-weight="600" fill="#6b7280" opacity="1">箭头含义：蓝色=主表基础字段，绿色=可用性/适用范围，橙色=限制规则，紫色=档位权益，灰色虚线=外部配置引用。</text>
+</svg>

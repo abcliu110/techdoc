@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1080" viewBox="0 0 1600 1080">
+  <style>
+    text { font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', 'Microsoft JhengHei', 'SimHei', sans-serif; }
+    .title { font-size: 28px; font-weight: 700; fill: #111827; }
+    .sub { font-size: 14px; fill: #6b7280; }
+    .box { rx: 14; ry: 14; fill: #ffffff; stroke-width: 2; }
+    .client { stroke: #93c5fd; fill: #eff6ff; }
+    .order { stroke: #c084fc; fill: #faf5ff; }
+    .pos { stroke: #fdba74; fill: #fff7ed; }
+    .crm { stroke: #86efac; fill: #f0fdf4; }
+    .backend { stroke: #cbd5e1; fill: #f8fafc; }
+    .label { font-size: 18px; font-weight: 700; fill: #111827; }
+    .desc { font-size: 14px; fill: #374151; }
+    .arrowMain { stroke: #2563eb; stroke-width: 3; fill: none; marker-end: url(#arrowBlue); }
+    .arrowAlt { stroke: #16a34a; stroke-width: 3; fill: none; marker-end: url(#arrowGreen); }
+    .arrowAsync { stroke: #9333ea; stroke-width: 3; fill: none; stroke-dasharray: 8 6; marker-end: url(#arrowPurple); }
+    .arrowCancel { stroke: #dc2626; stroke-width: 3; fill: none; marker-end: url(#arrowRed); }
+    .legendText { font-size: 13px; fill: #6b7280; }
+    .small { font-size: 12px; fill: #6b7280; }
+  </style>
+  <defs>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/>
+    </marker>
+    <marker id="arrowPurple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#9333ea"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/>
+    </marker>
+  </defs>
+  <rect width="1600" height="1080" fill="#ffffff"/>
+  <text x="60" y="52" class="title">order、POS、CRM 线上线下订单关系总览</text>
+  <text x="60" y="80" class="sub">顾客线与门店线并存；线上先到 order，门店本地单可先走 POS，但最终都会与 order / CRM 发生同步</text>
+
+  <rect x="60" y="130" width="240" height="120" class="box client"/>
+  <text x="180" y="168" text-anchor="middle" class="label">顾客端</text>
+  <text x="180" y="196" text-anchor="middle" class="desc">taro-mall / H5 / 扫码点餐</text>
+  <text x="180" y="220" text-anchor="middle" class="small">创建订单、支付、领券、充值</text>
+
+  <rect x="340" y="120" width="330" height="140" class="box order"/>
+  <text x="505" y="160" text-anchor="middle" class="label">nms4cloud-order</text>
+  <text x="505" y="188" text-anchor="middle" class="desc">云端订单事实中心</text>
+  <text x="505" y="214" text-anchor="middle" class="small">支付编排 / 状态流转 / 消息桥 / 后台查单</text>
+
+  <rect x="730" y="120" width="280" height="140" class="box crm"/>
+  <text x="870" y="160" text-anchor="middle" class="label">nms4cloud-crm</text>
+  <text x="870" y="188" text-anchor="middle" class="desc">会员权益账本</text>
+  <text x="870" y="214" text-anchor="middle" class="small">扣款 / 积分 / 券 / 充值 / 撤销</text>
+
+  <rect x="1080" y="120" width="240" height="140" class="box pos"/>
+  <text x="1200" y="160" text-anchor="middle" class="label">nms4pos</text>
+  <text x="1200" y="188" text-anchor="middle" class="desc">门店本地执行端</text>
+  <text x="1200" y="214" text-anchor="middle" class="small">本地单 / 结账 / 反结账 / 打印 / 同步</text>
+
+  <rect x="60" y="360" width="220" height="120" class="box backend"/>
+  <text x="170" y="398" text-anchor="middle" class="label">商户后台</text>
+  <text x="170" y="426" text-anchor="middle" class="desc">nms4cloud-biz-ui</text>
+  <text x="170" y="450" text-anchor="middle" class="small">订单中心 / 详情 / 重推</text>
+
+  <rect x="1080" y="360" width="240" height="120" class="box backend"/>
+  <text x="1200" y="398" text-anchor="middle" class="label">POS 前端</text>
+  <text x="1200" y="426" text-anchor="middle" class="desc">nms4pos-ui / uni4merchant</text>
+  <text x="1200" y="450" text-anchor="middle" class="small">开单 / 结账 / 反结账</text>
+
+  <path d="M 300 190 C 320 190, 320 180, 340 180" class="arrowMain"/>
+  <text x="320" y="168" class="legendText">crt_order / pay_order / pay_success</text>
+
+  <path d="M 670 180 C 700 180, 710 180, 730 180" class="arrowAlt"/>
+  <text x="690" y="166" class="legendText">cardConsumeInner / adjustPointsInner / writeOffCouponInner</text>
+
+  <path d="M 1010 180 C 1040 180, 1050 180, 1080 180" class="arrowMain"/>
+  <text x="1030" y="165" class="legendText">DO_ORDER / CASH_PAY / CASH_REQUEST</text>
+
+  <path d="M 1200 260 C 1200 300, 900 300, 900 260" class="arrowAsync"/>
+  <text x="965" y="292" class="legendText">CRM_PAY_ORDER_CLOSE_QUEUE / 回投 order</text>
+
+  <path d="M 1160 260 C 1160 310, 520 310, 520 260" class="arrowAsync"/>
+  <text x="700" y="334" class="legendText">POS confirm_order / cash_post_order 回写云端</text>
+
+  <path d="M 174 360 C 174 300, 505 300, 505 260" class="arrowMain"/>
+  <text x="230" y="316" class="legendText">后台查单 / 详情 / 重推依赖 order</text>
+
+  <path d="M 1200 480 C 1200 560, 1180 640, 1120 720" class="arrowCancel"/>
+  <text x="1220" y="560" class="legendText">门店本地结账 / 退款 / 反结账</text>
+
+  <rect x="60" y="560" width="1480" height="400" rx="18" ry="18" fill="#fafafa" stroke="#e5e7eb" stroke-width="1.5"/>
+  <text x="90" y="598" class="label">流程分支</text>
+
+  <rect x="90" y="640" width="300" height="220" class="box client"/>
+  <text x="240" y="676" text-anchor="middle" class="label">线上订单链</text>
+  <text x="240" y="712" text-anchor="middle" class="desc">顾客端先建云端订单</text>
+  <text x="240" y="742" text-anchor="middle" class="small">order 先做支付编排、券/积分/会员卡处理</text>
+  <text x="240" y="772" text-anchor="middle" class="small">支付成功后发门店消息</text>
+  <text x="240" y="802" text-anchor="middle" class="small">POS 落本地单并回写确认</text>
+
+  <rect x="440" y="640" width="300" height="220" class="box pos"/>
+  <text x="590" y="676" text-anchor="middle" class="label">门店本地单链</text>
+  <text x="590" y="712" text-anchor="middle" class="desc">POS 先本地结账</text>
+  <text x="590" y="742" text-anchor="middle" class="small">会员卡 / 积分 / 券可直接调 CRM</text>
+  <text x="590" y="772" text-anchor="middle" class="small">结账后补积分、反结账撤销权益</text>
+  <text x="590" y="802" text-anchor="middle" class="small">必要时再上云/查单/退款</text>
+
+  <rect x="790" y="640" width="300" height="220" class="box crm"/>
+  <text x="940" y="676" text-anchor="middle" class="label">CRM 充值分支</text>
+  <text x="940" y="712" text-anchor="middle" class="desc">charge/commit → charge/success</text>
+  <text x="940" y="742" text-anchor="middle" class="small">充值成功后回投 order</text>
+  <text x="940" y="772" text-anchor="middle" class="small">order 再继续推动门店收口</text>
+  <text x="940" y="802" text-anchor="middle" class="small">notCheckOut=true 时只处理充值任务</text>
+
+  <rect x="1140" y="640" width="300" height="220" class="box backend"/>
+  <text x="1290" y="676" text-anchor="middle" class="label">后台查单链</text>
+  <text x="1290" y="712" text-anchor="middle" class="desc">订单中心直接查 order</text>
+  <text x="1290" y="742" text-anchor="middle" class="small">listForMerchant / detail / 重推</text>
+  <text x="1290" y="772" text-anchor="middle" class="small">不直接依赖 POS 内存或 CRM 余额</text>
+  <text x="1290" y="802" text-anchor="middle" class="small">依赖云端订单事实</text>
+
+  <g transform="translate(90, 920)">
+    <line x1="0" y1="0" x2="28" y2="0" class="arrowMain"/>
+    <text x="40" y="5" class="legendText">主链路</text>
+    <line x1="130" y1="0" x2="158" y2="0" class="arrowAlt"/>
+    <text x="170" y="5" class="legendText">CRM 权益执行</text>
+    <line x1="300" y1="0" x2="328" y2="0" class="arrowAsync"/>
+    <text x="340" y="5" class="legendText">异步回写 / 消息</text>
+    <line x1="470" y1="0" x2="498" y2="0" class="arrowCancel"/>
+    <text x="510" y="5" class="legendText">撤销 / 退款 / 反结账</text>
+  </g>
+</svg>

@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <filter id="shadowSoft" x="-10%" y="-10%" width="130%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#94a3b8" flood-opacity="0.18"/>
+    </filter>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/>
+    </marker>
+    <marker id="arrow-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#9333ea"/>
+    </marker>
+    <style>
+      text { font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', 'Microsoft JhengHei', 'SimHei', sans-serif; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="760" fill="#ffffff"/>
+
+  <text x="60" y="42" fill="#111827" font-size="28" font-weight="700">会员券生命周期 - 财务流转图</text>
+  <text x="60" y="68" fill="#6b7280" font-size="14">发行明细看来源，核销明细看去向，余额表看结果，负债表看总账</text>
+
+  <rect x="260" y="88" width="680" height="64" rx="12" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5" filter="url(#shadowSoft)"/>
+  <text x="600" y="116" fill="#111827" font-size="18" font-weight="700" text-anchor="middle">业务事件</text>
+  <text x="600" y="138" fill="#6b7280" font-size="13" text-anchor="middle">发券 / 核销 / 过期 / 退款 / 积分兑换</text>
+
+  <rect x="70" y="200" width="320" height="130" rx="12" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5" filter="url(#shadowSoft)"/>
+  <rect x="70" y="200" width="320" height="8" rx="12" fill="#2563eb"/>
+  <text x="96" y="236" fill="#111827" font-size="24" font-weight="700">券发行明细表</text>
+  <text x="96" y="264" fill="#6b7280" font-size="14">记录发券原始事实</text>
+  <text x="96" y="286" fill="#6b7280" font-size="14">1张券 1条发放事件</text>
+  <text x="96" y="308" fill="#6b7280" font-size="14">对应负债新增的来源凭证</text>
+
+  <rect x="810" y="200" width="320" height="130" rx="12" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5" filter="url(#shadowSoft)"/>
+  <rect x="810" y="200" width="320" height="8" rx="12" fill="#2563eb"/>
+  <text x="836" y="236" fill="#111827" font-size="24" font-weight="700">券核销明细表</text>
+  <text x="836" y="264" fill="#6b7280" font-size="14">记录用券分摊结果</text>
+  <text x="836" y="286" fill="#6b7280" font-size="14">1张券 × 1订单行 × 1次分摊</text>
+  <text x="836" y="308" fill="#6b7280" font-size="14">对应负债释放和收入确认</text>
+
+  <rect x="440" y="380" width="320" height="130" rx="12" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5" filter="url(#shadowSoft)"/>
+  <rect x="440" y="380" width="320" height="8" rx="12" fill="#16a34a"/>
+  <text x="466" y="416" fill="#111827" font-size="24" font-weight="700">券余额表</text>
+  <text x="466" y="444" fill="#6b7280" font-size="14">某日剩余可用券</text>
+  <text x="466" y="466" fill="#6b7280" font-size="14">业务快照，不是流水</text>
+  <text x="466" y="488" fill="#6b7280" font-size="14">用于客服、运营、日终对账</text>
+
+  <rect x="70" y="560" width="320" height="130" rx="12" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5" filter="url(#shadowSoft)"/>
+  <rect x="70" y="560" width="320" height="8" rx="12" fill="#9333ea"/>
+  <text x="96" y="596" fill="#111827" font-size="24" font-weight="700">券负债余额表</text>
+  <text x="96" y="624" fill="#6b7280" font-size="14">合同负债 / 待转税额</text>
+  <text x="96" y="646" fill="#6b7280" font-size="14">财务余额，直接对总账</text>
+  <text x="96" y="668" fill="#6b7280" font-size="14">用于月结和资产负债表</text>
+
+  <rect x="440" y="560" width="320" height="130" rx="12" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5" filter="url(#shadowSoft)"/>
+  <rect x="440" y="560" width="320" height="8" rx="12" fill="#f59e0b"/>
+  <text x="466" y="596" fill="#111827" font-size="24" font-weight="700">月结对账</text>
+  <text x="466" y="624" fill="#6b7280" font-size="14">期初 + 新增 - 核销 - 过期 - 冲销</text>
+  <text x="466" y="646" fill="#6b7280" font-size="14">把业务余额勾成财务余额</text>
+  <text x="466" y="668" fill="#6b7280" font-size="14">生成冻结批次和过账依据</text>
+
+  <rect x="810" y="560" width="320" height="130" rx="12" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5" filter="url(#shadowSoft)"/>
+  <rect x="810" y="560" width="320" height="8" rx="12" fill="#111827"/>
+  <text x="836" y="596" fill="#111827" font-size="24" font-weight="700">总账凭证 / 财务报表</text>
+  <text x="836" y="624" fill="#6b7280" font-size="14">借贷分录、资产负债表、利润表</text>
+  <text x="836" y="646" fill="#6b7280" font-size="14">过账后锁定历史期间</text>
+  <text x="836" y="668" fill="#6b7280" font-size="14">成为正式财务结果</text>
+
+  <!-- arrows -->
+  <path d="M520 152 L230 184" fill="none" stroke="#2563eb" stroke-width="2.4" marker-end="url(#arrow-blue)"/>
+  <rect x="314" y="156" width="56" height="22" rx="6" fill="#ffffff" opacity="0.96"/>
+  <text x="342" y="172" fill="#6b7280" font-size="12" text-anchor="middle">发券</text>
+
+  <path d="M680 152 L970 184" fill="none" stroke="#2563eb" stroke-width="2.4" marker-end="url(#arrow-blue)"/>
+  <rect x="788" y="156" width="92" height="22" rx="6" fill="#ffffff" opacity="0.96"/>
+  <text x="834" y="172" fill="#6b7280" font-size="12" text-anchor="middle">核销 / 过期 / 退款</text>
+
+  <path d="M230 330 L230 352 L600 352 L600 380" fill="none" stroke="#16a34a" stroke-width="2.4" marker-end="url(#arrow-green)"/>
+  <rect x="330" y="338" width="96" height="22" rx="6" fill="#ffffff" opacity="0.96"/>
+  <text x="378" y="354" fill="#6b7280" font-size="12" text-anchor="middle">新增可用额度</text>
+
+  <path d="M970 330 L970 352 L600 352 L600 380" fill="none" stroke="#16a34a" stroke-width="2.4" marker-end="url(#arrow-green)"/>
+  <rect x="770" y="338" width="96" height="22" rx="6" fill="#ffffff" opacity="0.96"/>
+  <text x="818" y="354" fill="#6b7280" font-size="12" text-anchor="middle">减少可用额度</text>
+
+  <path d="M600 510 L600 560" fill="none" stroke="#16a34a" stroke-width="2.2" stroke-dasharray="7 6" marker-end="url(#arrow-green)"/>
+  <rect x="638" y="522" width="84" height="22" rx="6" fill="#ffffff" opacity="0.96"/>
+  <text x="680" y="538" fill="#6b7280" font-size="12" text-anchor="middle">日终快照</text>
+
+  <path d="M390 625 L440 625" fill="none" stroke="#9333ea" stroke-width="2.4" stroke-dasharray="7 6" marker-end="url(#arrow-purple)"/>
+  <rect x="398" y="602" width="84" height="22" rx="6" fill="#ffffff" opacity="0.96"/>
+  <text x="440" y="618" fill="#6b7280" font-size="12" text-anchor="middle">财务余额</text>
+
+  <path d="M760 625 L810 625" fill="none" stroke="#9333ea" stroke-width="2.4" marker-end="url(#arrow-purple)"/>
+  <rect x="772" y="602" width="84" height="22" rx="6" fill="#ffffff" opacity="0.96"/>
+  <text x="814" y="618" fill="#6b7280" font-size="12" text-anchor="middle">过账入账</text>
+
+  <!-- legend -->
+  <g transform="translate(60, 710)">
+    <rect x="0" y="0" width="210" height="92" rx="10" fill="#f9fafb" stroke="#e5e7eb" stroke-width="1"/>
+    <line x1="16" y1="22" x2="46" y2="22" stroke="#2563eb" stroke-width="2.4" marker-end="url(#arrow-blue)"/>
+    <text x="56" y="26" fill="#6b7280" font-size="12">业务事件流</text>
+    <line x1="16" y1="46" x2="46" y2="46" stroke="#16a34a" stroke-width="2.4" marker-end="url(#arrow-green)"/>
+    <text x="56" y="50" fill="#6b7280" font-size="12">余额快照流</text>
+    <line x1="16" y1="70" x2="46" y2="70" stroke="#9333ea" stroke-width="2.4" marker-end="url(#arrow-purple)"/>
+    <text x="56" y="74" fill="#6b7280" font-size="12">财务过账流</text>
+  </g>
+</svg>

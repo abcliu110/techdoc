@@ -13,3 +13,8 @@
 
           crm_deposit_coupon_schedule:
             actual-data-nodes: crm.crm_deposit_coupon_schedule
+
+          crm_consume_points_grant:
+            actual-data-nodes: crm.crm_consume_points_grant
+
+            

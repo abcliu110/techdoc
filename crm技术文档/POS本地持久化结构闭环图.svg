@@ -1,0 +1,131 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 920" width="1400" height="920">
+  <style>
+    text { font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', 'SimHei', sans-serif; }
+    .title { font-size: 30px; font-weight: 700; fill: #111827; }
+    .subtitle { font-size: 14px; fill: #6b7280; }
+    .group { fill: none; stroke: #dbe5f1; stroke-width: 2; stroke-dasharray: 8 6; }
+    .group-title { font-size: 18px; font-weight: 700; fill: #2563eb; }
+    .node-title { font-size: 16px; font-weight: 700; fill: #111827; }
+    .node-text { font-size: 13px; fill: #374151; }
+    .note { font-size: 12px; fill: #6b7280; }
+  </style>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#94a3b8" flood-opacity="0.18"/></filter>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/></marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/></marker>
+    <marker id="arrowOrange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#ea580c"/></marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/></marker>
+  </defs>
+  <rect width="1400" height="920" fill="#ffffff"/>
+  <text x="700" y="54" text-anchor="middle" class="title">nms4pos 本地持久化结构闭环与云端关系图</text>
+  <text x="700" y="82" text-anchor="middle" class="subtitle">以 dwd_bill.consume_give_points 和 crm_consume_points_grant 为例</text>
+  <rect x="40" y="120" width="360" height="690" rx="16" ry="16" class="group"/>
+  <text x="60" y="150" class="group-title">01 代码声明层</text>
+  <rect x="430" y="120" width="460" height="690" rx="16" ry="16" class="group"/>
+  <text x="450" y="150" class="group-title">02 本地数据库结构闭环</text>
+  <rect x="920" y="120" width="440" height="690" rx="16" ry="16" class="group"/>
+  <text x="940" y="150" class="group-title">03 运行链路与云端边界</text>
+  <rect x="70" y="180" width="300" height="138" rx="14" ry="14" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6" filter="url(#shadow)"/>
+  <rect x="84" y="194" width="56" height="56" rx="12" ry="12" fill="#dbeafe"/>
+  <text x="154" y="218" class="node-title">Java 实体字段</text>
+  <text x="96" y="246" class="node-text">DwdBill.consumeGivePoints</text>
+  <text x="96" y="268" class="node-text">数据库列：consume_give_points</text>
+  <text x="96" y="290" class="node-text">代码一旦映射，查询/更新会自动带上它</text>
+  <text x="96" y="312" class="note">注：实体字段 = Java 类里的 @Column 映射字段</text>
+  <rect x="70" y="348" width="300" height="154" rx="14" ry="14" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6" filter="url(#shadow)"/>
+  <rect x="84" y="362" width="56" height="56" rx="12" ry="12" fill="#dcfce7"/>
+  <text x="154" y="386" class="node-title">Java 本地持久化实体</text>
+  <text x="96" y="414" class="node-text">CrmConsumePointsGrant</text>
+  <text x="96" y="436" class="node-text">本地表：crm_consume_points_grant</text>
+  <text x="96" y="458" class="node-text">用于 POS 消费赠分补偿、幂等、撤销、重试</text>
+  <text x="96" y="480" class="node-text">代码已使用，就必须保证本地库能建出这张表</text>
+  <rect x="70" y="534" width="300" height="154" rx="14" ry="14" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6" filter="url(#shadow)"/>
+  <rect x="84" y="548" width="56" height="56" rx="12" ry="12" fill="#ffedd5"/>
+  <text x="154" y="572" class="node-title">业务代码读写</text>
+  <text x="96" y="600" class="node-text">DwdBillMapper / 通用 QueryChain</text>
+  <text x="96" y="622" class="node-text">CrmPointsEarnLocalService</text>
+  <text x="96" y="644" class="node-text">查 dwd_bill、写 dwd_bill</text>
+  <text x="96" y="666" class="node-text">查/写 crm_consume_points_grant</text>
+  <rect x="70" y="718" width="300" height="70" rx="14" ry="14" fill="#fff7ed" stroke="#fdba74" stroke-width="1.6" filter="url(#shadow)"/>
+  <rect x="84" y="732" width="56" height="40" rx="12" ry="12" fill="#fed7aa"/>
+  <text x="154" y="756" class="node-title">结论</text>
+  <text x="96" y="778" class="node-text">代码层声明了表/列，数据库结构就必须闭环</text>
+  <rect x="460" y="180" width="190" height="128" rx="14" ry="14" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6" filter="url(#shadow)"/>
+  <rect x="474" y="194" width="56" height="56" rx="12" ry="12" fill="#ede9fe"/>
+  <text x="544" y="218" class="node-title">ddl.sql</text>
+  <text x="486" y="246" class="node-text">新库初始化脚本</text>
+  <text x="486" y="268" class="node-text">负责“第一次建库就完整”</text>
+  <text x="486" y="290" class="node-text">缺表/缺列 =&gt; 新门店直接炸</text>
+  <rect x="680" y="180" width="180" height="128" rx="14" ry="14" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6" filter="url(#shadow)"/>
+  <rect x="694" y="194" width="56" height="56" rx="12" ry="12" fill="#dbeafe"/>
+  <text x="764" y="218" class="node-title">sql/update/*.sql</text>
+  <text x="706" y="246" class="node-text">老库增量升级脚本</text>
+  <text x="706" y="268" class="node-text">例如：2026-5-6-consume-give-points.sql</text>
+  <text x="706" y="290" class="node-text">负责已有门店补结构</text>
+  <rect x="460" y="350" width="400" height="144" rx="14" ry="14" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6" filter="url(#shadow)"/>
+  <rect x="474" y="364" width="56" height="56" rx="12" ry="12" fill="#dcfce7"/>
+  <text x="544" y="388" class="node-title">VerMgrServer 自动升级器</text>
+  <text x="486" y="416" class="node-text">启动时对比本地库结构与实体/版本差异</text>
+  <text x="486" y="438" class="node-text">收集 ALTER TABLE</text>
+  <text x="486" y="460" class="node-text">合并执行后更新本地 DB 版本号</text>
+  <text x="486" y="482" class="note">注：自动升级器能兜底，但不能替代 ddl.sql</text>
+  <rect x="460" y="530" width="400" height="176" rx="14" ry="14" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6" filter="url(#shadow)"/>
+  <rect x="474" y="544" width="56" height="56" rx="12" ry="12" fill="#fef3c7"/>
+  <text x="544" y="568" class="node-title">POS 本地 MySQL</text>
+  <text x="486" y="596" class="node-text">dwd_bill</text>
+  <text x="486" y="618" class="node-text">crm_consume_points_grant</text>
+  <text x="486" y="640" class="node-text">老门店：依赖升级脚本 / 自动升级器补齐</text>
+  <text x="486" y="662" class="node-text">新门店：依赖 ddl.sql 直接建全</text>
+  <text x="486" y="684" class="node-text">任一环节缺失 =&gt; Unknown column / Table not found</text>
+  <rect x="460" y="740" width="400" height="70" rx="14" ry="14" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.6" filter="url(#shadow)"/>
+  <rect x="474" y="754" width="56" height="40" rx="12" ry="12" fill="#fee2e2"/>
+  <text x="544" y="778" class="node-title">闭环要求</text>
+  <text x="486" y="800" class="node-text">新增表/新增列 = 实体 + 老库升级方案 + ddl.sql</text>
+  <rect x="950" y="180" width="380" height="146" rx="14" ry="14" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6" filter="url(#shadow)"/>
+  <rect x="964" y="194" width="56" height="56" rx="12" ry="12" fill="#dbeafe"/>
+  <text x="1034" y="218" class="node-title">POS 调云端是接口，不是表结构镜像</text>
+  <text x="976" y="246" class="node-text">Nms4cloudOrderService -&gt; /order_bill/*</text>
+  <text x="976" y="268" class="node-text">Nms4CloudCrmService -&gt; CRM 会员/积分接口</text>
+  <text x="976" y="290" class="node-text">本地 dwd_bill 加列，不会自动让云端表长同名列</text>
+  <rect x="950" y="366" width="380" height="128" rx="14" ry="14" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6" filter="url(#shadow)"/>
+  <rect x="964" y="380" width="56" height="56" rx="12" ry="12" fill="#dcfce7"/>
+  <text x="1034" y="404" class="node-title">云端业务落点</text>
+  <text x="976" y="432" class="node-text">订单侧：sorder.order_bill</text>
+  <text x="976" y="454" class="node-text">积分侧：crm_card_points_record 等流水表</text>
+  <text x="976" y="476" class="node-text">是“业务概念对应”，不是“同表镜像对应”</text>
+  <rect x="950" y="534" width="380" height="176" rx="14" ry="14" fill="#fff7ed" stroke="#fdba74" stroke-width="1.6" filter="url(#shadow)"/>
+  <rect x="964" y="548" width="56" height="56" rx="12" ry="12" fill="#fed7aa"/>
+  <text x="1034" y="572" class="node-title">同步边界</text>
+  <text x="976" y="600" class="node-text">如果想把本地新增字段同步到云端，需要继续补：</text>
+  <text x="976" y="622" class="node-text">1. POS 出参 DTO / 接口请求</text>
+  <text x="976" y="644" class="node-text">2. 云端接口入参</text>
+  <text x="976" y="666" class="node-text">3. 云端实体/表结构/展示链路</text>
+  <text x="976" y="688" class="node-text">否则它只是在 POS 本地生效</text>
+  <rect x="950" y="740" width="380" height="70" rx="14" ry="14" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.6" filter="url(#shadow)"/>
+  <rect x="964" y="754" width="56" height="40" rx="12" ry="12" fill="#bfdbfe"/>
+  <text x="1034" y="778" class="node-title">本次 consume_give_points 的定位</text>
+  <text x="976" y="800" class="node-text">当前首先是 POS 本地展示/打印/追踪字段，不是自动云端字段</text>
+  <path d="M370 250 L430 250" fill="none" stroke="#2563eb" stroke-width="2.4" marker-end="url(#arrowBlue)"/>
+  <rect x="378" y="232" width="44" height="20" rx="6" fill="#ffffff" opacity="0.95"/><text x="400" y="246" text-anchor="middle" class="note">需要</text>
+  <path d="M370 426 L430 426" fill="none" stroke="#16a34a" stroke-width="2.4" marker-end="url(#arrowGreen)"/>
+  <rect x="378" y="408" width="44" height="20" rx="6" fill="#ffffff" opacity="0.95"/><text x="400" y="422" text-anchor="middle" class="note">建表</text>
+  <path d="M370 608 L430 608" fill="none" stroke="#ea580c" stroke-width="2.4" marker-end="url(#arrowOrange)"/>
+  <rect x="374" y="590" width="52" height="20" rx="6" fill="#ffffff" opacity="0.95"/><text x="400" y="604" text-anchor="middle" class="note">依赖</text>
+  <path d="M555 308 L555 350" fill="none" stroke="#2563eb" stroke-width="2.2" marker-end="url(#arrowBlue)"/>
+  <path d="M770 308 L770 350" fill="none" stroke="#16a34a" stroke-width="2.2" marker-end="url(#arrowGreen)"/>
+  <path d="M660 494 L660 530" fill="none" stroke="#ea580c" stroke-width="2.2" marker-end="url(#arrowOrange)"/>
+  <path d="M660 706 L660 740" fill="none" stroke="#dc2626" stroke-width="2.2" marker-end="url(#arrowRed)"/>
+  <path d="M860 618 L920 618" fill="none" stroke="#2563eb" stroke-width="2.4" marker-end="url(#arrowBlue)"/>
+  <rect x="869" y="600" width="42" height="20" rx="6" fill="#ffffff" opacity="0.95"/><text x="890" y="614" text-anchor="middle" class="note">运行</text>
+  <path d="M1140 326 L1140 366" fill="none" stroke="#16a34a" stroke-width="2.2" marker-end="url(#arrowGreen)"/>
+  <path d="M1140 494 L1140 534" fill="none" stroke="#ea580c" stroke-width="2.2" marker-end="url(#arrowOrange)"/>
+  <path d="M1140 710 L1140 740" fill="none" stroke="#2563eb" stroke-width="2.2" marker-end="url(#arrowBlue)"/>
+  <path d="M860 566 C 950 520, 1030 500, 1130 500" fill="none" stroke="#dc2626" stroke-width="2.4" stroke-dasharray="7 5" marker-end="url(#arrowRed)"/>
+  <rect x="900" y="508" width="188" height="22" rx="8" fill="#ffffff" opacity="0.96"/><text x="994" y="523" text-anchor="middle" class="note">不会自动同步字段到云端表</text>
+  <g transform="translate(80, 850)">
+    <line x1="0" y1="8" x2="34" y2="8" stroke="#2563eb" stroke-width="2.2" marker-end="url(#arrowBlue)"/><text x="44" y="12" class="note">主流程 / 初始化</text>
+    <line x1="180" y1="8" x2="214" y2="8" stroke="#16a34a" stroke-width="2.2" marker-end="url(#arrowGreen)"/><text x="224" y="12" class="note">老库升级 / 建表</text>
+    <line x1="380" y1="8" x2="414" y2="8" stroke="#ea580c" stroke-width="2.2" marker-end="url(#arrowOrange)"/><text x="424" y="12" class="note">业务依赖 / 运行读写</text>
+    <line x1="620" y1="8" x2="654" y2="8" stroke="#dc2626" stroke-width="2.2" stroke-dasharray="7 5" marker-end="url(#arrowRed)"/><text x="664" y="12" class="note">边界 / 不自动同步</text>
+  </g>
+</svg>

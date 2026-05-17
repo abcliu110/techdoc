@@ -1,0 +1,385 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1370" width="1920" height="1370">
+<style>
+text { font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', 'Microsoft JhengHei', 'SimHei', sans-serif; }
+.caption { fill:#6b7280; font-size:12px; }
+</style>
+<defs>
+<marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/></marker>
+<marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/></marker>
+<marker id="arrow-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#9333ea"/></marker>
+<marker id="arrow-orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#ea580c"/></marker>
+<marker id="arrow-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/></marker>
+<marker id="arrow-gray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/></marker>
+<filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#94a3b8" flood-opacity="0.18"/></filter>
+</defs>
+<rect width="1920" height="1370" fill="#ffffff"/>
+<text x="60" y="58" text-anchor="start" font-size="26" font-weight="800" fill="#111827">按储值方案储值：发券延迟知识图谱</text>
+<text x="60" y="88" text-anchor="start" font-size="14" font-weight="400" fill="#6b7280">用节点表示服务/表/任务，用边表示事务、异步、定时、撤销匹配和失败补偿关系</text>
+<rect x="50" y="115" width="390" height="735" rx="18" ry="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.4" stroke-dasharray="8 6"/>
+<text x="74" y="149" font-size="18" font-weight="700" fill="#111827">配置与提交</text>
+<rect x="470" y="115" width="585" height="735" rx="18" ry="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.4" stroke-dasharray="8 6"/>
+<text x="494" y="149" font-size="18" font-weight="700" fill="#111827">主事务边界</text>
+<rect x="1085" y="115" width="785" height="820" rx="18" ry="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.4" stroke-dasharray="8 6"/>
+<text x="1109" y="149" font-size="18" font-weight="700" fill="#111827">发券延迟路径</text>
+<rect x="50" y="970" width="1820" height="310" rx="18" ry="18" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.4" stroke-dasharray="8 6"/>
+<text x="74" y="1004" font-size="18" font-weight="700" fill="#111827">撤销与失败补偿判断</text>
+<g class="node">
+<rect x="95" y="175" width="300" height="86" rx="10" ry="10" fill="#ffffff" stroke="#bfdbfe" stroke-width="1.5" filter="url(#shadow)"/>
+<circle cx="121" cy="202" r="16" fill="#dbeafe" stroke="#bfdbfe" stroke-width="1"/>
+<text x="121" y="207" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">入口</text>
+<text x="259.0" y="198" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">后台/小程序/POS</text>
+<text x="259.0" y="218" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">提交储值</text>
+<text x="245.0" y="239" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">commit / commitByPos</text>
+<text x="245.0" y="256" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">revokeChargeSign</text>
+</g>
+<g class="db-node">
+<path d="M 95,333 C 95,321 395,321 395,333 L 395,423 C 395,435 95,435 95,423 Z" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.6" filter="url(#shadow)"/>
+<ellipse cx="245.0" cy="333" rx="150.0" ry="18" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.6"/>
+<path d="M 95,423 C 95,435 395,435 395,423" fill="none" stroke="#93c5fd" stroke-width="1.3"/>
+<text x="245.0" y="349" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">crm_deposit_plan</text>
+<text x="245.0" y="369" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">储值方案</text>
+<text x="245.0" y="395" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">方案、档位、赠金</text>
+<text x="245.0" y="411" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">赠积分、赠券规则</text>
+</g>
+<g class="node">
+<rect x="95" y="535" width="300" height="112" rx="10" ry="10" fill="#ffffff" stroke="#bfdbfe" stroke-width="1.5" filter="url(#shadow)"/>
+<circle cx="121" cy="562" r="16" fill="#dbeafe" stroke="#bfdbfe" stroke-width="1"/>
+<text x="121" y="567" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">S</text>
+<text x="259.0" y="558" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">DepositPlanChargeService</text>
+<text x="259.0" y="578" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">储值方案服务</text>
+<text x="245.0" y="599" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">createChargeTask</text>
+<text x="245.0" y="616" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">commitByPos</text>
+<text x="245.0" y="633" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">createChargeRecord</text>
+</g>
+<g class="node">
+<rect x="95" y="700" width="300" height="92" rx="10" ry="10" fill="#ffffff" stroke="#c4b5fd" stroke-width="1.5" filter="url(#shadow)"/>
+<circle cx="121" cy="727" r="16" fill="#ede9fe" stroke="#c4b5fd" stroke-width="1"/>
+<text x="121" y="732" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">快照</text>
+<text x="259.0" y="723" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">规则快照</text>
+<text x="259.0" y="743" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">DepositPlanComment</text>
+<text x="245.0" y="764" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">planLid + tierIndex</text>
+<text x="245.0" y="781" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">tierSnapshot</text>
+</g>
+<g class="db-node">
+<path d="M 505,193 C 505,181 750,181 750,193 L 750,265 C 750,277 505,277 505,265 Z" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.6" filter="url(#shadow)"/>
+<ellipse cx="627.5" cy="193" rx="122.5" ry="18" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.6"/>
+<path d="M 505,265 C 505,277 750,277 750,265" fill="none" stroke="#93c5fd" stroke-width="1.3"/>
+<text x="627.5" y="209" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">crm_deal_task</text>
+<text x="627.5" y="229" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">交易主单</text>
+<text x="627.5" y="255" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">tradeState</text>
+<text x="627.5" y="271" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">saveRuleCode=planLid</text>
+</g>
+<g class="db-node">
+<path d="M 785,193 C 785,181 1020,181 1020,193 L 1020,265 C 1020,277 785,277 785,265 Z" fill="#f0fdf4" stroke="#86efac" stroke-width="1.6" filter="url(#shadow)"/>
+<ellipse cx="902.5" cy="193" rx="117.5" ry="18" fill="#f0fdf4" stroke="#86efac" stroke-width="1.6"/>
+<path d="M 785,265 C 785,277 1020,277 1020,265" fill="none" stroke="#86efac" stroke-width="1.3"/>
+<text x="902.5" y="209" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">crm_deal_task_item</text>
+<text x="902.5" y="229" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">交易明细</text>
+<text x="902.5" y="255" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">givePoint</text>
+<text x="902.5" y="271" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">saveRuleCode</text>
+</g>
+<g class="db-node">
+<path d="M 645,353 C 645,341 900,341 900,353 L 900,429 C 900,441 645,441 645,429 Z" fill="#f0f9ff" stroke="#7dd3fc" stroke-width="1.6" filter="url(#shadow)"/>
+<ellipse cx="772.5" cy="353" rx="127.5" ry="18" fill="#f0f9ff" stroke="#7dd3fc" stroke-width="1.6"/>
+<path d="M 645,429 C 645,441 900,441 900,429" fill="none" stroke="#7dd3fc" stroke-width="1.3"/>
+<text x="772.5" y="369" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">crm_deposit_charge_record</text>
+<text x="772.5" y="389" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">储值记录</text>
+<text x="772.5" y="415" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">planLid / tierIndex</text>
+<text x="772.5" y="431" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">taskLid / tierSnapshot</text>
+</g>
+<g class="node">
+<rect x="620" y="515" width="310" height="118" rx="10" ry="10" fill="#ffffff" stroke="#bfdbfe" stroke-width="1.5" filter="url(#shadow)"/>
+<circle cx="646" cy="542" r="16" fill="#dbeafe" stroke="#bfdbfe" stroke-width="1"/>
+<text x="646" y="547" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">TX</text>
+<text x="789.0" y="538" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">onPaymentSuccess</text>
+<text x="789.0" y="558" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">@Transactional</text>
+<text x="775.0" y="579" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">余额入账、记录成功</text>
+<text x="775.0" y="596" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">方案销量统计</text>
+</g>
+<g class="node">
+<rect x="505" y="700" width="245" height="100" rx="10" ry="10" fill="#ffffff" stroke="#bbf7d0" stroke-width="1.5" filter="url(#shadow)"/>
+<circle cx="531" cy="727" r="16" fill="#dcfce7" stroke="#bbf7d0" stroke-width="1"/>
+<text x="531" y="732" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">B</text>
+<text x="641.5" y="723" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">CardBalanceService</text>
+<text x="641.5" y="743" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">execute</text>
+<text x="627.5" y="764" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">同步入账</text>
+<text x="627.5" y="781" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">使用旧积分引擎</text>
+</g>
+<g class="db-node">
+<path d="M 790,718 C 790,706 1025,706 1025,718 L 1025,782 C 1025,794 790,794 790,782 Z" fill="#f0fdf4" stroke="#86efac" stroke-width="1.6" filter="url(#shadow)"/>
+<ellipse cx="907.5" cy="718" rx="117.5" ry="18" fill="#f0fdf4" stroke="#86efac" stroke-width="1.6"/>
+<path d="M 790,782 C 790,794 1025,794 1025,782" fill="none" stroke="#86efac" stroke-width="1.3"/>
+<text x="907.5" y="734" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">crm_card_*</text>
+<text x="907.5" y="754" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">余额/积分流水</text>
+<text x="907.5" y="780" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">crm_card_record</text>
+<text x="907.5" y="796" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">crm_card_points_record</text>
+</g>
+<g class="node">
+<rect x="1125" y="165" width="250" height="98" rx="10" ry="10" fill="#ffffff" stroke="#c4b5fd" stroke-width="1.5" filter="url(#shadow)"/>
+<circle cx="1151" cy="192" r="16" fill="#ede9fe" stroke="#c4b5fd" stroke-width="1"/>
+<text x="1151" y="197" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">Async</text>
+<text x="1264.0" y="188" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">CompletableFuture</text>
+<text x="1264.0" y="208" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">runAsync</text>
+<text x="1250.0" y="229" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">主事务提交后触发</text>
+<text x="1250.0" y="246" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">不阻塞余额入账</text>
+</g>
+<g class="node">
+<rect x="1425" y="165" width="250" height="98" rx="10" ry="10" fill="#ffffff" stroke="#c4b5fd" stroke-width="1.5" filter="url(#shadow)"/>
+<circle cx="1451" cy="192" r="16" fill="#ede9fe" stroke="#c4b5fd" stroke-width="1"/>
+<text x="1451" y="197" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">Gift</text>
+<text x="1564.0" y="188" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">handlePostSuccessBenefits</text>
+<text x="1564.0" y="208" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">后置权益</text>
+<text x="1550.0" y="229" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">赠券 / 升级 / 积分说明</text>
+<text x="1550.0" y="246" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">异常只记录日志</text>
+</g>
+<g class="decision">
+<polygon points="1550,299.0 1655.0,360 1550,421.0 1445.0,360" fill="#fff7ed" stroke="#fdba74" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="1550" y="355" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">issueRuleType</text>
+<text x="1550" y="373" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">发券规则</text>
+<text x="1550" y="376" text-anchor="middle" font-size="11" font-weight="400" fill="#4b5563">ONE_TIME</text>
+<text x="1550" y="390" text-anchor="middle" font-size="11" font-weight="400" fill="#4b5563">PERIODIC</text>
+</g>
+<g class="node">
+<rect x="1125" y="445" width="250" height="98" rx="10" ry="10" fill="#ffffff" stroke="#fed7aa" stroke-width="1.5" filter="url(#shadow)"/>
+<circle cx="1151" cy="472" r="16" fill="#ffedd5" stroke="#fed7aa" stroke-width="1"/>
+<text x="1151" y="477" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">1</text>
+<text x="1264.0" y="468" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">ONE_TIME</text>
+<text x="1264.0" y="488" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">一次性发券</text>
+<text x="1250.0" y="509" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">异步立即执行</text>
+<text x="1250.0" y="526" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">无业务延迟</text>
+</g>
+<g class="node">
+<rect x="1425" y="445" width="250" height="98" rx="10" ry="10" fill="#ffffff" stroke="#fed7aa" stroke-width="1.5" filter="url(#shadow)"/>
+<circle cx="1451" cy="472" r="16" fill="#ffedd5" stroke="#fed7aa" stroke-width="1"/>
+<text x="1451" y="477" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">券</text>
+<text x="1564.0" y="468" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">CrmCouponOpServicePlus</text>
+<text x="1564.0" y="488" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">couponOpAdd</text>
+<text x="1550.0" y="509" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">扣券库存</text>
+<text x="1550.0" y="526" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">生成券订单</text>
+</g>
+<g class="db-node">
+<path d="M 1605,608 C 1605,596 1825,596 1825,608 L 1825,682 C 1825,694 1605,694 1605,682 Z" fill="#fff7ed" stroke="#fdba74" stroke-width="1.6" filter="url(#shadow)"/>
+<ellipse cx="1715.0" cy="608" rx="110.0" ry="18" fill="#fff7ed" stroke="#fdba74" stroke-width="1.6"/>
+<path d="M 1605,682 C 1605,694 1825,694 1825,682" fill="none" stroke="#fdba74" stroke-width="1.3"/>
+<text x="1715.0" y="624" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">crm_coupon_order</text>
+<text x="1715.0" y="644" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">会员券订单</text>
+<text x="1715.0" y="670" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">order_bill_id</text>
+<text x="1715.0" y="686" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">couponStatus</text>
+</g>
+<g class="db-node">
+<path d="M 1425,608 C 1425,596 1575,596 1575,608 L 1575,682 C 1575,694 1425,694 1425,682 Z" fill="#fff7ed" stroke="#fdba74" stroke-width="1.6" filter="url(#shadow)"/>
+<ellipse cx="1500.0" cy="608" rx="75.0" ry="18" fill="#fff7ed" stroke="#fdba74" stroke-width="1.6"/>
+<path d="M 1425,682 C 1425,694 1575,694 1575,682" fill="none" stroke="#fdba74" stroke-width="1.3"/>
+<text x="1500.0" y="624" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">crm_coupon</text>
+<text x="1500.0" y="644" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">券库存</text>
+<text x="1500.0" y="670" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">received_number</text>
+<text x="1500.0" y="686" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">limit guard</text>
+</g>
+<g class="node">
+<rect x="1125" y="690" width="250" height="98" rx="10" ry="10" fill="#ffffff" stroke="#fed7aa" stroke-width="1.5" filter="url(#shadow)"/>
+<circle cx="1151" cy="717" r="16" fill="#ffedd5" stroke="#fed7aa" stroke-width="1"/>
+<text x="1151" y="722" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">周期</text>
+<text x="1264.0" y="713" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">PERIODIC</text>
+<text x="1264.0" y="733" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">周期发券</text>
+<text x="1250.0" y="754" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">创建计划</text>
+<text x="1250.0" y="771" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">可首期立即发</text>
+</g>
+<g class="db-node">
+<path d="M 1425,748 C 1425,736 1675,736 1675,748 L 1675,830 C 1675,842 1425,842 1425,830 Z" fill="#fff7ed" stroke="#fdba74" stroke-width="1.6" filter="url(#shadow)"/>
+<ellipse cx="1550.0" cy="748" rx="125.0" ry="18" fill="#fff7ed" stroke="#fdba74" stroke-width="1.6"/>
+<path d="M 1425,830 C 1425,842 1675,842 1675,830" fill="none" stroke="#fdba74" stroke-width="1.3"/>
+<text x="1550.0" y="764" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">crm_deposit_coupon_schedule</text>
+<text x="1550.0" y="784" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">周期发券计划</text>
+<text x="1550.0" y="810" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">next_issue_date</text>
+<text x="1550.0" y="826" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">status=1 ACTIVE</text>
+</g>
+<g class="node">
+<rect x="1125" y="825" width="250" height="82" rx="10" ry="10" fill="#ffffff" stroke="#fed7aa" stroke-width="1.5" filter="url(#shadow)"/>
+<circle cx="1151" cy="852" r="16" fill="#ffedd5" stroke="#fed7aa" stroke-width="1"/>
+<text x="1151" y="857" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">Job</text>
+<text x="1264.0" y="848" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">XXL Job</text>
+<text x="1264.0" y="868" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">定时扫描</text>
+<text x="1250.0" y="889" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">DepositPlanCouponScheduleJob</text>
+<text x="1250.0" y="906" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">到期后执行</text>
+</g>
+<g class="node">
+<rect x="1605" y="760" width="220" height="96" rx="10" ry="10" fill="#ffffff" stroke="#fed7aa" stroke-width="1.5" filter="url(#shadow)"/>
+<circle cx="1631" cy="787" r="16" fill="#ffedd5" stroke="#fed7aa" stroke-width="1"/>
+<text x="1631" y="792" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">Run</text>
+<text x="1729.0" y="783" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">executeScheduledIssuance</text>
+<text x="1729.0" y="803" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">计划发券</text>
+<text x="1715.0" y="824" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">后续期数发券</text>
+<text x="1715.0" y="841" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">issuedTimes++</text>
+</g>
+<path d="M 245,261 L 245,315" fill="none" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<rect x="213.0" y="279" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="245" y="294" text-anchor="middle" font-size="12" fill="#2563eb" font-weight="600">读取方案</text>
+<path d="M 395,578 L 505,230" fill="none" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<rect x="423.0" y="375" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="455" y="390" text-anchor="middle" font-size="12" fill="#2563eb" font-weight="600">写主单</text>
+<path d="M 395,588 L 785,230" fill="none" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<rect x="543.0" y="245" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="575" y="260" text-anchor="middle" font-size="12" fill="#2563eb" font-weight="600">写明细</text>
+<path d="M 395,600 L 645,392" fill="none" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<rect x="493.0" y="465" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="525" y="480" text-anchor="middle" font-size="12" fill="#2563eb" font-weight="600">写储值记录</text>
+<path d="M 245,441 L 245,535" fill="none" stroke="#16a34a" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 4" marker-end="url(#arrow-green)"/>
+<rect x="213.0" y="475" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="245" y="490" text-anchor="middle" font-size="12" fill="#16a34a" font-weight="600">规则参与</text>
+<path d="M 245,647 L 245,700" fill="none" stroke="#16a34a" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 4" marker-end="url(#arrow-green)"/>
+<rect x="213.0" y="664" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="245" y="679" text-anchor="middle" font-size="12" fill="#16a34a" font-weight="600">保存快照</text>
+<path d="M 900,392 L 930,392 L 930,500 L 775,500 L 775,515" fill="none" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<rect x="878.0" y="455" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="910" y="470" text-anchor="middle" font-size="12" fill="#2563eb" font-weight="600">支付成功后</text>
+<path d="M 775,633 L 650,700" fill="none" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<rect x="658.0" y="655" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="690" y="670" text-anchor="middle" font-size="12" fill="#2563eb" font-weight="600">事务内调用</text>
+<path d="M 750,750 L 790,750" fill="none" stroke="#16a34a" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 4" marker-end="url(#arrow-green)"/>
+<rect x="738.0" y="721" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="770" y="736" text-anchor="middle" font-size="12" fill="#16a34a" font-weight="600">写流水</text>
+<path d="M 750,229 L 620,515" fill="none" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<rect x="639.0" y="345" width="72" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="675" y="360" text-anchor="middle" font-size="12" fill="#2563eb" font-weight="600">task入参</text>
+<path d="M 772,447 L 772,515" fill="none" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<rect x="773.0" y="470" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="805" y="485" text-anchor="middle" font-size="12" fill="#2563eb" font-weight="600">成功更新</text>
+<path d="M 930,574 L 1045,574 L 1045,214 L 1125,214" fill="none" stroke="#9333ea" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 5" marker-end="url(#arrow-purple)"/>
+<rect x="1016.0" y="375" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="1048" y="390" text-anchor="middle" font-size="12" fill="#9333ea" font-weight="600">异步触发</text>
+<path d="M 1375,214 L 1425,214" fill="none" stroke="#9333ea" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 5" marker-end="url(#arrow-purple)"/>
+<rect x="1368.0" y="183" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="1400" y="198" text-anchor="middle" font-size="12" fill="#9333ea" font-weight="600">执行</text>
+<path d="M 1550,263 L 1550,299" fill="none" stroke="#9333ea" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 5" marker-end="url(#arrow-purple)"/>
+<rect x="1556.0" y="270" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="1588" y="285" text-anchor="middle" font-size="12" fill="#9333ea" font-weight="600">判断规则</text>
+<path d="M 1550,421 L 1375,494" fill="none" stroke="#ea580c" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-orange)"/>
+<rect x="1401.0" y="440" width="88" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="1445" y="455" text-anchor="middle" font-size="12" fill="#ea580c" font-weight="600">ONE_TIME</text>
+<path d="M 1375,494 L 1425,494" fill="none" stroke="#ea580c" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-orange)"/>
+<rect x="1368.0" y="462" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="1400" y="477" text-anchor="middle" font-size="12" fill="#ea580c" font-weight="600">调用</text>
+<path d="M 1550,421 L 1375,739" fill="none" stroke="#ea580c" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-orange)"/>
+<rect x="1418.0" y="580" width="88" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="1462" y="595" text-anchor="middle" font-size="12" fill="#ea580c" font-weight="600">PERIODIC</text>
+<path d="M 1375,739 L 1425,789" fill="none" stroke="#ea580c" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#arrow-orange)"/>
+<rect x="1373.0" y="745" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="1405" y="760" text-anchor="middle" font-size="12" fill="#ea580c" font-weight="600">写计划</text>
+<path d="M 1550,543 L 1550,590" fill="none" stroke="#16a34a" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 4" marker-end="url(#arrow-green)"/>
+<rect x="1482.0" y="555" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="1514" y="570" text-anchor="middle" font-size="12" fill="#16a34a" font-weight="600">扣库存</text>
+<path d="M 1675,494 L 1715,494 L 1715,590" fill="none" stroke="#16a34a" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 4" marker-end="url(#arrow-green)"/>
+<rect x="1708.0" y="525" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="1740" y="540" text-anchor="middle" font-size="12" fill="#16a34a" font-weight="600">生成券单</text>
+<path d="M 1250,788 L 1250,825" fill="none" stroke="#ea580c" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#arrow-orange)"/>
+<rect x="1263.0" y="797" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="1295" y="812" text-anchor="middle" font-size="12" fill="#ea580c" font-weight="600">到期扫描</text>
+<path d="M 1375,866 L 1605,808" fill="none" stroke="#ea580c" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#arrow-orange)"/>
+<rect x="1460.0" y="833" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="1492" y="848" text-anchor="middle" font-size="12" fill="#ea580c" font-weight="600">执行计划</text>
+<path d="M 1605,808 L 1575,665 L 1605,645" fill="none" stroke="#ea580c" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#arrow-orange)"/>
+<rect x="1568.0" y="710" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="1600" y="725" text-anchor="middle" font-size="12" fill="#ea580c" font-weight="600">发后续券</text>
+<path d="M 1635,760 L 1710,700" fill="none" stroke="#16a34a" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 4" marker-end="url(#arrow-green)"/>
+<rect x="1660.0" y="727" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="1692" y="742" text-anchor="middle" font-size="12" fill="#16a34a" font-weight="600">写券单</text>
+<rect x="1590" y="520" width="250" height="44" rx="8" fill="#ffffff" stroke="#fbbf24" stroke-width="1.2"/>
+<text x="1715" y="540" text-anchor="middle" font-size="12" font-weight="600" fill="#92400e">一次性/首期立即：order_bill_id = task.lid</text>
+<rect x="1585" y="870" width="280" height="44" rx="8" fill="#ffffff" stroke="#f87171" stroke-width="1.2"/>
+<text x="1725" y="890" text-anchor="middle" font-size="12" font-weight="700" fill="#b91c1c">周期后续：order_bill_id = chargeRecordLid</text>
+<path d="M 1710,856 L 1710,870" fill="none" stroke="#dc2626" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 3" marker-end="url(#arrow-red)"/>
+<g class="node">
+<rect x="95" y="1042" width="255" height="92" rx="10" ry="10" fill="#ffffff" stroke="#fca5a5" stroke-width="1.5" filter="url(#shadow)"/>
+<circle cx="121" cy="1069" r="16" fill="#fee2e2" stroke="#fca5a5" stroke-width="1"/>
+<text x="121" y="1074" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">撤</text>
+<text x="236.5" y="1065" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">CardBalanceService</text>
+<text x="236.5" y="1085" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">cancelOrder</text>
+<text x="222.5" y="1106" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">撤销储值</text>
+<text x="222.5" y="1123" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">余额/积分反向流水</text>
+</g>
+<g class="node">
+<rect x="405" y="1042" width="260" height="92" rx="10" ry="10" fill="#ffffff" stroke="#fca5a5" stroke-width="1.5" filter="url(#shadow)"/>
+<circle cx="431" cy="1069" r="16" fill="#fee2e2" stroke="#fca5a5" stroke-width="1"/>
+<text x="431" y="1074" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">后置</text>
+<text x="549.0" y="1065" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">dealOtherItemTaskCancel</text>
+<text x="549.0" y="1085" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">异步后置撤销</text>
+<text x="535.0" y="1106" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">saveRuleCode非空触发</text>
+<text x="535.0" y="1123" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">使用原task.lid</text>
+</g>
+<g class="node">
+<rect x="720" y="1042" width="260" height="92" rx="10" ry="10" fill="#ffffff" stroke="#fca5a5" stroke-width="1.5" filter="url(#shadow)"/>
+<circle cx="746" cy="1069" r="16" fill="#fee2e2" stroke="#fca5a5" stroke-width="1"/>
+<text x="746" y="1074" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">券</text>
+<text x="864.0" y="1065" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">couponOpRevoke</text>
+<text x="864.0" y="1085" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">撤销赠券</text>
+<text x="850.0" y="1106" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">orderId = task.lid</text>
+<text x="850.0" y="1123" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">status in WHX/YGQ</text>
+</g>
+<g class="db-node">
+<path d="M 1030,1053 C 1030,1041 1260,1041 1260,1053 L 1260,1123 C 1260,1135 1030,1135 1030,1123 Z" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.6" filter="url(#shadow)"/>
+<ellipse cx="1145.0" cy="1053" rx="115.0" ry="18" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.6"/>
+<path d="M 1030,1123 C 1030,1135 1260,1135 1260,1123" fill="none" stroke="#fca5a5" stroke-width="1.3"/>
+<text x="1145.0" y="1069" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">crm_coupon_order</text>
+<text x="1145.0" y="1089" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">匹配撤券</text>
+<text x="1145.0" y="1115" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">仅未核销/已过期</text>
+<text x="1145.0" y="1131" text-anchor="middle" font-size="12" font-weight="400" fill="#4b5563">已核销不可撤</text>
+</g>
+<g class="risk-card">
+<rect x="1310" y="1018" width="245" height="130" rx="10" ry="10" fill="#fef2f2" stroke="#fecaca" stroke-width="1.4"/>
+<text x="1432.5" y="1046" text-anchor="middle" font-size="15" font-weight="700" fill="#991b1b">失败补偿缺口</text>
+<text x="1432.5" y="1076" text-anchor="middle" font-size="12" font-weight="400" fill="#7f1d1d">一次性发券异常被catch</text>
+<text x="1432.5" y="1092" text-anchor="middle" font-size="12" font-weight="400" fill="#7f1d1d">当前未见失败状态表</text>
+<text x="1432.5" y="1108" text-anchor="middle" font-size="12" font-weight="400" fill="#7f1d1d">未见自动重试队列</text>
+</g>
+<g class="risk-card">
+<rect x="1590" y="1018" width="245" height="130" rx="10" ry="10" fill="#fef2f2" stroke="#fecaca" stroke-width="1.4"/>
+<text x="1712.5" y="1046" text-anchor="middle" font-size="15" font-weight="700" fill="#991b1b">周期撤销风险</text>
+<text x="1712.5" y="1076" text-anchor="middle" font-size="12" font-weight="400" fill="#7f1d1d">未见撤销关闭schedule</text>
+<text x="1712.5" y="1092" text-anchor="middle" font-size="12" font-weight="400" fill="#7f1d1d">后续券orderId不同</text>
+<text x="1712.5" y="1108" text-anchor="middle" font-size="12" font-weight="400" fill="#7f1d1d">未来可能继续发券</text>
+</g>
+<g class="risk-card">
+<rect x="1310" y="1165" width="245" height="82" rx="10" ry="10" fill="#fef2f2" stroke="#fecaca" stroke-width="1.4"/>
+<text x="1432.5" y="1193" text-anchor="middle" font-size="15" font-weight="700" fill="#991b1b">库存风险</text>
+<text x="1432.5" y="1223" text-anchor="middle" font-size="12" font-weight="400" fill="#7f1d1d">couponOpRevoke只作废券单</text>
+<text x="1432.5" y="1239" text-anchor="middle" font-size="12" font-weight="400" fill="#7f1d1d">未见回补crm_coupon库存</text>
+</g>
+<g class="risk-card">
+<rect x="1590" y="1165" width="245" height="82" rx="10" ry="10" fill="#fef2f2" stroke="#fecaca" stroke-width="1.4"/>
+<text x="1712.5" y="1193" text-anchor="middle" font-size="15" font-weight="700" fill="#991b1b">重试判断</text>
+<text x="1712.5" y="1223" text-anchor="middle" font-size="12" font-weight="400" fill="#7f1d1d">只有异常抛出到Job层</text>
+<text x="1712.5" y="1239" text-anchor="middle" font-size="12" font-weight="400" fill="#7f1d1d">周期任务才可能下次重试</text>
+</g>
+<path d="M 350,1088 L 405,1088" fill="none" stroke="#dc2626" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 5" marker-end="url(#arrow-red)"/>
+<rect x="346.0" y="1057" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="378" y="1072" text-anchor="middle" font-size="12" fill="#dc2626" font-weight="600">异步撤销</text>
+<path d="M 665,1088 L 720,1088" fill="none" stroke="#dc2626" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-red)"/>
+<rect x="660.0" y="1057" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="692" y="1072" text-anchor="middle" font-size="12" fill="#dc2626" font-weight="600">按单号</text>
+<path d="M 980,1088 L 1030,1088" fill="none" stroke="#dc2626" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow-red)"/>
+<rect x="973.0" y="1057" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="1005" y="1072" text-anchor="middle" font-size="12" fill="#dc2626" font-weight="600">匹配状态</text>
+<path d="M 1715,700 L 1715,1018 L 1590,1083" fill="none" stroke="#dc2626" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#arrow-red)"/>
+<rect x="1713.0" y="937" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="1745" y="952" text-anchor="middle" font-size="12" fill="#dc2626" font-weight="600">撤销难匹配</text>
+<path d="M 1550,848 L 1550,970 L 1710,1018" fill="none" stroke="#dc2626" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#arrow-red)"/>
+<rect x="1556.0" y="933" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="1588" y="948" text-anchor="middle" font-size="12" fill="#dc2626" font-weight="600">计划未关闭</text>
+<path d="M 1425,214 L 1310,1018" fill="none" stroke="#dc2626" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#arrow-red)"/>
+<rect x="1293.0" y="755" width="64" height="22" rx="5" ry="5" fill="#ffffff" opacity="0.95" stroke="#e5e7eb" stroke-width="0.8"/>
+<text x="1325" y="770" text-anchor="middle" font-size="12" fill="#dc2626" font-weight="600">异常只日志</text>
+<g transform="translate(70,1302)">
+<rect x="0" y="-24" width="1040" height="46" rx="10" fill="#ffffff" stroke="#e5e7eb"/>
+<path d="M 22,0 L 64,0" stroke="#2563eb" stroke-width="2" fill="none" marker-end="url(#arrow-blue)"/>
+<text x="74" y="5" font-size="13" fill="#4b5563">主事务同步</text>
+<path d="M 222,0 L 264,0" stroke="#16a34a" stroke-width="2" fill="none" marker-end="url(#arrow-green)"/>
+<text x="274" y="5" font-size="13" fill="#4b5563">表写入/数据落库</text>
+<path d="M 422,0 L 464,0" stroke="#9333ea" stroke-width="2" fill="none" marker-end="url(#arrow-purple)"/>
+<text x="474" y="5" font-size="13" fill="#4b5563">异步立即触发</text>
+<path d="M 622,0 L 664,0" stroke="#ea580c" stroke-width="2" fill="none" marker-end="url(#arrow-orange)"/>
+<text x="674" y="5" font-size="13" fill="#4b5563">周期延迟/定时</text>
+<path d="M 822,0 L 864,0" stroke="#dc2626" stroke-width="2" fill="none" marker-end="url(#arrow-red)"/>
+<text x="874" y="5" font-size="13" fill="#4b5563">撤销/风险</text>
+</g>
+<text x="1850" y="1325" text-anchor="end" font-size="12" font-weight="400" fill="#9ca3af">基于 DepositPlanChargeService / DepositPlanCouponService / DepositPlanCouponScheduleJob / CardBalanceService 源码关系整理</text>
+</svg>

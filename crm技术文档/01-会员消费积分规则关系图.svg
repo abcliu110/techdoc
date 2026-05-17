@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 900" width="1280" height="900">
+<style>
+text { font-family: 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif; }
+.title { font-size: 26px; font-weight: 700; fill: #111827; }
+.subtitle { font-size: 13px; fill: #6b7280; }
+.group { font-size: 15px; font-weight: 700; fill: #374151; }
+.node { font-size: 14px; font-weight: 700; fill: #111827; }
+.sub { font-size: 12px; fill: #4b5563; }
+.small { font-size: 12px; fill: #4b5563; }
+.arrowLabel { font-size: 11px; fill: #374151; }
+</style>
+<defs>
+<marker id="blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/></marker>
+<marker id="green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/></marker>
+<marker id="orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#ea580c"/></marker>
+<marker id="purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#9333ea"/></marker>
+<marker id="red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/></marker>
+<marker id="gray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/></marker>
+<filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#111827" flood-opacity="0.08"/></filter>
+</defs>
+<rect width="1280" height="900" fill="#ffffff"/>
+<text x="640" y="40" text-anchor="middle" class="title">&#x4F1A;&#x5458;&#x6D88;&#x8D39;&#x79EF;&#x5206;&#x89C4;&#x5219;&#x5173;&#x7CFB;&#x56FE;</text>
+<text x="640" y="64" text-anchor="middle" class="subtitle">&#x79EF;&#x5206;&#x662F;&#x5426;&#x8D60;&#x3001;&#x8D60;&#x591A;&#x5C11;&#xFF0C;&#x4E3B;&#x8981;&#x53D6;&#x51B3;&#x4E8E;&#x4F1A;&#x5458;&#x3001;&#x89C4;&#x5219;&#x5F00;&#x5173;&#x3001;&#x652F;&#x4ED8;&#x91D1;&#x989D;&#x53E3;&#x5F84;&#x3001;&#x7B49;&#x7EA7;&#x548C;&#x65F6;&#x95F4;&#x500D;&#x7387;</text>
+<g>
+<rect x="500" y="360" width="280" height="120" rx="8" ry="8" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5" filter="url(#shadow)"/>
+<text x="640.0" y="388" text-anchor="middle" class="node">&#x4F1A;&#x5458;&#x6D88;&#x8D39;&#x8D60;&#x5206;&#x89C4;&#x5219;</text>
+<text x="640.0" y="412" text-anchor="middle" class="sub">&#x914D;&#x7F6E;&#x6765;&#x6E90;&#xFF1A;crm_points_rule</text>
+<text x="640.0" y="429" text-anchor="middle" class="sub">&#x8BA1;&#x7B97;&#xFF1A;&#x57FA;&#x6570; &#xD7; &#x7B49;&#x7EA7;&#x6BD4;&#x4F8B; &#xD7; &#x500D;&#x7387;</text>
+<text x="640.0" y="446" text-anchor="middle" class="sub">&#x7ED3;&#x679C;&#xFF1A;&#x4E0A;&#x9650;&#x622A;&#x65AD;&#x540E;&#x5411;&#x4E0B;&#x53D6;&#x6574;</text>
+</g>
+<g>
+<rect x="70" y="120" width="230" height="112" rx="8" ry="8" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1.5" filter="url(#shadow)"/>
+<text x="185.0" y="148" text-anchor="middle" class="node">1. &#x4F1A;&#x5458;&#x524D;&#x63D0;</text>
+<text x="185.0" y="172" text-anchor="middle" class="sub">&#x5FC5;&#x987B;&#x6709;&#x4F1A;&#x5458;&#x5361;/cardLid</text>
+<text x="185.0" y="189" text-anchor="middle" class="sub">&#x975E;&#x4F1A;&#x5458;&#x8BA2;&#x5355;&#x4E0D;&#x8D60;&#x5206;</text>
+<text x="185.0" y="206" text-anchor="middle" class="sub">&#x4F1A;&#x5458;&#x5361;&#x7B49;&#x7EA7;&#x51B3;&#x5B9A;&#x57FA;&#x7840;&#x6BD4;&#x4F8B;</text>
+</g>
+<g>
+<rect x="380" y="115" width="245" height="122" rx="8" ry="8" fill="#fefce8" stroke="#fde68a" stroke-width="1.5" filter="url(#shadow)"/>
+<text x="502.5" y="143" text-anchor="middle" class="node">2. &#x89C4;&#x5219;&#x5F00;&#x5173;</text>
+<text x="502.5" y="167" text-anchor="middle" class="sub">pointsRuleEnabled&#xFF1A;&#x79EF;&#x5206;&#x603B;&#x5F00;&#x5173;</text>
+<text x="502.5" y="184" text-anchor="middle" class="sub">earningEnabled&#xFF1A;&#x6D88;&#x8D39;&#x9001;&#x79EF;&#x5206;</text>
+<text x="502.5" y="201" text-anchor="middle" class="sub">&#x4EFB;&#x4E00;&#x5173;&#x95ED;&#xFF0C;&#x672C;&#x5355;&#x8D60;&#x5206;=0</text>
+</g>
+<g>
+<rect x="725" y="115" width="255" height="122" rx="8" ry="8" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.5" filter="url(#shadow)"/>
+<text x="852.5" y="143" text-anchor="middle" class="node">3. &#x4F1A;&#x5458;&#x7B49;&#x7EA7;&#x6BD4;&#x4F8B;</text>
+<text x="852.5" y="167" text-anchor="middle" class="sub">level_rates JSON</text>
+<text x="852.5" y="184" text-anchor="middle" class="sub">consumeAmount / earnPoints</text>
+<text x="852.5" y="201" text-anchor="middle" class="sub">&#x4E0D;&#x5339;&#x914D;&#x7B49;&#x7EA7;&#x5219;&#x8D60;&#x5206;=0</text>
+</g>
+<g>
+<rect x="1040" y="120" width="180" height="112" rx="8" ry="8" fill="#eef2ff" stroke="#c7d2fe" stroke-width="1.5" filter="url(#shadow)"/>
+<text x="1130.0" y="148" text-anchor="middle" class="node">4. &#x65F6;&#x95F4;&#x500D;&#x7387;</text>
+<text x="1130.0" y="172" text-anchor="middle" class="sub">&#x751F;&#x65E5;&#x500D;&#x79EF;&#x5206;</text>
+<text x="1130.0" y="189" text-anchor="middle" class="sub">&#x4F1A;&#x5458;&#x65E5;&#x500D;&#x79EF;&#x5206;</text>
+<text x="1130.0" y="206" text-anchor="middle" class="sub">&#x53D6;&#x5F53;&#x524D;&#x547D;&#x4E2D;&#x500D;&#x7387;</text>
+</g>
+<g>
+<rect x="70" y="360" width="270" height="124" rx="8" ry="8" fill="#ecfeff" stroke="#67e8f9" stroke-width="1.5" filter="url(#shadow)"/>
+<text x="205.0" y="388" text-anchor="middle" class="node">5. &#x91D1;&#x989D;&#x53E3;&#x5F84;</text>
+<text x="205.0" y="412" text-anchor="middle" class="sub">&#x4F1A;&#x5458;&#x6298;&#x6263;&#xFF1A;&#x6309;&#x6298;&#x540E;&#x5B9E;&#x6536;</text>
+<text x="205.0" y="429" text-anchor="middle" class="sub">&#x975E;&#x50A8;&#x503C;&#x652F;&#x4ED8;&#xFF1A;&#x770B;&#x771F;&#x5B9E;&#x6536;&#x5165;</text>
+<text x="205.0" y="446" text-anchor="middle" class="sub">&#x79EF;&#x5206;&#x62B5;&#x73B0; PR &#x4E0D;&#x5165;&#x57FA;&#x6570;</text>
+</g>
+<g>
+<rect x="940" y="355" width="280" height="134" rx="8" ry="8" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5" filter="url(#shadow)"/>
+<text x="1080.0" y="383" text-anchor="middle" class="node">6. &#x50A8;&#x503C;&#x6263;&#x6B3E;&#x62C6;&#x5206;</text>
+<text x="1080.0" y="407" text-anchor="middle" class="sub">&#x5148; cardConsumeInner &#x6263;&#x6B3E;</text>
+<text x="1080.0" y="424" text-anchor="middle" class="sub">&#x8FD4;&#x56DE;&#x672C;&#x91D1; principalAmount</text>
+<text x="1080.0" y="441" text-anchor="middle" class="sub">&#x8D60;&#x9001;&#x4F59;&#x989D;&#x662F;&#x5426;&#x8BA1;&#x5206;&#x770B; giftAmountEarnEnabled</text>
+</g>
+<g>
+<rect x="110" y="610" width="250" height="122" rx="8" ry="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+<text x="235.0" y="638" text-anchor="middle" class="node">7. &#x652F;&#x4ED8;&#x65B9;&#x5F0F;&#x5C5E;&#x6027;</text>
+<text x="235.0" y="662" text-anchor="middle" class="sub">isRealIncome != false &#x53EF;&#x5165;&#x57FA;&#x6570;</text>
+<text x="235.0" y="679" text-anchor="middle" class="sub">HYK &#x4F1A;&#x5458;&#x5361;&#x5355;&#x72EC;&#x62C6;&#x672C;&#x91D1;</text>
+<text x="235.0" y="696" text-anchor="middle" class="sub">canIntegral &#x5F53;&#x524D;&#x4E0D;&#x662F;&#x8D60;&#x5206;&#x5224;&#x65AD;</text>
+</g>
+<g>
+<rect x="515" y="625" width="250" height="112" rx="8" ry="8" fill="#f5f3ff" stroke="#ddd6fe" stroke-width="1.5" filter="url(#shadow)"/>
+<text x="640.0" y="653" text-anchor="middle" class="node">8. &#x5546;&#x54C1;/&#x6E20;&#x9053;&#x5B57;&#x6BB5;</text>
+<text x="640.0" y="677" text-anchor="middle" class="sub">earningMode &#x5F53;&#x524D;&#x524D;&#x7AEF;&#x56FA;&#x5B9A; BY_PAYMENT</text>
+<text x="640.0" y="694" text-anchor="middle" class="sub">&#x6309;&#x5546;&#x54C1;&#x5B57;&#x6BB5;&#x4FDD;&#x7559;&#x540C;&#x6B65;&#x517C;&#x5BB9;</text>
+<text x="640.0" y="711" text-anchor="middle" class="sub">POS &#x5F53;&#x524D;&#x4E0D;&#x6309;&#x6E20;&#x9053;&#x62E6;&#x622A;</text>
+</g>
+<g>
+<rect x="920" y="610" width="250" height="122" rx="8" ry="8" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5" filter="url(#shadow)"/>
+<text x="1045.0" y="638" text-anchor="middle" class="node">9. &#x4E0A;&#x9650;&#x4E0E;&#x53D6;&#x6574;</text>
+<text x="1045.0" y="662" text-anchor="middle" class="sub">&#x5355;&#x7B14;&#x8D60;&#x5206;&#x4E0A;&#x9650;</text>
+<text x="1045.0" y="679" text-anchor="middle" class="sub">&#x751F;&#x65E5;/&#x4F1A;&#x5458;&#x65E5;&#x500D;&#x7387;&#x540E;&#x518D;&#x622A;&#x65AD;</text>
+<text x="1045.0" y="696" text-anchor="middle" class="sub">&#x6700;&#x7EC8;&#x79EF;&#x5206;&#x5411;&#x4E0B;&#x53D6;&#x6574;</text>
+</g>
+<path d="M300,176 C390,205 455,290 522,360" fill="none" stroke="#16a34a" stroke-width="2" marker-end="url(#green)"/>
+<rect x="346.0" y="232" width="92" height="21" rx="4" fill="#ffffff" opacity="0.96" stroke="#e5e7eb"/>
+<text x="392" y="247" text-anchor="middle" class="arrowLabel">&#x662F;&#x5426;&#x53EF;&#x8D60;</text>
+<path d="M505,237 C540,285 570,320 595,360" fill="none" stroke="#ea580c" stroke-width="2" marker-end="url(#orange)"/>
+<rect x="507.0" y="287" width="92" height="21" rx="4" fill="#ffffff" opacity="0.96" stroke="#e5e7eb"/>
+<text x="553" y="302" text-anchor="middle" class="arrowLabel">&#x5148;&#x770B;&#x5F00;&#x5173;</text>
+<path d="M850,237 C810,290 760,325 720,360" fill="none" stroke="#9333ea" stroke-width="2" marker-end="url(#purple)"/>
+<rect x="754.0" y="287" width="92" height="21" rx="4" fill="#ffffff" opacity="0.96" stroke="#e5e7eb"/>
+<text x="800" y="302" text-anchor="middle" class="arrowLabel">&#x51B3;&#x5B9A;&#x6BD4;&#x4F8B;</text>
+<path d="M1085,232 C990,290 890,325 780,390" fill="none" stroke="#9333ea" stroke-width="2" marker-end="url(#purple)"/>
+<rect x="917.0" y="285" width="92" height="21" rx="4" fill="#ffffff" opacity="0.96" stroke="#e5e7eb"/>
+<text x="963" y="300" text-anchor="middle" class="arrowLabel">&#x51B3;&#x5B9A;&#x500D;&#x7387;</text>
+<line x1="340" y1="422" x2="500" y2="422" stroke="#2563eb" stroke-width="2" marker-end="url(#blue)"/>
+<rect x="381.0" y="389" width="78" height="21" rx="4" fill="#ffffff" opacity="0.96" stroke="#e5e7eb"/>
+<text x="420" y="404" text-anchor="middle" class="arrowLabel">&#x7ED9;&#x57FA;&#x6570;</text>
+<line x1="940" y1="422" x2="780" y2="422" stroke="#ea580c" stroke-width="2" marker-end="url(#orange)"/>
+<rect x="814.0" y="389" width="92" height="21" rx="4" fill="#ffffff" opacity="0.96" stroke="#e5e7eb"/>
+<text x="860" y="404" text-anchor="middle" class="arrowLabel">&#x6263;&#x540E;&#x62C6;&#x5206;</text>
+<path d="M360,650 C435,585 500,525 562,480" fill="none" stroke="#6b7280" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#gray)"/>
+<rect x="399.0" y="572" width="92" height="21" rx="4" fill="#ffffff" opacity="0.96" stroke="#e5e7eb"/>
+<text x="445" y="587" text-anchor="middle" class="arrowLabel">&#x652F;&#x4ED8;&#x8FC7;&#x6EE4;</text>
+<path d="M640,625 C640,560 640,525 640,480" fill="none" stroke="#6b7280" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#gray)"/>
+<rect x="638.0" y="539" width="92" height="21" rx="4" fill="#ffffff" opacity="0.96" stroke="#e5e7eb"/>
+<text x="684" y="554" text-anchor="middle" class="arrowLabel">&#x6267;&#x884C;&#x53E3;&#x5F84;</text>
+<path d="M920,650 C840,585 770,525 718,480" fill="none" stroke="#16a34a" stroke-width="2" marker-end="url(#green)"/>
+<rect x="779.0" y="572" width="92" height="21" rx="4" fill="#ffffff" opacity="0.96" stroke="#e5e7eb"/>
+<text x="825" y="587" text-anchor="middle" class="arrowLabel">&#x6700;&#x7EC8;&#x88C1;&#x526A;</text>
+<rect x="120" y="790" width="1040" height="58" rx="10" fill="#ffffff" stroke="#d1d5db"/>
+<text x="640" y="815" text-anchor="middle" class="node">&#x4E00;&#x53E5;&#x8BDD;&#xFF1A;&#x5148;&#x5224;&#x65AD;&#x4F1A;&#x5458;&#x548C;&#x5F00;&#x5173;&#xFF0C;&#x518D;&#x6309;&#x6298;&#x540E;&#x5B9E;&#x6536;/&#x50A8;&#x503C;&#x672C;&#x91D1;&#x7B97;&#x57FA;&#x6570;&#xFF0C;&#x5957;&#x4F1A;&#x5458;&#x7B49;&#x7EA7;&#x6BD4;&#x4F8B;&#x548C;&#x65F6;&#x95F4;&#x500D;&#x7387;&#xFF0C;&#x6700;&#x540E;&#x6309;&#x4E0A;&#x9650;&#x4E0E;&#x53D6;&#x6574;&#x51FA;&#x79EF;&#x5206;&#x3002;</text>
+<text x="640" y="838" text-anchor="middle" class="subtitle">&#x7279;&#x522B;&#x6CE8;&#x610F;&#xFF1A;&#x4F1A;&#x5458;&#x6298;&#x6263;&#x4E0D;&#x963B;&#x65AD;&#x8D60;&#x5206;&#xFF1B;&#x79EF;&#x5206;&#x62B5;&#x73B0;&#x4E0D;&#x8BA1;&#x5165;&#x8D60;&#x5206;&#x57FA;&#x6570;&#xFF1B;&#x50A8;&#x503C;&#x8D60;&#x9001;&#x4F59;&#x989D;&#x662F;&#x5426;&#x79EF;&#x5206;&#x770B;&#x89C4;&#x5219;&#x5F00;&#x5173;&#x3002;</text>
+<line x1="70" y1="865" x2="120" y2="865" stroke="#2563eb" stroke-width="2" marker-end="url(#blue)"/>
+<text x="130" y="869" text-anchor="start" class="small">&#x91D1;&#x989D;/&#x57FA;&#x6570;</text>
+<line x1="250" y1="865" x2="300" y2="865" stroke="#ea580c" stroke-width="2" marker-end="url(#orange)"/>
+<text x="310" y="869" text-anchor="start" class="small">&#x5F00;&#x5173;/&#x6263;&#x6B3E;</text>
+<line x1="440" y1="865" x2="490" y2="865" stroke="#9333ea" stroke-width="2" marker-end="url(#purple)"/>
+<text x="500" y="869" text-anchor="start" class="small">&#x7B49;&#x7EA7;/&#x500D;&#x7387;</text>
+<line x1="650" y1="865" x2="700" y2="865" stroke="#6b7280" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#gray)"/>
+<text x="710" y="869" text-anchor="start" class="small">&#x5F53;&#x524D;&#x5B9E;&#x73B0;&#x7EA6;&#x675F;</text>
+</svg>

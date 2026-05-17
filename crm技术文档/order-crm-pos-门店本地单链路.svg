@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="880" viewBox="0 0 1500 880">
+  <style>
+    text { font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', 'Microsoft JhengHei', 'SimHei', sans-serif; }
+    .title { font-size: 28px; font-weight: 700; fill: #111827; }
+    .sub { font-size: 14px; fill: #6b7280; }
+    .box { rx: 14; ry: 14; fill: #ffffff; stroke-width: 2; }
+    .client { stroke: #93c5fd; fill: #eff6ff; }
+    .pos { stroke: #fdba74; fill: #fff7ed; }
+    .crm { stroke: #86efac; fill: #f0fdf4; }
+    .order { stroke: #c084fc; fill: #faf5ff; }
+    .backend { stroke: #cbd5e1; fill: #f8fafc; }
+    .bill { stroke: #fcd34d; fill: #fffbeb; }
+    .label { font-size: 18px; font-weight: 700; fill: #111827; }
+    .desc { font-size: 14px; fill: #374151; }
+    .small { font-size: 12px; fill: #6b7280; }
+    .arrowMain { stroke: #2563eb; stroke-width: 3; fill: none; marker-end: url(#arrowBlue); }
+    .arrowGreen { stroke: #16a34a; stroke-width: 3; fill: none; marker-end: url(#arrowGreen); }
+    .arrowPurple { stroke: #9333ea; stroke-width: 3; fill: none; marker-end: url(#arrowPurple); }
+    .arrowRed { stroke: #dc2626; stroke-width: 3; fill: none; marker-end: url(#arrowRed); }
+    .arrowDash { stroke: #9333ea; stroke-width: 3; fill: none; stroke-dasharray: 8 6; marker-end: url(#arrowPurple); }
+    .legendText { font-size: 13px; fill: #6b7280; }
+  </style>
+  <defs>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/>
+    </marker>
+    <marker id="arrowPurple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#9333ea"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/>
+    </marker>
+  </defs>
+  <rect width="1500" height="880" fill="#ffffff"/>
+  <text x="60" y="52" class="title">门店本地单链路</text>
+  <text x="60" y="80" class="sub">本地结账可以先不经过 order；但会员、券、积分、上云、查单、退款，仍会和 CRM / order 发生同步</text>
+
+  <rect x="60" y="160" width="230" height="120" class="box client"/>
+  <text x="175" y="196" text-anchor="middle" class="label">POS 前端</text>
+  <text x="175" y="224" text-anchor="middle" class="desc">nms4pos-ui / uni4merchant</text>
+  <text x="175" y="248" text-anchor="middle" class="small">checkOut / revoke / 会员选择</text>
+
+  <rect x="340" y="145" width="300" height="150" class="box pos"/>
+  <text x="490" y="182" text-anchor="middle" class="label">nms4pos</text>
+  <text x="490" y="210" text-anchor="middle" class="desc">门店本地执行端</text>
+  <text x="490" y="238" text-anchor="middle" class="small">DwdBillOpsServiceImpl / 本地收口 / 反结账</text>
+  <text x="490" y="262" text-anchor="middle" class="small">先在本地执行，再决定是否同步云端</text>
+
+  <rect x="700" y="65" width="250" height="120" class="box crm"/>
+  <text x="825" y="102" text-anchor="middle" class="label">nms4cloud-crm</text>
+  <text x="825" y="130" text-anchor="middle" class="desc">会员权益账本</text>
+  <text x="825" y="154" text-anchor="middle" class="small">cardConsumeSign / adjustPointsSign / revoke</text>
+
+  <rect x="700" y="255" width="250" height="120" class="box bill"/>
+  <text x="825" y="292" text-anchor="middle" class="label">本地账单</text>
+  <text x="825" y="320" text-anchor="middle" class="desc">DwdBill / DwdPay</text>
+  <text x="825" y="344" text-anchor="middle" class="small">余额 / 任务号 / 结账状态 / 退款状态</text>
+
+  <rect x="1030" y="145" width="290" height="150" class="box order"/>
+  <text x="1175" y="182" text-anchor="middle" class="label">云端 order</text>
+  <text x="1175" y="210" text-anchor="middle" class="desc">上传 / 查单 / 后台事实</text>
+  <text x="1175" y="238" text-anchor="middle" class="small">cash_post_order / confirm_order / listForMerchant</text>
+  <text x="1175" y="262" text-anchor="middle" class="small">必要时再统一给后台与云端查询使用</text>
+
+  <rect x="1030" y="395" width="290" height="120" class="box backend"/>
+  <text x="1175" y="432" text-anchor="middle" class="label">商户后台</text>
+  <text x="1175" y="460" text-anchor="middle" class="desc">订单中心 / 报表 / 详情</text>
+  <text x="1175" y="484" text-anchor="middle" class="small">依赖云端 order，不直接依赖本地内存</text>
+
+  <path d="M 290 220 C 310 220, 320 220, 340 220" class="arrowMain"/>
+  <text x="305" y="196" class="legendText">发起结账 / 反结账</text>
+
+  <path d="M 490 145 C 490 120, 670 120, 700 120" class="arrowGreen"/>
+  <text x="555" y="108" class="legendText">会员卡 / 积分 / 券 请求</text>
+
+  <path d="M 700 150 C 670 170, 640 190, 640 220" class="arrowGreen"/>
+  <text x="650" y="182" class="legendText">CRM 返回余额 / 任务号</text>
+
+  <path d="M 640 220 C 700 220, 740 220, 760 255" class="arrowMain"/>
+  <text x="700" y="208" class="legendText">写入本地账单</text>
+
+  <path d="M 640 250 C 700 265, 735 290, 760 300" class="arrowPurple"/>
+  <text x="680" y="286" class="legendText">本地结账 / 关闭账单</text>
+
+  <path d="M 880 315 C 950 315, 1000 280, 1030 240" class="arrowDash"/>
+  <text x="920" y="286" class="legendText">cash_post_order / confirm_order</text>
+
+  <path d="M 1030 445 C 920 445, 840 410, 760 330" class="arrowMain"/>
+  <text x="900" y="406" class="legendText">后台查单依赖云端事实</text>
+
+  <path d="M 490 295 C 560 330, 640 365, 700 340" class="arrowRed"/>
+  <text x="575" y="362" class="legendText">反结账 / 退款时撤销权益</text>
+
+  <path d="M 825 375 C 825 400, 825 415, 825 430" class="arrowDash"/>
+  <text x="845" y="406" class="legendText">补消费积分后写回本地流水</text>
+
+  <g transform="translate(60, 760)">
+    <line x1="0" y1="8" x2="26" y2="8" class="arrowMain"/>
+    <text x="38" y="13" class="legendText">本地执行</text>
+    <line x1="128" y1="8" x2="154" y2="8" class="arrowGreen"/>
+    <text x="166" y="13" class="legendText">CRM 权益执行</text>
+    <line x1="292" y1="8" x2="318" y2="8" class="arrowPurple"/>
+    <text x="330" y="13" class="legendText">本地收口</text>
+    <line x1="420" y1="8" x2="446" y2="8" class="arrowDash"/>
+    <text x="458" y="13" class="legendText">云端同步 / 上报 / 查单</text>
+  </g>
+</svg>
