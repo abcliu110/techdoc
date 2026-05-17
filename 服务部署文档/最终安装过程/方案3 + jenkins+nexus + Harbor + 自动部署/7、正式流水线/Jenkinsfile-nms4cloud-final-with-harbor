@@ -168,8 +168,11 @@ spec:
   # priorityClassName: high-priority
 
   containers:
+  - name: jnlp
+    image: 192.168.1.119:30020/library/inbound-agent:3355.v388858a_47b_33-3-jdk21
+
   - name: maven
-    image: maven:3.9-eclipse-temurin-21
+    image: 192.168.1.119:30020/library/maven:3.9-eclipse-temurin-21
     command:
     - cat
     tty: true
@@ -190,7 +193,7 @@ spec:
       value: "-Xmx6g -Xms2g -XX:+UseG1GC -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError"
 
   - name: kaniko
-    image: gcr.io/kaniko-project/executor:debug
+    image: 192.168.1.119:30020/library/kaniko:debug
     command:
     - /busybox/cat
     tty: true
@@ -1047,6 +1050,7 @@ def buildModuleImage(String moduleName, String modulePath) {
                     --context=${buildContext} \\
                     --dockerfile=${dockerfilePath} \\
                     --registry-mirror=${registryMirror} \\
+                    --skip-default-registry-fallback \\
                     \${DESTINATIONS} \\
                     --insecure \\
                     --insecure-pull \\
@@ -1055,6 +1059,7 @@ def buildModuleImage(String moduleName, String modulePath) {
                     --compression=gzip \\
                     --compression-level=9 \\
                     --push-retry=3 \\
+                    --skip-push-permission-check \\
                     --cache=false \\
                     --verbosity=info \\
                     --skip-unused-stages=true \\
@@ -1071,6 +1076,7 @@ def buildModuleImage(String moduleName, String modulePath) {
                     --compression=gzip \\
                     --compression-level=9 \\
                     --push-retry=3 \\
+                    --skip-push-permission-check \\
                     --cache=false \\
                     --verbosity=info \\
                     --skip-unused-stages=true \\
