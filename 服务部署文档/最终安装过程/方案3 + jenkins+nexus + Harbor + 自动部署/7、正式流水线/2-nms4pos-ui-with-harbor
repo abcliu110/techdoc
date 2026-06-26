@@ -1,0 +1,140 @@
+  pipeline {
+    agent {
+      kubernetes {
+        defaultContainer 'node'
+      yaml '''
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    jenkins: agent
+    project: nms4pos-ui
+spec:
+  serviceAccountName: default
+
+  containers:
+  - name: jnlp
+    image: 192.168.1.119:30020/library/inbound-agent:3355.v388858a_47b_33-3-jdk21
+
+  - name: node
+    image: 192.168.1.119:30020/library/node-pnpm-ssh:1.0
+    command:
+    - cat
+    tty: true
+'''
+      }
+    }
+
+    parameters {
+      string(name: 'GIT_BRANCH', defaultValue: 'member-test', description: 'Git 分支名称')
+    }
+  
+    options {
+      skipDefaultCheckout(true)
+      disableConcurrentBuilds()
+    timeout(time: 30, unit: 'MINUTES')
+    timestamps()
+  }
+
+    environment {
+      GIT_URL = 'https://codeup.aliyun.com/613895a803e1c17d57a7630f/web/nms4pos-ui.git'
+      GIT_CREDENTIALS_ID = 'aliyun-codeup-token'
+
+    UBUNTU_HOST = '192.168.1.119'
+    UBUNTU_USER = 'jj'
+    SSH_CREDENTIALS_ID = 'ubuntu-output-ssh-key'
+
+    PROJECT_NAME = '01-nms4pos-ui'
+    BUILD_OUTPUT_DIR = 'app/pos4desktop/www'
+    REMOTE_BASE = '/data/frontend-build-output'
+    REMOTE_OUTPUT_DIR = "${REMOTE_BASE}/${PROJECT_NAME}/app/pos4desktop/www"
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        container('node') {
+          deleteDir()
+          withCredentials([usernamePassword(
+            credentialsId: "${GIT_CREDENTIALS_ID}",
+            usernameVariable: 'GIT_USERNAME',
+            passwordVariable: 'GIT_PASSWORD'
+          )]) {
+            sh '''
+              set -e
+
+              cat > /tmp/git-askpass.sh <<'EOF'
+#!/bin/sh
+case "$1" in
+  *Username*) printf '%s\n' "$GIT_USERNAME" ;;
+  *Password*) printf '%s\n' "$GIT_PASSWORD" ;;
+  *) printf '\n' ;;
+esac
+EOF
+              chmod 700 /tmp/git-askpass.sh
+              export GIT_ASKPASS=/tmp/git-askpass.sh
+              export GIT_TERMINAL_PROMPT=0
+
+              git clone --depth 1 --branch "${GIT_BRANCH}" "${GIT_URL}" .
+
+              rm -f /tmp/git-askpass.sh
+            '''
+          }
+        }
+      }
+    }
+
+    stage('Build Frontend') {
+      steps {
+        container('node') {
+          sh '''
+            set -e
+            node -v
+            npm -v
+            pnpm -v
+
+            # 注入 pnpm.overrides 强制所有包使用 webpack@5.78.0
+            # webpack 5.93+ 收紧 ProgressPlugin schema，Taro 3.6.x 不兼容
+            node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('package.json','utf8'));p.pnpm=p.pnpm||{};p.pnpm.overrides=p.pnpm.overrides||{};p.pnpm.overrides['webpack']='5.78.0';fs.writeFileSync('package.json',JSON.stringify(p,null,2));"
+            pnpm install --no-frozen-lockfile
+            pnpm run desktop:build
+            pnpm run shell:build
+
+            test -d "${BUILD_OUTPUT_DIR}"
+          '''
+        }
+      }
+    }
+
+    stage('Upload To Ubuntu') {
+      steps {
+        container('node') {
+          withCredentials([sshUserPrivateKey(
+            credentialsId: "${SSH_CREDENTIALS_ID}",
+            keyFileVariable: 'SSH_KEY'
+          )]) {
+            sh '''
+              set -e
+
+              # 清空目标目录，再重建
+              ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no ${UBUNTU_USER}@${UBUNTU_HOST} \
+              "rm -rf ${REMOTE_OUTPUT_DIR} && mkdir -p ${REMOTE_OUTPUT_DIR}"
+
+              scp -i "$SSH_KEY" -o StrictHostKeyChecking=no -r ${BUILD_OUTPUT_DIR}/* \
+              ${UBUNTU_USER}@${UBUNTU_HOST}:${REMOTE_OUTPUT_DIR}/
+            '''
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      echo "构建成功，产物目录：${REMOTE_OUTPUT_DIR}"
+    }
+    failure {
+      echo '构建失败，请检查 Git 拉取、前端构建命令、Harbor 镜像拉取或 SSH 上传步骤'
+    }
+  }
+}

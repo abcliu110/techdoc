@@ -65,19 +65,15 @@ EOF
 pipeline {
   agent {
     kubernetes {
+      agentContainer 'maven'
+      agentInjection true
       yaml """
 apiVersion: v1
 kind: Pod
 spec:
   containers:
-  - name: jnlp
-    image: 192.168.1.119:30020/library/inbound-agent:3355.v388858a_47b_33-3-jdk21
-
   - name: maven
     image: 192.168.1.119:30020/library/maven:3.9-eclipse-temurin-21
-    command:
-    - cat
-    tty: true
     resources:
       requests:
         cpu: 1000m

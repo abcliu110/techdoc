@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `crm_consume_points_session` (
   `updated_time` DATETIME DEFAULT NULL COMMENT '更新时间',
   `deleted` TINYINT DEFAULT 0 COMMENT '是否删除',
   PRIMARY KEY (`pid`),
-  UNIQUE KEY `uk_crm_consume_points_session_bill_card` (`mid`, `source_`, `bill_lid`, `card_lid`, `deleted`),
+  UNIQUE KEY `uk_crm_consume_points_session_bill_card` (`mid`, `sid`, `source_`, `bill_lid`, `card_lid`, `deleted`),
   KEY `idx_crm_consume_points_session_bill` (`bill_lid`),
   KEY `idx_crm_consume_points_session_status` (`status_`)
 ) COMMENT='POS本地消费积分会话';

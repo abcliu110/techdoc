@@ -1,0 +1,161 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 920" width="1200" height="920">
+  <style>
+    text { font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', 'Microsoft JhengHei', 'SimHei', sans-serif; }
+    .title { font-size: 24px; font-weight: 700; fill: #111827; }
+    .section { font-size: 15px; font-weight: 700; fill: #374151; }
+    .label { font-size: 14px; font-weight: 600; fill: #111827; }
+    .sub { font-size: 12px; fill: #4b5563; }
+    .small { font-size: 11px; fill: #6b7280; }
+    .box { fill: #ffffff; stroke: #d1d5db; stroke-width: 1.5; rx: 8; ry: 8; }
+    .ui { fill: #eff6ff; stroke: #bfdbfe; stroke-width: 1.5; rx: 8; ry: 8; }
+    .api { fill: #fff7ed; stroke: #fed7aa; stroke-width: 1.5; rx: 8; ry: 8; }
+    .service { fill: #f0fdf4; stroke: #bbf7d0; stroke-width: 1.5; rx: 8; ry: 8; }
+    .warn { fill: #fef2f2; stroke: #fecaca; stroke-width: 1.5; rx: 8; ry: 8; }
+    .data { fill: #faf5ff; stroke: #ddd6fe; stroke-width: 1.5; rx: 8; ry: 8; }
+    .decision { fill: #ffffff; stroke: #d1d5db; stroke-width: 1.5; }
+    .container { fill: #f9fafb; stroke: #e5e7eb; stroke-width: 1.5; stroke-dasharray: 6 4; rx: 12; ry: 12; }
+    .arrowBlue { stroke: #2563eb; stroke-width: 2; fill: none; }
+    .arrowGreen { stroke: #16a34a; stroke-width: 2; fill: none; }
+    .arrowRed { stroke: #dc2626; stroke-width: 2; fill: none; }
+    .arrowPurple { stroke: #9333ea; stroke-width: 2; fill: none; stroke-dasharray: 6 4; }
+    .arrowGray { stroke: #6b7280; stroke-width: 1.5; fill: none; stroke-dasharray: 5 4; }
+  </style>
+  <defs>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/>
+    </marker>
+    <marker id="arrow-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/>
+    </marker>
+    <marker id="arrow-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#9333ea"/>
+    </marker>
+    <marker id="arrow-gray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="920" fill="#ffffff"/>
+  <text x="600" y="38" text-anchor="middle" class="title">商户中心登录图形验证码校验流程</text>
+  <text x="600" y="62" text-anchor="middle" class="sub">前端 nms4cloud-biz-ui / 后端 nms4cloud-platform-app / Redis 一次性验证码</text>
+
+  <rect x="40" y="92" width="1120" height="248" class="container"/>
+  <text x="60" y="118" class="section">A. 图形验证码生成与展示</text>
+
+  <rect x="80" y="150" width="180" height="72" class="ui"/>
+  <text x="170" y="178" text-anchor="middle" class="label">登录页加载图片</text>
+  <text x="170" y="199" text-anchor="middle" class="sub">/api/sys/captcha/get</text>
+
+  <rect x="330" y="150" width="190" height="72" class="api"/>
+  <text x="425" y="178" text-anchor="middle" class="label">CaptchaController</text>
+  <text x="425" y="199" text-anchor="middle" class="sub">GET /captcha/get</text>
+
+  <rect x="590" y="150" width="210" height="72" class="service"/>
+  <text x="695" y="178" text-anchor="middle" class="label">生成 4 位数字验证码</text>
+  <text x="695" y="199" text-anchor="middle" class="sub">Hutool CircleCaptcha</text>
+
+  <rect x="870" y="132" width="220" height="108" class="data"/>
+  <text x="980" y="162" text-anchor="middle" class="label">Redis 写入</text>
+  <text x="980" y="184" text-anchor="middle" class="sub">key = platform:captcha:md5</text>
+  <text x="980" y="204" text-anchor="middle" class="sub">value = 图形验证码</text>
+  <text x="980" y="224" text-anchor="middle" class="sub">TTL = 10 分钟</text>
+
+  <path d="M 260 186 L 330 186" class="arrowBlue" marker-end="url(#arrow-blue)"/>
+  <path d="M 520 186 L 590 186" class="arrowBlue" marker-end="url(#arrow-blue)"/>
+  <path d="M 800 186 L 870 186" class="arrowGreen" marker-end="url(#arrow-green)"/>
+  <path d="M 425 222 L 425 282 L 170 282 L 170 222" class="arrowBlue" marker-end="url(#arrow-blue)"/>
+  <rect x="270" y="270" width="116" height="24" fill="#ffffff" opacity="0.95"/>
+  <text x="328" y="287" text-anchor="middle" class="small">返回图片流</text>
+
+  <rect x="40" y="372" width="1120" height="290" class="container"/>
+  <text x="60" y="398" class="section">B. 账号密码登录校验</text>
+
+  <rect x="80" y="435" width="190" height="82" class="ui"/>
+  <text x="175" y="462" text-anchor="middle" class="label">用户提交登录</text>
+  <text x="175" y="483" text-anchor="middle" class="sub">group / username</text>
+  <text x="175" y="503" text-anchor="middle" class="sub">password / captcha</text>
+
+  <rect x="335" y="435" width="190" height="82" class="api"/>
+  <text x="430" y="462" text-anchor="middle" class="label">POST /api/sys/biz/login</text>
+  <text x="430" y="483" text-anchor="middle" class="sub">BizAuthController.login</text>
+  <text x="430" y="503" text-anchor="middle" class="sub">前端密码已三次 MD5</text>
+
+  <polygon points="675,424 785,476 675,528 565,476" class="decision"/>
+  <text x="675" y="470" text-anchor="middle" class="label">有有效</text>
+  <text x="675" y="491" text-anchor="middle" class="label">sessionKey?</text>
+
+  <rect x="870" y="435" width="190" height="82" class="service"/>
+  <text x="965" y="462" text-anchor="middle" class="label">跳过图形验证码</text>
+  <text x="965" y="483" text-anchor="middle" class="sub">小程序登录分支</text>
+  <text x="965" y="503" text-anchor="middle" class="sub">直接 loginInner</text>
+
+  <rect x="335" y="570" width="190" height="62" class="data"/>
+  <text x="430" y="596" text-anchor="middle" class="label">取 Redis 验证码</text>
+  <text x="430" y="617" text-anchor="middle" class="sub">同一 getCaptchaKey</text>
+
+  <polygon points="675,556 785,601 675,646 565,601" class="decision"/>
+  <text x="675" y="596" text-anchor="middle" class="label">验证码匹配?</text>
+  <text x="675" y="616" text-anchor="middle" class="sub">先删除 Redis key</text>
+
+  <rect x="870" y="570" width="190" height="62" class="service"/>
+  <text x="965" y="596" text-anchor="middle" class="label">进入 loginInner</text>
+  <text x="965" y="617" text-anchor="middle" class="sub">校验商户/用户/权限</text>
+
+  <rect x="80" y="570" width="190" height="62" class="warn"/>
+  <text x="175" y="596" text-anchor="middle" class="label">返回错误并刷新图片</text>
+  <text x="175" y="617" text-anchor="middle" class="sub">错误/过期/未传 captcha</text>
+
+  <path d="M 270 476 L 335 476" class="arrowBlue" marker-end="url(#arrow-blue)"/>
+  <path d="M 525 476 L 565 476" class="arrowBlue" marker-end="url(#arrow-blue)"/>
+  <path d="M 785 476 L 870 476" class="arrowGray" marker-end="url(#arrow-gray)"/>
+  <rect x="804" y="464" width="36" height="22" fill="#ffffff" opacity="0.95"/>
+  <text x="822" y="480" text-anchor="middle" class="small">是</text>
+  <path d="M 675 528 L 675 542 L 430 542 L 430 570" class="arrowBlue" marker-end="url(#arrow-blue)"/>
+  <rect x="548" y="530" width="36" height="22" fill="#ffffff" opacity="0.95"/>
+  <text x="566" y="546" text-anchor="middle" class="small">否</text>
+  <path d="M 525 601 L 565 601" class="arrowGreen" marker-end="url(#arrow-green)"/>
+  <path d="M 785 601 L 870 601" class="arrowGreen" marker-end="url(#arrow-green)"/>
+  <rect x="805" y="589" width="36" height="22" fill="#ffffff" opacity="0.95"/>
+  <text x="823" y="605" text-anchor="middle" class="small">是</text>
+  <path d="M 565 601 L 270 601" class="arrowRed" marker-end="url(#arrow-red)"/>
+  <rect x="292" y="589" width="36" height="22" fill="#ffffff" opacity="0.95"/>
+  <text x="310" y="605" text-anchor="middle" class="small">否</text>
+
+  <rect x="40" y="694" width="1120" height="150" class="container"/>
+  <text x="60" y="720" class="section">C. 手机号登录验证码分支</text>
+
+  <rect x="80" y="755" width="190" height="58" class="ui"/>
+  <text x="175" y="780" text-anchor="middle" class="label">输入图形验证码</text>
+  <text x="175" y="800" text-anchor="middle" class="sub">imageCaptcha + mobile</text>
+
+  <rect x="335" y="755" width="190" height="58" class="api"/>
+  <text x="430" y="780" text-anchor="middle" class="label">POST /captcha/sms</text>
+  <text x="430" y="800" text-anchor="middle" class="sub">当前源码实现被注释</text>
+
+  <rect x="590" y="742" width="200" height="84" class="data"/>
+  <text x="690" y="768" text-anchor="middle" class="label">设计意图</text>
+  <text x="690" y="789" text-anchor="middle" class="sub">校验图形验证码</text>
+  <text x="690" y="809" text-anchor="middle" class="sub">写 sms_captcha_code:mobile</text>
+
+  <rect x="870" y="755" width="190" height="58" class="service"/>
+  <text x="965" y="780" text-anchor="middle" class="label">POST /biz/loginByPhone</text>
+  <text x="965" y="800" text-anchor="middle" class="sub">校验 smsCaptcha</text>
+
+  <path d="M 270 784 L 335 784" class="arrowPurple" marker-end="url(#arrow-purple)"/>
+  <path d="M 525 784 L 590 784" class="arrowPurple" marker-end="url(#arrow-purple)"/>
+  <path d="M 790 784 L 870 784" class="arrowGreen" marker-end="url(#arrow-green)"/>
+
+  <rect x="60" y="862" width="1080" height="38" fill="#f9fafb" stroke="#e5e7eb" rx="8" ry="8"/>
+  <line x1="82" y1="881" x2="130" y2="881" class="arrowBlue" marker-end="url(#arrow-blue)"/>
+  <text x="140" y="886" class="small">主请求/响应</text>
+  <line x1="250" y1="881" x2="298" y2="881" class="arrowGreen" marker-end="url(#arrow-green)"/>
+  <text x="308" y="886" class="small">Redis 读写/通过</text>
+  <line x1="438" y1="881" x2="486" y2="881" class="arrowRed" marker-end="url(#arrow-red)"/>
+  <text x="496" y="886" class="small">失败路径</text>
+  <line x1="612" y1="881" x2="660" y2="881" class="arrowPurple" marker-end="url(#arrow-purple)"/>
+  <text x="670" y="886" class="small">手机号登录分支/当前源码缺口</text>
+  <text x="918" y="886" class="small">关键约束：IP + User-Agent 绑定，10 分钟 TTL，一次性使用</text>
+</svg>

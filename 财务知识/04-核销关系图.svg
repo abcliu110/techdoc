@@ -1,0 +1,72 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+<style>
+  text { font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', 'Microsoft JhengHei', 'SimHei', sans-serif; fill: #111827; }
+  .title { font-size: 24px; font-weight: 700; }
+  .subtitle { font-size: 13px; fill: #6b7280; }
+  .node-title { font-size: 16px; font-weight: 700; }
+  .node-text { font-size: 13px; fill: #374151; }
+  .small { font-size: 12px; fill: #6b7280; }
+</style>
+<defs>
+<marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/></marker>
+<marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/></marker>
+<marker id="arrow-orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#ea580c"/></marker>
+<marker id="arrow-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#9333ea"/></marker>
+<marker id="arrow-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/></marker>
+<marker id="arrow-gray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/></marker>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.12"/></filter>
+</defs>
+<rect width="1200" height="800" fill="#ffffff"/>
+<text x="600.0" y="42" text-anchor="middle" class="title">核销关系图</text>
+<text x="600.0" y="66" text-anchor="middle" class="subtitle">核销就是把未结清的账，和结清它的单据配对</text>
+<rect x="95" y="135" width="230" height="98" rx="10" ry="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="210.0" y="165" text-anchor="middle" class="node-title">应收账款</text>
+<text x="210.0" y="193" text-anchor="middle" class="node-text">客户欠我 10,000</text>
+<text x="210.0" y="215" text-anchor="middle" class="node-text">未核销 10,000</text>
+<rect x="95" y="315" width="230" height="98" rx="10" ry="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="210.0" y="345" text-anchor="middle" class="node-title">应付账款</text>
+<text x="210.0" y="373" text-anchor="middle" class="node-text">我欠供应商 8,000</text>
+<text x="210.0" y="395" text-anchor="middle" class="node-text">未核销 8,000</text>
+<rect x="95" y="495" width="230" height="98" rx="10" ry="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="210.0" y="525" text-anchor="middle" class="node-title">预收款</text>
+<text x="210.0" y="553" text-anchor="middle" class="node-text">客户先付 5,000</text>
+<text x="210.0" y="575" text-anchor="middle" class="node-text">待抵销售</text>
+<rect x="95" y="675" width="230" height="98" rx="10" ry="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="210.0" y="705" text-anchor="middle" class="node-title">预付款</text>
+<text x="210.0" y="733" text-anchor="middle" class="node-text">先付供应商 3,000</text>
+<text x="210.0" y="755" text-anchor="middle" class="node-text">待抵采购</text>
+<rect x="845" y="135" width="230" height="98" rx="10" ry="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="960.0" y="165" text-anchor="middle" class="node-title">收款单</text>
+<text x="960.0" y="193" text-anchor="middle" class="node-text">客户付款 6,000</text>
+<text x="960.0" y="215" text-anchor="middle" class="node-text">核销后剩 4,000</text>
+<rect x="845" y="315" width="230" height="98" rx="10" ry="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="960.0" y="345" text-anchor="middle" class="node-title">付款单</text>
+<text x="960.0" y="373" text-anchor="middle" class="node-text">付款 8,000</text>
+<text x="960.0" y="395" text-anchor="middle" class="node-text">核销后剩 0</text>
+<rect x="845" y="495" width="230" height="98" rx="10" ry="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="960.0" y="525" text-anchor="middle" class="node-title">销售应收</text>
+<text x="960.0" y="553" text-anchor="middle" class="node-text">本次销售 5,000</text>
+<text x="960.0" y="575" text-anchor="middle" class="node-text">被预收抵掉</text>
+<rect x="845" y="675" width="230" height="98" rx="10" ry="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="960.0" y="705" text-anchor="middle" class="node-title">采购应付</text>
+<text x="960.0" y="733" text-anchor="middle" class="node-text">本次采购 3,000</text>
+<text x="960.0" y="755" text-anchor="middle" class="node-text">被预付抵掉</text>
+<line x1="330" y1="184" x2="840" y2="184" stroke="#9333ea" stroke-width="2.4" fill="none" marker-end="url(#arrow-purple)"/>
+<rect x="545.0" y="156" width="80" height="22" rx="5" fill="#ffffff" opacity="0.96"/>
+<text x="585" y="172" text-anchor="middle" class="small">应收核销</text>
+<line x1="330" y1="364" x2="840" y2="364" stroke="#9333ea" stroke-width="2.4" fill="none" marker-end="url(#arrow-purple)"/>
+<rect x="545.0" y="336" width="80" height="22" rx="5" fill="#ffffff" opacity="0.96"/>
+<text x="585" y="352" text-anchor="middle" class="small">应付核销</text>
+<line x1="330" y1="544" x2="840" y2="544" stroke="#9333ea" stroke-width="2.4" fill="none" marker-end="url(#arrow-purple)"/>
+<rect x="545.0" y="516" width="80" height="22" rx="5" fill="#ffffff" opacity="0.96"/>
+<text x="585" y="532" text-anchor="middle" class="small">预收核销</text>
+<line x1="330" y1="724" x2="840" y2="724" stroke="#9333ea" stroke-width="2.4" fill="none" marker-end="url(#arrow-purple)"/>
+<rect x="545.0" y="696" width="80" height="22" rx="5" fill="#ffffff" opacity="0.96"/>
+<text x="585" y="712" text-anchor="middle" class="small">预付核销</text>
+<rect x="465" y="320" width="270" height="132" rx="10" ry="10" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="600.0" y="350" text-anchor="middle" class="node-title">核销记录</text>
+<text x="600.0" y="378" text-anchor="middle" class="node-text">保存配对关系</text>
+<text x="600.0" y="400" text-anchor="middle" class="node-text">记录已核销和未核销金额</text>
+<text x="600.0" y="422" text-anchor="middle" class="node-text">不删除原始账</text>
+<text x="600" y="86" text-anchor="middle" class="subtitle">左边是待结清账目，右边是结清或抵消它们的单据。</text>
+</svg>

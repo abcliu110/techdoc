@@ -1,0 +1,327 @@
+server:
+  port: 8080    
+
+
+spring:
+
+  cloud:
+    #限流配置
+    sentinel:
+      transport:
+        dashboard: sentinel:8858
+        port: 9998
+    #流控规则持久化到nacos配置中心
+      datasource:
+        ds1:
+          nacos:
+            server-addr: nacos:8848
+            data-id: ${spring.application.name}.json
+            group-id: DEFAULT_GROUP
+            data-type: json
+            rule-type: flow
+            
+    gateway:
+      routes: #数组形式
+
+        - id: a02-reg
+          # uri: lb://a02-reg  
+          uri: lb://yd4cloud-nms 
+          order: 1 
+          predicates: 
+            - Path=/*api/reg_sc/**
+          filters: 
+            - StripPrefix=2  
+
+        - id: a02-reg1
+          uri: lb://a02-reg  
+          # uri: lb://yd4cloud-nms 
+          order: 1 
+          predicates: 
+            - Path=/*api/reg_sc1/**
+          filters: 
+            - StripPrefix=2  
+
+        - id: a03-nmx-crm  #会员模块 路由唯一标识
+          uri: lb://a03-nmx-crm  
+          order: 2 
+          predicates: 
+            - Path=/*api/crm/**
+          filters: 
+            - StripPrefix=2  
+
+        - id: a04-nmx-chain  #基础配置模块 路由唯一标识
+          uri: lb://nms4cloud-mq   
+          order: 3 
+          predicates: 
+            - Path=/*api/sc/**
+          filters: 
+            - StripPrefix=2  
+          # metadata:
+          #   response-timeout: 50000
+          #   connect-timeout: 1000
+
+
+
+        - id: a06-tpp  
+          uri: lb://a06-tpp  
+          order: 3 
+          predicates: 
+            - Path=/*api/tpp/**
+          filters: 
+            - StripPrefix=2  
+
+        - id: a08-nms-pay  
+          uri: lb://a08-nms-pay  
+          order: 3 
+          predicates: 
+            - Path=/*api/payment/**
+          filters: 
+            - StripPrefix=2  
+        - id: a10-game  
+          uri: lb://a10-game  
+          order: 3 
+          predicates: 
+            - Path=/*api/game/**
+          filters: 
+            - StripPrefix=2  
+        - id: a13-etl  
+          uri: lb://a13-etl  
+          order: 3 
+          predicates: 
+            - Path=/*api/etl/**
+          filters: 
+            - StripPrefix=2  
+        - id: a14-flink  
+          uri: lb://a14-flink  
+          order: 3 
+          predicates: 
+            - Path=/*api/flink/**
+          filters: 
+            - StripPrefix=2  
+        - id: a15-flininfrastructurek  
+          uri: lb://a15-infrastructure  
+          order: 3 
+          predicates: 
+            - Path=/*api/inf/**
+          filters: 
+            - StripPrefix=2  
+
+
+        - id: a16-wms  
+          uri: lb://a16-wms  
+          order: 3 
+          predicates: 
+            - Path=/*api/wms/**
+          filters: 
+            - StripPrefix=2  
+
+        - id: a18-c-order  
+          uri: lb://a18-c-order  
+          order: 3 
+          predicates: 
+            - Path=/*api/order/**
+          filters: 
+            - StripPrefix=2  
+        # - id: a19-p-mq  
+        #   uri: lb://a19-p-mq  
+        #   order: 3 
+        #   predicates: 
+        #     - Path=/*api/mq/**
+        #   filters: 
+        #     - StripPrefix=2  
+
+        - id: nms4cloud-wechat  
+          uri: lb://nms4cloud-wechat  
+          order: 3 
+          predicates: 
+            - Path=/*api/wx/**
+          filters: 
+            - StripPrefix=2  
+
+
+        - id: nms4cloud-doctor  
+          uri: lb://nms4cloud-doctor  
+          order: 3 
+          predicates: 
+            - Path=/*api/doctor/**
+          filters: 
+            - StripPrefix=2  
+
+        - id: nms4cloud-docking  
+          uri: lb://nms4cloud-docking  
+          order: 3 
+          predicates: 
+            - Path=/*api/docking/**
+          filters: 
+            - StripPrefix=2  
+
+        - id: nms4cloud-platform  
+          uri: lb://nms4cloud-platform  
+          order: 3 
+          predicates: 
+            - Path=/*api/sys/**
+          filters: 
+            - StripPrefix=2  
+
+        - id: nms4cloud-pos11report  
+          uri: lb://nms4cloud-pos11report  
+          order: 3 
+          predicates: 
+            - Path=/*api/report/**,/*api/bi/**
+          filters: 
+            - StripPrefix=2  
+
+        - id: nms4cloud-pos11report-calc  
+          uri: lb://nms4cloud-pos11report-calc  
+          order: 3 
+          predicates: 
+            - Path=/*api/calc/**
+          filters: 
+            - StripPrefix=2   
+
+        # - id: nms4cloud-bi 
+        #   uri: lb://nms4cloud-bi 
+        #   order: 3 
+        #   predicates: 
+        #     - Path=/*api/bi/**
+        #   filters: 
+        #     - StripPrefix=2  
+
+        - id: nms4cloud-payment 
+          uri: lb://nms4cloud-payment 
+          order: 3 
+          predicates: 
+            - Path=/*api/pay/**
+          filters: 
+            - StripPrefix=2  
+
+        - id: nms4cloud-order 
+          uri: lb://nms4cloud-order 
+          order: 3 
+          predicates: 
+            - Path=/*api/sorder/**
+          filters: 
+            - StripPrefix=2  
+
+        - id: nms4cloud-wms 
+          uri: lb://nms4cloud-wms 
+          order: 3 
+          predicates: 
+            - Path=/*api/swms/**
+          filters: 
+            - StripPrefix=2  
+
+        - id: nms4cloud-biz  
+          uri: lb://nms4cloud-biz  
+          order: 3 
+          predicates: 
+            - Path=/*api/biz/**
+          filters: 
+            - StripPrefix=2  
+        - id: nms4cloud-crm  
+          uri: lb://nms4cloud-crm  
+          order: 3 
+          predicates: 
+            - Path=/*api/scrm/**
+          filters: 
+            - StripPrefix=2  
+
+        - id: nms4cloud-product  
+          uri: lb://nms4cloud-product  
+          order: 3 
+          predicates: 
+            - Path=/*api/pt/**
+          filters: 
+            - StripPrefix=2  
+
+        - id: a01-platform  
+          uri: lb://a01-platform  
+          order: 3 
+          predicates: 
+            - Path=/*api/platform/**,/*api/bauth/**
+            # - Path=/*api/bauth/**
+          filters: 
+            - StripPrefix=2  
+        - id: a20-c-pos  
+          uri: lb://a20-c-pos  
+          order: 3 
+          predicates: 
+            - Path=/*api/pos/**
+            # - Path=/*api/bauth/**
+          filters: 
+            - StripPrefix=2  
+
+        - id: nms4cloud-mq  
+          uri: lb://nms4cloud-mq  
+          order: 3 
+          predicates: 
+            - Path=/*api/mq/**,/*api/netty/**
+            # - Path=/*api/bauth/**
+          filters: 
+            - StripPrefix=2  
+            
+        - id: nms4cloud-mall 
+          uri: lb://nms4cloud-mall 
+          order: 3 
+          predicates: 
+            - Path=/*api/mall/**
+          filters: 
+            - StripPrefix=2  
+
+        - id: nms4cloud-netty 
+          uri: lb://nms4cloud-netty 
+          order: 3 
+          predicates: 
+            - Path=/*api/snetty/**
+          filters: 
+            - StripPrefix=2  
+
+        - id: yd4cloud-nms 
+          uri: lb://yd4cloud-nms 
+          order: 3 
+          predicates: 
+            - Path=/*api/ams/**
+          filters: 
+            - StripPrefix=2  
+
+        - id: nms4cloud-pos 
+          uri: lb://nms4cloud-pos 
+          order: 3 
+          predicates: 
+            - Path=/*api/spos/**
+          filters: 
+            - StripPrefix=2  
+
+        - id: nms4cloud-pos4cloud 
+          uri: lb://nms4cloud-pos4cloud 
+          order: 3 
+          predicates: 
+            - Path=/*api/pos4cloud/**
+          filters: 
+            - StripPrefix=2  
+
+        - id: nms4cloud-pos5sync
+          uri: lb://nms4cloud-pos5sync 
+          order: 3 
+          predicates: 
+            - Path=/*api/pos5sync/**
+          filters: 
+            - StripPrefix=2  
+        - id: nms4cloud-pos8book
+          uri: lb://nms4cloud-pos8book 
+          order: 3 
+          predicates: 
+            - Path=/*api/pos8book/**
+          filters: 
+            - StripPrefix=2  
+      #开启网关拉取nacos的服务
+      discovery:
+        locator:
+          enabled: true
+
+#设置日志级别,ERROR/WARN/INFO/DEBUG,默认是INFO以上才显示
+logging:
+  level:
+    root: INFO
+    #nacos日志问题
+    com.alibaba.nacos.client.config.impl: WARN

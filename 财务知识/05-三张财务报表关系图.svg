@@ -1,0 +1,52 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" width="1200" height="760">
+<style>
+  text { font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', 'Microsoft JhengHei', 'SimHei', sans-serif; fill: #111827; }
+  .title { font-size: 24px; font-weight: 700; }
+  .subtitle { font-size: 13px; fill: #6b7280; }
+  .node-title { font-size: 16px; font-weight: 700; }
+  .node-text { font-size: 13px; fill: #374151; }
+  .small { font-size: 12px; fill: #6b7280; }
+</style>
+<defs>
+<marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/></marker>
+<marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/></marker>
+<marker id="arrow-orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#ea580c"/></marker>
+<marker id="arrow-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#9333ea"/></marker>
+<marker id="arrow-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/></marker>
+<marker id="arrow-gray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/></marker>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.12"/></filter>
+</defs>
+<rect width="1200" height="760" fill="#ffffff"/>
+<text x="600.0" y="42" text-anchor="middle" class="title">三张财务报表关系图</text>
+<text x="600.0" y="66" text-anchor="middle" class="subtitle">利润表解释经营成果，现金流量表验证含金量，资产负债表沉淀结果</text>
+<rect x="90" y="290" width="270" height="150" rx="10" ry="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="225.0" y="320" text-anchor="middle" class="node-title">利润表</text>
+<text x="225.0" y="348" text-anchor="middle" class="node-text">一段时间：赚了多少</text>
+<text x="225.0" y="370" text-anchor="middle" class="node-text">收入 - 成本 - 费用 = 利润</text>
+<text x="225.0" y="392" text-anchor="middle" class="node-text">看经营本事</text>
+<rect x="465" y="290" width="270" height="150" rx="10" ry="10" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="600.0" y="320" text-anchor="middle" class="node-title">现金流量表</text>
+<text x="600.0" y="348" text-anchor="middle" class="node-text">一段时间：现金怎么进出</text>
+<text x="600.0" y="370" text-anchor="middle" class="node-text">经营、投资、融资现金流</text>
+<text x="600.0" y="392" text-anchor="middle" class="node-text">验证利润含金量</text>
+<rect x="840" y="290" width="270" height="150" rx="10" ry="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="975.0" y="320" text-anchor="middle" class="node-title">资产负债表</text>
+<text x="975.0" y="348" text-anchor="middle" class="node-text">某一时点：家底多少</text>
+<text x="975.0" y="370" text-anchor="middle" class="node-text">资产 - 负债 = 净资产</text>
+<text x="975.0" y="392" text-anchor="middle" class="node-text">沉淀历史结果</text>
+<line x1="360" y1="365" x2="465" y2="365" stroke="#16a34a" stroke-width="2.2" fill="none" marker-end="url(#arrow-green)"/>
+<rect x="363.0" y="328" width="98" height="22" rx="5" fill="#ffffff" opacity="0.96"/>
+<text x="412" y="344" text-anchor="middle" class="small">利润要看回款</text>
+<line x1="735" y1="365" x2="840" y2="365" stroke="#ea580c" stroke-width="2.2" fill="none" marker-end="url(#arrow-orange)"/>
+<rect x="731.0" y="328" width="112" height="22" rx="5" fill="#ffffff" opacity="0.96"/>
+<text x="787" y="344" text-anchor="middle" class="small">现金改变家底</text>
+<path d="M975,290 C890,140 310,140 225,288" stroke="#2563eb" stroke-width="2.0" fill="none" marker-end="url(#arrow-blue)"/>
+<rect x="520.0" y="129" width="160" height="22" rx="5" fill="#ffffff" opacity="0.96"/>
+<text x="600" y="145" text-anchor="middle" class="small">期初家底支撑本期经营</text>
+<path d="M225,440 C310,610 890,610 975,442" stroke="#9333ea" stroke-width="2.0" fill="none" marker-end="url(#arrow-purple)"/>
+<rect x="505.0" y="619" width="190" height="22" rx="5" fill="#ffffff" opacity="0.96"/>
+<text x="600" y="635" text-anchor="middle" class="small">本期经营结果沉淀到期末家底</text>
+<rect x="130" y="520" width="940" height="72" rx="12" fill="#f9fafb" stroke="#e5e7eb"/>
+<text x="600" y="552" text-anchor="middle" class="node-title">一句话记忆</text>
+<text x="600" y="578" text-anchor="middle" class="node-text">看家底用资产负债表，看本事用利润表，看命脉用现金流量表。</text>
+</svg>

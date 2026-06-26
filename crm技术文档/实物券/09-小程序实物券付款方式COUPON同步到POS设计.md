@@ -373,3 +373,107 @@ POS dwd_pay:
 4. 不处理历史数据，只保证新订单从付款落库开始数据正确。
 
 修复后，云端 `order_pay`、`doGetOrder.payList`、POS `dwd_pay` 三者对实物券抵扣金额的表达应保持一致，避免再次出现“云端缺 COUPON、POS 本地补 FJ 后又删除、最终账不平”的问题。
+
+---
+
+## 11. 最终落地口径（合并方案，施工依据）
+
+> 本节合并了此前"最小改动版"与"二次评估"的全部正确结论，删除被推翻的错误写法（如"见 COUPON 即跳过"、"派生 COUPON 填 couponNo"）。第 1-10 节的现象、根因、链路分析全部保留。**本节为最终施工依据。**
+
+### 11.1 核心判断
+
+本问题唯一根因是**云端付款时没有生成实物券 `COUPON` 支付明细**。POS 侧"补 FJ / 删多余 FJ"的冲突都是其连锁反应。
+
+已核实的事实：
+
+1. POS `CashPayHandler.checkPays()` 已完整支持云端 `COUPON`：把 `OnlinePayTypeEnum.COUPON` 收为 `couponPays`，逐条建 `DwdPay(type=FJ)`，名称取云端 `OrderPayVO.name`，金额取 `payAmount/amount`，`FJ.actualIncome=false`（不计实收）。
+2. 云端 `PayTypeEnum.COUPON(5)` 与 POS `OnlinePayTypeEnum.COUPON → PayWayEnum.FJ` 映射都已存在，无需新增枚举。
+3. POS 兜底 `if (dwdPays 为空 && couponAmount>0) addCoupons(...)` 只在"本地完全无 dwd_pay"时触发。云端补齐 `COUPON` 后不再进入"补 FJ 又被删除"的冲突路径。
+
+**结论：只改云端一处即可闭环，POS 端零改动。**
+
+### 11.2 改动范围
+
+- 文件：`nms4cloud-order/.../service/c/order/PayOrderServiceImpl.java`
+- 方法：`pay(WrapperDTO<...>)`
+- POS 端：**不改动**，仅验证。
+
+### 11.3 关键约束（必须遵守，来自二次评估的真实风险）
+
+以下约束是避免线上事故的硬性要求，已逐条核对代码确认：
+
+1. **不能复用现有普通券 COUPON 分支，不能进入 `couponAmount`。**
+   `pay()` 现有 `PayTypeEnum.COUPON` 分支会累加 `couponAmount`，最终 `payNext(..., order.getPaidAmount() - couponAmount)` 把它从有效账单金额再扣一次。实物券抵扣**已经**体现在 `order.paidAmount`（crt_order 已扣）。若派生 COUPON 进入 `couponAmount`，会出现 `validAmount = paidAmount - couponAmount` 二次扣减，导致会员卡/积分实扣金额被清零。
+   因此实物券派生 COUPON 必须是**独立补充步骤**：加入最终 `payList`、参与 `sumPayAmount` 校验，但**不进** `couponAmount/couponIdList/couponDTOS`，**不触发** CRM 普通券核销流程。
+
+2. **派生 COUPON 不能填 `couponNo`、不能填 `coupons`（最高优先级约束）。**
+   已确认 `OrderPay.couponNo` 是 `Long` 类型；取消订单 `cancel()` 会遍历所有 `OrderPay(type=COUPON)`，把 `couponNo` 加入 `couponIdSet`、把 `coupons` 解析为 `CrmCouponDTO`，然后调用 `cardOpForCustomerFeign.cancelWriteOffCouponInner` 走 **CRM 普通券撤销**。
+   实物券/平台券的核销与撤销走的是 crt_order → POS DwdCoupon 链路（见文档 07），与 CRM 普通券撤销完全不同。若派生 COUPON 填了 `couponNo/coupons`，取消订单时会误把实物券/会员券号送进 CRM 撤销（平台券的 `couponWriteOffTraceNo` 字符串键 CRM 更不认识），造成误撤销或报错。
+   **因此派生 COUPON 的 `couponNo`、`coupons` 必须保持为空。** 它只用于 POS 平账展示（DwdPay/FJ），不承担任何核销/撤销职责。
+
+3. **幂等按实物券维度判断，不能用"见 COUPON 即跳过"。**
+   支付页普通券也是 `type=COUPON`。若用户既用普通券又有实物券，"只要存在 COUPON 就跳过"会漏掉实物券对应的 FJ。应在派生前先判断 payList 中是否已存在**实物券派生的** COUPON（按金额来源 `productCouponItems` 维度），而非全局按 type 跳过。当前实现层面：派生逻辑只读 `order.productCouponItems` 生成，本身只在付款落库时执行一次，配合"按条目生成"即可保证不与支付页普通券混淆。
+
+4. **按 `productCouponItems` 条目逐条生成，不是物理券张数。**
+   金额来源 `productCouponItems[].coupon_amt` 是按 `food_lid`（券菜品行）维度写的；平台券 count>1 时该 `coupon_amt` 已是该行总额（与文档 07 修正后的 faceAmount 总额口径一致）。因此"每条 `productCouponItems` 一条 `OrderPay`"是正确量纲，措辞统一为**按条目**而非"每张物理券"。
+
+### 11.4 数据来源与字段口径
+
+数据来源（crt_order 的 `applyProductCouponAccounting` 已写入 `order`）：
+
+```text
+productCouponItems[]: { coupon_no, food_lid, coupon_amt }
+productItems[]:       { food_lid, food_no, food_name, food_number, food_amt, coupon_amt }
+```
+
+注意：`productCouponItems` 自身不含菜名，菜名在 `productItems.food_name`，通过 `food_lid` 关联。
+
+派生 `OrderPay` 字段口径：
+
+| 字段 | 取值 |
+|---|---|
+| `type` | `PayTypeEnum.COUPON` |
+| `name` | 按 `food_lid` 从 `productItems` 取 `food_name`（**与 POS FJ 的 name=菜名对齐**）；缺失兜底"付券" |
+| `payAmount` / `amount` | 该条 `coupon_amt`（纯券优惠，不信前端） |
+| `isRealIncome` | `false`（券抵扣非实收，对齐 POS FJ `actualIncome=false`） |
+| `mid` / `sid` / `saasOrderNo` / `saasOrderKey` / `reportDate` / `checkoutBy` | 与 `order` 一致 |
+| `deleted` | `false` |
+| `couponNo` | **必须为空**（见 11.3 第 2 条） |
+| `coupons` | **必须为空**（见 11.3 第 2 条） |
+
+### 11.5 实现方式（独立方法，不污染普通券链路）
+
+```text
+PayOrderServiceImpl.pay()
+  1. 保留现有 request.orderPayList -> payList 组装逻辑不变
+  2. 在 sumPayAmount 校验之前，调用 appendProductCouponPays(order, payList)
+  3. appendProductCouponPays 只读 order.productCouponItems / order.productItems，逐条目追加派生 COUPON
+  4. 派生 COUPON 不进入 couponAmount / couponIdList / couponDTOS
+  5. 派生 COUPON 不填 couponNo / coupons
+  6. 派生 COUPON 计入 sumPayAmount；因 order.paidAmount 是扣券后剩余应付，sumPayAmount >= paidAmount 仍成立，校验安全
+```
+
+### 11.6 POS 侧（零改动，仅验证）
+
+云端补 `COUPON` 后验证：
+
+- `doGetOrder.payList` 返回 `COUPON(菜名, 5)` + `CRM(会员卡, 5)`。
+- POS `checkPays` 走 couponPays 分支建 `DwdPay(FJ, 菜名, 5, deleted=0)`。
+- POS 不再触发"本地补 FJ 后又删除"路径。
+- 结账：应收 10 = 实收(CRM 5) + 付券(FJ 5)，不再报"应收 10 与实收 5 不等"。
+
+### 11.7 边界与回归
+
+- 普通订单（无实物券抵扣）：`productCouponItems` 为空，不生成 COUPON，原逻辑零变化。
+- 支付页普通券订单：派生逻辑只读 `productCouponItems`，不干扰普通券 `couponAdds/couponNo` 流程。
+- 多券订单：按 `productCouponItems` 条目逐条 COUPON，与 POS 逐条建 FJ 对齐。
+- 取消订单：派生 COUPON 无 `couponNo/coupons`，不会被 CRM 普通券撤销逻辑消费。
+- 不处理历史数据，沿用第 5.4 节口径。
+
+### 11.8 落地清单
+
+- [ ] 云端新增 `appendProductCouponPays(order, payList)`，在 `pay()` 的 `sumPayAmount` 校验前调用。
+- [ ] 派生 COUPON：name 取 `productItems.food_name`，金额取 `productCouponItems.coupon_amt`，`isRealIncome=false`，`couponNo/coupons` 留空，不进 `couponAmount`。
+- [ ] POS 端不改动。
+- [ ] 验证：实物券 5 + 会员卡 5 / 菜品 10：云端 `order_pay` 两条、`doGetOrder.payList` 两条、POS `dwd_pay` 生成 FJ=5 不被删、结账平账。
+- [ ] 回归：普通订单、支付页普通券订单、多券订单、取消订单、MQ 重试。

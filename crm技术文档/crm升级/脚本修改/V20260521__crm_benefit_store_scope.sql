@@ -1,0 +1,10 @@
+-- CRM 权益适用门店字段升级总说明。
+-- 本次变更跨两个 CRM 数据源，不能在同一个 MySQL 连接里直接连续执行。
+--
+-- 1. 在 a_crm 执行：
+--    V20260521__crm_benefit_store_scope_a_crm.sql
+--
+-- 2. 在 CRM mycat/gylregdb 执行：
+--    V20260521__crm_benefit_store_scope_gylregdb.sql
+--
+-- 字段均允许 NULL，用 NULL 保留旧单门店规则兼容语义。

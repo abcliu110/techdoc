@@ -1,0 +1,60 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" width="1200" height="760">
+<style>
+  text { font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', 'Microsoft JhengHei', 'SimHei', sans-serif; fill: #111827; }
+  .title { font-size: 24px; font-weight: 700; }
+  .subtitle { font-size: 13px; fill: #6b7280; }
+  .node-title { font-size: 16px; font-weight: 700; }
+  .node-text { font-size: 13px; fill: #374151; }
+  .small { font-size: 12px; fill: #6b7280; }
+</style>
+<defs>
+<marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/></marker>
+<marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/></marker>
+<marker id="arrow-orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#ea580c"/></marker>
+<marker id="arrow-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#9333ea"/></marker>
+<marker id="arrow-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/></marker>
+<marker id="arrow-gray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/></marker>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.12"/></filter>
+</defs>
+<rect width="1200" height="760" fill="#ffffff"/>
+<text x="600.0" y="42" text-anchor="middle" class="title">会计期间与结账状态图</text>
+<text x="600.0" y="66" text-anchor="middle" class="subtitle">期间负责分段，结账负责定稿</text>
+<rect x="90" y="310" width="160" height="110" rx="10" ry="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="170.0" y="340" text-anchor="middle" class="node-title">未开启</text>
+<text x="170.0" y="368" text-anchor="middle" class="node-text">期间存在</text>
+<text x="170.0" y="390" text-anchor="middle" class="node-text">尚不可入账</text>
+<rect x="310" y="310" width="160" height="110" rx="10" ry="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="390.0" y="340" text-anchor="middle" class="node-title">打开中</text>
+<text x="390.0" y="368" text-anchor="middle" class="node-text">允许录入、审核</text>
+<text x="390.0" y="390" text-anchor="middle" class="node-text">允许生成凭证</text>
+<rect x="530" y="310" width="160" height="110" rx="10" ry="10" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="610.0" y="340" text-anchor="middle" class="node-title">结账中</text>
+<text x="610.0" y="368" text-anchor="middle" class="node-text">完整性检查</text>
+<text x="610.0" y="390" text-anchor="middle" class="node-text">汇总与结转</text>
+<rect x="750" y="310" width="160" height="110" rx="10" ry="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="830.0" y="340" text-anchor="middle" class="node-title">已结账</text>
+<text x="830.0" y="368" text-anchor="middle" class="node-text">历史锁定</text>
+<text x="830.0" y="390" text-anchor="middle" class="node-text">报表定稿</text>
+<line x1="250" y1="365" x2="310" y2="365" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arrow-blue)"/>
+<line x1="470" y1="365" x2="530" y2="365" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arrow-blue)"/>
+<line x1="690" y1="365" x2="750" y2="365" stroke="#2563eb" stroke-width="2.2" fill="none" marker-end="url(#arrow-blue)"/>
+<rect x="242.0" y="329" width="76" height="22" rx="5" fill="#ffffff" opacity="0.96"/>
+<text x="280" y="345" text-anchor="middle" class="small">开启期间</text>
+<rect x="462.0" y="329" width="76" height="22" rx="5" fill="#ffffff" opacity="0.96"/>
+<text x="500" y="345" text-anchor="middle" class="small">执行结账</text>
+<rect x="682.0" y="329" width="76" height="22" rx="5" fill="#ffffff" opacity="0.96"/>
+<text x="720" y="345" text-anchor="middle" class="small">结账完成</text>
+<rect x="970" y="310" width="150" height="110" rx="10" ry="10" fill="#fef2f2" stroke="#fecaca" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="1045.0" y="340" text-anchor="middle" class="node-title">反结账</text>
+<text x="1045.0" y="368" text-anchor="middle" class="node-text">特殊权限</text>
+<text x="1045.0" y="390" text-anchor="middle" class="node-text">重新打开</text>
+<line x1="910" y1="365" x2="970" y2="365" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arrow-red)"/>
+<rect x="896.0" y="329" width="88" height="22" rx="5" fill="#ffffff" opacity="0.96"/>
+<text x="940" y="345" text-anchor="middle" class="small">申请反结账</text>
+<path d="M1045,420 C1035,545 390,545 390,424" stroke="#dc2626" stroke-width="2.2" fill="none" marker-end="url(#arrow-red)"/>
+<rect x="595.0" y="559" width="250" height="22" rx="5" fill="#ffffff" opacity="0.96"/>
+<text x="720" y="575" text-anchor="middle" class="small">通过权限、日志、影响检查后回到打开中</text>
+<rect x="95" y="115" width="1010" height="96" rx="12" fill="#f9fafb" stroke="#e5e7eb"/>
+<text x="600" y="150" text-anchor="middle" class="node-title">结账前检查</text>
+<text x="600" y="180" text-anchor="middle" class="node-text">单据审核、收入成本确认、库存成本、应收应付、凭证生成、余额结转、报表输出。</text>
+</svg>

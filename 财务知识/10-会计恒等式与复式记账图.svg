@@ -1,0 +1,49 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" width="1200" height="760">
+<style>
+  text { font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', 'Microsoft JhengHei', 'SimHei', sans-serif; fill: #111827; }
+  .title { font-size: 24px; font-weight: 700; }
+  .subtitle { font-size: 13px; fill: #6b7280; }
+  .node-title { font-size: 16px; font-weight: 700; }
+  .node-text { font-size: 13px; fill: #374151; }
+  .small { font-size: 12px; fill: #6b7280; }
+  .formula { font-size: 24px; font-weight: 700; fill: #111827; }
+</style>
+<defs>
+<marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/></marker>
+<marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/></marker>
+<marker id="arrow-orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#ea580c"/></marker>
+<marker id="arrow-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#9333ea"/></marker>
+<marker id="arrow-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/></marker>
+<marker id="arrow-gray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/></marker>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.12"/></filter>
+</defs>
+<rect width="1200" height="760" fill="#ffffff"/>
+<text x="600.0" y="42" text-anchor="middle" class="title">会计恒等式与复式记账图</text>
+<text x="600.0" y="66" text-anchor="middle" class="subtitle">资产 = 负债 + 所有者权益；有借必有贷，借贷必相等</text>
+<rect x="90" y="150" width="280" height="135" rx="10" ry="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="230.0" y="180" text-anchor="middle" class="node-title">资产</text>
+<text x="230.0" y="208" text-anchor="middle" class="node-text">公司拥有的资源</text>
+<text x="230.0" y="230" text-anchor="middle" class="node-text">现金、应收、库存、设备</text>
+<text x="420" y="235" text-anchor="middle" class="formula">=</text>
+<rect x="470" y="150" width="250" height="135" rx="10" ry="10" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="595.0" y="180" text-anchor="middle" class="node-title">负债</text>
+<text x="595.0" y="208" text-anchor="middle" class="node-text">借来的钱</text>
+<text x="595.0" y="230" text-anchor="middle" class="node-text">应付、贷款、预收</text>
+<text x="760" y="235" text-anchor="middle" class="formula">+</text>
+<rect x="820" y="150" width="290" height="135" rx="10" ry="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="965.0" y="180" text-anchor="middle" class="node-title">所有者权益</text>
+<text x="965.0" y="208" text-anchor="middle" class="node-text">自己的钱</text>
+<text x="965.0" y="230" text-anchor="middle" class="node-text">资本、留存收益</text>
+<rect x="180" y="390" width="840" height="190" rx="14" fill="#f9fafb" stroke="#e5e7eb"/>
+<text x="600" y="425" text-anchor="middle" class="node-title">例：收到客户回款 1,000</text>
+<rect x="265" y="465" width="250" height="72" rx="10" ry="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="390.0" y="495" text-anchor="middle" class="node-title">借：银行存款 +1,000</text>
+<text x="390.0" y="523" text-anchor="middle" class="node-text">资产增加</text>
+<rect x="685" y="465" width="250" height="72" rx="10" ry="10" fill="#fef2f2" stroke="#fecaca" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="810.0" y="495" text-anchor="middle" class="node-title">贷：应收账款 -1,000</text>
+<text x="810.0" y="523" text-anchor="middle" class="node-text">资产内部减少</text>
+<line x1="515" y1="501" x2="685" y2="501" stroke="#9333ea" stroke-width="2.4" fill="none" marker-end="url(#arrow-purple)"/>
+<rect x="540.0" y="466" width="120" height="22" rx="5" fill="#ffffff" opacity="0.96"/>
+<text x="600" y="482" text-anchor="middle" class="small">同一业务的两面</text>
+<text x="600" y="645" text-anchor="middle" class="subtitle">复式记账让每笔业务都有来源和去向，最终保证账和报表能平衡。</text>
+</svg>

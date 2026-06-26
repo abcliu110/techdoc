@@ -1,0 +1,75 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 820" width="1300" height="820">
+<style>
+  text { font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', 'Microsoft JhengHei', 'SimHei', sans-serif; fill: #111827; }
+  .title { font-size: 24px; font-weight: 700; }
+  .subtitle { font-size: 13px; fill: #6b7280; }
+  .node-title { font-size: 16px; font-weight: 700; }
+  .node-text { font-size: 13px; fill: #374151; }
+  .small { font-size: 12px; fill: #6b7280; }
+  .formula { font-size: 24px; font-weight: 700; fill: #111827; }
+</style>
+<defs>
+<marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/></marker>
+<marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/></marker>
+<marker id="arrow-orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#ea580c"/></marker>
+<marker id="arrow-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#9333ea"/></marker>
+<marker id="arrow-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/></marker>
+<marker id="arrow-gray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/></marker>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.12"/></filter>
+</defs>
+<rect width="1300" height="820" fill="#ffffff"/>
+<text x="650.0" y="42" text-anchor="middle" class="title">业务单据到会计凭证映射图</text>
+<text x="650.0" y="66" text-anchor="middle" class="subtitle">业务事实不能直接变成报表，中间要经过财务规则翻译</text>
+<rect x="70" y="130" width="210" height="95" rx="10" ry="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="175.0" y="160" text-anchor="middle" class="node-title">销售单</text>
+<text x="175.0" y="188" text-anchor="middle" class="node-text">确认收入</text>
+<text x="175.0" y="210" text-anchor="middle" class="node-text">形成应收</text>
+<rect x="70" y="275" width="210" height="95" rx="10" ry="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="175.0" y="305" text-anchor="middle" class="node-title">采购入库单</text>
+<text x="175.0" y="333" text-anchor="middle" class="node-text">库存增加</text>
+<text x="175.0" y="355" text-anchor="middle" class="node-text">形成应付</text>
+<rect x="70" y="420" width="210" height="95" rx="10" ry="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="175.0" y="450" text-anchor="middle" class="node-title">收款单</text>
+<text x="175.0" y="478" text-anchor="middle" class="node-text">现金增加</text>
+<text x="175.0" y="500" text-anchor="middle" class="node-text">核销应收</text>
+<rect x="70" y="565" width="210" height="95" rx="10" ry="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="175.0" y="595" text-anchor="middle" class="node-title">费用报销单</text>
+<text x="175.0" y="623" text-anchor="middle" class="node-text">费用确认</text>
+<text x="175.0" y="645" text-anchor="middle" class="node-text">现金或应付减少</text>
+<rect x="435" y="300" width="230" height="150" rx="10" ry="10" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="550.0" y="330" text-anchor="middle" class="node-title">财务规则引擎</text>
+<text x="550.0" y="358" text-anchor="middle" class="node-text">判断会计期间</text>
+<text x="550.0" y="380" text-anchor="middle" class="node-text">匹配科目模板</text>
+<text x="550.0" y="402" text-anchor="middle" class="node-text">确定借贷方向</text>
+<text x="550.0" y="424" text-anchor="middle" class="node-text">生成凭证分录</text>
+<rect x="820" y="130" width="270" height="95" rx="10" ry="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="955.0" y="160" text-anchor="middle" class="node-title">收入凭证</text>
+<text x="955.0" y="188" text-anchor="middle" class="node-text">借：应收账款</text>
+<text x="955.0" y="210" text-anchor="middle" class="node-text">贷：主营业务收入</text>
+<rect x="820" y="275" width="270" height="95" rx="10" ry="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="955.0" y="305" text-anchor="middle" class="node-title">采购凭证</text>
+<text x="955.0" y="333" text-anchor="middle" class="node-text">借：库存商品</text>
+<text x="955.0" y="355" text-anchor="middle" class="node-text">贷：应付账款</text>
+<rect x="820" y="420" width="270" height="95" rx="10" ry="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="955.0" y="450" text-anchor="middle" class="node-title">收款凭证</text>
+<text x="955.0" y="478" text-anchor="middle" class="node-text">借：银行存款</text>
+<text x="955.0" y="500" text-anchor="middle" class="node-text">贷：应收账款</text>
+<rect x="820" y="565" width="270" height="95" rx="10" ry="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="955.0" y="595" text-anchor="middle" class="node-title">费用凭证</text>
+<text x="955.0" y="623" text-anchor="middle" class="node-text">借：费用</text>
+<text x="955.0" y="645" text-anchor="middle" class="node-text">贷：银行/应付</text>
+<path d="M280,177 C345,177 370,375 435,375" stroke="#2563eb" stroke-width="1.8" fill="none" marker-end="url(#arrow-blue)"/>
+<path d="M280,322 C345,322 370,375 435,375" stroke="#2563eb" stroke-width="1.8" fill="none" marker-end="url(#arrow-blue)"/>
+<path d="M280,467 C345,467 370,375 435,375" stroke="#2563eb" stroke-width="1.8" fill="none" marker-end="url(#arrow-blue)"/>
+<path d="M280,612 C345,612 370,375 435,375" stroke="#2563eb" stroke-width="1.8" fill="none" marker-end="url(#arrow-blue)"/>
+<path d="M665,375 C730,375 755,177 820,177" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arrow-green)"/>
+<path d="M665,375 C730,375 755,322 820,322" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arrow-green)"/>
+<path d="M665,375 C730,375 755,467 820,467" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arrow-green)"/>
+<path d="M665,375 C730,375 755,612 820,612" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arrow-green)"/>
+<rect x="321.0" y="269" width="78" height="22" rx="5" fill="#ffffff" opacity="0.96"/>
+<text x="360" y="285" text-anchor="middle" class="small">来源事实</text>
+<rect x="706.0" y="269" width="78" height="22" rx="5" fill="#ffffff" opacity="0.96"/>
+<text x="745" y="285" text-anchor="middle" class="small">财务表达</text>
+<rect x="340" y="700" width="620" height="60" rx="12" fill="#f9fafb" stroke="#e5e7eb"/>
+<text x="650" y="736" text-anchor="middle" class="node-text">同一类业务单据，通常通过模板化规则生成稳定、可审计的会计凭证。</text>
+</svg>

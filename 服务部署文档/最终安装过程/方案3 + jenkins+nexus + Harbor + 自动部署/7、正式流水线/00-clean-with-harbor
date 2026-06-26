@@ -1,0 +1,115 @@
+pipeline {
+  agent {
+    kubernetes {
+      yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    jenkins: agent
+    project: clean-build-output
+spec:
+  serviceAccountName: default
+
+  containers:
+  - name: jnlp
+    image: 192.168.1.119:30020/library/inbound-agent:3355.v388858a_47b_33-3-jdk21
+
+  - name: shell
+    image: 192.168.1.119:30020/library/maven:3.9-eclipse-temurin-21
+    command:
+    - cat
+    tty: true
+"""
+    }
+  }
+
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '10'))
+    disableConcurrentBuilds()
+    timeout(time: 10, unit: 'MINUTES')
+    timestamps()
+  }
+
+  parameters {
+    password(
+      name: 'UBUNTU_SUDO_PASS',
+      defaultValue: '123456',
+      description: 'Ubuntu 物理机 jj 用户 sudo 密码'
+    )
+  }
+
+  environment {
+    UBUNTU_HOST        = '192.168.1.119'
+    UBUNTU_USER        = 'jj'
+    SSH_CREDENTIALS_ID = 'ubuntu-output-ssh-key'
+  }
+
+  stages {
+    stage('安装 SSH 客户端') {
+      steps {
+        container('shell') {
+          sh '''
+            set -e
+            apt-get update
+            apt-get install -y openssh-client
+          '''
+        }
+      }
+    }
+
+    stage('清理物理机目录') {
+      steps {
+        container('shell') {
+          withCredentials([sshUserPrivateKey(
+            credentialsId: "${SSH_CREDENTIALS_ID}",
+            keyFileVariable: 'SSH_KEY'
+          )]) {
+            withEnv(["SUDO_PASS=${params.UBUNTU_SUDO_PASS ?: '123456'}"]) {
+              sh '''
+                set +x
+                set -e
+                chmod 600 "$SSH_KEY"
+
+                ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no ${UBUNTU_USER}@${UBUNTU_HOST} "SUDO_PASS='$SUDO_PASS' bash -s" <<'REMOTE_CLEAN'
+                  set -e
+                  if [ -z "$SUDO_PASS" ]; then
+                    echo "sudo password is empty"
+                    exit 1
+                  fi
+                  sudo_with_pass() {
+                    printf '%s\n' "$SUDO_PASS" | sudo -S -p '' "$@"
+                  }
+
+                  sudo_with_pass mkdir -p /data/frontend-build-output
+                  sudo_with_pass mkdir -p /data/backend-build-output
+
+                  sudo_with_pass chown -R jj:jj /data/frontend-build-output
+                  sudo_with_pass chown -R jj:jj /data/backend-build-output
+
+                  sudo_with_pass rm -rf /data/frontend-build-output/01-nms4pos-ui
+                  sudo_with_pass mkdir -p /data/frontend-build-output/01-nms4pos-ui
+
+                  sudo_with_pass rm -rf /data/backend-build-output/01-nms4pos-java
+                  sudo_with_pass mkdir -p /data/backend-build-output/01-nms4pos-java
+
+                  sudo_with_pass chown -R jj:jj /data/frontend-build-output/01-nms4pos-ui
+                  sudo_with_pass chown -R jj:jj /data/backend-build-output/01-nms4pos-java
+REMOTE_CLEAN
+              '''
+            }
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      echo '清理完成'
+    }
+    failure {
+      echo '清理失败，请检查 SSH 凭据、jj 用户权限或 sudo 配置'
+    }
+  }
+}

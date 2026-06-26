@@ -1,0 +1,63 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 760" width="1300" height="760">
+<style>
+  text { font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', 'Microsoft JhengHei', 'SimHei', sans-serif; fill: #111827; }
+  .title { font-size: 24px; font-weight: 700; }
+  .subtitle { font-size: 13px; fill: #6b7280; }
+  .node-title { font-size: 16px; font-weight: 700; }
+  .node-text { font-size: 13px; fill: #374151; }
+  .small { font-size: 12px; fill: #6b7280; }
+  .formula { font-size: 24px; font-weight: 700; fill: #111827; }
+</style>
+<defs>
+<marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/></marker>
+<marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/></marker>
+<marker id="arrow-orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#ea580c"/></marker>
+<marker id="arrow-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#9333ea"/></marker>
+<marker id="arrow-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/></marker>
+<marker id="arrow-gray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/></marker>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.12"/></filter>
+</defs>
+<rect width="1300" height="760" fill="#ffffff"/>
+<text x="650.0" y="42" text-anchor="middle" class="title">应收应付生命周期图</text>
+<text x="650.0" y="66" text-anchor="middle" class="subtitle">往来账回答：谁欠我、我欠谁、收付了多少、还剩多少</text>
+<rect x="70" y="160" width="170" height="88" rx="10" ry="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="155.0" y="190" text-anchor="middle" class="node-title">销售</text>
+<text x="155.0" y="218" text-anchor="middle" class="node-text">产生债权</text>
+<rect x="300" y="160" width="170" height="88" rx="10" ry="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="385.0" y="190" text-anchor="middle" class="node-title">应收</text>
+<text x="385.0" y="218" text-anchor="middle" class="node-text">客户欠我</text>
+<rect x="530" y="160" width="170" height="88" rx="10" ry="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="615.0" y="190" text-anchor="middle" class="node-title">收款</text>
+<text x="615.0" y="218" text-anchor="middle" class="node-text">现金到账</text>
+<rect x="760" y="160" width="170" height="88" rx="10" ry="10" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="845.0" y="190" text-anchor="middle" class="node-title">核销</text>
+<text x="845.0" y="218" text-anchor="middle" class="node-text">配对应收和收款</text>
+<rect x="990" y="160" width="170" height="88" rx="10" ry="10" fill="#fef2f2" stroke="#fecaca" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="1075.0" y="190" text-anchor="middle" class="node-title">剩余未收</text>
+<text x="1075.0" y="218" text-anchor="middle" class="node-text">账龄与坏账风险</text>
+<line x1="240" y1="204" x2="300" y2="204" stroke="#2563eb" stroke-width="2.1" fill="none" marker-end="url(#arrow-blue)"/>
+<line x1="470" y1="204" x2="530" y2="204" stroke="#2563eb" stroke-width="2.1" fill="none" marker-end="url(#arrow-blue)"/>
+<line x1="700" y1="204" x2="760" y2="204" stroke="#2563eb" stroke-width="2.1" fill="none" marker-end="url(#arrow-blue)"/>
+<line x1="930" y1="204" x2="990" y2="204" stroke="#2563eb" stroke-width="2.1" fill="none" marker-end="url(#arrow-blue)"/>
+<rect x="70" y="430" width="170" height="88" rx="10" ry="10" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="155.0" y="460" text-anchor="middle" class="node-title">采购</text>
+<text x="155.0" y="488" text-anchor="middle" class="node-text">产生债务</text>
+<rect x="300" y="430" width="170" height="88" rx="10" ry="10" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="385.0" y="460" text-anchor="middle" class="node-title">应付</text>
+<text x="385.0" y="488" text-anchor="middle" class="node-text">我欠供应商</text>
+<rect x="530" y="430" width="170" height="88" rx="10" ry="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="615.0" y="460" text-anchor="middle" class="node-title">付款</text>
+<text x="615.0" y="488" text-anchor="middle" class="node-text">现金流出</text>
+<rect x="760" y="430" width="170" height="88" rx="10" ry="10" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="845.0" y="460" text-anchor="middle" class="node-title">核销</text>
+<text x="845.0" y="488" text-anchor="middle" class="node-text">配对应付和付款</text>
+<rect x="990" y="430" width="170" height="88" rx="10" ry="10" fill="#fef2f2" stroke="#fecaca" stroke-width="1.6" filter="url(#shadow)"/>
+<text x="1075.0" y="460" text-anchor="middle" class="node-title">剩余未付</text>
+<text x="1075.0" y="488" text-anchor="middle" class="node-text">付款计划与信用</text>
+<line x1="240" y1="474" x2="300" y2="474" stroke="#ea580c" stroke-width="2.1" fill="none" marker-end="url(#arrow-orange)"/>
+<line x1="470" y1="474" x2="530" y2="474" stroke="#ea580c" stroke-width="2.1" fill="none" marker-end="url(#arrow-orange)"/>
+<line x1="700" y1="474" x2="760" y2="474" stroke="#ea580c" stroke-width="2.1" fill="none" marker-end="url(#arrow-orange)"/>
+<line x1="930" y1="474" x2="990" y2="474" stroke="#ea580c" stroke-width="2.1" fill="none" marker-end="url(#arrow-orange)"/>
+<text x="650" y="120" text-anchor="middle" class="node-title">应收链路</text>
+<text x="650" y="390" text-anchor="middle" class="node-title">应付链路</text>
+</svg>

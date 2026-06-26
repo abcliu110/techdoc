@@ -1,0 +1,326 @@
+/*
+ * nms4cloud-coupon-mock Jenkins 构建流水线
+ *
+ * 参照 Jenkinsfile-nms4cloud-final-with-harbor 的 K8s Agent、Nexus Maven
+ * settings、Harbor 凭据和 Kaniko 推送方式，简化为单 Spring Boot 服务构建。
+ */
+
+def generateMavenSettings() {
+    sh """
+        cat > ${MAVEN_SETTINGS} <<EOF
+<settings>
+  <mirrors>
+    <mirror>
+      <id>nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>${NEXUS_URL}/repository/${NEXUS_REPO_GROUP}/</url>
+    </mirror>
+  </mirrors>
+  <servers>
+    <server>
+      <id>nexus</id>
+      <username>${NEXUS_USER}</username>
+      <password>${NEXUS_PASS}</password>
+    </server>
+    <server>
+      <id>nexus-releases</id>
+      <username>${NEXUS_USER}</username>
+      <password>${NEXUS_PASS}</password>
+    </server>
+    <server>
+      <id>nexus-snapshots</id>
+      <username>${NEXUS_USER}</username>
+      <password>${NEXUS_PASS}</password>
+    </server>
+  </servers>
+  <profiles>
+    <profile>
+      <id>nexus-profile</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <repositories>
+        <repository>
+          <id>nexus</id>
+          <url>${NEXUS_URL}/repository/${NEXUS_REPO_GROUP}/</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+            <checksumPolicy>warn</checksumPolicy>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>nexus</id>
+          <url>${NEXUS_URL}/repository/${NEXUS_REPO_GROUP}/</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+</settings>
+EOF
+    """
+}
+
+pipeline {
+    agent {
+        kubernetes {
+            yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    jenkins: agent
+    project: nms4cloud-coupon-mock
+spec:
+  containers:
+  - name: jnlp
+    image: 192.168.1.119:30020/library/inbound-agent:3355.v388858a_47b_33-3-jdk21
+
+  - name: maven
+    image: 192.168.1.119:30020/library/maven:3.9-eclipse-temurin-21
+    command:
+    - cat
+    tty: true
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 2000m
+        memory: 2Gi
+    env:
+    - name: MAVEN_OPTS
+      value: "-Xmx1024m -XX:+UseG1GC"
+
+  - name: kaniko
+    image: 192.168.1.119:30020/library/kaniko:debug
+    command:
+    - /busybox/cat
+    tty: true
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 2000m
+        memory: 2Gi
+"""
+        }
+    }
+
+    parameters {
+        string(
+            name: 'GIT_REPO_URL',
+            defaultValue: '',
+            description: 'nms4cloud-coupon-mock Git 仓库地址'
+        )
+        string(
+            name: 'GIT_BRANCH',
+            defaultValue: 'master',
+            description: 'Git 分支'
+        )
+        booleanParam(
+            name: 'SKIP_TESTS',
+            defaultValue: false,
+            description: '是否跳过单元测试'
+        )
+        booleanParam(
+            name: 'BUILD_DOCKER_IMAGE',
+            defaultValue: true,
+            description: '是否构建并推送 Docker 镜像到 Harbor'
+        )
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        disableConcurrentBuilds()
+        timeout(time: 30, unit: 'MINUTES')
+        timestamps()
+    }
+
+    environment {
+        MAVEN_SETTINGS = '/tmp/maven-settings.xml'
+
+        NEXUS_URL = 'http://nexus.nexus:8081'
+        NEXUS_REPO_GROUP = 'maven-public'
+        NEXUS_CRED_ID = 'nexus-credentials'
+
+        GIT_CREDENTIAL_ID = 'aliyun-codeup-token'
+
+        PROJECT_NAME = 'nms4cloud-coupon-mock'
+        HARBOR_REGISTRY = 'harbor.harbor'
+        HARBOR_PROJECT = 'library'
+        HARBOR_CRED_ID = 'harbor-user-auth'
+        DOCKER_REGISTRY_MIRROR = 'harbor.harbor/dockerhub-proxy'
+        DOCKER_IMAGE_TAG = "${env.BUILD_NUMBER}"
+    }
+
+    stages {
+        stage('环境检查') {
+            steps {
+                container('maven') {
+                    script {
+                        if (!params.GIT_REPO_URL?.trim()) {
+                            error('GIT_REPO_URL 不能为空，请填写 nms4cloud-coupon-mock 仓库地址')
+                        }
+
+                        withCredentials([usernamePassword(
+                            credentialsId: "${NEXUS_CRED_ID}",
+                            usernameVariable: 'NEXUS_USER',
+                            passwordVariable: 'NEXUS_PASS'
+                        )]) {
+                            generateMavenSettings()
+                        }
+
+                        currentBuild.displayName = "#${BUILD_NUMBER} - ${PROJECT_NAME}"
+                        currentBuild.description = "分支: ${params.GIT_BRANCH}"
+
+                        sh '''
+                            set +x
+                            java -version
+                            mvn -version -s ${MAVEN_SETTINGS}
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('代码检出') {
+            steps {
+                container('maven') {
+                    script {
+                        deleteDir()
+                        checkout([
+                            $class: 'GitSCM',
+                            branches: [[name: "*/${params.GIT_BRANCH}"]],
+                            extensions: [
+                                [$class: 'CloneOption', depth: 1, shallow: true, timeout: 20],
+                                [$class: 'CheckoutOption', timeout: 20]
+                            ],
+                            userRemoteConfigs: [[
+                                credentialsId: "${GIT_CREDENTIAL_ID}",
+                                url: "${params.GIT_REPO_URL}"
+                            ]]
+                        ])
+                    }
+                }
+            }
+        }
+
+        stage('Maven 构建') {
+            steps {
+                container('maven') {
+                    script {
+                        def skipTests = params.SKIP_TESTS ? '-Dmaven.test.skip=true' : ''
+                        sh "mvn -B clean package ${skipTests} -s ${MAVEN_SETTINGS}"
+                    }
+                }
+            }
+        }
+
+        stage('归档构建产物') {
+            steps {
+                container('maven') {
+                    archiveArtifacts artifacts: 'target/*.jar,Dockerfile', fingerprint: true, allowEmptyArchive: false
+                }
+            }
+        }
+
+        stage('构建并推送 Docker 镜像') {
+            when {
+                expression { params.BUILD_DOCKER_IMAGE }
+            }
+            steps {
+                container('kaniko') {
+                    script {
+                        buildDockerImage()
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo """
+构建成功: ${PROJECT_NAME}
+分支: ${params.GIT_BRANCH}
+镜像:
+  ${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${PROJECT_NAME}:${DOCKER_IMAGE_TAG}
+  ${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${PROJECT_NAME}:latest
+"""
+        }
+        failure {
+            echo """
+构建失败，请检查:
+1. Jenkins Agent Pod 是否能拉取 jnlp、maven、kaniko 镜像
+2. GIT_REPO_URL、GIT_BRANCH、GIT_CREDENTIAL_ID 是否正确
+3. Nexus 凭据和 Maven 依赖是否可用
+4. Harbor 凭据和镜像推送权限是否可用
+"""
+        }
+        always {
+            cleanWs(deleteDirs: true)
+        }
+    }
+}
+
+def buildDockerImage() {
+    def buildContext = "${WORKSPACE}"
+    def dockerfilePath = "${WORKSPACE}/Dockerfile"
+    def imageName = "${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${PROJECT_NAME}"
+
+    withCredentials([usernamePassword(
+        credentialsId: "${HARBOR_CRED_ID}",
+        usernameVariable: 'HB_USER',
+        passwordVariable: 'HB_PASS'
+    )]) {
+        sh """
+            set +x
+
+            mkdir -p /kaniko/.docker
+            AUTH=\$(printf "%s:%s" "\${HB_USER}" "\${HB_PASS}" | base64 | tr -d '\\n')
+            echo "{\\"auths\\":{\\"${HARBOR_REGISTRY}\\":{\\"auth\\":\\"\$AUTH\\"}}}" > /kaniko/.docker/config.json
+
+            if [ ! -f "${dockerfilePath}" ]; then
+                echo "未找到 Dockerfile: ${dockerfilePath}"
+                exit 1
+            fi
+
+            JAR_COUNT=\$(find "${WORKSPACE}/target" -maxdepth 1 -name "*.jar" -type f 2>/dev/null | wc -l)
+            if [ "\$JAR_COUNT" -eq 0 ]; then
+                echo "未找到 target/*.jar"
+                ls -la "${WORKSPACE}/target" 2>/dev/null || true
+                exit 1
+            fi
+
+            DESTINATIONS="--destination=${imageName}:${DOCKER_IMAGE_TAG} --destination=${imageName}:latest"
+
+            timeout 300 /kaniko/executor \\
+                --context=${buildContext} \\
+                --dockerfile=${dockerfilePath} \\
+                --registry-mirror=${DOCKER_REGISTRY_MIRROR} \\
+                --skip-default-registry-fallback \\
+                \${DESTINATIONS} \\
+                --insecure \\
+                --insecure-pull \\
+                --skip-tls-verify \\
+                --insecure-registry=${HARBOR_REGISTRY} \\
+                --compression=gzip \\
+                --compression-level=9 \\
+                --push-retry=3 \\
+                --cache=false \\
+                --verbosity=info
+        """
+    }
+
+    env.BUILT_IMAGE = "${imageName}:${DOCKER_IMAGE_TAG}"
+}
