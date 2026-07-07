@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+<defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/></marker></defs>
+<style>
+  .bg{fill:#f6f8fb}
+  .panel{fill:#ffffff;stroke:#d7dde8;stroke-width:2}
+  .soft{fill:#f1f5f9;stroke:#d7dde8;stroke-width:1.5}
+  .brand{fill:#2563eb;stroke:#1d4ed8;stroke-width:1.5}
+  .brandSoft{fill:#dbeafe;stroke:#93c5fd;stroke-width:1.5}
+  .green{fill:#dcfce7;stroke:#86efac;stroke-width:1.5}
+  .orange{fill:#fff7ed;stroke:#fdba74;stroke-width:1.5}
+  .red{fill:#fee2e2;stroke:#fca5a5;stroke-width:1.5}
+  .purple{fill:#ede9fe;stroke:#c4b5fd;stroke-width:1.5}
+  .line{stroke:#64748b;stroke-width:2;fill:none;marker-end:url(#arrow)}
+  .dash{stroke:#94a3b8;stroke-width:2;fill:none;stroke-dasharray:6 4;marker-end:url(#arrow)}
+  .title{font:700 24px Arial, sans-serif;fill:#0f172a}
+  .h{font:700 16px Arial, sans-serif;fill:#0f172a}
+  .t{font:14px Arial, sans-serif;fill:#334155}
+  .s{font:12px Arial, sans-serif;fill:#64748b}
+  .w{font:700 14px Arial, sans-serif;fill:#ffffff}
+</style>
+<rect class="bg" x="0" y="0" width="960" height="540"/>
+<text class="title" x="40" y="46">KDesign Enterprise UI System</text>
+<rect class="brandSoft" x="85" y="90" width="790" height="58" rx="12"/>
+<text class="h" x="115" y="115">Principles</text>
+<text class="t" x="310" y="115">Role-based | Consistent | Efficient | Pleasant</text>
+<rect class="soft" x="85" y="172" width="790" height="58" rx="12"/>
+<text class="h" x="115" y="197">Visual Foundation</text>
+<text class="t" x="310" y="197">Color | Shadow | Typography | Icon | I18N</text>
+<path class="line" d="M480,150 L480,172"/>
+<rect class="green" x="85" y="254" width="790" height="58" rx="12"/>
+<text class="h" x="115" y="279">Components</text>
+<text class="t" x="310" y="279">Button | Table | Form | Modal | Drawer | Message</text>
+<path class="line" d="M480,232 L480,254"/>
+<rect class="orange" x="85" y="336" width="790" height="58" rx="12"/>
+<text class="h" x="115" y="361">Typical Pages</text>
+<text class="t" x="310" y="361">Workbench | List | Form | Detail | Report</text>
+<path class="line" d="M480,314 L480,336"/>
+<rect class="purple" x="85" y="418" width="790" height="58" rx="12"/>
+<text class="h" x="115" y="443">ERP Model</text>
+<text class="t" x="310" y="443">Object | Document | State | Flow | Audit</text>
+<path class="line" d="M480,396 L480,418"/>
+</svg>

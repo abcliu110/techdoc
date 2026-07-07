@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>微信小程序扫码点餐系统分析地图</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --ink: #1f2933;
+      --muted: #667085;
+      --line: #d7dce3;
+      --blue: #2563eb;
+      --green: #059669;
+      --orange: #d97706;
+      --purple: #7c3aed;
+      --red: #dc2626;
+      --teal: #0f766e;
+      --shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    .page {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 28px;
+    }
+
+    .header {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 20px;
+      align-items: stretch;
+      margin-bottom: 20px;
+    }
+
+    .hero,
+    .principle {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      border-radius: 10px;
+      padding: 24px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    .tagline {
+      font-size: 15px;
+      max-width: 920px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fbfcfe;
+      color: #344054;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+
+    .dot.green { background: var(--green); }
+    .dot.orange { background: var(--orange); }
+    .dot.purple { background: var(--purple); }
+    .dot.red { background: var(--red); }
+    .dot.teal { background: var(--teal); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+    }
+
+    .layers {
+      display: grid;
+      gap: 12px;
+    }
+
+    .layer {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: #fcfcfd;
+      position: relative;
+    }
+
+    .layer::before {
+      content: "";
+      position: absolute;
+      left: -1px;
+      top: 12px;
+      bottom: 12px;
+      width: 4px;
+      border-radius: 4px;
+      background: var(--blue);
+    }
+
+    .layer.green::before { background: var(--green); }
+    .layer.orange::before { background: var(--orange); }
+    .layer.purple::before { background: var(--purple); }
+    .layer.red::before { background: var(--red); }
+    .layer.teal::before { background: var(--teal); }
+
+    .main {
+      display: grid;
+      gap: 20px;
+    }
+
+    .view-map {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .view {
+      min-height: 166px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 16px;
+      background: #ffffff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .view::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 68px;
+      height: 68px;
+      background: #eef4ff;
+      border-bottom-left-radius: 68px;
+    }
+
+    .view strong {
+      display: block;
+      color: #101828;
+      margin-bottom: 6px;
+      font-size: 15px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .view em {
+      display: block;
+      color: var(--blue);
+      font-style: normal;
+      font-size: 12px;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .view ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+      position: relative;
+      z-index: 1;
+    }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .step {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfe;
+      padding: 14px;
+      min-height: 104px;
+      position: relative;
+    }
+
+    .step:not(:last-child)::after {
+      content: ">";
+      position: absolute;
+      right: -13px;
+      top: 38px;
+      color: #98a2b3;
+      font-size: 18px;
+      font-weight: 700;
+      z-index: 2;
+    }
+
+    .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: white;
+      font-size: 12px;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: 1.1fr 1.1fr 1.35fr 1.2fr;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      background: white;
+    }
+
+    .cell {
+      padding: 12px 14px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      min-height: 58px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .cell:nth-child(4n) { border-right: none; }
+    .cell.header-cell {
+      background: #f2f4f7;
+      font-weight: 700;
+      color: #344054;
+    }
+
+    .cell.muted {
+      color: var(--muted);
+    }
+
+    .footer-note {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 10px;
+      padding: 16px;
+      color: #7c2d12;
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    @media (max-width: 1100px) {
+      .header,
+      .grid,
+      .view-map,
+      .pipeline {
+        grid-template-columns: 1fr;
+      }
+
+      .step:not(:last-child)::after {
+        content: "v";
+        right: 50%;
+        top: auto;
+        bottom: -19px;
+      }
+
+      .matrix {
+        grid-template-columns: 1fr;
+      }
+
+      .cell,
+      .cell:nth-child(4n) {
+        border-right: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="header">
+      <div class="hero">
+        <h1>微信小程序扫码点餐系统分析地图</h1>
+        <p class="tagline">目标不是画一张大流程图，而是用一组互补视图把系统边界、页面状态、接口调用、金额口径、配置决策、异常恢复和自动化测试模型分层描述清楚。</p>
+        <div class="legend">
+          <span class="pill"><span class="dot"></span>边界与结构</span>
+          <span class="pill"><span class="dot green"></span>状态与行为</span>
+          <span class="pill"><span class="dot orange"></span>接口与数据</span>
+          <span class="pill"><span class="dot purple"></span>规则与决策</span>
+          <span class="pill"><span class="dot red"></span>异常与恢复</span>
+          <span class="pill"><span class="dot teal"></span>测试模型</span>
+        </div>
+      </div>
+      <div class="principle">
+        <h2>总原则</h2>
+        <p>扫码点餐不是线性页面跳转，而是由二维码业务类型、前端状态缓存、桌台账单、支付类型、门店配置、会员状态共同驱动的状态系统。分析时必须把“流程”拆成多张图和多张表。</p>
+      </div>
+    </section>
+
+    <section class="grid">
+      <aside class="stack">
+        <div class="card">
+          <h2>分析层次</h2>
+          <div class="layers">
+            <div class="layer">
+              <h3>1. 系统上下文</h3>
+              <p>小程序、订单服务、商品/二维码、CRM、支付、微信支付、POS/门店。</p>
+            </div>
+            <div class="layer green">
+              <h3>2. 页面状态</h3>
+              <p>ScanCode、PullSingle、ORDER_FOODS、CART、ORDER_STATUS、PAY_CENTER。</p>
+            </div>
+            <div class="layer orange">
+              <h3>3. 接口与数据</h3>
+              <p>二维码、购物车、账单、订单、支付、储值的数据流。</p>
+            </div>
+            <div class="layer purple">
+              <h3>4. 决策规则</h3>
+              <p>businesstype、payType、viewMode、handlePull、配置开关。</p>
+            </div>
+            <div class="layer red">
+              <h3>5. 异常恢复</h3>
+              <p>扫码失败、下单失败、拉单失败、余额不足、支付取消、余额未刷新。</p>
+            </div>
+            <div class="layer teal">
+              <h3>6. 自动化测试</h3>
+              <p>把页面状态、动作、断言和恢复策略建成模型驱动测试。</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <section class="main">
+        <div class="card">
+          <h2>建议使用的图和技术</h2>
+          <div class="view-map">
+            <div class="view">
+              <strong>C4 上下文图</strong>
+              <em>回答系统边界</em>
+              <ul>
+                <li>谁使用系统</li>
+                <li>依赖哪些后端服务</li>
+                <li>微信支付和 POS 在哪里接入</li>
+              </ul>
+            </div>
+            <div class="view">
+              <strong>页面状态机图</strong>
+              <em>回答当前能点什么</em>
+              <ul>
+                <li>页面状态转换</li>
+                <li>按钮显示条件</li>
+                <li>自动化上下文判断</li>
+              </ul>
+            </div>
+            <div class="view">
+              <strong>时序图</strong>
+              <em>回答谁先调用谁</em>
+              <ul>
+                <li>扫码识别</li>
+                <li>下单拉单</li>
+                <li>支付和储值回调</li>
+              </ul>
+            </div>
+            <div class="view">
+              <strong>数据流图</strong>
+              <em>回答数据如何变化</em>
+              <ul>
+                <li>二维码参数到 billStore</li>
+                <li>购物车到订单</li>
+                <li>账单到支付中心</li>
+              </ul>
+            </div>
+            <div class="view">
+              <strong>决策表 / DMN</strong>
+              <em>回答条件分支</em>
+              <ul>
+                <li>businesstype 跳转</li>
+                <li>payType 先付/后付</li>
+                <li>viewMode 控制按钮</li>
+              </ul>
+            </div>
+            <div class="view">
+              <strong>金额口径模型</strong>
+              <em>回答钱怎么算</em>
+              <ul>
+                <li>购物车金额</li>
+                <li>桌台账单金额</li>
+                <li>支付应付金额</li>
+              </ul>
+            </div>
+            <div class="view">
+              <strong>领域模型 / ER 图</strong>
+              <em>回答业务对象关系</em>
+              <ul>
+                <li>门店、桌台、订单</li>
+                <li>菜品、购物车、账单</li>
+                <li>会员卡、支付记录、储值</li>
+              </ul>
+            </div>
+            <div class="view">
+              <strong>异常恢复矩阵</strong>
+              <em>回答失败后怎么办</em>
+              <ul>
+                <li>重试、等待、跳转</li>
+                <li>报错还是恢复</li>
+                <li>不能复用旧元素</li>
+              </ul>
+            </div>
+            <div class="view">
+              <strong>模型驱动测试</strong>
+              <em>回答如何自动化</em>
+              <ul>
+                <li>状态</li>
+                <li>动作</li>
+                <li>断言和恢复策略</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>推荐分析顺序</h2>
+          <div class="pipeline">
+            <div class="step">
+              <span class="num">1</span>
+              <h3>定边界</h3>
+              <p>先画系统上下文，确认小程序和后端服务、微信支付、POS 的边界。</p>
+            </div>
+            <div class="step">
+              <span class="num">2</span>
+              <h3>拆能力</h3>
+              <p>按扫码、点菜、购物车、下单、拉单、支付、储值拆业务能力。</p>
+            </div>
+            <div class="step">
+              <span class="num">3</span>
+              <h3>建状态</h3>
+              <p>用状态机描述页面和按钮条件，不用线性流程替代状态判断。</p>
+            </div>
+            <div class="step">
+              <span class="num">4</span>
+              <h3>理数据</h3>
+              <p>追踪二维码参数、billStore、cartDishs、payList、paidAmount。</p>
+            </div>
+            <div class="step">
+              <span class="num">5</span>
+              <h3>落测试</h3>
+              <p>把状态、动作、断言、异常恢复变成自动化测试模型。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>图和问题的映射矩阵</h2>
+          <div class="matrix">
+            <div class="cell header-cell">问题</div>
+            <div class="cell header-cell">首选图/技术</div>
+            <div class="cell header-cell">关键输入</div>
+            <div class="cell header-cell">输出物</div>
+
+            <div class="cell">系统有哪些外部依赖？</div>
+            <div class="cell">C4 上下文图</div>
+            <div class="cell muted">小程序、订单、CRM、支付、微信、POS</div>
+            <div class="cell muted">系统边界图</div>
+
+            <div class="cell">当前页面允许执行什么动作？</div>
+            <div class="cell">状态机图</div>
+            <div class="cell muted">bindusertaiid、viewMode、payType、handlePull</div>
+            <div class="cell muted">页面状态转移表</div>
+
+            <div class="cell">扫码、下单、支付如何调用？</div>
+            <div class="cell">时序图</div>
+            <div class="cell muted">queryQrBing、crt_order、pay_order、charge_success</div>
+            <div class="cell muted">接口调用链</div>
+
+            <div class="cell">金额为什么不一致？</div>
+            <div class="cell">数据流图 + 金额口径表</div>
+            <div class="cell muted">foodAmount、paidAmount、payList、coupon</div>
+            <div class="cell muted">金额断言规则</div>
+
+            <div class="cell">哪些条件决定跳转？</div>
+            <div class="cell">决策表 / DMN</div>
+            <div class="cell muted">businesstype、配置开关、会员状态、支付配置</div>
+            <div class="cell muted">分支决策表</div>
+
+            <div class="cell">异常怎么恢复？</div>
+            <div class="cell">失败模式矩阵</div>
+            <div class="cell muted">扫码失败、支付取消、余额不足、余额未刷新</div>
+            <div class="cell muted">恢复策略表</div>
+          </div>
+        </div>
+
+        <div class="footer-note">
+          架构师结论：不要用一张流程图吞掉全部复杂度。这个系统应该用“上下文图 + 状态机图 + 时序图 + 数据流图 + 决策表 + 金额模型 + 异常矩阵 + 测试状态模型”共同描述。
+        </div>
+      </section>
+    </section>
+  </main>
+</body>
+</html>

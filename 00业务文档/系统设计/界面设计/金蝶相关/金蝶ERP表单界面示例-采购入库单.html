@@ -1,0 +1,1168 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>采购入库单 - 金蝶 ERP 风格表单示例</title>
+  <style>
+    :root {
+      --page-bg: #f6f8fb;
+      --panel-bg: #ffffff;
+      --line: #d7dde8;
+      --line-soft: #e8edf5;
+      --text: #0f172a;
+      --subtext: #334155;
+      --muted: #64748b;
+      --brand: #2563eb;
+      --brand-dark: #1d4ed8;
+      --brand-soft: #dbeafe;
+      --success: #16a34a;
+      --success-soft: #dcfce7;
+      --warning: #ea580c;
+      --warning-soft: #fff7ed;
+      --danger: #dc2626;
+      --danger-soft: #fee2e2;
+      --disabled: #94a3b8;
+      --focus: #93c5fd;
+      --shadow: 0 8px 22px rgba(15, 23, 42, .08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-width: 1180px;
+      background: var(--page-bg);
+      color: var(--text);
+      font: 13px/1.45 "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      padding-bottom: 70px;
+    }
+
+    .topbar {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      color: #0b1f44;
+    }
+
+    .brand-mark {
+      width: 24px;
+      height: 24px;
+      border: 1px solid #8fb3e8;
+      border-radius: 4px;
+      display: grid;
+      place-items: center;
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 700;
+      background: #f8fbff;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 196px 1fr;
+      min-height: calc(100vh - 48px);
+    }
+
+    .sidebar {
+      background: #ffffff;
+      border-right: 1px solid var(--line);
+      padding: 12px 10px;
+    }
+
+    .nav-title {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .nav-item {
+      height: 34px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 0 10px;
+      margin: 2px 0;
+      border-radius: 4px;
+      color: var(--subtext);
+      white-space: nowrap;
+    }
+
+    .nav-item.active {
+      background: var(--brand-soft);
+      color: var(--brand-dark);
+      font-weight: 600;
+    }
+
+    .nav-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: .75;
+    }
+
+    .main {
+      padding: 16px 24px 0;
+    }
+
+    .breadcrumb {
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .bill {
+      background: var(--panel-bg);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, .03);
+      overflow: hidden;
+    }
+
+    .bill-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 62px;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .bill-title {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 360px;
+    }
+
+    .bill-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 24px;
+      font-weight: 650;
+    }
+
+    .bill-no {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .tag.saved {
+      color: #166534;
+      background: var(--success-soft);
+      border-color: #bbf7d0;
+    }
+
+    .tag.warn {
+      color: #9a3412;
+      background: var(--warning-soft);
+      border-color: #fed7aa;
+    }
+
+    .tag.info {
+      color: #1d4ed8;
+      background: var(--brand-soft);
+      border-color: #bfdbfe;
+    }
+
+    .tag.gray {
+      color: #475569;
+      background: #f1f5f9;
+      border-color: #e2e8f0;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      height: 32px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 0 12px;
+      background: #ffffff;
+      color: var(--subtext);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      border-color: #9db4d3;
+      color: var(--brand-dark);
+    }
+
+    .btn.primary {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .btn.primary:hover {
+      background: var(--brand-dark);
+      border-color: var(--brand-dark);
+      color: #ffffff;
+    }
+
+    .btn.text-danger {
+      color: var(--danger);
+      border-color: #fecaca;
+      background: #fff;
+    }
+
+    .btn:disabled,
+    .field-control[aria-disabled="true"] {
+      color: var(--disabled);
+      background: #f8fafc;
+      cursor: not-allowed;
+    }
+
+    .context-bar {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(160px, 1fr));
+      gap: 0;
+      border-bottom: 1px solid var(--line);
+      background: #fbfdff;
+    }
+
+    .context-item {
+      min-height: 42px;
+      padding: 6px 14px;
+      border-right: 1px solid var(--line-soft);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .context-item:last-child {
+      border-right: 0;
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .value {
+      color: var(--text);
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .notice {
+      margin: 12px 16px 0;
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border: 1px solid #fed7aa;
+      background: #fffaf4;
+      color: #7c2d12;
+      border-radius: 4px;
+    }
+
+    .notice strong {
+      color: #9a3412;
+    }
+
+    .form-body {
+      padding: 12px 16px 16px;
+    }
+
+    .section {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .section-head {
+      height: 38px;
+      padding: 0 12px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fbfcfe;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 650;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title::before {
+      content: "";
+      width: 3px;
+      height: 14px;
+      border-radius: 2px;
+      background: var(--brand);
+    }
+
+    .section-extra {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(210px, 1fr));
+      gap: 8px 16px;
+      padding: 12px;
+    }
+
+    .form-field {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-field.wide {
+      grid-column: span 2;
+    }
+
+    .form-field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field-label {
+      color: var(--subtext);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .required::before {
+      content: "*";
+      color: var(--danger);
+      margin-right: 3px;
+    }
+
+    .field-control {
+      min-width: 0;
+      height: 32px;
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 0 8px;
+      background: #fff;
+      color: var(--text);
+      outline: 0;
+    }
+
+    .field-control:focus {
+      border-color: var(--focus);
+      box-shadow: 0 0 0 2px rgba(147, 197, 253, .35);
+    }
+
+    textarea.field-control {
+      min-height: 58px;
+      padding: 7px 8px;
+      resize: vertical;
+    }
+
+    .hint {
+      grid-column: 2;
+      margin-top: -4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .hint.warning {
+      color: var(--warning);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 1180px;
+    }
+
+    th,
+    td {
+      border-right: 1px solid var(--line-soft);
+      border-bottom: 1px solid var(--line-soft);
+      padding: 0 8px;
+      height: 42px;
+      text-align: left;
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+
+    th {
+      height: 38px;
+      color: var(--subtext);
+      background: #f8fafc;
+      font-weight: 650;
+    }
+
+    th:last-child,
+    td:last-child {
+      border-right: 0;
+    }
+
+    .num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cell-input {
+      width: 100%;
+      height: 30px;
+      border: 1px solid transparent;
+      border-radius: 3px;
+      padding: 0 6px;
+      background: transparent;
+      color: inherit;
+      text-align: inherit;
+    }
+
+    .cell-input:hover,
+    .cell-input:focus {
+      background: #fff;
+      border-color: var(--focus);
+      outline: 0;
+    }
+
+    tr[data-row-state="error"] td {
+      background: #fff8f8;
+    }
+
+    .cell-error {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 0 6px;
+      border: 1px solid #fecaca;
+      border-radius: 3px;
+      color: var(--danger);
+      background: #fff1f2;
+    }
+
+    .table-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .link {
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: var(--brand);
+      cursor: pointer;
+    }
+
+    .link.danger {
+      color: var(--danger);
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(120px, 1fr));
+      gap: 0;
+      border-top: 1px solid var(--line);
+      background: #fbfdff;
+    }
+
+    .summary-item {
+      padding: 8px 12px;
+      border-right: 1px solid var(--line-soft);
+    }
+
+    .summary-item:last-child {
+      border-right: 0;
+    }
+
+    .summary-value {
+      margin-top: 2px;
+      font-size: 15px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    .compact-list {
+      padding: 10px 12px 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .list-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 30px;
+      gap: 12px;
+      border-bottom: 1px dashed #e2e8f0;
+      padding-bottom: 8px;
+    }
+
+    .list-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .row-main {
+      min-width: 0;
+    }
+
+    .row-title {
+      font-weight: 600;
+    }
+
+    .row-desc {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .tabs {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+      padding: 0 8px;
+    }
+
+    .tab {
+      height: 38px;
+      padding: 0 12px;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      background: transparent;
+      color: var(--subtext);
+      cursor: pointer;
+    }
+
+    .tab.active {
+      color: var(--brand);
+      border-bottom-color: var(--brand);
+      font-weight: 650;
+    }
+
+    .tab-panel {
+      display: none;
+      padding: 12px;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 10px;
+    }
+
+    .time {
+      color: var(--muted);
+      font-size: 12px;
+      text-align: right;
+    }
+
+    .event {
+      border-left: 2px solid #bfdbfe;
+      padding-left: 10px;
+    }
+
+    .footer-bar {
+      position: fixed;
+      left: 196px;
+      right: 0;
+      bottom: 0;
+      z-index: 10;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      background: rgba(255, 255, 255, .96);
+      border-top: 1px solid var(--line);
+      box-shadow: 0 -8px 18px rgba(15, 23, 42, .06);
+      backdrop-filter: blur(6px);
+    }
+
+    .footer-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: var(--muted);
+    }
+
+    .toast {
+      position: fixed;
+      right: 24px;
+      top: 62px;
+      z-index: 20;
+      display: none;
+      min-width: 260px;
+      padding: 10px 12px;
+      border: 1px solid #bbf7d0;
+      background: #f0fdf4;
+      color: #166534;
+      border-radius: 4px;
+      box-shadow: var(--shadow);
+    }
+
+    .toast.show {
+      display: block;
+    }
+
+    @media (max-width: 1360px) {
+      .form-grid {
+        grid-template-columns: repeat(3, minmax(220px, 1fr));
+      }
+
+      .context-bar {
+        grid-template-columns: repeat(3, minmax(180px, 1fr));
+      }
+
+      .bottom-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div
+    class="app-shell"
+    data-page-id="purchaseInStockForm"
+    data-page-type="form"
+    data-pattern="erp-bill-form"
+    data-object-type="purchaseInStockBill"
+    data-mode="edit"
+    data-state="saved"
+    data-biz-no="PIN202607040001"
+  >
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">ERP</span>
+        <span>企业管理云 · 供应链</span>
+      </div>
+      <div class="topbar-right">
+        <span>库存组织：华东公司</span>
+        <span>张敏 / 仓库收货员</span>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="nav-title">供应链业务</div>
+        <div class="nav-item"><span class="nav-dot"></span>采购订单</div>
+        <div class="nav-item active"><span class="nav-dot"></span>采购入库</div>
+        <div class="nav-item"><span class="nav-dot"></span>应付单</div>
+        <div class="nav-item"><span class="nav-dot"></span>库存查询</div>
+        <div class="nav-title">基础资料</div>
+        <div class="nav-item"><span class="nav-dot"></span>供应商</div>
+        <div class="nav-item"><span class="nav-dot"></span>物料</div>
+        <div class="nav-item"><span class="nav-dot"></span>仓库</div>
+        <div class="nav-title">治理</div>
+        <div class="nav-item"><span class="nav-dot"></span>审批中心</div>
+        <div class="nav-item"><span class="nav-dot"></span>操作日志</div>
+      </aside>
+
+      <main class="main">
+        <div class="breadcrumb">供应链 / 库存管理 / 采购入库 / 编辑单据</div>
+
+        <section class="bill">
+          <div class="bill-header">
+            <div class="bill-title">
+              <div class="bill-title-row">
+                <h1>采购入库单</h1>
+                <span class="tag saved" data-status="saved">已保存</span>
+                <span class="tag info">可提交</span>
+              </div>
+              <div class="bill-no">单据编号：PIN202607040001 · 来源：采购订单下推 · 当前模式：编辑</div>
+            </div>
+            <div class="actions">
+              <button class="btn" data-action="saveDraft" data-action-state="idle" data-permission="allowed" data-risk-level="normal">暂存</button>
+              <button class="btn" data-action="print" data-action-state="idle" data-permission="allowed" data-risk-level="low">打印</button>
+              <button class="btn" data-action="export" data-action-state="idle" data-permission="allowed" data-risk-level="low">导出</button>
+              <button class="btn text-danger" data-action="void" data-action-state="idle" data-permission="allowed" data-risk-level="high">作废</button>
+              <button class="btn primary" id="submitTop" data-action="submit" data-action-state="idle" data-permission="allowed" data-risk-level="normal">提交</button>
+              <button class="btn" data-action="more" data-action-state="idle" data-permission="allowed" data-risk-level="normal">更多</button>
+            </div>
+          </div>
+
+          <div class="context-bar">
+            <div class="context-item">
+              <span class="label">库存组织</span>
+              <span class="value">华东公司</span>
+            </div>
+            <div class="context-item">
+              <span class="label">业务日期</span>
+              <span class="value">2026-07-04</span>
+            </div>
+            <div class="context-item">
+              <span class="label">来源类型</span>
+              <span class="value">采购订单下推</span>
+            </div>
+            <div class="context-item">
+              <span class="label">来源单据</span>
+              <span class="value">PO202607030018</span>
+            </div>
+            <div class="context-item">
+              <span class="label">当前流程</span>
+              <span class="value">保存后待提交</span>
+            </div>
+          </div>
+
+          <div
+            class="notice"
+            data-error-code="LINE_WAREHOUSE_REQUIRED"
+            data-error-scope="row"
+            data-error-field="warehouseId"
+            data-error-row-index="3"
+          >
+            <strong>分录校验：</strong>
+            第 3 行“仓库”提交前必填；第 2 行“实收数量”小于应收数量，提交后会形成部分入库反写。
+          </div>
+
+          <div class="form-body">
+            <section class="section">
+              <div class="section-head">
+                <div class="section-title">基本信息</div>
+                <div class="section-extra">字段按业务决策顺序排列，非数据库顺序</div>
+              </div>
+              <div class="form-grid">
+                <label class="form-field" data-field="organizationId" data-field-group="basicInfo" data-required-phase="save" data-editable="false" data-source="context">
+                  <span class="field-label required">入库组织</span>
+                  <input class="field-control" value="华东公司" aria-disabled="true" readonly>
+                </label>
+                <label class="form-field" data-field="supplierId" data-field-group="basicInfo" data-required-phase="submit" data-editable="true" data-source="upstream">
+                  <span class="field-label required">供应商</span>
+                  <select class="field-control">
+                    <option>上海星河食品有限公司</option>
+                    <option>杭州优鲜供应链</option>
+                  </select>
+                </label>
+                <label class="form-field" data-field="bizDate" data-field-group="basicInfo" data-required-phase="save" data-editable="true" data-source="manual">
+                  <span class="field-label required">业务日期</span>
+                  <input class="field-control" type="date" value="2026-07-04">
+                </label>
+                <label class="form-field" data-field="billType" data-field-group="basicInfo" data-required-phase="save" data-editable="true" data-source="default">
+                  <span class="field-label required">单据类型</span>
+                  <select class="field-control">
+                    <option>标准采购入库</option>
+                    <option>退货补入库</option>
+                  </select>
+                </label>
+                <label class="form-field" data-field="warehouseKeeper" data-field-group="basicInfo" data-required-phase="submit" data-editable="true" data-source="context">
+                  <span class="field-label required">经办人</span>
+                  <input class="field-control" value="张敏">
+                </label>
+                <label class="form-field" data-field="purchaseDept" data-field-group="basicInfo" data-required-phase="submit" data-editable="true" data-source="upstream">
+                  <span class="field-label">采购部门</span>
+                  <input class="field-control" value="生鲜采购部">
+                </label>
+                <label class="form-field" data-field="buyer" data-field-group="basicInfo" data-required-phase="submit" data-editable="true" data-source="upstream">
+                  <span class="field-label">采购员</span>
+                  <input class="field-control" value="李倩">
+                </label>
+                <label class="form-field" data-field="sourceBillNo" data-field-group="basicInfo" data-required-phase="none" data-editable="false" data-source="upstream">
+                  <span class="field-label">来源单据</span>
+                  <input class="field-control" value="PO202607030018" aria-disabled="true" readonly>
+                </label>
+                <label class="form-field wide" data-field="receiveAddress" data-field-group="basicInfo" data-required-phase="submit" data-editable="true" data-source="upstream">
+                  <span class="field-label">收货地址</span>
+                  <input class="field-control" value="上海市浦东新区云桥路 88 号 1 号仓">
+                </label>
+                <label class="form-field wide" data-field="remark" data-field-group="basicInfo" data-required-phase="none" data-editable="true" data-source="manual">
+                  <span class="field-label">备注</span>
+                  <input class="field-control" value="供应商承诺当日补齐缺少批次资料">
+                </label>
+              </div>
+            </section>
+
+            <section class="section">
+              <div class="section-head">
+                <div class="section-title">业务与财务控制</div>
+                <div class="section-extra">影响下游应付、凭证、库存和报表口径</div>
+              </div>
+              <div class="form-grid">
+                <label class="form-field" data-field="purchaseType" data-field-group="businessInfo" data-required-phase="submit" data-editable="true" data-source="upstream">
+                  <span class="field-label required">采购类型</span>
+                  <select class="field-control">
+                    <option>普通采购</option>
+                    <option>寄售采购</option>
+                  </select>
+                </label>
+                <label class="form-field" data-field="settleMethod" data-field-group="businessInfo" data-required-phase="submit" data-editable="true" data-source="upstream">
+                  <span class="field-label required">结算方式</span>
+                  <select class="field-control">
+                    <option>月结 30 天</option>
+                    <option>现结</option>
+                  </select>
+                </label>
+                <label class="form-field" data-field="taxIncluded" data-field-group="businessInfo" data-required-phase="submit" data-editable="true" data-source="upstream">
+                  <span class="field-label">价税口径</span>
+                  <select class="field-control">
+                    <option>含税价</option>
+                    <option>不含税价</option>
+                  </select>
+                </label>
+                <label class="form-field" data-field="voucherClass" data-field-group="businessInfo" data-required-phase="voucher" data-editable="true" data-source="manual">
+                  <span class="field-label required">业务分类</span>
+                  <select class="field-control">
+                    <option>库存采购</option>
+                    <option>费用采购</option>
+                  </select>
+                </label>
+                <div class="form-field wide" data-field="voucherClassHint" data-field-group="businessInfo" data-required-phase="voucher" data-editable="false" data-source="rule">
+                  <span class="field-label">分类影响</span>
+                  <div>
+                    <input class="field-control" value="用于匹配下游应付单、凭证模板和报表口径" aria-disabled="true" readonly>
+                    <div class="hint warning">生成凭证前必须确认，修改后会重新计算下游会计分录。</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="section">
+              <div class="section-head">
+                <div class="section-title">明细分录</div>
+                <div class="actions">
+                  <button class="btn" data-action="addLine" data-action-state="idle" data-permission="allowed" data-risk-level="normal">新增行</button>
+                  <button class="btn" data-action="copyLine" data-action-state="idle" data-permission="allowed" data-risk-level="normal">复制行</button>
+                  <button class="btn" data-action="batchFillWarehouse" data-action-state="idle" data-permission="allowed" data-risk-level="normal">批量填仓库</button>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table aria-label="采购入库明细分录">
+                  <thead>
+                    <tr>
+                      <th style="width:54px;">行号</th>
+                      <th style="width:120px;">物料编码</th>
+                      <th style="width:180px;">物料名称</th>
+                      <th style="width:120px;">规格</th>
+                      <th style="width:116px;">批次</th>
+                      <th style="width:130px;">仓库</th>
+                      <th style="width:72px;">单位</th>
+                      <th class="num" style="width:98px;">应收数量</th>
+                      <th class="num" style="width:98px;">实收数量</th>
+                      <th class="num" style="width:90px;">单价</th>
+                      <th class="num" style="width:110px;">金额</th>
+                      <th class="num" style="width:80px;">税率</th>
+                      <th style="width:132px;">来源行</th>
+                      <th style="width:110px;">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr data-line-index="1" data-line-id="line_001" data-source-bill-no="PO202607030018" data-source-line-id="po_line_001" data-row-state="normal">
+                      <td>1</td>
+                      <td>MAT-10021</td>
+                      <td>冷冻鸡腿肉</td>
+                      <td>10kg/箱</td>
+                      <td>BT260704A</td>
+                      <td>冷链一仓</td>
+                      <td>箱</td>
+                      <td class="num">80</td>
+                      <td class="num"><input class="cell-input" value="80"></td>
+                      <td class="num">168.00</td>
+                      <td class="num">13,440.00</td>
+                      <td class="num">13%</td>
+                      <td>PO 行 1</td>
+                      <td><div class="table-actions"><button class="link">复制</button><button class="link danger">删除</button></div></td>
+                    </tr>
+                    <tr data-line-index="2" data-line-id="line_002" data-source-bill-no="PO202607030018" data-source-line-id="po_line_002" data-row-state="warning">
+                      <td>2</td>
+                      <td>MAT-10035</td>
+                      <td>精品五花肉</td>
+                      <td>25kg/箱</td>
+                      <td>BT260704B</td>
+                      <td>冷链一仓</td>
+                      <td>箱</td>
+                      <td class="num">40</td>
+                      <td class="num"><input class="cell-input" value="36"></td>
+                      <td class="num">286.00</td>
+                      <td class="num">10,296.00</td>
+                      <td class="num">13%</td>
+                      <td>PO 行 2</td>
+                      <td><div class="table-actions"><button class="link">复制</button><button class="link danger">删除</button></div></td>
+                    </tr>
+                    <tr data-line-index="3" data-line-id="line_003" data-source-bill-no="PO202607030018" data-source-line-id="po_line_003" data-row-state="error">
+                      <td>3</td>
+                      <td>MAT-10089</td>
+                      <td>进口牛腱</td>
+                      <td>20kg/箱</td>
+                      <td>BT260704C</td>
+                      <td><span class="cell-error">提交前必填</span></td>
+                      <td>箱</td>
+                      <td class="num">22</td>
+                      <td class="num"><input class="cell-input" value="22"></td>
+                      <td class="num">512.00</td>
+                      <td class="num">11,264.00</td>
+                      <td class="num">13%</td>
+                      <td>PO 行 3</td>
+                      <td><div class="table-actions"><button class="link">复制</button><button class="link danger">删除</button></div></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="summary">
+                <div class="summary-item">
+                  <div class="label">应收数量</div>
+                  <div class="summary-value">142 箱</div>
+                </div>
+                <div class="summary-item">
+                  <div class="label">实收数量</div>
+                  <div class="summary-value">138 箱</div>
+                </div>
+                <div class="summary-item">
+                  <div class="label">未入库数量</div>
+                  <div class="summary-value">4 箱</div>
+                </div>
+                <div class="summary-item">
+                  <div class="label">不含税金额</div>
+                  <div class="summary-value">30,088.50</div>
+                </div>
+                <div class="summary-item">
+                  <div class="label">税额</div>
+                  <div class="summary-value">3,911.50</div>
+                </div>
+                <div class="summary-item">
+                  <div class="label">价税合计</div>
+                  <div class="summary-value">35,000.00</div>
+                </div>
+              </div>
+            </section>
+
+            <div class="bottom-grid">
+              <section class="section">
+                <div class="section-head">
+                  <div class="section-title">附件证据</div>
+                  <div class="section-extra">审批可见，归档后只读</div>
+                </div>
+                <div class="compact-list">
+                  <div class="list-row">
+                    <div class="row-main">
+                      <div class="row-title">供应商送货单.pdf</div>
+                      <div class="row-desc">必传附件 · 参与审批 · 上传人 张敏</div>
+                    </div>
+                    <span class="tag saved">已上传</span>
+                  </div>
+                  <div class="list-row">
+                    <div class="row-main">
+                      <div class="row-title">冷链验收照片 3 张</div>
+                      <div class="row-desc">质检附件 · 仓库和审批人可见</div>
+                    </div>
+                    <span class="tag saved">已上传</span>
+                  </div>
+                </div>
+              </section>
+
+              <section class="section">
+                <div class="section-head">
+                  <div class="section-title">上下游关系</div>
+                  <div class="section-extra">来源、下游、反写可追溯</div>
+                </div>
+                <div class="compact-list">
+                  <div class="list-row">
+                    <div class="row-main">
+                      <div class="row-title">采购订单 PO202607030018</div>
+                      <div class="row-desc">已下推数量 138 / 142，剩余 4 箱</div>
+                    </div>
+                    <span class="tag info">上游</span>
+                  </div>
+                  <div class="list-row">
+                    <div class="row-main">
+                      <div class="row-title">应付单</div>
+                      <div class="row-desc">提交并审核后允许下推，业务分类用于凭证模板匹配</div>
+                    </div>
+                    <span class="tag gray">未生成</span>
+                  </div>
+                </div>
+              </section>
+
+              <section class="section">
+                <div class="tabs" role="tablist">
+                  <button class="tab active" data-tab="approval" role="tab">审批</button>
+                  <button class="tab" data-tab="logs" role="tab">日志</button>
+                  <button class="tab" data-tab="permission" role="tab">权限</button>
+                </div>
+                <div id="approval" class="tab-panel active">
+                  <div class="timeline">
+                    <div class="timeline-item">
+                      <div class="time">当前</div>
+                      <div class="event"><strong>待提交</strong><br><span class="row-desc">提交后进入仓库主管审批，预计 4 小时内完成。</span></div>
+                    </div>
+                    <div class="timeline-item">
+                      <div class="time">09:42</div>
+                      <div class="event"><strong>张敏保存单据</strong><br><span class="row-desc">由采购订单 PO202607030018 下推生成。</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div id="logs" class="tab-panel">
+                  <div class="compact-list">
+                    <div class="list-row"><span>09:42 创建并保存</span><span class="row-desc">张敏</span></div>
+                    <div class="list-row"><span>09:45 上传附件</span><span class="row-desc">张敏</span></div>
+                    <div class="list-row"><span>09:51 修改第 2 行实收数量</span><span class="row-desc">张敏</span></div>
+                  </div>
+                </div>
+                <div id="permission" class="tab-panel">
+                  <div class="compact-list">
+                    <div class="list-row"><span>查看 / 编辑 / 提交</span><span class="tag saved">允许</span></div>
+                    <div class="list-row"><span>反审核 / 作废</span><span class="tag warn">需主管权限</span></div>
+                    <div class="list-row"><span>生成凭证</span><span class="tag gray">无权限</span></div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer class="footer-bar">
+      <div class="footer-meta">
+        <span>状态：已保存</span>
+        <span>最后修改：2026-07-04 09:51</span>
+        <span>保存时必填已通过，提交前仍有 1 个分录错误</span>
+      </div>
+      <div class="actions">
+        <button class="btn" data-action="cancel" data-action-state="idle" data-permission="allowed" data-risk-level="low">取消</button>
+        <button class="btn" id="saveBtn" data-action="save" data-action-state="idle" data-permission="allowed" data-risk-level="normal">保存</button>
+        <button class="btn primary" id="submitBtn" data-action="submit" data-action-state="idle" data-permission="allowed" data-risk-level="normal">提交</button>
+      </div>
+    </footer>
+
+    <div id="toast" class="toast" role="status">保存成功：单据状态保持“已保存”，操作已写入日志。</div>
+  </div>
+
+  <script>
+    const toast = document.getElementById('toast');
+    const saveBtn = document.getElementById('saveBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitTop = document.getElementById('submitTop');
+
+    function showToast(text) {
+      toast.textContent = text;
+      toast.classList.add('show');
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove('show'), 2600);
+    }
+
+    function transientButtonState(button, stateText, doneText, message) {
+      const oldText = button.textContent;
+      button.disabled = true;
+      button.dataset.actionState = 'processing';
+      button.textContent = stateText;
+      window.setTimeout(() => {
+        button.disabled = false;
+        button.dataset.actionState = 'idle';
+        button.textContent = doneText || oldText;
+        showToast(message);
+        window.setTimeout(() => { button.textContent = oldText; }, 1200);
+      }, 700);
+    }
+
+    saveBtn.addEventListener('click', () => {
+      transientButtonState(saveBtn, '保存中', '已保存', '保存成功：保存阶段校验已通过，提交前仍需补齐第 3 行仓库。');
+    });
+
+    function submitWithValidation(button) {
+      button.dataset.actionState = 'failed';
+      showToast('提交被阻止：第 3 行“仓库”提交前必填，请定位分录错误后重试。');
+      window.setTimeout(() => { button.dataset.actionState = 'idle'; }, 1200);
+    }
+
+    submitBtn.addEventListener('click', () => submitWithValidation(submitBtn));
+    submitTop.addEventListener('click', () => submitWithValidation(submitTop));
+
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(item => item.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

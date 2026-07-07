@@ -1,0 +1,45 @@
+name: release-gate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  verify-release:
+    name: 统一发布门禁
+    runs-on: windows-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: 安装 Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: 启用 corepack
+        shell: pwsh
+        run: corepack enable
+
+      - name: 执行发布门禁自检
+        shell: pwsh
+        run: powershell -ExecutionPolicy Bypass -File .\scripts\verify-release.ps1 -SelfCheck
+
+      - name: 执行轻量发布门禁
+        shell: pwsh
+        run: powershell -ExecutionPolicy Bypass -File .\scripts\verify-release.ps1 -Light
+
+      - name: 执行统一发布门禁
+        shell: pwsh
+        run: powershell -ExecutionPolicy Bypass -File .\scripts\verify-release.ps1

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+<defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/></marker></defs>
+<style>
+  .bg{fill:#f6f8fb}
+  .panel{fill:#ffffff;stroke:#d7dde8;stroke-width:2}
+  .soft{fill:#f1f5f9;stroke:#d7dde8;stroke-width:1.5}
+  .brandSoft{fill:#dbeafe;stroke:#93c5fd;stroke-width:1.5}
+  .warn{fill:#fff7ed;stroke:#fdba74;stroke-width:1.5}
+  .danger{fill:#fee2e2;stroke:#fca5a5;stroke-width:1.5}
+  .success{fill:#dcfce7;stroke:#86efac;stroke-width:1.5}
+  .line{stroke:#64748b;stroke-width:2;fill:none;marker-end:url(#arrow)}
+  .title{font:700 24px Arial, sans-serif;fill:#0f172a}
+  .h{font:700 16px Arial, sans-serif;fill:#0f172a}
+  .t{font:14px Arial, sans-serif;fill:#334155}
+  .s{font:12px Arial, sans-serif;fill:#64748b}
+</style>
+<rect class="bg" x="0" y="0" width="960" height="540"/>
+<text class="title" x="40" y="46">Chart Drilldown Pattern</text>
+<rect class="panel" x="55" y="90" width="850" height="75" rx="12"/>
+<text class="h" x="80" y="122">Metrics: Sales 1.2M | Orders 8.5K | Avg 142</text>
+<rect class="panel" x="55" y="185" width="410" height="190" rx="12"/>
+<text class="h" x="80" y="218">Chart Area</text>
+<rect class="brandSoft" x="105" y="250" width="42" height="80" rx="4"/>
+<rect class="brandSoft" x="180" y="200" width="42" height="130" rx="4"/>
+<rect class="brandSoft" x="255" y="270" width="42" height="60" rx="4"/>
+<rect class="brandSoft" x="330" y="170" width="42" height="160" rx="4"/>
+<rect class="panel" x="495" y="185" width="410" height="190" rx="12"/>
+<text class="h" x="520" y="218">Current Drilldown</text>
+<text class="t" x="520" y="255">Region: East</text>
+<text class="t" x="520" y="290">Month: 2026-07</text>
+<text class="t" x="520" y="325">Category: Beverage</text>
+<path class="line" d="M465,280 L495,280"/>
+<rect class="soft" x="55" y="395" width="850" height="95" rx="12"/>
+<text class="h" x="80" y="428">Detail Rows: Store | Sales | Orders | Avg Price</text>
+<text class="t" x="80" y="462">Store A    120K     540      222    -&gt; Source Orders</text>
+</svg>

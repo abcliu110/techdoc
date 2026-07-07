@@ -1,0 +1,58 @@
+{
+  "snapshotId": "KS-LOWCODE-20260706-001",
+  "createdAt": "2026-07-06",
+  "productName": "低代码平台",
+  "knowledgeBaseName": "低代码平台竞品知识库",
+  "knowledgeBasePath": "../../../../01-知识库/低代码平台竞品知识库/",
+  "scope": "本快照是按《02-流程-知识库驱动新产品创建与迭代.md》对低代码平台产品创建流程执行的首个基线快照。用于断点续跑和后续 KnowledgeDiff 比对。",
+  "maturitySummary": {
+    "overall": "L0+",
+    "notes": [
+      "方向级增强，S 级核心模块源码证据数量已补足，但未达到完整 L1/S 级 DoD。",
+      "NocoBase 与 Frappe 已有较多源码初证和可见 UI 证据，但缺本地安装、客户-订单-审批样例实测和运行时导出样例。",
+      "金蝶内部实现仍只能作为高可信推断或假设，不得写成直接事实。"
+    ]
+  },
+  "files": [
+    {
+      "filePath": "../../../../01-知识库/低代码平台竞品知识库/README.md",
+      "contentHash": "7A5EEB759F2E3482B83250E38F5CAE79A48D5D28CA76230DD0F15C4194F2F4E8",
+      "evidenceLevel": "高可信推断",
+      "capabilityTags": ["元模型", "权限", "页面", "工作流", "扩展", "License"],
+      "riskTags": ["未完成实测", "竞品推断", "源码初证未闭环"]
+    },
+    {
+      "filePath": "../../../../01-知识库/低代码平台竞品知识库/低代码平台竞品知识库总览.md",
+      "contentHash": "E5B4F5C7A4190C8C9C71C060F3E1411A4425A28BCAC8647FFF5E05202F212032",
+      "evidenceLevel": "高可信推断",
+      "capabilityTags": ["业务元模型", "内部工具构建器", "数据模型驱动", "Frappe", "NocoBase"],
+      "riskTags": ["早期总览", "需以 README 成熟度声明为准"]
+    },
+    {
+      "filePath": "../03-需求/PRD-产品需求规格说明书.md",
+      "contentHash": "17E99FB97EA74048DDDCF7B98F7DF9A9C1F9578F59E09ECBD8D7A8493A21BD7E",
+      "evidenceLevel": "风险接受",
+      "capabilityTags": ["PRD", "M0", "M1", "M2", "M3", "客户-订单-审批"],
+      "riskTags": ["人工范围确认", "需求编号需抽查"]
+    },
+    {
+      "filePath": "../04-架构决策/00-总体架构与技术选型.md",
+      "contentHash": "47F96D62D84059FC6702727B7F72BC021F4FC53E96C61B886253E292BC7E7CDF",
+      "evidenceLevel": "风险接受",
+      "capabilityTags": ["架构", "技术栈", "模块化单体", "动态表", "多租户"],
+      "riskTags": ["部分 ADR 仍为 proposed", "阶段 5A 需补权衡矩阵"]
+    },
+    {
+      "filePath": "../04-架构决策/01-元模型设计.md",
+      "contentHash": "48DEF7C89E63024DE588FE71C93AC097419ECE3F56CAD58BE0508AE354752E41",
+      "evidenceLevel": "风险接受",
+      "capabilityTags": ["领域模型", "数据模型", "元模型", "字段类型", "发布快照"],
+      "riskTags": ["M0 accepted for M0", "M1-M3 需按里程碑终审"]
+    }
+  ],
+  "openQuestions": [
+    "decisionOwner 已在 T-5A-05 确认为“我本人”；后续仍需关闭 M0 覆盖审计和 evidenceId 结构化。",
+    "竞品知识库尚未形成完整结构化 evidenceId，当前 snapshot 以关键文件 hash 建立基线。",
+    "M0 must 能力需要继续精确核验 covered/partial/missing 状态。"
+  ]
+}

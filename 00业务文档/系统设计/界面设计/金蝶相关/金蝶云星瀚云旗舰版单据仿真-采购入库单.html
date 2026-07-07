@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>金蝶云星瀚/云旗舰版单据仿真 - 采购入库单</title>
+  <style>
+    :root {
+      --blue: #216ee8;
+      --blue2: #1598e6;
+      --deep: #124fb7;
+      --page: #f0f4fa;
+      --line: #cfd9e7;
+      --line2: #e5ebf4;
+      --text: #233247;
+      --sub: #5d6c80;
+      --label: #385d91;
+      --edit: #fffbea;
+      --head: #f6f8fc;
+      --danger: #d93026;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #dfe7f2;
+      color: var(--text);
+      font: 12px/1.3 "Microsoft YaHei", SimSun, Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    button, input { font: inherit; }
+
+    .screen {
+      width: 1280px;
+      height: 760px;
+      margin: 0 auto;
+      background: var(--page);
+      overflow: hidden;
+      border-left: 1px solid #c5cfdd;
+      border-right: 1px solid #c5cfdd;
+      box-shadow: 0 0 0 1px rgba(186, 199, 217, .55);
+    }
+
+    .bluebar {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 84% -12%, rgba(255,255,255,.24), transparent 28%),
+        linear-gradient(90deg, #0c4fbd 0%, #1e6fe8 47%, #139be8 100%);
+      box-shadow: inset 0 -1px rgba(0,0,0,.12);
+    }
+
+    .cloud-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .cloud-mark {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 5px;
+      background: rgba(255,255,255,.2);
+      border: 1px solid rgba(255,255,255,.42);
+      box-shadow: inset 0 1px rgba(255,255,255,.25);
+      font-size: 14px;
+    }
+
+    .blue-actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      opacity: .95;
+    }
+
+    .opened-tabs {
+      height: 33px;
+      display: flex;
+      align-items: end;
+      padding-left: 12px;
+      background: #edf2f8;
+      border-bottom: 1px solid #c2cfdf;
+    }
+
+    .opened-tab {
+      height: 30px;
+      min-width: 142px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      margin-right: 3px;
+      border: 1px solid #c8d3e1;
+      border-bottom: 0;
+      border-radius: 3px 3px 0 0;
+      background: #f8fafd;
+      color: #3b4e68;
+    }
+
+    .opened-tab.active {
+      background: #fff;
+      color: var(--deep);
+      font-weight: 600;
+    }
+
+    .menubar {
+      height: 39px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 3px;
+      background: #fff;
+      border-bottom: 1px solid #d4dce8;
+      box-shadow: 0 1px 2px rgba(18, 42, 76, .04);
+    }
+
+    .menu-btn {
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 10px;
+      border: 1px solid transparent;
+      background: #fff;
+      color: #253850;
+      border-radius: 3px;
+    }
+
+    .menu-btn:hover {
+      border-color: #a9c6f4;
+      background: #f3f8ff;
+    }
+
+    .menu-btn.primary {
+      color: #fff;
+      background: var(--blue);
+      border-color: var(--blue);
+      box-shadow: 0 1px 2px rgba(33, 110, 232, .25);
+    }
+
+    .ico {
+      width: 16px;
+      height: 16px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #2464c7;
+      background: #eef5ff;
+      border: 1px solid #c8ddff;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .primary .ico {
+      color: #fff;
+      background: rgba(255,255,255,.18);
+      border-color: rgba(255,255,255,.38);
+    }
+
+    .sep {
+      width: 1px;
+      height: 22px;
+      margin: 0 5px;
+      background: #d5deeb;
+    }
+
+    .canvas {
+      height: calc(100% - 118px);
+      padding: 12px 14px;
+      background:
+        linear-gradient(#f2f6fb, #eef3fa);
+    }
+
+    .bill {
+      height: 100%;
+      display: grid;
+      grid-template-rows: 48px 142px 1fr 76px 24px;
+      background: #fff;
+      border: 1px solid #c4cfde;
+      border-radius: 2px;
+      box-shadow: 0 1px 2px rgba(31, 45, 61, .08);
+    }
+
+    .bill-title {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(#ffffff, #f8fafd);
+      border-bottom: 1px solid #d8e1ec;
+    }
+
+    .bill-title h1 {
+      margin: 0;
+      font-size: 21px;
+      letter-spacing: 4px;
+      color: #183b73;
+      font-weight: 650;
+    }
+
+    .status-pill {
+      position: absolute;
+      right: 22px;
+      top: 11px;
+      height: 25px;
+      padding: 0 12px;
+      border: 1px solid #9cc2f4;
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      color: #1f61cc;
+      background: #f0f7ff;
+      font-weight: 600;
+    }
+
+    .top-fields {
+      padding: 10px 18px 8px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 44px;
+      row-gap: 6px;
+      border-bottom: 1px solid #dde5ef;
+    }
+
+    .field {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: 94px 1fr 94px 1fr;
+      align-items: center;
+      column-gap: 5px;
+      height: 24px;
+    }
+
+    .field label {
+      text-align: right;
+      color: var(--label);
+      white-space: nowrap;
+    }
+
+    .req::before {
+      content: "*";
+      color: var(--danger);
+      margin-right: 2px;
+    }
+
+    .input-wrap {
+      position: relative;
+      min-width: 0;
+    }
+
+    .control {
+      width: 100%;
+      height: 23px;
+      padding: 0 5px;
+      border: 1px solid #b8c4d5;
+      border-radius: 2px;
+      background: #fff;
+      color: #23344a;
+      box-shadow: inset 0 1px 1px rgba(31,45,61,.03);
+    }
+
+    .control.edit { background: var(--edit); }
+    .control.lock { background: #f5f7fa; color: #69778a; }
+
+    .lookup .control { padding-right: 24px; }
+    .lookup::after {
+      content: "...";
+      position: absolute;
+      right: 1px;
+      top: 1px;
+      width: 22px;
+      height: 21px;
+      line-height: 17px;
+      text-align: center;
+      color: #53657a;
+      background: #f0f4f9;
+      border-left: 1px solid #b8c4d5;
+    }
+
+    .tabs-area {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 30px 1fr 31px;
+    }
+
+    .subtabs {
+      display: flex;
+      align-items: end;
+      padding-left: 14px;
+      background: #f8fafd;
+      border-bottom: 1px solid #c6d1df;
+    }
+
+    .subtab {
+      height: 27px;
+      min-width: 88px;
+      padding: 0 13px;
+      border: 1px solid #cbd5e2;
+      border-bottom: 0;
+      background: #fff;
+      color: #34465d;
+      margin-right: 2px;
+    }
+
+    .subtab.active {
+      color: var(--deep);
+      font-weight: 600;
+      box-shadow: inset 0 2px 0 var(--blue), 0 -1px 0 #fff;
+    }
+
+    .grid-wrap {
+      min-height: 0;
+      overflow: auto;
+      background: #fff;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 1210px;
+    }
+
+    th, td {
+      height: 27px;
+      border-right: 1px solid #d2dce8;
+      border-bottom: 1px solid #e0e7f0;
+      padding: 0 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    th {
+      height: 28px;
+      text-align: center;
+      font-weight: 500;
+      color: #33445b;
+      background: linear-gradient(#fbfcff, #eef3f9);
+    }
+
+    td.index {
+      width: 36px;
+      text-align: center;
+      background: #fafbfd;
+      color: #536273;
+    }
+
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .edit-cell { background: var(--edit); }
+    .warn-cell { background: #fff2df; color: #a4530a; }
+    .err-cell { background: #fff0f0; color: var(--danger); }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      border-top: 1px solid #ccd6e4;
+      background: #fafbfd;
+    }
+
+    .sum-item {
+      padding: 5px 10px;
+      border-right: 1px solid #d9e1eb;
+      color: #657286;
+    }
+
+    .sum-item b {
+      display: block;
+      margin-top: 1px;
+      color: #23344a;
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bottom-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      border-top: 1px solid #ccd6e4;
+      background: #fff;
+    }
+
+    .info-box {
+      padding: 7px 12px;
+      border-right: 1px solid #d9e1eb;
+    }
+
+    .info-box:last-child { border-right: 0; }
+    .info-title {
+      color: #1b5fc6;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .info-row {
+      height: 19px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .info-row small { color: #738196; }
+
+    .statusbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      color: #546579;
+      background: #fafbfd;
+      border-top: 1px solid #ccd6e4;
+    }
+
+    .toast {
+      position: absolute;
+      right: 24px;
+      bottom: 34px;
+      display: none;
+      min-width: 330px;
+      padding: 8px 10px;
+      border: 1px solid #e5b082;
+      background: #fff7ed;
+      color: #9a4314;
+      box-shadow: 0 2px 8px rgba(31,45,61,.18);
+    }
+
+    .toast.show { display: block; }
+  </style>
+</head>
+<body>
+  <div
+    class="screen"
+    data-page-id="cloudKingdeePurchaseInStock"
+    data-page-type="form"
+    data-pattern="cloud-kingdee-bill"
+    data-object-type="purchaseInStockBill"
+    data-mode="edit"
+    data-state="saved"
+    data-biz-no="PIN202607040001"
+  >
+    <div class="bluebar">
+      <div class="cloud-title">
+        <span class="cloud-mark">云</span>
+        <span>金蝶云 · 企业业务平台</span>
+      </div>
+      <div class="blue-actions">
+        <span>搜索</span>
+        <span>消息</span>
+        <span>帮助</span>
+        <span>华东公司</span>
+        <span>张敏</span>
+      </div>
+    </div>
+
+    <div class="opened-tabs">
+      <div class="opened-tab active"><span>采购入库单</span><span>×</span></div>
+      <div class="opened-tab"><span>采购订单列表</span><span>×</span></div>
+      <div class="opened-tab"><span>即时库存</span><span>×</span></div>
+    </div>
+
+    <div class="menubar">
+      <button class="menu-btn"><span class="ico">+</span>新增</button>
+      <button class="menu-btn" id="saveBtn"><span class="ico">S</span>保存</button>
+      <button class="menu-btn primary" id="submitBtn"><span class="ico">✓</span>提交</button>
+      <button class="menu-btn"><span class="ico">审</span>审核</button>
+      <button class="menu-btn"><span class="ico">反</span>反审核</button>
+      <span class="sep"></span>
+      <button class="menu-btn"><span class="ico">↓</span>下推</button>
+      <button class="menu-btn"><span class="ico">引</span>引入</button>
+      <button class="menu-btn"><span class="ico">出</span>引出</button>
+      <button class="menu-btn"><span class="ico">印</span>打印</button>
+      <span class="sep"></span>
+      <button class="menu-btn"><span class="ico">↻</span>刷新</button>
+      <button class="menu-btn"><span class="ico">⋯</span>更多</button>
+    </div>
+
+    <main class="canvas">
+      <section class="bill">
+        <div class="bill-title">
+          <h1>采购入库单</h1>
+          <div class="status-pill">已保存</div>
+        </div>
+
+        <div class="top-fields">
+          <div class="field">
+            <label>单据编号</label>
+            <div class="input-wrap"><input class="control lock" value="PIN202607040001" readonly></div>
+            <label class="req">业务日期</label>
+            <div class="input-wrap"><input class="control edit" value="2026-07-04"></div>
+          </div>
+          <div class="field">
+            <label class="req">库存组织</label>
+            <div class="input-wrap lookup"><input class="control lock" value="华东公司" readonly></div>
+            <label class="req">供应商</label>
+            <div class="input-wrap lookup" data-field="supplier" data-field-group="basicInfo" data-required-phase="submit" data-editable="true" data-source="upstream"><input class="control edit" value="上海星河食品有限公司"></div>
+          </div>
+          <div class="field">
+            <label class="req">收货仓库</label>
+            <div class="input-wrap lookup"><input class="control edit" value="冷链一仓"></div>
+            <label>采购员</label>
+            <div class="input-wrap lookup"><input class="control" value="李倩"></div>
+          </div>
+          <div class="field">
+            <label>源单编号</label>
+            <div class="input-wrap lookup"><input class="control lock" value="PO202607030018" readonly></div>
+            <label>单据状态</label>
+            <div class="input-wrap"><input class="control lock" value="保存" readonly></div>
+          </div>
+          <div class="field">
+            <label class="req">采购类型</label>
+            <div class="input-wrap lookup"><input class="control edit" value="普通采购"></div>
+            <label>结算方式</label>
+            <div class="input-wrap lookup"><input class="control" value="月结30天"></div>
+          </div>
+          <div class="field">
+            <label class="req">业务分类</label>
+            <div class="input-wrap lookup"><input class="control edit" value="库存采购"></div>
+            <label>凭证口径</label>
+            <div class="input-wrap"><input class="control lock" value="按业务分类匹配凭证模板" readonly></div>
+          </div>
+          <div class="field">
+            <label>备注</label>
+            <div class="input-wrap"><input class="control" value="供应商承诺当日补齐缺少批次资料"></div>
+            <label>校验提示</label>
+            <div class="input-wrap"><input class="control lock" value="第3行仓库提交前必填；第2行部分入库" readonly></div>
+          </div>
+        </div>
+
+        <div class="tabs-area">
+          <div class="subtabs">
+            <button class="subtab active">明细信息</button>
+            <button class="subtab">财务信息</button>
+            <button class="subtab">附件</button>
+            <button class="subtab">关联关系</button>
+            <button class="subtab">审批日志</button>
+          </div>
+
+          <div class="grid-wrap">
+            <table aria-label="采购入库单明细">
+              <thead>
+                <tr>
+                  <th style="width:36px;">序号</th>
+                  <th style="width:92px;">物料编码</th>
+                  <th style="width:152px;">物料名称</th>
+                  <th style="width:104px;">规格型号</th>
+                  <th style="width:90px;">批号</th>
+                  <th style="width:108px;">仓库</th>
+                  <th style="width:56px;">单位</th>
+                  <th style="width:82px;">应收数量</th>
+                  <th style="width:82px;">实收数量</th>
+                  <th style="width:78px;">单价</th>
+                  <th style="width:98px;">金额</th>
+                  <th style="width:70px;">税率%</th>
+                  <th style="width:96px;">源单行号</th>
+                  <th style="width:170px;">备注</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-line-index="1" data-line-id="line_001" data-row-state="normal" data-source-bill-no="PO202607030018" data-source-line-id="po_line_001">
+                  <td class="index">1</td><td>MAT-10021</td><td>冷冻鸡腿肉</td><td>10kg/箱</td><td class="edit-cell">BT260704A</td><td class="edit-cell">冷链一仓</td><td>箱</td><td class="num">80</td><td class="num edit-cell">80</td><td class="num">168.00</td><td class="num">13,440.00</td><td class="num">13</td><td>PO行1</td><td></td>
+                </tr>
+                <tr data-line-index="2" data-line-id="line_002" data-row-state="warning" data-source-bill-no="PO202607030018" data-source-line-id="po_line_002">
+                  <td class="index">2</td><td>MAT-10035</td><td>精品五花肉</td><td>25kg/箱</td><td class="edit-cell">BT260704B</td><td class="edit-cell">冷链一仓</td><td>箱</td><td class="num">40</td><td class="num warn-cell">36</td><td class="num">286.00</td><td class="num">10,296.00</td><td class="num">13</td><td>PO行2</td><td class="warn-cell">部分入库，将反写未入库数量</td>
+                </tr>
+                <tr data-line-index="3" data-line-id="line_003" data-row-state="error" data-source-bill-no="PO202607030018" data-source-line-id="po_line_003">
+                  <td class="index">3</td><td>MAT-10089</td><td>进口牛腱</td><td>20kg/箱</td><td class="edit-cell">BT260704C</td><td class="err-cell" data-error-code="FIELD_REQUIRED" data-error-scope="row" data-error-field="warehouseId" data-error-row-index="3">提交前必填</td><td>箱</td><td class="num">22</td><td class="num edit-cell">22</td><td class="num">512.00</td><td class="num">11,264.00</td><td class="num">13</td><td>PO行3</td><td class="err-cell">仓库缺失</td>
+                </tr>
+                <tr><td class="index">4</td><td class="edit-cell"></td><td class="edit-cell"></td><td></td><td class="edit-cell"></td><td class="edit-cell"></td><td></td><td></td><td class="edit-cell"></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td class="index">5</td><td class="edit-cell"></td><td class="edit-cell"></td><td></td><td class="edit-cell"></td><td class="edit-cell"></td><td></td><td></td><td class="edit-cell"></td><td></td><td></td><td></td><td></td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="summary">
+            <div class="sum-item">应收数量<b>142 箱</b></div>
+            <div class="sum-item">实收数量<b>138 箱</b></div>
+            <div class="sum-item">未入库<b>4 箱</b></div>
+            <div class="sum-item">不含税金额<b>30,088.50</b></div>
+            <div class="sum-item">税额<b>3,911.50</b></div>
+            <div class="sum-item">价税合计<b>35,000.00</b></div>
+          </div>
+        </div>
+
+        <div class="bottom-info">
+          <div class="info-box">
+            <div class="info-title">附件</div>
+            <div class="info-row"><span>供应商送货单.pdf</span><small>已上传</small></div>
+            <div class="info-row"><span>冷链验收照片 3 张</span><small>审批可见</small></div>
+          </div>
+          <div class="info-box">
+            <div class="info-title">上下游关系</div>
+            <div class="info-row"><span>上游：PO202607030018</span><small>已下推 138/142</small></div>
+            <div class="info-row"><span>下游：应付单</span><small>未生成</small></div>
+          </div>
+          <div class="info-box">
+            <div class="info-title">制单与审批</div>
+            <div class="info-row"><span>制单人：张敏</span><small>2026-07-04 09:42</small></div>
+            <div class="info-row"><span>当前节点：待提交</span><small>仓库主管审批</small></div>
+          </div>
+        </div>
+
+        <div class="statusbar">
+          <span>组织：华东公司　账簿：默认账簿　期间：2026-07</span>
+          <span>保存时必填已通过；提交前仍有 1 个分录错误</span>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast" class="toast">提交失败：第3行“仓库”提交前必填，请补齐后重试。</div>
+  </div>
+
+  <script>
+    const toast = document.getElementById('toast');
+    const submitBtn = document.getElementById('submitBtn');
+    const saveBtn = document.getElementById('saveBtn');
+
+    function flash(text) {
+      toast.textContent = text;
+      toast.classList.add('show');
+      clearTimeout(flash.timer);
+      flash.timer = setTimeout(() => toast.classList.remove('show'), 2600);
+    }
+
+    submitBtn.addEventListener('click', () => {
+      submitBtn.dataset.actionState = 'failed';
+      flash('提交失败：第3行“仓库”提交前必填，请补齐后重试。');
+      setTimeout(() => { submitBtn.dataset.actionState = 'idle'; }, 900);
+    });
+
+    saveBtn.addEventListener('click', () => {
+      saveBtn.dataset.actionState = 'processing';
+      setTimeout(() => {
+        saveBtn.dataset.actionState = 'idle';
+        flash('保存成功：单据保持“已保存”，操作已写入日志。');
+      }, 500);
+    });
+  </script>
+</body>
+</html>

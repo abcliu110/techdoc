@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+<defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/></marker></defs>
+<style>
+  .bg{fill:#f6f8fb}
+  .panel{fill:#ffffff;stroke:#d7dde8;stroke-width:2}
+  .soft{fill:#f1f5f9;stroke:#d7dde8;stroke-width:1.5}
+  .brand{fill:#2563eb;stroke:#1d4ed8;stroke-width:1.5}
+  .brandSoft{fill:#dbeafe;stroke:#93c5fd;stroke-width:1.5}
+  .green{fill:#dcfce7;stroke:#86efac;stroke-width:1.5}
+  .orange{fill:#fff7ed;stroke:#fdba74;stroke-width:1.5}
+  .red{fill:#fee2e2;stroke:#fca5a5;stroke-width:1.5}
+  .purple{fill:#ede9fe;stroke:#c4b5fd;stroke-width:1.5}
+  .line{stroke:#64748b;stroke-width:2;fill:none;marker-end:url(#arrow)}
+  .dash{stroke:#94a3b8;stroke-width:2;fill:none;stroke-dasharray:6 4;marker-end:url(#arrow)}
+  .title{font:700 24px Arial, sans-serif;fill:#0f172a}
+  .h{font:700 16px Arial, sans-serif;fill:#0f172a}
+  .t{font:14px Arial, sans-serif;fill:#334155}
+  .s{font:12px Arial, sans-serif;fill:#64748b}
+  .w{font:700 14px Arial, sans-serif;fill:#ffffff}
+</style>
+<rect class="bg" x="0" y="0" width="960" height="540"/>
+<text class="title" x="40" y="46">Feedback System</text>
+<rect class="brandSoft" x="70" y="100" width="150" height="100" rx="12"/>
+<text class="h" x="90" y="136">Info</text>
+<text class="s" x="90" y="170">Light message</text>
+<rect class="soft" x="300" y="100" width="150" height="100" rx="12"/>
+<text class="h" x="320" y="136">Process</text>
+<text class="s" x="320" y="170">Loading / Progress</text>
+<rect class="green" x="530" y="100" width="150" height="100" rx="12"/>
+<text class="h" x="550" y="136">Success</text>
+<text class="s" x="550" y="170">Result feedback</text>
+<rect class="orange" x="760" y="100" width="150" height="100" rx="12"/>
+<text class="h" x="780" y="136">Risk</text>
+<text class="s" x="780" y="170">Confirm / Block</text>
+<rect class="red" x="70" y="300" width="150" height="100" rx="12"/>
+<text class="h" x="90" y="336">Field Error</text>
+<text class="s" x="90" y="370">Inline message</text>
+<rect class="orange" x="300" y="300" width="150" height="100" rx="12"/>
+<text class="h" x="320" y="336">Batch Result</text>
+<text class="s" x="320" y="370">Success + Failed detail</text>
+<rect class="soft" x="530" y="300" width="150" height="100" rx="12"/>
+<text class="h" x="550" y="336">Permission</text>
+<text class="s" x="550" y="370">Disabled + Reason</text>
+<rect class="red" x="760" y="300" width="150" height="100" rx="12"/>
+<text class="h" x="780" y="336">System Error</text>
+<text class="s" x="780" y="370">Error panel + Retry</text>
+</svg>

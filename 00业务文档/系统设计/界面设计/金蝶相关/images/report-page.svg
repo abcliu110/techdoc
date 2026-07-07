@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+<defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/></marker></defs>
+<style>
+  .bg{fill:#f6f8fb}
+  .panel{fill:#ffffff;stroke:#d7dde8;stroke-width:2}
+  .soft{fill:#f1f5f9;stroke:#d7dde8;stroke-width:1.5}
+  .brand{fill:#2563eb;stroke:#1d4ed8;stroke-width:1.5}
+  .brandSoft{fill:#dbeafe;stroke:#93c5fd;stroke-width:1.5}
+  .green{fill:#dcfce7;stroke:#86efac;stroke-width:1.5}
+  .orange{fill:#fff7ed;stroke:#fdba74;stroke-width:1.5}
+  .red{fill:#fee2e2;stroke:#fca5a5;stroke-width:1.5}
+  .purple{fill:#ede9fe;stroke:#c4b5fd;stroke-width:1.5}
+  .line{stroke:#64748b;stroke-width:2;fill:none;marker-end:url(#arrow)}
+  .dash{stroke:#94a3b8;stroke-width:2;fill:none;stroke-dasharray:6 4;marker-end:url(#arrow)}
+  .title{font:700 24px Arial, sans-serif;fill:#0f172a}
+  .h{font:700 16px Arial, sans-serif;fill:#0f172a}
+  .t{font:14px Arial, sans-serif;fill:#334155}
+  .s{font:12px Arial, sans-serif;fill:#64748b}
+  .w{font:700 14px Arial, sans-serif;fill:#ffffff}
+</style>
+<rect class="bg" x="0" y="0" width="960" height="540"/>
+<text class="title" x="40" y="46">Report Page</text>
+<rect class="panel" x="55" y="85" width="850" height="60" rx="12"/>
+<text class="h" x="85" y="122">Report Scope: Org | Period | Currency | Business Type</text>
+<rect class="brandSoft" x="55" y="165" width="270" height="110" rx="12"/>
+<text class="h" x="85" y="205">Metric: Sales</text>
+<text class="t" x="85" y="240">1.2M  +8%</text>
+<rect class="green" x="345" y="165" width="270" height="110" rx="12"/>
+<text class="h" x="375" y="205">Metric: Orders</text>
+<text class="t" x="375" y="240">8.5K  +4%</text>
+<rect class="orange" x="635" y="165" width="270" height="110" rx="12"/>
+<text class="h" x="665" y="205">Alert</text>
+<text class="t" x="665" y="240">Inventory Risk 12</text>
+<rect class="panel" x="55" y="305" width="410" height="150" rx="12"/>
+<text class="h" x="85" y="340">Chart: Trend / Rank / Share</text>
+<rect class="soft" x="495" y="305" width="410" height="150" rx="12"/>
+<text class="h" x="525" y="340">Drilldown Detail Table</text>
+<text class="t" x="525" y="380">Dimension -&gt; Detail -&gt; Source</text>
+</svg>

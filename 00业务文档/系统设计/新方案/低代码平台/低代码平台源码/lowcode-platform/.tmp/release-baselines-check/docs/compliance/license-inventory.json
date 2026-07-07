@@ -1,0 +1,350 @@
+{
+    "maven":  [
+                  {
+                      "id":  "com.fasterxml.jackson.core:jackson-databind",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "managed"
+                                   ],
+                      "scopes":  [
+                                     "compile"
+                                 ]
+                  },
+                  {
+                      "id":  "com.mysql:mysql-connector-j",
+                      "license":  "GPL-2.0-with-FOSS-exception",
+                      "versions":  [
+                                       "9.1.0"
+                                   ],
+                      "scopes":  [
+                                     "managed"
+                                 ]
+                  },
+                  {
+                      "id":  "com.mysql:mysql-connector-j",
+                      "license":  "GPL-2.0-with-FOSS-exception",
+                      "versions":  [
+                                       "managed"
+                                   ],
+                      "scopes":  [
+                                     "test"
+                                 ]
+                  },
+                  {
+                      "id":  "com.mysql:mysql-connector-j",
+                      "license":  "GPL-2.0-with-FOSS-exception",
+                      "versions":  [
+                                       "managed"
+                                   ],
+                      "scopes":  [
+                                     "test"
+                                 ]
+                  },
+                  {
+                      "id":  "com.tngtech.archunit:archunit-junit5",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "1.3.0"
+                                   ],
+                      "scopes":  [
+                                     "managed"
+                                 ]
+                  },
+                  {
+                      "id":  "com.tngtech.archunit:archunit-junit5",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "managed"
+                                   ],
+                      "scopes":  [
+                                     "test"
+                                 ]
+                  },
+                  {
+                      "id":  "org.assertj:assertj-core",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "managed"
+                                   ],
+                      "scopes":  [
+                                     "test"
+                                 ]
+                  },
+                  {
+                      "id":  "org.flywaydb:flyway-core",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "managed"
+                                   ],
+                      "scopes":  [
+                                     "compile"
+                                 ]
+                  },
+                  {
+                      "id":  "org.flywaydb:flyway-core",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "10.22.0"
+                                   ],
+                      "scopes":  [
+                                     "managed"
+                                 ]
+                  },
+                  {
+                      "id":  "org.flywaydb:flyway-core",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "managed"
+                                   ],
+                      "scopes":  [
+                                     "test"
+                                 ]
+                  },
+                  {
+                      "id":  "org.flywaydb:flyway-mysql",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "managed"
+                                   ],
+                      "scopes":  [
+                                     "compile"
+                                 ]
+                  },
+                  {
+                      "id":  "org.flywaydb:flyway-mysql",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "10.22.0"
+                                   ],
+                      "scopes":  [
+                                     "managed"
+                                 ]
+                  },
+                  {
+                      "id":  "org.flywaydb:flyway-mysql",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "managed"
+                                   ],
+                      "scopes":  [
+                                     "test"
+                                 ]
+                  },
+                  {
+                      "id":  "org.junit.jupiter:junit-jupiter",
+                      "license":  "EPL-2.0",
+                      "versions":  [
+                                       "managed"
+                                   ],
+                      "scopes":  [
+                                     "test"
+                                 ]
+                  },
+                  {
+                      "id":  "org.springframework.boot:spring-boot-dependencies",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "3.4.7"
+                                   ],
+                      "scopes":  [
+                                     "import"
+                                 ]
+                  },
+                  {
+                      "id":  "org.springframework.boot:spring-boot-starter",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "managed"
+                                   ],
+                      "scopes":  [
+                                     "compile"
+                                 ]
+                  },
+                  {
+                      "id":  "org.springframework.boot:spring-boot-starter-jdbc",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "managed"
+                                   ],
+                      "scopes":  [
+                                     "compile"
+                                 ]
+                  },
+                  {
+                      "id":  "org.springframework.boot:spring-boot-starter-test",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "managed"
+                                   ],
+                      "scopes":  [
+                                     "test"
+                                 ]
+                  },
+                  {
+                      "id":  "org.springframework.boot:spring-boot-starter-web",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "managed"
+                                   ],
+                      "scopes":  [
+                                     "compile"
+                                 ]
+                  },
+                  {
+                      "id":  "org.springframework:spring-context",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "managed"
+                                   ],
+                      "scopes":  [
+                                     "compile"
+                                 ]
+                  },
+                  {
+                      "id":  "org.springframework:spring-tx",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "managed"
+                                   ],
+                      "scopes":  [
+                                     "compile"
+                                 ]
+                  },
+                  {
+                      "id":  "org.testcontainers:testcontainers",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "2.0.5"
+                                   ],
+                      "scopes":  [
+                                     "test"
+                                 ]
+                  },
+                  {
+                      "id":  "org.testcontainers:testcontainers",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "2.0.5"
+                                   ],
+                      "scopes":  [
+                                     "test"
+                                 ]
+                  },
+                  {
+                      "id":  "org.testcontainers:testcontainers-bom",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "2.0.5"
+                                   ],
+                      "scopes":  [
+                                     "import"
+                                 ]
+                  },
+                  {
+                      "id":  "org.testcontainers:testcontainers-junit-jupiter",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "2.0.5"
+                                   ],
+                      "scopes":  [
+                                     "test"
+                                 ]
+                  },
+                  {
+                      "id":  "org.testcontainers:testcontainers-junit-jupiter",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "2.0.5"
+                                   ],
+                      "scopes":  [
+                                     "test"
+                                 ]
+                  },
+                  {
+                      "id":  "org.testcontainers:testcontainers-mysql",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "2.0.5"
+                                   ],
+                      "scopes":  [
+                                     "test"
+                                 ]
+                  },
+                  {
+                      "id":  "org.testcontainers:testcontainers-mysql",
+                      "license":  "Apache-2.0",
+                      "versions":  [
+                                       "2.0.5"
+                                   ],
+                      "scopes":  [
+                                     "test"
+                                 ]
+                  }
+              ],
+    "pnpm":  [
+                 {
+                     "id":  "@eslint/js",
+                     "license":  "MIT",
+                     "version":  "9.30.1",
+                     "declaredIn":  "lowcode-web/package.json",
+                     "dependencyType":  "devDependencies"
+                 },
+                 {
+                     "id":  "@types/node",
+                     "license":  "MIT",
+                     "version":  "20.19.4",
+                     "declaredIn":  "lowcode-web/package.json",
+                     "dependencyType":  "devDependencies"
+                 },
+                 {
+                     "id":  "eslint",
+                     "license":  "MIT",
+                     "version":  "9.30.1",
+                     "declaredIn":  "lowcode-web/package.json",
+                     "dependencyType":  "devDependencies"
+                 },
+                 {
+                     "id":  "typescript",
+                     "license":  "Apache-2.0",
+                     "version":  "5.8.3",
+                     "declaredIn":  "lowcode-web/package.json",
+                     "dependencyType":  "devDependencies"
+                 },
+                 {
+                     "id":  "typescript-eslint",
+                     "license":  "MIT",
+                     "version":  "8.35.1",
+                     "declaredIn":  "lowcode-web/package.json",
+                     "dependencyType":  "devDependencies"
+                 },
+                 {
+                     "id":  "vite",
+                     "license":  "MIT",
+                     "version":  "6.3.5",
+                     "declaredIn":  "lowcode-web/package.json",
+                     "dependencyType":  "devDependencies"
+                 },
+                 {
+                     "id":  "vitest",
+                     "license":  "MIT",
+                     "version":  "3.2.4",
+                     "declaredIn":  "lowcode-web/package.json",
+                     "dependencyType":  "devDependencies"
+                 }
+             ],
+    "reviewMode":  "manual-committed-baseline",
+    "docker":  [
+                   {
+                       "image":  "mysql:8.0.37",
+                       "license":  "GPL-2.0-only",
+                       "declaredIn":  "docker-compose.yml:mysql"
+                   },
+                   {
+                       "image":  "redis:7.4.8",
+                       "license":  "BSD-3-Clause",
+                       "declaredIn":  "docker-compose.yml:redis"
+                   }
+               ],
+    "updatedBy":  "release-gate",
+    "schemaVersion":  1
+}

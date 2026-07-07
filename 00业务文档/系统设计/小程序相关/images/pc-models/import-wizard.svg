@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+<defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/></marker></defs>
+<style>
+  .bg{fill:#f6f8fb}
+  .panel{fill:#ffffff;stroke:#d7dde8;stroke-width:2}
+  .soft{fill:#f1f5f9;stroke:#d7dde8;stroke-width:1.5}
+  .brandSoft{fill:#dbeafe;stroke:#93c5fd;stroke-width:1.5}
+  .warn{fill:#fff7ed;stroke:#fdba74;stroke-width:1.5}
+  .danger{fill:#fee2e2;stroke:#fca5a5;stroke-width:1.5}
+  .success{fill:#dcfce7;stroke:#86efac;stroke-width:1.5}
+  .line{stroke:#64748b;stroke-width:2;fill:none;marker-end:url(#arrow)}
+  .title{font:700 24px Arial, sans-serif;fill:#0f172a}
+  .h{font:700 16px Arial, sans-serif;fill:#0f172a}
+  .t{font:14px Arial, sans-serif;fill:#334155}
+  .s{font:12px Arial, sans-serif;fill:#64748b}
+</style>
+<rect class="bg" x="0" y="0" width="960" height="540"/>
+<text class="title" x="40" y="46">Import Wizard Pattern</text>
+<rect class="brandSoft" x="70" y="105" width="110" height="58" rx="12"/>
+<text class="h" x="92" y="140">Template</text>
+<path class="line" d="M180,134 L210,134"/>
+<rect class="brandSoft" x="210" y="105" width="110" height="58" rx="12"/>
+<text class="h" x="232" y="140">Upload</text>
+<path class="line" d="M320,134 L350,134"/>
+<rect class="brandSoft" x="350" y="105" width="110" height="58" rx="12"/>
+<text class="h" x="372" y="140">Mapping</text>
+<path class="line" d="M460,134 L490,134"/>
+<rect class="brandSoft" x="490" y="105" width="110" height="58" rx="12"/>
+<text class="h" x="512" y="140">Validate</text>
+<path class="line" d="M600,134 L630,134"/>
+<rect class="soft" x="630" y="105" width="110" height="58" rx="12"/>
+<text class="h" x="652" y="140">Confirm</text>
+<path class="line" d="M740,134 L770,134"/>
+<rect class="soft" x="770" y="105" width="110" height="58" rx="12"/>
+<text class="h" x="792" y="140">Result</text>
+<rect class="panel" x="75" y="220" width="810" height="210" rx="12"/>
+<text class="h" x="105" y="255">Validation Result</text>
+<text class="t" x="105" y="295">Success rows: 980</text>
+<text class="t" x="105" y="330">Failed rows: 20</text>
+<text class="t" x="105" y="365">Failure detail: row / field / reason</text>
+<rect class="warn" x="105" y="390" width="250" height="44" rx="8"/>
+<text class="t" x="125" y="418">Download failed rows</text>
+<rect class="brandSoft" x="620" y="390" width="230" height="44" rx="8"/>
+<text class="t" x="650" y="418">Confirm import</text>
+</svg>
