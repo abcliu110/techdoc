@@ -54,7 +54,17 @@ const SortableFieldItem: React.FC<{
         transition: 'all 0.3s',
       }}>
         <Space>
-          <div {...attributes} {...listeners} style={{ cursor: 'move', color: '#999' }}>
+          <div
+            {...attributes}
+            {...listeners}
+            style={{
+              cursor: 'grab',
+              color: '#999',
+              userSelect: 'none',
+              WebkitUserSelect: 'none',
+              touchAction: 'none',
+            }}
+          >
             <DragOutlined />
           </div>
           <strong>{field.label || '未命名字段'}</strong>
@@ -156,7 +166,11 @@ const DesignCanvas: React.FC<{
   onSave: () => void;
 }> = ({ fields, selectedIndex, previewMode, onFieldsReorder, onFieldSelect, onFieldDelete, onSave }) => {
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // 移动8px后才激活拖拽
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })

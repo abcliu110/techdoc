@@ -1,9 +1,10 @@
 import React from 'react';
 import { Tabs } from 'antd';
 import { FormRenderer } from './FormRenderer';
-import { FormDesignerEnhanced } from './FormDesignerEnhanced';
+import { FormDesignerFinal } from './FormDesignerFinal';
+import { DragTest } from './DragTest';
 
-// 主应用 - 包含渲染器和增强版设计器
+// 主应用
 export const App: React.FC = () => {
   return (
     <div style={{ height: '100vh' }}>
@@ -13,14 +14,19 @@ export const App: React.FC = () => {
         style={{ padding: '0 24px', background: 'white' }}
         items={[
           {
+            key: 'designer',
+            label: '🎨 表单设计器 (完整版)',
+            children: <FormDesignerFinal />,
+          },
+          {
             key: 'renderer',
             label: '📝 表单渲染器',
             children: <FormRenderer />,
           },
           {
-            key: 'designer',
-            label: '🎨 表单设计器 (增强版)',
-            children: <FormDesignerEnhanced />,
+            key: 'dragtest',
+            label: '🧪 拖拽测试',
+            children: <DragTest />,
           },
         ]}
       />
