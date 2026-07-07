@@ -42,6 +42,18 @@ class SchemaReconcilerTest {
   }
 
   @Test
+  void detect_建表计划标准列齐全_不把系统列误判为多余列() {
+    MetaObjectDraft order = object("order", List.of(field("name", FieldTypeEnum.TEXT, FieldOptionsDef.text(1, 128))));
+    List<PhysicalColumn> columns = new java.util.ArrayList<>(SchemaSyncPlanner.standardPhysicalColumns());
+    columns.add(new PhysicalColumn("name", "varchar", 128, null, null));
+    PhysicalTable current = new PhysicalTable("lc_crm_order", columns);
+
+    ReconcileReport report = reconciler.detect(SchemaSyncCommand.forObjects(1L, 10L, "crm", List.of(order), List.of(current)));
+
+    assertThat(report.differences()).isEmpty();
+  }
+
+  @Test
   void detect_varchar长度缩短_返回缩列阻断差异() {
     MetaObjectDraft order = object("order", List.of(field("name", FieldTypeEnum.TEXT, FieldOptionsDef.text(1, 64))));
     PhysicalTable current =

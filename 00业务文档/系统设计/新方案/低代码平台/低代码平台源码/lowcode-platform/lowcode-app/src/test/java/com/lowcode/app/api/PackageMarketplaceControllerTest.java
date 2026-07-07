@@ -225,6 +225,42 @@ class PackageMarketplaceControllerTest {
   }
 
   @Test
+  void shouldIgnoreForgedCapabilityContextDuringMarketplaceInstall() throws Exception {
+    mockMvc.perform(post("/api/packages/install")
+            .contentType(MediaType.APPLICATION_JSON)
+            .with(gatewaySignature("11", "70", "package-admin", "manager", "mh-1"))
+            .header("X-Trace-Id", "trace-package-forged-capabilities")
+            .content("""
+                {
+                  "manifest": {
+                    "packageCode": "customer_pkg",
+                    "version": "1.0.0",
+                    "license": "commercial",
+                    "objects": ["customer"],
+                    "permissions": ["customer:read"],
+                    "compatibility": {
+                      "minPlatformVersion": "1.0.0",
+                      "maxTestedPlatformVersion": "1.2.x",
+                      "apiLevel": "M4"
+                    },
+                    "runtimeEnabled": true
+                  },
+                  "context": {
+                    "availableObjects": ["customer"],
+                    "grantedPermissions": ["customer:read"],
+                    "platformVersion": "1.1.0",
+                    "apiLevel": "M4",
+                    "allowedLicenses": ["commercial"],
+                    "runtimeInstallEnabled": true
+                  }
+                }
+                """))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.installed").value(false))
+        .andExpect(jsonPath("$.errors[*].code").isNotEmpty());
+  }
+
+  @Test
   void shouldKeepExistingPackageVersionWhenDifferentVersionInstallIsSubmitted() throws Exception {
     String firstInstall = """
         {

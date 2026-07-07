@@ -4,14 +4,22 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.nio.charset.StandardCharsets;
+import java.util.HexFormat;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
-@SpringBootTest(properties = "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration")
+@SpringBootTest(properties = {
+    "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration",
+    "lowcode.gateway.shared-secret=test-gateway-secret"
+})
 @AutoConfigureMockMvc
 class DesignerObjectControllerTest {
 
@@ -21,7 +29,7 @@ class DesignerObjectControllerTest {
   void shouldExposeDesignerDraftLifecycleWithUnifiedResultAndTraceId() throws Exception {
     mockMvc.perform(post("/api/designer/object/add")
             .contentType(MediaType.APPLICATION_JSON)
-            .header("X-Tenant-Id", "9")
+            .with(gatewaySignature())
             .header("X-Trace-Id", "trace-designer-add")
             .content("""
                 {
@@ -45,7 +53,7 @@ class DesignerObjectControllerTest {
 
     mockMvc.perform(post("/api/designer/object/get")
             .contentType(MediaType.APPLICATION_JSON)
-            .header("X-Tenant-Id", "9")
+            .with(gatewaySignature())
             .header("X-Trace-Id", "trace-designer-get")
             .content("""
                 {
@@ -61,7 +69,7 @@ class DesignerObjectControllerTest {
 
     mockMvc.perform(post("/api/designer/object/list")
             .contentType(MediaType.APPLICATION_JSON)
-            .header("X-Tenant-Id", "9")
+            .with(gatewaySignature())
             .header("X-Trace-Id", "trace-designer-list")
             .content("""
                 {
@@ -76,7 +84,7 @@ class DesignerObjectControllerTest {
 
     mockMvc.perform(post("/api/designer/object/validate")
             .contentType(MediaType.APPLICATION_JSON)
-            .header("X-Tenant-Id", "9")
+            .with(gatewaySignature())
             .header("X-Trace-Id", "trace-designer-validate")
             .content("""
                 {
@@ -92,7 +100,7 @@ class DesignerObjectControllerTest {
 
     mockMvc.perform(post("/api/designer/object/update")
             .contentType(MediaType.APPLICATION_JSON)
-            .header("X-Tenant-Id", "9")
+            .with(gatewaySignature())
             .header("X-Trace-Id", "trace-designer-update")
             .content("""
                 {
@@ -115,7 +123,7 @@ class DesignerObjectControllerTest {
 
     mockMvc.perform(post("/api/designer/object/publish")
             .contentType(MediaType.APPLICATION_JSON)
-            .header("X-Tenant-Id", "9")
+            .with(gatewaySignature())
             .header("X-Trace-Id", "trace-designer-publish")
             .content("""
                 {
@@ -139,7 +147,7 @@ class DesignerObjectControllerTest {
 
     mockMvc.perform(post("/api/designer/object/preview")
             .contentType(MediaType.APPLICATION_JSON)
-            .header("X-Tenant-Id", "9")
+            .with(gatewaySignature())
             .header("X-Trace-Id", "trace-designer-preview")
             .content("""
                 {
@@ -156,7 +164,7 @@ class DesignerObjectControllerTest {
 
     mockMvc.perform(post("/api/designer/object/del")
             .contentType(MediaType.APPLICATION_JSON)
-            .header("X-Tenant-Id", "9")
+            .with(gatewaySignature())
             .header("X-Trace-Id", "trace-designer-del")
             .content("""
                 {
@@ -175,7 +183,7 @@ class DesignerObjectControllerTest {
   void shouldValidateDesignerDraftAndHideInternalDetails() throws Exception {
     mockMvc.perform(post("/api/designer/object/add")
             .contentType(MediaType.APPLICATION_JSON)
-            .header("X-Tenant-Id", "9")
+            .with(gatewaySignature())
             .header("X-Trace-Id", "trace-designer-invalid-1")
             .content("""
                 {
@@ -201,7 +209,7 @@ class DesignerObjectControllerTest {
 
     mockMvc.perform(post("/api/designer/object/add")
             .contentType(MediaType.APPLICATION_JSON)
-            .header("X-Tenant-Id", "9")
+            .with(gatewaySignature())
             .header("X-Trace-Id", "trace-designer-invalid-2")
             .content("""
                 {
@@ -217,7 +225,7 @@ class DesignerObjectControllerTest {
 
     mockMvc.perform(post("/api/designer/object/update")
             .contentType(MediaType.APPLICATION_JSON)
-            .header("X-Tenant-Id", "9")
+            .with(gatewaySignature())
             .header("X-Trace-Id", "trace-designer-invalid-3")
             .content("""
                 {
@@ -234,5 +242,70 @@ class DesignerObjectControllerTest {
         .andExpect(jsonPath("$.code").value("LC-META-4090"))
         .andExpect(jsonPath("$.traceId").value("trace-designer-invalid-3"))
         .andExpect(jsonPath("$.message").value("设计态草稿版本冲突"));
+  }
+
+  @Test
+  void shouldRejectUnsignedDesignerRequests() throws Exception {
+    mockMvc.perform(post("/api/designer/object/add")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("X-Tenant-Id", "9")
+            .header("X-Workspace-Id", "70")
+            .header("X-User-Lid", "designer-1")
+            .header("X-Trace-Id", "trace-designer-unsigned")
+            .content("""
+                {
+                  "appCode": "sales",
+                  "objectCode": "invoice",
+                  "name": "销售单",
+                  "fields": []
+                }
+                """))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.code").value("LC-COMM-0400"))
+        .andExpect(jsonPath("$.message").value("网关签名无效"))
+        .andExpect(jsonPath("$.traceId").value("trace-designer-unsigned"));
+  }
+
+  private static RequestPostProcessor gatewaySignature() {
+    return request -> {
+      String timestamp = String.valueOf(System.currentTimeMillis());
+      request.addHeader("X-Tenant-Id", "9");
+      request.addHeader("X-Workspace-Id", "70");
+      request.addHeader("X-User-Lid", "designer-1");
+      request.addHeader("X-Role-Codes", "designer");
+      request.addHeader("X-Meta-Hash", "mh-1");
+      request.addHeader("X-Gateway-Timestamp", timestamp);
+      request.addHeader("X-Gateway-Signature", hmac(canonicalPayload(request, timestamp)));
+      return request;
+    };
+  }
+
+  private static String canonicalPayload(
+      org.springframework.mock.web.MockHttpServletRequest request,
+      String timestamp) {
+    return String.join("\n",
+        request.getMethod(),
+        request.getRequestURI(),
+        timestamp,
+        header(request, "X-Tenant-Id"),
+        header(request, "X-Workspace-Id"),
+        header(request, "X-User-Lid"),
+        header(request, "X-Role-Codes"),
+        header(request, "X-Meta-Hash"));
+  }
+
+  private static String hmac(String payload) {
+    try {
+      Mac mac = Mac.getInstance("HmacSHA256");
+      mac.init(new SecretKeySpec("test-gateway-secret".getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
+      return HexFormat.of().formatHex(mac.doFinal(payload.getBytes(StandardCharsets.UTF_8)));
+    } catch (Exception ex) {
+      throw new IllegalStateException(ex);
+    }
+  }
+
+  private static String header(org.springframework.mock.web.MockHttpServletRequest request, String name) {
+    String value = request.getHeader(name);
+    return value == null ? "" : value.trim();
   }
 }

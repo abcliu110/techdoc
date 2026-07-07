@@ -34,6 +34,7 @@ class SchemaSyncPlanTest {
       assertThat(step.type()).isEqualTo(DdlType.CREATE_TABLE);
       assertThat(step.sql()).contains("create table lc_crm_order");
       assertThat(step.sql()).contains("owner_user_lid varchar(26)");
+      assertThat(step.sql()).contains("workspace_id bigint not null");
       assertThat(step.sql()).contains("owner_dept_lid varchar(26)");
       assertThat(step.sql()).contains("owner_org_path varchar(512)");
       assertThat(step.sql()).contains("name varchar(128)");

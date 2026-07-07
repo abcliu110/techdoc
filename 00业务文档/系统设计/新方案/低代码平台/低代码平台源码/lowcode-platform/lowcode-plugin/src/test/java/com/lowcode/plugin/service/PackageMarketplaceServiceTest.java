@@ -179,6 +179,29 @@ class PackageMarketplaceServiceTest {
   }
 
   @Test
+  void shouldFailClosedWhenTrustedCapabilityContextIsMissing() {
+    PackageMarketplaceService service = new PackageMarketplaceService();
+
+    PackageMarketplaceService.PackageInstallResult installResult =
+        service.install(
+            "tenant-a",
+            "package-admin",
+            "trace-missing-context",
+            marketplaceManifest("customer_pkg", "1.0.0"),
+            null);
+
+    assertThat(installResult.installed()).isFalse();
+    assertThat(installResult.report().errors())
+        .extracting(error -> error.code())
+        .contains(
+            "LC-META-PKG-007",
+            "LC-META-PKG-011",
+            "LC-META-PKG-013",
+            "LC-META-PKG-014",
+            "LC-META-PKG-015");
+  }
+
+  @Test
   void shouldDeriveInstalledDependenciesFromServerStateAndAvoidSilentOverwrite() {
     PackageMarketplaceService service = new PackageMarketplaceService();
     PackageManifestDef baseManifest =
