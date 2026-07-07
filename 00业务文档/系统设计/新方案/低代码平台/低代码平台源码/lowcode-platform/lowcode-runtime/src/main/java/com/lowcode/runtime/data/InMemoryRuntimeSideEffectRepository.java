@@ -58,6 +58,16 @@ class InMemoryRuntimeSideEffectRepository implements RuntimeSideEffectRepository
   }
 
   private String key(RuntimeExecutionContext context, String operation, String idempotencyKey) {
-    return context.tenantId() + ":" + context.appCode() + ":" + context.objectCode() + ":" + operation + ":" + idempotencyKey;
+    return context.tenantId()
+        + ":"
+        + context.workspaceId()
+        + ":"
+        + context.appCode()
+        + ":"
+        + context.objectCode()
+        + ":"
+        + operation
+        + ":"
+        + idempotencyKey;
   }
 }

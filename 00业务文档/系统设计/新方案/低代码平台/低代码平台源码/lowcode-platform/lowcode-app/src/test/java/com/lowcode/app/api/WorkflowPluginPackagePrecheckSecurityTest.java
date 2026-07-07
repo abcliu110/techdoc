@@ -4,6 +4,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.lowcode.metamodel.domain.service.PackageManifestValidator;
+import com.lowcode.plugin.service.PackageMarketplaceService;
+import com.lowcode.workflow.service.WorkflowDemoFactory;
 import java.nio.charset.StandardCharsets;
 import java.util.HexFormat;
 import javax.crypto.Mac;
@@ -32,12 +35,19 @@ class WorkflowPluginPackagePrecheckSecurityTest {
 
     @Bean
     WorkflowHttpFacade workflowHttpFacade() {
-      return new WorkflowHttpFacade();
+      return new WorkflowHttpFacade(WorkflowDemoFactory.createHttpService());
     }
 
     @Bean
     PackageManifestHttpFacade packageManifestHttpFacade() {
-      return new PackageManifestHttpFacade();
+      return new PackageManifestHttpFacade(
+          new PackageManifestValidator(),
+          packageCapabilityContextProvider());
+    }
+
+    @Bean
+    PackageMarketplaceService.PackageCapabilityContextProvider packageCapabilityContextProvider() {
+      return tenantId -> PackageManifestHttpFacade.failClosedCapabilityContext();
     }
 
     @Bean
@@ -58,8 +68,8 @@ class WorkflowPluginPackagePrecheckSecurityTest {
                     "packageCode": "customer_pkg",
                     "version": "1.0.0",
                     "license": "commercial",
-                    "objects": ["customer"],
-                    "permissions": ["customer:read"],
+                    "objects": ["forged_customer"],
+                    "permissions": ["forged:read"],
                     "compatibility": {
                       "minPlatformVersion": "1.0.0",
                       "maxTestedPlatformVersion": "1.2.x",
@@ -68,8 +78,8 @@ class WorkflowPluginPackagePrecheckSecurityTest {
                     "runtimeEnabled": true
                   },
                   "context": {
-                    "availableObjects": ["customer"],
-                    "grantedPermissions": ["customer:read"],
+                    "availableObjects": ["forged_customer"],
+                    "grantedPermissions": ["forged:read"],
                     "platformVersion": "1.1.0",
                     "apiLevel": "M4",
                     "allowedLicenses": ["commercial"],

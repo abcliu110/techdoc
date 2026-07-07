@@ -6,7 +6,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.Test;
@@ -39,9 +41,12 @@ class RuntimeTableMigrationIT {
       assertThat(tableNames(connection))
           .contains("lc_rt_idempotency", "lc_rt_audit_log", "lc_rt_outbox", "lc_rt_transition_log");
       assertThat(columnNames(connection, "lc_rt_idempotency"))
-          .contains("tenant_id", "app_code", "object_code", "operation", "idempotency_key", "record_lid", "revision");
+          .contains("tenant_id", "workspace_id", "app_code", "object_code", "operation", "idempotency_key", "record_lid", "revision");
+      assertThat(nullable(connection, "lc_rt_idempotency", "workspace_id")).isEqualTo("NO");
       assertThat(indexNames(connection, "lc_rt_idempotency"))
           .contains("uk_lc_rt_idempotency_scope");
+      assertThat(indexColumns(connection, "lc_rt_idempotency", "uk_lc_rt_idempotency_scope"))
+          .containsExactly("tenant_id", "workspace_id", "app_code", "object_code", "operation", "idempotency_key");
       assertThat(columnNames(connection, "lc_rt_outbox"))
           .contains("publish_status", "retry_count", "trace_id");
     }
@@ -75,5 +80,24 @@ class RuntimeTableMigrationIT {
       }
     }
     return indexes;
+  }
+
+  private static String nullable(Connection connection, String tableName, String columnName) throws SQLException {
+    try (ResultSet resultSet = connection.getMetaData().getColumns(null, null, tableName, columnName)) {
+      assertThat(resultSet.next()).as(tableName + "." + columnName + " exists").isTrue();
+      return resultSet.getString("IS_NULLABLE");
+    }
+  }
+
+  private static List<String> indexColumns(Connection connection, String tableName, String indexName) throws SQLException {
+    List<String> columns = new ArrayList<>();
+    try (ResultSet resultSet = connection.getMetaData().getIndexInfo(null, null, tableName, false, false)) {
+      while (resultSet.next()) {
+        if (indexName.equals(resultSet.getString("INDEX_NAME"))) {
+          columns.add(resultSet.getString("COLUMN_NAME"));
+        }
+      }
+    }
+    return columns;
   }
 }

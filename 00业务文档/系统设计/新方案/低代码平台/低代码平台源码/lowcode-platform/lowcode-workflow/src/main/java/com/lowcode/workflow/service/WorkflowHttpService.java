@@ -12,10 +12,10 @@ import java.util.Map;
  */
 public class WorkflowHttpService {
 
-  private final WorkflowRuntimeService runtimeService = new WorkflowRuntimeService();
+  private final WorkflowRuntimeService runtimeService;
 
-  public WorkflowHttpService() {
-    runtimeService.publish(new WorkflowDefinition("expense", "v1", Map.of("approve", "manager"), 1));
+  public WorkflowHttpService(WorkflowRuntimeService runtimeService) {
+    this.runtimeService = runtimeService;
   }
 
   public WorkflowStartResult start(WorkflowStartCommand command) {

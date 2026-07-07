@@ -26,12 +26,15 @@ public class DesignerObjectController {
 
   private final DesignerDraftFacade designerDraftFacade;
   private final ApiErrorResponseFactory errorResponseFactory;
+  private final AuthenticatedRuntimeContextResolver contextResolver;
 
   DesignerObjectController(
       DesignerDraftFacade designerDraftFacade,
-      ApiErrorResponseFactory errorResponseFactory) {
+      ApiErrorResponseFactory errorResponseFactory,
+      AuthenticatedRuntimeContextResolver contextResolver) {
     this.designerDraftFacade = designerDraftFacade;
     this.errorResponseFactory = errorResponseFactory;
+    this.contextResolver = contextResolver;
   }
 
   /**
@@ -44,8 +47,9 @@ public class DesignerObjectController {
    */
   @PostMapping("/api/designer/object/add")
   Result<?> add(HttpServletRequest request, @RequestBody DesignerDraftMutationRequest body) {
+    AuthenticatedRuntimeContext context = context(request, body.appCode(), body.objectCode());
     return Result.success(
-        designerDraftFacade.add(tenantId(request), body.appCode(), body.objectCode(), body.name(), body.revision(), toFields(body)),
+        designerDraftFacade.add(context.tenantId(), body.appCode(), body.objectCode(), body.name(), body.revision(), toFields(body)),
         traceId(request));
   }
 
@@ -59,8 +63,9 @@ public class DesignerObjectController {
    */
   @PostMapping("/api/designer/object/update")
   Result<?> update(HttpServletRequest request, @RequestBody DesignerDraftMutationRequest body) {
+    AuthenticatedRuntimeContext context = context(request, body.appCode(), body.objectCode());
     return Result.success(
-        designerDraftFacade.update(tenantId(request), body.appCode(), body.objectCode(), body.name(), body.revision(), toFields(body)),
+        designerDraftFacade.update(context.tenantId(), body.appCode(), body.objectCode(), body.name(), body.revision(), toFields(body)),
         traceId(request));
   }
 
@@ -74,8 +79,9 @@ public class DesignerObjectController {
    */
   @PostMapping("/api/designer/object/get")
   Result<?> get(HttpServletRequest request, @RequestBody DesignerDraftLocateRequest body) {
+    AuthenticatedRuntimeContext context = context(request, body.appCode(), body.objectCode());
     return Result.success(
-        designerDraftFacade.get(tenantId(request), body.appCode(), body.objectCode()),
+        designerDraftFacade.get(context.tenantId(), body.appCode(), body.objectCode()),
         traceId(request));
   }
 
@@ -89,8 +95,9 @@ public class DesignerObjectController {
    */
   @PostMapping("/api/designer/object/list")
   Result<?> list(HttpServletRequest request, @RequestBody DesignerDraftListRequest body) {
+    AuthenticatedRuntimeContext context = context(request, body.appCode(), "designer_object");
     return Result.success(
-        designerDraftFacade.list(tenantId(request), body.appCode()),
+        designerDraftFacade.list(context.tenantId(), body.appCode()),
         traceId(request));
   }
 
@@ -104,8 +111,9 @@ public class DesignerObjectController {
    */
   @PostMapping("/api/designer/object/del")
   Result<?> delete(HttpServletRequest request, @RequestBody DesignerDraftDeleteRequest body) {
+    AuthenticatedRuntimeContext context = context(request, body.appCode(), body.objectCode());
     return Result.success(
-        designerDraftFacade.delete(tenantId(request), body.appCode(), body.objectCode(), body.revision()),
+        designerDraftFacade.delete(context.tenantId(), body.appCode(), body.objectCode(), body.revision()),
         traceId(request));
   }
 
@@ -119,8 +127,9 @@ public class DesignerObjectController {
    */
   @PostMapping("/api/designer/object/validate")
   Result<?> validate(HttpServletRequest request, @RequestBody DesignerDraftLocateRequest body) {
+    AuthenticatedRuntimeContext context = context(request, body.appCode(), body.objectCode());
     return Result.success(
-        designerDraftFacade.validate(tenantId(request), body.appCode(), body.objectCode()),
+        designerDraftFacade.validate(context.tenantId(), body.appCode(), body.objectCode()),
         traceId(request));
   }
 
@@ -134,8 +143,9 @@ public class DesignerObjectController {
    */
   @PostMapping("/api/designer/object/publish")
   Result<?> publish(HttpServletRequest request, @RequestBody DesignerDraftPublishRequest body) {
+    AuthenticatedRuntimeContext context = context(request, body.appCode(), body.objectCode());
     return Result.success(
-        designerDraftFacade.publish(tenantId(request), body.appCode(), body.objectCode(), body.revision()),
+        designerDraftFacade.publish(context.tenantId(), body.appCode(), body.objectCode(), body.revision()),
         traceId(request));
   }
 
@@ -149,8 +159,9 @@ public class DesignerObjectController {
    */
   @PostMapping("/api/designer/object/preview")
   Result<?> preview(HttpServletRequest request, @RequestBody DesignerDraftLocateRequest body) {
+    AuthenticatedRuntimeContext context = context(request, body.appCode(), body.objectCode());
     return Result.success(
-        designerDraftFacade.preview(tenantId(request), body.appCode(), body.objectCode()),
+        designerDraftFacade.preview(context.tenantId(), body.appCode(), body.objectCode()),
         traceId(request));
   }
 
@@ -174,12 +185,13 @@ public class DesignerObjectController {
         .toList();
   }
 
-  private Long tenantId(HttpServletRequest request) {
-    String raw = request.getHeader("X-Tenant-Id");
-    if (raw == null || raw.isBlank()) {
-      throw new BizException(ErrorCode.TENANT_REQUIRED, "租户不能为空");
-    }
-    return Long.valueOf(raw.trim());
+  private AuthenticatedRuntimeContext context(HttpServletRequest request, String appCode, String objectCode) {
+    return contextResolver.resolve(request, appCode, objectCode, metaHash(request));
+  }
+
+  private String metaHash(HttpServletRequest request) {
+    String raw = request.getHeader("X-Meta-Hash");
+    return raw == null || raw.isBlank() ? "mh-1" : raw.trim();
   }
 
   private String traceId(HttpServletRequest request) {

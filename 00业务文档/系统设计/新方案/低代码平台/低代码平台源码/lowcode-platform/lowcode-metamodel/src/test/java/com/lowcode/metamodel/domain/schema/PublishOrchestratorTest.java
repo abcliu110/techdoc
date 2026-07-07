@@ -45,6 +45,7 @@ class PublishOrchestratorTest {
             step -> {
               assertThat(step.type()).isEqualTo(DdlType.CREATE_TABLE);
               assertThat(step.sql()).contains("tenant_id bigint not null");
+              assertThat(step.sql()).contains("workspace_id bigint not null");
               assertThat(step.sql()).contains("lid varchar(26) not null");
               assertThat(step.sql()).contains("revision bigint not null default 0");
               assertThat(step.sql()).contains("deleted tinyint not null default 0");
@@ -52,21 +53,21 @@ class PublishOrchestratorTest {
               assertThat(step.sql()).contains("order_no varchar(64)");
               assertThat(step.sql()).contains("customer_lid varchar(26)");
               assertThat(step.sql()).contains("amount decimal(18,4)");
-              assertThat(step.sql()).contains("unique key uk_lc_crm_order_tenant_lid_alive (tenant_id, lid, delete_token)");
-              assertThat(step.sql()).contains("unique key uk_lc_crm_order_tenant_order_no_alive (tenant_id, order_no, delete_token)");
-              assertThat(step.sql()).contains("key idx_lc_crm_order_tenant_deleted_create_time (tenant_id, deleted, create_time)");
+              assertThat(step.sql()).contains("unique key uk_lc_crm_order_tenant_workspace_lid_alive (tenant_id, workspace_id, lid, delete_token)");
+              assertThat(step.sql()).contains("unique key uk_lc_crm_order_tenant_order_no_alive (tenant_id, workspace_id, order_no, delete_token)");
+              assertThat(step.sql()).contains("key idx_lc_crm_order_tenant_workspace_deleted_create_time (tenant_id, workspace_id, deleted, create_time)");
               assertThat(step.sql()).doesNotContain("deleted_at)");
             });
 
     PhysicalTable table = preparation.physicalTables().getFirst();
     assertThat(table.tableName()).isEqualTo("lc_crm_order");
     assertThat(table.columns()).extracting(PhysicalColumn::name)
-        .contains("tenant_id", "lid", "revision", "deleted", "state_code", "order_no", "customer_lid", "amount");
+        .contains("tenant_id", "workspace_id", "lid", "revision", "deleted", "state_code", "order_no", "customer_lid", "amount");
     assertThat(table.indexes())
         .contains(
-            PhysicalIndex.unique("uk_lc_crm_order_tenant_lid_alive", List.of("tenant_id", "lid", "delete_token")),
-            PhysicalIndex.unique("uk_lc_crm_order_tenant_order_no_alive", List.of("tenant_id", "order_no", "delete_token")),
-            PhysicalIndex.normal("idx_lc_crm_order_tenant_deleted_create_time", List.of("tenant_id", "deleted", "create_time")));
+            PhysicalIndex.unique("uk_lc_crm_order_tenant_workspace_lid_alive", List.of("tenant_id", "workspace_id", "lid", "delete_token")),
+            PhysicalIndex.unique("uk_lc_crm_order_tenant_order_no_alive", List.of("tenant_id", "workspace_id", "order_no", "delete_token")),
+            PhysicalIndex.normal("idx_lc_crm_order_tenant_workspace_deleted_create_time", List.of("tenant_id", "workspace_id", "deleted", "create_time")));
 
     assertThat(preparation.snapshotSummary())
         .isEqualTo(

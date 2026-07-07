@@ -4,18 +4,39 @@ import com.lowcode.metamodel.domain.def.PackageManifestDef;
 import com.lowcode.metamodel.domain.service.PackageManifestValidationContext;
 import com.lowcode.metamodel.domain.service.PackageManifestValidator;
 import com.lowcode.metamodel.domain.service.ValidationReport;
+import com.lowcode.plugin.service.PackageMarketplaceService;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class PackageManifestHttpFacade {
+public class PackageManifestHttpFacade {
 
-  private final PackageManifestValidator validator = new PackageManifestValidator();
+  private final PackageManifestValidator validator;
+  private final PackageMarketplaceService.PackageCapabilityContextProvider capabilityContextProvider;
 
-  PackagePrecheckResponse precheck(PackagePrecheckRequest request) {
-    ValidationReport report = validator.validate(request.manifest(), context(request.context()));
+  @Autowired
+  public PackageManifestHttpFacade(
+      PackageMarketplaceService.PackageCapabilityContextProvider capabilityContextProvider) {
+    this(new PackageManifestValidator(), capabilityContextProvider);
+  }
+
+  PackageManifestHttpFacade(
+      PackageManifestValidator validator,
+      PackageMarketplaceService.PackageCapabilityContextProvider capabilityContextProvider) {
+    this.validator = validator;
+    this.capabilityContextProvider = capabilityContextProvider;
+  }
+
+  PackagePrecheckResponse precheck(
+      AuthenticatedRuntimeContext runtimeContext,
+      PackagePrecheckRequest request) {
+    PackagePrecheckRequest safeRequest = request == null ? PackagePrecheckRequest.empty() : request;
+    ValidationReport report = validator.validate(
+        safeRequest.safeManifest(),
+        trustedContext(runtimeContext, safeRequest.safeContext()));
     return new PackagePrecheckResponse(
         report.passed(),
         report.errors().stream()
@@ -23,23 +44,61 @@ class PackageManifestHttpFacade {
             .toList());
   }
 
-  private PackageManifestValidationContext context(PackagePrecheckContext context) {
-    PackagePrecheckContext safe = context == null ? PackagePrecheckContext.empty() : context;
+  protected PackageManifestValidationContext trustedContext(
+      AuthenticatedRuntimeContext runtimeContext) {
+    return trustedContext(runtimeContext, PackagePrecheckContext.empty());
+  }
+
+  private PackageManifestValidationContext trustedContext(
+      AuthenticatedRuntimeContext runtimeContext,
+      PackagePrecheckContext requestContext) {
+    PackageManifestValidationContext resolved =
+        capabilityContextProvider.resolve(String.valueOf(runtimeContext.tenantId()));
+    if (resolved == null) {
+      resolved = failClosedCapabilityContext();
+    }
     return new PackageManifestValidationContext(
-        safe.installedDependencies(),
-        safe.availableObjects(),
-        safe.availableExtensions(),
-        safe.availableMenus(),
-        safe.availableReports(),
-        safe.grantedPermissions(),
-        safe.platformVersion(),
-        safe.apiLevel(),
-        safe.allowedLicenses(),
-        safe.runtimeInstallEnabled() == null || safe.runtimeInstallEnabled());
+        requestContext.installedDependencies(),
+        resolved.availableObjects(),
+        resolved.availableExtensions(),
+        resolved.availableMenus(),
+        resolved.availableReports(),
+        resolved.grantedPermissions(),
+        resolved.platformVersion(),
+        resolved.apiLevel(),
+        resolved.allowedLicenses(),
+        resolved.runtimeInstallEnabled());
+  }
+
+  static PackageManifestValidationContext failClosedCapabilityContext() {
+    return new PackageManifestValidationContext(
+        Map.of(),
+        Set.of(),
+        Set.of(),
+        Set.of(),
+        Set.of(),
+        Set.of(),
+        null,
+        null,
+        Set.of(),
+        false);
   }
 }
 
-record PackagePrecheckRequest(PackageManifestDef manifest, PackagePrecheckContext context) {}
+record PackagePrecheckRequest(PackageManifestDef manifest, PackagePrecheckContext context) {
+
+  static PackagePrecheckRequest empty() {
+    return new PackagePrecheckRequest(new PackageManifestDef(null, null, false), PackagePrecheckContext.empty());
+  }
+
+  PackageManifestDef safeManifest() {
+    return manifest == null ? new PackageManifestDef(null, null, false) : manifest;
+  }
+
+  PackagePrecheckContext safeContext() {
+    return context == null ? PackagePrecheckContext.empty() : context;
+  }
+}
 
 record PackagePrecheckContext(
     Map<String, String> installedDependencies,

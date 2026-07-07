@@ -6,8 +6,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.Matchers.hasItem;
 
+import com.lowcode.metamodel.domain.service.PackageManifestValidationContext;
+import com.lowcode.plugin.service.PackageMarketplaceService;
 import java.nio.charset.StandardCharsets;
 import java.util.HexFormat;
+import java.util.Map;
+import java.util.Set;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import org.junit.jupiter.api.Test;
@@ -34,12 +38,30 @@ class PackageMarketplaceControllerTest {
 
     @Bean
     PackageMarketplaceHttpFacade packageMarketplaceHttpFacade() {
-      return new PackageMarketplaceHttpFacade();
+      com.lowcode.plugin.service.PackageMarketplaceService.PackageCapabilityContextProvider provider =
+          tenantId -> trustedMarketplaceContext();
+      return new PackageMarketplaceHttpFacade(
+          new PackageMarketplaceService(provider),
+          provider);
     }
 
     @Bean
     AuthenticatedRuntimeContextResolver authenticatedRuntimeContextResolver() {
       return new AuthenticatedRuntimeContextResolver("test-gateway-secret");
+    }
+
+    private PackageManifestValidationContext trustedMarketplaceContext() {
+      return new PackageManifestValidationContext(
+          Map.of(),
+          Set.of("customer"),
+          Set.of(),
+          Set.of(),
+          Set.of(),
+          Set.of("customer:read"),
+          "1.1.0",
+          "M4",
+          Set.of("commercial"),
+          true);
     }
   }
 
@@ -236,8 +258,8 @@ class PackageMarketplaceControllerTest {
                     "packageCode": "customer_pkg",
                     "version": "1.0.0",
                     "license": "commercial",
-                    "objects": ["customer"],
-                    "permissions": ["customer:read"],
+                    "objects": ["forged_customer"],
+                    "permissions": ["forged:read"],
                     "compatibility": {
                       "minPlatformVersion": "1.0.0",
                       "maxTestedPlatformVersion": "1.2.x",
@@ -246,8 +268,8 @@ class PackageMarketplaceControllerTest {
                     "runtimeEnabled": true
                   },
                   "context": {
-                    "availableObjects": ["customer"],
-                    "grantedPermissions": ["customer:read"],
+                    "availableObjects": ["forged_customer"],
+                    "grantedPermissions": ["forged:read"],
                     "platformVersion": "1.1.0",
                     "apiLevel": "M4",
                     "allowedLicenses": ["commercial"],

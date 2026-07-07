@@ -134,8 +134,8 @@ class WorkflowPluginController {
   Object precheckPackage(
       HttpServletRequest httpRequest,
       @RequestBody PackagePrecheckRequest request) {
-    context(httpRequest, "package", "manifest");
-    return packageManifestHttpFacade.precheck(request);
+    AuthenticatedRuntimeContext runtimeContext = context(httpRequest, "package", "manifest");
+    return packageManifestHttpFacade.precheck(runtimeContext, request);
   }
 
   @ExceptionHandler(com.lowcode.common.error.BizException.class)

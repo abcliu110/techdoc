@@ -23,8 +23,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
+import org.springframework.lang.Nullable;
 
 /**
  * HTTP facade backed by the runtime module API.
@@ -37,14 +39,21 @@ class RuntimeApiHttpFacade implements RuntimeHttpFacade {
   private final PublishedRuntimeObjectRegistry objectRegistry;
 
   RuntimeApiHttpFacade(RuntimeApiFacade runtimeApiFacade) {
-    this(runtimeApiFacade, null);
+    this(runtimeApiFacade, null, false);
+  }
+
+  RuntimeApiHttpFacade(RuntimeApiFacade runtimeApiFacade, PublishedRuntimeObjectRegistry objectRegistry) {
+    this(runtimeApiFacade, objectRegistry, false);
   }
 
   @Autowired
-  RuntimeApiHttpFacade(RuntimeApiFacade runtimeApiFacade, PublishedRuntimeObjectRegistry objectRegistry) {
+  RuntimeApiHttpFacade(
+      RuntimeApiFacade runtimeApiFacade,
+      @Nullable PublishedRuntimeObjectRegistry objectRegistry,
+      @Value("${lowcode.app.runtime.demo-enabled:false}") boolean runtimeDemoEnabled) {
     this.runtimeApiFacade = runtimeApiFacade;
     this.objectRegistry = objectRegistry;
-    if (objectRegistry == null) {
+    if (runtimeDemoEnabled && objectRegistry == null) {
       registerM1DemoObjects(runtimeApiFacade);
     }
   }

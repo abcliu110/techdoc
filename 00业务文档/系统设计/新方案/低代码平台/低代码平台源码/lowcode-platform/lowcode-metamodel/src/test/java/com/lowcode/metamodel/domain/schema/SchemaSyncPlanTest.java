@@ -8,11 +8,37 @@ import com.lowcode.metamodel.domain.enums.FieldTypeEnum;
 import com.lowcode.metamodel.domain.enums.ObjectTypeEnum;
 import com.lowcode.metamodel.domain.service.MetaObjectDraft;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.junit.jupiter.api.Test;
 
 class SchemaSyncPlanTest {
 
   private final SchemaSyncPlanner planner = new SchemaSyncPlanner();
+
+  @Test
+  void standardColumnDefinitionsStayAlignedWithPhysicalColumns() {
+    List<String> ddlColumnNames =
+        SchemaSyncPlanner.standardColumns().stream()
+            .map(SchemaSyncPlanTest::firstToken)
+            .toList();
+    List<String> physicalColumnNames =
+        SchemaSyncPlanner.standardPhysicalColumns().stream()
+            .map(PhysicalColumn::name)
+            .toList();
+
+    assertThat(ddlColumnNames).containsExactlyElementsOf(physicalColumnNames);
+    for (PhysicalColumn column : SchemaSyncPlanner.standardPhysicalColumns()) {
+      String ddl = SchemaSyncPlanner.standardColumns().get(physicalColumnNames.indexOf(column.name()));
+      assertThat(ddl).contains(column.typeName());
+      if (column.length() != null) {
+        assertThat(ddl).contains("(" + column.length() + ")");
+      }
+      if (column.scale() != null) {
+        assertThat(ddl).contains("(" + column.scale() + ")");
+      }
+    }
+  }
 
   @Test
   void plan_新对象_生成建表并包含系统列和业务字段() {
@@ -93,5 +119,13 @@ class SchemaSyncPlanTest {
     assertThat(plan.steps()).anySatisfy(step -> assertThat(step.type()).isEqualTo(DdlType.BLOCKED_NARROW_COLUMN));
     assertThat(plan.steps()).anySatisfy(step -> assertThat(step.type()).isEqualTo(DdlType.BLOCKED_DROP_COLUMN));
     assertThat(plan.steps()).noneSatisfy(step -> assertThat(step.sql()).containsIgnoringCase("drop column"));
+  }
+
+  private static String firstToken(String ddlFragment) {
+    Matcher matcher = Pattern.compile("^([a-z][a-z0-9_]*)\\s+").matcher(ddlFragment);
+    if (!matcher.find()) {
+      throw new IllegalArgumentException("Invalid column fragment: " + ddlFragment);
+    }
+    return matcher.group(1);
   }
 }

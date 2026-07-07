@@ -16,10 +16,6 @@ class WorkflowHttpFacade {
     this.workflowService = workflowService;
   }
 
-  WorkflowHttpFacade() {
-    this(new WorkflowHttpService());
-  }
-
   WorkflowStartResult start(
       AuthenticatedRuntimeContext context,
       String workflowCode,

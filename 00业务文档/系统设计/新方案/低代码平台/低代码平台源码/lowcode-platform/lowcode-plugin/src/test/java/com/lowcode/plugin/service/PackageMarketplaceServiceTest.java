@@ -1,7 +1,9 @@
 package com.lowcode.plugin.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.lowcode.common.error.BizException;
 import com.lowcode.metamodel.domain.def.PackageCompatibilityDef;
 import com.lowcode.metamodel.domain.def.PackageDependencyDef;
 import com.lowcode.metamodel.domain.def.PackageManifestDef;
@@ -16,19 +18,8 @@ class PackageMarketplaceServiceTest {
 
   @Test
   void shouldInstallListDisableAndDryRunMarketplacePackage() {
-    PackageMarketplaceService service = new PackageMarketplaceService();
-    PackageManifestValidationContext context =
-        new PackageManifestValidationContext(
-            Map.of(),
-            Set.of("customer"),
-            Set.of(),
-            Set.of(),
-            Set.of(),
-            Set.of("customer:read"),
-            "1.1.0",
-            "M4",
-            Set.of("commercial"),
-            true);
+    PackageMarketplaceService service = marketplaceService();
+    PackageManifestValidationContext context = marketplaceContext();
     PackageManifestDef baseManifest =
         new PackageManifestDef(
             "base_pkg",
@@ -90,7 +81,7 @@ class PackageMarketplaceServiceTest {
 
   @Test
   void shouldRejectInstallWhenDependencyLicenseOrRuntimeConstraintsFail() {
-    PackageMarketplaceService service = new PackageMarketplaceService();
+    PackageMarketplaceService service = marketplaceService();
     PackageManifestDef baseManifest =
         new PackageManifestDef(
             "base_pkg",
@@ -196,14 +187,42 @@ class PackageMarketplaceServiceTest {
         .contains(
             "LC-META-PKG-007",
             "LC-META-PKG-011",
-            "LC-META-PKG-013",
-            "LC-META-PKG-014",
             "LC-META-PKG-015");
   }
 
   @Test
+  void shouldRejectUpgradeWhenTrustedCapabilityContextIsMissing() {
+    PackageMarketplaceService.InMemoryPackageInstallationRepository repository =
+        new PackageMarketplaceService.InMemoryPackageInstallationRepository();
+    repository.save(
+        new PackageMarketplaceService.PackageInstallationState(
+            "tenant-a",
+            "customer_pkg",
+            "1.0.0",
+            "commercial",
+            true,
+            Map.of(),
+            PackageMarketplaceService.PackageInstallationStatus.ENABLED,
+            "seed-user",
+            "seed-trace",
+            "2026-07-07T00:00:00Z"));
+    PackageMarketplaceService service =
+        new PackageMarketplaceService(repository, new PackageManifestValidator());
+
+    assertThatThrownBy(() ->
+        service.upgrade(
+            "tenant-a",
+            "package-admin",
+            "trace-upgrade-missing-context",
+            marketplaceManifest("customer_pkg", "1.1.0"),
+            null))
+        .isInstanceOf(BizException.class)
+        .hasMessageContaining("应用包升级校验失败");
+  }
+
+  @Test
   void shouldDeriveInstalledDependenciesFromServerStateAndAvoidSilentOverwrite() {
-    PackageMarketplaceService service = new PackageMarketplaceService();
+    PackageMarketplaceService service = marketplaceService();
     PackageManifestDef baseManifest =
         new PackageManifestDef(
             "base_pkg",
@@ -217,18 +236,7 @@ class PackageMarketplaceServiceTest {
             List.of("customer:read"),
             new PackageCompatibilityDef("1.0.0", "1.2.x", "M4"),
             false);
-    PackageManifestValidationContext context =
-        new PackageManifestValidationContext(
-            Map.of(),
-            Set.of("customer"),
-            Set.of(),
-            Set.of(),
-            Set.of(),
-            Set.of("customer:read"),
-            "1.1.0",
-            "M4",
-            Set.of("commercial"),
-            true);
+    PackageManifestValidationContext context = marketplaceContext();
 
     assertThat(service.install("tenant-a", "package-admin", "trace-base", baseManifest, context).installed())
         .isTrue();
@@ -285,19 +293,8 @@ class PackageMarketplaceServiceTest {
 
   @Test
   void shouldUpgradeAndRollbackInstalledPackageWithVersionAudit() {
-    PackageMarketplaceService service = new PackageMarketplaceService();
-    PackageManifestValidationContext context =
-        new PackageManifestValidationContext(
-            Map.of(),
-            Set.of("customer"),
-            Set.of(),
-            Set.of(),
-            Set.of(),
-            Set.of("customer:read"),
-            "1.1.0",
-            "M4",
-            Set.of("commercial"),
-            true);
+    PackageMarketplaceService service = marketplaceService();
+    PackageManifestValidationContext context = marketplaceContext();
     PackageManifestDef manifest =
         new PackageManifestDef(
             "customer_pkg",
@@ -355,7 +352,7 @@ class PackageMarketplaceServiceTest {
 
   @Test
   void shouldRollbackUpgradeStackOneVersionAtATimeAfterMultipleUpgrades() {
-    PackageMarketplaceService service = new PackageMarketplaceService();
+    PackageMarketplaceService service = marketplaceService();
     PackageManifestValidationContext context = marketplaceContext();
 
     assertThat(service.install(
@@ -410,7 +407,10 @@ class PackageMarketplaceServiceTest {
     PackageMarketplaceService.InMemoryPackageInstallationRepository repository =
         new PackageMarketplaceService.InMemoryPackageInstallationRepository();
     PackageMarketplaceService service =
-        new PackageMarketplaceService(repository, new PackageManifestValidator());
+        new PackageMarketplaceService(
+            repository,
+            new PackageManifestValidator(),
+            tenantId -> marketplaceContext());
     PackageManifestValidationContext context = marketplaceContext();
 
     assertThat(service.install(
@@ -461,19 +461,8 @@ class PackageMarketplaceServiceTest {
 
   @Test
   void shouldOnlyBlockUninstallWhenPackageIsDeclaredDependency() {
-    PackageMarketplaceService service = new PackageMarketplaceService();
-    PackageManifestValidationContext context =
-        new PackageManifestValidationContext(
-            Map.of(),
-            Set.of("customer"),
-            Set.of(),
-            Set.of(),
-            Set.of(),
-            Set.of("customer:read"),
-            "1.1.0",
-            "M4",
-            Set.of("commercial"),
-            true);
+    PackageMarketplaceService service = marketplaceService();
+    PackageManifestValidationContext context = marketplaceContext();
     PackageManifestDef baseManifest =
         new PackageManifestDef(
             "base_pkg",
@@ -515,19 +504,8 @@ class PackageMarketplaceServiceTest {
 
   @Test
   void shouldUninstallDisabledPackageAndKeepAuditTrail() {
-    PackageMarketplaceService service = new PackageMarketplaceService();
-    PackageManifestValidationContext context =
-        new PackageManifestValidationContext(
-            Map.of(),
-            Set.of("customer"),
-            Set.of(),
-            Set.of(),
-            Set.of(),
-            Set.of("customer:read"),
-            "1.1.0",
-            "M4",
-            Set.of("commercial"),
-            true);
+    PackageMarketplaceService service = marketplaceService();
+    PackageManifestValidationContext context = marketplaceContext();
     PackageManifestDef manifest =
         new PackageManifestDef(
             "customer_pkg",
@@ -561,19 +539,8 @@ class PackageMarketplaceServiceTest {
 
   @Test
   void shouldRecordLifecycleAuditEventsForInstallEnableDisableAndUninstallDryRun() {
-    PackageMarketplaceService service = new PackageMarketplaceService();
-    PackageManifestValidationContext context =
-        new PackageManifestValidationContext(
-            Map.of(),
-            Set.of("customer"),
-            Set.of(),
-            Set.of(),
-            Set.of(),
-            Set.of("customer:read"),
-            "1.1.0",
-            "M4",
-            Set.of("commercial"),
-            true);
+    PackageMarketplaceService service = marketplaceService();
+    PackageManifestValidationContext context = marketplaceContext();
     PackageManifestDef manifest =
         new PackageManifestDef(
             "customer_pkg",
@@ -619,6 +586,13 @@ class PackageMarketplaceServiceTest {
         "M4",
         Set.of("commercial"),
         true);
+  }
+
+  private static PackageMarketplaceService marketplaceService() {
+    return new PackageMarketplaceService(
+        new PackageMarketplaceService.InMemoryPackageInstallationRepository(),
+        new PackageManifestValidator(),
+        tenantId -> marketplaceContext());
   }
 
   private static PackageManifestDef marketplaceManifest(String packageCode, String version) {

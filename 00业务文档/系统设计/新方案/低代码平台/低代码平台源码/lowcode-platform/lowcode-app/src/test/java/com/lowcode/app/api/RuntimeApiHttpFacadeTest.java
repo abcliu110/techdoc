@@ -20,7 +20,7 @@ class RuntimeApiHttpFacadeTest {
 
   @Test
   void shouldDelegateHttpContractToRuntimeApiFacade() {
-    RuntimeHttpFacade facade = new RuntimeApiHttpFacade(new RuntimeApiFacade());
+    RuntimeHttpFacade facade = new RuntimeApiHttpFacade(runtimeApiWithOrderObject());
     AuthenticatedRuntimeContext context = managerContext(70L, "trace-runtime-http");
 
     AddRecordResponse added = facade.add(context, new AddRecordRequest(
@@ -41,7 +41,7 @@ class RuntimeApiHttpFacadeTest {
 
   @Test
   void shouldKeepImportPreviewScopedToWorkspaceWhenDelegating() {
-    RuntimeHttpFacade facade = new RuntimeApiHttpFacade(new RuntimeApiFacade());
+    RuntimeHttpFacade facade = new RuntimeApiHttpFacade(runtimeApiWithOrderObject());
     AuthenticatedRuntimeContext workspace70 = managerContext(70L, "trace-runtime-import");
     AuthenticatedRuntimeContext workspace80 = managerContext(80L, "trace-runtime-import-other");
 
@@ -56,7 +56,7 @@ class RuntimeApiHttpFacadeTest {
 
   @Test
   void shouldReplayUpdateWithSameIdempotencyKeyWithoutIncrementingRevisionAgain() {
-    RuntimeHttpFacade facade = new RuntimeApiHttpFacade(new RuntimeApiFacade());
+    RuntimeHttpFacade facade = new RuntimeApiHttpFacade(runtimeApiWithOrderObject());
     AuthenticatedRuntimeContext context = managerContext(70L, "trace-runtime-update-idempotency");
 
     AddRecordResponse added = facade.add(context, new AddRecordRequest(
@@ -127,6 +127,16 @@ class RuntimeApiHttpFacadeTest {
         .hasMessageContaining("无操作权限");
   }
 
+  @Test
+  void shouldNotRegisterHardcodedDemoObjectWhenRegistryIsMissing() {
+    RuntimeHttpFacade facade = new RuntimeApiHttpFacade(new RuntimeApiFacade());
+    AuthenticatedRuntimeContext context = managerContext(70L, "trace-runtime-no-demo");
+
+    assertThatThrownBy(() -> facade.meta(context))
+        .isInstanceOf(RuntimeException.class)
+        .hasMessageContaining("对象不存在");
+  }
+
   private static AuthenticatedRuntimeContext managerContext(Long workspaceId, String traceId) {
     return new AuthenticatedRuntimeContext(
         3L,
@@ -137,5 +147,15 @@ class RuntimeApiHttpFacadeTest {
         "order",
         "mh-1",
         traceId);
+  }
+
+  private static RuntimeApiFacade runtimeApiWithOrderObject() {
+    RuntimeApiFacade runtimeApiFacade = new RuntimeApiFacade();
+    runtimeApiFacade.registerObject(DynamicObjectDefinition.builder("order", "lc_rt_order")
+        .field("amount", FieldKind.CURRENCY)
+        .field("remark", FieldKind.TEXT)
+        .field("secret_amount", FieldKind.CURRENCY)
+        .build());
+    return runtimeApiFacade;
   }
 }

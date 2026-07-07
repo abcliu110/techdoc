@@ -23,8 +23,8 @@
 
 - `lowcode-common`：公共契约、错误码、租户上下文和 ID 能力。
 - `lowcode-metamodel`：M0 元模型定义、元模型服务、Schema Sync 和 MetaGraph 的归属模块。
-- `lowcode-runtime`：M0 之后的动态运行时 API；T-001 禁止实现运行时 CRUD。
-- `lowcode-designer`：M0 之后的设计期 API；T-001 禁止实现 UI。
+- `lowcode-runtime`：M0 之后的动态运行时 API；当前已提供模块级运行时 CRUD 能力，`lowcode-app` 允许暴露最小 HTTP CRUD 闭环，但生产路径不能隐式回退到 demo / in-memory 装配。
+- `lowcode-designer`：M0 之后的设计期 API；当前仍不实现正式设计器 UI，只保留设计期后端与预览/演示契约。
 - `lowcode-expression`：表达式门面；其他模块禁止直接引入 Aviator。
 - `lowcode-plugin`：插件 SPI 边界。
 - `lowcode-workflow`：工作流扩展边界。

@@ -40,7 +40,9 @@ public class SchemaReconciler {
       currentColumns.put(column.name(), column);
     }
     Map<String, ColumnDefinition> expectedColumns = new LinkedHashMap<>();
-    expectedColumns.put("id", new ColumnDefinition("id", "bigint", null, null, null, "id bigint primary key"));
+    for (PhysicalColumn column : SchemaSyncPlanner.standardPhysicalColumns()) {
+      expectedColumns.put(column.name(), toExpectedColumn(column));
+    }
     for (FieldDef field : object.fields()) {
       ColumnDefinition expected = fieldTypeDdlMapper.map(field);
       if (expected != null) {
@@ -59,6 +61,16 @@ public class SchemaReconciler {
         differences.add(new ReconcileDiff(ReconcileDiffType.EXTRA_COLUMN, current.tableName(), currentColumn.name(), "物理列多余"));
       }
     }
+  }
+
+  private ColumnDefinition toExpectedColumn(PhysicalColumn column) {
+    return new ColumnDefinition(
+        column.name(),
+        column.typeName(),
+        column.length(),
+        column.precision(),
+        column.scale(),
+        column.name() + " " + column.typeName());
   }
 
   private void detectTypeDiff(

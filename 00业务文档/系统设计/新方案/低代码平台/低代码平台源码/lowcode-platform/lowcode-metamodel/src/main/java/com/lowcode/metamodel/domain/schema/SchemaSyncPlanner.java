@@ -145,6 +145,7 @@ public class SchemaSyncPlanner {
     return List.of(
         "id bigint primary key",
         "tenant_id bigint not null",
+        "workspace_id bigint not null",
         "app_id bigint not null",
         "object_id bigint not null",
         "lid varchar(26) not null",
@@ -166,6 +167,7 @@ public class SchemaSyncPlanner {
     return List.of(
         new PhysicalColumn("id", "bigint", null, null, null),
         new PhysicalColumn("tenant_id", "bigint", null, null, null),
+        new PhysicalColumn("workspace_id", "bigint", null, null, null),
         new PhysicalColumn("app_id", "bigint", null, null, null),
         new PhysicalColumn("object_id", "bigint", null, null, null),
         new PhysicalColumn("lid", "varchar", 26, null, null),
@@ -185,31 +187,31 @@ public class SchemaSyncPlanner {
 
   static List<PhysicalIndex> defaultIndexes(String tableName, MetaObjectDraft object) {
     List<PhysicalIndex> indexes = new ArrayList<>();
-    indexes.add(PhysicalIndex.unique("uk_" + tableName + "_tenant_lid_alive", List.of("tenant_id", "lid", "delete_token")));
+    indexes.add(PhysicalIndex.unique("uk_" + tableName + "_tenant_workspace_lid_alive", List.of("tenant_id", "workspace_id", "lid", "delete_token")));
     indexes.add(
         PhysicalIndex.normal(
-            "idx_" + tableName + "_tenant_deleted_create_time", List.of("tenant_id", "deleted", "create_time")));
+            "idx_" + tableName + "_tenant_workspace_deleted_create_time", List.of("tenant_id", "workspace_id", "deleted", "create_time")));
     indexes.add(
         PhysicalIndex.normal(
-            "idx_" + tableName + "_tenant_deleted_state", List.of("tenant_id", "deleted", "state_code")));
+            "idx_" + tableName + "_tenant_workspace_deleted_state", List.of("tenant_id", "workspace_id", "deleted", "state_code")));
     indexes.add(
         PhysicalIndex.normal(
-            "idx_" + tableName + "_tenant_owner_user_lid", List.of("tenant_id", "owner_user_lid")));
+            "idx_" + tableName + "_tenant_workspace_owner_user_lid", List.of("tenant_id", "workspace_id", "owner_user_lid")));
     indexes.add(
         PhysicalIndex.normal(
-            "idx_" + tableName + "_tenant_owner_dept_lid", List.of("tenant_id", "owner_dept_lid")));
+            "idx_" + tableName + "_tenant_workspace_owner_dept_lid", List.of("tenant_id", "workspace_id", "owner_dept_lid")));
     for (FieldDef field : object.fields()) {
       switch (field.fieldType()) {
         case AUTONUMBER ->
             indexes.add(
                 PhysicalIndex.unique(
                     "uk_" + tableName + "_tenant_" + field.code() + "_alive",
-                    List.of("tenant_id", field.code(), "delete_token")));
+                    List.of("tenant_id", "workspace_id", field.code(), "delete_token")));
         case LINK ->
             indexes.add(
                 PhysicalIndex.normal(
                     "idx_" + tableName + "_tenant_deleted_" + field.code() + "_lid",
-                    List.of("tenant_id", "deleted", field.code() + "_lid")));
+                    List.of("tenant_id", "workspace_id", "deleted", field.code() + "_lid")));
         default -> {
         }
       }

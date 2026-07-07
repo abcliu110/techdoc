@@ -20,16 +20,29 @@ public class PackageMarketplaceService {
 
   private final PackageInstallationRepository repository;
   private final PackageManifestValidator validator;
+  private final PackageCapabilityContextProvider capabilityContextProvider;
 
   public PackageMarketplaceService() {
-    this(new InMemoryPackageInstallationRepository(), new PackageManifestValidator());
+    this(new InMemoryPackageInstallationRepository(), new PackageManifestValidator(), tenantId -> null);
+  }
+
+  public PackageMarketplaceService(PackageCapabilityContextProvider capabilityContextProvider) {
+    this(new InMemoryPackageInstallationRepository(), new PackageManifestValidator(), capabilityContextProvider);
   }
 
   PackageMarketplaceService(
       PackageInstallationRepository repository,
       PackageManifestValidator validator) {
+    this(repository, validator, tenantId -> null);
+  }
+
+  public PackageMarketplaceService(
+      PackageInstallationRepository repository,
+      PackageManifestValidator validator,
+      PackageCapabilityContextProvider capabilityContextProvider) {
     this.repository = repository;
     this.validator = validator;
+    this.capabilityContextProvider = capabilityContextProvider;
   }
 
   public PackageInstallResult install(
@@ -108,18 +121,36 @@ public class PackageMarketplaceService {
 
   private PackageManifestValidationContext serverContext(
       String tenantId,
-      PackageManifestValidationContext requestedContext) {
+      PackageManifestValidationContext ignoredRequestedContext) {
+    PackageManifestValidationContext resolvedContext = capabilityContextProvider.resolve(tenantId);
+    if (resolvedContext == null) {
+      resolvedContext = failClosedCapabilityContext();
+    }
     return new PackageManifestValidationContext(
         installedVersions(tenantId),
-        requestedContext.availableObjects(),
-        requestedContext.availableExtensions(),
-        requestedContext.availableMenus(),
-        requestedContext.availableReports(),
-        requestedContext.grantedPermissions(),
-        requestedContext.platformVersion(),
-        requestedContext.apiLevel(),
-        requestedContext.allowedLicenses(),
-        requestedContext.runtimeInstallEnabled());
+        resolvedContext.availableObjects(),
+        resolvedContext.availableExtensions(),
+        resolvedContext.availableMenus(),
+        resolvedContext.availableReports(),
+        resolvedContext.grantedPermissions(),
+        resolvedContext.platformVersion(),
+        resolvedContext.apiLevel(),
+        resolvedContext.allowedLicenses(),
+        resolvedContext.runtimeInstallEnabled());
+  }
+
+  private PackageManifestValidationContext failClosedCapabilityContext() {
+    return new PackageManifestValidationContext(
+        Map.of(),
+        Set.of(),
+        Set.of(),
+        Set.of(),
+        Set.of(),
+        Set.of(),
+        null,
+        null,
+        Set.of(),
+        false);
   }
 
   private Map<String, String> installedVersions(String tenantId) {
@@ -595,5 +626,11 @@ public class PackageMarketplaceService {
       String result,
       String details,
       String occurredAt) {
+  }
+
+  @FunctionalInterface
+  public interface PackageCapabilityContextProvider {
+
+    PackageManifestValidationContext resolve(String tenantId);
   }
 }

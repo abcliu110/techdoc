@@ -7,6 +7,7 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noMethods;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.domain.JavaClass;
+import com.tngtech.archunit.core.domain.JavaConstructorCall;
 import com.tngtech.archunit.core.domain.JavaFieldAccess;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
@@ -121,6 +122,30 @@ class ArchitectureRulesTest {
                     events.add(SimpleConditionEvent.violated(
                         item,
                         item.getName() + " accesses possible SQL field " + access.getTarget().getFullName()));
+                  }
+                }
+              }
+            })
+            .allowEmptyShould(true);
+
+    rule.check(classes);
+  }
+
+  @Test
+  void appLayer_shouldNotInstantiateHiddenInMemoryImplementations() {
+    ArchRule rule =
+        noClasses()
+            .that()
+            .resideInAPackage("com.lowcode.app..")
+            .should(new ArchCondition<>("instantiate in-memory implementations from app layer") {
+              @Override
+              public void check(JavaClass item, ConditionEvents events) {
+                for (JavaConstructorCall call : item.getConstructorCallsFromSelf()) {
+                  JavaClass owner = call.getTargetOwner();
+                  if (owner.getSimpleName().startsWith("InMemory")) {
+                    events.add(SimpleConditionEvent.violated(
+                        item,
+                        item.getName() + " instantiates hidden in-memory type " + owner.getName()));
                   }
                 }
               }

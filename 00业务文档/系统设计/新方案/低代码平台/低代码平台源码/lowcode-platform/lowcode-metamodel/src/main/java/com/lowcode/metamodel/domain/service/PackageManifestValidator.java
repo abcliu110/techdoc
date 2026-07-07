@@ -60,7 +60,9 @@ public class PackageManifestValidator {
         errors.add(new ValidationError("compatibility.apiLevel", "LC-META-PKG-014", "API 级别不兼容"));
       }
     }
-    if (!context.allowedLicenses().isEmpty() && !context.allowedLicenses().contains(manifest.license())) {
+    if (!isBlank(manifest.license())
+        && !context.allowedLicenses().isEmpty()
+        && !context.allowedLicenses().contains(manifest.license())) {
       errors.add(new ValidationError("license", "LC-META-PKG-015", "License 不允许安装"));
     }
     if (manifest.runtimeEnabled() && !context.runtimeInstallEnabled()) {

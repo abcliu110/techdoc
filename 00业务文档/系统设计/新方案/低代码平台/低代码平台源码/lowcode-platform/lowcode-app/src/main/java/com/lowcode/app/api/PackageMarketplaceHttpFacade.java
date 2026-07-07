@@ -9,7 +9,15 @@ import org.springframework.stereotype.Component;
 @Component
 class PackageMarketplaceHttpFacade {
 
-  private final PackageMarketplaceService service = new PackageMarketplaceService();
+  private final PackageMarketplaceService service;
+  private final PackageMarketplaceService.PackageCapabilityContextProvider capabilityContextProvider;
+
+  PackageMarketplaceHttpFacade(
+      PackageMarketplaceService service,
+      PackageMarketplaceService.PackageCapabilityContextProvider capabilityContextProvider) {
+    this.service = service;
+    this.capabilityContextProvider = capabilityContextProvider;
+  }
 
   PackageInstallResponse install(
       AuthenticatedRuntimeContext runtimeContext,
@@ -20,7 +28,7 @@ class PackageMarketplaceHttpFacade {
             runtimeContext.userLid(),
             runtimeContext.traceId(),
             request.manifest(),
-            context(request.context()));
+            trustedContext(runtimeContext));
     return new PackageInstallResponse(
         result.installed(),
         result.state() == null ? null : state(result.state()),
@@ -70,7 +78,7 @@ class PackageMarketplaceHttpFacade {
             runtimeContext.userLid(),
             runtimeContext.traceId(),
             request.manifest(),
-            context(request.context()));
+            trustedContext(runtimeContext));
     return new PackageStateEnvelope(state(state));
   }
 
@@ -132,19 +140,24 @@ class PackageMarketplaceHttpFacade {
             .toList());
   }
 
-  private PackageManifestValidationContext context(PackagePrecheckContext context) {
-    PackagePrecheckContext safe = context == null ? PackagePrecheckContext.empty() : context;
+  protected PackageManifestValidationContext trustedContext(
+      AuthenticatedRuntimeContext runtimeContext) {
+    PackageManifestValidationContext resolved =
+        capabilityContextProvider.resolve(String.valueOf(runtimeContext.tenantId()));
+    if (resolved == null) {
+      resolved = PackageManifestHttpFacade.failClosedCapabilityContext();
+    }
     return new PackageManifestValidationContext(
-        safe.installedDependencies(),
-        safe.availableObjects(),
-        safe.availableExtensions(),
-        safe.availableMenus(),
-        safe.availableReports(),
-        safe.grantedPermissions(),
-        safe.platformVersion(),
-        safe.apiLevel(),
-        safe.allowedLicenses(),
-        safe.runtimeInstallEnabled() == null || safe.runtimeInstallEnabled());
+        java.util.Map.of(),
+        resolved.availableObjects(),
+        resolved.availableExtensions(),
+        resolved.availableMenus(),
+        resolved.availableReports(),
+        resolved.grantedPermissions(),
+        resolved.platformVersion(),
+        resolved.apiLevel(),
+        resolved.allowedLicenses(),
+        resolved.runtimeInstallEnabled());
   }
 
   private PackageStateResponse state(PackageMarketplaceService.PackageInstallationState state) {

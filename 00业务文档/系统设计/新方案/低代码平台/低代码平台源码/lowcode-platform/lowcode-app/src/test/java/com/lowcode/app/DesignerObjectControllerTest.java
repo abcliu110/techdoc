@@ -18,7 +18,9 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 @SpringBootTest(properties = {
     "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration",
-    "lowcode.gateway.shared-secret=test-gateway-secret"
+    "lowcode.gateway.shared-secret=test-gateway-secret",
+    "lowcode.app.runtime.demo-enabled=true",
+    "lowcode.app.workflow.demo-enabled=true"
 })
 @AutoConfigureMockMvc
 class DesignerObjectControllerTest {

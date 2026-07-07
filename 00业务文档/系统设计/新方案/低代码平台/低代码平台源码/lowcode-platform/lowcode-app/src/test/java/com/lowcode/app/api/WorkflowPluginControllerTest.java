@@ -5,12 +5,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.lowcode.metamodel.domain.service.PackageManifestValidationContext;
+import com.lowcode.metamodel.domain.service.PackageManifestValidator;
+import com.lowcode.plugin.service.PackageMarketplaceService;
+import com.lowcode.workflow.service.WorkflowDemoFactory;
 import java.nio.charset.StandardCharsets;
 import java.util.HexFormat;
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import org.objenesis.ObjenesisStd;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -33,34 +37,40 @@ class WorkflowPluginControllerTest {
   @TestConfiguration
   static class WorkflowPluginControllerTestConfig {
 
-    private static final ObjenesisStd OBJENESIS = new ObjenesisStd();
-
     @Bean
     WorkflowHttpFacade workflowHttpFacade() {
-      return new WorkflowHttpFacade();
+      return new WorkflowHttpFacade(WorkflowDemoFactory.createHttpService());
     }
 
     @Bean
     PackageManifestHttpFacade packageManifestHttpFacade() {
-      return OBJENESIS.newInstance(StubPackageManifestHttpFacade.class);
+      return new PackageManifestHttpFacade(
+          new PackageManifestValidator(),
+          packageCapabilityContextProvider());
+    }
+
+    @Bean
+    PackageMarketplaceService.PackageCapabilityContextProvider packageCapabilityContextProvider() {
+      return tenantId -> trustedPrecheckContext();
     }
 
     @Bean
     AuthenticatedRuntimeContextResolver authenticatedRuntimeContextResolver() {
       return new AuthenticatedRuntimeContextResolver("test-gateway-secret");
     }
-  }
 
-  static final class StubPackageManifestHttpFacade extends PackageManifestHttpFacade {
-
-    @Override
-    PackagePrecheckResponse precheck(PackagePrecheckRequest request) {
-      String packageCode = request.manifest() == null ? null : request.manifest().packageCode();
-      if (packageCode == null || packageCode.isBlank()) {
-        return new PackagePrecheckResponse(false, List.of(
-            new PackagePrecheckError("manifest.packageCode", "PACKAGE_CODE_REQUIRED", "packageCode required")));
-      }
-      return new PackagePrecheckResponse(true, List.of());
+    private PackageManifestValidationContext trustedPrecheckContext() {
+      return new PackageManifestValidationContext(
+          Map.of(),
+          Set.of("customer"),
+          Set.of(),
+          Set.of(),
+          Set.of(),
+          Set.of("customer:read"),
+          "0.1.0",
+          "M3",
+          Set.of("commercial"),
+          true);
     }
   }
 
