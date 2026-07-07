@@ -18,6 +18,7 @@ import com.lowcode.workflow.service.WorkflowHttpService;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -127,9 +128,9 @@ class RuntimeApiConfiguration {
   }
 
   @Bean
-  WorkflowHttpService workflowHttpServiceBean(
-      @Value("${lowcode.app.workflow.demo-enabled:false}") boolean demoEnabled) {
-    return workflowHttpService(demoEnabled);
+  @ConditionalOnProperty(name = "lowcode.app.workflow.demo-enabled", havingValue = "true")
+  WorkflowHttpService workflowHttpServiceBean() {
+    return workflowHttpService(true);
   }
 
   WorkflowHttpService workflowHttpService(boolean demoEnabled) {

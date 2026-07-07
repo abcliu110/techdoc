@@ -36,7 +36,7 @@ public class PackageManifestHttpFacade {
     PackagePrecheckRequest safeRequest = request == null ? PackagePrecheckRequest.empty() : request;
     ValidationReport report = validator.validate(
         safeRequest.safeManifest(),
-        trustedContext(runtimeContext, safeRequest.safeContext()));
+        trustedContext(runtimeContext));
     return new PackagePrecheckResponse(
         report.passed(),
         report.errors().stream()
@@ -46,19 +46,13 @@ public class PackageManifestHttpFacade {
 
   protected PackageManifestValidationContext trustedContext(
       AuthenticatedRuntimeContext runtimeContext) {
-    return trustedContext(runtimeContext, PackagePrecheckContext.empty());
-  }
-
-  private PackageManifestValidationContext trustedContext(
-      AuthenticatedRuntimeContext runtimeContext,
-      PackagePrecheckContext requestContext) {
     PackageManifestValidationContext resolved =
         capabilityContextProvider.resolve(String.valueOf(runtimeContext.tenantId()));
     if (resolved == null) {
       resolved = failClosedCapabilityContext();
     }
     return new PackageManifestValidationContext(
-        requestContext.installedDependencies(),
+        resolved.installedDependencies(),
         resolved.availableObjects(),
         resolved.availableExtensions(),
         resolved.availableMenus(),

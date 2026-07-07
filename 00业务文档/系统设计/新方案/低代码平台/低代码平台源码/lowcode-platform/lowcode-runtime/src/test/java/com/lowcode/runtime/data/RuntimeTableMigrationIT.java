@@ -52,6 +52,60 @@ class RuntimeTableMigrationIT {
     }
   }
 
+  @Test
+  void flywayMigration_shouldUpgradeLegacyIdempotencyScopeWithWorkspace() throws SQLException {
+    String database = "lowcode_upgrade";
+    try (Connection admin =
+        DriverManager.getConnection(MYSQL.getJdbcUrl(), MYSQL.getUsername(), MYSQL.getPassword())) {
+      admin.createStatement().execute("drop database if exists " + database);
+      admin.createStatement().execute("create database " + database);
+    }
+
+    String jdbcUrl = MYSQL.getJdbcUrl().replace("/lowcode", "/" + database);
+    try (Connection connection = DriverManager.getConnection(jdbcUrl, MYSQL.getUsername(), MYSQL.getPassword())) {
+      connection.createStatement().execute("""
+          create table lc_rt_idempotency (
+            id bigint not null,
+            tenant_id bigint not null,
+            app_code varchar(64) not null,
+            object_code varchar(64) not null,
+            operation varchar(32) not null,
+            idempotency_key varchar(128) not null,
+            record_lid varchar(26) not null,
+            from_state varchar(64) not null default '',
+            to_state varchar(64) not null default '',
+            revision bigint not null,
+            trace_id varchar(64) not null,
+            create_time datetime(3) not null default current_timestamp(3),
+            primary key (id),
+            unique key uk_lc_rt_idempotency_scope (tenant_id, app_code, object_code, operation, idempotency_key)
+          )
+          """);
+      connection.createStatement().execute("""
+          insert into lc_rt_idempotency
+            (id, tenant_id, app_code, object_code, operation, idempotency_key, record_lid, from_state, to_state, revision, trace_id)
+          values
+            (1, 9, 'sales', 'order', 'create', 'idem-1', 'rec-1', '', '', 1, 'trace-1')
+          """);
+    }
+
+    Flyway.configure()
+        .dataSource(jdbcUrl, MYSQL.getUsername(), MYSQL.getPassword())
+        .locations("classpath:db/migration")
+        .baselineVersion("202607060001")
+        .baselineOnMigrate(true)
+        .load()
+        .migrate();
+
+    try (Connection connection = DriverManager.getConnection(jdbcUrl, MYSQL.getUsername(), MYSQL.getPassword())) {
+      assertThat(columnNames(connection, "lc_rt_idempotency")).contains("workspace_id");
+      assertThat(nullable(connection, "lc_rt_idempotency", "workspace_id")).isEqualTo("NO");
+      assertThat(indexColumns(connection, "lc_rt_idempotency", "uk_lc_rt_idempotency_scope"))
+          .containsExactly("tenant_id", "workspace_id", "app_code", "object_code", "operation", "idempotency_key");
+      assertThat(workspaceIds(connection, "lc_rt_idempotency")).containsExactly(0L);
+    }
+  }
+
   private static Set<String> tableNames(Connection connection) throws SQLException {
     Set<String> tables = new HashSet<>();
     try (ResultSet resultSet = connection.getMetaData().getTables(null, null, "lc_rt_%", null)) {
@@ -99,5 +153,16 @@ class RuntimeTableMigrationIT {
       }
     }
     return columns;
+  }
+
+  private static List<Long> workspaceIds(Connection connection, String tableName) throws SQLException {
+    List<Long> workspaceIds = new ArrayList<>();
+    try (ResultSet resultSet = connection.createStatement()
+        .executeQuery("select workspace_id from " + tableName + " order by id")) {
+      while (resultSet.next()) {
+        workspaceIds.add(resultSet.getLong("workspace_id"));
+      }
+    }
+    return workspaceIds;
   }
 }

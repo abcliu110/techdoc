@@ -268,12 +268,109 @@ class DesignerObjectControllerTest {
         .andExpect(jsonPath("$.traceId").value("trace-designer-unsigned"));
   }
 
+  @Test
+  void shouldRejectTamperedDesignerGatewayHeaders() throws Exception {
+    mockMvc.perform(post("/api/designer/object/add")
+            .contentType(MediaType.APPLICATION_JSON)
+            .with(gatewaySignature())
+            .header("X-Workspace-Id", "71")
+            .header("X-Trace-Id", "trace-designer-tampered-workspace")
+            .content("""
+                {
+                  "appCode": "sales",
+                  "objectCode": "invoice",
+                  "name": "销售单",
+                  "fields": []
+                }
+                """))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.code").value("LC-COMM-0400"))
+        .andExpect(jsonPath("$.message").value("网关签名无效"))
+        .andExpect(jsonPath("$.traceId").value("trace-designer-tampered-workspace"));
+
+    mockMvc.perform(post("/api/designer/object/list")
+            .contentType(MediaType.APPLICATION_JSON)
+            .with(gatewaySignature())
+            .header("X-Role-Codes", "admin")
+            .header("X-Trace-Id", "trace-designer-tampered-role")
+            .content("""
+                {
+                  "appCode": "sales"
+                }
+                """))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.code").value("LC-COMM-0400"))
+        .andExpect(jsonPath("$.message").value("网关签名无效"))
+        .andExpect(jsonPath("$.traceId").value("trace-designer-tampered-role"));
+  }
+
+  @Test
+  void shouldRejectDesignerRequestsMissingSignedContextHeaders() throws Exception {
+    mockMvc.perform(post("/api/designer/object/add")
+            .contentType(MediaType.APPLICATION_JSON)
+            .with(gatewaySignatureWithoutWorkspace())
+            .header("X-Trace-Id", "trace-designer-missing-workspace")
+            .content("""
+                {
+                  "appCode": "sales",
+                  "objectCode": "invoice",
+                  "name": "销售单",
+                  "fields": []
+                }
+                """))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.code").value("LC-COMM-0400"))
+        .andExpect(jsonPath("$.message").value("工作区不能为空"))
+        .andExpect(jsonPath("$.traceId").value("trace-designer-missing-workspace"));
+
+    mockMvc.perform(post("/api/designer/object/get")
+            .contentType(MediaType.APPLICATION_JSON)
+            .with(gatewaySignatureWithoutUser())
+            .header("X-Trace-Id", "trace-designer-missing-user")
+            .content("""
+                {
+                  "appCode": "sales",
+                  "objectCode": "invoice"
+                }
+                """))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.code").value("LC-COMM-0400"))
+        .andExpect(jsonPath("$.message").value("用户不能为空"))
+        .andExpect(jsonPath("$.traceId").value("trace-designer-missing-user"));
+  }
+
   private static RequestPostProcessor gatewaySignature() {
     return request -> {
       String timestamp = String.valueOf(System.currentTimeMillis());
       request.addHeader("X-Tenant-Id", "9");
       request.addHeader("X-Workspace-Id", "70");
       request.addHeader("X-User-Lid", "designer-1");
+      request.addHeader("X-Role-Codes", "designer");
+      request.addHeader("X-Meta-Hash", "mh-1");
+      request.addHeader("X-Gateway-Timestamp", timestamp);
+      request.addHeader("X-Gateway-Signature", hmac(canonicalPayload(request, timestamp)));
+      return request;
+    };
+  }
+
+  private static RequestPostProcessor gatewaySignatureWithoutWorkspace() {
+    return request -> {
+      String timestamp = String.valueOf(System.currentTimeMillis());
+      request.addHeader("X-Tenant-Id", "9");
+      request.addHeader("X-User-Lid", "designer-1");
+      request.addHeader("X-Role-Codes", "designer");
+      request.addHeader("X-Meta-Hash", "mh-1");
+      request.addHeader("X-Gateway-Timestamp", timestamp);
+      request.addHeader("X-Gateway-Signature", hmac(canonicalPayload(request, timestamp)));
+      return request;
+    };
+  }
+
+  private static RequestPostProcessor gatewaySignatureWithoutUser() {
+    return request -> {
+      String timestamp = String.valueOf(System.currentTimeMillis());
+      request.addHeader("X-Tenant-Id", "9");
+      request.addHeader("X-Workspace-Id", "70");
       request.addHeader("X-Role-Codes", "designer");
       request.addHeader("X-Meta-Hash", "mh-1");
       request.addHeader("X-Gateway-Timestamp", timestamp);

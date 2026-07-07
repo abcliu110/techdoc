@@ -3,6 +3,7 @@ package com.lowcode.app.api;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.lowcode.common.error.BizException;
 import com.lowcode.metamodel.domain.graph.JdbcMetaVersionRepository;
 import com.lowcode.metamodel.domain.graph.MetaJdbcExecutor;
 import com.lowcode.metamodel.domain.graph.MetaGraphBuilder;
@@ -12,12 +13,14 @@ import com.lowcode.metamodel.domain.service.PackageManifestValidationContext;
 import com.lowcode.plugin.service.PackageMarketplaceService;
 import com.lowcode.runtime.api.RuntimeApiFacade;
 import com.lowcode.runtime.data.RuntimeJdbcExecutor;
+import com.lowcode.workflow.service.WorkflowHttpService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 class RuntimeApiConfigurationTest {
@@ -71,7 +74,7 @@ class RuntimeApiConfigurationTest {
   }
 
   @Test
-  void shouldFailFastWhenWorkflowHttpServiceFallsBackToImplicitInMemoryDefaults() {
+  void shouldFailFastWhenWorkflowHttpServiceIsCreatedWithoutExplicitDemoFlag() {
     RuntimeApiConfiguration configuration = new RuntimeApiConfiguration();
 
     assertThatThrownBy(() -> configuration.workflowHttpService())
@@ -96,6 +99,53 @@ class RuntimeApiConfigurationTest {
     assertThat(configuration.metaVersionRepository(Optional.empty(), true)).isNotNull();
     assertThat(configuration.metaVersionPointer(true).findCurrent(3L, "sales")).isEmpty();
     assertThat(configuration.workflowHttpService(true)).isNotNull();
+  }
+
+  @Test
+  void shouldNotCreateWorkflowDemoBeanByDefault() {
+    new ApplicationContextRunner()
+        .withBean(RuntimeJdbcExecutor.class, () -> new RuntimeJdbcExecutor() {
+          @Override
+          public int update(String sql, List<Object> parameters) {
+            return 1;
+          }
+
+          @Override
+          public List<Map<String, Object>> query(String sql, List<Object> parameters) {
+            return List.of();
+          }
+        })
+        .withBean(MetaJdbcExecutor.class, () -> (sql, parameters) -> List.of())
+        .withBean(WorkflowHttpFacade.class)
+        .withUserConfiguration(RuntimeApiConfiguration.class)
+        .run(context -> {
+          assertThat(context).doesNotHaveBean(WorkflowHttpService.class);
+          assertThat(context).hasSingleBean(WorkflowHttpFacade.class);
+        });
+  }
+
+  @Test
+  void shouldFailClosedWhenWorkflowFacadeIsCalledWithoutWorkflowService() {
+    new ApplicationContextRunner()
+        .withBean(RuntimeJdbcExecutor.class, () -> new RuntimeJdbcExecutor() {
+          @Override
+          public int update(String sql, List<Object> parameters) {
+            return 1;
+          }
+
+          @Override
+          public List<Map<String, Object>> query(String sql, List<Object> parameters) {
+            return List.of();
+          }
+        })
+        .withBean(MetaJdbcExecutor.class, () -> (sql, parameters) -> List.of())
+        .withBean(WorkflowHttpFacade.class)
+        .withUserConfiguration(RuntimeApiConfiguration.class)
+        .run(context -> assertThatThrownBy(() ->
+            context.getBean(WorkflowHttpFacade.class)
+                .start(authenticatedContext(), "approval", new WorkflowStartRequest(null, "rec-1", null, null)))
+            .isInstanceOf(BizException.class)
+            .hasMessageContaining("工作流服务未启用"));
   }
 
   @Test
@@ -178,5 +228,17 @@ class RuntimeApiConfigurationTest {
       updates.add(args);
       return 1;
     }
+  }
+
+  private static AuthenticatedRuntimeContext authenticatedContext() {
+    return new AuthenticatedRuntimeContext(
+        3L,
+        7L,
+        "user-1",
+        Set.of("manager"),
+        "trace-1",
+        "sales",
+        "order",
+        "mh-1");
   }
 }

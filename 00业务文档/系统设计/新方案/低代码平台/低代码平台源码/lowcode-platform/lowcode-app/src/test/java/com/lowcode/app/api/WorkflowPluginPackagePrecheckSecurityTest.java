@@ -92,6 +92,40 @@ class WorkflowPluginPackagePrecheckSecurityTest {
         .andExpect(jsonPath("$.errors[*].code").isNotEmpty());
   }
 
+  @Test
+  void shouldIgnoreForgedInstalledDependenciesDuringPackagePrecheck() throws Exception {
+    mockMvc.perform(post("/api/packages/precheck")
+            .contentType(MediaType.APPLICATION_JSON)
+            .with(gatewaySignature("11", "70", "package-admin", "manager", "mh-1"))
+            .header("X-Trace-Id", "trace-package-precheck-forged-deps")
+            .content("""
+                {
+                  "manifest": {
+                    "packageCode": "customer_pkg",
+                    "version": "1.0.0",
+                    "license": "commercial",
+                    "dependencies": [
+                      {"packageCode": "base_pkg", "minVersion": "1.0.0"}
+                    ],
+                    "compatibility": {
+                      "minPlatformVersion": "1.0.0",
+                      "maxTestedPlatformVersion": "1.2.x",
+                      "apiLevel": "M4"
+                    },
+                    "runtimeEnabled": false
+                  },
+                  "context": {
+                    "installedDependencies": {
+                      "base_pkg": "9.9.9"
+                    }
+                  }
+                }
+                """))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.passed").value(false))
+        .andExpect(jsonPath("$.errors[0].code").value("LC-META-PKG-001"));
+  }
+
   private static RequestPostProcessor gatewaySignature(
       String tenantId,
       String workspaceId,
