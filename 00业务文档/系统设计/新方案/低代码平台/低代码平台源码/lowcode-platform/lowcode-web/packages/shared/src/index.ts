@@ -121,3 +121,6 @@ function isSafeSchemaPropValue(key: string, value: unknown): boolean {
   const normalized = value.trim().toLowerCase();
   return !normalized.startsWith("javascript:") && !normalized.includes("javascript:");
 }
+
+// Path utilities
+export { getIn, setIn, deleteIn, hasIn } from './utils/path';
