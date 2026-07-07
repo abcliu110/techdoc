@@ -1,0 +1,21 @@
+{
+  "name": "@lowcode/form-designer",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "vite"
+  },
+  "dependencies": {
+    "@lowcode/form-core": "workspace:*",
+    "@lowcode/form-renderer": "workspace:*",
+    "mobx": "^6.10.0",
+    "mobx-react-lite": "^4.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "antd": "^5.0.0",
+    "@dnd-kit/core": "^6.0.0"
+  }
+}

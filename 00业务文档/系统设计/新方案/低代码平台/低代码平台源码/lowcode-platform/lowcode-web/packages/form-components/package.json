@@ -1,0 +1,16 @@
+{
+  "name": "@lowcode/form-components",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@lowcode/form-core": "workspace:*",
+    "antd": "^5.0.0",
+    "react": "^18.2.0"
+  },
+  "description": "37个表单组件库，基于Ant Design封装"
+}
