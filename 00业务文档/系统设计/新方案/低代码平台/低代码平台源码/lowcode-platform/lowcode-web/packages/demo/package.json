@@ -13,10 +13,12 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@lowcode/form-core": "workspace:*",
+    "@types/react-color": "^3.0.13",
     "antd": "^5.0.0",
     "mobx": "^6.10.0",
     "mobx-react-lite": "^4.0.0",
     "react": "^18.2.0",
+    "react-color": "^2.19.3",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0"

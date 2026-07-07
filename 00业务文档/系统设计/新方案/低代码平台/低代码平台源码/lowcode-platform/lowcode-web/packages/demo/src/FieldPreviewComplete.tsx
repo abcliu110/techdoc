@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Form,
   Input,
@@ -22,14 +22,35 @@ import {
   AutoComplete,
   TreeSelect,
   Transfer,
+  Table,
+  Calendar as AntCalendar,
 } from 'antd';
-import { PlusOutlined, InboxOutlined } from '@ant-design/icons';
+import { PlusOutlined, UploadOutlined, DeleteOutlined } from '@ant-design/icons';
+import { SketchPicker } from 'react-color';
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 const { Panel } = Collapse;
+const { Dragger } = Upload;
 
-export const FieldPreviewComplete: React.FC<{ field: any }> = ({ field }) => {
+interface FieldPreviewProps {
+  field: any;
+  children?: React.ReactNode;
+  isDesignMode?: boolean;
+}
+
+export const FieldPreviewComplete: React.FC<FieldPreviewProps> = ({
+  field,
+  children,
+  isDesignMode = false
+}) => {
+  const [activeTab, setActiveTab] = useState('1');
+  const [colorPickerVisible, setColorPickerVisible] = useState(false);
+  const [color, setColor] = useState(field.defaultValue || '#1890ff');
+  const [subTableData, setSubTableData] = useState([
+    { key: '1', product: '产品A', qty: 10, price: 100, amount: 1000 },
+  ]);
+
   const renderField = () => {
     const commonProps = {
       placeholder: field.placeholder || `请输入${field.label}`,
@@ -37,20 +58,42 @@ export const FieldPreviewComplete: React.FC<{ field: any }> = ({ field }) => {
       readOnly: field.readonly,
     };
 
+    // 获取选项（从配置或默认）
+    const options = field.options || [
+      { label: '选项1', value: '1' },
+      { label: '选项2', value: '2' },
+      { label: '选项3', value: '3' },
+    ];
+
+    // 获取树形数据
+    const treeData = field.treeData || [
+      {
+        title: '节点1',
+        value: '1',
+        children: [
+          { title: '子节点1-1', value: '1-1' },
+          { title: '子节点1-2', value: '1-2' },
+        ],
+      },
+      { title: '节点2', value: '2' },
+    ];
+
     switch (field.type) {
       // 基础组件 P0
       case 'input':
-        return <Input {...commonProps} />;
+        return <Input {...commonProps} defaultValue={field.defaultValue} />;
 
       case 'inputNumber':
-        return <InputNumber style={{ width: '100%' }} {...commonProps} />;
+        return <InputNumber style={{ width: '100%' }} {...commonProps} defaultValue={field.defaultValue} />;
 
       case 'select':
         return (
-          <Select {...commonProps}>
-            <Select.Option value="1">选项1</Select.Option>
-            <Select.Option value="2">选项2</Select.Option>
-            <Select.Option value="3">选项3</Select.Option>
+          <Select {...commonProps} defaultValue={field.defaultValue}>
+            {options.map((opt: any) => (
+              <Select.Option key={opt.value} value={opt.value}>
+                {opt.label}
+              </Select.Option>
+            ))}
           </Select>
         );
 
@@ -58,31 +101,42 @@ export const FieldPreviewComplete: React.FC<{ field: any }> = ({ field }) => {
         return <DatePicker style={{ width: '100%' }} {...commonProps} />;
 
       case 'checkbox':
+        if (options.length > 1) {
+          // 多个选项显示为CheckboxGroup
+          return (
+            <Checkbox.Group disabled={field.disabled} options={options.map((opt: any) => ({
+              label: opt.label,
+              value: opt.value,
+            }))} />
+          );
+        }
         return <Checkbox disabled={field.disabled}>{field.label}</Checkbox>;
 
       case 'radio':
         return (
-          <Radio.Group disabled={field.disabled}>
-            <Radio value="1">选项1</Radio>
-            <Radio value="2">选项2</Radio>
-            <Radio value="3">选项3</Radio>
+          <Radio.Group disabled={field.disabled} defaultValue={field.defaultValue}>
+            {options.map((opt: any) => (
+              <Radio key={opt.value} value={opt.value}>
+                {opt.label}
+              </Radio>
+            ))}
           </Radio.Group>
         );
 
       case 'switch':
-        return <Switch disabled={field.disabled} />;
+        return <Switch disabled={field.disabled} defaultChecked={field.defaultValue} />;
 
       case 'button':
         return <Button type="primary" disabled={field.disabled}>{field.label || '按钮'}</Button>;
 
       // 重要组件 P1
       case 'textarea':
-        return <TextArea rows={3} {...commonProps} />;
+        return <TextArea rows={3} {...commonProps} defaultValue={field.defaultValue} />;
 
       case 'upload':
         return (
-          <Upload {...commonProps}>
-            <Button icon={<PlusOutlined />} disabled={field.disabled}>
+          <Upload {...commonProps} action="/api/upload" listType="text">
+            <Button icon={<UploadOutlined />} disabled={field.disabled}>
               {field.label || '点击上传'}
             </Button>
           </Upload>
@@ -92,17 +146,7 @@ export const FieldPreviewComplete: React.FC<{ field: any }> = ({ field }) => {
         return (
           <Cascader
             style={{ width: '100%' }}
-            options={[
-              {
-                value: '1',
-                label: '选项1',
-                children: [
-                  { value: '1-1', label: '选项1-1' },
-                  { value: '1-2', label: '选项1-2' },
-                ],
-              },
-              { value: '2', label: '选项2' },
-            ]}
+            options={treeData}
             {...commonProps}
           />
         );
@@ -117,24 +161,22 @@ export const FieldPreviewComplete: React.FC<{ field: any }> = ({ field }) => {
         return (
           <AutoComplete
             style={{ width: '100%' }}
-            options={[
-              { value: '选项1' },
-              { value: '选项2' },
-              { value: '选项3' },
-            ]}
+            options={options.map((opt: any) => ({ value: opt.label }))}
             {...commonProps}
           />
         );
 
       case 'rate':
-        return <Rate disabled={field.disabled} />;
+        return <Rate disabled={field.disabled} defaultValue={field.defaultValue || 0} />;
 
       case 'tag':
         return (
           <div>
-            <AntTag color="blue">标签1</AntTag>
-            <AntTag color="green">标签2</AntTag>
-            <AntTag color="red">标签3</AntTag>
+            {options.map((opt: any, idx: number) => (
+              <AntTag key={opt.value} color={['blue', 'green', 'red', 'orange'][idx % 4]}>
+                {opt.label}
+              </AntTag>
+            ))}
           </div>
         );
 
@@ -146,25 +188,55 @@ export const FieldPreviewComplete: React.FC<{ field: any }> = ({ field }) => {
             size="small"
             style={{ background: '#fafafa' }}
           >
-            <div style={{ padding: '12px', color: '#666' }}>
-              卡片内容区域 - 可嵌套其他组件
-            </div>
+            {children && React.Children.count(children) > 0 ? (
+              <div style={{ minHeight: '60px' }}>{children}</div>
+            ) : (
+              <div style={{
+                padding: '20px',
+                textAlign: 'center',
+                color: '#999',
+                background: 'white',
+                border: '1px dashed #d9d9d9',
+                borderRadius: '4px'
+              }}>
+                📦 拖拽组件到这里（容器组件）
+              </div>
+            )}
           </Card>
         );
 
       case 'tabs':
         return (
           <Tabs
+            activeKey={activeTab}
+            onChange={setActiveTab}
             items={[
               {
                 key: '1',
                 label: '选项卡1',
-                children: <div style={{ padding: '12px', color: '#666' }}>选项卡1内容</div>,
+                children: children && React.Children.count(children) > 0 ? (
+                  <div style={{ padding: '12px', minHeight: '60px' }}>{children}</div>
+                ) : (
+                  <div style={{
+                    padding: '20px',
+                    textAlign: 'center',
+                    color: '#999',
+                    border: '1px dashed #d9d9d9',
+                    borderRadius: '4px'
+                  }}>
+                    📦 拖拽组件到这里
+                  </div>
+                ),
               },
               {
                 key: '2',
                 label: '选项卡2',
                 children: <div style={{ padding: '12px', color: '#666' }}>选项卡2内容</div>,
+              },
+              {
+                key: '3',
+                label: '选项卡3',
+                children: <div style={{ padding: '12px', color: '#666' }}>选项卡3内容</div>,
               },
             ]}
           />
@@ -172,12 +244,24 @@ export const FieldPreviewComplete: React.FC<{ field: any }> = ({ field }) => {
 
       case 'collapse':
         return (
-          <Collapse>
+          <Collapse defaultActiveKey={['1']}>
             <Panel header="折叠面板1" key="1">
-              <div style={{ color: '#666' }}>折叠面板内容</div>
+              {children && React.Children.count(children) > 0 ? (
+                <div style={{ minHeight: '40px' }}>{children}</div>
+              ) : (
+                <div style={{
+                  padding: '12px',
+                  textAlign: 'center',
+                  color: '#999',
+                  border: '1px dashed #d9d9d9',
+                  borderRadius: '4px'
+                }}>
+                  📦 拖拽组件到这里
+                </div>
+              )}
             </Panel>
             <Panel header="折叠面板2" key="2">
-              <div style={{ color: '#666' }}>折叠面板内容</div>
+              <div style={{ color: '#666' }}>折叠面板2内容</div>
             </Panel>
           </Collapse>
         );
@@ -187,15 +271,85 @@ export const FieldPreviewComplete: React.FC<{ field: any }> = ({ field }) => {
 
       // 高级组件 P2
       case 'subTable':
+        const columns = [
+          {
+            title: '产品名称',
+            dataIndex: 'product',
+            key: 'product',
+            render: (text: string, record: any) => (
+              <Input size="small" defaultValue={text} disabled={field.disabled} />
+            ),
+          },
+          {
+            title: '数量',
+            dataIndex: 'qty',
+            key: 'qty',
+            width: 100,
+            render: (text: number, record: any) => (
+              <InputNumber size="small" defaultValue={text} disabled={field.disabled} style={{ width: '100%' }} />
+            ),
+          },
+          {
+            title: '单价',
+            dataIndex: 'price',
+            key: 'price',
+            width: 100,
+            render: (text: number, record: any) => (
+              <InputNumber size="small" defaultValue={text} disabled={field.disabled} style={{ width: '100%' }} />
+            ),
+          },
+          {
+            title: '金额',
+            dataIndex: 'amount',
+            key: 'amount',
+            width: 100,
+          },
+          {
+            title: '操作',
+            key: 'action',
+            width: 80,
+            render: (_: any, record: any) => (
+              <Button
+                type="link"
+                danger
+                size="small"
+                icon={<DeleteOutlined />}
+                disabled={field.disabled}
+                onClick={() => {
+                  setSubTableData(subTableData.filter(item => item.key !== record.key));
+                }}
+              >
+                删除
+              </Button>
+            ),
+          },
+        ];
+
         return (
-          <div style={{ border: '1px dashed #d9d9d9', padding: '12px', borderRadius: '4px', background: '#fafafa' }}>
-            <div style={{ marginBottom: '8px', color: '#666', fontWeight: 'bold' }}>
-              📋 子表组件（主子表关系）
-            </div>
-            <div style={{ fontSize: '12px', color: '#999', marginBottom: '8px' }}>
-              支持一对多关系，自动计算、行内校验
-            </div>
-            <Button size="small" type="dashed" icon={<PlusOutlined />} disabled={field.disabled}>
+          <div style={{ border: '1px solid #d9d9d9', borderRadius: '4px', padding: '12px', background: 'white' }}>
+            <Table
+              size="small"
+              dataSource={subTableData}
+              columns={columns}
+              pagination={false}
+            />
+            <Button
+              size="small"
+              type="dashed"
+              icon={<PlusOutlined />}
+              disabled={field.disabled}
+              onClick={() => {
+                const newKey = `${subTableData.length + 1}`;
+                setSubTableData([...subTableData, {
+                  key: newKey,
+                  product: '新产品',
+                  qty: 1,
+                  price: 0,
+                  amount: 0,
+                }]);
+              }}
+              style={{ marginTop: '8px', width: '100%' }}
+            >
               添加行
             </Button>
           </div>
@@ -204,9 +358,19 @@ export const FieldPreviewComplete: React.FC<{ field: any }> = ({ field }) => {
       case 'richText':
         return (
           <div style={{ border: '1px solid #d9d9d9', borderRadius: '4px', minHeight: '120px', padding: '8px', background: 'white' }}>
-            <div style={{ color: '#999', fontSize: '12px' }}>
-              📝 富文本编辑器 - 支持格式化文本、图片、链接等
+            <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: '8px', marginBottom: '8px' }}>
+              <Button size="small" type="text">B</Button>
+              <Button size="small" type="text"><i>I</i></Button>
+              <Button size="small" type="text"><u>U</u></Button>
+              <Button size="small" type="text">链接</Button>
+              <Button size="small" type="text">图片</Button>
             </div>
+            <TextArea
+              bordered={false}
+              placeholder="请输入内容..."
+              rows={4}
+              disabled={field.disabled}
+            />
           </div>
         );
 
@@ -214,17 +378,7 @@ export const FieldPreviewComplete: React.FC<{ field: any }> = ({ field }) => {
         return (
           <TreeSelect
             style={{ width: '100%' }}
-            treeData={[
-              {
-                title: '节点1',
-                value: '1',
-                children: [
-                  { title: '子节点1-1', value: '1-1' },
-                  { title: '子节点1-2', value: '1-2' },
-                ],
-              },
-              { title: '节点2', value: '2' },
-            ]}
+            treeData={treeData}
             {...commonProps}
           />
         );
@@ -232,11 +386,7 @@ export const FieldPreviewComplete: React.FC<{ field: any }> = ({ field }) => {
       case 'transfer':
         return (
           <Transfer
-            dataSource={[
-              { key: '1', title: '选项1' },
-              { key: '2', title: '选项2' },
-              { key: '3', title: '选项3' },
-            ]}
+            dataSource={options.map((opt: any) => ({ key: opt.value, title: opt.label }))}
             targetKeys={[]}
             render={item => item.title}
             disabled={field.disabled}
@@ -244,29 +394,45 @@ export const FieldPreviewComplete: React.FC<{ field: any }> = ({ field }) => {
         );
 
       case 'slider':
-        return <Slider disabled={field.disabled} />;
+        return <Slider disabled={field.disabled} defaultValue={field.defaultValue || 30} />;
 
       case 'colorPicker':
         return (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{
-              width: '40px',
-              height: '40px',
-              background: '#1890ff',
-              border: '1px solid #d9d9d9',
-              borderRadius: '4px',
-              cursor: field.disabled ? 'not-allowed' : 'pointer',
-            }} />
-            <span style={{ color: '#666' }}>#1890ff</span>
+          <div style={{ position: 'relative' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                cursor: field.disabled ? 'not-allowed' : 'pointer',
+              }}
+              onClick={() => !field.disabled && setColorPickerVisible(!colorPickerVisible)}
+            >
+              <div style={{
+                width: '40px',
+                height: '40px',
+                background: color,
+                border: '1px solid #d9d9d9',
+                borderRadius: '4px',
+              }} />
+              <span style={{ color: '#666' }}>{color}</span>
+            </div>
+            {colorPickerVisible && (
+              <div style={{ position: 'absolute', zIndex: 1000, top: '50px' }}>
+                <SketchPicker
+                  color={color}
+                  onChange={(c) => setColor(c.hex)}
+                  onChangeComplete={() => setColorPickerVisible(false)}
+                />
+              </div>
+            )}
           </div>
         );
 
       case 'calendar':
         return (
-          <div style={{ border: '1px solid #d9d9d9', borderRadius: '4px', padding: '8px', background: '#fafafa' }}>
-            <div style={{ color: '#666', textAlign: 'center' }}>
-              📆 日历组件 - 日期选择和展示
-            </div>
+          <div style={{ border: '1px solid #d9d9d9', borderRadius: '4px', background: 'white' }}>
+            <AntCalendar fullscreen={false} />
           </div>
         );
 

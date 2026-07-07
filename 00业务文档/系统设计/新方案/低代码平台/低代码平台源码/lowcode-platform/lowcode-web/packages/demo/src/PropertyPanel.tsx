@@ -1,5 +1,6 @@
 import React from 'react';
-import { Card, Form, Input, Select, Switch, Collapse } from 'antd';
+import { Card, Form, Input, Select, Switch, Collapse, Button, Space } from 'antd';
+import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -22,11 +23,40 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({ selectedField, onF
     );
   }
 
+  // 添加选项
+  const handleAddOption = () => {
+    const options = selectedField.options || [];
+    onFieldUpdate({
+      options: [...options, { label: `选项${options.length + 1}`, value: `${options.length + 1}` }],
+    });
+  };
+
+  // 删除选项
+  const handleRemoveOption = (index: number) => {
+    const options = selectedField.options || [];
+    onFieldUpdate({
+      options: options.filter((_: any, i: number) => i !== index),
+    });
+  };
+
+  // 更新选项
+  const handleUpdateOption = (index: number, field: 'label' | 'value', value: string) => {
+    const options = [...(selectedField.options || [])];
+    options[index] = { ...options[index], [field]: value };
+    onFieldUpdate({ options });
+  };
+
+  // 是否需要选项配置
+  const needsOptions = ['select', 'radio', 'checkbox', 'autoComplete'].includes(selectedField.type);
+
+  // 是否需要树形数据配置
+  const needsTreeData = ['tree', 'cascader'].includes(selectedField.type);
+
   return (
     <div style={{ padding: '16px', height: '100vh', overflow: 'auto' }}>
       <h3 style={{ marginBottom: '16px' }}>⚙️ 属性面板</h3>
 
-      <Collapse defaultActiveKey={['basic', 'validation', 'style']} ghost>
+      <Collapse defaultActiveKey={['basic', 'data', 'validation', 'style']} ghost>
         {/* 基础属性 */}
         <Panel header="📝 基础属性" key="basic">
           <Card size="small">
@@ -55,11 +85,10 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({ selectedField, onF
                   <Option value="input">输入框</Option>
                   <Option value="inputNumber">数字输入</Option>
                   <Option value="select">下拉选择</Option>
+                  <Option value="radio">单选框</Option>
+                  <Option value="checkbox">复选框</Option>
                   <Option value="datePicker">日期选择</Option>
                   <Option value="textarea">多行文本</Option>
-                  <Option value="checkbox">复选框</Option>
-                  <Option value="radio">单选框</Option>
-                  <Option value="switch">开关</Option>
                   <Option value="upload">文件上传</Option>
                   <Option value="subTable">子表</Option>
                 </Select>
@@ -75,6 +104,76 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({ selectedField, onF
             </Form>
           </Card>
         </Panel>
+
+        {/* 数据配置 */}
+        {(needsOptions || needsTreeData) && (
+          <Panel header="📋 数据配置" key="data">
+            <Card size="small">
+              {needsOptions && (
+                <div>
+                  <div style={{ marginBottom: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <strong>选项列表</strong>
+                    <Button size="small" type="dashed" icon={<PlusOutlined />} onClick={handleAddOption}>
+                      添加选项
+                    </Button>
+                  </div>
+                  {(selectedField.options || []).map((option: any, index: number) => (
+                    <div key={index} style={{ marginBottom: '8px', padding: '8px', background: '#f5f5f5', borderRadius: '4px' }}>
+                      <Space direction="vertical" style={{ width: '100%' }} size="small">
+                        <Input
+                          size="small"
+                          placeholder="标签"
+                          value={option.label}
+                          onChange={e => handleUpdateOption(index, 'label', e.target.value)}
+                          addonBefore="标签"
+                        />
+                        <Input
+                          size="small"
+                          placeholder="值"
+                          value={option.value}
+                          onChange={e => handleUpdateOption(index, 'value', e.target.value)}
+                          addonBefore="值"
+                          addonAfter={
+                            <MinusCircleOutlined
+                              style={{ color: 'red', cursor: 'pointer' }}
+                              onClick={() => handleRemoveOption(index)}
+                            />
+                          }
+                        />
+                      </Space>
+                    </div>
+                  ))}
+                  {(!selectedField.options || selectedField.options.length === 0) && (
+                    <div style={{ padding: '12px', textAlign: 'center', color: '#999', background: '#fafafa', borderRadius: '4px' }}>
+                      暂无选项，点击添加
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {needsTreeData && (
+                <div>
+                  <div style={{ marginBottom: '8px' }}>
+                    <strong>树形数据（JSON）</strong>
+                  </div>
+                  <TextArea
+                    rows={6}
+                    placeholder='[{"label":"节点1","value":"1","children":[]}]'
+                    value={selectedField.treeData ? JSON.stringify(selectedField.treeData, null, 2) : ''}
+                    onChange={e => {
+                      try {
+                        const data = JSON.parse(e.target.value);
+                        onFieldUpdate({ treeData: data });
+                      } catch (err) {
+                        // 忽略JSON解析错误
+                      }
+                    }}
+                  />
+                </div>
+              )}
+            </Card>
+          </Panel>
+        )}
 
         {/* 校验规则 */}
         <Panel header="✅ 校验规则" key="validation">
@@ -218,6 +317,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({ selectedField, onF
             <div>类型: {selectedField.type}</div>
             <div>ID: {selectedField.fieldId}</div>
             {selectedField.placeholder && <div>占位符: {selectedField.placeholder}</div>}
+            {selectedField.options && <div>选项数: {selectedField.options.length}</div>}
             {selectedField.helpText && <div>提示: {selectedField.helpText}</div>}
           </div>
         </div>
