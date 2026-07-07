@@ -51,6 +51,45 @@ export const FieldPreviewComplete: React.FC<FieldPreviewProps> = ({
     { key: '1', product: '产品A', qty: 10, price: 100, amount: 1000 },
   ]);
 
+  // 应用宽高样式
+  const fieldStyle: React.CSSProperties = {
+    width: field.width || undefined,
+    height: field.height || undefined,
+  };
+
+  // 应用容器布局样式
+  const containerStyle: React.CSSProperties = {
+    padding: field.padding || undefined,
+  };
+
+  // 子组件布局样式
+  const getChildrenLayoutStyle = (): React.CSSProperties => {
+    const layout = field.childLayout || 'vertical';
+    const gap = field.gap || '12px';
+
+    if (layout === 'horizontal') {
+      return {
+        display: 'flex',
+        flexDirection: 'row',
+        gap: gap,
+        flexWrap: 'wrap',
+      };
+    } else if (layout === 'grid') {
+      return {
+        display: 'grid',
+        gridTemplateColumns: `repeat(${field.gridColumns || 2}, 1fr)`,
+        gap: field.gridGap || '12px',
+      };
+    } else {
+      // vertical
+      return {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: gap,
+      };
+    }
+  };
+
   const renderField = () => {
     const commonProps = {
       placeholder: field.placeholder || `请输入${field.label}`,
@@ -81,10 +120,10 @@ export const FieldPreviewComplete: React.FC<FieldPreviewProps> = ({
     switch (field.type) {
       // 基础组件 P0
       case 'input':
-        return <Input {...commonProps} defaultValue={field.defaultValue} />;
+        return <Input {...commonProps} defaultValue={field.defaultValue} style={fieldStyle} />;
 
       case 'inputNumber':
-        return <InputNumber style={{ width: '100%' }} {...commonProps} defaultValue={field.defaultValue} />;
+        return <InputNumber style={{ width: field.width || '100%', height: field.height }} {...commonProps} defaultValue={field.defaultValue} />;
 
       case 'select':
         return (
@@ -186,10 +225,12 @@ export const FieldPreviewComplete: React.FC<FieldPreviewProps> = ({
           <Card
             title={field.label || '卡片标题'}
             size="small"
-            style={{ background: '#fafafa' }}
+            style={{ background: '#fafafa', ...containerStyle }}
           >
             {children && React.Children.count(children) > 0 ? (
-              <div style={{ minHeight: '60px' }}>{children}</div>
+              <div style={{ minHeight: '60px', ...getChildrenLayoutStyle() }}>
+                {children}
+              </div>
             ) : (
               <div style={{
                 padding: '20px',
@@ -215,7 +256,9 @@ export const FieldPreviewComplete: React.FC<FieldPreviewProps> = ({
                 key: '1',
                 label: '选项卡1',
                 children: children && React.Children.count(children) > 0 ? (
-                  <div style={{ padding: '12px', minHeight: '60px' }}>{children}</div>
+                  <div style={{ padding: '12px', minHeight: '60px', ...getChildrenLayoutStyle() }}>
+                    {children}
+                  </div>
                 ) : (
                   <div style={{
                     padding: '20px',
@@ -247,7 +290,9 @@ export const FieldPreviewComplete: React.FC<FieldPreviewProps> = ({
           <Collapse defaultActiveKey={['1']}>
             <Panel header="折叠面板1" key="1">
               {children && React.Children.count(children) > 0 ? (
-                <div style={{ minHeight: '40px' }}>{children}</div>
+                <div style={{ minHeight: '40px', ...getChildrenLayoutStyle() }}>
+                  {children}
+                </div>
               ) : (
                 <div style={{
                   padding: '12px',

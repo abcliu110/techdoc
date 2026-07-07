@@ -52,6 +52,9 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({ selectedField, onF
   // 是否需要树形数据配置
   const needsTreeData = ['tree', 'cascader'].includes(selectedField.type);
 
+  // 是否为布局组件
+  const isLayoutComponent = ['card', 'tabs', 'collapse'].includes(selectedField.type);
+
   return (
     <div style={{ padding: '16px', height: '100vh', overflow: 'auto' }}>
       <h3 style={{ marginBottom: '16px' }}>⚙️ 属性面板</h3>
@@ -229,6 +232,22 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({ selectedField, onF
         <Panel header="🎨 样式配置" key="style">
           <Card size="small">
             <Form layout="vertical" size="small">
+              <Form.Item label="宽度">
+                <Input
+                  value={selectedField.width}
+                  onChange={e => onFieldUpdate({ width: e.target.value })}
+                  placeholder="如: 100%, 200px, auto"
+                />
+              </Form.Item>
+
+              <Form.Item label="高度">
+                <Input
+                  value={selectedField.height}
+                  onChange={e => onFieldUpdate({ height: e.target.value })}
+                  placeholder="如: 100px, 200px, auto"
+                />
+              </Form.Item>
+
               <Form.Item label="是否禁用">
                 <Switch
                   checked={selectedField.disabled}
@@ -267,6 +286,65 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({ selectedField, onF
             </Form>
           </Card>
         </Panel>
+
+        {/* 布局配置（仅布局组件） */}
+        {isLayoutComponent && (
+          <Panel header="📐 布局配置" key="layout">
+            <Card size="small">
+              <Form layout="vertical" size="small">
+                <Form.Item label="子组件布局">
+                  <Select
+                    value={selectedField.childLayout || 'vertical'}
+                    onChange={val => onFieldUpdate({ childLayout: val })}
+                  >
+                    <Option value="vertical">垂直排列</Option>
+                    <Option value="horizontal">水平排列</Option>
+                    <Option value="grid">网格布局</Option>
+                  </Select>
+                </Form.Item>
+
+                {selectedField.childLayout === 'grid' && (
+                  <>
+                    <Form.Item label="列数">
+                      <Select
+                        value={selectedField.gridColumns || 2}
+                        onChange={val => onFieldUpdate({ gridColumns: val })}
+                      >
+                        <Option value={1}>1列</Option>
+                        <Option value={2}>2列</Option>
+                        <Option value={3}>3列</Option>
+                        <Option value={4}>4列</Option>
+                      </Select>
+                    </Form.Item>
+                    <Form.Item label="网格间距">
+                      <Input
+                        value={selectedField.gridGap}
+                        onChange={e => onFieldUpdate({ gridGap: e.target.value })}
+                        placeholder="如: 16px, 1rem"
+                      />
+                    </Form.Item>
+                  </>
+                )}
+
+                <Form.Item label="内边距">
+                  <Input
+                    value={selectedField.padding}
+                    onChange={e => onFieldUpdate({ padding: e.target.value })}
+                    placeholder="如: 16px, 20px 10px"
+                  />
+                </Form.Item>
+
+                <Form.Item label="子组件间距">
+                  <Input
+                    value={selectedField.gap}
+                    onChange={e => onFieldUpdate({ gap: e.target.value })}
+                    placeholder="如: 12px, 1rem"
+                  />
+                </Form.Item>
+              </Form>
+            </Card>
+          </Panel>
+        )}
 
         {/* 高级配置 */}
         <Panel header="🔧 高级配置" key="advanced">

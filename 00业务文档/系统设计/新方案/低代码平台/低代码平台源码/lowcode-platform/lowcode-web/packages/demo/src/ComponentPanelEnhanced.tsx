@@ -19,15 +19,20 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({ type, label, ic
 
   const style: React.CSSProperties = {
     cursor: 'grab',
-    padding: '10px 12px',
-    border: highlight ? '2px solid #ff4d4f' : '1px solid #d9d9d9',
-    marginBottom: '8px',
+    padding: '4px 6px',
+    border: highlight ? '1px solid #ff4d4f' : '1px solid #d9d9d9',
     borderRadius: '4px',
     background: highlight ? '#fff1f0' : 'white',
-    transition: 'all 0.3s',
+    transition: 'all 0.2s',
     opacity: isDragging ? 0.5 : 1,
     transform: CSS.Translate.toString(transform),
     userSelect: 'none',
+    fontSize: '10px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '45px',
   };
 
   return (
@@ -40,28 +45,24 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({ type, label, ic
         if (!isDragging) {
           e.currentTarget.style.background = highlight ? '#ffccc7' : '#e6f7ff';
           e.currentTarget.style.borderColor = '#1890ff';
-          e.currentTarget.style.transform = 'translateX(4px)';
         }
       }}
       onMouseLeave={(e) => {
         if (!isDragging) {
           e.currentTarget.style.background = highlight ? '#fff1f0' : 'white';
           e.currentTarget.style.borderColor = highlight ? '#ff4d4f' : '#d9d9d9';
-          e.currentTarget.style.transform = 'translateX(0)';
         }
       }}
     >
-      <Space>
-        <span style={{ fontSize: '18px' }}>{icon}</span>
-        <span style={{ fontSize: '13px' }}>
-          <strong>{label}</strong>
-        </span>
-        {highlight && (
-          <Tag color="red" style={{ fontSize: '10px', padding: '0 4px' }}>
-            高级
-          </Tag>
-        )}
-      </Space>
+      <div style={{ fontSize: '14px', marginBottom: '2px' }}>{icon}</div>
+      <div style={{ fontSize: '10px', textAlign: 'center', lineHeight: '1.2' }}>
+        {label}
+      </div>
+      {highlight && (
+        <Tag color="red" style={{ fontSize: '9px', padding: '0 2px', marginTop: '2px', lineHeight: '12px' }}>
+          高级
+        </Tag>
+      )}
     </div>
   );
 };
@@ -123,19 +124,25 @@ export const ComponentPanelEnhanced: React.FC<ComponentPanelEnhancedProps> = ({ 
 
   return (
     <div style={{ padding: '16px', height: '100vh', overflow: 'auto' }}>
-      <h3 style={{ marginBottom: '16px' }}>📦 组件库</h3>
+      <h3 style={{ marginBottom: '16px', fontSize: '14px' }}>📦 组件库 (27个)</h3>
 
       {componentGroups.map((group, groupIndex) => (
-        <div key={groupIndex} style={{ marginBottom: '24px' }}>
+        <div key={groupIndex} style={{ marginBottom: '20px' }}>
           <h4 style={{
-            fontSize: '13px',
+            fontSize: '12px',
             color: '#666',
-            marginBottom: '12px',
-            fontWeight: 'bold'
+            marginBottom: '8px',
+            fontWeight: 'bold',
+            borderBottom: '1px solid #f0f0f0',
+            paddingBottom: '4px',
           }}>
             {group.title}
           </h4>
-          <div>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '4px',
+          }}>
             {group.components.map(item => (
               <DraggableComponent
                 key={item.type}
@@ -149,12 +156,12 @@ export const ComponentPanelEnhanced: React.FC<ComponentPanelEnhancedProps> = ({ 
         </div>
       ))}
 
-      <div style={{ marginTop: '24px', padding: '12px', background: '#fff7e6', borderRadius: '4px', fontSize: '12px' }}>
+      <div style={{ marginTop: '16px', padding: '8px', background: '#fff7e6', borderRadius: '4px', fontSize: '11px' }}>
         <div><strong>💡 使用提示</strong></div>
-        <div style={{ marginTop: '8px', color: '#666' }}>
-          • 拖动组件到画布添加<br/>
-          • 画布内拖动排序<br/>
-          • <strong>共27个组件</strong>完整支持
+        <div style={{ marginTop: '6px', color: '#666', lineHeight: '1.4' }}>
+          • 拖动到画布添加<br/>
+          • 拖到容器内嵌套<br/>
+          • 共27个组件
         </div>
       </div>
     </div>

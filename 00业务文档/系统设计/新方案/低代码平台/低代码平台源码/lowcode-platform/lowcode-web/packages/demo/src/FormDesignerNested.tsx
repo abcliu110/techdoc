@@ -5,55 +5,11 @@ import { Layout, Card, Button, Space, Tag, Tabs } from 'antd';
 import { SaveOutlined, DragOutlined, EyeOutlined, CodeOutlined } from '@ant-design/icons';
 import { ComponentPanelEnhanced } from './ComponentPanelEnhanced';
 import { PropertyPanel } from './PropertyPanel';
-import { SortableFieldItem } from './SortableFieldItem';
 import { FieldNode, arrayToTree, isContainerComponent } from './treeUtils';
-import { FieldPreviewComplete } from './FieldPreviewComplete';
+import { RenderFields } from './RenderFields';
 
 const { Sider, Content } = Layout;
 const { TabPane } = Tabs;
-
-// 递归渲染字段（简化版）
-const RenderFields: React.FC<{
-  fields: FieldNode[];
-  selectedId: string | null;
-  onFieldSelect: (id: string) => void;
-  onFieldDelete: (id: string) => void;
-  level?: number;
-}> = ({ fields, selectedId, onFieldSelect, onFieldDelete, level = 0 }) => {
-  return (
-    <SortableContext items={fields.map(f => f.id)} strategy={verticalListSortingStrategy}>
-      {fields.map((field) => {
-        const isContainer = isContainerComponent(field.type);
-        const isSelected = selectedId === field.id;
-
-        return (
-          <SortableFieldItem
-            key={field.id}
-            field={field}
-            index={field.id}
-            isSelected={isSelected}
-            onSelect={() => onFieldSelect(field.id)}
-            onDelete={() => onFieldDelete(field.id)}
-            isContainer={isContainer}
-          >
-            {/* 如果有子组件，递归渲染 */}
-            {isContainer && field.children && field.children.length > 0 && (
-              <div style={{ paddingTop: '8px' }}>
-                <RenderFields
-                  fields={field.children}
-                  selectedId={selectedId}
-                  onFieldSelect={onFieldSelect}
-                  onFieldDelete={onFieldDelete}
-                  level={level + 1}
-                />
-              </div>
-            )}
-          </SortableFieldItem>
-        );
-      })}
-    </SortableContext>
-  );
-};
 
 // 可放置区域的画布
 const DroppableCanvas: React.FC<{
@@ -160,11 +116,9 @@ export const FormDesignerNested: React.FC = () => {
 
       // 判断是否拖到容器内
       const overId = over.id.toString();
-      if (overId.startsWith('droppable-')) {
-        const parentId = overId.replace('droppable-', '');
-        if (parentId !== 'root') {
-          newField.parentId = parentId;
-        }
+      if (overId.startsWith('container-')) {
+        const parentId = overId.replace('container-', '');
+        newField.parentId = parentId;
       }
 
       setFields([...fields, newField]);
