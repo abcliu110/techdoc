@@ -173,7 +173,9 @@ class WorkflowHttpFacade {
 
   private WorkflowHttpService requireWorkflowService() {
     if (workflowService == null) {
-      throw invalidRequest("工作流服务未启用");
+      throw new com.lowcode.common.error.BizException(
+          com.lowcode.common.error.ErrorCode.FEATURE_DISABLED,
+          "工作流服务未启用");
     }
     return workflowService;
   }

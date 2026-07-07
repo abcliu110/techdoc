@@ -24,7 +24,9 @@ public class ApiErrorResponseFactory {
    * @return 业务异常对应的 HTTP 状态和响应体
    */
   public ApiErrorResponse fromBizException(BizException ex, HttpServletRequest request) {
-    HttpStatus status = ex.errorCode() == ErrorCode.TENANT_REQUIRED ? HttpStatus.BAD_REQUEST : HttpStatus.BAD_REQUEST;
+    HttpStatus status = ex.errorCode() == ErrorCode.FEATURE_DISABLED
+        ? HttpStatus.FORBIDDEN
+        : HttpStatus.BAD_REQUEST;
     return new ApiErrorResponse(status, Result.failure(ex.errorCode(), ex.getMessage(), traceId(request)));
   }
 

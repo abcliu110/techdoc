@@ -18,6 +18,7 @@ import com.lowcode.workflow.service.WorkflowHttpService;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,10 +31,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 class RuntimeApiConfiguration {
 
   @Bean
-  RuntimeApiFacade runtimeApiFacadeBean(
-      Optional<RuntimeJdbcExecutor> jdbcExecutor,
-      @Value("${lowcode.app.runtime.demo-enabled:false}") boolean demoEnabled) {
-    return runtimeApiFacade(jdbcExecutor, demoEnabled);
+  @ConditionalOnBean(RuntimeJdbcExecutor.class)
+  RuntimeApiFacade runtimeApiFacadeBean(RuntimeJdbcExecutor jdbcExecutor) {
+    return runtimeApiFacade(jdbcExecutor);
+  }
+
+  @Bean
+  @ConditionalOnProperty(name = "lowcode.app.runtime.demo-enabled", havingValue = "true")
+  @ConditionalOnMissingBean(RuntimeApiFacade.class)
+  RuntimeApiFacade runtimeDemoApiFacadeBean() {
+    return runtimeApiFacade(Optional.empty(), true);
   }
 
   RuntimeApiFacade runtimeApiFacade(Optional<RuntimeJdbcExecutor> jdbcExecutor, boolean demoEnabled) {
@@ -58,10 +65,16 @@ class RuntimeApiConfiguration {
   }
 
   @Bean
-  MetaVersionRepository metaVersionRepositoryBean(
-      Optional<MetaJdbcExecutor> jdbcExecutor,
-      @Value("${lowcode.app.runtime.demo-enabled:false}") boolean demoEnabled) {
-    return metaVersionRepository(jdbcExecutor, demoEnabled);
+  @ConditionalOnBean(JdbcTemplate.class)
+  MetaVersionRepository metaVersionRepositoryBean(MetaJdbcExecutor jdbcExecutor) {
+    return metaVersionRepository(Optional.of(jdbcExecutor));
+  }
+
+  @Bean
+  @ConditionalOnProperty(name = "lowcode.app.runtime.demo-enabled", havingValue = "true")
+  @ConditionalOnMissingBean(MetaVersionRepository.class)
+  MetaVersionRepository metaVersionDemoRepositoryBean() {
+    return metaVersionRepository(Optional.empty(), true);
   }
 
   MetaVersionRepository metaVersionRepository(Optional<MetaJdbcExecutor> jdbcExecutor, boolean demoEnabled) {
@@ -109,6 +122,8 @@ class RuntimeApiConfiguration {
   }
 
   @Bean
+  @ConditionalOnBean(MetaVersionRepository.class)
+  @ConditionalOnProperty(name = "lowcode.app.runtime.demo-enabled", havingValue = "false", matchIfMissing = true)
   MetaGraphProvider metaGraphProvider(MetaVersionRepository repository, MetaVersionPointer pointer) {
     return new MetaGraphProvider(repository, pointer, new MetaGraphBuilder(), 16);
   }
@@ -122,9 +137,10 @@ class RuntimeApiConfiguration {
   }
 
   @Bean
+  @ConditionalOnProperty(name = "lowcode.app.package.demo-enabled", havingValue = "true")
   PackageMarketplaceService packageMarketplaceService(
       PackageMarketplaceService.PackageCapabilityContextProvider capabilityContextProvider) {
-    return new PackageMarketplaceService(capabilityContextProvider);
+    return PackageMarketplaceService.inMemoryDemo(capabilityContextProvider);
   }
 
   @Bean

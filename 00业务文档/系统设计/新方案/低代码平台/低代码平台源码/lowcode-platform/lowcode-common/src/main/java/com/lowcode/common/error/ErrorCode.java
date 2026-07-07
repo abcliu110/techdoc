@@ -10,6 +10,7 @@ public enum ErrorCode {
   SUCCESS("0", "success"),
   PARAM_INVALID("LC-COMM-0400", "invalid parameter"),
   TENANT_REQUIRED("LC-COMM-0401", "tenant is required"),
+  FEATURE_DISABLED("LC-COMM-0403", "feature disabled"),
   META_CONFLICT("LC-META-4090", "metadata revision conflict");
 
   private final String code;

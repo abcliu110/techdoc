@@ -14,14 +14,20 @@ import com.lowcode.plugin.service.PackageMarketplaceService;
 import com.lowcode.runtime.api.RuntimeApiFacade;
 import com.lowcode.runtime.data.RuntimeJdbcExecutor;
 import com.lowcode.workflow.service.WorkflowHttpService;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 class RuntimeApiConfigurationTest {
 
@@ -102,6 +108,121 @@ class RuntimeApiConfigurationTest {
   }
 
   @Test
+  void shouldStartWithoutRuntimeOrMetaStoresAndFailClosedOnRuntimeCalls() {
+    new ApplicationContextRunner()
+        .withBean(RuntimeApiHttpFacade.class)
+        .withUserConfiguration(InMemoryRuntimeHttpFacade.class)
+        .withUserConfiguration(RuntimeApiConfiguration.class)
+        .run(context -> {
+          assertThat(context).hasSingleBean(RuntimeApiHttpFacade.class);
+          assertThat(context).doesNotHaveBean(RuntimeApiFacade.class);
+          assertThat(context).doesNotHaveBean(MetaVersionRepository.class);
+          assertThat(context).doesNotHaveBean(InMemoryRuntimeHttpFacade.class);
+
+          assertThatThrownBy(() -> context.getBean(RuntimeApiHttpFacade.class).meta(authenticatedContext()))
+              .isInstanceOf(BizException.class)
+              .hasMessageContaining("运行时服务未启用");
+        });
+  }
+
+  @Test
+  void shouldCreateInMemoryRuntimeHttpFacadeOnlyWhenRuntimeDemoIsExplicitlyEnabled() {
+    new ApplicationContextRunner()
+        .withUserConfiguration(InMemoryRuntimeHttpFacade.class)
+        .run(context -> assertThat(context).doesNotHaveBean(InMemoryRuntimeHttpFacade.class));
+
+    new ApplicationContextRunner()
+        .withPropertyValues("lowcode.app.runtime.demo-enabled=true")
+        .withUserConfiguration(InMemoryRuntimeHttpFacade.class)
+        .run(context -> assertThat(context).hasSingleBean(InMemoryRuntimeHttpFacade.class));
+  }
+
+  @Test
+  void shouldWireRuntimeDataControllerToFailClosedRuntimeFacadeByDefault() {
+    new ApplicationContextRunner()
+        .withBean(AuthenticatedRuntimeContextResolver.class, () -> new AuthenticatedRuntimeContextResolver("test-gateway-secret"))
+        .withBean(ApiErrorResponseFactory.class)
+        .withBean(RuntimeApiHttpFacade.class)
+        .withBean(RuntimeDataController.class)
+        .withUserConfiguration(InMemoryRuntimeHttpFacade.class)
+        .withUserConfiguration(RuntimeApiConfiguration.class)
+        .run(context -> {
+          assertThat(context).hasSingleBean(RuntimeHttpFacade.class);
+          assertThat(context.getBean(RuntimeHttpFacade.class)).isInstanceOf(RuntimeApiHttpFacade.class);
+          assertThat(context).doesNotHaveBean(InMemoryRuntimeHttpFacade.class);
+
+          assertThatThrownBy(() -> context.getBean(RuntimeDataController.class)
+              .meta("sales", "order", signedRuntimeRequest()))
+              .isInstanceOf(BizException.class)
+              .hasMessageContaining("运行时服务未启用");
+        });
+  }
+
+  @Test
+  void shouldWireRuntimeDataControllerToExplicitDemoRuntimeWhenRuntimeDemoIsEnabled() {
+    new ApplicationContextRunner()
+        .withPropertyValues("lowcode.app.runtime.demo-enabled=true")
+        .withBean(AuthenticatedRuntimeContextResolver.class, () -> new AuthenticatedRuntimeContextResolver("test-gateway-secret"))
+        .withBean(ApiErrorResponseFactory.class)
+        .withBean(RuntimeApiHttpFacade.class)
+        .withBean(RuntimeDataController.class)
+        .withUserConfiguration(InMemoryRuntimeHttpFacade.class)
+        .withUserConfiguration(PublishedRuntimeObjectRegistry.class)
+        .withUserConfiguration(RuntimeApiConfiguration.class)
+        .run(context -> {
+          assertThat(context).hasSingleBean(RuntimeApiFacade.class);
+          assertThat(context).doesNotHaveBean(com.lowcode.metamodel.domain.graph.MetaGraphProvider.class);
+          assertThat(context).doesNotHaveBean(PublishedRuntimeObjectRegistry.class);
+
+          Object response = context.getBean(RuntimeDataController.class)
+              .meta("sales", "order", signedRuntimeRequest());
+
+          assertThat(response).isInstanceOf(RuntimeObjectMetaResponse.class);
+          RuntimeObjectMetaResponse meta = (RuntimeObjectMetaResponse) response;
+          assertThat(meta.objectCode()).isEqualTo("order");
+          assertThat(meta.fields()).contains("amount", "remark");
+        });
+  }
+
+  @Test
+  void shouldKeepExplicitRuntimeDemoIndependentFromPublishedRegistryWhenJdbcTemplateExists() {
+    new ApplicationContextRunner()
+        .withPropertyValues("lowcode.app.runtime.demo-enabled=true")
+        .withBean(JdbcTemplate.class, RecordingJdbcTemplate::new)
+        .withBean(AuthenticatedRuntimeContextResolver.class, () -> new AuthenticatedRuntimeContextResolver("test-gateway-secret"))
+        .withBean(ApiErrorResponseFactory.class)
+        .withBean(RuntimeApiHttpFacade.class)
+        .withBean(RuntimeDataController.class)
+        .withUserConfiguration(InMemoryRuntimeHttpFacade.class)
+        .withUserConfiguration(PublishedRuntimeObjectRegistry.class)
+        .withUserConfiguration(RuntimeApiConfiguration.class)
+        .run(context -> {
+          assertThat(context).hasSingleBean(RuntimeApiFacade.class);
+          assertThat(context).hasSingleBean(MetaVersionRepository.class);
+          assertThat(context).doesNotHaveBean(com.lowcode.metamodel.domain.graph.MetaGraphProvider.class);
+          assertThat(context).doesNotHaveBean(PublishedRuntimeObjectRegistry.class);
+
+          Object response = context.getBean(RuntimeDataController.class)
+              .meta("sales", "order", signedRuntimeRequest());
+
+          assertThat(response).isInstanceOf(RuntimeObjectMetaResponse.class);
+          RuntimeObjectMetaResponse meta = (RuntimeObjectMetaResponse) response;
+          assertThat(meta.objectCode()).isEqualTo("order");
+          assertThat(meta.fields()).contains("amount", "remark");
+        });
+  }
+
+  @Test
+  void shouldMapFeatureDisabledBizExceptionToForbidden() {
+    ApiErrorResponse response = new ApiErrorResponseFactory().fromBizException(
+        new BizException(com.lowcode.common.error.ErrorCode.FEATURE_DISABLED, "运行时服务未启用"),
+        signedRuntimeRequest());
+
+    assertThat(response.status()).isEqualTo(HttpStatus.FORBIDDEN);
+    assertThat(response.body().code()).isEqualTo("LC-COMM-0403");
+  }
+
+  @Test
   void shouldNotCreateWorkflowDemoBeanByDefault() {
     new ApplicationContextRunner()
         .withBean(RuntimeJdbcExecutor.class, () -> new RuntimeJdbcExecutor() {
@@ -146,6 +267,33 @@ class RuntimeApiConfigurationTest {
                 .start(authenticatedContext(), "approval", new WorkflowStartRequest(null, "rec-1", null, null)))
             .isInstanceOf(BizException.class)
             .hasMessageContaining("工作流服务未启用"));
+  }
+
+  @Test
+  void shouldNotCreatePackageMarketplaceDemoServiceByDefault() {
+    new ApplicationContextRunner()
+        .withBean(RuntimeJdbcExecutor.class, () -> new RuntimeJdbcExecutor() {
+          @Override
+          public int update(String sql, List<Object> parameters) {
+            return 1;
+          }
+
+          @Override
+          public List<Map<String, Object>> query(String sql, List<Object> parameters) {
+            return List.of();
+          }
+        })
+        .withBean(MetaJdbcExecutor.class, () -> (sql, parameters) -> List.of())
+        .withBean(PackageMarketplaceHttpFacade.class)
+        .withUserConfiguration(RuntimeApiConfiguration.class)
+        .run(context -> {
+          assertThat(context).doesNotHaveBean(PackageMarketplaceService.class);
+          assertThat(context).hasSingleBean(PackageMarketplaceHttpFacade.class);
+          assertThatThrownBy(() ->
+              context.getBean(PackageMarketplaceHttpFacade.class).list(authenticatedContext()))
+              .isInstanceOf(BizException.class)
+              .hasMessageContaining("包市场服务未启用");
+        });
   }
 
   @Test
@@ -200,6 +348,17 @@ class RuntimeApiConfigurationTest {
   }
 
   @Test
+  void shouldCreateMetaVersionRepositoryWhenJdbcTemplateCreatesMetaJdbcExecutor() {
+    new ApplicationContextRunner()
+        .withBean(JdbcTemplate.class, RecordingJdbcTemplate::new)
+        .withUserConfiguration(RuntimeApiConfiguration.class)
+        .run(context -> {
+          assertThat(context).hasSingleBean(MetaJdbcExecutor.class);
+          assertThat(context).hasSingleBean(MetaVersionRepository.class);
+        });
+  }
+
+  @Test
   void shouldSerializePublishedDesignerSnapshotAsMetaGraphSnapshot() throws Exception {
     RecordingJdbcTemplate jdbcTemplate = new RecordingJdbcTemplate();
     JdbcPublishSnapshotSink sink = new JdbcPublishSnapshotSink(jdbcTemplate);
@@ -224,6 +383,11 @@ class RuntimeApiConfigurationTest {
     }
 
     @Override
+    public void afterPropertiesSet() {
+      // Test fixture: no real DataSource is needed for configuration wiring assertions.
+    }
+
+    @Override
     public int update(String sql, Object... args) {
       updates.add(args);
       return 1;
@@ -240,5 +404,46 @@ class RuntimeApiConfigurationTest {
         "sales",
         "order",
         "mh-1");
+  }
+
+  private static MockHttpServletRequest signedRuntimeRequest() {
+    MockHttpServletRequest request = new MockHttpServletRequest("POST", "/api/data/sales/order/meta");
+    request.addHeader("X-Tenant-Id", "3");
+    request.addHeader("X-Workspace-Id", "7");
+    request.addHeader("X-User-Lid", "user-1");
+    request.addHeader("X-Role-Codes", "manager");
+    request.addHeader("X-Meta-Hash", "mh-1");
+    request.addHeader("X-Trace-Id", "trace-1");
+    String timestamp = String.valueOf(System.currentTimeMillis());
+    request.addHeader("X-Gateway-Timestamp", timestamp);
+    request.addHeader("X-Gateway-Signature", hmac(canonicalPayload(request, timestamp)));
+    return request;
+  }
+
+  private static String canonicalPayload(MockHttpServletRequest request, String timestamp) {
+    return String.join("\n",
+        request.getMethod(),
+        request.getRequestURI(),
+        timestamp,
+        header(request, "X-Tenant-Id"),
+        header(request, "X-Workspace-Id"),
+        header(request, "X-User-Lid"),
+        header(request, "X-Role-Codes"),
+        header(request, "X-Meta-Hash").isBlank() ? "mh-1" : header(request, "X-Meta-Hash"));
+  }
+
+  private static String hmac(String payload) {
+    try {
+      Mac mac = Mac.getInstance("HmacSHA256");
+      mac.init(new SecretKeySpec("test-gateway-secret".getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
+      return HexFormat.of().formatHex(mac.doFinal(payload.getBytes(StandardCharsets.UTF_8)));
+    } catch (Exception ex) {
+      throw new IllegalStateException(ex);
+    }
+  }
+
+  private static String header(MockHttpServletRequest request, String name) {
+    String value = request.getHeader(name);
+    return value == null ? "" : value.trim();
   }
 }

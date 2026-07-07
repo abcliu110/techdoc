@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Component;
  * 设计目标是让 app 模块在不依赖外部安全或数据库基础设施时，也能验证上下文解析、脱敏和基本行为。
  */
 @Component
+@ConditionalOnProperty(name = "lowcode.app.runtime.demo-enabled", havingValue = "true")
 class InMemoryRuntimeHttpFacade implements RuntimeHttpFacade {
 
   private static final String IMPORT_OBJECT_KEY = "sales:order";

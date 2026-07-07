@@ -30,6 +30,14 @@ public class PackageMarketplaceService {
     this(new InMemoryPackageInstallationRepository(), new PackageManifestValidator(), capabilityContextProvider);
   }
 
+  public static PackageMarketplaceService inMemoryDemo(
+      PackageCapabilityContextProvider capabilityContextProvider) {
+    return new PackageMarketplaceService(
+        new InMemoryPackageInstallationRepository(),
+        new PackageManifestValidator(),
+        capabilityContextProvider);
+  }
+
   PackageMarketplaceService(
       PackageInstallationRepository repository,
       PackageManifestValidator validator) {

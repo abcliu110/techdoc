@@ -41,7 +41,7 @@ class PackageMarketplaceControllerTest {
       com.lowcode.plugin.service.PackageMarketplaceService.PackageCapabilityContextProvider provider =
           tenantId -> trustedMarketplaceContext();
       return new PackageMarketplaceHttpFacade(
-          new PackageMarketplaceService(provider),
+          PackageMarketplaceService.inMemoryDemo(provider),
           provider);
     }
 

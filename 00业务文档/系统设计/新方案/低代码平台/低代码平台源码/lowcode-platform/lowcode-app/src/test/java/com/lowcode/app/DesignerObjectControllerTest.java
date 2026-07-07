@@ -1,5 +1,6 @@
 package com.lowcode.app;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -10,6 +11,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -26,6 +28,21 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 class DesignerObjectControllerTest {
 
   @Autowired private MockMvc mockMvc;
+  @Autowired private ApplicationContext applicationContext;
+
+  @Test
+  void shouldExposeRuntimeDemoMetaWithFullApplicationWiring() throws Exception {
+    assertThat(applicationContext.containsBean("publishedRuntimeObjectRegistry")).isFalse();
+
+    mockMvc.perform(post("/api/data/sales/order/meta")
+            .contentType(MediaType.APPLICATION_JSON)
+            .with(runtimeGatewaySignature())
+            .header("X-Trace-Id", "trace-runtime-demo-meta")
+            .content("{}"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.objectCode").value("order"))
+        .andExpect(jsonPath("$.fields[0]").value("amount"));
+  }
 
   @Test
   void shouldExposeDesignerDraftLifecycleWithUnifiedResultAndTraceId() throws Exception {
@@ -273,7 +290,7 @@ class DesignerObjectControllerTest {
     mockMvc.perform(post("/api/designer/object/add")
             .contentType(MediaType.APPLICATION_JSON)
             .with(gatewaySignature())
-            .header("X-Workspace-Id", "71")
+            .with(replaceHeader("X-Workspace-Id", "71"))
             .header("X-Trace-Id", "trace-designer-tampered-workspace")
             .content("""
                 {
@@ -291,7 +308,7 @@ class DesignerObjectControllerTest {
     mockMvc.perform(post("/api/designer/object/list")
             .contentType(MediaType.APPLICATION_JSON)
             .with(gatewaySignature())
-            .header("X-Role-Codes", "admin")
+            .with(replaceHeader("X-Role-Codes", "admin"))
             .header("X-Trace-Id", "trace-designer-tampered-role")
             .content("""
                 {
@@ -353,6 +370,20 @@ class DesignerObjectControllerTest {
     };
   }
 
+  private static RequestPostProcessor runtimeGatewaySignature() {
+    return request -> {
+      String timestamp = String.valueOf(System.currentTimeMillis());
+      request.addHeader("X-Tenant-Id", "9");
+      request.addHeader("X-Workspace-Id", "70");
+      request.addHeader("X-User-Lid", "manager-1");
+      request.addHeader("X-Role-Codes", "manager");
+      request.addHeader("X-Meta-Hash", "mh-1");
+      request.addHeader("X-Gateway-Timestamp", timestamp);
+      request.addHeader("X-Gateway-Signature", hmac(canonicalPayload(request, timestamp)));
+      return request;
+    };
+  }
+
   private static RequestPostProcessor gatewaySignatureWithoutWorkspace() {
     return request -> {
       String timestamp = String.valueOf(System.currentTimeMillis());
@@ -375,6 +406,14 @@ class DesignerObjectControllerTest {
       request.addHeader("X-Meta-Hash", "mh-1");
       request.addHeader("X-Gateway-Timestamp", timestamp);
       request.addHeader("X-Gateway-Signature", hmac(canonicalPayload(request, timestamp)));
+      return request;
+    };
+  }
+
+  private static RequestPostProcessor replaceHeader(String name, String value) {
+    return request -> {
+      request.removeHeader(name);
+      request.addHeader(name, value);
       return request;
     };
   }

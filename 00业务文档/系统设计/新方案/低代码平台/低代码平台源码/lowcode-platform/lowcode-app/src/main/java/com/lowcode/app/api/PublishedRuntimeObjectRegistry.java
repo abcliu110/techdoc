@@ -11,12 +11,14 @@ import com.lowcode.runtime.data.FieldKind;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Comparator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 
 /**
  * Registers runtime object definitions from published metamodel snapshots.
  */
 @Component
+@ConditionalOnBean({RuntimeApiFacade.class, MetaGraphProvider.class})
 class PublishedRuntimeObjectRegistry {
 
   private final RuntimeApiFacade runtimeApiFacade;
