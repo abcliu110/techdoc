@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs } from 'antd';
 import { FormRenderer } from './FormRenderer';
-import { FormDesignerFinal } from './FormDesignerFinal';
+import { FormDesignerNested } from './FormDesignerNested';
 import { DragTest } from './DragTest';
 
 // 主应用
@@ -15,8 +15,8 @@ export const App: React.FC = () => {
         items={[
           {
             key: 'designer',
-            label: '🎨 表单设计器 (完整版)',
-            children: <FormDesignerFinal />,
+            label: '🎨 表单设计器 (嵌套版)',
+            children: <FormDesignerNested />,
           },
           {
             key: 'renderer',
