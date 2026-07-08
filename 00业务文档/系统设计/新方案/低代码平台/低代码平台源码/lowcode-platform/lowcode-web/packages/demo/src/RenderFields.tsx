@@ -6,6 +6,7 @@ import { FieldNode, isContainerComponent } from './treeUtils';
 
 interface ContainerDropZoneProps {
   containerId: string;
+  containerType: string;
   children?: React.ReactNode;
   isEmpty: boolean;
 }
@@ -13,7 +14,7 @@ interface ContainerDropZoneProps {
 /**
  * 容器内的可放置区域
  */
-const ContainerDropZone: React.FC<ContainerDropZoneProps> = ({ containerId, children, isEmpty }) => {
+const ContainerDropZone: React.FC<ContainerDropZoneProps> = ({ containerId, containerType, children, isEmpty }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: `container-${containerId}`,
     data: { containerId, type: 'container' },
@@ -23,6 +24,8 @@ const ContainerDropZone: React.FC<ContainerDropZoneProps> = ({ containerId, chil
     return (
       <div
         ref={setNodeRef}
+        data-testid={`drop-zone-${containerType}`}
+        data-container-id={containerId}
         style={{
           padding: '20px',
           textAlign: 'center',
@@ -42,6 +45,8 @@ const ContainerDropZone: React.FC<ContainerDropZoneProps> = ({ containerId, chil
   return (
     <div
       ref={setNodeRef}
+      data-testid={`drop-zone-${containerType}`}
+      data-container-id={containerId}
       style={{
         background: isOver ? '#e6f7ff' : 'transparent',
         borderRadius: '4px',
@@ -94,6 +99,7 @@ export const RenderFields: React.FC<RenderFieldsProps> = ({
             {isContainer && (
               <ContainerDropZone
                 containerId={field.id}
+                containerType={field.type}
                 isEmpty={!hasChildren}
               >
                 {hasChildren && (

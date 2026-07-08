@@ -35,6 +35,8 @@ const DroppableCanvas: React.FC<{
 
       <Card
         ref={setNodeRef}
+        data-testid="canvas-root"
+        aria-label="设计画布"
         style={{
           minHeight: '600px',
           background: isOver ? '#e6f7ff' : 'white',

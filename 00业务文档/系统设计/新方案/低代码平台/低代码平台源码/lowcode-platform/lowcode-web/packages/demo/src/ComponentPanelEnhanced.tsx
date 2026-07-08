@@ -40,6 +40,10 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({ type, label, ic
       ref={setNodeRef}
       {...attributes}
       {...listeners}
+      data-testid={`palette-${type}`}
+      data-component-type={type}
+      aria-label={`添加${label}`}
+      draggable="true"
       style={style}
       onMouseEnter={(e) => {
         if (!isDragging) {

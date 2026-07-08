@@ -42,6 +42,10 @@ export const SortableFieldItem: React.FC<SortableFieldItemProps> = ({
   return (
     <div ref={setNodeRef} style={style}>
       <div
+        data-testid="canvas-node"
+        data-node-id={field.id}
+        data-node-type={field.type}
+        aria-label={`字段：${field.label}`}
         onClick={onSelect}
         style={{
           position: 'relative',
@@ -82,6 +86,8 @@ export const SortableFieldItem: React.FC<SortableFieldItemProps> = ({
           <div
             {...attributes}
             {...listeners}
+            data-testid="drag-handle"
+            aria-label={`拖动字段：${field.label}`}
             style={{
               cursor: 'grab',
               padding: '4px 8px',
@@ -96,6 +102,8 @@ export const SortableFieldItem: React.FC<SortableFieldItemProps> = ({
             <HolderOutlined />
           </div>
           <Button
+            data-testid="delete-node-button"
+            aria-label={`删除字段：${field.label}`}
             type="text"
             danger
             size="small"

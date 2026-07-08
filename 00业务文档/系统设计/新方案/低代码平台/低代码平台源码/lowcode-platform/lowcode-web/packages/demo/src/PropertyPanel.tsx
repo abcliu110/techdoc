@@ -14,7 +14,7 @@ export interface PropertyPanelProps {
 export const PropertyPanel: React.FC<PropertyPanelProps> = ({ selectedField, onFieldUpdate }) => {
   if (!selectedField) {
     return (
-      <div style={{ padding: '16px', height: '100vh', overflow: 'auto' }}>
+      <div data-testid="property-panel" style={{ padding: '16px', height: '100vh', overflow: 'auto' }}>
         <h3>⚙️ 属性面板</h3>
         <div style={{ marginTop: '40px', textAlign: 'center', color: '#999' }}>
           请在画布中选择一个字段
@@ -56,7 +56,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({ selectedField, onF
   const isLayoutComponent = ['card', 'tabs', 'collapse'].includes(selectedField.type);
 
   return (
-    <div style={{ padding: '16px', height: '100vh', overflow: 'auto' }}>
+    <div data-testid="property-panel" style={{ padding: '16px', height: '100vh', overflow: 'auto' }}>
       <h3 style={{ marginBottom: '16px' }}>⚙️ 属性面板</h3>
 
       <Collapse defaultActiveKey={['basic', 'data', 'validation', 'style']} ghost>
@@ -66,6 +66,8 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({ selectedField, onF
             <Form layout="vertical" size="small">
               <Form.Item label="字段标签">
                 <Input
+                  data-testid="prop-label"
+                  aria-label="字段标签"
                   value={selectedField.label}
                   onChange={e => onFieldUpdate({ label: e.target.value })}
                   placeholder="请输入字段标签"
@@ -74,6 +76,8 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({ selectedField, onF
 
               <Form.Item label="字段ID">
                 <Input
+                  data-testid="prop-field-id"
+                  aria-label="字段ID"
                   value={selectedField.fieldId}
                   onChange={e => onFieldUpdate({ fieldId: e.target.value })}
                   placeholder="field_id"
@@ -234,6 +238,8 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({ selectedField, onF
             <Form layout="vertical" size="small">
               <Form.Item label="宽度">
                 <Input
+                  data-testid="prop-width"
+                  aria-label="字段宽度"
                   value={selectedField.width}
                   onChange={e => onFieldUpdate({ width: e.target.value })}
                   placeholder="如: 100%, 200px, auto"
@@ -242,6 +248,8 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({ selectedField, onF
 
               <Form.Item label="高度">
                 <Input
+                  data-testid="prop-height"
+                  aria-label="字段高度"
                   value={selectedField.height}
                   onChange={e => onFieldUpdate({ height: e.target.value })}
                   placeholder="如: 100px, 200px, auto"
