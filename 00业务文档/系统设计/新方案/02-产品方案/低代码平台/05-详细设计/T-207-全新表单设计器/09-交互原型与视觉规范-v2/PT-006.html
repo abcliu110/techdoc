@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>T-207 表单设计器 V2 - PT-006</title>
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.js"></script>
+  <style>
+    :root {
+      --bg: #e8edf3;
+      --panel: #ffffff;
+      --panel-subtle: #f7f9fb;
+      --panel-muted: #f0f3f7;
+      --rail: #263241;
+      --rail-hover: #344154;
+      --rail-active: #3a4b61;
+      --text: #1f2937;
+      --text-2: #475467;
+      --muted: #667085;
+      --line: #d7dee8;
+      --line-strong: #b6c0cd;
+      --accent: #2468c9;
+      --accent-soft: #edf4ff;
+      --accent-line: #8db3ee;
+      --success: #19733f;
+      --success-soft: #edf8f1;
+      --warning: #8a5a00;
+      --warning-soft: #fff8e6;
+      --shadow: 0 4px 16px rgba(30, 41, 59, 0.12);
+      --radius: 4px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Microsoft YaHei UI", "Segoe UI", sans-serif;
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    select { font: inherit; letter-spacing: 0; }
+
+    button { cursor: pointer; }
+    [hidden] { display: none !important; }
+
+    button:focus-visible,
+    input:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 2px solid #4c8fe8;
+      outline-offset: 1px;
+    }
+
+    .app {
+      width: 100%;
+      height: 100vh;
+      min-width: 1180px;
+      display: grid;
+      grid-template-rows: 48px minmax(0, 1fr) 30px;
+      background: var(--bg);
+    }
+
+    .command-bar {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: minmax(300px, 340px) minmax(410px, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      padding: 0 10px;
+      border-bottom: 1px solid var(--line-strong);
+      background: var(--panel);
+    }
+
+    .brand,
+    .command-group,
+    .command-status,
+    .status-main,
+    .status-metrics {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .brand { gap: 8px; font-weight: 700; }
+    .command-status { justify-content: flex-end; }
+
+    .brand-mark {
+      width: 26px;
+      height: 26px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border-radius: var(--radius);
+      background: var(--rail);
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .brand-name {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .state-chip,
+    .version-chip {
+      height: 22px;
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0 7px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-subtle);
+      color: var(--text-2);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .version-chip { border-color: #e5c96f; background: var(--warning-soft); color: var(--warning); }
+    .state-chip.active { border-color: #a9c4ee; background: var(--accent-soft); color: var(--accent); }
+    .state-chip.success { border-color: #9fd0ad; background: var(--success-soft); color: var(--success); }
+
+    .icon-button,
+    .command-button,
+    .small-button {
+      height: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 0 9px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--text-2);
+      white-space: nowrap;
+    }
+
+    .icon-button { width: 32px; padding: 0; }
+    .small-button { height: 26px; padding: 0 7px; border-color: var(--line); background: #fff; }
+    .command-button.primary { border-color: #1f61bc; background: var(--accent); color: #fff; }
+    .command-button.on { border-color: #acc7ef; background: var(--accent-soft); color: var(--accent); }
+    .icon-button:hover,
+    .command-button:hover,
+    .small-button:hover { background: var(--panel-muted); color: var(--text); }
+    .command-button.primary:hover { background: #1e5db3; color: #fff; }
+    .icon-button[disabled] { opacity: .38; cursor: default; }
+
+    svg { width: 15px; height: 15px; stroke-width: 1.8; }
+    .separator { width: 1px; height: 18px; flex: 0 0 1px; background: var(--line); }
+
+    .studio {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 52px 246px minmax(0, 1fr) 292px;
+      background: var(--bg);
+    }
+
+    .activity-bar {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 7px 4px;
+      border-right: 1px solid #18212c;
+      background: var(--rail);
+    }
+
+    .activity-button {
+      width: 44px;
+      height: 46px;
+      flex: 0 0 46px;
+      display: grid;
+      grid-template-rows: 23px 12px;
+      place-items: center;
+      gap: 2px;
+      padding: 4px 2px 3px;
+      border: 0;
+      border-radius: var(--radius);
+      background: transparent;
+      color: #c9d3df;
+    }
+
+    .activity-button:hover { background: var(--rail-hover); color: #fff; }
+    .activity-button[aria-selected="true"] { background: var(--rail-active); color: #fff; box-shadow: inset 3px 0 0 #71a8ff; }
+    .activity-label { font-size: 10px; }
+    .activity-spacer { flex: 1; }
+
+    .asset-panel,
+    .inspector-panel {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 40px minmax(0, 1fr);
+      overflow: hidden;
+      background: var(--panel);
+    }
+
+    .asset-panel { border-right: 1px solid var(--line); }
+    .inspector-panel { border-left: 1px solid var(--line); }
+
+    .panel-header {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 9px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-subtle);
+    }
+
+    .panel-title { min-width: 0; flex: 1; font-weight: 700; }
+    .panel-body { min-height: 0; overflow: auto; padding: 9px; }
+
+    .search-wrap { position: relative; margin-bottom: 9px; }
+    .search-wrap svg { position: absolute; left: 8px; top: 7px; color: var(--muted); }
+    .search-input {
+      width: 100%;
+      height: 29px;
+      padding: 0 8px 0 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--text);
+    }
+
+    .group { margin-top: 7px; }
+    .group-title {
+      height: 29px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text-2);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .tree-row {
+      min-width: 0;
+      height: 36px;
+      display: grid;
+      grid-template-columns: 25px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 4px;
+      padding: 0 7px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      color: var(--text-2);
+    }
+
+    .tree-row.selected { border-color: #9dbbe7; background: var(--accent-soft); color: var(--accent); }
+    .tree-row.indent { padding-left: 23px; }
+    .row-icon { width: 24px; height: 24px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+    .row-copy { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .row-meta { color: var(--muted); font-size: 11px; }
+
+    .canvas-shell {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 38px minmax(0, 1fr);
+      overflow: hidden;
+    }
+
+    .canvas-toolbar {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 0 10px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .breadcrumbs {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .canvas-tools { display: flex; align-items: center; gap: 5px; }
+    .segmented { display: flex; padding: 2px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-muted); }
+    .segment { height: 20px; padding: 0 7px; border: 0; border-radius: 3px; background: transparent; color: var(--muted); font-size: 11px; }
+    .segment[aria-pressed="true"] { background: #fff; color: var(--accent); box-shadow: 0 1px 2px rgba(30, 41, 59, .12); }
+
+    .canvas-viewport {
+      min-width: 0;
+      min-height: 0;
+      overflow: auto;
+      padding: 16px;
+      background-color: var(--bg);
+      background-image: radial-gradient(#cbd4df 0.75px, transparent 0.75px);
+      background-size: 16px 16px;
+    }
+
+    .artboard {
+      width: min(100%, 858px);
+      min-width: 620px;
+      height: 100%;
+      min-height: 650px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-rows: 54px minmax(0, 1fr);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .page-command {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .page-title { font-size: 16px; font-weight: 700; }
+    .page-subtitle { margin-top: 2px; color: var(--muted); font-size: 11px; }
+    .page-actions { display: flex; align-items: center; gap: 6px; }
+
+    .tabs-layout {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 39px minmax(0, 1fr);
+      margin: 12px;
+      border: 1px solid var(--accent-line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px #dbe8fa;
+    }
+
+    .tab-list {
+      display: flex;
+      align-items: end;
+      padding: 0 9px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-subtle);
+    }
+
+    .tab-button {
+      height: 38px;
+      padding: 0 14px;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      background: transparent;
+      color: var(--text-2);
+    }
+
+    .tab-button[aria-selected="true"] { border-bottom-color: var(--accent); color: var(--accent); font-weight: 700; }
+    .tab-add { width: 30px; margin-left: 2px; padding: 0; }
+
+    .tab-panel { min-height: 0; }
+    .split-layout {
+      min-width: 0;
+      min-height: 0;
+      height: 100%;
+      display: grid;
+      grid-template-columns: minmax(360px, 1fr) 9px 214px;
+      background: #fff;
+    }
+
+    .split-main,
+    .split-aside { min-width: 0; min-height: 0; }
+    .split-main { display: grid; grid-template-rows: 42px minmax(0, 1fr); }
+    .split-aside { overflow: auto; padding: 12px; border-left: 1px solid var(--line); background: #fbfcfe; }
+
+    .sticky-actions {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 11px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+      box-shadow: 0 2px 5px rgba(30, 41, 59, .08);
+    }
+
+    .sticky-label { display: flex; align-items: center; gap: 6px; color: var(--text-2); font-weight: 700; }
+    .action-set { display: flex; gap: 5px; }
+
+    .scroll-region {
+      min-height: 0;
+      overflow-y: auto;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .section-label { margin-bottom: 9px; color: var(--text-2); font-weight: 700; }
+    .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .form-field { min-width: 0; }
+    .field-label { margin-bottom: 5px; color: var(--text-2); font-size: 12px; }
+    .required { margin-right: 3px; color: #c23326; }
+    .field-value {
+      min-width: 0;
+      height: 33px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 9px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #fff;
+      color: var(--text);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .field-value.muted { background: var(--panel-subtle); color: var(--muted); }
+    .content-divider { height: 1px; margin: 15px 0 12px; background: var(--line); }
+    .note-block { padding: 10px; border-left: 3px solid var(--accent-line); background: var(--accent-soft); color: var(--text-2); line-height: 1.6; }
+
+    .split-handle {
+      position: relative;
+      border: 0;
+      border-left: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      background: var(--panel-muted);
+      cursor: col-resize;
+    }
+
+    .split-handle::after {
+      content: "";
+      position: absolute;
+      left: 3px;
+      top: 50%;
+      width: 2px;
+      height: 34px;
+      margin-top: -17px;
+      border-radius: 2px;
+      background: #94a3b4;
+      box-shadow: 3px 0 0 #c3ccd7;
+    }
+
+    .aside-heading { display: flex; align-items: center; gap: 7px; margin-bottom: 10px; font-weight: 700; }
+    .metric { padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .metric-label { color: var(--muted); font-size: 11px; }
+    .metric-value { margin-top: 4px; color: var(--text-2); font-weight: 700; }
+    .history-item { margin-top: 10px; padding: 8px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+    .history-title { font-weight: 700; }
+    .history-meta { margin-top: 4px; color: var(--muted); font-size: 11px; }
+
+    .inspector-context { padding: 11px 10px; border-bottom: 1px solid var(--line); background: #fff; }
+    .context-title { font-weight: 700; }
+    .context-path { margin-top: 4px; overflow: hidden; color: var(--muted); font-family: Consolas, monospace; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+    .inspector-tabs { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--line); }
+    .inspector-tab { height: 34px; border: 0; border-bottom: 2px solid transparent; background: #fff; color: var(--muted); font-size: 12px; }
+    .inspector-tab.active { border-bottom-color: var(--accent); color: var(--accent); font-weight: 700; }
+    .property-section { padding: 10px; border-bottom: 1px solid var(--line); }
+    .property-title { margin-bottom: 9px; color: var(--text-2); font-size: 12px; font-weight: 700; }
+    .property-row { display: grid; grid-template-columns: 82px minmax(0, 1fr); align-items: center; gap: 7px; margin-bottom: 8px; }
+    .property-label { color: var(--muted); font-size: 12px; }
+    .property-value {
+      min-width: 0;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 5px;
+      padding: 0 7px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #fff;
+      color: var(--text-2);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .switch {
+      width: 30px;
+      height: 17px;
+      position: relative;
+      flex: 0 0 auto;
+      border-radius: 9px;
+      background: var(--accent);
+    }
+    .switch::after { content: ""; position: absolute; right: 2px; top: 2px; width: 13px; height: 13px; border-radius: 50%; background: #fff; }
+
+    .status-bar {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 10px;
+      border-top: 1px solid var(--line-strong);
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .status-main strong { color: var(--text-2); }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); }
+    .status-metrics .separator { height: 12px; }
+
+    @media (max-width: 1280px) {
+      .studio { grid-template-columns: 52px 220px minmax(0, 1fr) 260px; }
+      .command-status .state-chip:nth-child(2) { display: none; }
+      .canvas-viewport { padding: 12px; }
+      .split-layout { grid-template-columns: minmax(330px, 1fr) 9px 190px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="pt-006" data-testid="pt006-v2-root" data-version="v2" data-active-tab="basic" data-split="main-wide" data-scroll="local" data-sticky="enabled">
+    <header class="command-bar" data-testid="workbench-region-top">
+      <div class="brand">
+        <span class="brand-mark">T</span>
+        <span class="brand-name">销售订单 · 复合布局设计</span>
+        <span class="version-chip">草稿 v12</span>
+      </div>
+      <div class="command-group" aria-label="设计器命令栏">
+        <button class="icon-button" title="撤销" aria-label="撤销"><i data-lucide="undo-2"></i></button>
+        <button class="icon-button" title="重做" aria-label="重做" disabled><i data-lucide="redo-2"></i></button>
+        <span class="separator"></span>
+        <button class="command-button on"><i data-lucide="save"></i>保存</button>
+        <button class="command-button"><i data-lucide="play"></i>预览</button>
+        <button class="command-button primary"><i data-lucide="rocket"></i>发布</button>
+      </div>
+      <div class="command-status">
+        <span class="state-chip active">V2 · PT-006 · 6/29</span>
+        <span class="state-chip">IX-004</span>
+        <span class="state-chip success"><i data-lucide="circle-check"></i>布局合法</span>
+      </div>
+    </header>
+
+    <main class="studio">
+      <nav class="activity-bar" role="tablist" aria-label="设计器资源模式">
+        <button class="activity-button" aria-selected="true" title="页面大纲"><i data-lucide="list-tree"></i><span class="activity-label">大纲</span></button>
+        <button class="activity-button" aria-selected="false" title="组件库"><i data-lucide="blocks"></i><span class="activity-label">组件</span></button>
+        <button class="activity-button" aria-selected="false" title="字段"><i data-lucide="database"></i><span class="activity-label">字段</span></button>
+        <button class="activity-button" aria-selected="false" title="问题"><i data-lucide="circle-alert"></i><span class="activity-label">问题</span></button>
+        <button class="activity-button" aria-selected="false" title="版本"><i data-lucide="history"></i><span class="activity-label">版本</span></button>
+        <span class="activity-spacer"></span>
+        <button class="activity-button" aria-selected="false" title="设置"><i data-lucide="settings"></i><span class="activity-label">设置</span></button>
+      </nav>
+
+      <aside class="asset-panel" data-testid="workbench-region-left">
+        <div class="panel-header">
+          <span class="panel-title">页面大纲</span>
+          <span class="state-chip active">6 节点</span>
+          <button class="icon-button" title="收起大纲" aria-label="收起大纲"><i data-lucide="panel-left-close"></i></button>
+        </div>
+        <div class="panel-body">
+          <div class="search-wrap"><i data-lucide="search"></i><input class="search-input" placeholder="搜索节点" aria-label="搜索节点" /></div>
+          <div class="group">
+            <div class="group-title"><span>页面结构</span><span class="row-meta">PageRoot</span></div>
+            <div class="tree-row"><span class="row-icon"><i data-lucide="panel-top"></i></span><span class="row-copy">页面命令栏</span><span class="row-meta">Header</span></div>
+            <div class="tree-row selected"><span class="row-icon"><i data-lucide="panels-top-left"></i></span><span class="row-copy">订单信息页签</span><span class="row-meta">Tabs</span></div>
+            <div class="tree-row indent"><span class="row-icon"><i data-lucide="panel-left-dashed"></i></span><span class="row-copy">主区 / 辅助栏</span><span class="row-meta">Split</span></div>
+            <div class="tree-row indent"><span class="row-icon"><i data-lucide="pin"></i></span><span class="row-copy">业务操作条</span><span class="row-meta">Sticky</span></div>
+            <div class="tree-row indent"><span class="row-icon"><i data-lucide="gallery-vertical-end"></i></span><span class="row-copy">表单内容区</span><span class="row-meta">Scroll</span></div>
+            <div class="tree-row indent"><span class="row-icon"><i data-lucide="panel-right"></i></span><span class="row-copy">客户辅助信息</span><span class="row-meta">Aside</span></div>
+          </div>
+        </div>
+      </aside>
+
+      <section class="canvas-shell" data-testid="workbench-region-center">
+        <div class="canvas-toolbar">
+          <div class="breadcrumbs" data-testid="pt006-breadcrumb">页面根节点 / 订单信息页签 / 基本信息 / 主区</div>
+          <div class="canvas-tools">
+            <div class="segmented" aria-label="设计器模式">
+              <button class="segment" aria-pressed="true">设计</button>
+              <button class="segment" aria-pressed="false">预览</button>
+            </div>
+            <button class="icon-button" title="显示网格" aria-label="显示网格"><i data-lucide="grid-2x2"></i></button>
+            <button class="small-button"><i data-lucide="search"></i>100%</button>
+          </div>
+        </div>
+
+        <div class="canvas-viewport">
+          <article class="artboard" data-testid="pt006-artboard">
+            <header class="page-command">
+              <div><div class="page-title">销售订单</div><div class="page-subtitle">SO-20260710-0086 · 草稿</div></div>
+              <div class="page-actions"><button class="small-button"><i data-lucide="save"></i>暂存</button><button class="small-button"><i data-lucide="send"></i>提交</button></div>
+            </header>
+
+            <section class="tabs-layout" data-testid="pt006-node-tabs" data-selected="true">
+              <div class="tab-list" role="tablist" aria-label="订单信息页签">
+                <button class="tab-button" data-tab="basic" role="tab" aria-selected="true" aria-controls="panel-basic">基本信息</button>
+                <button class="tab-button" data-tab="delivery" data-testid="pt006-tab-delivery" role="tab" aria-selected="false" aria-controls="panel-delivery">物流与交付</button>
+                <button class="tab-button" data-tab="attachments" role="tab" aria-selected="false" aria-controls="panel-attachments">附件</button>
+                <button class="tab-button tab-add" title="新增页签" aria-label="新增页签"><i data-lucide="plus"></i></button>
+              </div>
+
+              <div class="tab-panel" id="panel-basic" data-panel="basic" role="tabpanel">
+                <div class="split-layout" data-testid="pt006-node-split">
+                  <section class="split-main">
+                    <div class="sticky-actions" data-testid="pt006-node-sticky">
+                      <span class="sticky-label"><i data-lucide="pin"></i>业务操作条 <span class="state-chip active">Sticky</span></span>
+                      <span class="action-set"><button class="small-button">保存</button><button class="small-button">提交</button><button class="small-button">审核</button></span>
+                    </div>
+                    <div class="scroll-region" data-testid="pt006-node-scroll">
+                      <div class="section-label">订单基本信息</div>
+                      <div class="field-grid">
+                        <div class="form-field"><div class="field-label"><span class="required">*</span>客户</div><div class="field-value">南京星河科技有限公司<i data-lucide="chevron-down"></i></div></div>
+                        <div class="form-field"><div class="field-label"><span class="required">*</span>订单日期</div><div class="field-value">2026-07-10<i data-lucide="calendar-days"></i></div></div>
+                        <div class="form-field"><div class="field-label">销售组织</div><div class="field-value">华东大区 / 南京分公司<i data-lucide="chevron-down"></i></div></div>
+                        <div class="form-field"><div class="field-label">销售员</div><div class="field-value">王明<i data-lucide="chevron-down"></i></div></div>
+                        <div class="form-field"><div class="field-label">币别</div><div class="field-value">人民币 CNY<i data-lucide="chevron-down"></i></div></div>
+                        <div class="form-field"><div class="field-label">含税金额</div><div class="field-value muted">¥ 83,520.00</div></div>
+                      </div>
+                      <div class="content-divider"></div>
+                      <div class="section-label">补充说明</div>
+                      <div class="note-block">该内容区独立滚动，顶部业务操作条保持可见；右侧辅助栏维持客户信用与历史订单上下文。</div>
+                    </div>
+                  </section>
+                  <button class="split-handle" data-testid="pt006-split-handle" title="调整主区与辅助栏宽度" aria-label="调整主区与辅助栏宽度"></button>
+                  <aside class="split-aside">
+                    <div class="aside-heading"><i data-lucide="book-user"></i>客户辅助信息</div>
+                    <div class="metric"><div class="metric-label">可用信用额度</div><div class="metric-value">¥ 268,400.00</div></div>
+                    <div class="metric"><div class="metric-label">应收余额</div><div class="metric-value">¥ 31,860.00</div></div>
+                    <div class="metric"><div class="metric-label">最近下单</div><div class="metric-value">2026-06-28</div></div>
+                    <div class="history-item"><div class="history-title">SO-20260628-0012</div><div class="history-meta">已完成 · ¥ 26,880.00</div></div>
+                    <div class="history-item"><div class="history-title">SO-20260602-0038</div><div class="history-meta">已完成 · ¥ 18,600.00</div></div>
+                  </aside>
+                </div>
+              </div>
+
+              <div class="tab-panel" id="panel-delivery" data-panel="delivery" role="tabpanel" hidden>
+                <div class="split-layout">
+                  <section class="split-main">
+                    <div class="sticky-actions"><span class="sticky-label"><i data-lucide="truck"></i>交付操作 <span class="state-chip active">Sticky</span></span><span class="action-set"><button class="small-button">校验地址</button><button class="small-button">计算运费</button></span></div>
+                    <div class="scroll-region">
+                      <div class="section-label">物流与交付</div>
+                      <div class="field-grid">
+                        <div class="form-field"><div class="field-label"><span class="required">*</span>收货仓库</div><div class="field-value">南京江北中心仓<i data-lucide="chevron-down"></i></div></div>
+                        <div class="form-field"><div class="field-label"><span class="required">*</span>要求交期</div><div class="field-value">2026-07-18<i data-lucide="calendar-days"></i></div></div>
+                        <div class="form-field"><div class="field-label">运输方式</div><div class="field-value">公路整车<i data-lucide="chevron-down"></i></div></div>
+                        <div class="form-field"><div class="field-label">联系人</div><div class="field-value">陈晓 · 138****2761</div></div>
+                      </div>
+                      <div class="content-divider"></div>
+                      <div class="note-block">交付页签已激活。页签状态、面包屑和右侧 Inspector 使用同一 `data-active-tab` 状态同步更新。</div>
+                    </div>
+                  </section>
+                  <button class="split-handle" title="调整主区与辅助栏宽度" aria-label="调整主区与辅助栏宽度"></button>
+                  <aside class="split-aside"><div class="aside-heading"><i data-lucide="map-pinned"></i>交付校验</div><div class="metric"><div class="metric-label">地址完整度</div><div class="metric-value">已通过</div></div><div class="metric"><div class="metric-label">预计运输时长</div><div class="metric-value">2 天</div></div><div class="metric"><div class="metric-label">预计运费</div><div class="metric-value">¥ 1,280.00</div></div></aside>
+                </div>
+              </div>
+
+              <div class="tab-panel" id="panel-attachments" data-panel="attachments" role="tabpanel" hidden>
+                <div class="scroll-region"><div class="section-label">订单附件</div><div class="note-block">报价单、合同与客户盖章文件在此集中管理。</div></div>
+              </div>
+            </section>
+          </article>
+        </div>
+      </section>
+
+      <aside class="inspector-panel" data-testid="workbench-region-right">
+        <div class="panel-header"><span class="panel-title">属性</span><span class="state-chip active">已同步</span><button class="icon-button" title="收起属性面板" aria-label="收起属性面板"><i data-lucide="panel-right-close"></i></button></div>
+        <div class="panel-body" style="padding:0">
+          <div class="inspector-context"><div class="context-title" data-testid="pt006-inspector-title">订单信息页签</div><div class="context-path" data-testid="pt006-inspector-path">PageRoot.OrderTabs.tabs[basic]</div></div>
+          <div class="inspector-tabs"><button class="inspector-tab active">布局</button><button class="inspector-tab">交互</button><button class="inspector-tab">样式</button></div>
+          <div class="property-section">
+            <div class="property-title">Tabs</div>
+            <div class="property-row"><span class="property-label">activeKey</span><span class="property-value" data-testid="pt006-active-key">basic</span></div>
+            <div class="property-row"><span class="property-label">页签数</span><span class="property-value">3</span></div>
+            <div class="property-row"><span class="property-label">可关闭</span><span class="property-value">关闭</span></div>
+          </div>
+          <div class="property-section">
+            <div class="property-title">Split</div>
+            <div class="property-row"><span class="property-label">主区</span><span class="property-value">calc(100% - 223px)</span></div>
+            <div class="property-row"><span class="property-label">辅助栏</span><span class="property-value">214 px</span></div>
+            <div class="property-row"><span class="property-label">可调整</span><span class="property-value"><span>开启</span><span class="switch"></span></span></div>
+          </div>
+          <div class="property-section">
+            <div class="property-title">Scroll / Sticky</div>
+            <div class="property-row"><span class="property-label">滚动方向</span><span class="property-value">vertical</span></div>
+            <div class="property-row"><span class="property-label">stickyTop</span><span class="property-value">0 px</span></div>
+            <div class="property-row"><span class="property-label">操作条</span><span class="property-value"><span>固定</span><span class="switch"></span></span></div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="status-bar" data-testid="workbench-region-bottom">
+      <div class="status-main"><span class="status-dot"></span><strong data-testid="pt006-status-title">复合布局就绪</strong><span data-testid="pt006-status-message">Tabs / Split / Scroll / Sticky 结构校验通过</span></div>
+      <div class="status-metrics"><span>容器 4</span><span class="separator"></span><span>节点 18</span><span class="separator"></span><span>画布 100%</span><span class="separator"></span><span>1440 工作区</span></div>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.querySelector('[data-testid="pt006-v2-root"]');
+      var breadcrumb = document.querySelector('[data-testid="pt006-breadcrumb"]');
+      var inspectorTitle = document.querySelector('[data-testid="pt006-inspector-title"]');
+      var inspectorPath = document.querySelector('[data-testid="pt006-inspector-path"]');
+      var activeKey = document.querySelector('[data-testid="pt006-active-key"]');
+      var statusMessage = document.querySelector('[data-testid="pt006-status-message"]');
+      var tabNames = { basic: '基本信息', delivery: '物流与交付', attachments: '附件' };
+
+      document.querySelectorAll('.tab-button[data-tab]').forEach(function (button) {
+        button.addEventListener('click', function () {
+          var nextTab = button.getAttribute('data-tab');
+          root.setAttribute('data-active-tab', nextTab);
+
+          document.querySelectorAll('.tab-button[data-tab]').forEach(function (item) {
+            item.setAttribute('aria-selected', String(item === button));
+          });
+
+          document.querySelectorAll('.tab-panel[data-panel]').forEach(function (panel) {
+            panel.hidden = panel.getAttribute('data-panel') !== nextTab;
+          });
+
+          breadcrumb.textContent = '页面根节点 / 订单信息页签 / ' + tabNames[nextTab];
+          inspectorTitle.textContent = tabNames[nextTab] + '页签';
+          inspectorPath.textContent = 'PageRoot.OrderTabs.tabs[' + nextTab + ']';
+          activeKey.textContent = nextTab;
+          statusMessage.textContent = '已激活“' + tabNames[nextTab] + '”，画布与 Inspector 已同步';
+        });
+      });
+
+      if (window.lucide) {
+        window.lucide.createIcons({ attrs: { 'aria-hidden': 'true' } });
+      }
+    }());
+  </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 > 版本：v0.1
 > 所属里程碑：M0 元模型内核
 > 依赖：T-003
-> 输入：`../03-需求/PRD-产品需求规格说明书.md`、`../04-架构决策/00-总体架构与技术选型.md`、`../04-架构决策/01-元模型设计.md`、`../07-知识库同步/07-低代码平台级架构陷阱与高难度问题清单.md`、`08-详细设计总纲.md`、公共工程规范 00/11/22/23/24/25、`../04-架构决策/ADR/ADR-LOWCODE-DM-001-minimal-domain-model.md`、`../04-架构决策/ADR/ADR-LOWCODE-ID-001-snowflake-ulid-code.md`、`../04-架构决策/ADR/ADR-LOWCODE-STORE-001-json-relational-hybrid.md`、`../04-架构决策/ADR/ADR-LOWCODE-PUBLISH-001-persistent-publish-pipeline.md`、`../04-架构决策/ADR/ADR-LOWCODE-FIELDTYPE-SPI-001-field-type-handler-spi.md`
+> 输入：`../03-需求/PRD-产品需求规格说明书.md`、`../04-架构决策/00-总体架构与技术选型.md`、`../04-架构决策/01-元模型设计.md`、`../07-知识库同步/07-低代码平台级架构陷阱与高难度问题清单.md`、`08-详细设计总纲.md`、`../../../../工程规范/低代码平台规范/06-陷阱覆盖矩阵.md`、`../../../../工程规范/通用规范/02-数据与API规范.md`、`../../../../工程规范/通用规范/06-模块兼容与发布规范.md`、`../../../../工程规范/通用规范/07-配置错误恢复与可观测性规范.md`、`../../../../工程规范/低代码平台规范/01-元模型与物理存储契约.md`、`../../../../工程规范/低代码平台规范/05-发布安全运维与测试契约.md`、`../04-架构决策/ADR/ADR-LOWCODE-DM-001-minimal-domain-model.md`、`../04-架构决策/ADR/ADR-LOWCODE-ID-001-id-strategy.md`、`../04-架构决策/ADR/ADR-LOWCODE-STORE-001-metadata-json-aggregate.md`、`../04-架构决策/ADR/ADR-LOWCODE-PUBLISH-001-persistent-publish-pipeline.md`、`../04-架构决策/ADR/ADR-LOWCODE-FIELDTYPE-SPI-001-field-type-handler-spi.md`
 
 ---
 
@@ -87,7 +87,7 @@ BLOCKED_UNSUPPORTED_FIELD_TYPE
 
 ## 5. FieldTypeHandler DDL 映射
 
-T-004 必须按 ADR-LOWCODE-FIELDTYPE-SPI-001 实现字段类型处理器注册表。Schema Sync 只消费 `FieldTypeHandler.ddlMapping`、`comparePhysicalColumn`、`capabilities` 与 DDL 契约向量，不得自行散落 `switch(field_type)`。公共工程规范 11 与 23 的字段类型表格是人工可读索引，不能成为第二套事实源。
+T-004 必须按 ADR-LOWCODE-FIELDTYPE-SPI-001 实现字段类型处理器注册表。Schema Sync 只消费 `FieldTypeHandler.ddlMapping`、`comparePhysicalColumn`、`capabilities` 与 DDL 契约向量，不得自行散落 `switch(field_type)`。`../../../../工程规范/低代码平台规范/01-元模型与物理存储契约.md` 的字段类型表格是人工可读索引，不能成为第二套事实源。
 
 ```java
 public interface FieldTypeHandler {
@@ -99,7 +99,7 @@ public interface FieldTypeHandler {
 }
 ```
 
-人工索引对齐公共工程规范 11 和 23；可执行事实源是 `FieldTypeHandler` 实现和 `contractVectors`，不得维护第二套隐藏映射。
+人工索引对齐 `../../../../工程规范/低代码平台规范/01-元模型与物理存储契约.md`；可执行事实源是 `FieldTypeHandler` 实现和 `contractVectors`，不得维护第二套隐藏映射。
 
 重点：
 
@@ -220,7 +220,7 @@ abandon(taskId): 标记 ABANDONED，仅允许在无执行中 step 时操作
 
 ## 9. DDL 日志
 
-使用公共工程规范 22 中 `lc_rt_ddl_log` 草案。该表由 T-002 创建；T-004 启动时必须检查日志表存在，不存在直接失败并提示先执行 T-002 迁移。
+使用 `../../../../工程规范/低代码平台规范/05-发布安全运维与测试契约.md` §1.1 的 `lc_rt_ddl_log` 契约。该表由 T-002 创建；T-004 启动时必须检查日志表存在，不存在直接失败并提示先执行 T-002 迁移。
 
 错误信息必须脱敏，不记录业务数据值。
 

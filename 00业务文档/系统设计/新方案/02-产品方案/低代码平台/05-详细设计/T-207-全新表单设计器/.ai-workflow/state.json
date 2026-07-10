@@ -1,0 +1,293 @@
+﻿{
+    "version":  "1.0",
+    "project":  {
+                    "name":  "T-207 全新表单设计器",
+                    "description":  "面向企业 PC Web 单据、复杂表单、主数据维护、审批页和业务工作台的 IDE 级可见即可得页面设计器。",
+                    "createdAt":  "2026-07-09",
+                    "updatedAt":  "2026-07-09T18:45:00+08:00"
+                },
+    "phases":  {
+                   "需求规格":  {
+                                "status":  "completed",
+                                "startedAt":  "2026-07-09T16:00:00+08:00",
+                                "completedAt":  "2026-07-09T16:30:00+08:00",
+                                "deliverable":  "D:\\mywork\\techdoc\\00业务文档\\系统设计\\新方案\\02-产品方案\\低代码平台\\05-详细设计\\T-207-全新表单设计器\\01-产品定位与范围\\T-207-全新表单设计器-需求规格文档.md",
+                                "selfCheck":  {
+                                                  "passed":  true,
+                                                  "items":  [
+                                                                {
+                                                                    "item":  "功能点编号连续无重复",
+                                                                    "passed":  true,
+                                                                    "evidence":  "需求规格第2章 F-001 至 F-035"
+                                                                },
+                                                                {
+                                                                    "item":  "每个功能点包含名称、描述、输入、输出、优先级",
+                                                                    "passed":  true,
+                                                                    "evidence":  "需求规格第2章功能需求清单"
+                                                                },
+                                                                {
+                                                                    "item":  "功能点描述具体且可验收",
+                                                                    "passed":  true,
+                                                                    "evidence":  "需求规格第10章需求质量矩阵"
+                                                                },
+                                                                {
+                                                                    "item":  "优先级 P0/P1/P2 有边界依据",
+                                                                    "passed":  true,
+                                                                    "evidence":  "需求规格第2章、第5章"
+                                                                },
+                                                                {
+                                                                    "item":  "超出范围明确标注",
+                                                                    "passed":  true,
+                                                                    "evidence":  "需求规格第5章 OOS-001 至 OOS-008"
+                                                                },
+                                                                {
+                                                                    "item":  "约束与假设合理且明确",
+                                                                    "passed":  true,
+                                                                    "evidence":  "需求规格第4章 C-001 至 C-008、A-001 至 A-005"
+                                                                },
+                                                                {
+                                                                    "item":  "对照用户场景无明显逻辑遗漏",
+                                                                    "passed":  true,
+                                                                    "evidence":  "需求规格第7章角色-场景-目标矩阵、第9章业务闭环样例"
+                                                                },
+                                                                {
+                                                                    "item":  "状态文件 metadata.qualityLevel 已记录并与需求规格第6章一致",
+                                                                    "passed":  true,
+                                                                    "evidence":  "metadata.qualityLevel=L4；需求规格第6.1节 qualityLevel=L4"
+                                                                },
+                                                                {
+                                                                    "item":  "对照流程规范 §2.8 复杂度判定规则逐项验证完成",
+                                                                    "passed":  true,
+                                                                    "evidence":  "需求规格第6.2节触发条件逐项命中"
+                                                                },
+                                                                {
+                                                                    "item":  "每个 P0 需求绑定角色、场景和验收断言",
+                                                                    "passed":  true,
+                                                                    "evidence":  "需求规格第10章 F-001 至 F-023"
+                                                                },
+                                                                {
+                                                                    "item":  "不存在平台能力但无业务闭环样例承接",
+                                                                    "passed":  true,
+                                                                    "evidence":  "需求规格第9章覆盖 RuntimeRenderer、Analyzer、SchemaNormalizer、PageSchema、自动化抓手"
+                                                                },
+                                                                {
+                                                                    "item":  "数据、权限、状态、规则、发布、审计需求边界明确",
+                                                                    "passed":  true,
+                                                                    "evidence":  "需求规格第3章、第4章、第8章、第9章"
+                                                                },
+                                                                {
+                                                                    "item":  "无不可验收表述作为通过依据",
+                                                                    "passed":  true,
+                                                                    "evidence":  "需求规格第10章均使用可观察断言"
+                                                                }
+                                                            ]
+                                              },
+                                "notes":  "已按 AI 研发流程规范 v2.8.2 生成阶段 1 正式需求规格；2026-07-09 因 09 原型暴露设计器子系统门禁缺口，已回退补充 F-023 设计器子系统门禁，并将 P1/P2 编号顺延至 F-035。",
+                                "reviewConclusion":  "passed_with_rework_note",
+                                "blockingIssuesCount":  0,
+                                "reviewRounds":  0,
+                                "reviewHistory":  [
+
+                                                  ],
+                                "completedTasks":  [
+
+                                                   ]
+                            },
+                   "功能设计":  {
+                                "status":  "in_progress",
+                                "startedAt":  "2026-07-09T16:45:00+08:00",
+                                "deliverable":  "D:\\mywork\\techdoc\\00业务文档\\系统设计\\新方案\\02-产品方案\\低代码平台\\05-详细设计\\T-207-全新表单设计器\\02-信息架构与工作台\\T-207-全新表单设计器-功能规格文档.md",
+                                "selfCheck":  {
+                                                  "passed":  false,
+                                                  "items":  [
+                                                                {
+                                                                    "item":  "需求功能点覆盖率 100%",
+                                                                    "passed":  true,
+                                                                    "evidence":  "功能规格第1章 F-001 至 F-023 映射 FD-001 至 FD-023"
+                                                                },
+                                                                {
+                                                                    "item":  "业务流程覆盖主流程与异常流程",
+                                                                    "passed":  true,
+                                                                    "evidence":  "功能规格第2章"
+                                                                },
+                                                                {
+                                                                    "item":  "业务规则使用 R-XXX 编号且可追溯需求",
+                                                                    "passed":  true,
+                                                                    "evidence":  "功能规格第3章 R-001 至 R-027"
+                                                                },
+                                                                {
+                                                                    "item":  "业务状态与页面状态分开描述",
+                                                                    "passed":  true,
+                                                                    "evidence":  "功能规格第4章"
+                                                                },
+                                                                {
+                                                                    "item":  "数据流和生命周期明确",
+                                                                    "passed":  true,
+                                                                    "evidence":  "功能规格第5章"
+                                                                },
+                                                                {
+                                                                    "item":  "既有功能边界明确",
+                                                                    "passed":  true,
+                                                                    "evidence":  "功能规格第6章"
+                                                                },
+                                                                {
+                                                                    "item":  "复杂 UI 工作台强制触发条件逐项命中",
+                                                                    "passed":  true,
+                                                                    "evidence":  "功能规格第7.2节"
+                                                                },
+                                                                {
+                                                                    "item":  "页面原型 PT 不少于 12 张",
+                                                                    "passed":  true,
+                                                                    "evidence":  "PT-001 至 PT-024，共24张；PT-019 至 PT-024 为 09 原型 rework 必补图件"
+                                                                },
+                                                                {
+                                                                    "item":  "交互流 IX 不少于 10 条",
+                                                                    "passed":  true,
+                                                                    "evidence":  "IX-001 至 IX-019，共19条；IX-016 至 IX-019 为 09 原型 rework 必补交互"
+                                                                },
+                                                                {
+                                                                    "item":  "页面状态 PS 不少于 8 组",
+                                                                    "passed":  true,
+                                                                    "evidence":  "PS-001 至 PS-018，共18组；PS-015 至 PS-018 为 09 原型 rework 必补状态"
+                                                                },
+                                                                {
+                                                                    "item":  "N/A 替代图件覆盖缺口为空",
+                                                                    "passed":  true,
+                                                                    "evidence":  "无 N/A，所有强制项直接覆盖"
+                                                                },
+                                                                {
+                                                                    "item":  "矩阵化设计覆盖角色、状态、权限、规则、异常",
+                                                                    "passed":  true,
+                                                                    "evidence":  "功能规格第9章"
+                                                                },
+                                                                {
+                                                                    "item":  "功能规格可直接支撑任务分解和测试用例生成",
+                                                                    "passed":  true,
+                                                                    "evidence":  "功能规格第11章"
+                                                                },
+                                                                {
+                                                                    "item":  "P0 功能交互规格覆盖 FD-001 至 FD-023",
+                                                                    "passed":  true,
+                                                                    "evidence":  "功能规格第8章"
+                                                                },
+                                                                {
+                                                                    "item":  "ND 标识与阶段 1 需求规格一致",
+                                                                    "passed":  true,
+                                                                    "evidence":  "功能规格第7.6.1节"
+                                                                },
+                                                                {
+                                                                    "item":  "自动化测试抓手具备 data-testid、稳定 ID 和交互完成信号",
+                                                                    "passed":  true,
+                                                                    "evidence":  "功能规格第7.5节；新增 palette/activity/drag ghost/illegal dropzone/reject reason 合同"
+                                                                },
+                                                                {
+                                                                    "item":  "Stage 3 输入合同覆盖发布/回滚、兼容迁移、Gate ownership、CommandStack 边界",
+                                                                    "passed":  true,
+                                                                    "evidence":  "功能规格第9.7节"
+                                                                },
+                                                                {
+                                                                    "item":  "humanReviewGate.status = completed 且全部 PT/IX/PS 图件经用户确认",
+                                                                    "passed":  false,
+                                                                    "evidence":  "humanReviewGate.status=pending；实际原型图和交互图将在09产出后交由用户人工检查"
+                                                                }
+                                                            ]
+                                              },
+                                "notes":  "09 原型预评审发现左侧组件资产体系、Outline Tree 独立态和设计器子系统门禁不足；已回退补充设计器子系统拆解、Component Palette、BO Field Tree、Outline Tree、Publish/Version、非法投放、自动化抓手合同，并定向回退 03/08 统一资产翻译与测试抓手。阶段 2/09 在重做 PT-019 至 PT-024、IX-016 至 IX-019、PS-015 至 PS-018 并经用户人工检查前不得完成。",
+                                "reviewConclusion":  "rework_required",
+                                "blockingIssuesCount":  1,
+                                "pendingGate":  "designerSubsystemReworkGate",
+                                "reviewRounds":  1,
+                                "reviewHistory":  [
+                                                      {
+                                                          "round":  1,
+                                                          "blockingIssues":  2,
+                                                          "conclusion":  "failed",
+                                                          "artifact":  "C:\\Users\\16555\\Documents\\Codex\\2026-07-08\\plugin-computer-use-openai-bundled-play\\.omx\\artifacts\\claude-t207-stage2-review-2026-07-09T08-28-08-637Z.md",
+                                                          "fixed":  true,
+                                                          "fixSummary":  "已补齐第8章 FD-001 至 FD-022，新增 R-016、ND 对齐表，并将阶段状态从 completed 调整为 in_progress。"
+                                                      },
+                                                      {
+                                                          "round":  2,
+                                                          "blockingIssues":  5,
+                                                          "conclusion":  "fixed_after_adversarial_review",
+                                                          "artifact":  "multi-agent adversarial review in current Codex thread",
+                                                          "fixed":  true,
+                                                          "fixSummary":  "已按对抗/测试/架构评审补强表格分页与虚拟滚动、性能指标、P1能力阻断、抓手契约、Section readonly、发布回滚原子语义、兼容迁移、Gate ownership 和 CommandStack 边界。"
+                                                      }
+                                                  ],
+                                "completedTasks":  [
+
+                                                   ],
+                                "humanReviewGate":  {
+                                                        "required":  true,
+                                                        "trigger":  "09-交互原型与视觉规范完成全部 PT-001 至 PT-024、IX-001 至 IX-019、PS-001 至 PS-018 后",
+                                                        "status":  "pending",
+                                                        "reviewer":  "user",
+                                                        "notes":  "用户要求原型图和交互图全部出来后进行人工检查；未完成用户人工检查前，原型和交互图不得标记为最终通过。"
+                                                    },
+                                "designerSubsystemReworkGate":  {
+                                                                    "required":  true,
+                                                                    "trigger":  "09 原型发现左侧组件资产体系、拖拽投放或任一设计器子系统缺少操作模型",
+                                                                    "status":  "pending",
+                                                                    "reviewer":  "user",
+                                                                    "notes":  "必须补齐设计器子系统拆解、Component Palette、BO Field Tree、Outline Tree、Publish/Version、合法/非法投放和端到端建模主路径，并重做 09 原型后交用户人工检查。"
+                                                                }
+                            },
+                   "详细设计":  {
+                                "status":  "pending",
+                                "deliverable":  "D:\\mywork\\techdoc\\00业务文档\\系统设计\\新方案\\02-产品方案\\低代码平台\\05-详细设计\\T-207-全新表单设计器\\07-Schema与运行时架构\\T-207-全新表单设计器-技术设计文档.md"
+                            },
+                   "自我评审":  {
+                                "status":  "pending",
+                                "deliverable":  "D:\\mywork\\techdoc\\00业务文档\\系统设计\\新方案\\02-产品方案\\低代码平台\\05-详细设计\\T-207-全新表单设计器\\99-流程合规与评审\\T-207-全新表单设计器-自我评审报告.md"
+                            },
+                   "测试规格":  {
+                                "status":  "pending",
+                                "deliverable":  "D:\\mywork\\techdoc\\00业务文档\\系统设计\\新方案\\02-产品方案\\低代码平台\\05-详细设计\\T-207-全新表单设计器\\08-测试验收与质量门禁\\T-207-全新表单设计器-测试用例规格.md"
+                            },
+                   "任务分解":  {
+                                "status":  "pending",
+                                "deliverable":  "D:\\mywork\\techdoc\\00业务文档\\系统设计\\新方案\\02-产品方案\\低代码平台\\05-详细设计\\T-207-全新表单设计器\\99-流程合规与评审\\T-207-全新表单设计器-开发任务列表.md"
+                            },
+                   "实现":  {
+                              "status":  "pending"
+                          },
+                   "代码自审":  {
+                                "status":  "pending"
+                            },
+                   "测试执行":  {
+                                "status":  "pending"
+                            },
+                   "集成测试":  {
+                                "status":  "pending"
+                            },
+                   "回归测试":  {
+                                "status":  "pending"
+                            }
+               },
+    "changes":  [
+
+                ],
+    "metadata":  {
+                     "lastUpdated":  "2026-07-09T18:45:00+08:00",
+                     "lastPhase":  "功能设计回退修复",
+                     "totalPhases":  11,
+                     "completedPhases":  1,
+                     "qualityLevel":  "L4",
+                     "qualityReason":  [
+                                           "涉及多角色、多 UI 状态、权限、审计、发布、回滚和自动化质量门禁",
+                                           "产物包含 PageSchema、RuntimeRenderer、SchemaNormalizer、AnalyzerPipeline 等平台元模型和运行时基础设施",
+                                           "发布后的 Schema 会驱动多个业务单据、主数据、审批和工作台页面",
+                                           "需要兼容旧 Schema 结构并支持版本历史和回滚"
+                                       ],
+                     "strictGates":  [
+                                         "stage-1-requirement-matrix",
+                                         "stage-2-pt-ix-ps-complex-ui-gate",
+                                         "stage-2-prototype-human-review",
+                                         "stage-3-adr-compatibility-migration-threat-rollback",
+                                         "stage-5-test-matrix-with-pt-ix-ps",
+                                         "stage-2-designer-subsystem-gate",
+                                         "stage-9-component-palette-human-review"
+                                     ]
+                 }
+}

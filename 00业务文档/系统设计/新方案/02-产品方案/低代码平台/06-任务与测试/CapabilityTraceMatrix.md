@@ -1,6 +1,6 @@
 # CapabilityTraceMatrix
 
-> 本矩阵用于阶段 6A 开发准入。2026-07-06 已完成 M0 范围精确核验：M0 只覆盖 T-001~T-005 元模型内核；M1/M2/M3 能力不作为 M0 开工阻断。
+> 本矩阵用于阶段 6A 开发准入。2026-07-10 复核：M0 只覆盖 T-001~T-005 元模型内核；M1/M2/M3 能力不作为 M0 开工阻断。表内 `covered` 表示产品需求已有设计承接，不表示所引用的 proposed ADR 已批准；其精确类名、字段、表结构、枚举和算法仍受详细设计 README 的 ADR 状态门禁约束。
 
 ## 1. M0 must 能力追踪
 
@@ -28,11 +28,10 @@
 |---|---|---|
 | M0 must 能力是否存在 missing | pass | CAP-LCDP-M0-001~005 均为 covered |
 | M0 must 能力是否有 PRD 引用 | pass | 均引用到 REQ/DEC-REQ |
-| M0 must 能力是否有 ADR 或设计承接 | pass | 高风险能力均有 accepted / accepted for M0 ADR 或明确 proposed 预留边界 |
+| M0 must 能力是否有 ADR 或设计承接 | conditional-pass | accepted M0 能力可实现；proposed ADR 只允许契约中性预留和误执行阻断，精确结构须先终审 |
 | M0 must 能力是否有 T-001~T-005 详细设计 | pass | 均指向具体 T-00x 文件 |
 | M0 must 能力是否有任务卡 | pass | 均指向 `04-任务分配计划.md` T-001~T-005 |
 | M0 must 能力是否有 M0 测试规格 | pass | 均指向 `测试规格/M0-测试规格.md` 具体章节 |
 | M1/M2/M3 能力是否误阻断 M0 | pass | 均标记 `not-applicable-for-M0` |
 
-结论：`M0-ready`。本结论只允许进入 M0 元模型内核代码生成；M1/M2/M3 仍需按里程碑门禁推进。
-
+结论：`M0-ready-with-ADR-gates`。可进入 accepted M0 元模型内核实现；来自 proposed ADR 的精确字段、DTO、枚举、校验器和算法不在准入范围，M1/M2/M3 仍需按里程碑门禁推进。

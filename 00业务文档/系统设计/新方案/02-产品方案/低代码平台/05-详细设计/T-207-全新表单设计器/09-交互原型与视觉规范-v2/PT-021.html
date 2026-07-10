@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PT-021 不可投放态</title>
+  <style>
+    :root {
+      --bg: #eef2f6;
+      --panel: #ffffff;
+      --panel-soft: #f7f9fc;
+      --text: #1f2937;
+      --muted: #667085;
+      --border: #d7dee8;
+      --primary: #2468c9;
+      --primary-soft: #eaf2ff;
+      --success: #19733f;
+      --danger: #c73535;
+      --danger-soft: #fff1f1;
+      --warning: #b76e00;
+      --shadow: 0 10px 24px rgba(31, 41, 55, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      min-width: 1440px;
+      min-height: 900px;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font: 13px/1.5 "Microsoft YaHei UI", "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    button, input {
+      font: inherit;
+    }
+
+    button {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      height: 30px;
+      padding: 0 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+    }
+
+    button:hover:not(:disabled) {
+      border-color: #b9c6d8;
+      background: #f8fbff;
+    }
+
+    button:disabled {
+      color: #98a2b3;
+      background: #f4f6f8;
+      cursor: not-allowed;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 48px 244px 1fr 304px;
+      grid-template-rows: 48px 1fr;
+      width: 1440px;
+      height: 900px;
+      margin: 0 auto;
+      background: var(--bg);
+    }
+
+    .topbar {
+      grid-column: 1 / 5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--border);
+      background: var(--panel);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      background: var(--primary);
+      box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.22);
+    }
+
+    .brand-text {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .brand-meta {
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .topbar-actions,
+    .toolbar-group,
+    .status-row,
+    .section-head,
+    .detail-row,
+    .meta-row,
+    .field-row,
+    .canvas-toolbar,
+    .issue-tabs,
+    .footer-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .topbar-actions {
+      justify-content: flex-end;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #1f5ab0;
+      border-color: #1f5ab0;
+    }
+
+    .btn-danger {
+      border-color: #e4b4b4;
+      color: var(--danger);
+      background: #fff7f7;
+    }
+
+    .activitybar {
+      grid-row: 2;
+      background: #f7f9fc;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0;
+      gap: 10px;
+    }
+
+    .nav-dot {
+      width: 30px;
+      height: 30px;
+      border-radius: 4px;
+      border: 1px solid transparent;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      background: transparent;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .nav-dot.active {
+      color: var(--primary);
+      border-color: #bfd2f0;
+      background: var(--primary-soft);
+    }
+
+    .sidebar,
+    .inspector,
+    .canvas {
+      grid-row: 2;
+      min-height: 0;
+    }
+
+    .sidebar,
+    .inspector {
+      background: var(--panel);
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+    }
+
+    .inspector {
+      border-right: 0;
+      border-left: 1px solid var(--border);
+    }
+
+    .panel-title {
+      padding: 14px 16px 10px;
+      font-size: 15px;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-scroll {
+      padding: 12px 16px 16px;
+      overflow: auto;
+    }
+
+    .chip {
+      height: 24px;
+      padding: 0 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .chip-danger {
+      color: var(--danger);
+      background: var(--danger-soft);
+      border-color: #efc2c2;
+    }
+
+    .chip-muted {
+      color: var(--muted);
+      background: #f5f7fa;
+      border-color: #e6ebf2;
+    }
+
+    .summary-card,
+    .issue-card,
+    .inspector-card,
+    .canvas-shell,
+    .footer-note {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .summary-card {
+      margin-bottom: 12px;
+      padding: 12px;
+      background: linear-gradient(0deg, #ffffff, #ffffff), var(--panel);
+    }
+
+    .summary-title,
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .summary-copy,
+    .helper-text,
+    .meta-label,
+    .field-note,
+    .issue-hint,
+    .footer-copy {
+      color: var(--muted);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .metric {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px;
+      background: var(--panel-soft);
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .metric-value {
+      margin-top: 4px;
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .issue-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .issue-card {
+      padding: 10px 12px;
+      cursor: pointer;
+      box-shadow: none;
+    }
+
+    .issue-card.active {
+      border-color: #9ebbe8;
+      background: var(--primary-soft);
+    }
+
+    .issue-card .section-head {
+      justify-content: space-between;
+    }
+
+    .issue-title {
+      font-weight: 600;
+    }
+
+    .issue-badge {
+      font-size: 12px;
+      color: var(--warning);
+      background: #fff5e8;
+      border: 1px solid #f2d3a4;
+      border-radius: 999px;
+      padding: 0 8px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .canvas {
+      padding: 14px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .canvas-toolbar {
+      justify-content: space-between;
+      min-height: 32px;
+    }
+
+    .toolbar-left,
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .canvas-shell {
+      flex: 1;
+      padding: 16px;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 12px;
+      min-height: 0;
+      background: #f8fafc;
+    }
+
+    .banner {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      border: 1px solid #efc2c2;
+      background: var(--danger-soft);
+      border-radius: 4px;
+      padding: 12px 14px;
+    }
+
+    .banner-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--danger);
+    }
+
+    .banner-list {
+      margin: 6px 0 0;
+      padding-left: 18px;
+      color: #7a2e2e;
+    }
+
+    .status-strip {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .status-panel {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #fff;
+      padding: 10px 12px;
+    }
+
+    .status-panel.active {
+      border-color: #9ebbe8;
+      background: #f7fbff;
+    }
+
+    .status-panel .section-head {
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .canvas-form {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #fff;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 292px;
+      min-height: 0;
+    }
+
+    .form-main {
+      padding: 16px;
+      border-right: 1px solid var(--border);
+    }
+
+    .form-side {
+      padding: 16px;
+      background: #fbfcfe;
+    }
+
+    .form-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .form-subtitle {
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .field-group {
+      margin-top: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .field-row {
+      align-items: flex-start;
+      justify-content: space-between;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px 12px;
+      background: #fff;
+      gap: 12px;
+    }
+
+    .field-row.error {
+      border-color: #efc2c2;
+      background: #fff9f9;
+    }
+
+    .field-label {
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .field-tag {
+      white-space: nowrap;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .mapping-card {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #fff;
+      padding: 12px;
+    }
+
+    .mapping-table {
+      margin-top: 8px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .mapping-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 4px;
+      background: var(--panel-soft);
+      border: 1px solid #e6ebf2;
+    }
+
+    .mapping-row.error {
+      background: #fff7f7;
+      border-color: #efc2c2;
+    }
+
+    .inspector-card {
+      padding: 12px;
+      box-shadow: none;
+      margin-bottom: 10px;
+    }
+
+    .inspector-card.active {
+      border-color: #9ebbe8;
+      background: #f8fbff;
+    }
+
+    .detail-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .detail-block {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #fff;
+      padding: 10px;
+    }
+
+    .detail-block.warn {
+      border-color: #efc2c2;
+      background: #fff8f8;
+    }
+
+    .detail-label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .detail-value {
+      font-weight: 600;
+    }
+
+    .footer-note {
+      padding: 10px 12px;
+      box-shadow: none;
+      background: #fff;
+    }
+
+    .footer-actions {
+      justify-content: space-between;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div
+    class="app"
+    data-prototype="PT-021"
+    data-state="blocked-overview"
+    data-testid="prototype-root"
+    id="prototypeRoot"
+  >
+    <header class="topbar" data-testid="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <div class="brand-text">
+          <div class="brand-title">全新表单设计器</div>
+          <div class="brand-meta">客户入驻申请 · 当前版本不可投放</div>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button type="button" data-testid="btn-preview">预览</button>
+        <button type="button" data-testid="btn-save">保存草稿</button>
+        <button
+          type="button"
+          data-testid="btn-deploy"
+          disabled
+          title="存在 3 个阻塞项，修复后才能投放"
+        >
+          投放
+        </button>
+      </div>
+    </header>
+
+    <aside class="activitybar" data-testid="activitybar">
+      <div class="nav-dot active" data-testid="nav-structure">构</div>
+      <div class="nav-dot" data-testid="nav-rules">规</div>
+      <div class="nav-dot" data-testid="nav-publish">发</div>
+      <div class="nav-dot" data-testid="nav-logs">记</div>
+    </aside>
+
+    <section class="sidebar" data-testid="left-panel">
+      <div class="panel-title">投放阻塞摘要</div>
+      <div class="panel-scroll">
+        <div class="summary-card" data-testid="summary-card">
+          <div class="status-row">
+            <span class="chip chip-danger" data-testid="status-chip">不可投放</span>
+            <span class="chip chip-muted" data-testid="status-env">生产环境校验</span>
+          </div>
+          <div class="summary-title" style="margin-top: 10px;">当前表单未通过最终投放检查</div>
+          <div class="summary-copy" style="margin-top: 6px;">
+            阻塞项集中在发布配置、字段映射和提交规则。请先处理高优先级问题，再重新校验。
+          </div>
+          <div class="summary-grid">
+            <div class="metric" data-testid="metric-blockers">
+              <div class="metric-label">阻塞项</div>
+              <div class="metric-value">3</div>
+            </div>
+            <div class="metric" data-testid="metric-warnings">
+              <div class="metric-label">提醒项</div>
+              <div class="metric-value">2</div>
+            </div>
+            <div class="metric" data-testid="metric-last-check">
+              <div class="metric-label">最近校验</div>
+              <div class="metric-value" style="font-size: 14px;">09:42</div>
+            </div>
+            <div class="metric" data-testid="metric-owner">
+              <div class="metric-label">责任人</div>
+              <div class="metric-value" style="font-size: 14px;">表单运营组</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-head">
+          <div class="section-title">阻塞明细</div>
+          <button type="button" id="focusIssueBtn" data-testid="btn-focus-issue">定位主阻塞</button>
+        </div>
+        <div class="issue-list" data-testid="issue-list">
+          <button type="button" class="issue-card active" id="issueMapping" data-testid="issue-mapping">
+            <div class="section-head">
+              <span class="issue-title">未绑定提交流程</span>
+              <span class="issue-badge">P0</span>
+            </div>
+            <div class="issue-hint">提交按钮没有关联生产流程 ID，投放后无法进入审批。</div>
+          </button>
+          <button type="button" class="issue-card" id="issueValidation" data-testid="issue-validation">
+            <div class="section-head">
+              <span class="issue-title">实名规则冲突</span>
+              <span class="issue-badge">P1</span>
+            </div>
+            <div class="issue-hint">证件号字段为必填，但前置节点允许匿名跳过，规则互斥。</div>
+          </button>
+          <button type="button" class="issue-card" id="issueChannel" data-testid="issue-channel">
+            <div class="section-head">
+              <span class="issue-title">投放渠道未确认</span>
+              <span class="issue-badge">P1</span>
+            </div>
+            <div class="issue-hint">移动端渠道包未选择，发布范围仍为空。</div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <main class="canvas" data-testid="canvas-area">
+      <div class="canvas-toolbar" data-testid="canvas-toolbar">
+        <div class="toolbar-left">
+          <div class="chip chip-muted" data-testid="toolbar-mode">设计模式</div>
+          <div class="chip chip-muted" data-testid="toolbar-step">发布前检查</div>
+        </div>
+        <div class="toolbar-right">
+          <button type="button" id="switchDetailBtn" data-testid="btn-switch-detail">查看规则详情</button>
+          <button type="button" class="btn-danger" data-testid="btn-blocked-log">阻塞日志</button>
+        </div>
+      </div>
+
+      <div class="canvas-shell" data-testid="canvas-shell">
+        <div class="banner" data-testid="blocked-banner">
+          <div>
+            <div class="banner-title" id="bannerTitle">当前表单不可投放</div>
+            <div class="helper-text" id="bannerCopy" style="margin-top: 4px;">
+              先修复生产流程映射，再同步实名校验规则和渠道配置。
+            </div>
+            <ul class="banner-list" id="bannerList">
+              <li>缺少提交流程 ID，无法创建审批实例。</li>
+              <li>实名规则存在互斥配置，提交后可能被错误驳回。</li>
+              <li>移动端投放范围为空，生产包无法生成。</li>
+            </ul>
+          </div>
+          <button type="button" class="btn-primary" id="resolveNowBtn" data-testid="btn-resolve-now">立即定位</button>
+        </div>
+
+        <div class="status-strip" data-testid="status-strip">
+          <div class="status-panel active" id="panelOverview" data-testid="panel-overview">
+            <div class="section-head">
+              <span class="section-title">发布总览</span>
+              <span class="chip chip-danger">阻塞中</span>
+            </div>
+            <div class="helper-text">本次发布 9 项校验通过，3 项阻塞，2 项提醒。</div>
+          </div>
+          <div class="status-panel" id="panelMapping" data-testid="panel-mapping">
+            <div class="section-head">
+              <span class="section-title">流程绑定</span>
+              <span class="chip chip-muted">未完成</span>
+            </div>
+            <div class="helper-text">提交事件未绑定生产流程，当前使用的是测试流程占位。</div>
+          </div>
+          <div class="status-panel" id="panelRules" data-testid="panel-rules">
+            <div class="section-head">
+              <span class="section-title">校验规则</span>
+              <span class="chip chip-muted">待处理</span>
+            </div>
+            <div class="helper-text">实名字段与匿名入口策略冲突，需要统一。</div>
+          </div>
+        </div>
+
+        <div class="canvas-form" data-testid="form-stage">
+          <div class="form-main">
+            <div class="form-title" data-testid="form-title">客户入驻申请表</div>
+            <div class="form-subtitle" data-testid="form-subtitle">生产投放前配置检查视图</div>
+
+            <div class="field-group" data-testid="field-group">
+              <div class="field-row" data-testid="field-name">
+                <div>
+                  <div class="field-label">企业名称</div>
+                  <div class="field-note">字段编码：company_name，已绑定存储模型。</div>
+                </div>
+                <div class="field-tag">文本输入</div>
+              </div>
+              <div class="field-row error" data-testid="field-id-card">
+                <div>
+                  <div class="field-label">法人证件号</div>
+                  <div class="field-note">规则冲突：字段必填，但匿名入口允许跳过该分组。</div>
+                </div>
+                <div class="field-tag">实名校验</div>
+              </div>
+              <div class="field-row error" data-testid="field-submit">
+                <div>
+                  <div class="field-label">提交动作</div>
+                  <div class="field-note" id="submitFieldNote">未绑定生产流程，当前仅记录草稿，不可投放。</div>
+                </div>
+                <div class="field-tag">事件动作</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-side">
+            <div class="mapping-card" data-testid="mapping-card">
+              <div class="section-head">
+                <span class="section-title">投放检查结果</span>
+                <span class="chip chip-danger" id="sideStateTag">待修复</span>
+              </div>
+              <div class="mapping-table" data-testid="mapping-table">
+                <div class="mapping-row error" data-testid="mapping-row-flow">
+                  <span>提交流程 ID</span>
+                  <strong id="flowStatusText">缺失</strong>
+                </div>
+                <div class="mapping-row error" data-testid="mapping-row-channel">
+                  <span>移动端渠道包</span>
+                  <strong>未选择</strong>
+                </div>
+                <div class="mapping-row" data-testid="mapping-row-storage">
+                  <span>数据模型</span>
+                  <strong style="color: var(--success);">已映射</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-note" data-testid="footer-note">
+          <div class="footer-actions">
+            <div class="footer-copy" id="footerCopy">主阻塞：提交流程未绑定生产 ID，投放按钮保持禁用。</div>
+            <div>
+              <button type="button" data-testid="btn-ignore" disabled title="阻塞项不允许忽略">忽略阻塞</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <aside class="inspector" data-testid="right-panel">
+      <div class="panel-title">属性与修复建议</div>
+      <div class="panel-scroll">
+        <div class="inspector-card active" id="inspectorOverview" data-testid="inspector-overview">
+          <div class="section-title">当前节点</div>
+          <div class="helper-text" id="inspectorNodeName" style="margin-top: 4px;">提交动作 / submit_apply</div>
+          <div class="detail-grid">
+            <div class="detail-block warn" data-testid="detail-owner">
+              <div class="detail-label">阻塞原因</div>
+              <div class="detail-value">未配置生产流程 ID</div>
+            </div>
+            <div class="detail-block" data-testid="detail-impact">
+              <div class="detail-label">影响范围</div>
+              <div class="detail-value">Web、H5、企业微信三端投放</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="inspector-card" id="inspectorAction" data-testid="inspector-action">
+          <div class="section-head">
+            <span class="section-title">修复动作</span>
+            <span class="chip chip-muted" id="inspectorModeTag">总览</span>
+          </div>
+          <div class="detail-grid">
+            <div class="detail-block" data-testid="detail-step-one">
+              <div class="detail-label">步骤 1</div>
+              <div class="detail-value" id="stepOneText">在发布配置中选择已上线审批流程。</div>
+            </div>
+            <div class="detail-block" data-testid="detail-step-two">
+              <div class="detail-label">步骤 2</div>
+              <div class="detail-value" id="stepTwoText">同步实名规则，取消匿名入口或改为选填。</div>
+            </div>
+            <div class="detail-block" data-testid="detail-step-three">
+              <div class="detail-label">步骤 3</div>
+              <div class="detail-value" id="stepThreeText">补齐移动端渠道包后重新执行发布校验。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.getElementById("prototypeRoot");
+      var focusIssueBtn = document.getElementById("focusIssueBtn");
+      var resolveNowBtn = document.getElementById("resolveNowBtn");
+      var switchDetailBtn = document.getElementById("switchDetailBtn");
+      var bannerTitle = document.getElementById("bannerTitle");
+      var bannerCopy = document.getElementById("bannerCopy");
+      var footerCopy = document.getElementById("footerCopy");
+      var flowStatusText = document.getElementById("flowStatusText");
+      var submitFieldNote = document.getElementById("submitFieldNote");
+      var sideStateTag = document.getElementById("sideStateTag");
+      var inspectorNodeName = document.getElementById("inspectorNodeName");
+      var inspectorModeTag = document.getElementById("inspectorModeTag");
+      var stepOneText = document.getElementById("stepOneText");
+      var stepTwoText = document.getElementById("stepTwoText");
+      var stepThreeText = document.getElementById("stepThreeText");
+      var issueMapping = document.getElementById("issueMapping");
+      var issueValidation = document.getElementById("issueValidation");
+      var issueChannel = document.getElementById("issueChannel");
+      var panelOverview = document.getElementById("panelOverview");
+      var panelMapping = document.getElementById("panelMapping");
+      var panelRules = document.getElementById("panelRules");
+
+      function clearIssueActive() {
+        issueMapping.classList.remove("active");
+        issueValidation.classList.remove("active");
+        issueChannel.classList.remove("active");
+        panelOverview.classList.remove("active");
+        panelMapping.classList.remove("active");
+        panelRules.classList.remove("active");
+      }
+
+      function setBlockedOverview() {
+        root.dataset.state = "blocked-overview";
+        clearIssueActive();
+        issueMapping.classList.add("active");
+        panelOverview.classList.add("active");
+        inspectorModeTag.textContent = "总览";
+        inspectorNodeName.textContent = "提交动作 / submit_apply";
+        bannerTitle.textContent = "当前表单不可投放";
+        bannerCopy.textContent = "先修复生产流程映射，再同步实名校验规则和渠道配置。";
+        footerCopy.textContent = "主阻塞：提交流程未绑定生产 ID，投放按钮保持禁用。";
+        flowStatusText.textContent = "缺失";
+        submitFieldNote.textContent = "未绑定生产流程，当前仅记录草稿，不可投放。";
+        sideStateTag.textContent = "待修复";
+        stepOneText.textContent = "在发布配置中选择已上线审批流程。";
+        stepTwoText.textContent = "同步实名规则，取消匿名入口或改为选填。";
+        stepThreeText.textContent = "补齐移动端渠道包后重新执行发布校验。";
+      }
+
+      function setMappingFocus() {
+        root.dataset.state = "blocked-flow-focus";
+        clearIssueActive();
+        issueMapping.classList.add("active");
+        panelMapping.classList.add("active");
+        inspectorModeTag.textContent = "流程阻塞";
+        inspectorNodeName.textContent = "发布配置 / 提交流程 ID";
+        bannerTitle.textContent = "已定位到主阻塞：提交流程未绑定";
+        bannerCopy.textContent = "当前发布配置仍引用测试流程占位，生产环境不会创建审批实例。";
+        footerCopy.textContent = "处理建议：绑定生产流程 ID 后，再次校验即可解除首个阻塞。";
+        flowStatusText.textContent = "等待绑定";
+        submitFieldNote.textContent = "请选择生产流程 ID，再启用正式提交流程。";
+        sideStateTag.textContent = "流程待绑定";
+        stepOneText.textContent = "打开发布配置，替换测试流程占位。";
+        stepTwoText.textContent = "确认审批节点与表单字段映射一致。";
+        stepThreeText.textContent = "保存后重新运行发布检查。";
+      }
+
+      function setRuleFocus() {
+        root.dataset.state = "blocked-rule-focus";
+        clearIssueActive();
+        issueValidation.classList.add("active");
+        panelRules.classList.add("active");
+        inspectorModeTag.textContent = "规则冲突";
+        inspectorNodeName.textContent = "字段规则 / 法人证件号";
+        bannerTitle.textContent = "规则冲突会导致生产提交失败";
+        bannerCopy.textContent = "匿名入口与实名必填规则互斥，需要统一提交策略。";
+        footerCopy.textContent = "处理建议：关闭匿名入口，或将证件号改为条件必填。";
+        stepOneText.textContent = "统一入口策略，避免匿名链路进入实名分组。";
+        stepTwoText.textContent = "为证件号增加条件展示规则。";
+        stepThreeText.textContent = "重新验证字段必填与流程节点约束。";
+      }
+
+      focusIssueBtn.addEventListener("click", setMappingFocus);
+      resolveNowBtn.addEventListener("click", setMappingFocus);
+      switchDetailBtn.addEventListener("click", setRuleFocus);
+      issueMapping.addEventListener("click", setMappingFocus);
+      issueValidation.addEventListener("click", setRuleFocus);
+      issueChannel.addEventListener("click", setBlockedOverview);
+
+      setBlockedOverview();
+    }());
+  </script>
+</body>
+</html>

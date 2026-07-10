@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PT-012 问题分析与发布</title>
+  <style>
+    :root {
+      --bg: #eef2f6;
+      --panel: #ffffff;
+      --text: #1f2937;
+      --muted: #667085;
+      --border: #d7dee8;
+      --primary: #2468c9;
+      --primary-soft: #e8f0fb;
+      --success: #19733f;
+      --danger: #c73535;
+      --warning: #b76e00;
+      --shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      min-width: 1440px;
+      height: 100%;
+      overflow-x: hidden;
+      font-family: "Microsoft YaHei UI", "Segoe UI", sans-serif;
+      font-size: 13px;
+      letter-spacing: 0;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    body {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    button, input, textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      border-radius: 4px;
+      height: 30px;
+      padding: 0 12px;
+      transition: background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+      white-space: nowrap;
+    }
+
+    button:hover:enabled {
+      border-color: #b9c6d8;
+      background: #f8fafc;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      color: #98a2b3;
+      background: #f3f5f7;
+    }
+
+    .app-shell {
+      width: 1440px;
+      height: 900px;
+      display: grid;
+      grid-template-columns: 48px 248px minmax(0, 1fr) 304px;
+      grid-template-rows: 48px minmax(0, 1fr);
+      overflow: hidden;
+    }
+
+    .topbar {
+      grid-column: 1 / 5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--border);
+      background: var(--panel);
+    }
+
+    .topbar-left,
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-right: 12px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .brand-mark {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      background: var(--primary);
+      position: relative;
+    }
+
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border: 2px solid rgba(255, 255, 255, 0.88);
+      border-top-width: 3px;
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 28px;
+      padding: 0 10px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--muted);
+      background: #fafbfc;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--warning);
+    }
+
+    .mode-btn {
+      min-width: 72px;
+    }
+
+    .mode-btn.active {
+      background: var(--primary-soft);
+      border-color: #b7ccec;
+      color: var(--primary);
+    }
+
+    .primary-btn {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .primary-btn:hover:enabled {
+      background: #1f5db6;
+      border-color: #1f5db6;
+    }
+
+    .rail {
+      grid-row: 2;
+      background: #f7f9fc;
+      border-right: 1px solid var(--border);
+      padding-top: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .rail-item {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      border: 1px solid transparent;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      background: transparent;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .rail-item.active {
+      background: var(--primary-soft);
+      border-color: #c7d8f0;
+      color: var(--primary);
+    }
+
+    .sidebar,
+    .inspector,
+    .canvas {
+      grid-row: 2;
+      min-height: 0;
+    }
+
+    .sidebar,
+    .inspector {
+      background: var(--panel);
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-header {
+      height: 44px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .panel-body {
+      padding: 14px;
+      overflow: auto;
+    }
+
+    .panel-section {
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .problem-list,
+    .release-list,
+    .check-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .problem-card,
+    .release-card {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .problem-card.active {
+      border-color: #9ebae6;
+      background: #f8fbff;
+    }
+
+    .problem-card-title,
+    .release-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .badge-high {
+      color: var(--danger);
+      background: #fdecec;
+      border-color: #f5cdcd;
+    }
+
+    .badge-medium {
+      color: var(--warning);
+      background: #fff5e8;
+      border-color: #f0dfbf;
+    }
+
+    .badge-low {
+      color: var(--success);
+      background: #eaf6ef;
+      border-color: #cfe8d8;
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+
+    .canvas {
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    .workspace {
+      height: 100%;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #f9fbfd;
+      display: grid;
+      grid-template-rows: 40px minmax(0, 1fr) 80px;
+      overflow: hidden;
+    }
+
+    .workspace-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .workspace-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+    }
+
+    .workspace-grid {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+      gap: 16px;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    .stage,
+    .preview {
+      min-height: 0;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .stage {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .stage-toolbar {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+    }
+
+    .tab {
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: #fff;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .tab.active {
+      border-color: #b7ccec;
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .analysis-detail {
+      min-height: 0;
+      padding: 14px;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .detail-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .detail-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .detail-desc {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .stat-card {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px;
+      background: #fbfcfe;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .insight-block {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .insight-title {
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .line-list {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .preview {
+      display: grid;
+      grid-template-rows: auto auto minmax(0, 1fr);
+    }
+
+    .preview-header,
+    .preview-footer {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .preview-footer {
+      border-top: 1px solid var(--border);
+      border-bottom: 0;
+      background: #fcfdff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .preview-main {
+      padding: 14px;
+      overflow: auto;
+      background: #fbfcfe;
+    }
+
+    .release-summary {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .summary-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .summary-label {
+      color: var(--muted);
+    }
+
+    .gate-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .gate-item {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px;
+      background: #fff;
+    }
+
+    .gate-state {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      margin-top: 1px;
+      flex: 0 0 auto;
+      border: 1px solid var(--border);
+      background: #f4f6f8;
+      position: relative;
+    }
+
+    .gate-item.ready .gate-state {
+      border-color: #9bd0ae;
+      background: #e7f6ed;
+    }
+
+    .gate-item.ready .gate-state::after {
+      content: "";
+      position: absolute;
+      left: 5px;
+      top: 2px;
+      width: 5px;
+      height: 9px;
+      border-right: 2px solid var(--success);
+      border-bottom: 2px solid var(--success);
+      transform: rotate(40deg);
+    }
+
+    .gate-item.blocked .gate-state {
+      border-color: #efbcbc;
+      background: #fdecec;
+    }
+
+    .gate-item.blocked .gate-state::after,
+    .gate-item.blocked .gate-state::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 3px;
+      width: 2px;
+      height: 10px;
+      background: var(--danger);
+    }
+
+    .gate-item.blocked .gate-state::after {
+      transform: rotate(45deg);
+    }
+
+    .gate-item.blocked .gate-state::before {
+      transform: rotate(-45deg);
+    }
+
+    .gate-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .gate-desc {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .timeline {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 14px;
+      background: #fff;
+    }
+
+    .timeline-step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      min-width: 0;
+    }
+
+    .timeline-step::after {
+      content: "";
+      width: 26px;
+      height: 1px;
+      background: #cfd8e4;
+      margin-left: 2px;
+    }
+
+    .timeline-step:last-child::after {
+      display: none;
+    }
+
+    .timeline-step.active,
+    .timeline-step.done {
+      color: var(--text);
+    }
+
+    .timeline-step.done .timeline-index,
+    .timeline-step.active .timeline-index {
+      border-color: #b7ccec;
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .timeline-index {
+      width: 20px;
+      height: 20px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 auto;
+      font-size: 12px;
+      background: #fff;
+    }
+
+    .inspector {
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .field-group {
+      margin-bottom: 14px;
+    }
+
+    .field-label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+    }
+
+    .field-value,
+    .field-area {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #fff;
+      padding: 8px 10px;
+      color: var(--text);
+    }
+
+    .field-value {
+      height: 32px;
+    }
+
+    .field-area {
+      height: 72px;
+      resize: none;
+    }
+
+    .hint {
+      margin-top: 6px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .notice {
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #fbfcfe;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <div
+    class="app-shell"
+    data-prototype="PT-012"
+    data-state="analysis"
+    data-testid="pt-012-root"
+  >
+    <header class="topbar" data-testid="topbar">
+      <div class="topbar-left">
+        <div class="brand" data-testid="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>全新表单设计器</span>
+        </div>
+        <div class="status-chip" data-testid="scene-chip">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="sceneLabel">问题分析中</span>
+        </div>
+        <button class="mode-btn active" type="button" data-mode="analysis" data-testid="mode-analysis">问题分析</button>
+        <button class="mode-btn" type="button" data-mode="release" data-testid="mode-release">发布视图</button>
+      </div>
+      <div class="topbar-right">
+        <button type="button" title="仅在分析完成后可发布" data-testid="save-draft-btn">保存草稿</button>
+        <button class="primary-btn" type="button" id="publishAction" data-testid="publish-action-btn">生成发布单</button>
+      </div>
+    </header>
+
+    <aside class="rail" data-testid="left-rail">
+      <button class="rail-item active" type="button" title="分析" data-testid="rail-analysis">A</button>
+      <button class="rail-item" type="button" title="发布" data-testid="rail-release">R</button>
+      <button class="rail-item" type="button" title="记录" data-testid="rail-log">L</button>
+    </aside>
+
+    <aside class="sidebar" data-testid="problem-sidebar">
+      <div class="panel-header">
+        <span>问题清单</span>
+        <span style="color:#667085;font-weight:500;">3 条</span>
+      </div>
+      <div class="panel-body">
+        <section class="panel-section">
+          <div class="section-title">
+            <span>待分析问题</span>
+            <span style="color:#667085;">按影响排序</span>
+          </div>
+          <div class="problem-list" data-testid="problem-list">
+            <button class="problem-card active" type="button" data-problem-card="render" data-testid="problem-card-render">
+              <div class="problem-card-title">
+                <span>渲染卡顿</span>
+                <span class="badge badge-high">高风险</span>
+              </div>
+              <div style="color:#667085;line-height:1.5;">复杂表单拖拽后预览延迟，影响设计器发布前验证。</div>
+              <div class="meta-row">
+                <span>近 7 天 18 次反馈</span>
+                <span>版本 v2.7.4</span>
+              </div>
+            </button>
+            <button class="problem-card" type="button" data-problem-card="permission" data-testid="problem-card-permission">
+              <div class="problem-card-title">
+                <span>权限回填异常</span>
+                <span class="badge badge-medium">中风险</span>
+              </div>
+              <div style="color:#667085;line-height:1.5;">复制模板后角色范围丢失，需二次确认发布影响面。</div>
+              <div class="meta-row">
+                <span>关联 4 个项目</span>
+                <span>上线阻断</span>
+              </div>
+            </button>
+            <button class="problem-card" type="button" data-problem-card="audit" data-testid="problem-card-audit">
+              <div class="problem-card-title">
+                <span>审计日志缺口</span>
+                <span class="badge badge-low">低风险</span>
+              </div>
+              <div style="color:#667085;line-height:1.5;">字段排序变更未写入审计摘要，影响发布追踪完整性。</div>
+              <div class="meta-row">
+                <span>可灰度修复</span>
+                <span>需补说明</span>
+              </div>
+            </button>
+          </div>
+        </section>
+
+        <section class="panel-section">
+          <div class="section-title">
+            <span>发布批次</span>
+            <span style="color:#667085;">本周</span>
+          </div>
+          <div class="release-list" data-testid="release-list">
+            <div class="release-card" data-testid="release-batch-card">
+              <div class="release-title">
+                <span>批次 RC-2407-12</span>
+                <span class="badge badge-medium" id="batchStateLabel">待评审</span>
+              </div>
+              <div style="color:#667085;line-height:1.5;">包含 3 项缺陷修复、1 项交互校正，目标窗口 19:30 - 20:00。</div>
+              <div class="meta-row">
+                <span>负责人：林舟</span>
+                <span>验证人：QA-韩霁</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </aside>
+
+    <main class="canvas" data-testid="center-canvas">
+      <section class="workspace">
+        <div class="workspace-bar" data-testid="workspace-bar">
+          <div class="workspace-title">
+            <span>PT-012</span>
+            <span style="color:#667085;font-weight:500;">问题分析与发布</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span style="color:#667085;">主场景：识别问题后生成可发布批次</span>
+          </div>
+        </div>
+
+        <div class="workspace-grid">
+          <section class="stage" data-testid="analysis-stage">
+            <div class="stage-toolbar">
+              <div class="tabs" data-testid="stage-tabs">
+                <span class="tab active" data-testid="tab-impact">影响分析</span>
+                <span class="tab" data-testid="tab-scope">变更范围</span>
+                <span class="tab" data-testid="tab-release">发布条件</span>
+              </div>
+              <button type="button" id="focusPrimaryProblem" data-testid="focus-problem-btn">聚焦主问题</button>
+            </div>
+
+            <div class="analysis-detail" id="analysisDetail" data-testid="analysis-detail">
+              <div class="detail-head">
+                <div>
+                  <div class="detail-title" id="detailTitle">渲染卡顿</div>
+                  <div class="detail-desc" id="detailDesc">拖拽 30+ 组件后，右侧配置区与画布刷新不同步，发布前的预览验证需要重复刷新。</div>
+                </div>
+                <span class="badge badge-high" id="detailRisk">高风险</span>
+              </div>
+
+              <div class="stat-grid" data-testid="impact-stats">
+                <div class="stat-card">
+                  <div class="stat-label">影响租户</div>
+                  <div class="stat-value" id="statTenants">12</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-label">回归用例</div>
+                  <div class="stat-value" id="statCases">9</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-label">建议窗口</div>
+                  <div class="stat-value" id="statWindow">夜间灰度</div>
+                </div>
+              </div>
+
+              <div class="insight-block" data-testid="root-cause-block">
+                <div class="insight-title">问题根因</div>
+                <ul class="line-list" id="causeList">
+                  <li>属性面板变更触发整页同步，拖拽高频操作下产生重复渲染。</li>
+                  <li>发布前预览复用编辑态缓存，导致最新 schema 未即时生效。</li>
+                  <li>当前缺少针对大表单的性能门禁。</li>
+                </ul>
+              </div>
+
+              <div class="insight-block" data-testid="action-block">
+                <div class="insight-title">处理建议</div>
+                <ul class="line-list" id="adviceList">
+                  <li>先冻结高风险预览发布入口，避免未验证方案扩散。</li>
+                  <li>将问题纳入当前 RC 批次，配套增加性能回归与人工验收。</li>
+                  <li>发布说明中标记“仅影响复杂表单编辑，不影响已上线表单运行态”。</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section class="preview" data-testid="release-preview">
+            <div class="preview-header">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                <strong>发布摘要</strong>
+                <span id="releaseStatePill" class="badge badge-medium">待生成</span>
+              </div>
+            </div>
+
+            <div class="preview-main" id="previewMain" data-testid="preview-main">
+              <div class="release-summary">
+                <div class="summary-row">
+                  <span class="summary-label">当前状态</span>
+                  <strong id="summaryState">分析进行中</strong>
+                </div>
+                <div class="summary-row">
+                  <span class="summary-label">主发布项</span>
+                  <strong id="summaryProblem">渲染卡顿</strong>
+                </div>
+                <div class="summary-row">
+                  <span class="summary-label">发布策略</span>
+                  <strong id="summaryStrategy">先分析后出单</strong>
+                </div>
+
+                <div class="gate-list" data-testid="gate-list">
+                  <div class="gate-item ready" data-testid="gate-impact">
+                    <span class="gate-state" aria-hidden="true"></span>
+                    <div>
+                      <div class="gate-title">影响范围已识别</div>
+                      <div class="gate-desc">已确认租户数量、受影响环节与发布时段建议。</div>
+                    </div>
+                  </div>
+                  <div class="gate-item blocked" data-testid="gate-validation">
+                    <span class="gate-state" aria-hidden="true"></span>
+                    <div>
+                      <div class="gate-title">回归门禁待补齐</div>
+                      <div class="gate-desc" id="validationGateText">需要补充复杂表单场景性能回归，当前不可直接发布。</div>
+                    </div>
+                  </div>
+                  <div class="gate-item blocked" data-testid="gate-publish">
+                    <span class="gate-state" aria-hidden="true"></span>
+                    <div>
+                      <div class="gate-title">发布单未生成</div>
+                      <div class="gate-desc" id="publishGateText">先完成主问题分析，再生成发布批次说明。</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="preview-footer">
+              <span id="footerHint">点击“生成发布单”后，右侧将切换到发布说明与门禁结果。</span>
+              <button type="button" id="toggleReleaseView" data-testid="toggle-release-view">切换到发布视图</button>
+            </div>
+          </section>
+        </div>
+
+        <div class="timeline" data-testid="release-timeline">
+          <div class="timeline-step done" data-testid="timeline-collect">
+            <span class="timeline-index">1</span>
+            <span>收集问题</span>
+          </div>
+          <div class="timeline-step active" data-testid="timeline-analyze">
+            <span class="timeline-index">2</span>
+            <span>影响分析</span>
+          </div>
+          <div class="timeline-step" data-testid="timeline-gate">
+            <span class="timeline-index">3</span>
+            <span>门禁确认</span>
+          </div>
+          <div class="timeline-step" data-testid="timeline-publish">
+            <span class="timeline-index">4</span>
+            <span>发布出单</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="inspector" data-testid="property-panel">
+      <div class="panel-header">
+        <span>发布属性</span>
+        <span id="sideStateLabel" style="color:#667085;font-weight:500;">分析态</span>
+      </div>
+      <div class="panel-body">
+        <div class="field-group">
+          <label class="field-label" for="ownerField">责任人</label>
+          <input class="field-value" id="ownerField" value="林舟 / 交互平台" readonly data-testid="field-owner">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="scopeField">发布范围</label>
+          <input class="field-value" id="scopeField" value="表单设计器编辑态" readonly data-testid="field-scope">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="decisionField">发布决策</label>
+          <textarea class="field-area" id="decisionField" readonly data-testid="field-decision">当前先完成主问题分析，待回归门禁补齐后生成发布单。</textarea>
+          <div class="hint">发布视图下会自动改写为正式发布说明。</div>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="noteField">审核提示</label>
+          <textarea class="field-area" id="noteField" readonly data-testid="field-note">高风险问题需附带回滚说明与灰度观察人。</textarea>
+        </div>
+        <div class="notice" data-testid="panel-notice">
+          <strong>操作说明</strong><br>
+          左侧定位问题，中间确认影响与处理建议，右侧查看是否满足发布门禁。
+        </div>
+        <div style="margin-top:14px;display:flex;gap:8px;">
+          <button type="button" id="reviewBtn" data-testid="review-btn">标记已评审</button>
+          <button type="button" disabled title="需先生成发布单" data-testid="disabled-execute-btn">执行发布</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    (function () {
+      const root = document.querySelector('[data-testid="pt-012-root"]');
+      const sceneLabel = document.getElementById('sceneLabel');
+      const publishAction = document.getElementById('publishAction');
+      const toggleReleaseView = document.getElementById('toggleReleaseView');
+      const batchStateLabel = document.getElementById('batchStateLabel');
+      const releaseStatePill = document.getElementById('releaseStatePill');
+      const summaryState = document.getElementById('summaryState');
+      const summaryProblem = document.getElementById('summaryProblem');
+      const summaryStrategy = document.getElementById('summaryStrategy');
+      const validationGateText = document.getElementById('validationGateText');
+      const publishGateText = document.getElementById('publishGateText');
+      const sideStateLabel = document.getElementById('sideStateLabel');
+      const decisionField = document.getElementById('decisionField');
+      const noteField = document.getElementById('noteField');
+      const footerHint = document.getElementById('footerHint');
+      const focusPrimaryProblem = document.getElementById('focusPrimaryProblem');
+      const reviewBtn = document.getElementById('reviewBtn');
+      const modeButtons = Array.from(document.querySelectorAll('.mode-btn'));
+      const railButtons = Array.from(document.querySelectorAll('.rail-item'));
+      const timelineAnalyze = document.querySelector('[data-testid="timeline-analyze"]');
+      const timelineGate = document.querySelector('[data-testid="timeline-gate"]');
+      const timelinePublish = document.querySelector('[data-testid="timeline-publish"]');
+      const gateValidation = document.querySelector('[data-testid="gate-validation"]');
+      const gatePublish = document.querySelector('[data-testid="gate-publish"]');
+
+      const problemCards = Array.from(document.querySelectorAll('[data-problem-card]'));
+      const problemData = {
+        render: {
+          title: '渲染卡顿',
+          desc: '拖拽 30+ 组件后，右侧配置区与画布刷新不同步，发布前的预览验证需要重复刷新。',
+          riskClass: 'badge-high',
+          riskText: '高风险',
+          tenants: '12',
+          cases: '9',
+          window: '夜间灰度',
+          causes: [
+            '属性面板变更触发整页同步，拖拽高频操作下产生重复渲染。',
+            '发布前预览复用编辑态缓存，导致最新 schema 未即时生效。',
+            '当前缺少针对大表单的性能门禁。'
+          ],
+          advice: [
+            '先冻结高风险预览发布入口，避免未验证方案扩散。',
+            '将问题纳入当前 RC 批次，配套增加性能回归与人工验收。',
+            '发布说明中标记“仅影响复杂表单编辑，不影响已上线表单运行态”。'
+          ]
+        },
+        permission: {
+          title: '权限回填异常',
+          desc: '复制模板后角色范围丢失，发布到生产前需明确受影响租户与回填脚本顺序。',
+          riskClass: 'badge-medium',
+          riskText: '中风险',
+          tenants: '4',
+          cases: '6',
+          window: '低峰全量',
+          causes: [
+            '模板复制链路未带上角色映射快照，导致发布前配置与实际权限不一致。',
+            '发布脚本依赖旧字段名，回填逻辑在跨空间复制时失效。',
+            '缺少针对权限模板复制的回归断言。'
+          ],
+          advice: [
+            '发布单需附带角色范围核对清单，并增加脚本前置校验。',
+            '上线前先在 1 个租户灰度验证回填效果，再推广到正式批次。',
+            '对受影响模板补出回滚 SQL 与人工核对人。'
+          ]
+        },
+        audit: {
+          title: '审计日志缺口',
+          desc: '字段排序变更未写入审计摘要，发布记录可追踪性不足，但不阻断运行态。',
+          riskClass: 'badge-low',
+          riskText: '低风险',
+          tenants: '全部新建项目',
+          cases: '3',
+          window: '随 RC 发布',
+          causes: [
+            '排序变更在前端本地完成，未统一透传到审计汇总接口。',
+            '发布说明模板默认只记录组件增删，不记录排序调整。',
+            '审计看板缺少“排序变更”专项筛选。'
+          ],
+          advice: [
+            '可与当前 RC 一并修复，但需要在发布说明中追加影响说明。',
+            '发布后补做历史数据回放，避免追踪链断裂。',
+            '后续把排序调整加入审计摘要标准字段。'
+          ]
+        }
+      };
+
+      const detailTitle = document.getElementById('detailTitle');
+      const detailDesc = document.getElementById('detailDesc');
+      const detailRisk = document.getElementById('detailRisk');
+      const statTenants = document.getElementById('statTenants');
+      const statCases = document.getElementById('statCases');
+      const statWindow = document.getElementById('statWindow');
+      const causeList = document.getElementById('causeList');
+      const adviceList = document.getElementById('adviceList');
+
+      function setMode(mode) {
+        root.setAttribute('data-state', mode);
+        sceneLabel.textContent = mode === 'release' ? '发布单已生成' : '问题分析中';
+        sideStateLabel.textContent = mode === 'release' ? '发布态' : '分析态';
+        modeButtons.forEach((button) => {
+          button.classList.toggle('active', button.dataset.mode === mode);
+        });
+        railButtons[0].classList.toggle('active', mode === 'analysis');
+        railButtons[1].classList.toggle('active', mode === 'release');
+      }
+
+      function updateProblem(problemKey) {
+        const problem = problemData[problemKey];
+        problemCards.forEach((card) => {
+          card.classList.toggle('active', card.dataset.problemCard === problemKey);
+        });
+        detailTitle.textContent = problem.title;
+        detailDesc.textContent = problem.desc;
+        detailRisk.className = 'badge ' + problem.riskClass;
+        detailRisk.textContent = problem.riskText;
+        statTenants.textContent = problem.tenants;
+        statCases.textContent = problem.cases;
+        statWindow.textContent = problem.window;
+        summaryProblem.textContent = problem.title;
+        causeList.innerHTML = problem.causes.map((text) => '<li>' + text + '</li>').join('');
+        adviceList.innerHTML = problem.advice.map((text) => '<li>' + text + '</li>').join('');
+      }
+
+      function publishRelease() {
+        setMode('release');
+        releaseStatePill.textContent = '可发布';
+        releaseStatePill.className = 'badge badge-low';
+        batchStateLabel.textContent = '待发布';
+        batchStateLabel.className = 'badge badge-low';
+        summaryState.textContent = '发布单已生成';
+        summaryStrategy.textContent = '灰度 30 分钟后全量';
+        validationGateText.textContent = '回归项已并入批次，发布后持续观察首批租户编辑耗时。';
+        publishGateText.textContent = '发布单已生成，包含回滚说明、灰度观察人与验证结论。';
+        gateValidation.classList.remove('blocked');
+        gateValidation.classList.add('ready');
+        gatePublish.classList.remove('blocked');
+        gatePublish.classList.add('ready');
+        timelineAnalyze.classList.remove('active');
+        timelineAnalyze.classList.add('done');
+        timelineGate.classList.add('done');
+        timelinePublish.classList.add('active');
+        footerHint.textContent = '发布视图已展开，可直接查看门禁状态、灰度窗口与回滚说明。';
+        decisionField.value = '发布单已生成：先灰度复杂表单编辑租户 30 分钟，观察耗时与权限回填，再执行全量发布。';
+        noteField.value = '需在发布结束后复核审计日志摘要，并确认首批租户未出现预览缓存错乱。';
+      }
+
+      publishAction.addEventListener('click', publishRelease);
+      toggleReleaseView.addEventListener('click', publishRelease);
+
+      modeButtons.forEach((button) => {
+        button.addEventListener('click', function () {
+          if (button.dataset.mode === 'release') {
+            publishRelease();
+            return;
+          }
+          setMode('analysis');
+          summaryState.textContent = '分析进行中';
+          summaryStrategy.textContent = '先分析后出单';
+          releaseStatePill.textContent = '待生成';
+          releaseStatePill.className = 'badge badge-medium';
+          batchStateLabel.textContent = '待评审';
+          batchStateLabel.className = 'badge badge-medium';
+          gateValidation.classList.remove('ready');
+          gateValidation.classList.add('blocked');
+          gatePublish.classList.remove('ready');
+          gatePublish.classList.add('blocked');
+          validationGateText.textContent = '需要补充复杂表单场景性能回归，当前不可直接发布。';
+          publishGateText.textContent = '先完成主问题分析，再生成发布批次说明。';
+          timelineAnalyze.classList.remove('done');
+          timelineAnalyze.classList.add('active');
+          timelineGate.classList.remove('done');
+          timelinePublish.classList.remove('active');
+          decisionField.value = '当前先完成主问题分析，待回归门禁补齐后生成发布单。';
+          noteField.value = '高风险问题需附带回滚说明与灰度观察人。';
+          footerHint.textContent = '点击“生成发布单”后，右侧将切换到发布说明与门禁结果。';
+        });
+      });
+
+      problemCards.forEach((card) => {
+        card.addEventListener('click', function () {
+          updateProblem(card.dataset.problemCard);
+        });
+      });
+
+      focusPrimaryProblem.addEventListener('click', function () {
+        updateProblem('render');
+      });
+
+      reviewBtn.addEventListener('click', function () {
+        reviewBtn.textContent = '已评审';
+        reviewBtn.disabled = true;
+        reviewBtn.title = '评审状态已记录';
+      });
+
+      updateProblem('render');
+    }());
+  </script>
+</body>
+</html>

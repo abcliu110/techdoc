@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>T-207 表单设计器 V2 - PT-010</title>
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.js"></script>
+  <style>
+    :root {
+      --bg: #e8edf3;
+      --panel: #ffffff;
+      --panel-soft: #f7f9fb;
+      --panel-muted: #f0f3f7;
+      --rail: #263241;
+      --rail-hover: #344154;
+      --rail-active: #3a4b61;
+      --text: #1f2937;
+      --text-2: #475467;
+      --muted: #667085;
+      --line: #d7dee8;
+      --line-strong: #b6c0cd;
+      --accent: #2468c9;
+      --accent-soft: #edf4ff;
+      --success: #19733f;
+      --success-soft: #edf8f1;
+      --warning: #8a5a00;
+      --warning-soft: #fff8e6;
+      --danger: #b42318;
+      --danger-soft: #fff1f0;
+      --radius: 4px;
+      --shadow: 0 4px 16px rgba(30, 41, 59, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Microsoft YaHei UI", "Segoe UI", sans-serif;
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
+    button,
+    input { font: inherit; letter-spacing: 0; }
+    button { cursor: pointer; }
+    [hidden] { display: none !important; }
+
+    button:focus-visible,
+    input:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 2px solid #4c8fe8;
+      outline-offset: 1px;
+    }
+
+    .app {
+      width: 100%;
+      height: 100vh;
+      min-width: 0;
+      display: grid;
+      grid-template-rows: 48px minmax(0, 1fr) 30px;
+      background: var(--bg);
+    }
+
+    .command-bar {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: minmax(310px, 1fr) auto minmax(310px, 1fr);
+      align-items: center;
+      gap: 12px;
+      padding: 0 10px;
+      border-bottom: 1px solid var(--line-strong);
+      background: #fff;
+    }
+
+    .brand,
+    .command-group,
+    .command-status,
+    .breadcrumbs,
+    .inline,
+    .status-main,
+    .status-metrics {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .brand { gap: 8px; font-weight: 700; }
+    .brand-mark {
+      width: 26px;
+      height: 26px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border-radius: var(--radius);
+      background: var(--rail);
+      color: #fff;
+      font-size: 14px;
+    }
+    .brand-copy { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .brand-copy span { color: var(--muted); font-weight: 400; }
+    .command-group { justify-content: center; gap: 4px; }
+    .command-status { justify-content: flex-end; gap: 6px; }
+
+    .icon-button,
+    .command-button,
+    .small-button {
+      height: 30px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--text-2);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+    .icon-button { width: 32px; padding: 0; }
+    .command-button { padding: 0 9px; }
+    .small-button { height: 26px; padding: 0 7px; border-color: var(--line); background: #fff; }
+    .icon-button:hover,
+    .command-button:hover,
+    .small-button:hover { background: var(--panel-muted); color: var(--text); }
+    .command-button.primary { border-color: #1f61bc; background: var(--accent); color: #fff; }
+    .command-button.on { border-color: #acc7ef; background: var(--accent-soft); color: var(--accent); }
+    .icon-button[disabled] { opacity: .38; cursor: default; }
+
+    svg { width: 15px; height: 15px; stroke-width: 1.8; }
+
+    .chip {
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0 7px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-soft);
+      color: var(--text-2);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .chip.warning { border-color: #e5c96f; background: var(--warning-soft); color: var(--warning); }
+    .chip.success { border-color: #9fd0ad; background: var(--success-soft); color: var(--success); }
+    .chip.active { border-color: #a9c4ee; background: var(--accent-soft); color: var(--accent); }
+    .chip.danger { border-color: #efb1ac; background: var(--danger-soft); color: var(--danger); }
+
+    .studio {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 52px 252px minmax(0, 1fr) 318px;
+      overflow: hidden;
+    }
+
+    .activity-bar {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 7px 4px;
+      border-right: 1px solid #18212c;
+      background: var(--rail);
+    }
+    .activity-button {
+      width: 44px;
+      height: 46px;
+      flex: 0 0 46px;
+      border: 0;
+      border-radius: var(--radius);
+      background: transparent;
+      color: #c9d3df;
+      display: grid;
+      grid-template-rows: 23px 12px;
+      place-items: center;
+      gap: 2px;
+      padding: 4px 2px 3px;
+    }
+    .activity-button:hover { background: var(--rail-hover); color: #fff; }
+    .activity-button[aria-selected="true"] { background: var(--rail-active); color: #fff; box-shadow: inset 3px 0 0 #71a8ff; }
+    .activity-icon {
+      width: 24px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, .16);
+      border-radius: var(--radius);
+    }
+    .activity-label { width: 100%; height: 12px; overflow: hidden; line-height: 12px; text-align: center; font-size: 10px; font-weight: 600; }
+    .activity-spacer { flex: 1; }
+
+    .object-panel,
+    .inspector-panel {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 38px minmax(0, 1fr);
+      overflow: hidden;
+      background: #fff;
+    }
+    .object-panel { border-right: 1px solid var(--line); }
+    .inspector-panel { border-left: 1px solid var(--line); }
+    .panel-header {
+      height: 38px;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 9px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+    .panel-title { font-weight: 700; }
+    .panel-body { min-height: 0; overflow: auto; padding: 9px; }
+
+    .search-box { position: relative; margin-bottom: 10px; }
+    .search-box svg { position: absolute; left: 8px; top: 8px; color: var(--muted); }
+    .search-box input {
+      width: 100%;
+      height: 31px;
+      padding: 0 8px 0 29px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      color: var(--text);
+      background: #fff;
+    }
+
+    .group-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 28px;
+      padding: 0 4px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .object-row {
+      width: 100%;
+      min-width: 0;
+      min-height: 48px;
+      margin-bottom: 4px;
+      padding: 7px 8px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--text);
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 7px;
+      text-align: left;
+    }
+    .object-row:hover { background: var(--panel-soft); }
+    .object-row[data-selected="true"] { border-color: #9bbbec; background: var(--accent-soft); }
+    .object-icon {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--text-2);
+    }
+    .object-row[data-selected="true"] .object-icon { border-color: #9bbbec; color: var(--accent); }
+    .object-copy { min-width: 0; }
+    .object-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+    .object-code { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-family: Consolas, monospace; font-size: 11px; margin-top: 2px; }
+    .mini-state { color: var(--muted); font-size: 11px; }
+
+    .canvas-shell {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 38px minmax(0, 1fr);
+      overflow: hidden;
+    }
+    .canvas-toolbar {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 0 10px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+    .breadcrumbs { gap: 6px; overflow: hidden; color: var(--muted); white-space: nowrap; text-overflow: ellipsis; }
+    .breadcrumbs strong { color: var(--text-2); }
+    .canvas-tools { display: flex; align-items: center; gap: 5px; }
+    .segment-control { height: 26px; display: inline-grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    .segment { min-width: 54px; border: 0; border-right: 1px solid var(--line); background: #fff; color: var(--muted); font-size: 12px; }
+    .segment:last-child { border-right: 0; }
+    .segment[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+    .canvas-viewport {
+      min-width: 0;
+      min-height: 0;
+      overflow: auto;
+      padding: 22px 24px 34px;
+      background-color: var(--bg);
+      background-image: radial-gradient(#cbd3de .7px, transparent .7px);
+      background-size: 16px 16px;
+    }
+    .artboard {
+      width: min(760px, 100%);
+      min-height: 590px;
+      margin: 0 auto;
+      border: 1px solid #cbd3de;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+    .document-header {
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 0 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .document-title { font-size: 16px; font-weight: 700; }
+    .document-subtitle { margin-top: 3px; color: var(--muted); font-size: 11px; }
+    .document-actions { display: flex; gap: 6px; }
+    .form-content { padding: 18px; }
+    .notice {
+      min-height: 42px;
+      margin-bottom: 14px;
+      padding: 9px 11px;
+      border: 1px solid #e8d28d;
+      border-left: 3px solid #d89a18;
+      border-radius: var(--radius);
+      background: var(--warning-soft);
+      color: #6f4c08;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 12px;
+    }
+    .notice strong { color: var(--warning); }
+    .form-section {
+      position: relative;
+      border: 1px solid #8db3ee;
+      box-shadow: 0 0 0 2px rgba(54, 112, 202, .11);
+      background: #fff;
+    }
+    .section-caption {
+      height: 38px;
+      padding: 0 12px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 700;
+    }
+    .selection-tag { position: absolute; top: -21px; left: -1px; height: 20px; padding: 0 6px; background: var(--accent); color: #fff; display: flex; align-items: center; font-size: 10px; }
+    .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 14px; padding: 14px; }
+    .field {
+      min-width: 0;
+      min-height: 69px;
+      padding: 9px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+    .field[data-selected="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(36, 104, 201, .15); }
+    .field.disabled { border-style: dashed; background: #f5f6f8; color: #98a2b3; }
+    .field-label { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 7px; color: var(--text-2); font-size: 12px; font-weight: 600; }
+    .field-value { height: 30px; min-width: 0; padding: 0 9px; border: 1px solid var(--line); border-radius: 3px; background: var(--panel-soft); display: flex; align-items: center; justify-content: space-between; gap: 8px; overflow: hidden; color: var(--text); }
+    .field-value span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .disabled .field-value { color: #98a2b3; background: #eef0f3; }
+    .lock-note { color: var(--muted); font-size: 10px; font-weight: 400; }
+    .canvas-footnote { margin-top: 14px; display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: 11px; }
+
+    .inspector-layout { min-height: 0; display: grid; grid-template-rows: auto 35px minmax(0, 1fr); overflow: hidden; }
+    .context-block { padding: 10px; border-bottom: 1px solid var(--line); }
+    .context-title { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-weight: 700; }
+    .context-path { margin-top: 4px; color: var(--muted); font-family: Consolas, monospace; font-size: 10px; overflow-wrap: anywhere; }
+    .config-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid var(--line); background: #fbfcfe; }
+    .config-tab { min-width: 0; border: 0; border-right: 1px solid var(--line); background: transparent; color: var(--muted); font-size: 12px; }
+    .config-tab:last-child { border-right: 0; }
+    .config-tab[aria-selected="true"] { background: #fff; color: var(--accent); box-shadow: inset 0 -2px 0 var(--accent); font-weight: 700; }
+    .config-tab[disabled] { color: #98a2b3; cursor: not-allowed; background: #f2f4f7; }
+    .config-content { min-height: 0; overflow: auto; padding: 10px; }
+    .config-heading { margin: 0 0 5px; font-size: 13px; }
+    .config-description { margin: 0 0 12px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+    .setting-group { margin-bottom: 12px; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    .setting-title { height: 30px; padding: 0 9px; border-bottom: 1px solid var(--line); background: var(--panel-soft); display: flex; align-items: center; justify-content: space-between; gap: 8px; font-weight: 700; font-size: 12px; }
+    .setting-row { min-height: 41px; padding: 7px 9px; border-bottom: 1px solid #edf0f4; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; }
+    .setting-row:last-child { border-bottom: 0; }
+    .setting-name { font-size: 12px; }
+    .setting-hint { margin-top: 2px; color: var(--muted); font-size: 10px; }
+    .switch { width: 32px; height: 18px; padding: 2px; border: 0; border-radius: 999px; background: #aeb7c4; }
+    .switch::after { content: ""; display: block; width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: transform .15s ease; }
+    .switch[aria-checked="true"] { background: var(--accent); }
+    .switch[aria-checked="true"]::after { transform: translateX(14px); }
+    .value-box { min-width: 92px; height: 27px; padding: 0 7px; border: 1px solid var(--line); border-radius: 3px; background: #fff; display: flex; align-items: center; justify-content: space-between; gap: 6px; color: var(--text-2); font-size: 11px; }
+    .role-list { display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-end; max-width: 150px; }
+    .role-tag { padding: 3px 6px; border: 1px solid #b7cbea; border-radius: 3px; background: var(--accent-soft); color: var(--accent); font-size: 10px; }
+    .scope-card { padding: 9px; border: 1px solid #b7cbea; border-radius: var(--radius); background: #f6f9ff; color: var(--text-2); font-size: 11px; line-height: 1.6; }
+    .scope-card strong { color: var(--accent); }
+
+    .status-bar {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 10px;
+      border-top: 1px solid var(--line-strong);
+      background: #fff;
+      color: var(--text-2);
+      font-size: 11px;
+    }
+    .status-main { gap: 7px; overflow: hidden; white-space: nowrap; }
+    .status-main span:last-child { overflow: hidden; text-overflow: ellipsis; color: var(--muted); }
+    .status-dot { width: 7px; height: 7px; flex: 0 0 auto; border-radius: 50%; background: #d89a18; box-shadow: 0 0 0 3px #fff4d2; }
+    .status-metrics { gap: 8px; white-space: nowrap; }
+    .separator { width: 1px; height: 12px; background: var(--line); }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 42px;
+      z-index: 5;
+      min-height: 36px;
+      max-width: 320px;
+      padding: 8px 11px;
+      border: 1px solid #a9c4ee;
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--text-2);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .toast svg { color: var(--accent); }
+
+    @media (max-width: 1200px) {
+      .studio { grid-template-columns: 48px 220px minmax(0, 1fr) 286px; }
+      .command-bar { grid-template-columns: minmax(250px, 1fr) auto minmax(250px, 1fr); }
+      .canvas-viewport { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="pt-010" data-testid="pt010-v2-root" data-version="v2" data-active-config="validation" data-selected-object="field_amount" data-p1-enabled="false" data-last-action="ready">
+    <header class="command-bar">
+      <div class="brand">
+        <span class="brand-mark">T</span>
+        <div class="brand-copy">销售订单 <span>/ 规则权限入口</span></div>
+        <span class="chip warning">草稿 v12</span>
+      </div>
+      <div class="command-group" aria-label="设计器命令">
+        <button class="icon-button" title="撤销" aria-label="撤销"><i data-lucide="undo-2"></i></button>
+        <button class="icon-button" title="重做" aria-label="重做" disabled><i data-lucide="redo-2"></i></button>
+        <button class="command-button on" data-testid="pt010-save"><i data-lucide="save"></i>保存</button>
+        <button class="command-button" data-testid="pt010-preview"><i data-lucide="play"></i>预览</button>
+        <button class="command-button primary"><i data-lucide="rocket"></i>发布</button>
+      </div>
+      <div class="command-status">
+        <span class="chip warning"><i data-lucide="triangle-alert"></i>P1 动态规则未启用</span>
+        <span class="chip success"><i data-lucide="shield-check"></i>静态规则有效</span>
+      </div>
+    </header>
+
+    <main class="studio">
+      <nav class="activity-bar" aria-label="配置类型">
+        <button class="activity-button" aria-selected="true" title="配置对象"><span class="activity-icon"><i data-lucide="boxes"></i></span><span class="activity-label">对象</span></button>
+        <button class="activity-button" aria-selected="false" data-config-entry="validation" title="校验规则"><span class="activity-icon"><i data-lucide="list-checks"></i></span><span class="activity-label">规则</span></button>
+        <button class="activity-button" aria-selected="false" data-config-entry="permission" title="字段权限"><span class="activity-icon"><i data-lucide="shield-check"></i></span><span class="activity-label">权限</span></button>
+        <button class="activity-button" aria-selected="false" data-config-entry="state" title="状态控制"><span class="activity-icon"><i data-lucide="workflow"></i></span><span class="activity-label">状态</span></button>
+        <div class="activity-spacer"></div>
+        <button class="activity-button" aria-selected="false" title="问题"><span class="activity-icon"><i data-lucide="circle-alert"></i></span><span class="activity-label">问题</span></button>
+      </nav>
+
+      <aside class="object-panel">
+        <div class="panel-header"><span class="panel-title">配置对象</span><span class="chip active">3 个节点</span></div>
+        <div class="panel-body">
+          <div class="search-box"><i data-lucide="search"></i><input aria-label="搜索配置对象" placeholder="搜索字段或按钮" /></div>
+          <div class="group-label"><span>当前页面</span><span>销售订单</span></div>
+          <button class="object-row" data-object="field_amount" data-selected="true">
+            <span class="object-icon"><i data-lucide="badge-dollar-sign"></i></span>
+            <span class="object-copy"><span class="object-name">金额</span><span class="object-code">field_amount</span></span>
+            <span class="mini-state">只读</span>
+          </button>
+          <button class="object-row" data-object="submit_button" data-selected="false">
+            <span class="object-icon"><i data-lucide="mouse-pointer-click"></i></span>
+            <span class="object-copy"><span class="object-name">提交按钮</span><span class="object-code">submit_button</span></span>
+            <span class="mini-state">确认</span>
+          </button>
+          <button class="object-row" data-object="entry_table" data-selected="false">
+            <span class="object-icon"><i data-lucide="table-2"></i></span>
+            <span class="object-copy"><span class="object-name">销售分录</span><span class="object-code">entry_table</span></span>
+            <span class="mini-state">继承</span>
+          </button>
+          <div class="group-label"><span>P1 能力</span><span class="chip warning">未启用</span></div>
+          <div class="scope-card"><strong>动态条件已锁定</strong><br />visibleWhen 与角色预览保留入口；导入动态表达式时将被发布门禁阻断。</div>
+        </div>
+      </aside>
+
+      <section class="canvas-shell">
+        <div class="canvas-toolbar">
+          <div class="breadcrumbs"><strong>页面根节点</strong><span>/</span><span>金额控制</span><span>/</span><span>金额</span></div>
+          <div class="canvas-tools">
+            <div class="segment-control"><button class="segment" aria-pressed="true">设计</button><button class="segment" aria-pressed="false">规则预览</button></div>
+            <button class="small-button"><i data-lucide="search"></i>100%</button>
+          </div>
+        </div>
+        <div class="canvas-viewport">
+          <article class="artboard">
+            <header class="document-header">
+              <div><div class="document-title">销售订单</div><div class="document-subtitle">订单表单 · 规则配置视图</div></div>
+              <div class="document-actions"><button class="small-button">保存</button><button class="command-button primary">提交</button></div>
+            </header>
+            <div class="form-content">
+              <div class="notice"><i data-lucide="info"></i><div><strong>P0 静态规则可用</strong>　动态表达式与角色预览属于 P1，本版本仅展示入口和阻断状态。</div></div>
+              <section class="form-section">
+                <span class="selection-tag">Section · 金额控制</span>
+                <div class="section-caption"><span>金额控制</span><span class="chip active"><i data-lucide="list-checks"></i>2 条静态规则</span></div>
+                <div class="field-grid">
+                  <div class="field" data-selected="true" tabindex="0">
+                    <div class="field-label"><span>金额</span><span class="chip active">readonly</span></div>
+                    <div class="field-value"><span>3,176.00</span><i data-lucide="lock-keyhole"></i></div>
+                  </div>
+                  <div class="field" tabindex="0">
+                    <div class="field-label"><span>提交按钮</span><span class="chip success">二次确认</span></div>
+                    <div class="field-value"><span>提交销售订单</span><i data-lucide="circle-check"></i></div>
+                  </div>
+                  <div class="field disabled">
+                    <div class="field-label"><span>动态 visibleWhen</span><span class="lock-note">P1 未启用</span></div>
+                    <div class="field-value"><span>条件表达式不可配置</span><i data-lucide="lock"></i></div>
+                  </div>
+                  <div class="field disabled">
+                    <div class="field-label"><span>角色预览</span><span class="lock-note">P1 未启用</span></div>
+                    <div class="field-value"><span>按角色预览不可用</span><i data-lucide="lock"></i></div>
+                  </div>
+                </div>
+              </section>
+              <div class="canvas-footnote"><span>当前选中：field_amount</span><span>规则来源：字段级配置</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <aside class="inspector-panel">
+        <div class="panel-header"><span class="panel-title">规则 / 权限 / 状态</span><span class="chip active" data-testid="pt010-config-state">校验</span></div>
+        <div class="inspector-layout">
+          <div class="context-block">
+            <div class="context-title"><span>金额</span><span class="chip">数值字段</span></div>
+            <div class="context-path">PageRoot.AmountSection.field_amount</div>
+          </div>
+          <div class="config-tabs" role="tablist" aria-label="配置入口">
+            <button class="config-tab" data-config="validation" role="tab" aria-selected="true">校验</button>
+            <button class="config-tab" data-config="permission" data-testid="pt010-config-permission" role="tab" aria-selected="false">权限</button>
+            <button class="config-tab" data-config="state" role="tab" aria-selected="false">状态</button>
+            <button class="config-tab" data-config="dynamic" role="tab" aria-selected="false" disabled title="P1 未启用">动态</button>
+          </div>
+          <div class="config-content">
+            <section data-config-panel="validation">
+              <h2 class="config-heading">字段校验</h2>
+              <p class="config-description">配置当前字段的必填、只读与提交校验。静态规则在设计态即时生效。</p>
+              <div class="setting-group">
+                <div class="setting-title"><span>基础规则</span><span class="chip success">已生效</span></div>
+                <div class="setting-row"><div><div class="setting-name">必填</div><div class="setting-hint">提交前检查空值</div></div><button class="switch" role="switch" aria-checked="false" aria-label="必填"></button></div>
+                <div class="setting-row"><div><div class="setting-name">只读</div><div class="setting-hint">金额由系统计算</div></div><button class="switch" role="switch" aria-checked="true" aria-label="只读"></button></div>
+                <div class="setting-row"><div><div class="setting-name">数值范围</div><div class="setting-hint">允许的最小值</div></div><span class="value-box">0.00 <i data-lucide="chevron-down"></i></span></div>
+              </div>
+              <div class="scope-card"><strong>规则结果</strong><br />readonly = true<br />required = false<br />min = 0</div>
+            </section>
+
+            <section data-config-panel="permission" hidden>
+              <h2 class="config-heading">字段权限</h2>
+              <p class="config-description">按角色控制金额字段的可见与可编辑范围。默认权限保持最小授权。</p>
+              <div class="setting-group">
+                <div class="setting-title"><span>角色授权</span><span class="chip active">2 个角色</span></div>
+                <div class="setting-row"><div><div class="setting-name">可查看</div><div class="setting-hint">允许读取金额</div></div><div class="role-list"><span class="role-tag">销售主管</span><span class="role-tag">财务</span></div></div>
+                <div class="setting-row"><div><div class="setting-name">可编辑</div><div class="setting-hint">系统计算字段不开放编辑</div></div><span class="value-box">无角色 <i data-lucide="chevron-down"></i></span></div>
+                <div class="setting-row"><div><div class="setting-name">无权限时隐藏</div><div class="setting-hint">否则显示脱敏值</div></div><button class="switch" role="switch" aria-checked="true" aria-label="无权限时隐藏"></button></div>
+              </div>
+              <div class="scope-card"><strong>权限边界</strong><br />未授权角色不渲染金额字段；设计者始终可见权限占位，不改变运行态授权。</div>
+            </section>
+
+            <section data-config-panel="state" hidden>
+              <h2 class="config-heading">状态控制</h2>
+              <p class="config-description">根据单据静态状态控制字段行为；动态条件表达式仍由 P1 能力承载。</p>
+              <div class="setting-group">
+                <div class="setting-title"><span>状态矩阵</span><span class="chip success">3 项</span></div>
+                <div class="setting-row"><div><div class="setting-name">草稿</div><div class="setting-hint">draft</div></div><span class="value-box">只读 <i data-lucide="chevron-down"></i></span></div>
+                <div class="setting-row"><div><div class="setting-name">审批中</div><div class="setting-hint">approving</div></div><span class="value-box">只读 <i data-lucide="chevron-down"></i></span></div>
+                <div class="setting-row"><div><div class="setting-name">已完成</div><div class="setting-hint">completed</div></div><span class="value-box">只读 <i data-lucide="chevron-down"></i></span></div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="status-bar">
+      <div class="status-main"><span class="status-dot"></span><strong data-testid="pt010-status-title">规则配置就绪</strong><span data-testid="pt010-status-message">已选中“金额”，当前显示字段校验</span></div>
+      <div class="status-metrics"><span>静态规则 2</span><span class="separator"></span><span>权限角色 2</span><span class="separator"></span><span class="chip warning">RULE_P1_NOT_ENABLED</span><span class="separator"></span><span>1440 工作区</span></div>
+    </footer>
+    <div class="toast" data-testid="pt010-toast" hidden><i data-lucide="circle-check"></i><span></span></div>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.querySelector('[data-testid="pt010-v2-root"]');
+      var stateChip = root.querySelector('[data-testid="pt010-config-state"]');
+      var statusTitle = root.querySelector('[data-testid="pt010-status-title"]');
+      var statusMessage = root.querySelector('[data-testid="pt010-status-message"]');
+      var toast = root.querySelector('[data-testid="pt010-toast"]');
+      var labels = { validation: '校验', permission: '权限', state: '状态' };
+
+      function setStatus(title, message) {
+        statusTitle.textContent = title;
+        statusMessage.textContent = message;
+      }
+
+      function showToast(message) {
+        toast.hidden = false;
+        toast.querySelector('span').textContent = message;
+        window.clearTimeout(showToast.timer);
+        showToast.timer = window.setTimeout(function () { toast.hidden = true; }, 1600);
+      }
+
+      function activateConfig(config) {
+        if (!labels[config]) return;
+        root.querySelectorAll('.config-tab[data-config]').forEach(function (tab) {
+          tab.setAttribute('aria-selected', tab.getAttribute('data-config') === config ? 'true' : 'false');
+        });
+        root.querySelectorAll('[data-config-panel]').forEach(function (panel) {
+          panel.hidden = panel.getAttribute('data-config-panel') !== config;
+        });
+        root.querySelectorAll('.activity-button[data-config-entry]').forEach(function (button) {
+          button.setAttribute('aria-selected', button.getAttribute('data-config-entry') === config ? 'true' : 'false');
+        });
+        root.setAttribute('data-active-config', config);
+        root.setAttribute('data-last-action', 'config:' + config);
+        stateChip.textContent = labels[config];
+        setStatus(labels[config] + '配置已打开', '金额字段的' + labels[config] + '设置已同步到属性面板');
+      }
+
+      root.querySelectorAll('.config-tab:not([disabled])').forEach(function (tab) {
+        tab.addEventListener('click', function () { activateConfig(tab.getAttribute('data-config')); });
+      });
+      root.querySelectorAll('.activity-button[data-config-entry]').forEach(function (button) {
+        button.addEventListener('click', function () { activateConfig(button.getAttribute('data-config-entry')); });
+      });
+      root.querySelectorAll('.object-row').forEach(function (row) {
+        row.addEventListener('click', function () {
+          root.querySelectorAll('.object-row').forEach(function (item) { item.setAttribute('data-selected', item === row ? 'true' : 'false'); });
+          root.setAttribute('data-selected-object', row.getAttribute('data-object'));
+          root.setAttribute('data-last-action', 'object:' + row.getAttribute('data-object'));
+          setStatus('配置对象已切换', row.querySelector('.object-name').textContent + '已选中');
+        });
+      });
+      root.querySelectorAll('.switch').forEach(function (control) {
+        control.addEventListener('click', function () {
+          var next = control.getAttribute('aria-checked') !== 'true';
+          control.setAttribute('aria-checked', next ? 'true' : 'false');
+          root.setAttribute('data-last-action', 'switch:' + control.getAttribute('aria-label'));
+        });
+      });
+      root.querySelector('[data-testid="pt010-save"]').addEventListener('click', function () {
+        root.setAttribute('data-last-action', 'save');
+        showToast('规则草稿已保存');
+      });
+      root.querySelector('[data-testid="pt010-preview"]').addEventListener('click', function () {
+        root.setAttribute('data-last-action', 'preview');
+        showToast('规则预览已更新');
+      });
+
+      if (window.lucide) window.lucide.createIcons();
+    })();
+  </script>
+</body>
+</html>

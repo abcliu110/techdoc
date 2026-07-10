@@ -1,0 +1,1276 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>T-207 Web Form Designer Prototype</title>
+  <style>
+    :root {
+      --bg: #eef2f6;
+      --panel: #ffffff;
+      --panel-soft: #f7f9fc;
+      --line: #d7dee8;
+      --line-strong: #b8c4d4;
+      --text: #172033;
+      --muted: #64748b;
+      --blue: #2563eb;
+      --blue-soft: #e8f0ff;
+      --green: #047857;
+      --amber: #b45309;
+      --red: #b91c1c;
+      --shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+      font-family: "Microsoft YaHei UI", "Segoe UI", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      min-width: 1280px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 12px;
+      letter-spacing: 0;
+      overflow: hidden;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    .app {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: 48px minmax(0, 1fr) 28px;
+      background: var(--bg);
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr) 420px;
+      align-items: center;
+      gap: 12px;
+      padding: 0 12px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .back {
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: var(--panel);
+      color: var(--muted);
+    }
+
+    .titleblock {
+      min-width: 0;
+      line-height: 1.35;
+    }
+
+    .titleblock strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .titleblock span {
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .command-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: center;
+      min-width: 0;
+    }
+
+    .cmd {
+      min-width: 30px;
+      height: 28px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: var(--panel);
+      color: var(--text);
+    }
+
+    .cmd.icon {
+      width: 30px;
+      padding: 0;
+    }
+
+    .cmd.primary {
+      border-color: var(--blue);
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .cmd.warning {
+      color: var(--amber);
+      border-color: #f0c987;
+      background: #fff8ed;
+    }
+
+    .top-status {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      color: var(--muted);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 4px;
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .pill.good {
+      color: var(--green);
+      border-color: #b7decf;
+      background: #effaf5;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 286px minmax(680px, 1fr) 336px;
+      min-height: 0;
+    }
+
+    .left, .right {
+      background: var(--panel);
+      min-height: 0;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: 38px minmax(0, 1fr);
+    }
+
+    .left {
+      border-right: 1px solid var(--line);
+    }
+
+    .right {
+      border-left: 1px solid var(--line);
+    }
+
+    .tabs {
+      display: flex;
+      align-items: end;
+      gap: 2px;
+      padding: 0 8px;
+      background: var(--panel-soft);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tab {
+      height: 30px;
+      padding: 0 10px;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .tab.active {
+      color: var(--blue);
+      border-bottom-color: var(--blue);
+      font-weight: 600;
+    }
+
+    .panel-scroll {
+      min-height: 0;
+      overflow: auto;
+      padding: 10px;
+    }
+
+    .search {
+      height: 30px;
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 0 9px;
+      margin-bottom: 10px;
+      color: var(--text);
+      background: #fff;
+    }
+
+    .group-title {
+      height: 24px;
+      display: flex;
+      align-items: center;
+      color: var(--muted);
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .tree-row, .tool-row {
+      height: 30px;
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 6px;
+      padding: 0 6px;
+      border-radius: 4px;
+      color: var(--text);
+    }
+
+    .tree-row:hover, .tool-row:hover {
+      background: #f0f5ff;
+    }
+
+    .tree-row.active {
+      background: var(--blue-soft);
+      box-shadow: inset 2px 0 0 var(--blue);
+    }
+
+    .icon-box {
+      width: 16px;
+      height: 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 3px;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-size: 10px;
+      background: #fff;
+    }
+
+    .row-main {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .row-sub {
+      color: var(--muted);
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .canvas-wrap {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 34px minmax(0, 1fr);
+      background: #edf1f6;
+    }
+
+    .canvas-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .canvas-tools {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .mini {
+      height: 24px;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      color: var(--muted);
+    }
+
+    .stage {
+      min-height: 0;
+      overflow: auto;
+      padding: 18px;
+    }
+
+    .page {
+      width: 1180px;
+      min-height: 820px;
+      margin: 0 auto 24px;
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-rows: 46px 38px minmax(0, 1fr) 46px;
+    }
+
+    .bill-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 3;
+    }
+
+    .bill-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .bill-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .statusbar {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      align-items: center;
+      padding: 0 14px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .status-item strong {
+      color: var(--text);
+      font-weight: 600;
+      margin-left: 4px;
+    }
+
+    .bill-body {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 292px;
+      gap: 0;
+    }
+
+    .main-form {
+      min-width: 0;
+      min-height: 0;
+      overflow: auto;
+      padding: 14px;
+    }
+
+    .side-panel {
+      min-height: 0;
+      border-left: 1px solid var(--line);
+      background: #fbfcfe;
+      display: grid;
+      grid-template-rows: 36px minmax(0, 1fr);
+    }
+
+    .side-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--line);
+      background: #f8fafc;
+    }
+
+    .side-tab {
+      flex: 1;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      border-bottom: 2px solid transparent;
+    }
+
+    .side-tab.active {
+      color: var(--blue);
+      border-bottom-color: var(--blue);
+      font-weight: 600;
+    }
+
+    .side-content {
+      overflow: auto;
+      padding: 12px;
+    }
+
+    .section {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      margin-bottom: 12px;
+      background: #fff;
+    }
+
+    .section.selected {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 1px var(--blue);
+    }
+
+    .section-title {
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+      font-weight: 600;
+    }
+
+    .grid-form {
+      display: grid;
+      grid-template-columns: repeat(24, minmax(0, 1fr));
+      gap: 10px 14px;
+      padding: 12px;
+    }
+
+    .field {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: 82px minmax(0, 1fr);
+      align-items: center;
+      gap: 8px;
+      height: 30px;
+    }
+
+    .span-6 { grid-column: span 6; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+
+    .label {
+      color: var(--muted);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .value {
+      min-width: 0;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #cbd5e1;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .value.focused {
+      border-bottom-color: var(--blue);
+      box-shadow: 0 1px 0 var(--blue);
+    }
+
+    .designer-overlay {
+      position: relative;
+    }
+
+    .snapline-v {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 344px;
+      width: 1px;
+      background: var(--blue);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .snap-label {
+      position: absolute;
+      top: 8px;
+      left: 352px;
+      height: 20px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 11px;
+      pointer-events: none;
+    }
+
+    .table-designer {
+      border: 1px solid var(--blue);
+      box-shadow: 0 0 0 1px var(--blue);
+      background: #fff;
+    }
+
+    .table-titlebar {
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      border-bottom: 1px solid var(--line);
+      background: #f6f9ff;
+    }
+
+    .table-titlebar strong {
+      font-weight: 600;
+    }
+
+    .table-shell {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      min-height: 360px;
+    }
+
+    .table-gutter {
+      background: #f8fafc;
+      border-right: 1px solid var(--line);
+      display: grid;
+      grid-template-rows: 36px repeat(6, 36px) minmax(0, 1fr);
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .gutter-cell {
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+    }
+
+    .grid-area {
+      min-width: 0;
+      overflow: auto;
+      position: relative;
+    }
+
+    table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 1380px;
+      table-layout: fixed;
+      font-size: 12px;
+    }
+
+    th, td {
+      height: 36px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 0 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      background: #fff;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: #f8fafc;
+      color: #334155;
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .frozen {
+      position: sticky;
+      left: 0;
+      z-index: 3;
+      box-shadow: 1px 0 0 var(--line);
+    }
+
+    th.frozen {
+      z-index: 4;
+    }
+
+    .frozen-2 {
+      position: sticky;
+      left: 92px;
+      z-index: 3;
+      box-shadow: 1px 0 0 var(--line);
+    }
+
+    th.frozen-2 {
+      z-index: 4;
+    }
+
+    .op-col {
+      position: sticky;
+      right: 0;
+      z-index: 3;
+      background: #fff;
+      box-shadow: -1px 0 0 var(--line);
+    }
+
+    th.op-col {
+      z-index: 4;
+      background: #f8fafc;
+    }
+
+    .cell-edit {
+      outline: 2px solid var(--blue);
+      outline-offset: -2px;
+      background: #fff;
+    }
+
+    .cell-error {
+      color: var(--red);
+      box-shadow: inset 0 -2px 0 var(--red);
+      background: #fff7f7;
+    }
+
+    .cell-readonly {
+      color: var(--muted);
+      background: #f8fafc;
+    }
+
+    .cell-masked {
+      color: var(--muted);
+      background: #f8fafc;
+    }
+
+    .detail-row td {
+      height: auto;
+      padding: 0;
+      background: #f8fafc;
+    }
+
+    .detail-panel {
+      margin: 8px 8px 10px 100px;
+      border: 1px solid var(--line);
+      background: #fff;
+      display: grid;
+      grid-template-rows: 32px auto;
+    }
+
+    .detail-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 10px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .detail-head strong {
+      color: var(--text);
+    }
+
+    .nested {
+      width: 820px;
+      margin: 10px;
+      border: 1px solid var(--line);
+    }
+
+    .nested th, .nested td {
+      height: 32px;
+    }
+
+    .summary {
+      height: 38px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) repeat(4, 150px);
+      align-items: center;
+      border-top: 1px solid var(--line);
+      background: #fbfcfe;
+      padding: 0 10px;
+      color: var(--muted);
+    }
+
+    .summary strong {
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .bottom-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 0 14px;
+      border-top: 1px solid var(--line);
+      background: #fff;
+      position: sticky;
+      bottom: 0;
+      z-index: 3;
+    }
+
+    .prop-tabs {
+      display: flex;
+      height: 38px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-soft);
+      padding: 0 8px;
+      align-items: end;
+      gap: 2px;
+    }
+
+    .prop-body {
+      min-height: 0;
+      overflow: auto;
+      padding: 10px;
+    }
+
+    .prop-section {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .prop-title {
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+      font-weight: 600;
+    }
+
+    .prop-row {
+      min-height: 34px;
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      align-items: center;
+      gap: 8px;
+      padding: 4px 8px;
+      border-bottom: 1px solid #eef2f7;
+    }
+
+    .prop-row:last-child {
+      border-bottom: 0;
+    }
+
+    .prop-label {
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .prop-value {
+      min-width: 0;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .prop-value.select {
+      justify-content: space-between;
+    }
+
+    .outline {
+      margin-top: 10px;
+      border-top: 1px solid var(--line);
+      padding-top: 8px;
+    }
+
+    .validation-list {
+      display: grid;
+      gap: 6px;
+    }
+
+    .issue {
+      display: grid;
+      grid-template-columns: 16px minmax(0, 1fr);
+      gap: 6px;
+      align-items: start;
+      padding: 6px;
+      border-radius: 4px;
+      background: #fff8ed;
+      border: 1px solid #f3d5a4;
+      color: #7c4a03;
+      line-height: 1.45;
+    }
+
+    .issue.error {
+      background: #fff5f5;
+      border-color: #f1b5b5;
+      color: #8a1515;
+    }
+
+    .footer {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto auto;
+      align-items: center;
+      gap: 16px;
+      padding: 0 10px;
+      background: #f8fafc;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .breadcrumb {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .kbd {
+      border: 1px solid var(--line-strong);
+      border-radius: 3px;
+      padding: 1px 4px;
+      background: #fff;
+      color: #475569;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <button class="back" title="返回">‹</button>
+        <div class="titleblock">
+          <strong>T-207 销售订单 Web 表单设计器</strong>
+          <span>DevExpress 风格嵌套表格 + 金蝶式企业密度 + Visual Studio 式属性窗</span>
+        </div>
+      </div>
+      <div class="command-group" aria-label="设计器命令栏">
+        <button class="cmd icon" title="撤销">↶</button>
+        <button class="cmd icon" title="重做">↷</button>
+        <button class="cmd">保存</button>
+        <button class="cmd">预览</button>
+        <button class="cmd warning">校验 2</button>
+        <button class="cmd primary">发布</button>
+      </div>
+      <div class="top-status">
+        <span class="pill good">Renderer 一致</span>
+        <span class="pill">LayoutEngine 24列</span>
+        <span class="pill">TableEngine master-detail</span>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="left">
+        <div class="tabs">
+          <button class="tab active">字段</button>
+          <button class="tab">控件</button>
+          <button class="tab">表格</button>
+          <button class="tab">大纲</button>
+        </div>
+        <div class="panel-scroll">
+          <input class="search" value="销售订单" aria-label="搜索字段">
+
+          <div class="group-title">BO 字段树</div>
+          <div class="tree-row active">
+            <span class="icon-box">F</span>
+            <span class="row-main">销售订单 SalesOrder</span>
+            <span class="row-sub">root</span>
+          </div>
+          <div class="tree-row">
+            <span class="icon-box">T</span>
+            <span class="row-main">客户 customerId</span>
+            <span class="row-sub">ref</span>
+          </div>
+          <div class="tree-row">
+            <span class="icon-box">¥</span>
+            <span class="row-main">总金额 totalAmount</span>
+            <span class="row-sub">money</span>
+          </div>
+          <div class="tree-row">
+            <span class="icon-box">≡</span>
+            <span class="row-main">订单明细 lines</span>
+            <span class="row-sub">child</span>
+          </div>
+
+          <div class="group-title">布局控件</div>
+          <div class="tool-row">
+            <span class="icon-box">▦</span>
+            <span class="row-main">Grid 24列</span>
+            <span class="row-sub">layout</span>
+          </div>
+          <div class="tool-row">
+            <span class="icon-box">↔</span>
+            <span class="row-main">SplitPane 左右分栏</span>
+            <span class="row-sub">web</span>
+          </div>
+          <div class="tool-row">
+            <span class="icon-box">⇵</span>
+            <span class="row-main">Sticky 操作区</span>
+            <span class="row-sub">web</span>
+          </div>
+
+          <div class="group-title">强表格控件</div>
+          <div class="tool-row">
+            <span class="icon-box">DG</span>
+            <span class="row-main">EditableTable 可编辑表格</span>
+            <span class="row-sub">P0</span>
+          </div>
+          <div class="tool-row">
+            <span class="icon-box">MD</span>
+            <span class="row-main">MasterDetailTable 母子嵌套</span>
+            <span class="row-sub">DevExpress</span>
+          </div>
+          <div class="tool-row">
+            <span class="icon-box">↧</span>
+            <span class="row-main">Detail Grid 展开行</span>
+            <span class="row-sub">nested</span>
+          </div>
+          <div class="tool-row">
+            <span class="icon-box">∑</span>
+            <span class="row-main">SummaryBar 汇总栏</span>
+            <span class="row-sub">calc</span>
+          </div>
+
+          <div class="outline">
+            <div class="group-title">页面大纲</div>
+            <div class="tree-row">
+              <span class="icon-box">P</span>
+              <span class="row-main">SalesOrderPage</span>
+              <span class="row-sub">page</span>
+            </div>
+            <div class="tree-row">
+              <span class="icon-box">S</span>
+              <span class="row-main">BasicInfo Section</span>
+              <span class="row-sub">grid</span>
+            </div>
+            <div class="tree-row active">
+              <span class="icon-box">T</span>
+              <span class="row-main">Lines MasterDetailTable</span>
+              <span class="row-sub">table</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <section class="canvas-wrap">
+        <div class="canvas-toolbar">
+          <span>设计画布：PC Web 1440 / 缩放 100% / 吸附线开启</span>
+          <div class="canvas-tools">
+            <button class="mini">Grid</button>
+            <button class="mini">Snaplines</button>
+            <button class="mini">滚动容器</button>
+            <button class="mini">运行态预览</button>
+          </div>
+        </div>
+
+        <div class="stage">
+          <div class="page designer-overlay">
+            <div class="snapline-v"></div>
+            <div class="snap-label">span 12 / gap 14</div>
+
+            <div class="bill-toolbar">
+              <div class="bill-name"><span class="status-dot"></span>销售订单 SO-20260708-001</div>
+              <div class="bill-actions">
+                <button class="cmd">保存草稿</button>
+                <button class="cmd">提交审批</button>
+                <button class="cmd">打印</button>
+                <button class="cmd primary">发布预览</button>
+              </div>
+            </div>
+
+            <div class="statusbar">
+              <div class="status-item">状态 <strong>草稿</strong></div>
+              <div class="status-item">组织 <strong>华东销售</strong></div>
+              <div class="status-item">客户 <strong>杭州未来科技</strong></div>
+              <div class="status-item">币种 <strong>CNY</strong></div>
+              <div class="status-item">审批 <strong>未提交</strong></div>
+              <div class="status-item">校验 <strong>2 warning</strong></div>
+            </div>
+
+            <div class="bill-body">
+              <div class="main-form">
+                <section class="section">
+                  <div class="section-title">
+                    <span>基本信息 FormGrid</span>
+                    <span class="pill">Grid 24 / compact</span>
+                  </div>
+                  <div class="grid-form">
+                    <div class="field span-8"><div class="label">客户</div><div class="value focused">杭州未来科技有限公司</div></div>
+                    <div class="field span-8"><div class="label">销售组织</div><div class="value">华东销售中心</div></div>
+                    <div class="field span-8"><div class="label">订单日期</div><div class="value">2026-07-08</div></div>
+                    <div class="field span-8"><div class="label">收货地址</div><div class="value">浙江省杭州市余杭区文一西路</div></div>
+                    <div class="field span-8"><div class="label">结算方式</div><div class="value">月结 30 天</div></div>
+                    <div class="field span-8"><div class="label">业务员</div><div class="value">李明</div></div>
+                  </div>
+                </section>
+
+                <section class="section selected">
+                  <div class="table-designer">
+                    <div class="table-titlebar">
+                      <strong>订单明细 MasterDetailTable</strong>
+                      <div>
+                        <span class="pill">冻结左 2 列</span>
+                        <span class="pill">右操作列</span>
+                        <span class="pill">Detail Grid</span>
+                      </div>
+                    </div>
+
+                    <div class="table-shell">
+                      <div class="table-gutter">
+                        <div class="gutter-cell">#</div>
+                        <div class="gutter-cell">1</div>
+                        <div class="gutter-cell">2</div>
+                        <div class="gutter-cell">3</div>
+                        <div class="gutter-cell">4</div>
+                        <div class="gutter-cell">5</div>
+                        <div class="gutter-cell">6</div>
+                      </div>
+                      <div class="grid-area">
+                        <table aria-label="订单明细强表格">
+                          <colgroup>
+                            <col style="width:92px">
+                            <col style="width:210px">
+                            <col style="width:120px">
+                            <col style="width:120px">
+                            <col style="width:100px">
+                            <col style="width:120px">
+                            <col style="width:120px">
+                            <col style="width:120px">
+                            <col style="width:120px">
+                            <col style="width:160px">
+                            <col style="width:96px">
+                          </colgroup>
+                          <thead>
+                            <tr>
+                              <th class="frozen">行号</th>
+                              <th class="frozen-2">物料</th>
+                              <th>规格型号</th>
+                              <th>仓库</th>
+                              <th>数量</th>
+                              <th>单价</th>
+                              <th>金额</th>
+                              <th>税率</th>
+                              <th>交货日期</th>
+                              <th>备注</th>
+                              <th class="op-col">操作</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td class="frozen">▾ 1</td>
+                              <td class="frozen-2 cell-edit">A-1001 标准件</td>
+                              <td>蓝牙模块</td>
+                              <td>华东仓</td>
+                              <td>20</td>
+                              <td>128.00</td>
+                              <td>2,560.00</td>
+                              <td>13%</td>
+                              <td>2026-07-20</td>
+                              <td>需批次跟踪</td>
+                              <td class="op-col">复制 删除</td>
+                            </tr>
+                            <tr class="detail-row">
+                              <td colspan="11">
+                                <div class="detail-panel">
+                                  <div class="detail-head">
+                                    <strong>批次明细 Detail Grid</strong>
+                                    <span>lazyLoad=true</span>
+                                    <span>maxHeight=220</span>
+                                    <span>继承父行权限</span>
+                                  </div>
+                                  <table class="nested" aria-label="批次明细嵌套表格">
+                                    <colgroup>
+                                      <col style="width:120px">
+                                      <col style="width:120px">
+                                      <col style="width:100px">
+                                      <col style="width:130px">
+                                      <col style="width:180px">
+                                    </colgroup>
+                                    <thead>
+                                      <tr>
+                                        <th>批次号</th>
+                                        <th>库位</th>
+                                        <th>数量</th>
+                                        <th>生产日期</th>
+                                        <th>序列号区间</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        <td>B202607-A</td>
+                                        <td>A-01-03</td>
+                                        <td>12</td>
+                                        <td>2026-07-01</td>
+                                        <td>SN0001 - SN0012</td>
+                                      </tr>
+                                      <tr>
+                                        <td>B202607-B</td>
+                                        <td>A-01-04</td>
+                                        <td class="cell-error">8</td>
+                                        <td>2026-07-02</td>
+                                        <td>SN0013 - SN0020</td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td class="frozen">▸ 2</td>
+                              <td class="frozen-2">B-2048 工业屏</td>
+                              <td>10.1 寸</td>
+                              <td>华东仓</td>
+                              <td>8</td>
+                              <td>860.00</td>
+                              <td>6,880.00</td>
+                              <td>13%</td>
+                              <td>2026-07-26</td>
+                              <td>客户指定包装</td>
+                              <td class="op-col">复制 删除</td>
+                            </tr>
+                            <tr>
+                              <td class="frozen">▸ 3</td>
+                              <td class="frozen-2">C-3100 线束</td>
+                              <td>定制</td>
+                              <td>委外仓</td>
+                              <td>120</td>
+                              <td>16.50</td>
+                              <td>1,980.00</td>
+                              <td>13%</td>
+                              <td>2026-07-30</td>
+                              <td class="cell-readonly">按图纸生产</td>
+                              <td class="op-col">复制 删除</td>
+                            </tr>
+                            <tr>
+                              <td class="frozen">▸ 4</td>
+                              <td class="frozen-2">D-5000 服务费</td>
+                              <td>安装</td>
+                              <td>--</td>
+                              <td>1</td>
+                              <td>2,000.00</td>
+                              <td class="cell-masked">******</td>
+                              <td>6%</td>
+                              <td>2026-08-01</td>
+                              <td>文员角色脱敏</td>
+                              <td class="op-col">只读</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <div class="summary">
+                      <span>SummaryBar：子表汇总回填主表，总金额字段只读显示</span>
+                      <span>数量合计 <strong>149</strong></span>
+                      <span>不含税 <strong>12,761.06</strong></span>
+                      <span>税额 <strong>1,658.94</strong></span>
+                      <span>价税合计 <strong>14,420.00</strong></span>
+                    </div>
+                  </div>
+                </section>
+              </div>
+
+              <aside class="side-panel">
+                <div class="side-tabs">
+                  <button class="side-tab active">审批</button>
+                  <button class="side-tab">附件</button>
+                  <button class="side-tab">关联</button>
+                </div>
+                <div class="side-content">
+                  <div class="prop-section">
+                    <div class="prop-title">流程摘要</div>
+                    <div class="prop-row"><span class="prop-label">当前节点</span><span class="prop-value">销售提交</span></div>
+                    <div class="prop-row"><span class="prop-label">下一处理人</span><span class="prop-value">区域经理</span></div>
+                    <div class="prop-row"><span class="prop-label">超额原因</span><span class="prop-value">未触发</span></div>
+                  </div>
+                  <div class="validation-list">
+                    <div class="issue"><span>!</span><span>批次 B202607-B 的序列号区间需补全。</span></div>
+                    <div class="issue error"><span>×</span><span>文员角色不能编辑金额列，已按后端权限降级为脱敏只读。</span></div>
+                  </div>
+                </div>
+              </aside>
+            </div>
+
+            <div class="bottom-actions">
+              <button class="cmd">关闭</button>
+              <button class="cmd">保存草稿</button>
+              <button class="cmd primary">提交审批</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="right">
+        <div class="prop-tabs">
+          <button class="tab active">属性</button>
+          <button class="tab">列</button>
+          <button class="tab">Detail</button>
+          <button class="tab">权限</button>
+          <button class="tab">性能</button>
+        </div>
+        <div class="prop-body">
+          <div class="prop-section">
+            <div class="prop-title">TableEngine</div>
+            <div class="prop-row"><span class="prop-label">component</span><span class="prop-value">MasterDetailTable</span></div>
+            <div class="prop-row"><span class="prop-label">dataSource</span><span class="prop-value">salesOrder.lines</span></div>
+            <div class="prop-row"><span class="prop-label">rowKey</span><span class="prop-value">lineId</span></div>
+            <div class="prop-row"><span class="prop-label">density</span><span class="prop-value select">compact <span>⌄</span></span></div>
+          </div>
+
+          <div class="prop-section">
+            <div class="prop-title">列与滚动</div>
+            <div class="prop-row"><span class="prop-label">columns</span><span class="prop-value">30</span></div>
+            <div class="prop-row"><span class="prop-label">frozenLeft</span><span class="prop-value">2</span></div>
+            <div class="prop-row"><span class="prop-label">frozenRight</span><span class="prop-value">1</span></div>
+            <div class="prop-row"><span class="prop-label">stickyHeader</span><span class="prop-value">true</span></div>
+            <div class="prop-row"><span class="prop-label">horizontal</span><span class="prop-value">scroll</span></div>
+          </div>
+
+          <div class="prop-section">
+            <div class="prop-title">Detail Grid</div>
+            <div class="prop-row"><span class="prop-label">detailType</span><span class="prop-value">grid + tabs</span></div>
+            <div class="prop-row"><span class="prop-label">childRef</span><span class="prop-value">lines.batches</span></div>
+            <div class="prop-row"><span class="prop-label">lazyLoad</span><span class="prop-value">true</span></div>
+            <div class="prop-row"><span class="prop-label">maxDepth</span><span class="prop-value">3</span></div>
+            <div class="prop-row"><span class="prop-label">maxHeight</span><span class="prop-value">220px</span></div>
+          </div>
+
+          <div class="prop-section">
+            <div class="prop-title">选中列：物料</div>
+            <div class="prop-row"><span class="prop-label">fieldRef</span><span class="prop-value">materialId</span></div>
+            <div class="prop-row"><span class="prop-label">editor</span><span class="prop-value">ReferenceSelect</span></div>
+            <div class="prop-row"><span class="prop-label">width</span><span class="prop-value">210px</span></div>
+            <div class="prop-row"><span class="prop-label">fixed</span><span class="prop-value">left</span></div>
+            <div class="prop-row"><span class="prop-label">required</span><span class="prop-value">true</span></div>
+          </div>
+
+          <div class="prop-section">
+            <div class="prop-title">权限与规则</div>
+            <div class="prop-row"><span class="prop-label">cellPolicy</span><span class="prop-value">row ∩ column</span></div>
+            <div class="prop-row"><span class="prop-label">calc</span><span class="prop-value">qty * price = amount</span></div>
+            <div class="prop-row"><span class="prop-label">summary</span><span class="prop-value">SUM(amount) → totalAmount</span></div>
+            <div class="prop-row"><span class="prop-label">errorPath</span><span class="prop-value">rowKey/columnId/detail</span></div>
+          </div>
+
+          <div class="prop-section">
+            <div class="prop-title">性能</div>
+            <div class="prop-row"><span class="prop-label">virtualRows</span><span class="prop-value">true</span></div>
+            <div class="prop-row"><span class="prop-label">target</span><span class="prop-value">1000 x 30</span></div>
+            <div class="prop-row"><span class="prop-label">editMode</span><span class="prop-value">cell incremental</span></div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="footer">
+      <div class="breadcrumb">SalesOrderPage / MainForm / Lines MasterDetailTable / Column materialId / Detail batches</div>
+      <span>校验：<strong>1 error / 1 warning</strong></span>
+      <span>快捷键：<span class="kbd">Tab</span> 单元格移动 <span class="kbd">Enter</span> 编辑</span>
+      <span>缩放 100%</span>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1155 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>T-207 Web 布局控件原型图</title>
+  <style>
+    :root {
+      --bg: #e8edf4;
+      --panel: #ffffff;
+      --soft: #f6f8fb;
+      --head: #eef2f7;
+      --line: #cbd5e1;
+      --line-dark: #a7b4c5;
+      --text: #1f2937;
+      --muted: #64748b;
+      --blue: #1f5fbf;
+      --blue-soft: #e8f1ff;
+      --green: #0f7a4c;
+      --amber: #a15c06;
+      --red: #b42318;
+      font-family: "Microsoft YaHei UI", "Segoe UI", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .page {
+      min-width: 1360px;
+      padding: 18px;
+    }
+
+    .header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: end;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .legend {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .pill {
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #fff;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .library {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      display: grid;
+      grid-template-rows: 58px 360px 112px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      overflow: hidden;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+    }
+
+    .card-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+
+    .card-head h2 {
+      margin: 0 0 3px;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .card-head p {
+      margin: 0;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tag {
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 7px;
+      border: 1px solid #a7c4f5;
+      background: var(--blue-soft);
+      color: var(--blue);
+      border-radius: 3px;
+      white-space: nowrap;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .proto {
+      display: grid;
+      grid-template-columns: 160px minmax(0, 1fr) 210px;
+      gap: 10px;
+      padding: 10px;
+      background: #dfe7f0;
+      overflow: hidden;
+    }
+
+    .toolbox,
+    .inspector,
+    .canvas {
+      border: 1px solid var(--line-dark);
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .pane-title {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      border-bottom: 1px solid var(--line);
+      background: var(--head);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .tool-list,
+    .prop-list {
+      padding: 8px;
+      display: grid;
+      gap: 6px;
+      align-content: start;
+    }
+
+    .tool {
+      height: 28px;
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr);
+      gap: 6px;
+      align-items: center;
+      padding: 0 6px;
+      border: 1px solid var(--line);
+      background: #fff;
+      font-size: 10px;
+      color: #334155;
+    }
+
+    .tool.active {
+      border-color: #a7c4f5;
+      background: var(--blue-soft);
+      box-shadow: inset 2px 0 0 var(--blue);
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .ico {
+      width: 16px;
+      height: 16px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line-dark);
+      background: #fff;
+      color: #526174;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .canvas {
+      display: grid;
+      grid-template-rows: 28px minmax(0, 1fr);
+    }
+
+    .canvas-body {
+      position: relative;
+      padding: 16px;
+      background:
+        linear-gradient(#edf2f7 1px, transparent 1px),
+        linear-gradient(90deg, #edf2f7 1px, transparent 1px),
+        #fbfcfe;
+      background-size: 20px 20px;
+      overflow: hidden;
+    }
+
+    .layout-control {
+      position: relative;
+      height: 100%;
+      min-height: 250px;
+      border: 2px solid var(--blue);
+      background: #fff;
+      box-shadow: 0 0 0 1px rgba(31, 95, 191, .18), 0 8px 18px rgba(15, 23, 42, .10);
+      overflow: hidden;
+    }
+
+    .control-label {
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 7px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 10px;
+      z-index: 6;
+    }
+
+    .handle {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      border: 1px solid var(--blue);
+      background: #fff;
+      z-index: 7;
+    }
+
+    .h1 { left: -5px; top: -5px; }
+    .h2 { right: -5px; top: -5px; }
+    .h3 { left: -5px; bottom: -5px; }
+    .h4 { right: -5px; bottom: -5px; }
+
+    .slot {
+      border: 1px dashed #8bb4ed;
+      background: rgba(31, 95, 191, .045);
+      color: var(--blue);
+      display: grid;
+      place-items: center;
+      font-size: 10px;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .slot.filled {
+      border-style: solid;
+      border-color: var(--line);
+      background: #f8fafc;
+      color: var(--muted);
+    }
+
+    .dropzone {
+      border: 1px dashed var(--blue);
+      background: rgba(31, 95, 191, .06);
+      color: var(--blue);
+      display: grid;
+      place-items: center;
+      font-size: 10px;
+    }
+
+    .prop-row {
+      min-height: 24px;
+      display: grid;
+      grid-template-columns: 78px minmax(0, 1fr);
+      border: 1px solid #e2e8f0;
+      background: #fff;
+      font-size: 10px;
+    }
+
+    .prop-row span {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      padding: 0 5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .prop-row span:first-child {
+      border-right: 1px solid #e2e8f0;
+      background: #fbfcfe;
+      color: var(--muted);
+    }
+
+    .contract {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      padding: 9px 10px;
+      border-top: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .contract-box {
+      border: 1px solid #e2e8f0;
+      background: #fbfcfe;
+      padding: 7px;
+      color: var(--muted);
+      line-height: 1.4;
+      overflow: hidden;
+    }
+
+    .contract-box strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 3px;
+      font-size: 12px;
+    }
+
+    .grid-control {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr) 104px;
+      grid-template-rows: 44px minmax(0, 1fr) 38px;
+      grid-template-areas:
+        "header header header"
+        "left main right"
+        "footer footer footer";
+      gap: 8px;
+      padding: 24px 10px 10px;
+    }
+
+    .grid-control .header { grid-area: header; }
+    .grid-control .left { grid-area: left; }
+    .grid-control .main { grid-area: main; }
+    .grid-control .right { grid-area: right; }
+    .grid-control .footer { grid-area: footer; }
+
+    .form-control {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 8px 10px;
+      align-content: start;
+      padding: 26px 12px 12px;
+    }
+
+    .field {
+      height: 27px;
+      display: grid;
+      grid-template-columns: 54px minmax(0, 1fr);
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      min-width: 0;
+    }
+
+    .field label {
+      color: var(--muted);
+      text-align: right;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .input {
+      height: 24px;
+      display: flex;
+      align-items: center;
+      padding: 0 6px;
+      border: 1px solid var(--line);
+      background: #fff;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .span4 { grid-column: span 4; }
+    .span6 { grid-column: span 6; }
+    .span12 { grid-column: span 12; }
+
+    .flex-control {
+      display: flex;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      gap: 8px;
+      padding: 28px 12px 12px;
+    }
+
+    .chip {
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #526174;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .chip.active {
+      border-color: #a7c4f5;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .dock-control {
+      display: grid;
+      grid-template-columns: 86px minmax(0, 1fr) 92px;
+      grid-template-rows: 42px minmax(0, 1fr) 38px;
+      grid-template-areas:
+        "top top top"
+        "dock-left dock-fill dock-right"
+        "bottom bottom bottom";
+      padding: 22px 8px 8px;
+    }
+
+    .dock-top { grid-area: top; }
+    .dock-left { grid-area: dock-left; }
+    .dock-fill { grid-area: dock-fill; }
+    .dock-right { grid-area: dock-right; }
+    .dock-bottom { grid-area: bottom; }
+
+    .dock-control .slot {
+      border-style: solid;
+      margin: -1px 0 0 -1px;
+    }
+
+    .split-control {
+      display: grid;
+      grid-template-columns: minmax(110px, 34%) 8px minmax(0, 1fr);
+      padding: 24px 10px 10px;
+    }
+
+    .split-pane {
+      border: 1px dashed #8bb4ed;
+      background: rgba(31, 95, 191, .045);
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+      font-size: 10px;
+    }
+
+    .split-bar {
+      background: #e6edf5;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      position: relative;
+    }
+
+    .split-bar:after {
+      content: "";
+      position: absolute;
+      left: 3px;
+      top: 50%;
+      width: 2px;
+      height: 34px;
+      margin-top: -17px;
+      border-radius: 2px;
+      background: #8fa0b5;
+    }
+
+    .scroll-control {
+      display: grid;
+      grid-template-rows: 32px minmax(0, 1fr);
+      padding: 24px 10px 10px;
+    }
+
+    .scroll-head {
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      background: #f8fafc;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .scroll-body {
+      position: relative;
+      border: 1px dashed #8bb4ed;
+      border-top: 0;
+      background: rgba(31, 95, 191, .035);
+      padding: 8px;
+      display: grid;
+      gap: 7px;
+      align-content: start;
+      overflow: hidden;
+    }
+
+    .row {
+      height: 24px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .fake-scroll {
+      position: absolute;
+      top: 10px;
+      bottom: 10px;
+      right: 5px;
+      width: 6px;
+      border-radius: 4px;
+      background: #e2e8f0;
+    }
+
+    .fake-scroll span {
+      display: block;
+      height: 42px;
+      margin: 20px 1px 0;
+      border-radius: 4px;
+      background: #94a3b8;
+    }
+
+    .sticky-control {
+      display: grid;
+      grid-template-rows: 32px minmax(0, 1fr) 34px;
+      padding: 24px 10px 10px;
+    }
+
+    .sticky-top,
+    .sticky-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      background: #fff;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .sticky-mid {
+      border-left: 1px dashed #8bb4ed;
+      border-right: 1px dashed #8bb4ed;
+      padding: 8px;
+      display: grid;
+      gap: 7px;
+      align-content: start;
+      background: rgba(31, 95, 191, .035);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .tabs-control {
+      display: grid;
+      grid-template-rows: 34px minmax(0, 1fr);
+      padding: 24px 10px 10px;
+    }
+
+    .tabbar {
+      display: flex;
+      align-items: end;
+      gap: 2px;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      background: #f8fafc;
+      overflow: hidden;
+    }
+
+    .tab-item {
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 10px;
+      border: 1px solid transparent;
+      border-bottom: 0;
+      color: var(--muted);
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .tab-item.active {
+      border-color: var(--line);
+      background: #fff;
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .tab-slot {
+      border: 1px dashed #8bb4ed;
+      border-top: 0;
+      background: rgba(31, 95, 191, .035);
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+      font-size: 10px;
+    }
+
+    .portal-control {
+      padding: 24px 10px 10px;
+      position: relative;
+    }
+
+    .portal-base {
+      height: 100%;
+      border: 1px dashed #8bb4ed;
+      background: rgba(31, 95, 191, .035);
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+      font-size: 10px;
+    }
+
+    .floating {
+      position: absolute;
+      right: 30px;
+      top: 72px;
+      width: 180px;
+      height: 112px;
+      border: 1px solid var(--line-dark);
+      background: #fff;
+      box-shadow: 0 14px 28px rgba(15, 23, 42, 0.18);
+      display: grid;
+      grid-template-rows: 28px minmax(0, 1fr);
+      z-index: 5;
+    }
+
+    .floating-title {
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      border-bottom: 1px solid var(--line);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .responsive-control {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 24px 10px 10px;
+    }
+
+    .bp {
+      display: grid;
+      grid-template-rows: 24px minmax(0, 1fr);
+      border: 1px solid var(--line);
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .bp-title {
+      display: grid;
+      place-items: center;
+      border-bottom: 1px solid var(--line);
+      background: #f8fafc;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .bp-body {
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr) 28px;
+      gap: 4px;
+      padding: 6px;
+    }
+
+    .bp.small .bp-body {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .bp.small .bp-body .slot:first-child,
+    .bp.small .bp-body .slot:last-child {
+      display: none;
+    }
+
+    .mini-btn {
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 46px;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #334155;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .mini-btn.primary {
+      border-color: var(--blue);
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .stack-control {
+      display: grid;
+      gap: 8px;
+      align-content: start;
+      padding: 26px 12px 12px;
+    }
+
+    .stack-section {
+      min-height: 44px;
+      border: 1px solid var(--line);
+      background: #fff;
+      display: grid;
+      grid-template-columns: 86px minmax(0, 1fr) 56px;
+      align-items: center;
+      gap: 8px;
+      padding: 7px;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .stack-section strong {
+      color: var(--text);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .stack-section .dropzone {
+      min-height: 26px;
+    }
+
+    .accordion-control {
+      display: grid;
+      gap: 0;
+      align-content: start;
+      padding: 26px 12px 12px;
+    }
+
+    .acc-item {
+      border: 1px solid var(--line);
+      background: #fff;
+      margin-bottom: -1px;
+      overflow: hidden;
+    }
+
+    .acc-head {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 9px;
+      background: #f8fafc;
+      color: #334155;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .acc-head span {
+      color: var(--muted);
+      font-weight: 500;
+      font-size: 10px;
+    }
+
+    .acc-body {
+      min-height: 62px;
+      padding: 8px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      background: #fff;
+    }
+
+    .acc-body.collapsed {
+      display: none;
+    }
+
+    .card-grid-control {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      align-content: start;
+      padding: 26px 12px 12px;
+    }
+
+    .data-card {
+      min-height: 82px;
+      border: 1px solid var(--line);
+      background: #fff;
+      display: grid;
+      grid-template-rows: 24px minmax(0, 1fr);
+      overflow: hidden;
+    }
+
+    .data-card h3 {
+      margin: 0;
+      padding: 0 8px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #e2e8f0;
+      background: #f8fafc;
+      font-size: 10px;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .data-card .slot,
+    .data-card .dropzone {
+      min-height: 56px;
+      border-width: 0;
+      border-top: 1px dashed #8bb4ed;
+    }
+
+    .drawer-control {
+      position: relative;
+      padding: 24px 10px 10px;
+    }
+
+    .drawer-base {
+      height: 100%;
+      border: 1px dashed #8bb4ed;
+      background: rgba(31, 95, 191, .035);
+      display: grid;
+      grid-template-rows: 34px minmax(0, 1fr);
+      overflow: hidden;
+    }
+
+    .drawer-base .row {
+      margin: 8px;
+    }
+
+    .drawer-panel {
+      position: absolute;
+      top: 42px;
+      right: 18px;
+      bottom: 18px;
+      width: 210px;
+      border: 1px solid var(--line-dark);
+      background: #fff;
+      box-shadow: -10px 0 22px rgba(15, 23, 42, .16);
+      display: grid;
+      grid-template-rows: 30px minmax(0, 1fr) 34px;
+      z-index: 5;
+    }
+
+    .drawer-title,
+    .dialog-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      border-bottom: 1px solid var(--line);
+      background: #f8fafc;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .drawer-body,
+    .dialog-body {
+      padding: 8px;
+      display: grid;
+      gap: 7px;
+      align-content: start;
+      overflow: hidden;
+    }
+
+    .drawer-foot,
+    .dialog-foot {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      padding: 0 8px;
+      border-top: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+
+    .dialog-control {
+      position: relative;
+      padding: 24px 10px 10px;
+      display: grid;
+      place-items: center;
+    }
+
+    .dialog-shade {
+      position: absolute;
+      inset: 24px 10px 10px;
+      background: rgba(15, 23, 42, .10);
+      border: 1px dashed #8bb4ed;
+    }
+
+    .dialog-box {
+      position: relative;
+      width: 300px;
+      height: 176px;
+      border: 1px solid var(--line-dark);
+      background: #fff;
+      box-shadow: 0 16px 32px rgba(15, 23, 42, .20);
+      display: grid;
+      grid-template-rows: 30px minmax(0, 1fr) 36px;
+      z-index: 5;
+    }
+
+    .master-detail-control {
+      display: grid;
+      grid-template-columns: minmax(140px, 36%) 8px minmax(0, 1fr);
+      padding: 24px 10px 10px;
+    }
+
+    .md-master,
+    .md-detail {
+      border: 1px solid var(--line);
+      background: #fff;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: 28px minmax(0, 1fr);
+    }
+
+    .md-title {
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      border-bottom: 1px solid var(--line);
+      background: #f8fafc;
+      font-size: 10px;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .md-list {
+      padding: 7px;
+      display: grid;
+      gap: 6px;
+      align-content: start;
+      background: #fbfcfe;
+    }
+
+    .md-row {
+      height: 26px;
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr);
+      gap: 5px;
+      align-items: center;
+      padding: 0 6px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .md-row.active {
+      border-color: #a7c4f5;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .md-detail-body {
+      padding: 8px;
+      display: grid;
+      grid-template-rows: 32px minmax(0, 1fr);
+      gap: 8px;
+    }
+
+    .md-detail-body .dropzone {
+      min-height: 112px;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <div>
+        <h1>T-207 Web 布局控件原型图</h1>
+        <p class="lead">这版展示的是“布局控件”本身，不是页面布局模板。每个控件都按设计器组件表达：工具箱入口、画布中的控件边界、内部插槽/投放区、尺寸手柄、属性协议，并覆盖常用 Web 布局。</p>
+      </div>
+      <div class="legend">
+        <span class="pill">控件边界</span>
+        <span class="pill">Slots / DropZone</span>
+        <span class="pill">设计态 Overlay</span>
+        <span class="pill">属性协议</span>
+      </div>
+    </header>
+
+    <section class="library">
+      <article class="card">
+        <div class="card-head"><div><h2>01 GridContainer 网格布局控件</h2><p>一个可拖入画布的网格容器控件，内部提供命名插槽和网格投放区。</p></div><span class="tag">P0</span></div>
+        <div class="proto">
+          <div class="toolbox"><div class="pane-title">Toolbox</div><div class="tool-list"><div class="tool active"><span class="ico">G</span><span>GridContainer</span></div><div class="tool"><span class="ico">F</span><span>FlexContainer</span></div><div class="tool"><span class="ico">D</span><span>DockContainer</span></div></div></div>
+          <div class="canvas"><div class="pane-title">Designer Canvas <span>selected</span></div><div class="canvas-body"><div class="layout-control grid-control"><div class="control-label">GridContainer</div><span class="handle h1"></span><span class="handle h2"></span><span class="handle h3"></span><span class="handle h4"></span><div class="slot header">header slot</div><div class="slot left">left slot</div><div class="dropzone main">drop field/table here</div><div class="slot right">right slot</div><div class="slot footer">footer slot</div></div></div></div>
+          <div class="inspector"><div class="pane-title">Properties</div><div class="prop-list"><div class="prop-row"><span>columns</span><span>120 1fr 160</span></div><div class="prop-row"><span>rows</span><span>auto 1fr auto</span></div><div class="prop-row"><span>areas</span><span>header/left/main/right</span></div><div class="prop-row"><span>gap</span><span>8px</span></div></div></div>
+        </div>
+        <div class="contract"><div class="contract-box"><strong>支持布局</strong>CSS Grid、区域命名、响应式列</div><div class="contract-box"><strong>插槽</strong>header、left、main、right、footer、自定义 area</div><div class="contract-box"><strong>子控件</strong>Field、FormGrid、Table、Tabs、Panel、Split</div></div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><div><h2>02 FormGridContainer 表单网格控件</h2><p>专门承载业务字段，拖字段后自动生成 label + editor + validation。</p></div><span class="tag">P0</span></div>
+        <div class="proto">
+          <div class="toolbox"><div class="pane-title">Toolbox</div><div class="tool-list"><div class="tool active"><span class="ico">FG</span><span>FormGridContainer</span></div><div class="tool"><span class="ico">R</span><span>ReferenceField</span></div><div class="tool"><span class="ico">M</span><span>MoneyField</span></div></div></div>
+          <div class="canvas"><div class="pane-title">Designer Canvas <span>24 columns</span></div><div class="canvas-body"><div class="layout-control form-control"><div class="control-label">FormGridContainer</div><span class="handle h1"></span><span class="handle h2"></span><span class="handle h3"></span><span class="handle h4"></span><div class="field span4"><label>客户</label><span class="input">ReferencePicker</span></div><div class="field span4"><label>组织</label><span class="input">Selector</span></div><div class="field span4"><label>日期</label><span class="input">DatePicker</span></div><div class="field span6"><label>地址</label><span class="input">TextInput</span></div><div class="field span6"><label>金额</label><span class="input">MoneyInput</span></div><div class="dropzone span12">drop BO field here</div></div></div></div>
+          <div class="inspector"><div class="pane-title">Properties</div><div class="prop-list"><div class="prop-row"><span>columns</span><span>24</span></div><div class="prop-row"><span>labelWidth</span><span>78px</span></div><div class="prop-row"><span>density</span><span>compact</span></div><div class="prop-row"><span>autoBind</span><span>true</span></div></div></div>
+        </div>
+        <div class="contract"><div class="contract-box"><strong>支持布局</strong>表单列网格、字段 span、label 对齐</div><div class="contract-box"><strong>插槽</strong>字段单元格、整行说明、分组标题</div><div class="contract-box"><strong>子控件</strong>业务字段控件、复合字段、隐藏字段</div></div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><div><h2>03 FlexContainer 弹性布局控件</h2><p>承载按钮、标签、工具条、筛选项，内部元素可换行、增长和收缩。</p></div><span class="tag">P0</span></div>
+        <div class="proto">
+          <div class="toolbox"><div class="pane-title">Toolbox</div><div class="tool-list"><div class="tool active"><span class="ico">FX</span><span>FlexContainer</span></div><div class="tool"><span class="ico">B</span><span>Button</span></div><div class="tool"><span class="ico">T</span><span>Tag</span></div></div></div>
+          <div class="canvas"><div class="pane-title">Designer Canvas <span>wrap enabled</span></div><div class="canvas-body"><div class="layout-control flex-control"><div class="control-label">FlexContainer</div><span class="handle h1"></span><span class="handle h2"></span><span class="handle h3"></span><span class="handle h4"></span><span class="chip active">保存</span><span class="chip">提交审批</span><span class="chip">审核</span><span class="chip">反审核</span><span class="chip">下推采购</span><span class="chip">打印</span><span class="dropzone" style="width:120px;height:28px;">drop action</span></div></div></div>
+          <div class="inspector"><div class="pane-title">Properties</div><div class="prop-list"><div class="prop-row"><span>direction</span><span>row</span></div><div class="prop-row"><span>wrap</span><span>true</span></div><div class="prop-row"><span>justify</span><span>flex-start</span></div><div class="prop-row"><span>gap</span><span>8px</span></div></div></div>
+        </div>
+        <div class="contract"><div class="contract-box"><strong>支持布局</strong>Flex row/column、wrap、grow、shrink</div><div class="contract-box"><strong>插槽</strong>默认流式插槽、左/右工具组</div><div class="contract-box"><strong>子控件</strong>Button、Tag、ToolbarItem、StatusItem</div></div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><div><h2>04 DockContainer 停靠布局控件</h2><p>作为应用框架控件，提供 top/left/right/bottom/fill 五类停靠插槽。</p></div><span class="tag">P0</span></div>
+        <div class="proto">
+          <div class="toolbox"><div class="pane-title">Toolbox</div><div class="tool-list"><div class="tool active"><span class="ico">DK</span><span>DockContainer</span></div><div class="tool"><span class="ico">N</span><span>NavPanel</span></div><div class="tool"><span class="ico">A</span><span>ActionBar</span></div></div></div>
+          <div class="canvas"><div class="pane-title">Designer Canvas <span>fill required</span></div><div class="canvas-body"><div class="layout-control dock-control"><div class="control-label">DockContainer</div><span class="handle h1"></span><span class="handle h2"></span><span class="handle h3"></span><span class="handle h4"></span><div class="slot dock-top">top slot</div><div class="slot dock-left">left slot</div><div class="dropzone dock-fill">fill slot</div><div class="slot dock-right">right slot</div><div class="slot dock-bottom">bottom slot</div></div></div></div>
+          <div class="inspector"><div class="pane-title">Properties</div><div class="prop-list"><div class="prop-row"><span>leftSize</span><span>214px</span></div><div class="prop-row"><span>rightSize</span><span>270px</span></div><div class="prop-row"><span>collapsible</span><span>true</span></div><div class="prop-row"><span>fill</span><span>required</span></div></div></div>
+        </div>
+        <div class="contract"><div class="contract-box"><strong>支持布局</strong>停靠、折叠、fill、自适应</div><div class="contract-box"><strong>插槽</strong>top、left、right、bottom、fill</div><div class="contract-box"><strong>子控件</strong>Nav、Toolbar、Inspector、PageContent</div></div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><div><h2>05 SplitContainer 分割布局控件</h2><p>提供左右或上下两个可调整插槽，适合列表详情和查询结果分屏。</p></div><span class="tag">P0</span></div>
+        <div class="proto">
+          <div class="toolbox"><div class="pane-title">Toolbox</div><div class="tool-list"><div class="tool active"><span class="ico">SP</span><span>SplitContainer</span></div><div class="tool"><span class="ico">L</span><span>ListPanel</span></div><div class="tool"><span class="ico">D</span><span>DetailPanel</span></div></div></div>
+          <div class="canvas"><div class="pane-title">Designer Canvas <span>drag handle</span></div><div class="canvas-body"><div class="layout-control split-control"><div class="control-label">SplitContainer</div><span class="handle h1"></span><span class="handle h2"></span><span class="handle h3"></span><span class="handle h4"></span><div class="split-pane">primary slot 34%</div><div class="split-bar"></div><div class="split-pane">secondary slot fill</div></div></div></div>
+          <div class="inspector"><div class="pane-title">Properties</div><div class="prop-list"><div class="prop-row"><span>direction</span><span>horizontal</span></div><div class="prop-row"><span>primary</span><span>34%</span></div><div class="prop-row"><span>minSize</span><span>220px</span></div><div class="prop-row"><span>resizable</span><span>true</span></div></div></div>
+        </div>
+        <div class="contract"><div class="contract-box"><strong>支持布局</strong>左右/上下分割、拖拽、折叠</div><div class="contract-box"><strong>插槽</strong>primary、secondary</div><div class="contract-box"><strong>子控件</strong>Table、Form、Tree、Preview、Tabs</div></div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><div><h2>06 ScrollContainer 滚动布局控件</h2><p>显式声明局部滚动区域，避免整页滚动混乱，支持滚动阴影和焦点滚动。</p></div><span class="tag">P0</span></div>
+        <div class="proto">
+          <div class="toolbox"><div class="pane-title">Toolbox</div><div class="tool-list"><div class="tool active"><span class="ico">SC</span><span>ScrollContainer</span></div><div class="tool"><span class="ico">F</span><span>FormSection</span></div><div class="tool"><span class="ico">T</span><span>Table</span></div></div></div>
+          <div class="canvas"><div class="pane-title">Designer Canvas <span>overflow:auto</span></div><div class="canvas-body"><div class="layout-control scroll-control"><div class="control-label">ScrollContainer</div><span class="handle h1"></span><span class="handle h2"></span><span class="handle h3"></span><span class="handle h4"></span><div class="scroll-head">sticky optional header</div><div class="scroll-body"><div class="row">表单区域 A</div><div class="row">表单区域 B</div><div class="row">分录表格</div><div class="row">附件面板</div><div class="row">审批记录</div><div class="fake-scroll"><span></span></div></div></div></div></div>
+          <div class="inspector"><div class="pane-title">Properties</div><div class="prop-list"><div class="prop-row"><span>overflowY</span><span>auto</span></div><div class="prop-row"><span>maxHeight</span><span>100%</span></div><div class="prop-row"><span>shadow</span><span>true</span></div><div class="prop-row"><span>focusScroll</span><span>true</span></div></div></div>
+        </div>
+        <div class="contract"><div class="contract-box"><strong>支持布局</strong>局部滚动、横向滚动、滚动阴影</div><div class="contract-box"><strong>插槽</strong>header、scrollBody、footer</div><div class="contract-box"><strong>子控件</strong>Form、Table、Tabs、Accordion、Timeline</div></div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><div><h2>07 StickyContainer 固定布局控件</h2><p>把顶部工具条、底部动作栏、表头等固定到滚动容器边缘。</p></div><span class="tag">P0</span></div>
+        <div class="proto">
+          <div class="toolbox"><div class="pane-title">Toolbox</div><div class="tool-list"><div class="tool active"><span class="ico">ST</span><span>StickyContainer</span></div><div class="tool"><span class="ico">B</span><span>ActionBar</span></div><div class="tool"><span class="ico">H</span><span>HeaderBar</span></div></div></div>
+          <div class="canvas"><div class="pane-title">Designer Canvas <span>sticky top/bottom</span></div><div class="canvas-body"><div class="layout-control sticky-control"><div class="control-label">StickyContainer</div><span class="handle h1"></span><span class="handle h2"></span><span class="handle h3"></span><span class="handle h4"></span><div class="sticky-top">top sticky slot <span class="mini-btn">保存</span></div><div class="sticky-mid"><div class="row">scroll content 1</div><div class="row">scroll content 2</div><div class="row">scroll content 3</div><div class="fake-scroll"><span></span></div></div><div class="sticky-bottom"><span class="mini-btn">取消</span><span class="mini-btn primary">提交</span></div></div></div></div>
+          <div class="inspector"><div class="pane-title">Properties</div><div class="prop-list"><div class="prop-row"><span>top</span><span>0</span></div><div class="prop-row"><span>bottom</span><span>0</span></div><div class="prop-row"><span>zIndex</span><span>100</span></div><div class="prop-row"><span>container</span><span>mainScroll</span></div></div></div>
+        </div>
+        <div class="contract"><div class="contract-box"><strong>支持布局</strong>top/bottom sticky、表头固定</div><div class="contract-box"><strong>插槽</strong>stickyTop、body、stickyBottom</div><div class="contract-box"><strong>子控件</strong>Toolbar、ActionBar、TableHeader、Summary</div></div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><div><h2>08 TabsContainer 页签布局控件</h2><p>提供多个可独立懒加载的 TabPanel 插槽，支持权限隐藏和错误标记。</p></div><span class="tag">P0</span></div>
+        <div class="proto">
+          <div class="toolbox"><div class="pane-title">Toolbox</div><div class="tool-list"><div class="tool active"><span class="ico">TB</span><span>TabsContainer</span></div><div class="tool"><span class="ico">P</span><span>TabPanel</span></div><div class="tool"><span class="ico">F</span><span>FormGrid</span></div></div></div>
+          <div class="canvas"><div class="pane-title">Designer Canvas <span>active: 明细</span></div><div class="canvas-body"><div class="layout-control tabs-control"><div class="control-label">TabsContainer</div><span class="handle h1"></span><span class="handle h2"></span><span class="handle h3"></span><span class="handle h4"></span><div class="tabbar"><span class="tab-item">基本信息</span><span class="tab-item active">订单明细</span><span class="tab-item">批次</span><span class="tab-item">序列号</span><span class="tab-item">附件</span></div><div class="tab-slot">active TabPanel slot: drop Table/Form here</div></div></div></div>
+          <div class="inspector"><div class="pane-title">Properties</div><div class="prop-list"><div class="prop-row"><span>activeKey</span><span>entry</span></div><div class="prop-row"><span>lazy</span><span>true</span></div><div class="prop-row"><span>permission</span><span>per tab</span></div><div class="prop-row"><span>errorBadge</span><span>true</span></div></div></div>
+        </div>
+        <div class="contract"><div class="contract-box"><strong>支持布局</strong>页签、懒加载、内部滚动</div><div class="contract-box"><strong>插槽</strong>TabPanel[]、extraAction、tabHeader</div><div class="contract-box"><strong>子控件</strong>FormGrid、Table、MasterDetail、Timeline</div></div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><div><h2>09 PortalContainer 浮层布局控件</h2><p>管理弹窗、抽屉、下拉、右键菜单的挂载、层级、锚点和边界避让。</p></div><span class="tag">P0</span></div>
+        <div class="proto">
+          <div class="toolbox"><div class="pane-title">Toolbox</div><div class="tool-list"><div class="tool active"><span class="ico">PT</span><span>PortalContainer</span></div><div class="tool"><span class="ico">D</span><span>Dialog</span></div><div class="tool"><span class="ico">P</span><span>Popover</span></div></div></div>
+          <div class="canvas"><div class="pane-title">Designer Canvas <span>z-index managed</span></div><div class="canvas-body"><div class="layout-control portal-control"><div class="control-label">PortalContainer</div><span class="handle h1"></span><span class="handle h2"></span><span class="handle h3"></span><span class="handle h4"></span><div class="portal-base">root page slot</div><div class="floating"><div class="floating-title">客户参照浮层</div><div class="tool-list"><span class="chip active">anchor: 客户字段</span><span class="chip">boundary: viewport</span></div></div></div></div></div>
+          <div class="inspector"><div class="pane-title">Properties</div><div class="prop-list"><div class="prop-row"><span>mount</span><span>pageRoot</span></div><div class="prop-row"><span>zIndex</span><span>1200</span></div><div class="prop-row"><span>boundary</span><span>viewport</span></div><div class="prop-row"><span>focusTrap</span><span>true</span></div></div></div>
+        </div>
+        <div class="contract"><div class="contract-box"><strong>支持布局</strong>Dialog、Drawer、Popover、Dropdown、Menu</div><div class="contract-box"><strong>插槽</strong>portalRoot、overlay、anchorBinding</div><div class="contract-box"><strong>子控件</strong>Form、TablePicker、Menu、DrawerContent</div></div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><div><h2>10 ResponsiveContainer 响应式布局控件</h2><p>设计器专用断点容器，定义不同 PC 宽度下布局控件的覆盖规则。</p></div><span class="tag">P0</span></div>
+        <div class="proto">
+          <div class="toolbox"><div class="pane-title">Toolbox</div><div class="tool-list"><div class="tool active"><span class="ico">RS</span><span>ResponsiveContainer</span></div><div class="tool"><span class="ico">1</span><span>1280 Rule</span></div><div class="tool"><span class="ico">2</span><span>1440 Rule</span></div></div></div>
+          <div class="canvas"><div class="pane-title">Designer Canvas <span>PC breakpoints</span></div><div class="canvas-body"><div class="layout-control responsive-control"><div class="control-label">ResponsiveContainer</div><span class="handle h1"></span><span class="handle h2"></span><span class="handle h3"></span><span class="handle h4"></span><div class="bp small"><div class="bp-title">1280</div><div class="bp-body"><div class="slot">nav</div><div class="dropzone">main</div><div class="slot">aside</div></div></div><div class="bp"><div class="bp-title">1440</div><div class="bp-body"><div class="slot">nav</div><div class="dropzone">main</div><div class="slot">aside</div></div></div><div class="bp"><div class="bp-title">1600</div><div class="bp-body"><div class="slot">nav</div><div class="dropzone">main</div><div class="slot">aside+</div></div></div></div></div></div>
+          <div class="inspector"><div class="pane-title">Properties</div><div class="prop-list"><div class="prop-row"><span>breakpoints</span><span>1280/1440/1600</span></div><div class="prop-row"><span>mode</span><span>override</span></div><div class="prop-row"><span>collapse</span><span>aside at 1280</span></div><div class="prop-row"><span>preview</span><span>1440</span></div></div></div>
+        </div>
+        <div class="contract"><div class="contract-box"><strong>支持布局</strong>PC 断点覆盖、区域折叠、列数变化</div><div class="contract-box"><strong>插槽</strong>breakpointView、overrideRule、preview</div><div class="contract-box"><strong>子控件</strong>任何布局控件的断点规则</div></div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><div><h2>11 StackContainer 堆叠布局控件</h2><p>面向长表单和详情页的纵向布局控件，每个 section 都是可投放子控件的插槽。</p></div><span class="tag">P1</span></div>
+        <div class="proto">
+          <div class="toolbox"><div class="pane-title">Toolbox</div><div class="tool-list"><div class="tool active"><span class="ico">SK</span><span>StackContainer</span></div><div class="tool"><span class="ico">S</span><span>StackSection</span></div><div class="tool"><span class="ico">FG</span><span>FormGrid</span></div></div></div>
+          <div class="canvas"><div class="pane-title">Designer Canvas <span>vertical stack</span></div><div class="canvas-body"><div class="layout-control stack-control"><div class="control-label">StackContainer</div><span class="handle h1"></span><span class="handle h2"></span><span class="handle h3"></span><span class="handle h4"></span><div class="stack-section"><strong>基础信息</strong><div class="dropzone">drop FormGrid</div><span>auto</span></div><div class="stack-section"><strong>财务信息</strong><div class="slot">Money fields slot</div><span>auto</span></div><div class="stack-section"><strong>备注附件</strong><div class="slot">Attachment / Textarea</div><span>min 96</span></div></div></div></div>
+          <div class="inspector"><div class="pane-title">Properties</div><div class="prop-list"><div class="prop-row"><span>direction</span><span>vertical</span></div><div class="prop-row"><span>gap</span><span>8px</span></div><div class="prop-row"><span>sectionMode</span><span>ordered</span></div><div class="prop-row"><span>autoHeight</span><span>true</span></div></div></div>
+        </div>
+        <div class="contract"><div class="contract-box"><strong>支持布局</strong>纵向堆叠、区块顺序、区块高度约束</div><div class="contract-box"><strong>插槽</strong>StackSection[]、sectionHeader、sectionBody</div><div class="contract-box"><strong>子控件</strong>FormGrid、Table、Attachment、Timeline、CardGrid</div></div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><div><h2>12 AccordionContainer 折叠布局控件</h2><p>用于高级筛选、长表单分组和可选区域，折叠状态进入设计时协议。</p></div><span class="tag">P1</span></div>
+        <div class="proto">
+          <div class="toolbox"><div class="pane-title">Toolbox</div><div class="tool-list"><div class="tool active"><span class="ico">AC</span><span>AccordionContainer</span></div><div class="tool"><span class="ico">I</span><span>AccordionItem</span></div><div class="tool"><span class="ico">F</span><span>FilterField</span></div></div></div>
+          <div class="canvas"><div class="pane-title">Designer Canvas <span>expanded item: 1</span></div><div class="canvas-body"><div class="layout-control accordion-control"><div class="control-label">AccordionContainer</div><span class="handle h1"></span><span class="handle h2"></span><span class="handle h3"></span><span class="handle h4"></span><div class="acc-item"><div class="acc-head">高级条件 <span>expanded</span></div><div class="acc-body"><div class="slot">date range</div><div class="dropzone">drop filter field</div></div></div><div class="acc-item"><div class="acc-head">业务控制 <span>collapsed</span></div><div class="acc-body collapsed"></div></div><div class="acc-item"><div class="acc-head">审计字段 <span>collapsed</span></div><div class="acc-body collapsed"></div></div></div></div></div>
+          <div class="inspector"><div class="pane-title">Properties</div><div class="prop-list"><div class="prop-row"><span>mode</span><span>multiple</span></div><div class="prop-row"><span>defaultOpen</span><span>advanced</span></div><div class="prop-row"><span>persist</span><span>per user</span></div><div class="prop-row"><span>lazyRender</span><span>true</span></div></div></div>
+        </div>
+        <div class="contract"><div class="contract-box"><strong>支持布局</strong>折叠分组、单开/多开、懒渲染</div><div class="contract-box"><strong>插槽</strong>AccordionItem[]、itemHeader、itemBody</div><div class="contract-box"><strong>子控件</strong>FormGrid、FilterBar、Table、Tree、说明区域</div></div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><div><h2>13 CardGridContainer 卡片网格控件</h2><p>用于业务摘要、附件、审批摘要和工作台卡片，强调可调整列数和卡片规格。</p></div><span class="tag">P1</span></div>
+        <div class="proto">
+          <div class="toolbox"><div class="pane-title">Toolbox</div><div class="tool-list"><div class="tool active"><span class="ico">CG</span><span>CardGridContainer</span></div><div class="tool"><span class="ico">C</span><span>DataCard</span></div><div class="tool"><span class="ico">K</span><span>KPIBlock</span></div></div></div>
+          <div class="canvas"><div class="pane-title">Designer Canvas <span>3 columns</span></div><div class="canvas-body"><div class="layout-control card-grid-control"><div class="control-label">CardGridContainer</div><span class="handle h1"></span><span class="handle h2"></span><span class="handle h3"></span><span class="handle h4"></span><div class="data-card"><h3>客户摘要</h3><div class="slot">fields slot</div></div><div class="data-card"><h3>授信信息</h3><div class="dropzone">drop KPI</div></div><div class="data-card"><h3>附件</h3><div class="slot">AttachmentList</div></div><div class="data-card"><h3>审批摘要</h3><div class="slot">ApprovalSummary</div></div><div class="data-card"><h3>风险提示</h3><div class="slot">WarningList</div></div><div class="data-card"><h3>+</h3><div class="dropzone">drop card</div></div></div></div></div>
+          <div class="inspector"><div class="pane-title">Properties</div><div class="prop-list"><div class="prop-row"><span>columns</span><span>3</span></div><div class="prop-row"><span>cardMin</span><span>180px</span></div><div class="prop-row"><span>rowGap</span><span>8px</span></div><div class="prop-row"><span>equalHeight</span><span>false</span></div></div></div>
+        </div>
+        <div class="contract"><div class="contract-box"><strong>支持布局</strong>卡片网格、最小宽度、自适应列</div><div class="contract-box"><strong>插槽</strong>CardItem[]、cardHeader、cardBody、cardAction</div><div class="contract-box"><strong>子控件</strong>KPI、FieldList、Attachment、Chart、StatusBlock</div></div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><div><h2>14 DrawerContainer 抽屉布局控件</h2><p>用于右侧详情、筛选和快速编辑，比 Portal 更强调从边缘进入和尺寸约束。</p></div><span class="tag">P1</span></div>
+        <div class="proto">
+          <div class="toolbox"><div class="pane-title">Toolbox</div><div class="tool-list"><div class="tool active"><span class="ico">DR</span><span>DrawerContainer</span></div><div class="tool"><span class="ico">H</span><span>DrawerHeader</span></div><div class="tool"><span class="ico">F</span><span>FormGrid</span></div></div></div>
+          <div class="canvas"><div class="pane-title">Designer Canvas <span>placement:right</span></div><div class="canvas-body"><div class="layout-control drawer-control"><div class="control-label">DrawerContainer</div><span class="handle h1"></span><span class="handle h2"></span><span class="handle h3"></span><span class="handle h4"></span><div class="drawer-base"><div class="row">page content behind drawer</div><div class="dropzone">page root slot</div></div><div class="drawer-panel"><div class="drawer-title">右侧详情 <span>420px</span></div><div class="drawer-body"><div class="slot">FormGrid slot</div><div class="slot">Entry table slot</div><div class="dropzone">drop section</div></div><div class="drawer-foot"><span class="mini-btn">取消</span><span class="mini-btn primary">保存</span></div></div></div></div></div>
+          <div class="inspector"><div class="pane-title">Properties</div><div class="prop-list"><div class="prop-row"><span>placement</span><span>right</span></div><div class="prop-row"><span>width</span><span>420px</span></div><div class="prop-row"><span>mask</span><span>false</span></div><div class="prop-row"><span>resizable</span><span>true</span></div></div></div>
+        </div>
+        <div class="contract"><div class="contract-box"><strong>支持布局</strong>left/right/top/bottom 抽屉、可调整宽度</div><div class="contract-box"><strong>插槽</strong>header、body、footer、extraAction</div><div class="contract-box"><strong>子控件</strong>FormGrid、Table、Tree、Filter、Preview</div></div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><div><h2>15 DialogContainer 弹窗布局控件</h2><p>用于编辑、参照选择、批量操作和确认流程，设计态显示遮罩、焦点边界和底部动作。</p></div><span class="tag">P1</span></div>
+        <div class="proto">
+          <div class="toolbox"><div class="pane-title">Toolbox</div><div class="tool-list"><div class="tool active"><span class="ico">DG</span><span>DialogContainer</span></div><div class="tool"><span class="ico">T</span><span>TitleBar</span></div><div class="tool"><span class="ico">A</span><span>ActionFooter</span></div></div></div>
+          <div class="canvas"><div class="pane-title">Designer Canvas <span>modal</span></div><div class="canvas-body"><div class="layout-control dialog-control"><div class="control-label">DialogContainer</div><span class="handle h1"></span><span class="handle h2"></span><span class="handle h3"></span><span class="handle h4"></span><div class="dialog-shade"></div><div class="dialog-box"><div class="dialog-title">批量维护字段 <span>focus trap</span></div><div class="dialog-body"><div class="slot">FormGrid slot</div><div class="dropzone">drop TablePicker</div></div><div class="dialog-foot"><span class="mini-btn">取消</span><span class="mini-btn primary">确定</span></div></div></div></div></div>
+          <div class="inspector"><div class="pane-title">Properties</div><div class="prop-list"><div class="prop-row"><span>modal</span><span>true</span></div><div class="prop-row"><span>width</span><span>720px</span></div><div class="prop-row"><span>height</span><span>auto</span></div><div class="prop-row"><span>destroy</span><span>on close</span></div></div></div>
+        </div>
+        <div class="contract"><div class="contract-box"><strong>支持布局</strong>模态弹窗、非模态弹窗、拖动、尺寸</div><div class="contract-box"><strong>插槽</strong>title、body、footer、toolbar</div><div class="contract-box"><strong>子控件</strong>FormGrid、TablePicker、TreePicker、WizardSteps</div></div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><div><h2>16 MasterDetailContainer 主从布局控件</h2><p>用于主表/明细、树/表单、列表/详情，承担上下文传递和懒加载协议。</p></div><span class="tag">P0</span></div>
+        <div class="proto">
+          <div class="toolbox"><div class="pane-title">Toolbox</div><div class="tool-list"><div class="tool active"><span class="ico">MD</span><span>MasterDetailContainer</span></div><div class="tool"><span class="ico">M</span><span>MasterSlot</span></div><div class="tool"><span class="ico">D</span><span>DetailSlot</span></div></div></div>
+          <div class="canvas"><div class="pane-title">Designer Canvas <span>context: selected row</span></div><div class="canvas-body"><div class="layout-control master-detail-control"><div class="control-label">MasterDetailContainer</div><span class="handle h1"></span><span class="handle h2"></span><span class="handle h3"></span><span class="handle h4"></span><div class="md-master"><div class="md-title">master slot</div><div class="md-list"><div class="md-row active"><span>1</span><span>销售订单 SO-001</span></div><div class="md-row"><span>2</span><span>销售订单 SO-002</span></div><div class="md-row"><span>3</span><span>销售订单 SO-003</span></div><div class="dropzone">drop Table/Tree</div></div></div><div class="split-bar"></div><div class="md-detail"><div class="md-title">detail slot</div><div class="md-detail-body"><div class="slot">selected row context</div><div class="dropzone">drop FormGrid / child Table / Tabs</div></div></div></div></div></div>
+          <div class="inspector"><div class="pane-title">Properties</div><div class="prop-list"><div class="prop-row"><span>masterKey</span><span>id</span></div><div class="prop-row"><span>detailLoad</span><span>lazy</span></div><div class="prop-row"><span>context</span><span>row + parent</span></div><div class="prop-row"><span>split</span><span>resizable</span></div></div></div>
+        </div>
+        <div class="contract"><div class="contract-box"><strong>支持布局</strong>主从、列表详情、树详情、嵌套主从</div><div class="contract-box"><strong>插槽</strong>master、detail、emptyDetail、detailToolbar</div><div class="contract-box"><strong>子控件</strong>Table、Tree、FormGrid、Tabs、NestedTable</div></div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

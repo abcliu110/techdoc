@@ -1,0 +1,25 @@
+{
+  "name": "ai-prototype-pipeline",
+  "version": "1.0.0",
+  "description": "AI 驱动的原型设计闭环验证管线",
+  "scripts": {
+    "start": "node scripts/orchestrator.js",
+    "validate": "node scripts/validate-prototype.js http://localhost:3000",
+    "audit": "node scripts/axe-audit.js",
+    "lint": "eslint prototypes/ --config config/.eslintrc.js",
+    "stylelint": "stylelint \"prototypes/**/*.css\" --config config/stylelint.config.js"
+  },
+  "dependencies": {
+    "playwright": "^1.40.0",
+    "axe-core": "^4.8.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "eslint-plugin-react": "^7.33.0",
+    "eslint-plugin-tailwindcss": "^3.13.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "stylelint": "^15.0.0",
+    "stylelint-config-standard": "^34.0.0"
+  }
+}

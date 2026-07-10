@@ -1,0 +1,2137 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>T-207 Web 页面设计器 — 可交互原型</title>
+  <style>
+    :root {
+      --bg: #e8edf4;
+      --panel: #ffffff;
+      --soft: #f5f7fa;
+      --head: #eef2f7;
+      --line: #cbd5e1;
+      --line-dark: #a7b4c5;
+      --text: #1f2937;
+      --muted: #66758a;
+      --blue: #1f5fbf;
+      --blue-2: #2d74d7;
+      --blue-soft: #e8f1ff;
+      --blue-light: #f0f6ff;
+      --green: #0f7a4c;
+      --green-soft: #eefaf4;
+      --amber: #a15c06;
+      --amber-soft: #fff8ed;
+      --red: #b42318;
+      --red-soft: #fef2f2;
+      --purple: #6d28d9;
+      --purple-soft: #faf5ff;
+      --shadow: 0 10px 24px rgba(15, 23, 42, 0.10);
+      font-family: "Microsoft YaHei UI", "Segoe UI", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+      height: 100vh;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* ===== APP SHELL ===== */
+    .app {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: 26px 36px minmax(0, 1fr) 52px 22px;
+    }
+
+    .menu-bar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0 10px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      color: #536276;
+      font-size: 11px;
+    }
+
+    .menu-bar span { cursor: pointer; padding: 0 2px; white-space: nowrap; }
+    .menu-bar span:first-child { color: var(--blue); font-weight: 700; }
+
+    .cmd-bar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: 8px;
+      padding: 0 10px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-icon {
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      border-radius: 4px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .brand-text strong { font-size: 12px; font-weight: 700; display: block; line-height: 1.2; }
+    .brand-text span { font-size: 10px; color: var(--muted); display: block; line-height: 1.2; }
+
+    .cmd-tools { display: flex; align-items: center; gap: 4px; }
+
+    .btn {
+      height: 26px;
+      min-width: 32px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      color: #334155;
+      font-size: 11px;
+      white-space: nowrap;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s;
+    }
+
+    .btn:hover { background: var(--blue-light); border-color: var(--blue); }
+    .btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .btn.primary:hover { background: var(--blue-2); }
+    .btn.warn { background: var(--amber-soft); border-color: #e3bf81; color: var(--amber); }
+    .btn.active { background: var(--blue-soft); border-color: var(--blue); color: var(--blue); }
+
+    .pill {
+      height: 24px;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      color: var(--muted);
+      font-size: 10px;
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    .pill.blue { background: var(--blue-soft); color: var(--blue); border-color: #b9cdfc; }
+    .pill.green { background: var(--green-soft); color: var(--green); border-color: #b7dfcd; }
+    .pill.red { background: var(--red-soft); color: var(--red); border-color: #fca5a5; }
+
+    /* ===== 3-PANEL WORKSPACE ===== */
+    .workspace {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr) 260px;
+    }
+
+    .panel-left,
+    .panel-right {
+      min-height: 0;
+      background: #fff;
+      display: grid;
+      grid-template-rows: 28px minmax(0, 1fr);
+    }
+
+    .panel-left { border-right: 1px solid var(--line); }
+    .panel-right { border-left: 1px solid var(--line); }
+
+    .panel-tabs {
+      display: flex;
+      align-items: end;
+      gap: 1px;
+      padding: 0 5px;
+      background: var(--head);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tab {
+      height: 24px;
+      padding: 0 8px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid transparent;
+      border-bottom: 0;
+      border-radius: 4px 4px 0 0;
+      color: #536276;
+      font-size: 10px;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+
+    .tab:hover { color: var(--blue); }
+
+    .tab.active {
+      border-color: var(--line);
+      background: #fff;
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .panel-content {
+      min-height: 0;
+      overflow: auto;
+      padding: 8px;
+    }
+
+    /* ===== LEFT TOOLBOX ===== */
+    .search-box {
+      width: 100%;
+      height: 26px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 0 8px;
+      font-size: 11px;
+      margin-bottom: 8px;
+      outline: none;
+    }
+
+    .search-box:focus { border-color: var(--blue); }
+
+    .group-label {
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6px;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-bottom: 0;
+      font-size: 10px;
+      font-weight: 700;
+      border-radius: 3px 3px 0 0;
+      color: var(--text);
+    }
+
+    .item-list {
+      border: 1px solid var(--line);
+      border-top: 0;
+      border-radius: 0 0 3px 3px;
+      margin-bottom: 8px;
+      background: #fff;
+    }
+
+    .item {
+      height: 28px;
+      display: grid;
+      grid-template-columns: 20px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 6px;
+      padding: 0 6px;
+      border-bottom: 1px solid #edf2f7;
+      font-size: 11px;
+      color: #334155;
+      cursor: grab;
+      transition: background 0.1s;
+    }
+
+    .item:last-child { border-bottom: 0; }
+    .item:hover { background: #f0f5ff; }
+    .item.dragging { opacity: 0.4; }
+    .item.active { background: var(--blue-soft); box-shadow: inset 2px 0 0 var(--blue); }
+
+    .item[draggable="true"]:active { cursor: grabbing; }
+
+    .ico {
+      width: 18px;
+      height: 18px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line-dark);
+      border-radius: 3px;
+      background: #fff;
+      color: #526174;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .ico.blue { border-color: var(--blue); background: var(--blue-soft); color: var(--blue); }
+    .ico.green { border-color: var(--green); background: var(--green-soft); color: var(--green); }
+    .ico.amber { border-color: var(--amber); background: var(--amber-soft); color: var(--amber); }
+    .ico.purple { border-color: var(--purple); background: var(--purple-soft); color: var(--purple); }
+
+    .badge { color: var(--muted); font-size: 9px; }
+
+    /* ===== CENTER CANVAS ===== */
+    .panel-center {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 28px minmax(0, 1fr);
+      background: #e6edf5;
+    }
+
+    .canvas-bar {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      padding: 0 8px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .doc-tab {
+      height: 24px;
+      min-width: 140px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      border-bottom: 0;
+      border-radius: 4px 4px 0 0;
+      background: #fff;
+      color: #334155;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .doc-tab.active {
+      background: #fff;
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .doc-tab .close {
+      width: 14px;
+      height: 14px;
+      display: grid;
+      place-items: center;
+      border-radius: 2px;
+      font-size: 10px;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .doc-tab .close:hover { background: var(--red-soft); color: var(--red); }
+
+    .viewport {
+      min-height: 0;
+      overflow: auto;
+      padding: 16px;
+      position: relative;
+      background:
+        linear-gradient(#edf2f7 1px, transparent 1px),
+        linear-gradient(90deg, #edf2f7 1px, transparent 1px),
+        #dfe7f0;
+      background-size: 22px 22px;
+    }
+
+    /* ===== GRID AREA OVERLAYS ===== */
+    .grid-overlay {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      pointer-events: none;
+      z-index: 1;
+      display: none;
+    }
+
+    .grid-overlay.visible { display: block; }
+
+    .snap-line-v {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--blue);
+      opacity: 0.3;
+    }
+
+    .snap-line-h {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--blue);
+      opacity: 0.3;
+    }
+
+    .snap-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 9px;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* ===== WEBPAGE CANVAS ===== */
+    .webpage {
+      height: 100%;
+      min-height: 500px;
+      border: 1px solid var(--line-dark);
+      background: #fff;
+      display: grid;
+      grid-template-rows: 34px 30px minmax(0, 1fr) 34px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      z-index: 2;
+    }
+
+    .page-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .page-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+
+    .page-nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 9px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+    }
+
+    .nav-chip {
+      height: 22px;
+      padding: 0 8px;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 3px;
+      color: var(--muted);
+      font-size: 10px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+
+    .nav-chip:hover { color: var(--blue); }
+
+    .nav-chip.active {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .page-main {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 200px minmax(0, 1fr) 240px;
+      overflow: hidden;
+    }
+
+    .dock-nav {
+      min-height: 0;
+      border-right: 1px solid var(--line);
+      background: #f7f9fc;
+      display: grid;
+      grid-template-rows: 26px minmax(0, 1fr);
+    }
+
+    .dock-head {
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      font-size: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .dock-body {
+      padding: 6px;
+      display: grid;
+      align-content: start;
+      gap: 3px;
+      overflow: auto;
+    }
+
+    .dock-row {
+      height: 26px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      border-radius: 3px;
+      color: var(--muted);
+      font-size: 10px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+
+    .dock-row:hover { background: #eef2f8; }
+    .dock-row.active { background: var(--blue-soft); color: var(--blue); font-weight: 700; }
+
+    .content {
+      min-width: 0;
+      min-height: 0;
+      padding: 8px;
+      display: grid;
+      grid-template-rows: auto auto auto auto auto;
+      gap: 8px;
+      overflow: auto;
+      background: #fbfcfe;
+    }
+
+    /* ===== SECTION BLOCKS (DROP TARGETS) ===== */
+    .section-block {
+      border: 1px solid var(--line);
+      background: #fff;
+      position: relative;
+      min-width: 0;
+      overflow: hidden;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .section-block:hover { border-color: var(--blue-2); }
+
+    .section-block.selected {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 2px rgba(31, 95, 191, 0.15);
+    }
+
+    .section-block.drop-target {
+      border-color: var(--blue);
+      border-style: dashed;
+      background: var(--blue-light);
+    }
+
+    .section-block.drop-target::before {
+      content: "↓ 拖放至此";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 4px 12px;
+      border-radius: 4px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 11px;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .sel-badge {
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 8px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 10px;
+      z-index: 5;
+      border-radius: 0 0 3px 0;
+    }
+
+    .section-head-bar {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .section-head-bar:hover { background: #eef3f9; }
+
+    .section-head-bar span { color: var(--muted); font-weight: 400; font-size: 9px; }
+
+    /* Resize handles */
+    .resize-handles { display: none; }
+
+    .section-block.selected .resize-handles { display: block; }
+
+    .resize-handle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border: 1.5px solid var(--blue);
+      background: #fff;
+      z-index: 6;
+    }
+
+    .resize-handle.h1 { left: -4px; top: -4px; cursor: nw-resize; }
+    .resize-handle.h2 { right: -4px; top: -4px; cursor: ne-resize; }
+    .resize-handle.h3 { left: -4px; bottom: -4px; cursor: sw-resize; }
+    .resize-handle.h4 { right: -4px; bottom: -4px; cursor: se-resize; }
+
+    /* Form Grid */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(24, minmax(0, 1fr));
+      gap: 6px 8px;
+      padding: 24px 12px 12px;
+    }
+
+    .field {
+      height: 22px;
+      display: grid;
+      grid-template-columns: 52px minmax(0, 1fr);
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+      font-size: 9px;
+    }
+
+    .span4 { grid-column: span 4; }
+    .span6 { grid-column: span 6; }
+    .span8 { grid-column: span 8; }
+    .span12 { grid-column: span 12; }
+    .span16 { grid-column: span 16; }
+
+    .field label { color: var(--muted); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .field input {
+      height: 20px;
+      display: flex;
+      align-items: center;
+      padding: 0 5px;
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      color: #334155;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 9px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .field input:focus { border-color: var(--blue); background: var(--blue-light); }
+
+    /* Toolbar */
+    .toolbar-strip {
+      height: 34px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 10px;
+      overflow: hidden;
+      flex-wrap: wrap;
+    }
+
+    .op-btn {
+      height: 23px;
+      padding: 0 9px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #fff;
+      color: #526174;
+      font-size: 10px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+
+    .op-btn:hover { background: #f0f5ff; border-color: #9fb9e8; }
+    .op-btn.active { border-color: #9fb9e8; background: var(--blue-soft); color: var(--blue); font-weight: 700; }
+
+    /* Table */
+    .table-wrap { min-height: 0; overflow: auto; max-height: 200px; }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 10px;
+    }
+
+    .data-table th, .data-table td {
+      height: 26px;
+      padding: 0 6px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .data-table th { background: #f5f7fa; font-weight: 700; position: sticky; top: 0; z-index: 1; }
+
+    .nested-row td { height: 44px; background: #fafbfe; padding: 4px; }
+
+    .nested {
+      height: 36px;
+      display: grid;
+      grid-template-columns: 64px minmax(0, 1fr);
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .nested strong {
+      display: grid;
+      place-items: center;
+      border-right: 1px solid var(--line);
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-size: 9px;
+    }
+
+    .nested span {
+      display: flex;
+      align-items: center;
+      padding: 0 6px;
+      color: var(--muted);
+      font-size: 9px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Aside */
+    .aside-panel {
+      min-height: 0;
+      border-left: 1px solid var(--line);
+      background: #f8fafc;
+      display: grid;
+      grid-template-rows: 26px minmax(0, 1fr);
+      overflow: hidden;
+    }
+
+    .aside-body { padding: 6px; display: grid; gap: 6px; align-content: start; overflow: auto; }
+
+    .info-card { border: 1px solid var(--line); background: #fff; border-radius: 3px; overflow: hidden; }
+
+    .info-card-head {
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      background: #f5f7fa;
+      border-bottom: 1px solid var(--line);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .info-card-body { padding: 8px; font-size: 10px; color: var(--muted); line-height: 1.6; }
+
+    .timeline-item { display: grid; grid-template-columns: 14px minmax(0, 1fr); gap: 5px; line-height: 1.5; }
+    .timeline-dot { width: 6px; height: 6px; display: inline-block; margin-top: 5px; border-radius: 50%; }
+    .timeline-dot.filled { background: var(--green); }
+    .timeline-dot.empty { background: none; border: 1px solid var(--line); }
+
+    .page-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      padding: 0 10px;
+      border-top: 1px solid var(--line);
+      background: #fff;
+    }
+
+    /* ===== RIGHT PROPERTIES ===== */
+    .prop-select {
+      width: 100%;
+      height: 28px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 0 8px;
+      font-size: 11px;
+      margin-bottom: 8px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .prop-select:focus { border-color: var(--blue); }
+
+    .prop-box {
+      border: 1px solid var(--line);
+      margin-bottom: 8px;
+      background: #fff;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .prop-cat {
+      height: 26px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      background: var(--soft);
+      border-bottom: 1px solid var(--line);
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .prop-cat:hover { background: #eef3f9; }
+
+    .prop-row {
+      min-height: 28px;
+      display: grid;
+      grid-template-columns: 88px minmax(0, 1fr);
+      border-bottom: 1px solid #edf2f7;
+      font-size: 10px;
+    }
+
+    .prop-row:last-child { border-bottom: 0; }
+    .prop-row:hover { background: #fafcfe; }
+
+    .prop-row label {
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      background: #fbfcfe;
+      color: var(--muted);
+      border-right: 1px solid #edf2f7;
+      font-size: 10px;
+    }
+
+    .prop-row .value {
+      display: flex;
+      align-items: center;
+      padding: 0 6px;
+      color: #334155;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .prop-row .value:hover { background: var(--blue-light); color: var(--blue); }
+
+    .prop-row .value input {
+      width: 100%;
+      height: 100%;
+      border: none;
+      padding: 0 4px;
+      font-size: 10px;
+      background: transparent;
+      outline: none;
+    }
+
+    .layout-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      padding: 6px;
+    }
+
+    .layout-cell {
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      font-size: 9px;
+      color: var(--muted);
+      cursor: pointer;
+      background: #fff;
+      transition: all 0.1s;
+    }
+
+    .layout-cell:hover { border-color: var(--blue-2); color: var(--blue); }
+    .layout-cell.active { border-color: var(--blue); background: var(--blue-soft); color: var(--blue); font-weight: 700; }
+
+    /* ===== BOTTOM STATUS BAR ===== */
+    .bottom-bar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 240px;
+      border-top: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .errors-panel {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: 26px minmax(0, 1fr);
+      overflow: hidden;
+    }
+
+    .bottom-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 10px;
+      background: var(--head);
+      border-bottom: 1px solid var(--line);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .err-list {
+      overflow: auto;
+      display: grid;
+      align-content: start;
+      gap: 0;
+    }
+
+    .err-row {
+      height: 22px;
+      display: grid;
+      grid-template-columns: 58px 70px minmax(0, 1fr) 80px;
+      align-items: center;
+      border-bottom: 1px solid #edf2f7;
+      font-size: 9px;
+      padding: 0 8px;
+      gap: 6px;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+
+    .err-row:hover { background: var(--blue-light); }
+    .err-row .type { font-weight: 700; }
+    .err-row .type.error { color: var(--red); }
+    .err-row .type.warn { color: var(--amber); }
+    .err-row .type.info { color: var(--green); }
+
+    .schema-preview {
+      border-left: 1px solid var(--line);
+      background: #fbfcfe;
+      padding: 6px;
+      color: #334155;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 9px;
+      line-height: 1.5;
+      white-space: pre;
+      overflow: auto;
+    }
+
+    .status-bar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto auto auto;
+      align-items: center;
+      gap: 10px;
+      padding: 0 10px;
+      background: #f8fafc;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .breadcrumb { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .kbd {
+      display: inline-flex;
+      align-items: center;
+      height: 18px;
+      padding: 0 5px;
+      border: 1px solid var(--line-dark);
+      border-radius: 3px;
+      background: #fff;
+      color: #475569;
+      font-size: 9px;
+    }
+
+    /* ===== MODE SWITCH ===== */
+    .mode-indicator {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 8px 20px;
+      border-radius: 20px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 8px 24px rgba(31, 95, 191, 0.3);
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .mode-indicator.show { opacity: 1; }
+
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed;
+      top: 70px;
+      right: 20px;
+      padding: 10px 16px;
+      border-radius: 6px;
+      background: var(--text);
+      color: #fff;
+      font-size: 11px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      z-index: 200;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.3s;
+      max-width: 300px;
+    }
+
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { background: var(--green); }
+    .toast.error { background: var(--red); }
+    .toast.info { background: var(--blue); }
+
+    /* ===== OUTLINE VIEW ===== */
+    .outline-list {
+      padding: 4px 0;
+    }
+
+    .outline-item {
+      height: 26px;
+      display: grid;
+      grid-template-columns: 16px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 6px;
+      padding: 0 6px;
+      font-size: 10px;
+      color: #334155;
+      cursor: pointer;
+      border-left: 2px solid transparent;
+      transition: all 0.1s;
+    }
+
+    .outline-item:hover { background: #f0f5ff; }
+    .outline-item.active { background: var(--blue-soft); border-left-color: var(--blue); color: var(--blue); font-weight: 700; }
+    .outline-item.indent { padding-left: 20px; }
+    .outline-item.indent2 { padding-left: 34px; }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ===== MENU BAR ===== -->
+  <div class="menu-bar">
+    <span>文件</span><span>编辑</span><span>视图</span><span>布局</span><span>数据</span><span>规则</span><span>权限</span><span>发布</span><span>帮助</span>
+    <span style="margin-left:auto;color:var(--line-dark);font-size:10px;">T-207 Web 页面设计器 v1.0 · 可交互原型</span>
+  </div>
+
+  <!-- ===== COMMAND BAR ===== -->
+  <div class="cmd-bar">
+    <div class="brand">
+      <div class="brand-icon">T</div>
+      <div class="brand-text">
+        <strong>企业单据页面设计器</strong>
+        <span>销售订单 PC Web 页面</span>
+      </div>
+    </div>
+    <div class="cmd-tools">
+      <button class="btn" onclick="undoRedo('undo')" title="Ctrl+Z">↶ 撤销</button>
+      <button class="btn" onclick="undoRedo('redo')" title="Ctrl+Y">↷ 重做</button>
+      <button class="btn" onclick="savePage()">💾 保存</button>
+      <button class="btn warn" onclick="runValidation()">⚠️ 校验 <span id="errCount">3</span></button>
+    </div>
+    <div class="cmd-tools">
+      <button class="btn" id="btnLayout" onclick="switchMode('layout')">📐 布局</button>
+      <button class="btn" id="btnTable" onclick="switchMode('table')">📊 表格</button>
+      <button class="btn" id="btnDual" onclick="switchMode('dual')">👁 双视图</button>
+      <button class="btn primary" onclick="publishPage()">🚀 发布</button>
+    </div>
+    <div class="cmd-tools">
+      <select class="pill" id="breakpointSelect" onchange="changeBreakpoint(this.value)" style="cursor:pointer;">
+        <option value="1440" selected>1440</option>
+        <option value="1280">1280</option>
+        <option value="1600">1600</option>
+        <option value="1920">1920</option>
+      </select>
+      <span class="pill blue" id="gridAreaToggle" onclick="toggleGridArea()" style="cursor:pointer;">Grid 区</span>
+    </div>
+  </div>
+
+  <!-- ===== 3-PANEL WORKSPACE ===== -->
+  <div class="workspace">
+
+    <!-- ===== LEFT: TOOLBOX ===== -->
+    <aside class="panel-left">
+      <div class="panel-tabs">
+        <div class="tab active" onclick="switchLeftTab(this, 'containers')">容器</div>
+        <div class="tab" onclick="switchLeftTab(this, 'table')">表格</div>
+        <div class="tab" onclick="switchLeftTab(this, 'fields')">字段</div>
+        <div class="tab" onclick="switchLeftTab(this, 'outline')">大纲</div>
+      </div>
+      <div class="panel-content">
+
+        <!-- CONTAINERS TAB -->
+        <div id="tab-containers">
+          <input class="search-box" placeholder="🔍 搜索组件..." oninput="filterTools(this.value)">
+          <div class="group-label">布局容器</div>
+          <div class="item-list" id="toolList">
+            <div class="item" draggable="true" data-type="GridLayout" data-name="GridLayout" data-icon="blue">
+              <span class="ico blue">G</span>
+              <span>GridLayout</span>
+              <span class="badge">grid</span>
+            </div>
+            <div class="item" draggable="true" data-type="FlexLayout" data-name="FlexLayout" data-icon="">
+              <span class="ico">F</span>
+              <span>FlexLayout</span>
+              <span class="badge">flex</span>
+            </div>
+            <div class="item" draggable="true" data-type="DockLayout" data-name="DockLayout" data-icon="">
+              <span class="ico">D</span>
+              <span>DockLayout</span>
+              <span class="badge">dock</span>
+            </div>
+            <div class="item" draggable="true" data-type="SplitPane" data-name="SplitPane" data-icon="">
+              <span class="ico">S</span>
+              <span>SplitPane</span>
+              <span class="badge">split</span>
+            </div>
+            <div class="item" draggable="true" data-type="StickyRegion" data-name="StickyRegion" data-icon="">
+              <span class="ico">K</span>
+              <span>StickyRegion</span>
+              <span class="badge">sticky</span>
+            </div>
+            <div class="item" draggable="true" data-type="PortalOverlay" data-name="Portal Overlay" data-icon="">
+              <span class="ico">P</span>
+              <span>Portal Overlay</span>
+              <span class="badge">portal</span>
+            </div>
+          </div>
+          <div class="group-label">业务容器</div>
+          <div class="item-list">
+            <div class="item" draggable="true" data-type="BillPage" data-name="BillPage" data-icon="green">
+              <span class="ico green">B</span>
+              <span>BillPage</span>
+              <span class="badge">单据</span>
+            </div>
+            <div class="item" draggable="true" data-type="MasterDetail" data-name="MasterDetail" data-icon="green">
+              <span class="ico green">M</span>
+              <span>MasterDetail</span>
+              <span class="badge">主从</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TABLE TAB -->
+        <div id="tab-table" style="display:none;">
+          <input class="search-box" placeholder="🔍 搜索表格...">
+          <div class="group-label">表格组件</div>
+          <div class="item-list">
+            <div class="item" draggable="true" data-type="EntryTable" data-name="EntryTable" data-icon="amber">
+              <span class="ico amber">T</span>
+              <span>EntryTable</span>
+              <span class="badge">分录</span>
+            </div>
+            <div class="item" draggable="true" data-type="BatchDetail" data-name="BatchDetail" data-icon="amber">
+              <span class="ico amber">C</span>
+              <span>BatchDetail</span>
+              <span class="badge">批次</span>
+            </div>
+            <div class="item" draggable="true" data-type="SerialDetail" data-name="SerialDetail" data-icon="amber">
+              <span class="ico amber">L</span>
+              <span>SerialDetail</span>
+              <span class="badge">序列号</span>
+            </div>
+          </div>
+          <div class="group-label">列类型</div>
+          <div class="item-list">
+            <div class="item" draggable="true" data-type="RefColumn" data-name="基础资料列" data-icon="purple">
+              <span class="ico purple">R</span>
+              <span>基础资料列</span>
+              <span class="badge">ref</span>
+            </div>
+            <div class="item" draggable="true" data-type="MoneyColumn" data-name="金额列" data-icon="purple">
+              <span class="ico purple">$</span>
+              <span>金额列</span>
+              <span class="badge">money</span>
+            </div>
+            <div class="item" draggable="true" data-type="DateColumn" data-name="日期列" data-icon="purple">
+              <span class="ico purple">D</span>
+              <span>日期列</span>
+              <span class="badge">date</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- FIELDS TAB -->
+        <div id="tab-fields" style="display:none;">
+          <input class="search-box" placeholder="🔍 搜索字段...">
+          <div class="group-label">SalesOrder BO</div>
+          <div class="item-list">
+            <div class="item" draggable="true" data-type="Field" data-name="客户 customerId" data-icon="purple">
+              <span class="ico purple">C</span>
+              <span>客户</span>
+              <span class="badge">ref</span>
+            </div>
+            <div class="item" draggable="true" data-type="Field" data-name="销售组织 orgId" data-icon="purple">
+              <span class="ico purple">O</span>
+              <span>销售组织</span>
+              <span class="badge">ref</span>
+            </div>
+            <div class="item" draggable="true" data-type="Field" data-name="物料 materialId" data-icon="purple">
+              <span class="ico purple">M</span>
+              <span>物料</span>
+              <span class="badge">ref</span>
+            </div>
+            <div class="item" draggable="true" data-type="Field" data-name="数量 qty" data-icon="purple">
+              <span class="ico purple">Q</span>
+              <span>数量</span>
+              <span class="badge">num</span>
+            </div>
+            <div class="item" draggable="true" data-type="Field" data-name="金额 amount" data-icon="purple">
+              <span class="ico purple">$</span>
+              <span>金额</span>
+              <span class="badge">money</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- OUTLINE TAB -->
+        <div id="tab-outline" style="display:none;">
+          <div class="outline-list">
+            <div class="outline-item active" onclick="selectSection('HeaderFormGrid')">
+              <span>📄</span>
+              <span>PageLayout</span>
+              <span class="badge">page</span>
+            </div>
+            <div class="outline-item indent" onclick="selectSection('DockNav')">
+              <span>📋</span>
+              <span>DockNav</span>
+              <span class="badge">dock</span>
+            </div>
+            <div class="outline-item indent" onclick="selectSection('MainContent')">
+              <span>📦</span>
+              <span>MainContent</span>
+              <span class="badge">fill</span>
+            </div>
+            <div class="outline-item indent2" onclick="selectSection('HeaderFormGrid')">
+              <span>📝</span>
+              <span>HeaderFormGrid</span>
+              <span class="badge">grid</span>
+            </div>
+            <div class="outline-item indent2" onclick="selectSection('ActionToolbar')">
+              <span>🔧</span>
+              <span>ActionToolbar</span>
+              <span class="badge">flex</span>
+            </div>
+            <div class="outline-item indent2" onclick="selectSection('EntryTable')">
+              <span>📊</span>
+              <span>EntryTable</span>
+              <span class="badge">table</span>
+            </div>
+            <div class="outline-item indent2" onclick="selectSection('TabsSection')">
+              <span>🏷</span>
+              <span>TabsSection</span>
+              <span class="badge">tabs</span>
+            </div>
+            <div class="outline-item indent" onclick="selectSection('AsidePanel')">
+              <span>📌</span>
+              <span>AsidePanel</span>
+              <span class="badge">aside</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- ===== CENTER: CANVAS ===== -->
+    <section class="panel-center">
+      <div class="canvas-bar">
+        <div style="display:flex;gap:4px;align-items:center;">
+          <div class="doc-tab active">
+            <span>销售订单.page.json</span>
+            <span class="close">✕</span>
+          </div>
+          <div class="doc-tab">
+            <span>预览</span>
+            <span class="close">✕</span>
+          </div>
+        </div>
+        <div class="cmd-tools">
+          <button class="btn" onclick="toggleSnaplines()">📏 列线</button>
+          <button class="btn" onclick="toggleSnaplines()">🧲 吸附</button>
+          <button class="btn" onclick="toggleGridArea()">📐 Grid区</button>
+          <span class="pill" id="zoomLevel">100%</span>
+          <button class="btn" onclick="zoomCanvas(-10)">➖</button>
+          <button class="btn" onclick="zoomCanvas(10)">➕</button>
+        </div>
+      </div>
+
+      <div class="viewport" id="viewport">
+
+        <!-- Grid Area Overlay -->
+        <div class="grid-overlay" id="gridOverlay">
+          <div class="snap-line-v" style="left:24%;"></div>
+          <div class="snap-line-v" style="left:calc(24% + 200px);"></div>
+          <div class="snap-line-v" style="left:calc(24% + 200px + 240px);"></div>
+          <div class="snap-badge">Grid: nav 200px | main 1fr | aside 240px</div>
+        </div>
+
+        <!-- Webpage Canvas -->
+        <div class="webpage" id="webpage" ondragover="onDragOver(event)" ondrop="onDrop(event)" ondragleave="onDragLeave(event)">
+
+          <!-- Topbar -->
+          <div class="page-top">
+            <div class="page-title"><span class="dot"></span>销售订单</div>
+            <div style="display:flex;gap:4px;">
+              <button class="btn" style="height:22px;font-size:9px;padding:0 6px;">保存草稿</button>
+              <button class="btn primary" style="height:22px;font-size:9px;padding:0 6px;" onclick="runPreview()">▶ 运行预览</button>
+            </div>
+          </div>
+
+          <!-- Tab Nav -->
+          <div class="page-nav">
+            <span class="nav-chip active" onclick="switchNavChip(this)">基本信息</span>
+            <span class="nav-chip" onclick="switchNavChip(this)">订单明细</span>
+            <span class="nav-chip" onclick="switchNavChip(this)">批次明细</span>
+            <span class="nav-chip" onclick="switchNavChip(this)">交付计划</span>
+            <span class="nav-chip" onclick="switchNavChip(this)">审批记录</span>
+            <span class="nav-chip" onclick="switchNavChip(this)">关联单据</span>
+          </div>
+
+          <!-- 3-Column Layout -->
+          <div class="page-main">
+
+            <!-- Dock Nav -->
+            <nav class="dock-nav">
+              <div class="dock-head">业务导航 <span style="font-weight:400;font-size:9px;color:var(--muted);">200px</span></div>
+              <div class="dock-body">
+                <div class="dock-row active" onclick="switchDockRow(this)">📋 基本信息</div>
+                <div class="dock-row" onclick="switchDockRow(this)">📦 订单明细</div>
+                <div class="dock-row" onclick="switchDockRow(this)">📑 批次明细</div>
+                <div class="dock-row" onclick="switchDockRow(this)">📎 合同附件</div>
+                <div class="dock-row" onclick="switchDockRow(this)">✅ 审批记录</div>
+                <div class="dock-row" onclick="switchDockRow(this)">🔗 关联单据</div>
+              </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="content" id="mainContent">
+
+              <!-- Section 1: HeaderFormGrid -->
+              <section class="section-block selected" id="sec-HeaderFormGrid"
+                data-name="HeaderFormGrid"
+                data-type="GridLayout"
+                onclick="selectSectionBlock(event, 'HeaderFormGrid')"
+                ondragover="onDragOverSection(event)" ondrop="onDropSection(event)">
+                <div class="resize-handles">
+                  <div class="resize-handle h1"></div>
+                  <div class="resize-handle h2"></div>
+                  <div class="resize-handle h3"></div>
+                  <div class="resize-handle h4"></div>
+                </div>
+                <div class="sel-badge" id="badge-HeaderFormGrid">HeaderFormGrid — Grid 24列</div>
+                <div class="form-grid">
+                  <div class="field span6"><label>客户</label><input value="杭州未来科技" onclick="event.stopPropagation()"></div>
+                  <div class="field span6"><label>销售组织</label><input value="华东销售中心" onclick="event.stopPropagation()"></div>
+                  <div class="field span6"><label>订单日期</label><input value="2026-07-09" onclick="event.stopPropagation()"></div>
+                  <div class="field span6"><label>币种</label><input value="CNY 人民币" onclick="event.stopPropagation()"></div>
+                  <div class="field span12"><label>收货地址</label><input value="浙江省杭州市余杭区文一西路 999 号" onclick="event.stopPropagation()"></div>
+                  <div class="field span6"><label>状态</label><input value="草稿" onclick="event.stopPropagation()"></div>
+                  <div class="field span6"><label>业务员</label><input value="张明" onclick="event.stopPropagation()"></div>
+                </div>
+              </section>
+
+              <!-- Section 2: ActionToolbar -->
+              <section class="section-block" id="sec-ActionToolbar"
+                data-name="ActionToolbar"
+                data-type="FlexLayout"
+                onclick="selectSectionBlock(event, 'ActionToolbar')"
+                ondragover="onDragOverSection(event)" ondrop="onDropSection(event)">
+                <div class="resize-handles">
+                  <div class="resize-handle h1"></div>
+                  <div class="resize-handle h2"></div>
+                  <div class="resize-handle h3"></div>
+                  <div class="resize-handle h4"></div>
+                </div>
+                <div class="section-head-bar">
+                  <span>FlexLayout 操作区 <span>flex-wrap / action buttons</span></span>
+                </div>
+                <div class="toolbar-strip">
+                  <span class="op-btn active">💾 保存</span>
+                  <span class="op-btn" onclick="toggleOpBtn(event)">📤 提交审批</span>
+                  <span class="op-btn" onclick="toggleOpBtn(event)">✅ 审核</span>
+                  <span class="op-btn" onclick="toggleOpBtn(event)">🔄 反审核</span>
+                  <span class="op-btn" onclick="toggleOpBtn(event)">🖨 打印</span>
+                  <span class="op-btn" onclick="toggleOpBtn(event)">📦 下推采购</span>
+                  <span class="op-btn" onclick="toggleOpBtn(event)">🔗 关联发货</span>
+                  <span class="op-btn" onclick="toggleOpBtn(event)">⋯ 更多</span>
+                </div>
+              </section>
+
+              <!-- Section 3: EntryTable -->
+              <section class="section-block" id="sec-EntryTable"
+                data-name="EntryTable"
+                data-type="EntryTable"
+                onclick="selectSectionBlock(event, 'EntryTable')"
+                ondragover="onDragOverSection(event)" ondrop="onDropSection(event)">
+                <div class="resize-handles">
+                  <div class="resize-handle h1"></div>
+                  <div class="resize-handle h2"></div>
+                  <div class="resize-handle h3"></div>
+                  <div class="resize-handle h4"></div>
+                </div>
+                <div class="section-head-bar">
+                  <span>EntryTable 分录表格 <span>冻结列 / 嵌套批次 / 虚拟滚动</span></span>
+                  <span style="font-weight:400;font-size:9px;color:var(--green);">汇总: ¥ 14,420.00</span>
+                </div>
+                <div class="toolbar-strip" style="border-bottom:1px solid var(--line);">
+                  <span class="op-btn active" onclick="toggleOpBtn(event)">➕ 新增行</span>
+                  <span class="op-btn" onclick="toggleOpBtn(event)">📋 复制行</span>
+                  <span class="op-btn" onclick="toggleOpBtn(event)">🗑 删除行</span>
+                  <span class="op-btn" onclick="toggleOpBtn(event)">📥 批量填充</span>
+                  <span class="op-btn" onclick="toggleOpBtn(event)">📦 批次</span>
+                  <span class="op-btn" onclick="toggleOpBtn(event)">🏷 序列号</span>
+                </div>
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <colgroup>
+                      <col style="width:36px"><col style="width:130px"><col style="width:60px"><col style="width:60px"><col style="width:90px"><col style="width:80px"><col style="width:80px">
+                    </colgroup>
+                    <thead>
+                      <tr><th>#</th><th>物料</th><th>单位</th><th>数量</th><th>单价</th><th>金额</th><th>交付日期</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>1</td><td>A-1001 标准件</td><td>PCS</td><td>20</td><td>128.00</td><td>2,560.00</td><td>07-20</td></tr>
+                      <tr class="nested-row"><td></td><td colspan="6"><div class="nested"><strong>批次明细</strong><span>批次号 B-001 / 库位 A-01-02 / 可用量 20 / 序列号 20 个</span></div></td></tr>
+                      <tr><td>2</td><td>B-2048 工业屏</td><td>PCS</td><td>8</td><td>860.00</td><td>6,880.00</td><td>07-26</td></tr>
+                      <tr><td>3</td><td>C-3100 线束组件</td><td>PCS</td><td>120</td><td>16.50</td><td>1,980.00</td><td>07-30</td></tr>
+                      <tr><td>4</td><td>D-5000 维保服务</td><td>次</td><td>1</td><td>2,000.00</td><td>2,000.00</td><td>08-01</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+
+              <!-- Section 4: TabsSection -->
+              <section class="section-block" id="sec-TabsSection"
+                data-name="TabsSection"
+                data-type="TabsContainer"
+                onclick="selectSectionBlock(event, 'TabsSection')"
+                ondragover="onDragOverSection(event)" ondrop="onDropSection(event)">
+                <div class="resize-handles">
+                  <div class="resize-handle h1"></div>
+                  <div class="resize-handle h2"></div>
+                  <div class="resize-handle h3"></div>
+                  <div class="resize-handle h4"></div>
+                </div>
+                <div class="section-head-bar">
+                  <span>Tabs / Collapse 扩展区 <span>懒加载 / 权限隐藏 / 局部滚动</span></span>
+                </div>
+                <div class="toolbar-strip">
+                  <span class="op-btn active">订单明细</span>
+                  <span class="op-btn" onclick="toggleOpBtn(event)">批次明细</span>
+                  <span class="op-btn" onclick="toggleOpBtn(event)">序列号</span>
+                  <span class="op-btn" onclick="toggleOpBtn(event)">合同条款</span>
+                  <span class="op-btn" onclick="toggleOpBtn(event)">交付计划</span>
+                  <span class="op-btn" onclick="toggleOpBtn(event)">变更记录</span>
+                </div>
+              </section>
+
+              <!-- Sticky Bottom Actions -->
+              <div style="display:flex;justify-content:flex-end;gap:6px;padding:4px 0;">
+                <button class="btn" style="height:28px;font-size:10px;">关闭</button>
+                <button class="btn" style="height:28px;font-size:10px;" onclick="savePage()">💾 保存草稿</button>
+                <button class="btn primary" style="height:28px;font-size:10px;" onclick="showToast('已提交审批', 'success')">📤 提交审批</button>
+              </div>
+            </main>
+
+            <!-- Aside Panel -->
+            <aside class="aside-panel">
+              <div class="dock-head">AsidePanel <span style="font-weight:400;font-size:9px;color:var(--muted);">240px</span></div>
+              <div class="aside-body">
+                <div class="info-card">
+                  <div class="info-card-head">审批轨迹 <span class="pill" style="height:16px;font-size:8px;padding:0 4px;">sticky</span></div>
+                  <div class="info-card-body">
+                    <div class="timeline-item"><span class="timeline-dot filled"></span><span>销售创建草稿，等待提交审批。</span></div>
+                    <div class="timeline-item"><span class="timeline-dot filled"></span><span>系统校验客户信用额度和交付风险。</span></div>
+                    <div class="timeline-item"><span class="timeline-dot empty"></span><span>区域经理审批后订单生效。</span></div>
+                  </div>
+                </div>
+                <div class="info-card">
+                  <div class="info-card-head">风险提示 <span style="color:var(--amber);font-weight:700;">1</span></div>
+                  <div class="info-card-body">客户信用额度即将超出预警线。</div>
+                </div>
+                <div class="info-card">
+                  <div class="info-card-head">附件 <span style="color:var(--muted);">3</span></div>
+                  <div class="info-card-body">
+                    <div class="timeline-item"><span class="timeline-dot empty"></span><span>客户合同.pdf</span></div>
+                    <div class="timeline-item"><span class="timeline-dot empty"></span><span>技术规格.xlsx</span></div>
+                    <div class="timeline-item"><span class="timeline-dot empty"></span><span>报价确认.png</span></div>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+
+          <!-- Page Bottom Actions -->
+          <div class="page-bottom">
+            <button class="btn" style="height:24px;font-size:10px;">关闭</button>
+            <button class="btn" style="height:24px;font-size:10px;" onclick="savePage()">💾 保存草稿</button>
+            <button class="btn primary" style="height:24px;font-size:10px;" onclick="showToast('已提交审批', 'success')">📤 提交审批</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== RIGHT: PROPERTIES ===== -->
+    <aside class="panel-right">
+      <div class="panel-tabs">
+        <div class="tab active" onclick="switchRightTab(this, 'props')">属性</div>
+        <div class="tab" onclick="switchRightTab(this, 'layout')">布局</div>
+        <div class="tab" onclick="switchRightTab(this, 'breakpoint')">断点</div>
+        <div class="tab" onclick="switchRightTab(this, 'events')">规则</div>
+      </div>
+      <div class="panel-content">
+
+        <!-- PROPS TAB -->
+        <div id="right-props">
+          <select class="prop-select" id="propSelect" onchange="changeSelectedProp(this.value)">
+            <option value="HeaderFormGrid">HeaderFormGrid : GridLayout</option>
+            <option value="ActionToolbar">ActionToolbar : FlexLayout</option>
+            <option value="EntryTable">EntryTable : EntryTable</option>
+            <option value="TabsSection">TabsSection : TabsContainer</option>
+          </select>
+
+          <div class="prop-box">
+            <div class="prop-cat" onclick="togglePropBox(this)">📐 布局属性</div>
+            <div class="layout-grid">
+              <div class="layout-cell">nav</div>
+              <div class="layout-cell active">main</div>
+              <div class="layout-cell">aside</div>
+            </div>
+            <div class="prop-row"><label>display</label><div class="value" onclick="editProp(this, 'display')">grid</div></div>
+            <div class="prop-row"><label>columns</label><div class="value" onclick="editProp(this, 'columns')">repeat(24, 1fr)</div></div>
+            <div class="prop-row"><label>rowGap</label><div class="value" onclick="editProp(this, 'rowGap')">6px</div></div>
+            <div class="prop-row"><label>colGap</label><div class="value" onclick="editProp(this, 'colGap')">8px</div></div>
+            <div class="prop-row"><label>labelWidth</label><div class="value" onclick="editProp(this, 'labelWidth')">52px</div></div>
+          </div>
+
+          <div class="prop-box">
+            <div class="prop-cat" onclick="togglePropBox(this)">🧱 Grid Area</div>
+            <div class="prop-row"><label>areas</label><div class="value">nav main aside</div></div>
+            <div class="prop-row"><label>columns</label><div class="value">200px 1fr 240px</div></div>
+            <div class="prop-row"><label>scroll</label><div class="value">main: auto</div></div>
+            <div class="prop-row"><label>sticky</label><div class="value">top / bottom</div></div>
+          </div>
+
+          <div class="prop-box">
+            <div class="prop-cat" onclick="togglePropBox(this)">⚡ 约束属性</div>
+            <div class="prop-row"><label>minWidth</label><div class="value" onclick="editProp(this, 'minWidth')">1180px</div></div>
+            <div class="prop-row"><label>maxWidth</label><div class="value">none</div></div>
+            <div class="prop-row"><label>overflow</label><div class="value">main: auto</div></div>
+          </div>
+
+          <div class="prop-box">
+            <div class="prop-cat" onclick="togglePropBox(this)">🔗 数据绑定</div>
+            <div class="prop-row"><label>BO</label><div class="value">SalesOrder</div></div>
+            <div class="prop-row"><label>scope</label><div class="value">header</div></div>
+            <div class="prop-row"><label>lazyLoad</label><div class="value">false</div></div>
+          </div>
+
+          <div class="prop-box">
+            <div class="prop-cat" onclick="togglePropBox(this)">🔒 权限</div>
+            <div class="prop-row"><label>查看</label><div class="value">销售员</div></div>
+            <div class="prop-row"><label>编辑</label><div class="value">制单人</div></div>
+          </div>
+        </div>
+
+        <!-- LAYOUT TAB -->
+        <div id="right-layout" style="display:none;">
+          <div class="prop-box">
+            <div class="prop-cat">布局模式</div>
+            <div class="layout-grid">
+              <div class="layout-cell active" onclick="setLayoutMode(this, 'grid')">Grid</div>
+              <div class="layout-cell" onclick="setLayoutMode(this, 'flex')">Flex</div>
+              <div class="layout-cell" onclick="setLayoutMode(this, 'dock')">Dock</div>
+            </div>
+            <div class="prop-row"><label>template</label><div class="value">"nav main aside"</div></div>
+            <div class="prop-row"><label>columns</label><div class="value" onclick="editProp(this, 'layoutColumns')">200px 1fr 240px</div></div>
+            <div class="prop-row"><label>rows</label><div class="value">minmax(0, 1fr)</div></div>
+            <div class="prop-row"><label>gap</label><div class="value">0</div></div>
+          </div>
+          <div class="prop-box">
+            <div class="prop-cat">滚动容器</div>
+            <div class="prop-row"><label>main</label><div class="value">auto</div></div>
+            <div class="prop-row"><label>aside</label><div class="value">auto</div></div>
+            <div class="prop-row"><label>nav</label><div class="value">hidden</div></div>
+          </div>
+          <div class="prop-box">
+            <div class="prop-cat">固定区</div>
+            <div class="prop-row"><label>stickyTop</label><div class="value">page-top</div></div>
+            <div class="prop-row"><label>stickyBottom</label><div class="value">page-bottom</div></div>
+          </div>
+          <div class="prop-box">
+            <div class="prop-cat">拖放规则</div>
+            <div class="prop-row"><label>Field</label><div class="value">FormGrid / TableCell</div></div>
+            <div class="prop-row"><label>Table</label><div class="value">Main / Tabs</div></div>
+            <div class="prop-row"><label>Portal</label><div class="value">root only</div></div>
+          </div>
+        </div>
+
+        <!-- BREAKPOINT TAB -->
+        <div id="right-breakpoint" style="display:none;">
+          <div class="prop-box">
+            <div class="prop-cat">断点配置</div>
+            <div class="prop-row"><label style="background:var(--blue-soft);color:var(--blue);">1440</label><div class="value">baseline</div></div>
+            <div class="prop-row"><label>1280</label><div class="value">aside collapse</div></div>
+            <div class="prop-row"><label>1600</label><div class="value">aside 280px</div></div>
+            <div class="prop-row"><label>1920</label><div class="value">content max 1480px</div></div>
+          </div>
+          <div class="prop-box">
+            <div class="prop-cat">当前断点: <span style="color:var(--blue);" id="currentBp">1440</span></div>
+            <div class="prop-row"><label>nav</label><div class="value" id="bpNav">200px</div></div>
+            <div class="prop-row"><label>aside</label><div class="value" id="bpAside">240px</div></div>
+            <div class="prop-row"><label>formGrid</label><div class="value">24列</div></div>
+          </div>
+          <div class="prop-box">
+            <div class="prop-cat">预览</div>
+            <div style="padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+              <div style="height:32px;border:1px solid var(--line);border-radius:3px;display:grid;place-items:center;font-size:9px;cursor:pointer;" onclick="changeBreakpoint('1280')">1280</div>
+              <div style="height:32px;border:1px solid var(--blue);background:var(--blue-soft);border-radius:3px;display:grid;place-items:center;font-size:9px;cursor:pointer;" onclick="changeBreakpoint('1440')">1440 ✓</div>
+              <div style="height:32px;border:1px solid var(--line);border-radius:3px;display:grid;place-items:center;font-size:9px;cursor:pointer;" onclick="changeBreakpoint('1600')">1600</div>
+              <div style="height:32px;border:1px solid var(--line);border-radius:3px;display:grid;place-items:center;font-size:9px;cursor:pointer;" onclick="changeBreakpoint('1920')">1920</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EVENTS TAB -->
+        <div id="right-events" style="display:none;">
+          <div class="prop-box">
+            <div class="prop-cat">字段事件</div>
+            <div class="prop-row"><label>onChange</label><div class="value">—</div></div>
+            <div class="prop-row"><label>onBlur</label><div class="value">—</div></div>
+            <div class="prop-row"><label>onFocus</label><div class="value">—</div></div>
+          </div>
+          <div class="prop-box">
+            <div class="prop-cat">页面事件</div>
+            <div class="prop-row"><label>onLoad</label><div class="value">fetchSalesOrder()</div></div>
+            <div class="prop-row"><label>beforeSave</label><div class="value">validateForm()</div></div>
+            <div class="prop-row"><label>afterSubmit</label><div class="value">refreshList()</div></div>
+          </div>
+          <div class="prop-box">
+            <div class="prop-cat">规则链</div>
+            <div class="prop-row"><label>客户变更</label><div class="value">→ 价格政策</div></div>
+            <div class="prop-row"><label>价格政策</label><div class="value">→ 信用额度</div></div>
+            <div class="prop-row"><label>信用额度</label><div class="value">→ 审批路线</div></div>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+  </div>
+
+  <!-- ===== BOTTOM STATUS BAR ===== -->
+  <div class="bottom-bar">
+    <div class="errors-panel">
+      <div class="bottom-title">
+        <span>错误列表 / 设计分析器</span>
+        <span style="margin-left:auto;font-weight:400;color:var(--muted);" id="errTotal">4 项</span>
+      </div>
+      <div class="err-list" id="errList">
+        <div class="err-row" onclick="selectSection('ActionToolbar')">
+          <span class="type error">Error</span>
+          <span>P-033</span>
+          <span>反审核按钮缺少岗位权限配置</span>
+          <span>权限</span>
+        </div>
+        <div class="err-row" onclick="selectSection('AsidePanel')">
+          <span class="type warn">Warning</span>
+          <span>L-201</span>
+          <span>1280 断点下右侧 Aside 应折叠</span>
+          <span>Layout</span>
+        </div>
+        <div class="err-row" onclick="selectSection('HeaderFormGrid')">
+          <span class="type warn">Warning</span>
+          <span>B-102</span>
+          <span>客户变更将触发价格政策重算</span>
+          <span>规则</span>
+        </div>
+        <div class="err-row" onclick="selectSection('EntryTable')">
+          <span class="type info">Info</span>
+          <span>T-020</span>
+          <span>EntryTable 已启用虚拟滚动</span>
+          <span>性能</span>
+        </div>
+      </div>
+    </div>
+    <pre class="schema-preview" id="schemaPreview">{
+  layout: {
+    display: "grid",
+    areas: ["nav main aside"],
+    columns: "200px 1fr 240px",
+    scrollContainers: ["main"],
+    sticky: ["top", "bottom"]
+  },
+  formGrid: {
+    columns: 24,
+    rowGap: "6px",
+    colGap: "8px"
+  },
+  table: {
+    type: "EntryTable",
+    detail: "BatchDetail",
+    virtualRows: true
+  }
+}</pre>
+  </div>
+
+  <!-- ===== STATUS BAR ===== -->
+  <div class="status-bar">
+    <div class="breadcrumb" id="breadcrumb">SalesOrder.page / RootGrid / HeaderFormGrid / EntryTable</div>
+    <span>布局校验: <strong style="color:var(--red);" id="statusErrCount">1 blocker</strong> / 3 warning</span>
+    <span><span class="kbd">Alt</span>+拖动 复制</span>
+    <span id="statusZoom">缩放 100%</span>
+    <span style="color:var(--blue);font-weight:600;">综合方案: 01+04+05+10</span>
+  </div>
+
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast"></div>
+
+<!-- ===== MODE INDICATOR ===== -->
+<div class="mode-indicator" id="modeIndicator"></div>
+
+<script>
+// ===== STATE =====
+let currentSection = 'HeaderFormGrid';
+let currentMode = 'default';
+let canvasZoom = 100;
+let gridAreaVisible = false;
+let snaplinesVisible = false;
+let undoStack = [];
+let redoStack = [];
+
+// ===== SELECTION =====
+function selectSectionBlock(event, name) {
+  event.stopPropagation();
+
+  // Deselect all
+  document.querySelectorAll('.section-block').forEach(s => s.classList.remove('selected'));
+  document.querySelectorAll('.outline-item').forEach(o => o.classList.remove('active'));
+
+  // Select
+  const sec = document.getElementById('sec-' + name);
+  if (sec) sec.classList.add('selected');
+
+  // Update outline
+  const outlineItems = document.querySelectorAll('.outline-item span:nth-child(2)');
+  outlineItems.forEach(item => {
+    if (item.textContent === name) {
+      item.parentElement.classList.add('active');
+    }
+  });
+
+  // Update breadcrumb
+  updateBreadcrumb(name);
+  currentSection = name;
+
+  // Update property select
+  const propSelect = document.getElementById('propSelect');
+  if (propSelect) {
+    const opts = propSelect.options;
+    for (let i = 0; i < opts.length; i++) {
+      if (opts[i].value === name) {
+        propSelect.selectedIndex = i;
+        break;
+      }
+    }
+  }
+
+  // Update schema preview
+  updateSchemaPreview(name);
+
+  showToast('已选中: ' + name, 'info');
+}
+
+function selectSection(name) {
+  const sec = document.getElementById('sec-' + name);
+  if (sec) {
+    sec.click();
+    sec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function updateBreadcrumb(name) {
+  document.getElementById('breadcrumb').textContent = `SalesOrder.page / RootGrid / ${name}`;
+}
+
+function updateSchemaPreview(name) {
+  const schemas = {
+    HeaderFormGrid: `{
+  "name": "HeaderFormGrid",
+  "type": "GridLayout",
+  "display": "grid",
+  "columns": "repeat(24, 1fr)",
+  "rowGap": "6px",
+  "colGap": "8px",
+  "children": ["Field"]
+}`,
+    ActionToolbar: `{
+  "name": "ActionToolbar",
+  "type": "FlexLayout",
+  "display": "flex",
+  "flexWrap": "wrap",
+  "gap": "4px",
+  "children": ["Button"]
+}`,
+    EntryTable: `{
+  "name": "EntryTable",
+  "type": "EntryTable",
+  "detail": "BatchDetail",
+  "virtualRows": true,
+  "freezeColumns": 1,
+  "columns": ["物料","数量","金额"]
+}`,
+    TabsSection: `{
+  "name": "TabsSection",
+  "type": "TabsContainer",
+  "lazyLoad": true,
+  "permissions": ["sales"],
+  "children": ["Tab"]
+}`
+  };
+  document.getElementById('schemaPreview').textContent = schemas[name] || schemas.HeaderFormGrid;
+}
+
+// ===== LEFT TABS =====
+function switchLeftTab(el, tabId) {
+  document.querySelectorAll('.panel-left .tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('#tab-containers,#tab-table,#tab-fields,#tab-outline').forEach(t => t.style.display = 'none');
+  document.getElementById('tab-' + tabId).style.display = 'block';
+}
+
+// ===== RIGHT TABS =====
+function switchRightTab(el, tabId) {
+  document.querySelectorAll('.panel-right .tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('#right-props,#right-layout,#right-breakpoint,#right-events').forEach(t => t.style.display = 'none');
+  document.getElementById('right-' + tabId).style.display = 'block';
+}
+
+// ===== DRAG & DROP =====
+const dragData = { type: '', name: '', icon: '' };
+
+document.querySelectorAll('.item[draggable="true"]').forEach(item => {
+  item.addEventListener('dragstart', e => {
+    dragData.type = item.dataset.type;
+    dragData.name = item.dataset.name;
+    dragData.icon = item.dataset.icon;
+    item.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'copy';
+  });
+
+  item.addEventListener('dragend', e => {
+    item.classList.remove('dragging');
+  });
+});
+
+function onDragOver(event) {
+  event.preventDefault();
+  event.dataTransfer.dropEffect = 'copy';
+}
+
+function onDragLeave(event) {
+  // Remove drop targets
+  document.querySelectorAll('.section-block').forEach(s => s.classList.remove('drop-target'));
+}
+
+function onDrop(event) {
+  event.preventDefault();
+  document.querySelectorAll('.section-block').forEach(s => s.classList.remove('drop-target'));
+
+  if (dragData.type) {
+    showToast(`已添加组件: ${dragData.name} (${dragData.type})`, 'success');
+    updateSchemaPreview(currentSection);
+  }
+}
+
+function onDragOverSection(event) {
+  event.preventDefault();
+  event.currentTarget.classList.add('drop-target');
+}
+
+function onDropSection(event) {
+  event.preventDefault();
+  event.currentTarget.classList.remove('drop-target');
+
+  if (dragData.type) {
+    const sectionName = event.currentTarget.dataset.name;
+    showToast(`${dragData.name} 已添加到 ${sectionName}`, 'success');
+    updateSchemaPreview(sectionName);
+  }
+}
+
+// ===== TOOL SEARCH =====
+function filterTools(query) {
+  query = query.toLowerCase();
+  document.querySelectorAll('.item-list .item').forEach(item => {
+    const text = item.textContent.toLowerCase();
+    item.style.display = text.includes(query) ? '' : 'none';
+  });
+}
+
+// ===== MODE SWITCH =====
+function switchMode(mode) {
+  // Reset buttons
+  document.querySelectorAll('.cmd-tools .btn').forEach(b => {
+    if (['btnLayout', 'btnTable', 'btnDual'].includes(b.id)) {
+      b.classList.remove('active');
+    }
+  });
+
+  document.getElementById('btn' + mode.charAt(0).toUpperCase() + mode.slice(1)).classList.add('active');
+
+  const messages = {
+    layout: '布局模式 — Grid Area 可视化已开启',
+    table: '表格模式 — EntryTable 设计视图',
+    dual: '双视图模式 — 设计态 / 运行态并排'
+  };
+
+  showModeIndicator(messages[mode]);
+  currentMode = mode;
+
+  if (mode === 'layout') {
+    toggleGridArea();
+    switchRightTab(document.querySelector('.panel-right .tab'), 'layout');
+  }
+
+  if (mode === 'table') {
+    switchLeftTab(document.querySelector('.panel-left .tab'), 'table');
+  }
+}
+
+function showModeIndicator(msg) {
+  const indicator = document.getElementById('modeIndicator');
+  indicator.textContent = msg;
+  indicator.classList.add('show');
+  setTimeout(() => indicator.classList.remove('show'), 2000);
+}
+
+// ===== GRID AREA TOGGLE =====
+function toggleGridArea() {
+  gridAreaVisible = !gridAreaVisible;
+  const overlay = document.getElementById('gridOverlay');
+  const btn = document.getElementById('gridAreaToggle');
+  overlay.classList.toggle('visible', gridAreaVisible);
+  btn.classList.toggle('blue', gridAreaVisible);
+  btn.classList.toggle('pill', !gridAreaVisible);
+  btn.textContent = gridAreaVisible ? '✓ Grid 区' : 'Grid 区';
+}
+
+// ===== SNAPLINES TOGGLE =====
+function toggleSnaplines() {
+  snaplinesVisible = !snaplinesVisible;
+  showToast(snaplinesVisible ? '列线和吸附已开启' : '列线和吸附已关闭', 'info');
+}
+
+// ===== BREAKPOINT CHANGE =====
+const bpConfigs = {
+  '1280': { nav: '160px', aside: '0px', asideVisible: false },
+  '1440': { nav: '200px', aside: '240px', asideVisible: true },
+  '1600': { nav: '200px', aside: '280px', asideVisible: true },
+  '1920': { nav: '220px', aside: '300px', asideVisible: true }
+};
+
+function changeBreakpoint(bp) {
+  const config = bpConfigs[bp];
+  if (!config) return;
+
+  document.getElementById('breakpointSelect').value = bp;
+  document.getElementById('currentBp').textContent = bp;
+  document.getElementById('bpNav').textContent = config.nav;
+  document.getElementById('bpAside').textContent = config.aside;
+
+  const dockNav = document.querySelector('.dock-nav');
+  const asidePanel = document.querySelector('.aside-panel');
+  if (dockNav) dockNav.style.gridTemplateColumns = config.nav + ' minmax(0, 1fr)';
+  if (asidePanel) asidePanel.style.display = config.asideVisible ? '' : 'none';
+
+  // Update breakpoint pills in preview
+  document.querySelectorAll('.viewport .bp, [onclick*="changeBreakpoint"]').forEach(el => {
+    el.classList.remove('active');
+  });
+
+  showToast(`断点已切换到 ${bp}px`, 'info');
+}
+
+// ===== CANVAS ZOOM =====
+function zoomCanvas(delta) {
+  canvasZoom = Math.max(50, Math.min(150, canvasZoom + delta));
+  const webpage = document.getElementById('webpage');
+  webpage.style.transform = `scale(${canvasZoom / 100})`;
+  webpage.style.transformOrigin = 'top center';
+  document.getElementById('zoomLevel').textContent = canvasZoom + '%';
+  document.getElementById('statusZoom').textContent = '缩放 ' + canvasZoom + '%';
+}
+
+// ===== TOGGLE PROPS BOX =====
+function togglePropBox(el) {
+  const box = el.parentElement;
+  const rows = box.querySelectorAll('.prop-row, .layout-grid');
+  const isCollapsed = rows[0] && rows[0].style.display === 'none';
+  rows.forEach(r => r.style.display = isCollapsed ? '' : 'none');
+}
+
+// ===== EDIT PROP =====
+function editProp(el, propName) {
+  const currentValue = el.textContent.trim();
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.value = currentValue;
+  input.style.cssText = 'width:100%;height:100%;border:none;padding:0 4px;font-size:10px;background:var(--blue-light);outline:none;';
+
+  el.innerHTML = '';
+  el.appendChild(input);
+  input.focus();
+  input.select();
+
+  const save = () => {
+    const newVal = input.value.trim() || currentValue;
+    el.textContent = newVal;
+    showToast(`${propName} = ${newVal}`, 'success');
+    updateSchemaPreview(currentSection);
+  };
+
+  input.addEventListener('blur', save);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); save(); }
+    if (e.key === 'Escape') { el.textContent = currentValue; }
+  });
+}
+
+// ===== LAYOUT MODE =====
+function setLayoutMode(el, mode) {
+  el.parentElement.querySelectorAll('.layout-cell').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  showToast('布局模式: ' + mode.toUpperCase(), 'info');
+}
+
+// ===== PROP SELECT =====
+function changeSelectedProp(value) {
+  selectSection(value);
+}
+
+// ===== NAV CHIP SWITCH =====
+function switchNavChip(el) {
+  el.parentElement.querySelectorAll('.nav-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ===== DOCK ROW SWITCH =====
+function switchDockRow(el) {
+  el.parentElement.querySelectorAll('.dock-row').forEach(r => r.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ===== OP BUTTON TOGGLE =====
+function toggleOpBtn(event) {
+  event.stopPropagation();
+  event.currentTarget.classList.toggle('active');
+}
+
+// ===== SAVE =====
+function savePage() {
+  showToast('💾 页面已保存', 'success');
+  undoStack.push('save');
+}
+
+// ===== VALIDATION =====
+function runValidation() {
+  showToast('⚠️ 布局校验完成: 1 blocker / 3 warning', 'error');
+  document.getElementById('errCount').textContent = '3';
+  document.getElementById('statusErrCount').textContent = '1 blocker';
+}
+
+// ===== PUBLISH =====
+function publishPage() {
+  showToast('🚀 发布中...', 'info');
+  setTimeout(() => {
+    showToast('✅ 发布成功！页面已上线。', 'success');
+  }, 1500);
+}
+
+// ===== PREVIEW =====
+function runPreview() {
+  showToast('▶ 正在启动运行预览...', 'info');
+}
+
+// ===== UNDO/REDO =====
+function undoRedo(action) {
+  showToast(action === 'undo' ? '↶ 撤销' : '↷ 重做', 'info');
+}
+
+// ===== TOAST =====
+function showToast(message, type = 'info') {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.className = 'toast ' + type;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// ===== KEYBOARD SHORTCUTS =====
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey || e.metaKey) {
+    if (e.key === 'z') { e.preventDefault(); undoRedo('undo'); }
+    if (e.key === 'y') { e.preventDefault(); undoRedo('redo'); }
+    if (e.key === 's') { e.preventDefault(); savePage(); }
+  }
+  if (e.key === 'Delete' || e.key === 'Backspace') {
+    if (document.activeElement.tagName !== 'INPUT') {
+      showToast('选中组件后可删除', 'info');
+    }
+  }
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.section-block').forEach(s => s.classList.remove('selected'));
+    currentSection = '';
+  }
+});
+
+// ===== CLICK OUTSIDE TO DESELECT =====
+document.getElementById('webpage').addEventListener('click', e => {
+  if (e.target === document.getElementById('webpage') ||
+      e.target.classList.contains('page-main') ||
+      e.target.classList.contains('page-top') ||
+      e.target.classList.contains('page-nav') ||
+      e.target.classList.contains('page-bottom')) {
+    document.querySelectorAll('.section-block').forEach(s => s.classList.remove('selected'));
+    currentSection = '';
+  }
+});
+
+// ===== INITIAL =====
+document.addEventListener('DOMContentLoaded', () => {
+  updateSchemaPreview('HeaderFormGrid');
+  showToast('🎉 T-207 可交互原型已加载 — 点击组件选中，拖放添新组件', 'info');
+});
+</script>
+</body>
+</html>

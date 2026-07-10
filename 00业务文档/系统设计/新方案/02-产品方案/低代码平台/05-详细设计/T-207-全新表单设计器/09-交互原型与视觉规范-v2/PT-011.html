@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PT-011 预览运行态</title>
+  <style>
+    :root {
+      --bg: #eef2f6;
+      --panel: #ffffff;
+      --panel-muted: #f7f9fc;
+      --text: #1f2937;
+      --subtle: #667085;
+      --border: #d7dee8;
+      --primary: #2468c9;
+      --success: #19733f;
+      --danger: #c73535;
+      --shadow: 0 1px 2px rgba(16, 24, 40, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Microsoft YaHei UI", "Segoe UI", sans-serif;
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      border-radius: 4px;
+      height: 30px;
+      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    button:hover {
+      border-color: #b7c4d6;
+      background: #f8fbff;
+    }
+
+    button.primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    button.primary:hover {
+      background: #1958b3;
+      border-color: #1958b3;
+    }
+
+    .icon-button {
+      width: 32px;
+      padding: 0;
+    }
+
+    .app-shell {
+      width: 1440px;
+      min-height: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 48px 240px minmax(0, 1fr) 300px;
+      grid-template-rows: 48px minmax(0, 1fr);
+      grid-template-areas:
+        "top top top top"
+        "rail nav canvas inspector";
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      background: var(--bg);
+    }
+
+    .topbar {
+      grid-area: top;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand,
+    .top-actions,
+    .run-status,
+    .meta-row,
+    .list-item,
+    .field-row,
+    .summary-line,
+    .timeline-item,
+    .info-row {
+      display: flex;
+      align-items: center;
+    }
+
+    .brand {
+      gap: 10px;
+      font-weight: 600;
+    }
+
+    .brand-badge {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      background: #dce9fb;
+      color: var(--primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .mode-pill {
+      height: 24px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: #edf4ff;
+      color: var(--primary);
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .top-actions {
+      gap: 10px;
+    }
+
+    .rail,
+    .nav-panel,
+    .canvas-panel,
+    .inspector-panel {
+      min-height: 0;
+    }
+
+    .rail {
+      grid-area: rail;
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      padding: 10px 7px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .rail .nav-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 4px;
+      border: 1px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--subtle);
+      background: transparent;
+    }
+
+    .rail .nav-icon.active {
+      border-color: #cddcf5;
+      background: #eef4ff;
+      color: var(--primary);
+    }
+
+    .nav-panel,
+    .inspector-panel,
+    .canvas-panel {
+      padding: 14px;
+    }
+
+    .nav-panel {
+      grid-area: nav;
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+    }
+
+    .inspector-panel {
+      grid-area: inspector;
+      background: var(--panel);
+      border-left: 1px solid var(--border);
+    }
+
+    .canvas-panel {
+      grid-area: canvas;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .panel-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 12px;
+    }
+
+    .panel-card + .panel-card {
+      margin-top: 12px;
+    }
+
+    .panel-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin: 0 0 10px;
+    }
+
+    .panel-subtitle {
+      margin: 0 0 10px;
+      color: var(--subtle);
+      line-height: 1.5;
+    }
+
+    .run-status {
+      gap: 8px;
+      color: var(--subtle);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      display: inline-block;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .list-item {
+      justify-content: space-between;
+      padding: 9px 10px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: #fff;
+      gap: 8px;
+    }
+
+    .list-item.active {
+      border-color: #c9daf7;
+      background: #f4f8ff;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: #f3f5f8;
+      color: var(--subtle);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .meta-row,
+    .summary-line,
+    .info-row {
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .meta-row {
+      margin-bottom: 10px;
+      color: var(--subtle);
+    }
+
+    .canvas-toolbar {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .toolbar-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .canvas-frame {
+      flex: 1;
+      min-height: 0;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #dfe6ef;
+      padding: 22px;
+      overflow: hidden;
+    }
+
+    .runtime-app {
+      width: 100%;
+      height: 100%;
+      background: #f6f8fb;
+      border-radius: 4px;
+      border: 1px solid #cfd8e5;
+      display: grid;
+      grid-template-rows: 52px minmax(0, 1fr);
+      overflow: hidden;
+    }
+
+    .runtime-header {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .runtime-body {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      min-height: 0;
+    }
+
+    .step-nav {
+      border-right: 1px solid var(--border);
+      background: #fbfcfe;
+      padding: 16px 14px;
+    }
+
+    .step-item {
+      padding: 10px 12px;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      border: 1px solid transparent;
+      color: var(--subtle);
+    }
+
+    .step-item.current {
+      background: #eef4ff;
+      border-color: #c9daf7;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .step-item.done {
+      color: var(--success);
+    }
+
+    .form-stage {
+      padding: 20px 24px;
+      overflow: auto;
+    }
+
+    .notice {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--primary);
+      border-radius: 4px;
+      padding: 10px 12px;
+      color: var(--subtle);
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .form-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 18px;
+    }
+
+    .form-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .form-title {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .form-desc {
+      margin: 6px 0 0;
+      color: var(--subtle);
+      line-height: 1.5;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .status-badge.idle {
+      background: #eef3f8;
+      color: var(--subtle);
+    }
+
+    .status-badge.editing {
+      background: #eef4ff;
+      color: var(--primary);
+    }
+
+    .status-badge.submitted {
+      background: #edf8f0;
+      color: var(--success);
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px 16px;
+      margin-bottom: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .field label {
+      color: var(--subtle);
+    }
+
+    .field-row {
+      min-height: 36px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #fff;
+      padding: 0 10px;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .field-row textarea {
+      width: 100%;
+      min-height: 88px;
+      border: 0;
+      outline: none;
+      resize: none;
+      padding: 10px 0;
+      background: transparent;
+      color: var(--text);
+    }
+
+    .field-value {
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .field-hint {
+      color: var(--subtle);
+      font-size: 12px;
+    }
+
+    .summary-box {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--panel-muted);
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+
+    .summary-line + .summary-line,
+    .info-row + .info-row,
+    .timeline-item + .timeline-item {
+      margin-top: 8px;
+    }
+
+    .summary-key,
+    .info-key {
+      color: var(--subtle);
+      flex: 0 0 auto;
+    }
+
+    .summary-value,
+    .info-value {
+      flex: 1;
+      text-align: right;
+      min-width: 0;
+    }
+
+    .stage-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .timeline-item {
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--subtle);
+    }
+
+    .timeline-item strong {
+      color: var(--text);
+    }
+
+    .inspector-section + .inspector-section {
+      margin-top: 16px;
+    }
+
+    .inspector-header {
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0 0 10px;
+    }
+
+    .state-label {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: #eef4ff;
+      color: var(--primary);
+      font-size: 12px;
+    }
+
+    .section-note {
+      color: var(--subtle);
+      line-height: 1.5;
+      margin-top: 8px;
+    }
+
+    .helper-text {
+      color: var(--subtle);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .empty-state,
+    .success-state {
+      border: 1px dashed var(--border);
+      border-radius: 4px;
+      padding: 16px;
+      background: #fff;
+    }
+
+    .success-state {
+      border-style: solid;
+      border-color: #c8e7d0;
+      background: #f6fbf7;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex: 0 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell" data-prototype="PT-011" data-state="overview" data-testid="pt-root" id="prototypeRoot">
+    <header class="topbar" data-testid="topbar">
+      <div class="brand">
+        <span class="brand-badge">FD</span>
+        <span>全新表单设计器</span>
+        <span class="mode-pill" data-testid="mode-pill">预览运行态</span>
+      </div>
+      <div class="top-actions">
+        <div class="run-status" data-testid="run-status">
+          <span class="dot"></span>
+          <span>运行实例可交互</span>
+        </div>
+        <button type="button" class="icon-button" aria-label="刷新预览" data-testid="refresh-button" id="resetButton">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <aside class="rail" data-testid="activity-rail">
+      <button type="button" class="nav-icon active" aria-label="预览" data-testid="rail-preview">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+      <button type="button" class="nav-icon" aria-label="流程" data-testid="rail-flow">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3v18"/><path d="M18 9V3"/><path d="M18 21v-6"/><rect x="3" y="8" width="6" height="8" rx="1"/><rect x="15" y="8" width="6" height="8" rx="1"/></svg>
+      </button>
+      <button type="button" class="nav-icon" aria-label="日志" data-testid="rail-log">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg>
+      </button>
+    </aside>
+
+    <aside class="nav-panel" data-testid="navigation-panel">
+      <div class="meta-row">
+        <span>运行导航</span>
+        <span class="tag">单场景</span>
+      </div>
+      <div class="panel-card">
+        <h2 class="panel-title">当前预览</h2>
+        <p class="panel-subtitle">面向业务用户的运行态预览，不暴露设计器配置，仅保留填写、校验、提交与结果回显。</p>
+        <div class="list" data-testid="scene-list">
+          <div class="list-item active" data-testid="scene-item-main">
+            <span>请假申请单</span>
+            <span class="tag">运行中</span>
+          </div>
+          <div class="list-item" data-testid="scene-item-access">
+            <span>访问身份</span>
+            <span class="tag">普通员工</span>
+          </div>
+          <div class="list-item" data-testid="scene-item-version">
+            <span>模板版本</span>
+            <span class="tag">V2.3</span>
+          </div>
+        </div>
+      </div>
+      <div class="panel-card">
+        <h2 class="panel-title">运行要点</h2>
+        <div class="timeline-item" data-testid="run-point-1">
+          <strong>1. 首屏只展示业务表单</strong>
+          <span>隐藏组件边框</span>
+        </div>
+        <div class="timeline-item" data-testid="run-point-2">
+          <strong>2. 状态切换实时反馈</strong>
+          <span>右侧同步摘要</span>
+        </div>
+        <div class="timeline-item" data-testid="run-point-3">
+          <strong>3. 提交后给出结果页</strong>
+          <span>保留处理单号</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="canvas-panel" data-testid="canvas-panel">
+      <div class="canvas-toolbar" data-testid="canvas-toolbar">
+        <div class="toolbar-group">
+          <strong>运行态窗口</strong>
+          <span class="tag" id="toolbarStateLabel" data-testid="toolbar-state-label">概览</span>
+        </div>
+        <div class="toolbar-group">
+          <button type="button" data-testid="enter-fill-button" id="enterFillButton">进入填写</button>
+          <button type="button" class="primary" data-testid="submit-button" id="submitButton">模拟提交</button>
+        </div>
+      </div>
+
+      <div class="canvas-frame" data-testid="canvas-frame">
+        <section class="runtime-app" data-testid="runtime-app">
+          <header class="runtime-header">
+            <div>
+              <strong data-testid="runtime-title">员工自助服务门户</strong>
+              <div class="helper-text" data-testid="runtime-subtitle">运行时预览: 展示真实访问者看到的表单页面。</div>
+            </div>
+            <span class="status-badge idle" id="runtimeStatusBadge" data-testid="runtime-status-badge">
+              <span class="dot" style="background:#98a2b3"></span>
+              <span id="runtimeStatusText">待开始</span>
+            </span>
+          </header>
+
+          <div class="runtime-body">
+            <nav class="step-nav" data-testid="step-nav">
+              <div class="step-item current" id="stepOverview" data-testid="step-overview">
+                <span>01 预览概览</span>
+                <span>当前</span>
+              </div>
+              <div class="step-item" id="stepFill" data-testid="step-fill">
+                <span>02 填写申请</span>
+                <span>待处理</span>
+              </div>
+              <div class="step-item" id="stepDone" data-testid="step-done">
+                <span>03 提交结果</span>
+                <span>未完成</span>
+              </div>
+            </nav>
+
+            <section class="form-stage" data-testid="form-stage">
+              <div class="notice" id="noticeBar" data-testid="notice-bar">当前为预览运行态，字段布局与表单规则已固定，业务用户可直接填写并发起流程。</div>
+
+              <div class="form-card" data-testid="form-card">
+                <div class="form-header">
+                  <div>
+                    <h1 class="form-title">请假申请单</h1>
+                    <p class="form-desc">场景模拟员工发起请假流程。重点验证运行态字段展示、步骤切换与提交结果反馈。</p>
+                  </div>
+                  <span class="status-badge idle" id="formStateBadge" data-testid="form-state-badge">
+                    <span class="dot" style="background:#98a2b3"></span>
+                    <span id="formStateText">概览</span>
+                  </span>
+                </div>
+
+                <div class="summary-box" data-testid="summary-box">
+                  <div class="summary-line">
+                    <span class="summary-key">当前访问人</span>
+                    <span class="summary-value">陈佳宁 / 销售运营部</span>
+                  </div>
+                  <div class="summary-line">
+                    <span class="summary-key">默认流程</span>
+                    <span class="summary-value">直属主管审批 → HR 备案</span>
+                  </div>
+                  <div class="summary-line">
+                    <span class="summary-key">校验策略</span>
+                    <span class="summary-value" id="validationSummary">进入填写后启用必填校验提示</span>
+                  </div>
+                </div>
+
+                <div class="empty-state" id="overviewState" data-testid="overview-state">
+                  <p class="helper-text">先点击“进入填写”，切换到业务用户视角，查看字段填写态和即时说明。</p>
+                </div>
+
+                <div class="hidden" id="editingState" data-testid="editing-state">
+                  <div class="field-grid">
+                    <div class="field" data-testid="field-applicant">
+                      <label>申请人</label>
+                      <div class="field-row"><span class="field-value">陈佳宁</span><span class="field-hint">自动带出</span></div>
+                    </div>
+                    <div class="field" data-testid="field-department">
+                      <label>所属部门</label>
+                      <div class="field-row"><span class="field-value">销售运营部</span><span class="field-hint">不可编辑</span></div>
+                    </div>
+                    <div class="field" data-testid="field-leave-type">
+                      <label>请假类型</label>
+                      <div class="field-row"><span class="field-value">年假</span><span class="field-hint">默认值</span></div>
+                    </div>
+                    <div class="field" data-testid="field-duration">
+                      <label>请假时长</label>
+                      <div class="field-row"><span class="field-value">2026-07-15 09:00 至 2026-07-16 18:00</span><span class="field-hint">共 2 天</span></div>
+                    </div>
+                    <div class="field" data-testid="field-approver">
+                      <label>审批人</label>
+                      <div class="field-row"><span class="field-value">赵海川</span><span class="field-hint">规则选人</span></div>
+                    </div>
+                    <div class="field" data-testid="field-contact">
+                      <label>紧急联系人</label>
+                      <div class="field-row"><span class="field-value">138-0000-9217</span><span class="field-hint">已填写</span></div>
+                    </div>
+                    <div class="field" style="grid-column: 1 / -1;" data-testid="field-reason">
+                      <label for="reasonInput">请假事由</label>
+                      <div class="field-row" style="align-items:flex-start;height:auto;padding:0 10px;">
+                        <textarea id="reasonInput">参加家庭事务处理，已提前完成本周客户周报。</textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="hidden success-state" id="submittedState" data-testid="submitted-state">
+                  <div class="summary-line">
+                    <span class="summary-key">提交流水号</span>
+                    <span class="summary-value" id="resultCode">LV-20260710-0142</span>
+                  </div>
+                  <div class="summary-line">
+                    <span class="summary-key">处理结果</span>
+                    <span class="summary-value" style="color:var(--success);">已提交至直属主管审批</span>
+                  </div>
+                  <div class="summary-line">
+                    <span class="summary-key">系统回执</span>
+                    <span class="summary-value">消息中心与企业微信已同步通知</span>
+                  </div>
+                </div>
+
+                <div class="stage-actions" style="margin-top:18px;">
+                  <button type="button" data-testid="secondary-enter-fill-button" id="secondaryEnterFillButton">切换填写态</button>
+                  <button type="button" class="primary" data-testid="secondary-submit-button" id="secondarySubmitButton">提交并查看结果</button>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <aside class="inspector-panel" data-testid="inspector-panel">
+      <div class="inspector-section">
+        <h2 class="inspector-header">运行状态</h2>
+        <span class="state-label" id="inspectorStateLabel" data-testid="inspector-state-label">overview</span>
+        <p class="section-note" id="inspectorStateNote" data-testid="inspector-state-note">当前显示预览概览，业务用户尚未进入填写流程。</p>
+      </div>
+
+      <div class="inspector-section">
+        <h2 class="inspector-header">实时摘要</h2>
+        <div class="panel-card" data-testid="runtime-summary-card">
+          <div class="info-row">
+            <span class="info-key">表单标题</span>
+            <span class="info-value">请假申请单</span>
+          </div>
+          <div class="info-row">
+            <span class="info-key">显示模式</span>
+            <span class="info-value" id="displayModeValue">概览模式</span>
+          </div>
+          <div class="info-row">
+            <span class="info-key">结果面板</span>
+            <span class="info-value" id="resultPanelValue">未展开</span>
+          </div>
+          <div class="info-row">
+            <span class="info-key">主交互断言</span>
+            <span class="info-value" id="interactionAssertionValue">待执行</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="inspector-section">
+        <h2 class="inspector-header">验收提示</h2>
+        <div class="panel-card" data-testid="acceptance-card">
+          <p class="helper-text">点击“进入填写”后，根节点 `data-state` 将从 `overview` 切换到 `editing`，可见内容同步变更；提交后切换到 `submitted`。</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.getElementById("prototypeRoot");
+      var toolbarStateLabel = document.getElementById("toolbarStateLabel");
+      var runtimeStatusBadge = document.getElementById("runtimeStatusBadge");
+      var runtimeStatusText = document.getElementById("runtimeStatusText");
+      var formStateBadge = document.getElementById("formStateBadge");
+      var formStateText = document.getElementById("formStateText");
+      var overviewState = document.getElementById("overviewState");
+      var editingState = document.getElementById("editingState");
+      var submittedState = document.getElementById("submittedState");
+      var inspectorStateLabel = document.getElementById("inspectorStateLabel");
+      var inspectorStateNote = document.getElementById("inspectorStateNote");
+      var displayModeValue = document.getElementById("displayModeValue");
+      var resultPanelValue = document.getElementById("resultPanelValue");
+      var interactionAssertionValue = document.getElementById("interactionAssertionValue");
+      var validationSummary = document.getElementById("validationSummary");
+      var noticeBar = document.getElementById("noticeBar");
+      var stepOverview = document.getElementById("stepOverview");
+      var stepFill = document.getElementById("stepFill");
+      var stepDone = document.getElementById("stepDone");
+
+      function applyState(state) {
+        root.setAttribute("data-state", state);
+        inspectorStateLabel.textContent = state;
+
+        overviewState.classList.add("hidden");
+        editingState.classList.add("hidden");
+        submittedState.classList.add("hidden");
+        stepOverview.className = "step-item";
+        stepFill.className = "step-item";
+        stepDone.className = "step-item";
+
+        if (state === "overview") {
+          toolbarStateLabel.textContent = "概览";
+          runtimeStatusBadge.className = "status-badge idle";
+          formStateBadge.className = "status-badge idle";
+          runtimeStatusText.textContent = "待开始";
+          formStateText.textContent = "概览";
+          overviewState.classList.remove("hidden");
+          stepOverview.className = "step-item current";
+          inspectorStateNote.textContent = "当前显示预览概览，业务用户尚未进入填写流程。";
+          displayModeValue.textContent = "概览模式";
+          resultPanelValue.textContent = "未展开";
+          interactionAssertionValue.textContent = "待执行";
+          validationSummary.textContent = "进入填写后启用必填校验提示";
+          noticeBar.textContent = "当前为预览运行态，字段布局与表单规则已固定，业务用户可直接填写并发起流程。";
+          return;
+        }
+
+        if (state === "editing") {
+          toolbarStateLabel.textContent = "填写中";
+          runtimeStatusBadge.className = "status-badge editing";
+          formStateBadge.className = "status-badge editing";
+          runtimeStatusText.textContent = "填写中";
+          formStateText.textContent = "填写中";
+          editingState.classList.remove("hidden");
+          stepOverview.className = "step-item done";
+          stepFill.className = "step-item current";
+          inspectorStateNote.textContent = "已进入填写态，字段内容与流程说明直接面向业务用户展示。";
+          displayModeValue.textContent = "填写模式";
+          resultPanelValue.textContent = "未展开";
+          interactionAssertionValue.textContent = "data-state: overview -> editing";
+          validationSummary.textContent = "必填项已激活，失焦后展示规则提示";
+          noticeBar.textContent = "请确认字段默认值、只读项和审批链都符合运行时预期。";
+          return;
+        }
+
+        toolbarStateLabel.textContent = "已提交";
+        runtimeStatusBadge.className = "status-badge submitted";
+        formStateBadge.className = "status-badge submitted";
+        runtimeStatusText.textContent = "已提交";
+        formStateText.textContent = "提交完成";
+        submittedState.classList.remove("hidden");
+        stepOverview.className = "step-item done";
+        stepFill.className = "step-item done";
+        stepDone.className = "step-item current";
+        inspectorStateNote.textContent = "提交结果已展示，运行态会回显单号、通知渠道与后续审批节点。";
+        displayModeValue.textContent = "结果模式";
+        resultPanelValue.textContent = "已展开";
+        interactionAssertionValue.textContent = "data-state: editing -> submitted";
+        validationSummary.textContent = "校验已通过，生成业务回执";
+        noticeBar.textContent = "提交成功后，运行态仅保留结果反馈与回执信息。";
+      }
+
+      function toEditing() {
+        applyState("editing");
+      }
+
+      function toSubmitted() {
+        if (root.getAttribute("data-state") === "overview") {
+          applyState("editing");
+        }
+        applyState("submitted");
+      }
+
+      document.getElementById("enterFillButton").addEventListener("click", toEditing);
+      document.getElementById("secondaryEnterFillButton").addEventListener("click", toEditing);
+      document.getElementById("submitButton").addEventListener("click", toSubmitted);
+      document.getElementById("secondarySubmitButton").addEventListener("click", toSubmitted);
+      document.getElementById("resetButton").addEventListener("click", function () {
+        applyState("overview");
+      });
+
+      applyState("overview");
+    })();
+  </script>
+</body>
+</html>

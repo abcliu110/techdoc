@@ -1,8 +1,7 @@
 # ADR-LOWCODE-FIELDTYPE-SPI-001: 字段类型处理器 SPI
 
-Status: accepted for M0
-
-Date: 2026-07-06
+> 状态：accepted for M0
+> 日期：2026-07-06
 
 ## Context
 

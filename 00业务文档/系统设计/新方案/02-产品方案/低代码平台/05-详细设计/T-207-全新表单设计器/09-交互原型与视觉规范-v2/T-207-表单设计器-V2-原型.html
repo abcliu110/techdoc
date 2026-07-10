@@ -1,0 +1,945 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>T-207 表单设计器 V2 - PT-001</title>
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.js"></script>
+  <style>
+    :root {
+      --bg: #e8edf3;
+      --panel: #ffffff;
+      --panel-subtle: #f7f9fb;
+      --panel-muted: #f0f3f7;
+      --rail: #263241;
+      --rail-hover: #344154;
+      --rail-active: #3a4b61;
+      --text: #1f2937;
+      --text-2: #475467;
+      --muted: #667085;
+      --line: #d7dee8;
+      --line-strong: #b6c0cd;
+      --accent: #2468c9;
+      --accent-soft: #edf4ff;
+      --accent-line: #8db3ee;
+      --success: #19733f;
+      --success-soft: #edf8f1;
+      --warning: #8a5a00;
+      --warning-soft: #fff8e6;
+      --danger: #b42318;
+      --danger-soft: #fff1f0;
+      --shadow: 0 4px 16px rgba(30, 41, 59, 0.12);
+      --radius: 4px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Microsoft YaHei UI", "Segoe UI", sans-serif;
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    select { font: inherit; letter-spacing: 0; }
+
+    button { cursor: pointer; }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 2px solid #4c8fe8;
+      outline-offset: 1px;
+    }
+
+    [hidden] { display: none !important; }
+
+    .app {
+      height: 100vh;
+      min-width: 1180px;
+      display: grid;
+      grid-template-rows: 48px minmax(0, 1fr) 30px;
+      background: var(--bg);
+    }
+
+    .command-bar {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: minmax(290px, 340px) minmax(440px, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      padding: 0 10px;
+      border-bottom: 1px solid var(--line-strong);
+      background: #fff;
+    }
+
+    .brand {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+    }
+
+    .brand-mark {
+      width: 26px;
+      height: 26px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border-radius: var(--radius);
+      background: var(--rail);
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .brand-name {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .version-chip,
+    .state-chip {
+      height: 22px;
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0 7px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-subtle);
+      color: var(--text-2);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .version-chip { border-color: #e5c96f; background: var(--warning-soft); color: var(--warning); }
+    .state-chip.success { border-color: #9fd0ad; background: var(--success-soft); color: var(--success); }
+    .state-chip.active { border-color: #a9c4ee; background: var(--accent-soft); color: var(--accent); }
+
+    .command-group,
+    .command-status {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .command-status { justify-content: flex-end; gap: 6px; }
+
+    .icon-button,
+    .command-button,
+    .small-button {
+      height: 30px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--text-2);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .icon-button { width: 32px; padding: 0; }
+    .command-button { padding: 0 9px; }
+    .small-button { height: 26px; padding: 0 7px; border-color: var(--line); background: #fff; }
+
+    .icon-button:hover,
+    .command-button:hover,
+    .small-button:hover { background: var(--panel-muted); color: var(--text); }
+
+    .command-button.primary { border-color: #1f61bc; background: var(--accent); color: #fff; }
+    .command-button.primary:hover { background: #1e5db3; color: #fff; }
+    .command-button.on { border-color: #acc7ef; background: var(--accent-soft); color: var(--accent); }
+    .icon-button[disabled] { opacity: 0.38; cursor: default; }
+
+    .icon-button svg,
+    .command-button svg,
+    .small-button svg,
+    .activity-icon svg,
+    .component-icon svg { width: 15px; height: 15px; stroke-width: 1.8; }
+
+    .studio {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 52px 276px minmax(0, 1fr) 300px;
+      background: var(--bg);
+    }
+
+    .studio[data-inspector="collapsed"] { grid-template-columns: 52px 276px minmax(0, 1fr) 44px; }
+    .studio[data-assets="collapsed"] { grid-template-columns: 52px 0 minmax(0, 1fr) 300px; }
+    .studio[data-assets="collapsed"][data-inspector="collapsed"] { grid-template-columns: 52px 0 minmax(0, 1fr) 44px; }
+
+    .activity-bar {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 7px 4px;
+      border-right: 1px solid #18212c;
+      background: var(--rail);
+    }
+
+    .activity-button {
+      width: 44px;
+      height: 46px;
+      flex: 0 0 46px;
+      border: 0;
+      border-radius: var(--radius);
+      background: transparent;
+      color: #c9d3df;
+      display: grid;
+      grid-template-rows: 23px 12px;
+      place-items: center;
+      gap: 2px;
+      padding: 4px 2px 3px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .activity-button:hover { background: var(--rail-hover); color: #fff; }
+    .activity-button[aria-selected="true"] { background: var(--rail-active); color: #fff; box-shadow: inset 3px 0 0 #71a8ff; }
+    .activity-button[aria-selected="true"] .activity-icon { border-color: rgba(137, 182, 255, 0.65); background: rgba(75, 133, 222, 0.18); }
+
+    .activity-icon {
+      width: 24px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+    }
+
+    .activity-label {
+      width: 100%;
+      height: 12px;
+      line-height: 12px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .activity-spacer { flex: 1 1 auto; min-height: 8px; }
+
+    .asset-panel,
+    .inspector-panel {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 38px minmax(0, 1fr);
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .asset-panel { border-right: 1px solid var(--line); }
+    .inspector-panel { border-left: 1px solid var(--line); }
+    .studio[data-assets="collapsed"] .asset-panel { visibility: hidden; }
+    .studio[data-inspector="collapsed"] .inspector-panel { display: none; }
+
+    .panel-header {
+      min-width: 0;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 8px 0 10px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-subtle);
+    }
+
+    .panel-title {
+      min-width: 0;
+      flex: 1 1 auto;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    .panel-body { min-height: 0; overflow: auto; padding: 9px; }
+    .mode-panel { min-height: 100%; }
+
+    .search-wrap { position: relative; margin-bottom: 8px; }
+    .search-wrap svg { position: absolute; left: 8px; top: 7px; width: 14px; height: 14px; color: var(--muted); }
+    .search-input {
+      width: 100%;
+      height: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--text);
+      padding: 0 28px;
+    }
+    .search-input::placeholder { color: #98a2b3; }
+
+    .group { margin-bottom: 9px; }
+    .group-toggle {
+      width: 100%;
+      height: 28px;
+      border: 0;
+      border-bottom: 1px solid #e8edf3;
+      background: transparent;
+      color: var(--text-2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2px;
+      font-weight: 700;
+    }
+    .group-toggle span { display: flex; align-items: center; gap: 5px; }
+    .group-toggle svg { width: 13px; height: 13px; transition: transform 120ms ease; }
+    .group[data-collapsed="true"] .group-toggle svg { transform: rotate(-90deg); }
+    .group[data-collapsed="true"] .component-grid { display: none; }
+
+    .component-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; padding-top: 6px; }
+    .component-item {
+      min-width: 0;
+      height: 60px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--text-2);
+      display: grid;
+      grid-template-rows: 28px 16px;
+      place-items: center;
+      gap: 2px;
+      padding: 5px 3px 4px;
+    }
+    .component-item:hover { border-color: #9dbbe7; background: var(--accent-soft); color: var(--accent); }
+    .component-item[data-selected="true"] { border-color: #77a2e2; background: var(--accent-soft); color: var(--accent); box-shadow: inset 0 0 0 1px #c8daf5; }
+    .component-item[disabled] { opacity: 0.45; background: var(--panel-subtle); }
+    .component-icon { width: 25px; height: 25px; display: grid; place-items: center; border: 1px solid #d3dce8; border-radius: var(--radius); background: #f9fbfd; }
+    .component-name { width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center; font-size: 11px; }
+    .component-item[hidden] { display: none; }
+
+    .empty-result { padding: 28px 12px; color: var(--muted); text-align: center; }
+
+    .compact-list { display: grid; gap: 5px; }
+    .compact-row {
+      min-width: 0;
+      min-height: 34px;
+      display: grid;
+      grid-template-columns: 22px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 6px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--text-2);
+    }
+    .compact-row:hover,
+    .compact-row.selected { border-color: #9dbbe7; background: var(--accent-soft); color: var(--accent); }
+    .compact-row.error { border-color: #efb3ad; background: var(--danger-soft); color: var(--danger); }
+    .row-icon { width: 22px; height: 22px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+    .row-main { min-width: 0; }
+    .row-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .row-subtitle { margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-size: 11px; }
+
+    .canvas-shell {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 34px minmax(0, 1fr);
+      background: #e9eef4;
+    }
+
+    .canvas-toolbar {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 8px 0 10px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+
+    .breadcrumbs { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-size: 12px; }
+    .canvas-tools { display: flex; align-items: center; gap: 4px; }
+
+    .segmented {
+      height: 26px;
+      display: inline-flex;
+      padding: 2px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-muted);
+    }
+    .segment { height: 20px; border: 0; border-radius: 3px; background: transparent; color: var(--muted); padding: 0 7px; font-size: 11px; }
+    .segment[aria-pressed="true"] { background: #fff; color: var(--accent); box-shadow: 0 1px 2px rgba(30, 41, 59, 0.12); }
+
+    .canvas-viewport {
+      min-width: 0;
+      min-height: 0;
+      overflow: auto;
+      padding: 18px;
+      background:
+        linear-gradient(#dfe6ee 1px, transparent 1px),
+        linear-gradient(90deg, #dfe6ee 1px, transparent 1px),
+        #edf1f5;
+      background-size: 24px 24px;
+    }
+
+    .artboard {
+      width: min(980px, 100%);
+      min-width: 690px;
+      min-height: 610px;
+      margin: 0 auto;
+      border: 1px solid #bdc7d3;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .page-command {
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+    .page-title { font-size: 16px; font-weight: 700; }
+    .page-actions { display: flex; gap: 5px; }
+
+    .form-body { padding: 14px; }
+    .design-section { margin-bottom: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; position: relative; }
+    .design-section[data-selected="true"] { border-color: #4d87dd; box-shadow: 0 0 0 2px rgba(54, 112, 202, 0.14); }
+    .section-header { height: 34px; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; border-bottom: 1px solid var(--line); background: var(--panel-subtle); font-weight: 700; }
+    .selection-label { color: var(--accent); font-size: 11px; font-weight: 500; }
+    .field-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 12px; padding: 12px; }
+
+    .form-field { min-width: 0; min-height: 64px; padding: 7px 8px; border: 1px solid #d8dee7; border-radius: var(--radius); background: #fff; position: relative; }
+    .form-field:hover { border-color: #9fb9dc; }
+    .form-field[data-selected="true"] { border-color: #3273d1; box-shadow: 0 0 0 2px rgba(50, 115, 209, 0.16); }
+    .field-label { display: flex; align-items: center; gap: 4px; margin-bottom: 6px; color: var(--text-2); font-size: 12px; }
+    .required { color: var(--danger); }
+    .field-value { height: 28px; display: flex; align-items: center; padding: 0 7px; border: 1px solid #cfd8e3; border-radius: 3px; background: #fafbfc; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .resize-handle { position: absolute; top: 50%; right: 2px; width: 5px; height: 20px; margin-top: -10px; border-radius: 2px; background: #3777d5; }
+
+    .table-wrap { padding: 10px 12px 12px; overflow: auto; }
+    .entry-table { width: 100%; min-width: 640px; border-collapse: collapse; table-layout: fixed; }
+    .entry-table th,
+    .entry-table td { height: 32px; padding: 0 8px; border: 1px solid #dbe2eb; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .entry-table th { background: #f2f5f8; color: var(--text-2); }
+    .entry-table tfoot td { background: #f8fafc; font-weight: 700; }
+
+    .inspector-tabs { height: 34px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid var(--line); background: #fbfcfe; }
+    .inspector-tab { border: 0; border-right: 1px solid var(--line); background: transparent; color: var(--muted); font-size: 12px; }
+    .inspector-tab:last-child { border-right: 0; }
+    .inspector-tab[aria-selected="true"] { color: var(--accent); background: #fff; box-shadow: inset 0 -2px 0 var(--accent); font-weight: 700; }
+    .inspector-content { min-height: 0; overflow: auto; }
+    .context-block { padding: 9px 10px; border-bottom: 1px solid var(--line); background: #fff; }
+    .context-title { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .context-path { margin-top: 3px; color: var(--muted); font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .property-list { padding: 6px 10px 14px; }
+    .property-group-title { height: 28px; display: flex; align-items: center; border-bottom: 1px solid #edf1f5; color: var(--text-2); font-weight: 700; }
+    .property-row { min-height: 32px; display: grid; grid-template-columns: 82px minmax(0, 1fr); align-items: center; gap: 7px; border-bottom: 1px solid #eef2f6; }
+    .property-label { color: var(--muted); }
+    .property-value { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text); }
+    .property-input,
+    .property-select { width: 100%; height: 26px; border: 1px solid var(--line); border-radius: 3px; background: #fff; color: var(--text); padding: 0 6px; }
+
+    .inspector-rail { display: none; border-left: 1px solid var(--line); background: #f8fafc; padding-top: 7px; }
+    .studio[data-inspector="collapsed"] .inspector-rail { display: flex; flex-direction: column; align-items: center; gap: 7px; }
+    .rail-button { width: 30px; height: 30px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; color: var(--text-2); display: grid; place-items: center; padding: 0; }
+    .rail-label { writing-mode: vertical-rl; color: var(--muted); font-size: 11px; }
+
+    .status-bar {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      padding: 0 10px;
+      border-top: 1px solid var(--line-strong);
+      background: #fff;
+      color: var(--text-2);
+      font-size: 12px;
+    }
+    .status-main,
+    .status-metrics { min-width: 0; display: flex; align-items: center; gap: 8px; }
+    .status-main span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .status-metrics { justify-content: flex-end; white-space: nowrap; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); }
+    .separator { width: 1px; height: 14px; background: var(--line); }
+
+    .toast {
+      position: fixed;
+      right: 14px;
+      bottom: 42px;
+      max-width: 360px;
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 10px;
+      border: 1px solid #a9c9b4;
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--success);
+      box-shadow: var(--shadow);
+      z-index: 20;
+    }
+
+    @media (max-width: 1500px) {
+      .command-bar { grid-template-columns: 290px minmax(400px, 1fr) auto; }
+      .studio { grid-template-columns: 52px 250px minmax(0, 1fr) 280px; }
+      .studio[data-inspector="collapsed"] { grid-template-columns: 52px 250px minmax(0, 1fr) 44px; }
+      .studio[data-assets="collapsed"] { grid-template-columns: 52px 0 minmax(0, 1fr) 280px; }
+      .studio[data-assets="collapsed"][data-inspector="collapsed"] { grid-template-columns: 52px 0 minmax(0, 1fr) 44px; }
+      .canvas-viewport { padding: 14px; }
+      .artboard { min-width: 0; }
+      .field-grid { gap: 8px; }
+      .command-status .state-chip:nth-child(2) { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="pt-001" data-testid="pt001-v2-root" data-version="v2" data-completed-prototypes="1/29" data-breakpoint="desktop-1440" data-bindings-ready="false">
+    <header class="command-bar" data-testid="workbench-region-top">
+      <div class="brand">
+        <span class="brand-mark">T</span>
+        <span class="brand-name">销售订单表单设计器</span>
+        <span class="version-chip">草稿 v12</span>
+      </div>
+      <div class="command-group" aria-label="设计器命令栏">
+        <button class="icon-button" data-testid="top-command-undo" title="撤销" aria-label="撤销"><i data-lucide="undo-2"></i></button>
+        <button class="icon-button" data-testid="top-command-redo" title="重做" aria-label="重做" disabled><i data-lucide="redo-2"></i></button>
+        <span class="separator"></span>
+        <button class="command-button on" data-testid="top-command-save"><i data-lucide="save"></i>保存</button>
+        <button class="command-button" data-testid="top-command-preview"><i data-lucide="play"></i>预览</button>
+        <button class="command-button primary" data-testid="top-command-publish"><i data-lucide="rocket"></i>发布</button>
+      </div>
+      <div class="command-status">
+        <span class="state-chip active">V2 · PT-001 · 1/29</span>
+        <span class="state-chip">Schema 312 KB</span>
+        <span class="state-chip success"><i data-lucide="circle-check"></i>0 错误</span>
+      </div>
+    </header>
+
+    <main class="studio" data-testid="workbench-width-state" data-assets="expanded" data-inspector="expanded">
+      <nav class="activity-bar" data-testid="pt001-activity-bar" data-active-mode="components" role="tablist" aria-label="设计器资源模式">
+        <button class="activity-button" id="pt001-activity-item-components" data-testid="pt001-activity-item-components" data-mode="components" role="tab" aria-selected="true" aria-controls="pt001-panel-components" title="组件库">
+          <span class="activity-icon"><i data-lucide="blocks"></i></span><span class="activity-label">组件</span>
+        </button>
+        <button class="activity-button" id="pt001-activity-item-fields" data-testid="pt001-activity-item-fields" data-mode="fields" role="tab" aria-selected="false" aria-controls="pt001-panel-fields" title="字段与业务对象">
+          <span class="activity-icon"><i data-lucide="database"></i></span><span class="activity-label">字段</span>
+        </button>
+        <button class="activity-button" id="pt001-activity-item-outline" data-testid="pt001-activity-item-outline" data-mode="outline" role="tab" aria-selected="false" aria-controls="pt001-panel-outline" title="页面大纲">
+          <span class="activity-icon"><i data-lucide="list-tree"></i></span><span class="activity-label">大纲</span>
+        </button>
+        <button class="activity-button" id="pt001-activity-item-issues" data-testid="pt001-activity-item-issues" data-mode="issues" role="tab" aria-selected="false" aria-controls="pt001-panel-issues" title="问题与校验">
+          <span class="activity-icon"><i data-lucide="circle-alert"></i></span><span class="activity-label">问题</span>
+        </button>
+        <button class="activity-button" id="pt001-activity-item-versions" data-testid="pt001-activity-item-versions" data-mode="versions" role="tab" aria-selected="false" aria-controls="pt001-panel-versions" title="版本历史">
+          <span class="activity-icon"><i data-lucide="history"></i></span><span class="activity-label">版本</span>
+        </button>
+        <button class="activity-button" id="pt001-activity-item-data" data-testid="pt001-activity-item-data" data-mode="data" role="tab" aria-selected="false" aria-controls="pt001-panel-data" title="数据源">
+          <span class="activity-icon"><i data-lucide="cable"></i></span><span class="activity-label">数据</span>
+        </button>
+        <span class="activity-spacer"></span>
+        <button class="activity-button" data-testid="pt001-activity-settings" title="设计器设置" aria-label="设计器设置">
+          <span class="activity-icon"><i data-lucide="settings"></i></span><span class="activity-label">设置</span>
+        </button>
+      </nav>
+
+      <aside class="asset-panel" data-testid="workbench-region-left" data-active-panel="components">
+        <div class="panel-header">
+          <span class="panel-title" data-testid="pt001-left-panel-title">组件库</span>
+          <span class="state-chip success" data-testid="pt001-left-panel-state">可拖放</span>
+          <button class="icon-button" data-testid="pt001-assets-collapse" title="收起资源区" aria-label="收起资源区"><i data-lucide="panel-left-close"></i></button>
+        </div>
+        <div class="panel-body">
+          <section class="mode-panel" id="pt001-panel-components" data-testid="pt001-left-dock-panel-components" role="tabpanel" aria-labelledby="pt001-activity-item-components">
+            <div class="search-wrap"><i data-lucide="search"></i><input class="search-input" data-testid="pt001-component-search" placeholder="搜索组件" /></div>
+            <div class="group" data-testid="pt001-group-layout" data-collapsed="false">
+              <button class="group-toggle" aria-expanded="true"><span><i data-lucide="chevron-down"></i>布局容器</span><span class="state-chip">6</span></button>
+              <div class="component-grid">
+                <button class="component-item" data-testid="pt001-component-grid" title="网格布局：支持列、跨度、间距和响应式断点"><span class="component-icon"><i data-lucide="grid-3x3"></i></span><span class="component-name">网格布局</span></button>
+                <button class="component-item" data-testid="pt001-component-flex" title="弹性布局：支持横向、纵向、换行和对齐"><span class="component-icon"><i data-lucide="move-horizontal"></i></span><span class="component-name">弹性布局</span></button>
+                <button class="component-item" data-testid="pt001-component-section" title="分组容器：承载业务区块和标题"><span class="component-icon"><i data-lucide="panel-top"></i></span><span class="component-name">分组容器</span></button>
+                <button class="component-item" data-testid="pt001-component-tabs" title="页签容器：拆分复杂表单区域"><span class="component-icon"><i data-lucide="panels-top-left"></i></span><span class="component-name">页签容器</span></button>
+                <button class="component-item" data-testid="pt001-component-split" title="分割容器：支持可调整双栏布局"><span class="component-icon"><i data-lucide="panel-left-dashed"></i></span><span class="component-name">分割容器</span></button>
+                <button class="component-item" data-testid="pt001-component-scroll" title="滚动容器：控制局部滚动与粘性区域"><span class="component-icon"><i data-lucide="gallery-vertical-end"></i></span><span class="component-name">滚动容器</span></button>
+              </div>
+            </div>
+            <div class="group" data-testid="pt001-group-input" data-collapsed="false">
+              <button class="group-toggle" aria-expanded="true"><span><i data-lucide="chevron-down"></i>常用组件</span><span class="state-chip">9</span></button>
+              <div class="component-grid">
+                <button class="component-item" data-testid="pt001-component-text" title="单行文本输入"><span class="component-icon"><i data-lucide="text-cursor-input"></i></span><span class="component-name">单行文本</span></button>
+                <button class="component-item" data-testid="pt001-component-number" title="数值输入，支持精度和范围"><span class="component-icon"><i data-lucide="binary"></i></span><span class="component-name">数值输入</span></button>
+                <button class="component-item" data-testid="pt001-component-money" title="金额输入，支持币别和千分位"><span class="component-icon"><i data-lucide="badge-dollar-sign"></i></span><span class="component-name">金额输入</span></button>
+                <button class="component-item" data-testid="pt001-component-date" title="日期与日期时间选择"><span class="component-icon"><i data-lucide="calendar-days"></i></span><span class="component-name">日期选择</span></button>
+                <button class="component-item" data-testid="pt001-component-select" title="单选或多选下拉"><span class="component-icon"><i data-lucide="list-filter"></i></span><span class="component-name">下拉选择</span></button>
+                <button class="component-item" data-testid="pt001-component-switch" title="布尔开关"><span class="component-icon"><i data-lucide="toggle-right"></i></span><span class="component-name">开关</span></button>
+                <button class="component-item" data-testid="pt001-component-reference" title="客户、物料、组织等基础资料选择"><span class="component-icon"><i data-lucide="book-user"></i></span><span class="component-name">基础资料</span></button>
+                <button class="component-item" data-testid="pt001-component-file" title="附件上传与管理"><span class="component-icon"><i data-lucide="paperclip"></i></span><span class="component-name">附件</span></button>
+                <button class="component-item" data-testid="pt001-component-button" title="业务动作按钮"><span class="component-icon"><i data-lucide="square-mouse-pointer"></i></span><span class="component-name">按钮</span></button>
+              </div>
+            </div>
+            <div class="group" data-testid="pt001-group-business" data-collapsed="false">
+              <button class="group-toggle" aria-expanded="true"><span><i data-lucide="chevron-down"></i>业务组件</span><span class="state-chip">6</span></button>
+              <div class="component-grid">
+                <button class="component-item" data-testid="pt001-component-entry-table" title="企业单据分录表格，支持列、行、汇总和明细"><span class="component-icon"><i data-lucide="table-2"></i></span><span class="component-name">分录表格</span></button>
+                <button class="component-item" data-testid="pt001-component-detail" title="分录行的一层明细面板"><span class="component-icon"><i data-lucide="rows-3"></i></span><span class="component-name">明细面板</span></button>
+                <button class="component-item" data-testid="pt001-component-org" title="组织选择组件"><span class="component-icon"><i data-lucide="building-2"></i></span><span class="component-name">组织选择</span></button>
+                <button class="component-item" data-testid="pt001-component-user" title="人员与岗位选择"><span class="component-icon"><i data-lucide="users"></i></span><span class="component-name">人员选择</span></button>
+                <button class="component-item" data-testid="pt001-component-status" title="单据业务状态展示"><span class="component-icon"><i data-lucide="badge-check"></i></span><span class="component-name">状态标识</span></button>
+                <button class="component-item" data-testid="pt001-component-audit" title="审计轨迹和操作记录"><span class="component-icon"><i data-lucide="scroll-text"></i></span><span class="component-name">审计轨迹</span></button>
+              </div>
+            </div>
+            <div class="empty-result" data-testid="pt001-component-empty" hidden>没有匹配的组件</div>
+          </section>
+
+          <section class="mode-panel" id="pt001-panel-fields" data-testid="pt001-left-dock-panel-fields" role="tabpanel" aria-labelledby="pt001-activity-item-fields" hidden>
+            <div class="search-wrap"><i data-lucide="search"></i><input class="search-input" placeholder="搜索业务字段" /></div>
+            <div class="compact-list">
+              <div class="compact-row selected"><span class="row-icon">BO</span><div class="row-main"><div class="row-title">销售订单</div><div class="row-subtitle">SalesOrder · 主业务对象</div></div><span class="state-chip">主</span></div>
+              <div class="compact-row"><span class="row-icon">客</span><div class="row-main"><div class="row-title">客户</div><div class="row-subtitle">customerId · 基础资料</div></div><span class="state-chip">必填</span></div>
+              <div class="compact-row"><span class="row-icon">日</span><div class="row-main"><div class="row-title">订单日期</div><div class="row-subtitle">orderDate · 日期</div></div><span class="state-chip">日期</span></div>
+              <div class="compact-row"><span class="row-icon">币</span><div class="row-main"><div class="row-title">币别</div><div class="row-subtitle">currencyId · 基础资料</div></div><span class="state-chip">引用</span></div>
+              <div class="compact-row"><span class="row-icon">表</span><div class="row-main"><div class="row-title">销售分录</div><div class="row-subtitle">entries · 明细集合</div></div><span class="state-chip">集合</span></div>
+            </div>
+          </section>
+
+          <section class="mode-panel" id="pt001-panel-outline" data-testid="pt001-left-dock-panel-outline" role="tabpanel" aria-labelledby="pt001-activity-item-outline" hidden>
+            <div class="compact-list">
+              <div class="compact-row selected"><span class="row-icon"><i data-lucide="file"></i></span><div class="row-main"><div class="row-title">页面根节点</div><div class="row-subtitle">PageRoot</div></div><span>⌄</span></div>
+              <div class="compact-row"><span class="row-icon"><i data-lucide="panel-top"></i></span><div class="row-main"><div class="row-title">　单据头</div><div class="row-subtitle">　HeaderSection</div></div><span>⌄</span></div>
+              <div class="compact-row"><span class="row-icon"><i data-lucide="grid-3x3"></i></span><div class="row-main"><div class="row-title">　　基础信息网格</div><div class="row-subtitle">　　GridLayout</div></div><span>⌄</span></div>
+              <div class="compact-row"><span class="row-icon"><i data-lucide="table-2"></i></span><div class="row-main"><div class="row-title">　销售分录</div><div class="row-subtitle">　EntryTable</div></div><span>⌄</span></div>
+            </div>
+          </section>
+
+          <section class="mode-panel" id="pt001-panel-issues" data-testid="pt001-left-dock-panel-issues" role="tabpanel" aria-labelledby="pt001-activity-item-issues" hidden>
+            <div class="compact-list">
+              <div class="compact-row error"><span class="row-icon"><i data-lucide="triangle-alert"></i></span><div class="row-main"><div class="row-title">表格列密度偏高</div><div class="row-subtitle">EntryTable.columns · 警告</div></div><span class="state-chip">定位</span></div>
+              <div class="compact-row"><span class="row-icon"><i data-lucide="circle-check"></i></span><div class="row-main"><div class="row-title">字段绑定完整</div><div class="row-subtitle">18 / 18 已绑定</div></div><span class="state-chip success">通过</span></div>
+              <div class="compact-row"><span class="row-icon"><i data-lucide="circle-check"></i></span><div class="row-main"><div class="row-title">发布性能门禁</div><div class="row-subtitle">当前 0 个阻断项</div></div><span class="state-chip success">通过</span></div>
+            </div>
+          </section>
+
+          <section class="mode-panel" id="pt001-panel-versions" data-testid="pt001-left-dock-panel-versions" role="tabpanel" aria-labelledby="pt001-activity-item-versions" hidden>
+            <div class="compact-list">
+              <div class="compact-row selected"><span class="row-icon">12</span><div class="row-main"><div class="row-title">草稿 v12</div><div class="row-subtitle">刚刚保存 · 当前编辑</div></div><span class="state-chip active">当前</span></div>
+              <div class="compact-row"><span class="row-icon">11</span><div class="row-main"><div class="row-title">发布版本 v11</div><div class="row-subtitle">2026-07-08 18:20</div></div><span class="state-chip success">发布</span></div>
+              <div class="compact-row"><span class="row-icon">10</span><div class="row-main"><div class="row-title">历史版本 v10</div><div class="row-subtitle">2026-07-07 16:42</div></div><span class="state-chip">归档</span></div>
+            </div>
+          </section>
+
+          <section class="mode-panel" id="pt001-panel-data" data-testid="pt001-left-dock-panel-data" role="tabpanel" aria-labelledby="pt001-activity-item-data" hidden>
+            <div class="compact-list">
+              <div class="compact-row selected"><span class="row-icon"><i data-lucide="database"></i></span><div class="row-main"><div class="row-title">销售订单业务对象</div><div class="row-subtitle">SalesOrder · 已连接</div></div><span class="state-chip success">正常</span></div>
+              <div class="compact-row"><span class="row-icon"><i data-lucide="braces"></i></span><div class="row-main"><div class="row-title">客户信用 API</div><div class="row-subtitle">GET /customer/credit</div></div><span class="state-chip">接口</span></div>
+              <div class="compact-row"><span class="row-icon"><i data-lucide="list-checks"></i></span><div class="row-main"><div class="row-title">订单状态枚举</div><div class="row-subtitle">OrderStatus · 8 项</div></div><span class="state-chip">枚举</span></div>
+            </div>
+          </section>
+        </div>
+      </aside>
+
+      <section class="canvas-shell" data-testid="workbench-region-center">
+        <div class="canvas-toolbar">
+          <div class="breadcrumbs" data-testid="pt001-breadcrumb">页面根节点 / 单据头 / 基础信息网格 / 客户</div>
+          <div class="canvas-tools">
+            <div class="segmented" aria-label="画布模式">
+              <button class="segment" data-testid="pt001-mode-design" aria-pressed="true">设计</button>
+              <button class="segment" data-testid="pt001-mode-preview" aria-pressed="false">预览</button>
+            </div>
+            <button class="icon-button" data-testid="pt001-grid-toggle" title="显示网格" aria-label="显示网格"><i data-lucide="grid-2x2"></i></button>
+            <button class="small-button" data-testid="pt001-zoom"><i data-lucide="search"></i>100%</button>
+          </div>
+        </div>
+        <div class="canvas-viewport" data-testid="pt001-canvas-viewport">
+          <article class="artboard" data-testid="pt001-artboard">
+            <header class="page-command">
+              <div class="page-title">销售订单</div>
+              <div class="page-actions"><button class="small-button">保存</button><button class="small-button">提交</button><button class="small-button">更多</button></div>
+            </header>
+            <div class="form-body">
+              <section class="design-section" data-testid="pt001-node-header-section" data-node-name="单据头" data-node-path="PageRoot.HeaderSection" data-selected="false" tabindex="0">
+                <div class="section-header"><span>单据头</span><span class="selection-label">三列网格</span></div>
+                <div class="field-grid">
+                  <div class="form-field" data-testid="pt001-node-field-customer" data-node-name="客户" data-node-path="PageRoot.HeaderSection.GridLayout.field_customer" data-selected="true" tabindex="0">
+                    <div class="field-label"><span class="required">*</span>客户</div><div class="field-value">南京星河科技有限公司</div><span class="resize-handle" data-testid="pt001-handle-field-customer" title="调整字段跨度"></span>
+                  </div>
+                  <div class="form-field" data-testid="pt001-node-field-date" data-node-name="订单日期" data-node-path="PageRoot.HeaderSection.GridLayout.field_orderDate" data-selected="false" tabindex="0">
+                    <div class="field-label"><span class="required">*</span>订单日期</div><div class="field-value">2026-07-10</div>
+                  </div>
+                  <div class="form-field" data-testid="pt001-node-field-currency" data-node-name="币别" data-node-path="PageRoot.HeaderSection.GridLayout.field_currency" data-selected="false" tabindex="0">
+                    <div class="field-label">币别</div><div class="field-value">CNY 人民币</div>
+                  </div>
+                  <div class="form-field" data-testid="pt001-node-field-org" data-node-name="销售组织" data-node-path="PageRoot.HeaderSection.GridLayout.field_org" data-selected="false" tabindex="0">
+                    <div class="field-label"><span class="required">*</span>销售组织</div><div class="field-value">华东销售中心</div>
+                  </div>
+                  <div class="form-field" data-testid="pt001-node-field-owner" data-node-name="销售员" data-node-path="PageRoot.HeaderSection.GridLayout.field_owner" data-selected="false" tabindex="0">
+                    <div class="field-label">销售员</div><div class="field-value">王晓明</div>
+                  </div>
+                  <div class="form-field" data-testid="pt001-node-field-status" data-node-name="单据状态" data-node-path="PageRoot.HeaderSection.GridLayout.field_status" data-selected="false" tabindex="0">
+                    <div class="field-label">单据状态</div><div class="field-value">草稿</div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="design-section" data-testid="pt001-node-entry-table" data-node-name="销售分录" data-node-path="PageRoot.EntryTable" data-selected="false" tabindex="0">
+                <div class="section-header"><span>销售分录</span><span class="selection-label">5 列 · 2 行</span></div>
+                <div class="table-wrap">
+                  <table class="entry-table">
+                    <thead><tr><th style="width:30%">物料</th><th style="width:15%">数量</th><th style="width:18%">单价</th><th style="width:19%">金额</th><th style="width:18%">交付日期</th></tr></thead>
+                    <tbody><tr><td>A-1001 标准件</td><td>10</td><td>120.00</td><td>1,200.00</td><td>2026-07-20</td></tr><tr><td>B-2002 定制件</td><td>4</td><td>520.00</td><td>2,080.00</td><td>2026-07-22</td></tr></tbody>
+                    <tfoot><tr><td>合计</td><td>14</td><td></td><td>3,280.00</td><td></td></tr></tfoot>
+                  </table>
+                </div>
+              </section>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <aside class="inspector-panel" data-testid="workbench-region-right" data-state="expanded">
+        <div class="panel-header"><span class="panel-title">属性</span><span class="state-chip active">已同步</span><button class="icon-button" data-testid="pt001-inspector-collapse" title="收起属性面板" aria-label="收起属性面板"><i data-lucide="panel-right-close"></i></button></div>
+        <div class="inspector-content">
+          <div class="context-block"><div class="context-title" data-testid="pt001-inspector-node-name">客户</div><div class="context-path" data-testid="pt001-inspector-node-path">PageRoot.HeaderSection.GridLayout.field_customer</div></div>
+          <div class="inspector-tabs" role="tablist" aria-label="属性类型">
+            <button class="inspector-tab" data-testid="pt001-inspector-tab-business" data-panel="business" role="tab" aria-selected="true">业务</button>
+            <button class="inspector-tab" data-testid="pt001-inspector-tab-layout" data-panel="layout" role="tab" aria-selected="false">布局</button>
+            <button class="inspector-tab" data-testid="pt001-inspector-tab-rules" data-panel="rules" role="tab" aria-selected="false">规则</button>
+            <button class="inspector-tab" data-testid="pt001-inspector-tab-events" data-panel="events" role="tab" aria-selected="false">事件</button>
+          </div>
+          <div class="property-list" data-testid="pt001-inspector-panel-business" data-panel="business">
+            <div class="property-group-title">字段</div>
+            <div class="property-row"><span class="property-label">标题</span><input class="property-input" data-testid="pt001-prop-title" value="客户" /></div>
+            <div class="property-row"><span class="property-label">字段编码</span><span class="property-value">customerId</span></div>
+            <div class="property-row"><span class="property-label">控件类型</span><select class="property-select"><option>基础资料选择</option><option>下拉选择</option></select></div>
+            <div class="property-row"><span class="property-label">数据源</span><span class="property-value">SalesOrder.customerId</span></div>
+            <div class="property-group-title">校验</div>
+            <div class="property-row"><span class="property-label">必填</span><span class="property-value">是</span></div>
+            <div class="property-row"><span class="property-label">唯一性</span><span class="property-value">否</span></div>
+          </div>
+          <div class="property-list" data-testid="pt001-inspector-panel-layout" data-panel="layout" hidden>
+            <div class="property-group-title">网格布局</div>
+            <div class="property-row"><span class="property-label">列跨度</span><select class="property-select"><option>1 / 3</option><option>2 / 3</option><option>3 / 3</option></select></div>
+            <div class="property-row"><span class="property-label">最小宽度</span><span class="property-value">220 px</span></div>
+            <div class="property-row"><span class="property-label">对齐</span><span class="property-value">拉伸</span></div>
+          </div>
+          <div class="property-list" data-testid="pt001-inspector-panel-rules" data-panel="rules" hidden>
+            <div class="property-group-title">动态规则</div>
+            <div class="property-row"><span class="property-label">可见条件</span><span class="property-value">始终可见</span></div>
+            <div class="property-row"><span class="property-label">只读条件</span><span class="property-value">status != draft</span></div>
+            <div class="property-row"><span class="property-label">必填条件</span><span class="property-value">status == draft</span></div>
+          </div>
+          <div class="property-list" data-testid="pt001-inspector-panel-events" data-panel="events" hidden>
+            <div class="property-group-title">事件绑定</div>
+            <div class="property-row"><span class="property-label">值变化</span><span class="property-value">refreshCredit</span></div>
+            <div class="property-row"><span class="property-label">获取焦点</span><span class="property-value">未绑定</span></div>
+          </div>
+        </div>
+      </aside>
+
+      <aside class="inspector-rail" data-testid="pt001-inspector-rail" data-state="collapsed">
+        <button class="rail-button" data-testid="pt001-inspector-expand" title="展开属性面板" aria-label="展开属性面板"><i data-lucide="sliders-horizontal"></i></button>
+        <span class="rail-label">属性</span>
+      </aside>
+    </main>
+
+    <footer class="status-bar" data-testid="workbench-region-bottom">
+      <div class="status-main"><span class="status-dot"></span><strong data-testid="pt001-status-title">设计器就绪</strong><span data-testid="pt001-status-message">选中“客户”，属性面板已同步</span></div>
+      <div class="status-metrics"><span>组件 86</span><span class="separator"></span><span>Schema 312 KB</span><span class="separator"></span><span>画布 100%</span><span class="separator"></span><span data-testid="pt001-viewport-chip">1440 工作区</span></div>
+    </footer>
+    <div class="toast" data-testid="pt001-toast" hidden><i data-lucide="circle-check"></i><span></span></div>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.querySelector('[data-testid="pt001-v2-root"]');
+      var studio = root.querySelector('.studio');
+      var assetRegion = root.querySelector('[data-testid="workbench-region-left"]');
+      var panelTitle = root.querySelector('[data-testid="pt001-left-panel-title"]');
+      var panelState = root.querySelector('[data-testid="pt001-left-panel-state"]');
+      var statusTitle = root.querySelector('[data-testid="pt001-status-title"]');
+      var statusMessage = root.querySelector('[data-testid="pt001-status-message"]');
+      var toast = root.querySelector('[data-testid="pt001-toast"]');
+      var meta = {
+        components: ['组件库', '可拖放', '组件面板已打开'],
+        fields: ['字段与业务对象', '已绑定', '字段面板已打开'],
+        outline: ['页面大纲', '结构同步', '页面大纲已打开'],
+        issues: ['问题', '1 条警告', '问题面板已打开'],
+        versions: ['版本历史', '草稿 v12', '版本面板已打开'],
+        data: ['数据源', '连接正常', '数据源面板已打开']
+      };
+
+      function setStatus(title, message) {
+        statusTitle.textContent = title;
+        statusMessage.textContent = message;
+      }
+
+      function showToast(message) {
+        toast.hidden = false;
+        toast.querySelector('span').textContent = message;
+        window.clearTimeout(showToast.timer);
+        showToast.timer = window.setTimeout(function () { toast.hidden = true; }, 1800);
+      }
+
+      function activateActivity(button) {
+        var mode = button.getAttribute('data-mode');
+        root.querySelectorAll('.activity-button[role="tab"]').forEach(function (item) {
+          var active = item === button;
+          item.setAttribute('aria-selected', active ? 'true' : 'false');
+          item.setAttribute('tabindex', active ? '0' : '-1');
+        });
+        root.querySelectorAll('.mode-panel[role="tabpanel"]').forEach(function (panel) {
+          panel.hidden = panel.id !== button.getAttribute('aria-controls');
+        });
+        assetRegion.setAttribute('data-active-panel', mode);
+        root.querySelector('[data-testid="pt001-activity-bar"]').setAttribute('data-active-mode', mode);
+        panelTitle.textContent = meta[mode][0];
+        panelState.textContent = meta[mode][1];
+        setStatus('资源区已切换', meta[mode][2]);
+        root.setAttribute('data-last-action', 'activity:' + mode);
+      }
+
+      var activityTabs = Array.from(root.querySelectorAll('.activity-button[role="tab"]'));
+      activityTabs.forEach(function (button, index) {
+        button.setAttribute('tabindex', index === 0 ? '0' : '-1');
+        button.addEventListener('click', function () { activateActivity(button); });
+        button.addEventListener('keydown', function (event) {
+          if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+          event.preventDefault();
+          var delta = event.key === 'ArrowDown' ? 1 : -1;
+          var next = activityTabs[(index + delta + activityTabs.length) % activityTabs.length];
+          next.focus();
+          activateActivity(next);
+        });
+      });
+
+      root.querySelectorAll('.group-toggle').forEach(function (button) {
+        button.addEventListener('click', function () {
+          var group = button.closest('.group');
+          var collapsed = group.getAttribute('data-collapsed') === 'true';
+          group.setAttribute('data-collapsed', collapsed ? 'false' : 'true');
+          button.setAttribute('aria-expanded', collapsed ? 'true' : 'false');
+        });
+      });
+
+      var componentSearch = root.querySelector('[data-testid="pt001-component-search"]');
+      componentSearch.addEventListener('input', function () {
+        var query = componentSearch.value.trim().toLowerCase();
+        var visible = 0;
+        root.querySelectorAll('.component-item').forEach(function (item) {
+          var matched = !query || (item.textContent + ' ' + item.title).toLowerCase().indexOf(query) >= 0;
+          item.hidden = !matched;
+          if (matched) visible += 1;
+        });
+        root.querySelector('[data-testid="pt001-component-empty"]').hidden = visible !== 0;
+        root.setAttribute('data-search-count', String(visible));
+        setStatus('组件搜索', visible ? ('找到 ' + visible + ' 个组件') : '没有匹配的组件');
+      });
+
+      root.querySelectorAll('.component-item').forEach(function (item) {
+        item.addEventListener('click', function () {
+          root.querySelectorAll('.component-item').forEach(function (other) { other.setAttribute('data-selected', other === item ? 'true' : 'false'); });
+          setStatus('已选择组件', item.querySelector('.component-name').textContent + '，可拖入画布');
+          root.setAttribute('data-selected-component', item.getAttribute('data-testid'));
+        });
+      });
+
+      var assetsCollapse = root.querySelector('[data-testid="pt001-assets-collapse"]');
+      assetsCollapse.addEventListener('click', function () {
+        var collapsed = studio.getAttribute('data-assets') === 'collapsed';
+        studio.setAttribute('data-assets', collapsed ? 'expanded' : 'collapsed');
+        assetsCollapse.setAttribute('aria-expanded', collapsed ? 'true' : 'false');
+        setStatus('资源区', collapsed ? '资源区已展开' : '资源区已收起，可从活动栏恢复');
+      });
+      root.querySelector('[data-testid="pt001-activity-bar"]').addEventListener('click', function (event) {
+        if (event.target.closest('.activity-button[role="tab"]') && studio.getAttribute('data-assets') === 'collapsed') {
+          studio.setAttribute('data-assets', 'expanded');
+        }
+      });
+
+      root.querySelector('[data-testid="pt001-inspector-collapse"]').addEventListener('click', function () {
+        studio.setAttribute('data-inspector', 'collapsed');
+        root.querySelector('[data-testid="workbench-region-right"]').setAttribute('data-state', 'collapsed');
+        setStatus('属性面板', '属性面板已收起');
+        root.setAttribute('data-last-action', 'inspector:collapsed');
+      });
+      root.querySelector('[data-testid="pt001-inspector-expand"]').addEventListener('click', function () {
+        studio.setAttribute('data-inspector', 'expanded');
+        root.querySelector('[data-testid="workbench-region-right"]').setAttribute('data-state', 'expanded');
+        setStatus('属性面板', '属性面板已展开');
+        root.setAttribute('data-last-action', 'inspector:expanded');
+      });
+
+      root.querySelectorAll('.inspector-tab').forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          root.querySelectorAll('.inspector-tab').forEach(function (item) { item.setAttribute('aria-selected', item === tab ? 'true' : 'false'); });
+          root.querySelectorAll('.property-list[data-panel]').forEach(function (panel) { panel.hidden = panel.getAttribute('data-panel') !== tab.getAttribute('data-panel'); });
+          root.setAttribute('data-inspector-panel', tab.getAttribute('data-panel'));
+        });
+      });
+
+      root.querySelectorAll('[data-node-name]').forEach(function (node) {
+        node.addEventListener('click', function (event) {
+          event.stopPropagation();
+          root.querySelectorAll('[data-node-name]').forEach(function (item) { item.setAttribute('data-selected', item === node ? 'true' : 'false'); });
+          root.querySelector('[data-testid="pt001-inspector-node-name"]').textContent = node.getAttribute('data-node-name');
+          root.querySelector('[data-testid="pt001-inspector-node-path"]').textContent = node.getAttribute('data-node-path');
+          root.querySelector('[data-testid="pt001-breadcrumb"]').textContent = node.getAttribute('data-node-path').split('.').join(' / ');
+          setStatus('已选择节点', node.getAttribute('data-node-name') + '，属性面板已同步');
+          root.setAttribute('data-selected-node', node.getAttribute('data-testid'));
+        });
+      });
+
+      root.querySelector('[data-testid="pt001-mode-design"]').addEventListener('click', function () {
+        root.querySelector('[data-testid="pt001-mode-design"]').setAttribute('aria-pressed', 'true');
+        root.querySelector('[data-testid="pt001-mode-preview"]').setAttribute('aria-pressed', 'false');
+        root.setAttribute('data-canvas-mode', 'design');
+      });
+      root.querySelector('[data-testid="pt001-mode-preview"]').addEventListener('click', function () {
+        root.querySelector('[data-testid="pt001-mode-design"]').setAttribute('aria-pressed', 'false');
+        root.querySelector('[data-testid="pt001-mode-preview"]').setAttribute('aria-pressed', 'true');
+        root.setAttribute('data-canvas-mode', 'preview');
+        showToast('已切换到预览模式');
+      });
+
+      root.querySelector('[data-testid="top-command-save"]').addEventListener('click', function () { showToast('草稿 v12 已保存'); setStatus('保存成功', '所有更改已写入草稿'); });
+      root.querySelector('[data-testid="top-command-preview"]').addEventListener('click', function () { root.querySelector('[data-testid="pt001-mode-preview"]').click(); });
+      root.querySelector('[data-testid="top-command-publish"]').addEventListener('click', function () { showToast('发布前检查通过，已进入确认阶段'); setStatus('发布检查通过', '0 个错误，1 个非阻断警告'); });
+
+      function syncViewport() {
+        var width = window.innerWidth;
+        var breakpoint = width >= 1760 ? 'desktop-1920' : (width >= 1360 ? 'desktop-1440' : 'desktop-compact');
+        root.setAttribute('data-breakpoint', breakpoint);
+        root.setAttribute('data-viewport-width', String(width));
+        root.querySelector('[data-testid="pt001-viewport-chip"]').textContent = breakpoint === 'desktop-1920' ? '1920 工作区' : (breakpoint === 'desktop-1440' ? '1440 工作区' : '紧凑工作区');
+      }
+      window.addEventListener('resize', syncViewport);
+      syncViewport();
+      root.setAttribute('data-selected-node', 'pt001-node-field-customer');
+      root.setAttribute('data-inspector-panel', 'business');
+      root.setAttribute('data-canvas-mode', 'design');
+      root.setAttribute('data-bindings-ready', 'true');
+      if (window.lucide) window.lucide.createIcons();
+    })();
+  </script>
+</body>
+</html>

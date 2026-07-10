@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PT-016 权限差异预览</title>
+  <style>
+    :root {
+      --bg: #eef2f6;
+      --panel: #ffffff;
+      --line: #d7dee8;
+      --text: #1f2937;
+      --muted: #667085;
+      --primary: #2468c9;
+      --success: #19733f;
+      --danger: #c73535;
+      --warn: #b7791f;
+      --soft-primary: #eaf2ff;
+      --soft-success: #edf9f1;
+      --soft-danger: #fff0f0;
+      --soft-warn: #fff7e7;
+      --shadow: 0 8px 18px rgba(31, 41, 55, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: "Microsoft YaHei UI", "Segoe UI", sans-serif;
+      font-size: 12px;
+      letter-spacing: 0;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    button, input {
+      font: inherit;
+    }
+
+    button {
+      margin: 0;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+    }
+
+    button:hover:not(:disabled) {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      color: #98a2b3;
+      background: #f7f9fc;
+    }
+
+    .shell {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: 48px 244px minmax(0, 1fr) 304px;
+      grid-template-rows: 48px minmax(0, 1fr);
+      grid-template-areas:
+        "top top top top"
+        "nav left center right";
+    }
+
+    .topbar,
+    .sidebar,
+    .canvas-wrap,
+    .panel,
+    .activity {
+      background: var(--panel);
+    }
+
+    .topbar {
+      grid-area: top;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      background: var(--primary);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .brand-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tool-btn,
+    .preset-btn {
+      height: 30px;
+      padding: 0 12px;
+      white-space: nowrap;
+    }
+
+    .tool-btn.primary,
+    .preset-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .activity {
+      grid-area: nav;
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .icon-btn.active {
+      background: var(--soft-primary);
+      border-color: #bfd4fa;
+      color: var(--primary);
+    }
+
+    .sidebar {
+      grid-area: left;
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .section-head {
+      padding: 12px 14px 10px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .section-note {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .preset-list,
+    .diff-list,
+    .property-list {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .preset-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      text-align: left;
+      padding: 0 10px;
+    }
+
+    .preset-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .preset-label {
+      font-weight: 600;
+    }
+
+    .preset-desc {
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .diff-card,
+    .summary-card,
+    .property-card,
+    .notice-card {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+    }
+
+    .summary-card {
+      padding: 12px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric {
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #f9fbfd;
+    }
+
+    .metric-label {
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .metric-value {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .canvas-wrap {
+      grid-area: center;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .canvas-toolbar {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .canvas-toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .compare-label {
+      padding: 6px 10px;
+      border-radius: 4px;
+      background: var(--soft-primary);
+      color: var(--primary);
+      border: 1px solid #bfd4fa;
+      white-space: nowrap;
+    }
+
+    .canvas-stage {
+      min-width: 0;
+      flex: 1;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 258px;
+      gap: 16px;
+      overflow: hidden;
+    }
+
+    .designer-card {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fcfdff;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .designer-head {
+      height: 40px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      background: #f7f9fc;
+    }
+
+    .canvas-body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      min-height: 0;
+    }
+
+    .form-pane {
+      padding: 18px;
+      overflow: auto;
+      min-width: 0;
+    }
+
+    .mini-map {
+      border-left: 1px solid var(--line);
+      background: #fff;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .form-header {
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .form-title-wrap {
+      min-width: 0;
+    }
+
+    .form-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .form-desc {
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .role-chip-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      padding: 4px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .chip.current {
+      border-color: #bfd4fa;
+      color: var(--primary);
+      background: var(--soft-primary);
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .field-card {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .field-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .field-name {
+      font-weight: 600;
+    }
+
+    .status-badge {
+      min-width: 66px;
+      text-align: center;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .status-editable {
+      background: var(--soft-success);
+      color: var(--success);
+      border-color: #c6ebd3;
+    }
+
+    .status-readonly {
+      background: var(--soft-warn);
+      color: var(--warn);
+      border-color: #f1d58d;
+    }
+
+    .status-hidden {
+      background: var(--soft-danger);
+      color: var(--danger);
+      border-color: #f2c4c4;
+    }
+
+    .field-body {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field-label {
+      color: var(--muted);
+    }
+
+    .field-input,
+    .field-textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 8px 10px;
+      background: #fff;
+      color: var(--text);
+    }
+
+    .field-textarea {
+      min-height: 76px;
+      resize: none;
+    }
+
+    .field-card[data-visibility="hidden"] .field-body {
+      display: none;
+    }
+
+    .field-card[data-visibility="hidden"] .hidden-note {
+      display: block;
+    }
+
+    .hidden-note {
+      display: none;
+      padding: 10px;
+      border: 1px dashed #edb0b0;
+      border-radius: 4px;
+      color: var(--danger);
+      background: #fff8f8;
+      line-height: 1.5;
+    }
+
+    .field-foot {
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .outline-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fafcff;
+    }
+
+    .outline-name {
+      font-weight: 600;
+    }
+
+    .diff-card {
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .diff-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .diff-title {
+      font-weight: 600;
+    }
+
+    .diff-copy {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .legend {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 0 12px 12px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+    }
+
+    .legend-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+    }
+
+    .panel {
+      grid-area: right;
+      border-left: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .property-card,
+    .notice-card {
+      padding: 12px;
+      line-height: 1.5;
+    }
+
+    .property-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid #edf1f6;
+    }
+
+    .property-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .property-key {
+      color: var(--muted);
+    }
+
+    .property-value {
+      text-align: right;
+      font-weight: 600;
+    }
+
+    .notice-card {
+      background: #f8fbff;
+      border-color: #cfe0fb;
+      color: #234a8a;
+    }
+
+    .footer-actions {
+      margin-top: auto;
+      padding: 12px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      gap: 8px;
+    }
+
+    .footer-actions button {
+      flex: 1;
+      height: 32px;
+    }
+
+    @media (max-width: 1280px) {
+      .shell {
+        grid-template-columns: 48px 228px minmax(0, 1fr) 288px;
+      }
+
+      .canvas-body {
+        grid-template-columns: minmax(0, 1fr) 280px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell" data-prototype="PT-016" data-state="sales-vs-auditor" data-testid="prototype-root">
+    <header class="topbar" data-testid="topbar">
+      <div class="brand">
+        <div class="brand-mark">FD</div>
+        <div class="brand-copy">
+          <div class="title">全新表单设计器</div>
+          <div class="subtitle">权限差异预览 · 实时比较两个角色在同一表单上的操作差异</div>
+        </div>
+      </div>
+      <div class="toolbar" data-testid="toolbar-actions">
+        <button class="tool-btn" type="button" data-testid="btn-version" title="查看最近一次权限配置发布时间">版本 v2.6</button>
+        <button class="tool-btn" type="button" data-testid="btn-refresh" title="重新拉取权限配置差异">重新比对</button>
+        <button class="tool-btn primary" type="button" data-testid="btn-publish" title="当前页面仅演示预览，发布按钮不可用" disabled>发布配置</button>
+      </div>
+    </header>
+
+    <aside class="activity" data-testid="activity-bar">
+      <button class="icon-btn active" type="button" data-testid="nav-form" title="表单视图">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.8"></rect>
+          <path d="M8 9H16M8 13H16M8 17H13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+        </svg>
+      </button>
+      <button class="icon-btn" type="button" data-testid="nav-rule" title="规则视图">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 3L20 7V17L12 21L4 17V7L12 3Z" stroke="currentColor" stroke-width="1.8"></path>
+          <path d="M8 12H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+        </svg>
+      </button>
+      <button class="icon-btn" type="button" data-testid="nav-permission" title="权限视图">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M7 10V7C7 4.79 8.79 3 11 3H13C15.21 3 17 4.79 17 7V10" stroke="currentColor" stroke-width="1.8"></path>
+          <rect x="5" y="10" width="14" height="11" rx="2" stroke="currentColor" stroke-width="1.8"></rect>
+        </svg>
+      </button>
+    </aside>
+
+    <section class="sidebar" data-testid="left-panel">
+      <div class="section-head">
+        <div>
+          <div class="section-title">对比预设</div>
+          <div class="section-note">选择一个角色组合查看字段差异</div>
+        </div>
+      </div>
+      <div class="preset-list" data-testid="preset-list">
+        <button class="preset-btn active" type="button" data-preset="sales-vs-auditor" data-testid="preset-sales-vs-auditor">
+          <span class="preset-meta">
+            <span class="preset-label">销售经理 vs 财务审核</span>
+            <span class="preset-desc">敏感金额只读，审批备注可见</span>
+          </span>
+          <span class="status-badge status-readonly">默认</span>
+        </button>
+        <button class="preset-btn" type="button" data-preset="sales-vs-service" data-testid="preset-sales-vs-service">
+          <span class="preset-meta">
+            <span class="preset-label">销售经理 vs 客服专员</span>
+            <span class="preset-desc">客户信息编辑，报价字段隐藏</span>
+          </span>
+          <span class="status-badge status-editable">可切换</span>
+        </button>
+        <button class="preset-btn" type="button" data-preset="admin-vs-intern" data-testid="preset-admin-vs-intern">
+          <span class="preset-meta">
+            <span class="preset-label">平台管理员 vs 实习生</span>
+            <span class="preset-desc">完整权限与受限权限的极端差异</span>
+          </span>
+          <span class="status-badge status-hidden">演示</span>
+        </button>
+      </div>
+
+      <div class="section-head">
+        <div>
+          <div class="section-title">差异摘要</div>
+          <div class="section-note" id="summary-note" data-testid="summary-note">当前显示 3 个存在权限差异的字段</div>
+        </div>
+      </div>
+      <div class="summary-card" data-testid="summary-metrics">
+        <div class="metric">
+          <div class="metric-label">可编辑差异</div>
+          <div class="metric-value" id="metric-editable" data-testid="metric-editable">1</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">只读差异</div>
+          <div class="metric-value" id="metric-readonly" data-testid="metric-readonly">1</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">隐藏差异</div>
+          <div class="metric-value" id="metric-hidden" data-testid="metric-hidden">1</div>
+        </div>
+      </div>
+    </section>
+
+    <main class="canvas-wrap" data-testid="canvas-area">
+      <div class="canvas-toolbar">
+        <div class="canvas-toolbar-left">
+          <div class="compare-label" id="compare-label" data-testid="compare-label">销售经理 对比 财务审核</div>
+          <div class="section-note" id="compare-note" data-testid="compare-note">审批状态为“待审核”时自动套用财务审核视角。</div>
+        </div>
+        <div class="toolbar">
+          <button class="tool-btn" type="button" data-testid="btn-highlight" title="突出显示权限不同的字段">高亮差异</button>
+          <button class="tool-btn" type="button" data-testid="btn-snapshot" title="导出当前预览快照">导出快照</button>
+        </div>
+      </div>
+
+      <div class="canvas-stage">
+        <section class="designer-card" data-testid="designer-card">
+          <div class="designer-head">
+            <div class="section-title">报价审批表单</div>
+            <div class="section-note" id="state-pill" data-testid="state-pill">data-state = sales-vs-auditor</div>
+          </div>
+          <div class="canvas-body">
+            <div class="form-pane" data-testid="form-preview">
+              <div class="form-header">
+                <div class="form-title-wrap">
+                  <div class="form-title">新建报价单</div>
+                  <div class="form-desc" id="form-desc" data-testid="form-desc">用于预览两个角色在同一张业务表单上的可见性、可编辑性与只读差异。</div>
+                </div>
+                <div class="role-chip-row" data-testid="role-chip-row">
+                  <span class="chip current" id="role-a-chip" data-testid="role-a-chip">角色 A：销售经理</span>
+                  <span class="chip" id="role-b-chip" data-testid="role-b-chip">角色 B：财务审核</span>
+                </div>
+              </div>
+
+              <div class="field-grid">
+                <article class="field-card" id="field-customer" data-field="customer" data-visibility="visible" data-testid="field-customer">
+                  <div class="field-head">
+                    <div class="field-name">客户名称</div>
+                    <div class="status-badge status-editable" id="badge-customer" data-testid="badge-customer">双角色可编辑</div>
+                  </div>
+                  <div class="field-body">
+                    <label class="field-label" for="input-customer">基础资料</label>
+                    <input class="field-input" id="input-customer" data-testid="input-customer" type="text" value="上海浦越智能制造有限公司">
+                  </div>
+                  <div class="hidden-note" data-testid="hidden-note-customer">当前角色组合下，该字段对次要角色不可见。</div>
+                  <div class="field-foot" id="foot-customer">客户基础资料由一线业务维护，二线角色默认也可修改。</div>
+                </article>
+
+                <article class="field-card" id="field-amount" data-field="amount" data-visibility="visible" data-testid="field-amount">
+                  <div class="field-head">
+                    <div class="field-name">报价金额</div>
+                    <div class="status-badge status-readonly" id="badge-amount" data-testid="badge-amount">次要角色只读</div>
+                  </div>
+                  <div class="field-body">
+                    <label class="field-label" for="input-amount">含税总价</label>
+                    <input class="field-input" id="input-amount" data-testid="input-amount" type="text" value="¥ 286,000.00">
+                  </div>
+                  <div class="hidden-note" data-testid="hidden-note-amount">当前角色组合下，该字段不展示给次要角色。</div>
+                  <div class="field-foot" id="foot-amount">涉及金额的字段在审批阶段通常保留查看权限，但不允许修改。</div>
+                </article>
+
+                <article class="field-card" id="field-margin" data-field="margin" data-visibility="visible" data-testid="field-margin">
+                  <div class="field-head">
+                    <div class="field-name">毛利率</div>
+                    <div class="status-badge status-hidden" id="badge-margin" data-testid="badge-margin">次要角色隐藏</div>
+                  </div>
+                  <div class="field-body">
+                    <label class="field-label" for="input-margin">财务敏感指标</label>
+                    <input class="field-input" id="input-margin" data-testid="input-margin" type="text" value="22.8%">
+                  </div>
+                  <div class="hidden-note" data-testid="hidden-note-margin">该字段在当前组合中仅主角色可见，用于防止报价策略外泄。</div>
+                  <div class="field-foot" id="foot-margin">平台支持按角色隐藏敏感指标，同时保留审批必要字段。</div>
+                </article>
+
+                <article class="field-card" id="field-remark" data-field="remark" data-visibility="visible" data-testid="field-remark">
+                  <div class="field-head">
+                    <div class="field-name">审批备注</div>
+                    <div class="status-badge status-editable" id="badge-remark" data-testid="badge-remark">双角色可编辑</div>
+                  </div>
+                  <div class="field-body">
+                    <label class="field-label" for="input-remark">协作说明</label>
+                    <textarea class="field-textarea" id="input-remark" data-testid="input-remark">销售经理已补充付款节点说明，等待财务确认折扣合规性。</textarea>
+                  </div>
+                  <div class="hidden-note" data-testid="hidden-note-remark">审批备注仅对当前主角色开放。</div>
+                  <div class="field-foot" id="foot-remark">备注区用于跨角色协作，通常保留双向可编辑能力。</div>
+                </article>
+              </div>
+            </div>
+
+            <aside class="mini-map" data-testid="mini-map">
+              <div class="section-title">字段权限总览</div>
+              <div class="outline-row" data-testid="outline-customer">
+                <span class="outline-name">客户名称</span>
+                <span class="status-badge status-editable" id="outline-badge-customer">A/B 可编辑</span>
+              </div>
+              <div class="outline-row" data-testid="outline-amount">
+                <span class="outline-name">报价金额</span>
+                <span class="status-badge status-readonly" id="outline-badge-amount">B 只读</span>
+              </div>
+              <div class="outline-row" data-testid="outline-margin">
+                <span class="outline-name">毛利率</span>
+                <span class="status-badge status-hidden" id="outline-badge-margin">B 隐藏</span>
+              </div>
+              <div class="outline-row" data-testid="outline-remark">
+                <span class="outline-name">审批备注</span>
+                <span class="status-badge status-editable" id="outline-badge-remark">A/B 可编辑</span>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section data-testid="diff-panel">
+          <div class="section-head">
+            <div>
+              <div class="section-title">字段差异详情</div>
+              <div class="section-note" id="diff-note" data-testid="diff-note">点击左侧预设后，此区域与画布同步刷新。</div>
+            </div>
+          </div>
+          <div class="diff-list" id="diff-list" data-testid="diff-list"></div>
+          <div class="legend" data-testid="legend">
+            <div class="legend-item"><span class="legend-dot" style="background:#19733f"></span>可编辑</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#b7791f"></span>只读</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#c73535"></span>隐藏</div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <aside class="panel" data-testid="right-panel">
+      <div class="section-head">
+        <div>
+          <div class="section-title">预览属性</div>
+          <div class="section-note">面向设计器维护者的说明</div>
+        </div>
+      </div>
+      <div class="property-list">
+        <div class="property-card" data-testid="property-card">
+          <div class="property-row">
+            <span class="property-key">当前预设</span>
+            <span class="property-value" id="prop-preset" data-testid="prop-preset">销售经理 vs 财务审核</span>
+          </div>
+          <div class="property-row">
+            <span class="property-key">主交互态</span>
+            <span class="property-value" id="prop-state" data-testid="prop-state">sales-vs-auditor</span>
+          </div>
+          <div class="property-row">
+            <span class="property-key">差异字段数</span>
+            <span class="property-value" id="prop-diff-count" data-testid="prop-diff-count">3</span>
+          </div>
+          <div class="property-row">
+            <span class="property-key">审批流绑定</span>
+            <span class="property-value" id="prop-flow" data-testid="prop-flow">报价审批 / 节点二</span>
+          </div>
+        </div>
+        <div class="notice-card" id="notice-card" data-testid="notice-card">
+          当前视图用于回答“为什么同一字段在不同角色下表现不同”，以便产品、实施与权限管理员快速达成一致。
+        </div>
+      </div>
+      <div class="footer-actions">
+        <button type="button" data-testid="btn-compare-lock" title="此示例固定双角色对比，不能关闭">锁定对比</button>
+        <button type="button" data-testid="btn-approve" title="仅展示预览，审批动作未开放" disabled>确认差异</button>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    (function () {
+      var presets = {
+        "sales-vs-auditor": {
+          label: "销售经理 vs 财务审核",
+          compareLabel: "销售经理 对比 财务审核",
+          note: "审批状态为“待审核”时自动套用财务审核视角。",
+          formDesc: "用于预览两个角色在同一张业务表单上的可见性、可编辑性与只读差异。",
+          summaryNote: "当前显示 3 个存在权限差异的字段",
+          notice: "当前视图用于回答“为什么同一字段在不同角色下表现不同”，以便产品、实施与权限管理员快速达成一致。",
+          diffCount: 3,
+          roles: ["角色 A：销售经理", "角色 B：财务审核"],
+          fields: {
+            customer: {
+              status: "editable",
+              badge: "双角色可编辑",
+              outline: "A/B 可编辑",
+              foot: "客户基础资料由一线业务维护，二线角色默认也可修改。",
+              hiddenNote: "当前角色组合下，该字段对次要角色不可见。"
+            },
+            amount: {
+              status: "readonly",
+              badge: "次要角色只读",
+              outline: "B 只读",
+              foot: "涉及金额的字段在审批阶段通常保留查看权限，但不允许修改。",
+              hiddenNote: "当前角色组合下，该字段不展示给次要角色。"
+            },
+            margin: {
+              status: "hidden",
+              badge: "次要角色隐藏",
+              outline: "B 隐藏",
+              foot: "平台支持按角色隐藏敏感指标，同时保留审批必要字段。",
+              hiddenNote: "该字段在当前组合中仅主角色可见，用于防止报价策略外泄。"
+            },
+            remark: {
+              status: "editable",
+              badge: "双角色可编辑",
+              outline: "A/B 可编辑",
+              foot: "备注区用于跨角色协作，通常保留双向可编辑能力。",
+              hiddenNote: "审批备注仅对当前主角色开放。"
+            }
+          },
+          diffs: [
+            {
+              field: "报价金额",
+              left: "销售经理可编辑金额并提交折扣理由。",
+              right: "财务审核仅查看金额，不能改写报价总额。"
+            },
+            {
+              field: "毛利率",
+              left: "销售经理可见，用于判断报价空间。",
+              right: "财务审核默认隐藏，避免无关人员接触策略指标。"
+            },
+            {
+              field: "审批备注",
+              left: "销售经理补充商务原因。",
+              right: "财务审核追加审批意见，保留协作输入。"
+            }
+          ]
+        },
+        "sales-vs-service": {
+          label: "销售经理 vs 客服专员",
+          compareLabel: "销售经理 对比 客服专员",
+          note: "服务跟进阶段强调客户信息维护，报价策略退居次级。",
+          formDesc: "客服专员偏重履约与回访，因此客户信息开放编辑，报价策略字段尽量收窄。",
+          summaryNote: "当前显示 2 个存在权限差异的字段",
+          notice: "当前组合强调业务跟进场景，帮助实施团队验证“服务角色是否只看该看的字段”。",
+          diffCount: 2,
+          roles: ["角色 A：销售经理", "角色 B：客服专员"],
+          fields: {
+            customer: {
+              status: "editable",
+              badge: "双角色可编辑",
+              outline: "A/B 可编辑",
+              foot: "客户联系人与回访计划需要客服持续维护。",
+              hiddenNote: "当前角色组合下，该字段对次要角色不可见。"
+            },
+            amount: {
+              status: "hidden",
+              badge: "次要角色隐藏",
+              outline: "B 隐藏",
+              foot: "客服阶段无需暴露报价金额，避免额外解释成本。",
+              hiddenNote: "客服专员不展示该字段，降低信息噪声。"
+            },
+            margin: {
+              status: "hidden",
+              badge: "次要角色隐藏",
+              outline: "B 隐藏",
+              foot: "毛利率继续作为销售侧敏感字段保留。",
+              hiddenNote: "该字段仍然只对销售经理可见。"
+            },
+            remark: {
+              status: "readonly",
+              badge: "次要角色只读",
+              outline: "B 只读",
+              foot: "客服可查看审批备注，但不能覆盖销售与财务沟通记录。",
+              hiddenNote: "审批备注对客服专员不开放。"
+            }
+          },
+          diffs: [
+            {
+              field: "客户名称",
+              left: "销售经理维护客户归属。",
+              right: "客服专员可同步更新客户联系人与服务信息。"
+            },
+            {
+              field: "报价金额 / 毛利率",
+              left: "销售经理保留完整报价视角。",
+              right: "客服专员隐藏金额与毛利率，避免服务过程暴露销售策略。"
+            }
+          ]
+        },
+        "admin-vs-intern": {
+          label: "平台管理员 vs 实习生",
+          compareLabel: "平台管理员 对比 实习生",
+          note: "极端权限对比用于校验最小授权模型是否生效。",
+          formDesc: "管理员拥有完整编辑权，实习生仅可查看经过筛选的基础字段，用来验证最小授权与培训场景。",
+          summaryNote: "当前显示 4 个存在权限差异的字段",
+          notice: "当前组合适合做权限回归演示，快速暴露字段过度开放的风险。",
+          diffCount: 4,
+          roles: ["角色 A：平台管理员", "角色 B：实习生"],
+          fields: {
+            customer: {
+              status: "readonly",
+              badge: "次要角色只读",
+              outline: "B 只读",
+              foot: "实习生允许查看客户名，但禁止修改正式资料。",
+              hiddenNote: "实习生当前不可见该字段。"
+            },
+            amount: {
+              status: "hidden",
+              badge: "次要角色隐藏",
+              outline: "B 隐藏",
+              foot: "报价金额不向实习角色开放。",
+              hiddenNote: "该字段对实习生完全隐藏。"
+            },
+            margin: {
+              status: "hidden",
+              badge: "次要角色隐藏",
+              outline: "B 隐藏",
+              foot: "毛利率仅管理员可见，可用于检验极端权限限制。",
+              hiddenNote: "该字段对实习生完全隐藏。"
+            },
+            remark: {
+              status: "readonly",
+              badge: "次要角色只读",
+              outline: "B 只读",
+              foot: "实习生可阅读审批链路，但不能写入意见。",
+              hiddenNote: "实习生不能查看审批备注。"
+            }
+          },
+          diffs: [
+            {
+              field: "客户名称",
+              left: "管理员可维护完整客户资料。",
+              right: "实习生仅查看，不允许编辑。"
+            },
+            {
+              field: "报价金额",
+              left: "管理员可以修改金额并发起重算。",
+              right: "实习生不可见。"
+            },
+            {
+              field: "毛利率",
+              left: "管理员查看敏感指标并调整权限模板。",
+              right: "实习生不可见。"
+            },
+            {
+              field: "审批备注",
+              left: "管理员可编辑审批说明。",
+              right: "实习生只能阅读。"
+            }
+          ]
+        }
+      };
+
+      var fields = ["customer", "amount", "margin", "remark"];
+      var statusMeta = {
+        editable: { className: "status-editable" },
+        readonly: { className: "status-readonly" },
+        hidden: { className: "status-hidden" }
+      };
+
+      var root = document.querySelector("[data-prototype='PT-016']");
+      var presetButtons = document.querySelectorAll("[data-preset]");
+      var compareLabel = document.getElementById("compare-label");
+      var compareNote = document.getElementById("compare-note");
+      var formDesc = document.getElementById("form-desc");
+      var roleAChip = document.getElementById("role-a-chip");
+      var roleBChip = document.getElementById("role-b-chip");
+      var summaryNote = document.getElementById("summary-note");
+      var metricEditable = document.getElementById("metric-editable");
+      var metricReadonly = document.getElementById("metric-readonly");
+      var metricHidden = document.getElementById("metric-hidden");
+      var statePill = document.getElementById("state-pill");
+      var propPreset = document.getElementById("prop-preset");
+      var propState = document.getElementById("prop-state");
+      var propDiffCount = document.getElementById("prop-diff-count");
+      var noticeCard = document.getElementById("notice-card");
+      var diffList = document.getElementById("diff-list");
+      var diffNote = document.getElementById("diff-note");
+
+      function setBadgeState(node, status, text) {
+        node.className = "status-badge " + statusMeta[status].className;
+        node.textContent = text;
+      }
+
+      function renderDiffs(items) {
+        diffList.innerHTML = "";
+        for (var i = 0; i < items.length; i += 1) {
+          var card = document.createElement("article");
+          card.className = "diff-card";
+          card.setAttribute("data-testid", "diff-card-" + i);
+
+          var top = document.createElement("div");
+          top.className = "diff-top";
+
+          var title = document.createElement("div");
+          title.className = "diff-title";
+          title.textContent = items[i].field;
+
+          var badge = document.createElement("span");
+          badge.className = "chip";
+          badge.textContent = "存在差异";
+
+          top.appendChild(title);
+          top.appendChild(badge);
+
+          var copy = document.createElement("div");
+          copy.className = "diff-copy";
+          copy.textContent = "角色 A：" + items[i].left + " 角色 B：" + items[i].right;
+
+          card.appendChild(top);
+          card.appendChild(copy);
+          diffList.appendChild(card);
+        }
+      }
+
+      function applyPreset(key) {
+        var preset = presets[key];
+        var editableCount = 0;
+        var readonlyCount = 0;
+        var hiddenCount = 0;
+
+        root.setAttribute("data-state", key);
+        compareLabel.textContent = preset.compareLabel;
+        compareNote.textContent = preset.note;
+        formDesc.textContent = preset.formDesc;
+        roleAChip.textContent = preset.roles[0];
+        roleBChip.textContent = preset.roles[1];
+        summaryNote.textContent = preset.summaryNote;
+        statePill.textContent = "data-state = " + key;
+        propPreset.textContent = preset.label;
+        propState.textContent = key;
+        propDiffCount.textContent = String(preset.diffCount);
+        noticeCard.textContent = preset.notice;
+        diffNote.textContent = "已加载：" + preset.label;
+
+        for (var i = 0; i < fields.length; i += 1) {
+          var fieldKey = fields[i];
+          var config = preset.fields[fieldKey];
+          var fieldNode = document.getElementById("field-" + fieldKey);
+          var badgeNode = document.getElementById("badge-" + fieldKey);
+          var outlineNode = document.getElementById("outline-badge-" + fieldKey);
+          var footNode = document.getElementById("foot-" + fieldKey);
+          var hiddenNode = document.querySelector("[data-testid='hidden-note-" + fieldKey + "']");
+          var inputNode = document.getElementById("input-" + fieldKey);
+
+          fieldNode.setAttribute("data-visibility", config.status === "hidden" ? "hidden" : "visible");
+          setBadgeState(badgeNode, config.status, config.badge);
+          setBadgeState(outlineNode, config.status, config.outline);
+          footNode.textContent = config.foot;
+          hiddenNode.textContent = config.hiddenNote;
+
+          if (inputNode) {
+            inputNode.disabled = config.status === "hidden";
+            inputNode.readOnly = config.status === "readonly";
+          }
+
+          if (config.status === "editable") {
+            editableCount += 1;
+          } else if (config.status === "readonly") {
+            readonlyCount += 1;
+          } else if (config.status === "hidden") {
+            hiddenCount += 1;
+          }
+        }
+
+        metricEditable.textContent = String(editableCount);
+        metricReadonly.textContent = String(readonlyCount);
+        metricHidden.textContent = String(hiddenCount);
+        renderDiffs(preset.diffs);
+
+        for (var j = 0; j < presetButtons.length; j += 1) {
+          var active = presetButtons[j].getAttribute("data-preset") === key;
+          presetButtons[j].classList.toggle("active", active);
+        }
+      }
+
+      for (var index = 0; index < presetButtons.length; index += 1) {
+        presetButtons[index].addEventListener("click", function (event) {
+          var key = event.currentTarget.getAttribute("data-preset");
+          applyPreset(key);
+        });
+      }
+
+      applyPreset("sales-vs-auditor");
+    }());
+  </script>
+</body>
+</html>

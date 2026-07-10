@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PT-018 性能门禁</title>
+  <style>
+    :root {
+      --bg: #eef2f6;
+      --panel: #ffffff;
+      --line: #d7dee8;
+      --text: #1f2937;
+      --muted: #667085;
+      --primary: #2468c9;
+      --success: #19733f;
+      --danger: #c73535;
+      --warn: #b7791f;
+      --soft: #f6f8fb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-width: 1440px;
+      height: 100%;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font: 13px/1.4 "Microsoft YaHei UI", "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      border-radius: 4px;
+      height: 30px;
+      padding: 0 12px;
+      cursor: pointer;
+    }
+
+    button:hover:enabled {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      color: #98a2b3;
+      background: #f3f4f6;
+    }
+
+    .app {
+      width: 1440px;
+      height: 900px;
+      display: grid;
+      grid-template-columns: 48px 240px 1fr 300px;
+      grid-template-rows: 48px 1fr;
+    }
+
+    .topbar {
+      grid-column: 1 / 5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .brand,
+    .top-actions,
+    .status-inline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-mark {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      background: var(--primary);
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--line);
+      background: #f7f9fc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 10px;
+      gap: 8px;
+    }
+
+    .rail-btn {
+      width: 32px;
+      height: 32px;
+      padding: 0;
+    }
+
+    .nav {
+      border-right: 1px solid var(--line);
+      background: var(--panel);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav-head,
+    .panel-head {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      border-bottom: 1px solid var(--line);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .nav-body,
+    .panel-body {
+      padding: 12px;
+      overflow: hidden;
+    }
+
+    .tree-item,
+    .panel-row,
+    .metric-card,
+    .timeline-item,
+    .note-box,
+    .gate-banner,
+    .draft-card {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+    }
+
+    .tree-item {
+      padding: 10px;
+      margin-bottom: 8px;
+      background: var(--soft);
+    }
+
+    .tree-item strong,
+    .metric-card strong,
+    .draft-card strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .workspace {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .canvas-toolbar {
+      height: 40px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+    }
+
+    .toolbar-group,
+    .segment,
+    .banner-main,
+    .draft-grid,
+    .metrics-grid,
+    .footer-bar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .segment button.active {
+      border-color: var(--primary);
+      background: #edf4ff;
+      color: var(--primary);
+    }
+
+    .canvas {
+      flex: 1;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    .stage {
+      height: 100%;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 12px;
+    }
+
+    .gate-banner {
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fcfdff;
+    }
+
+    .gate-banner[data-tone="blocked"] {
+      border-left: 4px solid var(--danger);
+    }
+
+    .gate-banner[data-tone="pass"] {
+      border-left: 4px solid var(--success);
+    }
+
+    .gate-banner[data-tone="running"] {
+      border-left: 4px solid var(--warn);
+    }
+
+    .banner-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .banner-text,
+    .muted {
+      color: var(--muted);
+    }
+
+    .draft-grid {
+      align-items: stretch;
+    }
+
+    .draft-card {
+      flex: 1;
+      padding: 12px;
+      min-height: 110px;
+    }
+
+    .metrics-grid {
+      align-items: stretch;
+    }
+
+    .metric-card {
+      flex: 1;
+      padding: 12px;
+      min-height: 124px;
+      background: var(--panel);
+    }
+
+    .metric-value {
+      font-size: 28px;
+      font-weight: 600;
+      margin: 6px 0 8px;
+    }
+
+    .metric-flag {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #fff;
+      background: var(--success);
+    }
+
+    .metric-flag.danger {
+      background: var(--danger);
+    }
+
+    .metric-flag.warn {
+      background: var(--warn);
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 12px;
+      min-height: 0;
+    }
+
+    .timeline-stack,
+    .insight-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 0;
+    }
+
+    .timeline-item,
+    .note-box {
+      padding: 10px 12px;
+      background: var(--panel);
+    }
+
+    .timeline-item strong,
+    .note-box strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .footer-bar {
+      justify-content: space-between;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 10px 12px;
+      background: var(--panel);
+    }
+
+    .prop-panel {
+      border-left: 1px solid var(--line);
+      background: var(--panel);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-row {
+      padding: 10px;
+      margin-bottom: 8px;
+    }
+
+    .pair {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 6px;
+      color: var(--muted);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #f8fafc;
+      color: var(--muted);
+    }
+
+    .pill.primary {
+      background: #edf4ff;
+      border-color: #b9cff1;
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="app" data-prototype="PT-018" data-state="blocked" data-testid="pt-018-root">
+    <header class="topbar" data-testid="topbar">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <strong>全新表单设计器 / 性能门禁</strong>
+        <span class="muted">发布前性能校验</span>
+      </div>
+      <div class="top-actions">
+        <div class="status-inline" data-testid="top-status">
+          <span class="pill primary" id="topStatusPill">BLOCKED</span>
+          <span class="muted" id="topStatusText">当前草稿不满足发布门禁</span>
+        </div>
+        <button type="button" data-testid="btn-save">保存草稿</button>
+        <button type="button" id="publishButton" data-testid="btn-publish" disabled title="门禁通过后可发布">发布版本</button>
+      </div>
+    </header>
+
+    <aside class="sidebar" data-testid="activity-rail">
+      <button type="button" class="rail-btn" data-testid="rail-design">D</button>
+      <button type="button" class="rail-btn" data-testid="rail-data">S</button>
+      <button type="button" class="rail-btn" data-testid="rail-gate">P</button>
+      <button type="button" class="rail-btn" data-testid="rail-log">L</button>
+    </aside>
+
+    <nav class="nav" data-testid="resource-panel">
+      <div class="nav-head">
+        <span>资源树</span>
+        <span>Draft 12</span>
+      </div>
+      <div class="nav-body">
+        <div class="tree-item" data-testid="tree-page">
+          <strong>表单页 / 采购申请</strong>
+          <div class="muted">主表 + 3 个明细区 + 条件显隐</div>
+        </div>
+        <div class="tree-item" data-testid="tree-async">
+          <strong>异步规则集</strong>
+          <div class="muted">字段联动 18 条 / 远程数据源 4 个</div>
+        </div>
+        <div class="tree-item" data-testid="tree-release">
+          <strong>发布门禁</strong>
+          <div class="muted">渲染耗时、节点规模、首屏请求数</div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="workspace" data-testid="workspace">
+      <div class="canvas-toolbar" data-testid="canvas-toolbar">
+        <div class="toolbar-group">
+          <span class="pill">环境: 设计态</span>
+          <span class="pill">版本: v2.18.0</span>
+        </div>
+        <div class="segment" data-testid="preset-switch">
+          <button type="button" id="presetRisk" class="active" data-testid="preset-risk">高风险草稿</button>
+          <button type="button" id="presetSafe" data-testid="preset-safe">低负载草稿</button>
+          <button type="button" id="runGate" data-testid="btn-run-gate">执行门禁</button>
+        </div>
+      </div>
+
+      <section class="canvas">
+        <div class="stage">
+          <section class="gate-banner" id="gateBanner" data-tone="blocked" data-testid="gate-banner">
+            <div class="banner-main">
+              <div>
+                <div class="banner-title" id="bannerTitle">性能门禁阻塞发布</div>
+                <div class="banner-text" id="bannerText">渲染耗时和节点规模超过阈值，需先压缩草稿复杂度。</div>
+              </div>
+            </div>
+            <div class="status-inline">
+              <span class="pill" id="scenarioTag">场景: 高风险草稿</span>
+              <span class="pill" id="gateStateTag">状态: blocked</span>
+            </div>
+          </section>
+
+          <section class="draft-grid">
+            <div class="draft-card" data-testid="draft-overview">
+              <strong>本次提交</strong>
+              <div class="muted">采购申请 / 移动端表单 + PC 审批配置</div>
+              <div class="pair"><span>组件总数</span><span id="overviewNodes">428</span></div>
+              <div class="pair"><span>动态规则</span><span id="overviewRules">18</span></div>
+              <div class="pair"><span>远程选项源</span><span id="overviewSources">4</span></div>
+            </div>
+            <div class="draft-card" data-testid="draft-threshold">
+              <strong>门禁阈值</strong>
+              <div class="pair"><span>首屏渲染</span><span>&lt;= 180ms</span></div>
+              <div class="pair"><span>画布节点数</span><span>&lt;= 320</span></div>
+              <div class="pair"><span>首屏请求数</span><span>&lt;= 6</span></div>
+            </div>
+          </section>
+
+          <section class="metrics-grid">
+            <div class="metric-card" data-testid="metric-render">
+              <strong>首屏渲染耗时</strong>
+              <div class="metric-value" id="metricRenderValue">286ms</div>
+              <span class="metric-flag danger" id="metricRenderFlag">超阈值</span>
+              <div class="muted">阈值 180ms，设计态采样 20 次</div>
+            </div>
+            <div class="metric-card" data-testid="metric-nodes">
+              <strong>画布节点数</strong>
+              <div class="metric-value" id="metricNodesValue">428</div>
+              <span class="metric-flag danger" id="metricNodesFlag">超阈值</span>
+              <div class="muted">阈值 320，包含联动容器与明细区</div>
+            </div>
+            <div class="metric-card" data-testid="metric-request">
+              <strong>首屏请求数</strong>
+              <div class="metric-value" id="metricRequestValue">7</div>
+              <span class="metric-flag warn" id="metricRequestFlag">逼近上限</span>
+              <div class="muted">阈值 6，请求串行链路存在重叠</div>
+            </div>
+          </section>
+
+          <section class="timeline">
+            <div class="timeline-stack">
+              <div class="timeline-item" data-testid="timeline-latest">
+                <strong>最近一次门禁执行</strong>
+                <div class="pair"><span>执行入口</span><span id="timelineEntry">提交前自动校验</span></div>
+                <div class="pair"><span>阻塞原因</span><span id="timelineReason">重复联动容器过多</span></div>
+                <div class="pair"><span>建议动作</span><span id="timelineAction">拆分审批段并延迟加载选项</span></div>
+              </div>
+              <div class="timeline-item" data-testid="timeline-history">
+                <strong>门禁历史</strong>
+                <div class="pair"><span>10:42</span><span>BLOCKED / 首屏渲染 286ms</span></div>
+                <div class="pair"><span>09:15</span><span>BLOCKED / 节点数 428</span></div>
+                <div class="pair"><span>昨天</span><span>PASS / 需求池模板</span></div>
+              </div>
+            </div>
+            <div class="insight-stack">
+              <div class="note-box" data-testid="insight-note">
+                <strong>修复建议</strong>
+                <div id="insightText">优先收敛重复区块，减少同屏明细容器，并把字典型数据切到按需加载。</div>
+              </div>
+              <div class="note-box" data-testid="insight-owner">
+                <strong>责任归属</strong>
+                <div class="pair"><span>提交人</span><span>交互设计 / 张宁</span></div>
+                <div class="pair"><span>复核人</span><span>前端基建 / 王远</span></div>
+                <div class="pair"><span>建议 SLA</span><span id="slaText">24 小时内完成压测复核</span></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="footer-bar" data-testid="footer-bar">
+            <div class="muted" id="footerHint">当前为阻塞态，发布按钮已锁定，需修复后重新执行门禁。</div>
+            <button type="button" data-testid="btn-export">导出报告</button>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <aside class="prop-panel" data-testid="property-panel">
+      <div class="panel-head">
+        <span>门禁配置</span>
+        <span>只读</span>
+      </div>
+      <div class="panel-body">
+        <div class="panel-row" data-testid="prop-state">
+          <strong>当前状态</strong>
+          <div class="pair"><span>根节点 data-state</span><span id="propState">blocked</span></div>
+        </div>
+        <div class="panel-row" data-testid="prop-scope">
+          <strong>校验范围</strong>
+          <div class="pair"><span>画布层级</span><span>页面 + 明细区</span></div>
+          <div class="pair"><span>运行模式</span><span>设计态模拟</span></div>
+        </div>
+        <div class="panel-row" data-testid="prop-limit">
+          <strong>压测阈值</strong>
+          <div class="pair"><span>渲染耗时</span><span>180ms</span></div>
+          <div class="pair"><span>节点规模</span><span>320</span></div>
+          <div class="pair"><span>请求数</span><span>6</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    (function () {
+      const root = document.querySelector('[data-testid="pt-018-root"]');
+      const presetRisk = document.getElementById('presetRisk');
+      const presetSafe = document.getElementById('presetSafe');
+      const runGate = document.getElementById('runGate');
+      const publishButton = document.getElementById('publishButton');
+
+      const views = {
+        risk: {
+          state: 'blocked',
+          tone: 'blocked',
+          topPill: 'BLOCKED',
+          topText: '当前草稿不满足发布门禁',
+          bannerTitle: '性能门禁阻塞发布',
+          bannerText: '渲染耗时和节点规模超过阈值，需先压缩草稿复杂度。',
+          scenario: '场景: 高风险草稿',
+          gateState: '状态: blocked',
+          nodes: '428',
+          rules: '18',
+          sources: '4',
+          renderValue: '286ms',
+          nodesValue: '428',
+          requestValue: '7',
+          renderFlag: ['超阈值', 'danger'],
+          nodesFlag: ['超阈值', 'danger'],
+          requestFlag: ['逼近上限', 'warn'],
+          reason: '重复联动容器过多',
+          action: '拆分审批段并延迟加载选项',
+          insight: '优先收敛重复区块，减少同屏明细容器，并把字典型数据切到按需加载。',
+          sla: '24 小时内完成压测复核',
+          footer: '当前为阻塞态，发布按钮已锁定，需修复后重新执行门禁。'
+        },
+        safe: {
+          state: 'pass',
+          tone: 'pass',
+          topPill: 'PASS',
+          topText: '当前草稿满足发布门禁，可进入发布流程',
+          bannerTitle: '性能门禁已放行',
+          bannerText: '首屏渲染、节点规模与请求数均在阈值内，可提交发布。',
+          scenario: '场景: 低负载草稿',
+          gateState: '状态: pass',
+          nodes: '246',
+          rules: '9',
+          sources: '2',
+          renderValue: '132ms',
+          nodesValue: '246',
+          requestValue: '4',
+          renderFlag: ['正常', ''],
+          nodesFlag: ['正常', ''],
+          requestFlag: ['正常', ''],
+          reason: '门禁全量指标通过',
+          action: '允许进入发布审批',
+          insight: '当前版本已完成延迟加载与明细区折叠，后续保持规则拆分即可稳定通过。',
+          sla: '无需加急，按常规发布窗口执行',
+          footer: '门禁通过，发布按钮已解锁，可继续进入版本发布。'
+        }
+      };
+
+      function applyFlag(id, value) {
+        const target = document.getElementById(id);
+        target.textContent = value[0];
+        target.className = 'metric-flag' + (value[1] ? ' ' + value[1] : '');
+      }
+
+      function activatePreset(mode) {
+        const view = views[mode];
+        root.dataset.state = view.state;
+        document.getElementById('gateBanner').dataset.tone = view.tone;
+        document.getElementById('topStatusPill').textContent = view.topPill;
+        document.getElementById('topStatusText').textContent = view.topText;
+        document.getElementById('bannerTitle').textContent = view.bannerTitle;
+        document.getElementById('bannerText').textContent = view.bannerText;
+        document.getElementById('scenarioTag').textContent = view.scenario;
+        document.getElementById('gateStateTag').textContent = view.gateState;
+        document.getElementById('overviewNodes').textContent = view.nodes;
+        document.getElementById('overviewRules').textContent = view.rules;
+        document.getElementById('overviewSources').textContent = view.sources;
+        document.getElementById('metricRenderValue').textContent = view.renderValue;
+        document.getElementById('metricNodesValue').textContent = view.nodesValue;
+        document.getElementById('metricRequestValue').textContent = view.requestValue;
+        document.getElementById('timelineReason').textContent = view.reason;
+        document.getElementById('timelineAction').textContent = view.action;
+        document.getElementById('insightText').textContent = view.insight;
+        document.getElementById('slaText').textContent = view.sla;
+        document.getElementById('footerHint').textContent = view.footer;
+        document.getElementById('propState').textContent = view.state;
+        publishButton.disabled = view.state !== 'pass';
+        applyFlag('metricRenderFlag', view.renderFlag);
+        applyFlag('metricNodesFlag', view.nodesFlag);
+        applyFlag('metricRequestFlag', view.requestFlag);
+        presetRisk.classList.toggle('active', mode === 'risk');
+        presetSafe.classList.toggle('active', mode === 'safe');
+      }
+
+      presetRisk.addEventListener('click', function () {
+        activatePreset('risk');
+      });
+
+      presetSafe.addEventListener('click', function () {
+        activatePreset('safe');
+      });
+
+      runGate.addEventListener('click', function () {
+        const nextMode = root.dataset.state === 'pass' ? 'risk' : 'safe';
+        activatePreset(nextMode);
+      });
+    }());
+  </script>
+</body>
+</html>

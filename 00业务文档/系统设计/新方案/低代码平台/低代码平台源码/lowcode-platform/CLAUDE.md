@@ -6,7 +6,7 @@
 
 - 工程规范：
   - `D:\mywork\techdoc\00业务文档\系统设计\工程规范\README.md`
-  - `D:\mywork\techdoc\00业务文档\系统设计\工程规范\00-陷阱覆盖总表.md`
+  - `D:\mywork\techdoc\00业务文档\系统设计\工程规范\低代码平台规范\06-陷阱覆盖矩阵.md`
 - 本仓库根目录 `README.md`（项目当前能力边界总览）
 - 各模块根目录 `README.md`
 - AI 可操作性契约：`packages/demo/src/设计器AI可控API设计方案.md`

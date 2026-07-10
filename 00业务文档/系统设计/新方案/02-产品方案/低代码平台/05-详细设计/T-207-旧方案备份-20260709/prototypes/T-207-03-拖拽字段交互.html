@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>T-207 表单设计器 原型03-拖拽字段交互</title>
+  <style>
+    :root {
+      --bg: #e8edf4;
+      --panel: #ffffff;
+      --soft: #f5f7fa;
+      --head: #eef2f7;
+      --line: #cbd5e1;
+      --line-dark: #a7b4c5;
+      --text: #1f2937;
+      --muted: #66758a;
+      --blue: #1f5fbf;
+      --blue-2: #2d74d7;
+      --blue-soft: #e8f1ff;
+      --green: #0f7a4c;
+      --green-soft: #edfdf7;
+      --amber: #a15c06;
+      --amber-soft: #fffbeb;
+      --red: #b42318;
+      --red-soft: #fef2f2;
+      font-family: "Microsoft YaHei UI", "Segoe UI", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-size: 12px; overflow: hidden; }
+    button, input, select { font: inherit; }
+
+    .shell { height: 100vh; display: grid; grid-template-rows: 44px minmax(0, 1fr) 26px; background: var(--bg); }
+
+    /* 顶部 */
+    .topbar { display: grid; grid-template-columns: 280px minmax(0, 1fr) 300px; align-items: center; background: #fff; border-bottom: 1px solid var(--line); }
+    .brand { display: flex; align-items: center; gap: 8px; padding: 0 12px; border-right: 1px solid var(--line); height: 100%; }
+    .logo { width: 26px; height: 26px; background: var(--blue); border-radius: 4px; display: grid; place-items: center; color: #fff; font-weight: 700; font-size: 14px; }
+    .brand-text strong { display: block; font-size: 12px; font-weight: 700; }
+    .brand-text span { display: block; font-size: 10px; color: var(--muted); }
+    .cmd-center { display: flex; align-items: center; gap: 4px; padding: 0 12px; }
+    .cmd-btn { height: 26px; padding: 0 10px; border: 1px solid var(--line); border-radius: 3px; background: #fff; color: var(--text); font-size: 11px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+    .cmd-btn:hover { background: var(--blue-soft); border-color: var(--blue); color: var(--blue); }
+    .cmd-btn.primary { border-color: var(--blue); background: var(--blue); color: #fff; }
+    .cmd-btn.icon { min-width: 28px; padding: 0; justify-content: center; }
+    .divider { width: 1px; height: 20px; background: var(--line); margin: 0 4px; }
+    .topbar-right { display: flex; align-items: center; justify-content: flex-end; gap: 6px; padding: 0 12px; border-left: 1px solid var(--line); height: 100%; }
+    .status-pill { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 3px; border: 1px solid var(--line); background: var(--soft); color: var(--muted); font-size: 10px; white-space: nowrap; }
+    .status-pill.success { color: var(--green); border-color: #b7decf; background: var(--green-soft); }
+
+    /* 工作区 */
+    .workspace { display: grid; grid-template-columns: 210px minmax(0, 1fr) 245px; min-height: 0; background: var(--bg); }
+
+    /* 左侧面板 */
+    .left-panel, .right-panel { background: #fff; min-height: 0; display: grid; grid-template-rows: 27px minmax(0, 1fr); overflow: hidden; }
+    .left-panel { border-right: 1px solid var(--line); }
+    .right-panel { border-left: 1px solid var(--line); }
+    .panel-tabs { display: flex; align-items: end; gap: 1px; padding: 0 5px; background: var(--head); border-bottom: 1px solid var(--line); }
+    .panel-tab { height: 23px; padding: 0 8px; display: inline-flex; align-items: center; border: 1px solid transparent; border-bottom: 0; border-radius: 3px 3px 0 0; color: var(--muted); font-size: 10px; cursor: pointer; background: transparent; }
+    .panel-tab.active { border-color: var(--line); background: #fff; color: var(--blue); font-weight: 700; }
+    .panel-body { min-height: 0; overflow: auto; padding: 6px; }
+    .search-box { width: 100%; height: 24px; border: 1px solid var(--line); border-radius: 3px; padding: 0 7px; margin-bottom: 6px; font-size: 10px; color: var(--muted); background: #fff; }
+    .group-title { height: 20px; display: flex; align-items: center; padding: 0 6px; background: var(--soft); border: 1px solid var(--line); border-bottom: 0; font-size: 10px; font-weight: 700; color: var(--muted); }
+    .item-list { border: 1px solid var(--line); margin-bottom: 6px; }
+    .item { height: 24px; display: grid; grid-template-columns: 16px minmax(0, 1fr) auto; align-items: center; gap: 4px; padding: 0 6px; border-bottom: 1px solid #edf2f7; font-size: 10px; color: var(--text); cursor: pointer; }
+    .item:last-child { border-bottom: 0; }
+    .item:hover { background: var(--blue-soft); }
+    .item.dragging { opacity: 0.5; }
+    .item .ico { width: 15px; height: 15px; display: grid; place-items: center; border: 1px solid var(--line-dark); border-radius: 2px; background: #fff; color: var(--muted); font-size: 9px; font-weight: 700; }
+    .item .label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* 中央画布 */
+    .canvas-area { min-height: 0; display: grid; grid-template-rows: 26px minmax(0, 1fr); overflow: hidden; background: var(--bg); }
+    .docbar { display: flex; align-items: end; justify-content: space-between; padding: 0 7px; background: #f8fafc; border-bottom: 1px solid var(--line); }
+    .doc-tab { height: 22px; min-width: 120px; display: inline-flex; align-items: center; justify-content: space-between; gap: 6px; padding: 0 7px; border: 1px solid var(--line); border-bottom: 0; border-radius: 3px 3px 0 0; background: #fff; color: var(--text); font-size: 10px; }
+    .doc-tab .close { width: 12px; height: 12px; display: grid; place-items: center; border-radius: 2px; cursor: pointer; color: var(--muted); font-size: 10px; }
+    .canvas-tools { display: flex; align-items: center; gap: 4px; }
+    .viewport { min-height: 0; padding: 12px; overflow: auto; background: linear-gradient(#edf2f7 1px, transparent 1px), linear-gradient(90deg, #edf2f7 1px, transparent 1px), #dfe7f0; background-size: 22px 22px; position: relative; }
+
+    /* Web 页面 */
+    .webpage { width: 1100px; min-height: 700px; margin: 0 auto; background: #fff; border: 1px solid var(--line-dark); box-shadow: 0 10px 18px rgba(15, 23, 42, 0.12); position: relative; }
+    .page-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 10px; height: 34px; background: #fff; border-bottom: 1px solid var(--line); }
+    .page-title { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+    .page-main { min-height: 0; display: grid; grid-template-columns: 110px minmax(0, 1fr) 140px; overflow: hidden; height: calc(100% - 34px - 34px); }
+    .dock { min-height: 0; border-right: 1px solid var(--line); background: #f7f9fc; display: grid; grid-template-rows: 26px minmax(0, 1fr); overflow: hidden; }
+    .dock-head { height: 26px; display: flex; align-items: center; padding: 0 7px; background: #fff; border-bottom: 1px solid var(--line); font-size: 10px; font-weight: 700; color: var(--muted); }
+    .aside-info { min-height: 0; border-left: 1px solid var(--line); background: #f8fafc; display: grid; grid-template-rows: 26px minmax(0, 1fr); overflow: hidden; }
+    .aside-head { height: 26px; display: flex; align-items: center; padding: 0 7px; background: #fff; border-bottom: 1px solid var(--line); font-size: 10px; font-weight: 700; color: var(--muted); }
+    .page-bottom { display: flex; align-items: center; justify-content: flex-end; gap: 4px; padding: 0 8px; height: 34px; border-top: 1px solid var(--line); background: #fff; }
+
+    /* 画布主体 */
+    .canvas-body { min-width: 0; min-height: 0; padding: 6px; background: #fbfcfe; display: flex; flex-direction: column; gap: 6px; overflow: auto; }
+
+    /* GridLayout 容器 */
+    .dropped-container { border: 1px solid var(--line); background: #fff; position: relative; }
+    .dropped-container:hover { border-color: var(--blue-2); }
+    .dropped-container.selected { border-color: var(--blue); box-shadow: 0 0 0 1px var(--blue); }
+
+    /* 选中标签 */
+    .sel-label { position: absolute; top: -1px; left: -1px; height: 16px; display: inline-flex; align-items: center; padding: 0 5px; background: var(--blue); color: #fff; font-size: 9px; z-index: 10; border-radius: 0 0 2px 0; white-space: nowrap; }
+    .sel-label.type-tag { left: auto; right: -1px; top: -1px; background: #64748b; border-radius: 0 0 0 2px; }
+
+    /* 表单栅格 */
+    .form-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 5px 6px; padding: 22px 8px 8px; }
+    .field { height: 22px; display: grid; grid-template-columns: 44px minmax(0, 1fr); align-items: center; gap: 3px; min-width: 0; font-size: 9px; }
+    .field label { color: var(--muted); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .field-val { height: 20px; display: flex; align-items: center; padding: 0 4px; border: 1px solid #cbd5e1; border-radius: 2px; background: #fff; color: #334155; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 9px; }
+    .field-val.focused { border-color: var(--blue); box-shadow: 0 1px 0 var(--blue); }
+    .field-val.dropping { border-color: var(--blue); background: var(--blue-soft); border-style: dashed; }
+    .field.selected .field-val { border-color: var(--blue); box-shadow: 0 0 0 1px var(--blue); }
+    .span4 { grid-column: span 4; }
+    .span6 { grid-column: span 6; }
+    .span8 { grid-column: span 8; }
+
+    /* 调整手柄 */
+    .handle { position: absolute; width: 6px; height: 6px; border: 1px solid var(--blue); background: #fff; z-index: 11; cursor: nwse-resize; }
+    .handle.tl { left: -3px; top: -3px; }
+    .handle.br { right: -3px; bottom: -3px; }
+
+    /* 右侧属性面板 */
+    .prop-select { width: 100%; height: 24px; border: 1px solid var(--line); border-radius: 3px; padding: 0 6px; background: #fff; color: var(--text); font-size: 10px; margin-bottom: 6px; }
+    .prop-box { border: 1px solid var(--line); margin-bottom: 6px; background: #fff; }
+    .prop-cat { height: 20px; display: flex; align-items: center; padding: 0 6px; background: var(--soft); border-bottom: 1px solid var(--line); font-size: 10px; font-weight: 700; color: var(--muted); }
+    .prop-row { min-height: 22px; display: grid; grid-template-columns: 78px minmax(0, 1fr); border-bottom: 1px solid #edf2f7; font-size: 9px; }
+    .prop-row:last-child { border-bottom: 0; }
+    .prop-row span { display: flex; align-items: center; min-width: 0; padding: 0 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .prop-row span:first-child { border-right: 1px solid #edf2f7; background: #fafcfe; color: var(--muted); }
+    .prop-row span:last-child { color: var(--text); }
+    .prop-input { width: 100%; height: 22px; border: none; padding: 0 5px; font-size: 9px; outline: none; }
+
+    /* 吸附线 */
+    .snap-v { position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: var(--blue); opacity: 0.7; pointer-events: none; z-index: 20; }
+    .snap-h { position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--blue); opacity: 0.7; pointer-events: none; z-index: 20; }
+    .snap-label { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); height: 16px; padding: 2px 6px; border-radius: 3px; background: var(--blue); color: #fff; font-size: 9px; pointer-events: none; z-index: 21; }
+
+    /* 底部 */
+    .bottombar { display: grid; grid-template-columns: minmax(0, 1fr) 200px; background: #fff; border-top: 1px solid var(--line); font-size: 10px; overflow: hidden; }
+    .bottom-title { display: flex; align-items: center; gap: 8px; padding: 0 8px; background: var(--head); border-bottom: 1px solid var(--line); font-size: 10px; font-weight: 700; color: var(--muted); }
+    .statusbar { display: flex; align-items: center; gap: 10px; padding: 0 8px; background: #f8fafc; color: var(--muted); font-size: 10px; }
+  </style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ===== 顶部命令区 ===== -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">T</div>
+      <div class="brand-text">
+        <strong>企业单据页面设计器</strong>
+        <span>PC Web 可视化布局设计</span>
+      </div>
+    </div>
+    <div class="cmd-center">
+      <button class="cmd-btn icon" title="撤销">↩</button>
+      <button class="cmd-btn icon" title="重做">↪</button>
+      <div class="divider"></div>
+      <button class="cmd-btn">保存</button>
+      <button class="cmd-btn">校验</button>
+      <button class="cmd-btn primary">发布</button>
+      <div class="divider"></div>
+      <button class="cmd-btn">预览</button>
+      <button class="cmd-btn">JSON</button>
+    </div>
+    <div class="topbar-right">
+      <span class="status-pill success">● 已保存</span>
+      <span class="status-pill">Rev 2</span>
+    </div>
+  </header>
+
+  <!-- ===== 工作区 ===== -->
+  <div class="workspace">
+
+    <!-- 左侧面板：当前选中字段 tab -->
+    <aside class="left-panel">
+      <div class="panel-tabs">
+        <button class="panel-tab">容器</button>
+        <button class="panel-tab active">字段</button>
+        <button class="panel-tab">大纲</button>
+      </div>
+      <div class="panel-body">
+        <input class="search-box" type="text" placeholder="搜索控件..." value="">
+        <div class="group-title">基础字段</div>
+        <div class="item-list">
+          <div class="item active" draggable="true">
+            <span class="ico">T</span>
+            <span class="label">文本输入</span>
+          </div>
+          <div class="item" draggable="true">
+            <span class="ico">#</span>
+            <span class="label">数字输入</span>
+          </div>
+          <div class="item" draggable="true">
+            <span class="ico">📅</span>
+            <span class="label">日期选择</span>
+          </div>
+          <div class="item" draggable="true">
+            <span class="ico">▾</span>
+            <span class="label">下拉选择</span>
+          </div>
+          <div class="item" draggable="true">
+            <span class="ico">☐</span>
+            <span class="label">复选框</span>
+          </div>
+          <div class="item" draggable="true">
+            <span class="ico">⊜</span>
+            <span class="label">开关</span>
+          </div>
+        </div>
+        <div class="group-title">高级字段</div>
+        <div class="item-list">
+          <div class="item" draggable="true">
+            <span class="ico">⊞</span>
+            <span class="label">级联选择</span>
+          </div>
+          <div class="item" draggable="true">
+            <span class="ico">⊢</span>
+            <span class="label">树形选择</span>
+          </div>
+          <div class="item" draggable="true">
+            <span class="ico">≡</span>
+            <span class="label">子表格</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 中央画布 -->
+    <section class="canvas-area">
+      <div class="docbar">
+        <div style="display:flex;gap:3px;align-items:end;">
+          <div class="doc-tab">
+            页面1.page.json
+            <span class="close">✕</span>
+          </div>
+        </div>
+        <div class="canvas-tools">
+          <button class="cmd-btn" style="height:22px;font-size:9px;background:var(--blue-soft);border-color:var(--blue);color:var(--blue);">100%</button>
+          <div class="divider"></div>
+          <button class="cmd-btn icon" style="height:22px;" title="吸附">⊡</button>
+        </div>
+      </div>
+
+      <div class="viewport">
+
+        <!-- 吸附线 -->
+        <div class="snap-v"></div>
+        <div class="snap-h"></div>
+        <div class="snap-label">列对齐</div>
+
+        <!-- 页面 -->
+        <div class="webpage">
+          <div class="page-top">
+            <div class="page-title">
+              <span class="status-dot"></span>
+              新建页面
+            </div>
+          </div>
+
+          <div class="page-main">
+            <nav class="dock">
+              <div class="dock-head">业务导航</div>
+            </nav>
+
+            <!-- 画布主体：GridLayout 内已有字段，日期字段被选中 -->
+            <div class="canvas-body">
+              <div class="dropped-container">
+                <div class="sel-label">FormGrid selected</div>
+                <div class="sel-label type-tag">P0</div>
+                <div class="form-grid">
+
+                  <!-- 已放置的字段 -->
+                  <div class="field span4">
+                    <label>文本A</label>
+                    <div class="field-val">文本输入</div>
+                  </div>
+                  <div class="field span4">
+                    <label>数字B</label>
+                    <div class="field-val">数字输入</div>
+                  </div>
+
+                  <!-- 当前被拖入的字段（hover 态） -->
+                  <div class="field span4">
+                    <label>日期C</label>
+                    <div class="field-val dropping">日期选择</div>
+                  </div>
+
+                  <!-- 字段即将放置的位置提示 -->
+                  <div class="field span4" style="border:1px dashed var(--blue);background:var(--blue-soft);border-radius:2px;height:24px;opacity:0.5;">
+                    <label></label>
+                    <div style="color:var(--blue);font-size:9px;">+ 下拉选择</div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <aside class="aside-info">
+              <div class="aside-head">右侧信息</div>
+            </aside>
+          </div>
+
+          <div class="page-bottom"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 右侧属性面板：显示选中字段属性 -->
+    <aside class="right-panel">
+      <div class="panel-tabs">
+        <button class="panel-tab active">属性</button>
+        <button class="panel-tab">布局</button>
+        <button class="panel-tab">规则</button>
+      </div>
+      <div class="panel-body">
+        <select class="prop-select">
+          <option selected>FormGridContainer</option>
+          <option>GridLayout</option>
+        </select>
+
+        <!-- 基础属性 -->
+        <div class="prop-box">
+          <div class="prop-cat">基础属性</div>
+          <div class="prop-row"><span>nodeId</span><span><input class="prop-input" value="form_basic"></span></div>
+          <div class="prop-row"><span>label</span><span><input class="prop-input" value="基本信息"></span></div>
+          <div class="prop-row"><span>columns</span><span><input class="prop-input" value="12"></span></div>
+        </div>
+
+        <!-- 字段绑定（当前选中容器内的字段） -->
+        <div class="prop-box">
+          <div class="prop-cat">字段列表 (4)</div>
+          <div class="prop-row" style="cursor:pointer;"><span>文本A</span><span>文本输入</span></div>
+          <div class="prop-row" style="cursor:pointer;"><span>数字B</span><span>数字输入</span></div>
+          <div class="prop-row" style="cursor:pointer;background:var(--blue-soft);"><span style="background:var(--blue-soft);">日期C</span><span>日期选择</span></div>
+          <div class="prop-row" style="color:#94a3b8;"><span>下拉选择</span><span>未放置</span></div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- ===== 底部状态栏 ===== -->
+  <div class="bottombar">
+    <div class="bottom-title" style="display:flex;align-items:center;padding:0 8px;">
+      Schema 预览
+    </div>
+    <div style="display:flex;align-items:center;padding:0 8px;color:#94a3b8;font-size:10px;">
+      选中: FormGrid | 4 字段 | 缩放 100%
+    </div>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.item[draggable]').forEach(item => {
+    item.addEventListener('dragstart', e => {
+      item.classList.add('dragging');
+    });
+    item.addEventListener('dragend', e => {
+      item.classList.remove('dragging');
+    });
+  });
+</script>
+
+</body>
+</html>

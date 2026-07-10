@@ -1,0 +1,194 @@
+阿里云代码管理地址:https://codeup.aliyun.com/
+
+收银系统后端代码
+https://codeup.aliyun.com/613895a803e1c17d57a7630f/nms4cloud-pos-java/nms4pos
+
+前端代码
+https://codeup.aliyun.com/613895a803e1c17d57a7630f/web/nms4pos-ui
+
+报表前端
+https://codeup.aliyun.com/613895a803e1c17d57a7630f/nms4cloud-biz-ui
+https://packages.aliyun.com/npm/npm-registry/guide
+
+https://packages.aliyun.com/maven/repo-tbmiu/guide
+
+https://www.yuque.com/ningmengshuzongbuzhangyubiao/gav3c4/mog71i6oa7q3o2kk?singleDoc# 《前端入职指引》
+
+
+https://www.yuque.com/ningmengshuzongbuzhangyubiao/gav3c4/dfudpzdgzkvnyb0y?singleDoc#  《后端入职指引》
+
+npm login --registry=https://packages.aliyun.com/613895a803e1c17d57a7630f/npm/npm-registry/ -u 6965eee7df2584eb75b5ec13 -p 4q3ovDG3_Fga
+
+npm login -u 6965eee7df2584eb75b5ec13 -p 4q3ovDG3_Fga
+
+安装依赖
+mvn dependency:get -DgroupId=com.nms4cloud -DartifactId=nms4cloud -Dversion=0.0.1-SNAPSHOT -Dtype=pom -U
+
+https://shop.gzjjzhy.com/welcome
+
+https://shop.gzjjzhy.com
+
+https://www.tapd.cn/tapd_fe/41025856/bug/detail/1141025856001007574
+
+凤小馆
+gzsnfw
+admin
+st11338
+
+
+凤岄轩
+gzslnfy
+admin
+st11338
+
+lemontree
+1000
+1000
+
+
+演示中心
+yszx
+admin
+st11338
+
+收钱吧全来店销售手册
+https://sqb.feishu.cn/wiki/SJqswDpQCiK5Ngkh9IocfNp8nvf
+https://sqb.feishu.cn/wiki/MMFIwd0J6ibOgjkWIhPc7MF8nSe  
+https://sqb.feishu.cn/wiki/MMFIwd0J6ibOgjkWIhPc7MF8nSe
+
+
+http://shop-kaci.shouqianba.com/
+主账号gzsq
+子账号admin
+密码a12345678
+
+winget install --id GitTower.GitFlowNext --source winget
+
+claude --dangerously-skip-permissions
+
+PS C:\Windows\System32> python3 -c "import sys; print(sys.prefix)"
+C:\Users\16555\.pyenv\pyenv-win\versions\3.11.4
+
+https://x-superflash.com/
+
+
+测试服务器ip: 192.168.1.119
+用户名jj, 密码123456
+
+rancher登录地址： https://jjtestserver
+用户名:admin 密码:st11338st11338
+
+http://192.168.1.119:30090/
+jenkins: 用户名jj  密码: st11338
+
+//制品库
+nexus: http://192.168.1.119:30002/
+用户名:admin 密码:st11338
+
+Harbor 镜像库
+http://192.168.1.119:30020/
+用户名: admin 密码:Harbor12345
+
+nacos配置
+http://192.168.1.119:8848/nacos
+
+用户名: nacos 密码:nacos
+
+jdbc:mysql://192.168.1.119:3306/gylregdb?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+
+用户名:root 密码:st11338
+
+http://192.168.1.119:30080/user/login
+http://bosswx.gzjjzhy.com:30080/user/login
+
+主账号ID 100042037431 
+用户名 liuguoyun 
+登录密码 C*RIN:kn 
+SecretId - 
+SecretKey - 
+快捷登录 https://cloud.tencent.com/login/subAccount/100042037431?type=subAccount&username=liuguoyun
+
+106.55.226.252
+
+administrator
+
+eM@aTvvU4RFzo*
+
+• # 1. 从官方仓库拉取 nginx 镜像到你本机的 Docker
+  docker pull nginx:1.25.3
+
+  # 2. 登录服务器 192.168.1.119 上的 Harbor 镜像仓库
+  # 用户名：admin
+  # 密码：Harbor12345
+  docker login 192.168.1.119:30020
+
+  # 3. 给本地 nginx 镜像打上 Harbor 仓库标签
+  # 格式：Harbor地址/项目名/镜像名:版本
+  docker tag nginx:1.25.3 192.168.1.119:30020/library/nginx:1.25.3
+
+  # 4. 将镜像推送到 192.168.1.119 的 Harbor 仓库
+  docker push 192.168.1.119:30020/library/nginx:1.25.3
+
+  # 5. 使用修改后的 Kubernetes 部署文件重新部署 nginx
+  kubectl apply -f D:\mywork\techdoc\服务部署文档\nginx最新部署\nginx-deployment-online-like.yaml
+
+  # 6. 重启 deployment，让 Pod 重新拉取 Harbor 中的新镜像
+  kubectl rollout restart deployment nginx
+
+  # 7. 查看 Pod 状态，确认镜像拉取和启动是否成功
+  kubectl get pod -o wide
+
+
+
+主账号ID 100042037431 
+用户名 liuguoyun
+SecretId - 
+SecretKey - 
+快捷登录 https://cloud.tencent.com/login/subAccount/100042037431?type=subAccount&username=liuguoyun
+
+106.55.226.252
+administrator
+123c:\Users\16555\Desktop\nacos_config_export_20260402162831.zipPPL
+
+http://119.29.228.21:30002/nacos
+
+
+# 1. 先打标签
+docker tag xuxueli/xxl-job-admin:2.4.1 192.168.1.119:30020/library/xxl-job-admin:2.4.1
+
+# 2. 再推送
+docker push 192.168.1.119:30020/library/xxl-job-admin:2.4.1
+
+1c4388778a2e2002
+
+https://wx.gzjjzhy.com/lemontree?code=1c4388778a2e2002&p=0&mid=lemontree
+
+令牌名:镜像仓库
+Git Username:cnb
+Token:1M1c5dVH3It8WR9lpvi39ufKRHB
+
+
+
+4、打包环境 
+	http://192.168.1.241:8080
+	打包账号密码
+	用户：user
+	密码：Lemontree556
+5、下载winscp,查看打包内容：登陆winscp  
+	IP 192.168.1.214 
+	端口22
+	用户
+	rduser
+	密码
+	rduser123456
+  路径：/home/rduser/jenkins
+   @柠檬树-彭海淇
+
+  root
+a4CpgDmx!dGeRG2GZv
+
+
+巨焦BOSS
+wxa1617c32d294e518
+e052e0c219664cdce155f81ab561583f
+

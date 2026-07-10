@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PT-023 端到端搭建</title>
+  <style>
+    :root {
+      --bg: #eef2f6;
+      --panel: #ffffff;
+      --line: #d7dee8;
+      --text: #1f2937;
+      --muted: #667085;
+      --primary: #2468c9;
+      --primary-soft: #e8f0fd;
+      --success: #19733f;
+      --danger: #c73535;
+      --active: #eff5ff;
+      --shadow: 0 8px 24px rgba(31, 41, 55, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-width: 1440px;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Microsoft YaHei UI", "Segoe UI", sans-serif;
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+
+    button:hover:not(:disabled) {
+      border-color: #b8c5d6;
+      background: #f8fafc;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      color: #98a2b3;
+      background: #f3f5f8;
+    }
+
+    .app-shell {
+      height: 100vh;
+      display: grid;
+      grid-template-columns: 48px 248px 1fr 304px;
+      grid-template-rows: 48px 1fr;
+    }
+
+    .topbar {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      z-index: 2;
+    }
+
+    .topbar-left,
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-right: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      background: var(--primary);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .brand-copy {
+      min-width: 0;
+    }
+
+    .brand-copy strong {
+      display: block;
+      font-size: 14px;
+      line-height: 1.2;
+      font-weight: 600;
+    }
+
+    .brand-copy span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 4px;
+      background: #f7f9fc;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--success);
+    }
+
+    .topbar .primary-btn {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .sidebar {
+      grid-row: 2;
+      background: #f7f9fc;
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0;
+      gap: 10px;
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .icon-btn.active {
+      background: var(--primary-soft);
+      border-color: #b6caec;
+      color: var(--primary);
+    }
+
+    .resource-panel,
+    .property-panel {
+      grid-row: 2;
+      background: var(--panel);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .resource-panel {
+      border-right: 1px solid var(--line);
+    }
+
+    .property-panel {
+      border-left: 1px solid var(--line);
+    }
+
+    .panel-head {
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-head strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .panel-head span {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .panel-body {
+      padding: 12px;
+      overflow: auto;
+    }
+
+    .search-box {
+      width: 100%;
+      height: 34px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fbfcfe;
+    }
+
+    .resource-group + .resource-group {
+      margin-top: 14px;
+    }
+
+    .group-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      color: var(--muted);
+    }
+
+    .tool-list,
+    .summary-list,
+    .property-list,
+    .field-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .tool-card,
+    .summary-item,
+    .property-card,
+    .field-item,
+    .node-item {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+    }
+
+    .tool-card {
+      width: 100%;
+      padding: 10px;
+      text-align: left;
+    }
+
+    .tool-card.active {
+      background: var(--active);
+      border-color: #b6caec;
+    }
+
+    .tool-card strong,
+    .summary-item strong,
+    .property-card strong,
+    .field-item strong,
+    .node-item strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .tool-card span,
+    .summary-item span,
+    .property-card span,
+    .field-item span,
+    .node-item span,
+    .canvas-meta,
+    .helper-text {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .workspace {
+      grid-row: 2;
+      padding: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .stagebar {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 68px;
+    }
+
+    .stage-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: nowrap;
+      min-width: 0;
+    }
+
+    .stage-tab {
+      min-width: 120px;
+      padding: 9px 12px;
+      text-align: left;
+      background: #fbfcfe;
+    }
+
+    .stage-tab.active {
+      background: var(--active);
+      border-color: #b6caec;
+      color: var(--primary);
+    }
+
+    .stage-tab small {
+      display: block;
+      margin-top: 4px;
+      color: inherit;
+      opacity: 0.85;
+    }
+
+    .stage-meta {
+      min-width: 250px;
+      padding: 6px 0;
+      color: var(--muted);
+      line-height: 1.5;
+      text-align: right;
+    }
+
+    .canvas-wrap {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 1fr 276px;
+      gap: 12px;
+    }
+
+    .canvas-panel,
+    .summary-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .canvas-panel {
+      min-width: 0;
+    }
+
+    .panel-bar {
+      min-height: 42px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .panel-bar strong {
+      font-size: 14px;
+    }
+
+    .canvas-scroll {
+      flex: 1;
+      overflow: auto;
+      padding: 16px;
+      background: #f6f8fb;
+    }
+
+    .canvas-card {
+      width: 100%;
+      min-height: 100%;
+      border: 1px solid #cfd8e3;
+      border-radius: 4px;
+      background: #fff;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .canvas-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid #edf1f5;
+      padding-bottom: 12px;
+    }
+
+    .canvas-title strong {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .canvas-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--line);
+      background: #fafcff;
+      color: var(--muted);
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .field-item,
+    .node-item,
+    .summary-item,
+    .property-card {
+      padding: 10px 12px;
+    }
+
+    .field-item.active,
+    .node-item.active {
+      border-color: #b6caec;
+      background: var(--active);
+    }
+
+    .field-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .field-tag {
+      color: var(--primary);
+      background: var(--primary-soft);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 12px;
+    }
+
+    .summary-panel .panel-body {
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .summary-item strong::after {
+      content: "";
+      display: block;
+      width: 28px;
+      height: 2px;
+      margin-top: 8px;
+      background: #d8e4f6;
+    }
+
+    .node-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .helper-banner {
+      border: 1px solid #d6e4fb;
+      background: #f7fbff;
+      border-radius: 4px;
+      padding: 10px 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .helper-banner strong {
+      color: var(--text);
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    .form-row {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .form-row label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .form-row input,
+    .form-row select {
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 0 10px;
+      background: #fbfcfe;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 10px;
+      background: #fafcff;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .metric strong {
+      font-size: 16px;
+    }
+
+    .footer-note {
+      padding-top: 2px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div
+    class="app-shell"
+    data-prototype="PT-023"
+    data-state="source"
+    data-testid="pt023-root"
+    id="appRoot"
+  >
+    <header class="topbar" data-testid="topbar">
+      <div class="topbar-left">
+        <div class="brand" data-testid="brand">
+          <span class="brand-mark">LC</span>
+          <div class="brand-copy">
+            <strong>全新表单设计器</strong>
+            <span>PT-023 / 端到端搭建场景</span>
+          </div>
+        </div>
+        <div class="status-pill" data-testid="record-pill">
+          <span class="status-dot"></span>
+          <span id="recordSummary">已接入 3 个业务对象，待补齐审批节点</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button type="button" data-testid="save-btn">保存草稿</button>
+        <button type="button" data-testid="preview-btn">预览链路</button>
+        <button type="button" class="primary-btn" data-testid="publish-btn">提交发布</button>
+      </div>
+    </header>
+
+    <aside class="sidebar" data-testid="activity-nav">
+      <button type="button" class="icon-btn active" title="设计总览" data-testid="nav-overview">□</button>
+      <button type="button" class="icon-btn" title="组件库" data-testid="nav-components">＋</button>
+      <button type="button" class="icon-btn" title="流程编排" data-testid="nav-flow">⇄</button>
+      <button type="button" class="icon-btn" title="发布检查" data-testid="nav-release">✓</button>
+    </aside>
+
+    <section class="resource-panel" data-testid="resource-panel">
+      <div class="panel-head">
+        <strong>端到端搭建资产</strong>
+        <span>从数据对象、表单组件、流程节点到发布校验，按阶段逐步拼装。</span>
+      </div>
+      <div class="panel-body">
+        <input
+          class="search-box"
+          type="text"
+          value="订单、客户、审批"
+          readonly
+          aria-label="资产搜索"
+          data-testid="resource-search"
+        />
+
+        <div class="resource-group">
+          <div class="group-title">
+            <span>阶段切换</span>
+            <span id="phaseTag">当前：数据接入</span>
+          </div>
+          <div class="tool-list" id="stageTools" data-testid="stage-tools"></div>
+        </div>
+
+        <div class="resource-group">
+          <div class="group-title">
+            <span>常用模版</span>
+            <span>稳定复用</span>
+          </div>
+          <div class="tool-list">
+            <button type="button" class="tool-card" data-testid="template-order">
+              <strong>订单提交流程</strong>
+              <span>含订单主表、明细表、审批流与回写动作。</span>
+            </button>
+            <button type="button" class="tool-card" data-testid="template-service">
+              <strong>服务工单流程</strong>
+              <span>含工单升级、SLA 校验与节点催办策略。</span>
+            </button>
+            <button type="button" class="tool-card" disabled data-testid="template-cross-app">
+              <strong>跨应用复合模版</strong>
+              <span>需完成租户级依赖清点后开放。</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <main class="workspace" data-testid="workspace">
+      <section class="stagebar" data-testid="stagebar">
+        <div class="stage-tabs" id="stageTabs"></div>
+        <div class="stage-meta" data-testid="stage-meta">
+          <div id="stageStatusText">当前目标：先完成业务对象接入，再铺设表单骨架。</div>
+          <div id="stageProgressText">进度 1/4 · 数据接入</div>
+        </div>
+      </section>
+
+      <section class="canvas-wrap">
+        <div class="canvas-panel" data-testid="canvas-panel">
+          <div class="panel-bar">
+            <strong id="canvasHeading">主设计画布</strong>
+            <span class="canvas-meta" id="canvasMeta">正在编辑：业务对象映射区</span>
+          </div>
+          <div class="canvas-scroll">
+            <div class="canvas-card" data-testid="canvas-card">
+              <div class="canvas-header">
+                <div class="canvas-title">
+                  <strong id="scenarioTitle">订单提交流程 / 数据接入</strong>
+                  <span class="helper-text" id="scenarioSubtitle">将业务对象接入到设计器，形成后续布局、流程、发布的唯一数据底座。</span>
+                </div>
+                <div class="canvas-badges" data-testid="canvas-badges">
+                  <span class="badge" id="badgeOwner">负责人：实施顾问</span>
+                  <span class="badge" id="badgePhase">阶段：数据接入</span>
+                  <span class="badge" id="badgeRisk">风险：字段约束待确认</span>
+                </div>
+              </div>
+
+              <div class="helper-banner" data-testid="helper-banner">
+                <strong id="bannerTitle">主交互：切换阶段，联动画布、摘要与属性面板</strong>
+                <span id="bannerText">点击上方阶段按钮后，根节点 `data-state`、中心内容与右侧属性会同步变化，模拟端到端搭建的连续工作流。</span>
+              </div>
+
+              <div class="section-grid">
+                <div>
+                  <div class="field-list" id="primaryList" data-testid="primary-list"></div>
+                </div>
+                <div>
+                  <div class="node-list" id="secondaryList" data-testid="secondary-list"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="summary-panel" data-testid="summary-panel">
+          <div class="panel-bar">
+            <strong>阶段摘要</strong>
+            <span class="helper-text" id="summaryHint">面向实施的即时检查单</span>
+          </div>
+          <div class="panel-body">
+            <div class="summary-list" id="summaryList" data-testid="summary-list"></div>
+            <div class="metrics" data-testid="metrics">
+              <div class="metric">
+                <span>对象就绪</span>
+                <strong id="metricReady">3/4</strong>
+              </div>
+              <div class="metric">
+                <span>关键动作</span>
+                <strong id="metricAction">2 项</strong>
+              </div>
+              <div class="metric">
+                <span>发布阻塞</span>
+                <strong id="metricRisk">1 项</strong>
+              </div>
+            </div>
+            <div class="footer-note" id="footerNote" data-testid="footer-note">
+              当前建议：优先补齐审批节点变量，再进入发布校验。
+            </div>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <aside class="property-panel" data-testid="property-panel">
+      <div class="panel-head">
+        <strong id="propertyTitle">属性联动面板</strong>
+        <span id="propertySubtitle">右侧展示当前阶段最关键的配置项，避免端到端搭建过程中切屏查找。</span>
+      </div>
+      <div class="panel-body">
+        <div class="property-list" id="propertyList" data-testid="property-list"></div>
+        <div class="form-row">
+          <label for="ownerField">实施负责人</label>
+          <input id="ownerField" type="text" value="陈顾问 / 华东一组" readonly data-testid="owner-field" />
+        </div>
+        <div class="form-row">
+          <label for="releaseField">发布策略</label>
+          <select id="releaseField" data-testid="release-field">
+            <option>灰度发布</option>
+            <option>直接替换</option>
+          </select>
+        </div>
+        <div class="helper-banner" data-testid="property-banner">
+          <strong id="propertyBannerTitle">操作说明</strong>
+          <span id="propertyBannerText">保持当前阶段配置完整，再切换下一阶段，避免表单、流程、发布信息失配。</span>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const stageData = [
+      {
+        key: "source",
+        label: "数据接入",
+        step: "1/4",
+        short: "对象映射",
+        title: "订单提交流程 / 数据接入",
+        subtitle: "将业务对象接入到设计器，形成后续布局、流程、发布的唯一数据底座。",
+        meta: "正在编辑：业务对象映射区",
+        goal: "当前目标：先完成业务对象接入，再铺设表单骨架。",
+        progress: "进度 1/4 · 数据接入",
+        record: "已接入 3 个业务对象，待补齐审批节点",
+        phaseTag: "当前：数据接入",
+        owner: "负责人：实施顾问",
+        risk: "风险：字段约束待确认",
+        summaryHint: "面向实施的即时检查单",
+        footer: "当前建议：确认订单状态枚举与客户主键映射，避免后续流程变量失真。",
+        bannerTitle: "主交互：切换阶段，联动画布、摘要与属性面板",
+        bannerText: "点击上方阶段按钮后，根节点 `data-state`、中心内容与右侧属性会同步变化，模拟端到端搭建的连续工作流。",
+        propertyTitle: "属性联动面板 / 数据接入",
+        propertySubtitle: "优先确认对象来源、字段主键与约束策略，为后续所有阶段提供统一上下文。",
+        propertyBannerTitle: "数据接入动作",
+        propertyBannerText: "先锁定主对象，再补齐从表与引用对象，避免表单布局建立在不稳定字段集之上。",
+        metrics: ["3/4", "2 项", "1 项"],
+        tools: [
+          ["订单主表", "主键、状态、所属客户已完成映射。"],
+          ["订单明细", "子表结构已对齐，仍需校验数量精度。"],
+          ["客户档案", "引用对象已建立，等待联系人补链。"]
+        ],
+        nodes: [
+          ["字段约束", "金额、数量、日期字段均需补齐校验规则。"],
+          ["跨对象引用", "审批节点将读取客户等级与订单额度。"],
+          ["系统回写", "发布后同步订单状态到 ERP。"]
+        ],
+        summaries: [
+          ["对象覆盖", "主表、子表、引用对象三类资产已进入设计器。"],
+          ["待办事项", "联系人对象与审批变量尚未绑定。"],
+          ["风险提醒", "字段长度与枚举值仍需和源系统一致。"]
+        ],
+        properties: [
+          ["对象来源", "CRM 订单主表 / ERP 出库表 / 客户主数据。"],
+          ["映射策略", "主键透传，状态字段按枚举编码同步。"],
+          ["校验建议", "金额保留两位小数，联系人字段必须回填。"]
+        ]
+      },
+      {
+        key: "layout",
+        label: "表单搭建",
+        step: "2/4",
+        short: "布局编排",
+        title: "订单提交流程 / 表单搭建",
+        subtitle: "把已接入的数据对象组织成可填写、可审阅、可复用的业务表单结构。",
+        meta: "正在编辑：表单分区与组件布局",
+        goal: "当前目标：完成头部摘要、明细表和审批信息的同屏编排。",
+        progress: "进度 2/4 · 表单搭建",
+        record: "已铺设 8 个字段组件，明细区待加联动校验",
+        phaseTag: "当前：表单搭建",
+        owner: "负责人：产品配置师",
+        risk: "风险：明细表联动尚未闭环",
+        summaryHint: "面向业务方的可视化检查单",
+        footer: "当前建议：先稳定头部摘要与明细表结构，再追加高级交互。",
+        bannerTitle: "主交互：阶段切换后，画布切入不同搭建视角",
+        bannerText: "当前阶段聚焦组件布局，中心画布显示字段分区，右侧属性改为展示布局规则和校验优先级。",
+        propertyTitle: "属性联动面板 / 表单搭建",
+        propertySubtitle: "围绕布局密度、字段分区和输入体验进行配置，确保端到端方案可直接给业务试用。",
+        propertyBannerTitle: "布局动作",
+        propertyBannerText: "固定核心摘要区，再放明细和审批分区，能明显降低后续流程串接返工。",
+        metrics: ["8/10", "4 项", "1 项"],
+        tools: [
+          ["头部摘要区", "展示订单编号、客户名称、订单金额与提交日期。"],
+          ["明细表区", "承载商品、数量、单价、金额及行内计算。"],
+          ["审批信息区", "补充审批意见、节点状态与最终归档。"]
+        ],
+        nodes: [
+          ["组件联动", "客户等级变化时，自动切换折扣字段是否可编辑。"],
+          ["显隐规则", "高风险订单显示审批说明，普通订单保持紧凑布局。"],
+          ["输入校验", "提交前校验必填、金额范围与子表合计一致性。"]
+        ],
+        summaries: [
+          ["布局完成度", "头部与明细区已落位，审批区待接入状态栏。"],
+          ["复用策略", "同一布局可复制到售后工单与补录场景。"],
+          ["风险提醒", "明细区列宽与联动校验需同步验证。"]
+        ],
+        properties: [
+          ["布局模式", "双列头部 + 全宽明细 + 折叠审批信息。"],
+          ["组件规则", "金额字段右对齐，客户字段启用远程搜索。"],
+          ["交互节奏", "保存草稿后保持当前位置，不打断搭建流程。"]
+        ]
+      },
+      {
+        key: "flow",
+        label: "流程编排",
+        step: "3/4",
+        short: "动作链路",
+        title: "订单提交流程 / 流程编排",
+        subtitle: "把表单提交、审批决策、状态回写和通知动作串成完整业务链路。",
+        meta: "正在编辑：审批节点与动作连接",
+        goal: "当前目标：串联提交、审批、回写和通知四个关键节点。",
+        progress: "进度 3/4 · 流程编排",
+        record: "已配置 4 个节点，待补齐驳回分支",
+        phaseTag: "当前：流程编排",
+        owner: "负责人：流程实施顾问",
+        risk: "风险：驳回支路未验证",
+        summaryHint: "面向上线前的链路检查单",
+        footer: "当前建议：优先补齐驳回路径与消息通知，保证端到端可回路。",
+        bannerTitle: "主交互：流程阶段强调节点串接与业务闭环",
+        bannerText: "此时中心画布聚焦流程节点，摘要区显示链路缺口，右侧属性切换为节点输入输出与触发条件。",
+        propertyTitle: "属性联动面板 / 流程编排",
+        propertySubtitle: "围绕节点角色、触发条件和回写动作做集中配置，确保从表单到系统动作真正打通。",
+        propertyBannerTitle: "流程动作",
+        propertyBannerText: "提交、审批、回写、通知四类动作至少各出现一次，才能视为端到端闭环。",
+        metrics: ["4/5", "5 项", "2 项"],
+        tools: [
+          ["提交节点", "校验表单完整性并写入初始状态。"],
+          ["审批节点", "按客户等级匹配不同审批人和额度策略。"],
+          ["回写节点", "审批通过后更新 ERP 与 CRM 状态。"]
+        ],
+        nodes: [
+          ["通知节点", "向申请人、销售、仓储发送结果通知。"],
+          ["驳回分支", "回退到申请人并保留修改痕迹。"],
+          ["条件网关", "大额订单进入财务复审，小额订单直接主管审批。"]
+        ],
+        summaries: [
+          ["链路完整度", "主流程已通，驳回与异常支路仍需补足。"],
+          ["执行保障", "回写与通知均依赖统一业务主键。"],
+          ["风险提醒", "条件网关变量名需与数据接入阶段保持一致。"]
+        ],
+        properties: [
+          ["节点输入", "订单金额、客户等级、提交人部门。"],
+          ["节点输出", "审批状态、ERP 回写标记、消息发送结果。"],
+          ["触发条件", "大额订单与异常客户均需增加复审节点。"]
+        ]
+      },
+      {
+        key: "release",
+        label: "发布校验",
+        step: "4/4",
+        short: "发布检查",
+        title: "订单提交流程 / 发布校验",
+        subtitle: "在正式上线前，用统一清单确认数据、表单、流程与发布策略是否全部闭环。",
+        meta: "正在编辑：发布前校验与灰度策略",
+        goal: "当前目标：完成发布门禁，确认灰度对象和回滚方案。",
+        progress: "进度 4/4 · 发布校验",
+        record: "已完成 9 项校验，剩余 1 项外部接口联调",
+        phaseTag: "当前：发布校验",
+        owner: "负责人：项目上线经理",
+        risk: "风险：外部接口待联调",
+        summaryHint: "面向上线窗口的最终检查单",
+        footer: "当前建议：保持灰度发布，先验证 ERP 回写和消息通知，再全量放开。",
+        bannerTitle: "主交互：最后一步聚焦发布门禁与回滚预案",
+        bannerText: "切换到发布校验后，画布展示上线检查项，摘要区切成门禁看板，右侧属性专注发布策略与回滚条件。",
+        propertyTitle: "属性联动面板 / 发布校验",
+        propertySubtitle: "围绕门禁、灰度范围与回滚预案做最后确认，确保端到端搭建结果可安全落地。",
+        propertyBannerTitle: "发布动作",
+        propertyBannerText: "接口联调未过时保持灰度发布，避免用未闭环链路直接替换线上版本。",
+        metrics: ["9/10", "3 项", "1 项"],
+        tools: [
+          ["门禁清单", "检查对象映射、布局规则、流程节点、消息模板。"],
+          ["灰度范围", "先开放给华东销售团队，观察审批与回写稳定性。"],
+          ["回滚策略", "保留旧版本入口，异常时一键切回。"]
+        ],
+        nodes: [
+          ["接口联调", "ERP 回写接口需在发布窗口前完成最终验收。"],
+          ["数据回放", "用三笔真实订单做全链路演练。"],
+          ["监控告警", "发布后 30 分钟内重点关注失败回写和超时通知。"]
+        ],
+        summaries: [
+          ["发布准备", "除外部接口外，其余门禁项均可通过。"],
+          ["风险兜底", "灰度 + 回滚双保险，适合端到端新链路上线。"],
+          ["风险提醒", "若接口联调失败，发布按钮必须继续保持门禁。"]
+        ],
+        properties: [
+          ["发布策略", "灰度发布到华东团队，观察 2 小时后再扩面。"],
+          ["回滚条件", "连续 3 笔回写失败或审批超时即切回旧版。"],
+          ["验收重点", "订单状态一致性、消息触达率、审批耗时。"]
+        ]
+      }
+    ];
+
+    const root = document.getElementById("appRoot");
+    const stageTabs = document.getElementById("stageTabs");
+    const stageTools = document.getElementById("stageTools");
+    const primaryList = document.getElementById("primaryList");
+    const secondaryList = document.getElementById("secondaryList");
+    const summaryList = document.getElementById("summaryList");
+    const propertyList = document.getElementById("propertyList");
+
+    const refs = {
+      recordSummary: document.getElementById("recordSummary"),
+      phaseTag: document.getElementById("phaseTag"),
+      stageStatusText: document.getElementById("stageStatusText"),
+      stageProgressText: document.getElementById("stageProgressText"),
+      canvasHeading: document.getElementById("canvasHeading"),
+      canvasMeta: document.getElementById("canvasMeta"),
+      scenarioTitle: document.getElementById("scenarioTitle"),
+      scenarioSubtitle: document.getElementById("scenarioSubtitle"),
+      badgeOwner: document.getElementById("badgeOwner"),
+      badgePhase: document.getElementById("badgePhase"),
+      badgeRisk: document.getElementById("badgeRisk"),
+      bannerTitle: document.getElementById("bannerTitle"),
+      bannerText: document.getElementById("bannerText"),
+      summaryHint: document.getElementById("summaryHint"),
+      footerNote: document.getElementById("footerNote"),
+      propertyTitle: document.getElementById("propertyTitle"),
+      propertySubtitle: document.getElementById("propertySubtitle"),
+      propertyBannerTitle: document.getElementById("propertyBannerTitle"),
+      propertyBannerText: document.getElementById("propertyBannerText"),
+      metricReady: document.getElementById("metricReady"),
+      metricAction: document.getElementById("metricAction"),
+      metricRisk: document.getElementById("metricRisk")
+    };
+
+    function makeCard(title, desc, className, testid) {
+      const item = document.createElement("div");
+      item.className = className;
+      if (testid) item.dataset.testid = testid;
+      item.innerHTML = "<strong></strong><span></span>";
+      item.querySelector("strong").textContent = title;
+      item.querySelector("span").textContent = desc;
+      return item;
+    }
+
+    function renderStageTabs(activeKey) {
+      stageTabs.innerHTML = "";
+      stageData.forEach((stage) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "stage-tab" + (stage.key === activeKey ? " active" : "");
+        btn.dataset.stage = stage.key;
+        btn.dataset.testid = "stage-tab-" + stage.key;
+        btn.innerHTML = "<strong>" + stage.label + "</strong><small>" + stage.step + " · " + stage.short + "</small>";
+        btn.addEventListener("click", () => render(stage.key));
+        stageTabs.appendChild(btn);
+      });
+    }
+
+    function renderStageTools(activeKey) {
+      stageTools.innerHTML = "";
+      stageData.forEach((stage) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "tool-card" + (stage.key === activeKey ? " active" : "");
+        btn.dataset.stage = stage.key;
+        btn.dataset.testid = "stage-tool-" + stage.key;
+        btn.innerHTML = "<strong>" + stage.label + "</strong><span>" + stage.title + "</span>";
+        btn.addEventListener("click", () => render(stage.key));
+        stageTools.appendChild(btn);
+      });
+    }
+
+    function renderList(container, rows, className, prefix) {
+      container.innerHTML = "";
+      rows.forEach((row, index) => {
+        const card = makeCard(row[0], row[1], className + (index === 0 ? " active" : ""), prefix + "-" + index);
+        if (className === "field-item") {
+          const strong = card.querySelector("strong");
+          const wrapper = document.createElement("div");
+          wrapper.className = "field-label";
+          const title = document.createElement("strong");
+          title.textContent = strong.textContent;
+          const tag = document.createElement("span");
+          tag.className = "field-tag";
+          tag.textContent = index === 0 ? "关键" : "已接入";
+          wrapper.appendChild(title);
+          wrapper.appendChild(tag);
+          strong.replaceWith(wrapper);
+        }
+        container.appendChild(card);
+      });
+    }
+
+    function render(key) {
+      const stage = stageData.find((item) => item.key === key) || stageData[0];
+      root.dataset.state = stage.key;
+
+      renderStageTabs(stage.key);
+      renderStageTools(stage.key);
+      renderList(primaryList, stage.tools, "field-item", "field");
+      renderList(secondaryList, stage.nodes, "node-item", "node");
+      renderList(summaryList, stage.summaries, "summary-item", "summary");
+      renderList(propertyList, stage.properties, "property-card", "property");
+
+      refs.recordSummary.textContent = stage.record;
+      refs.phaseTag.textContent = stage.phaseTag;
+      refs.stageStatusText.textContent = stage.goal;
+      refs.stageProgressText.textContent = stage.progress;
+      refs.canvasHeading.textContent = "主设计画布 / " + stage.label;
+      refs.canvasMeta.textContent = stage.meta;
+      refs.scenarioTitle.textContent = stage.title;
+      refs.scenarioSubtitle.textContent = stage.subtitle;
+      refs.badgeOwner.textContent = stage.owner;
+      refs.badgePhase.textContent = "阶段：" + stage.label;
+      refs.badgeRisk.textContent = stage.risk;
+      refs.bannerTitle.textContent = stage.bannerTitle;
+      refs.bannerText.textContent = stage.bannerText;
+      refs.summaryHint.textContent = stage.summaryHint;
+      refs.footerNote.textContent = stage.footer;
+      refs.propertyTitle.textContent = stage.propertyTitle;
+      refs.propertySubtitle.textContent = stage.propertySubtitle;
+      refs.propertyBannerTitle.textContent = stage.propertyBannerTitle;
+      refs.propertyBannerText.textContent = stage.propertyBannerText;
+      refs.metricReady.textContent = stage.metrics[0];
+      refs.metricAction.textContent = stage.metrics[1];
+      refs.metricRisk.textContent = stage.metrics[2];
+    }
+
+    render("source");
+  </script>
+</body>
+</html>

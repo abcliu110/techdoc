@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PT-015 - &#x7248;&#x672C;&#x56DE;&#x6EDA;</title>
+  <style>
+    :root {
+      --bg: #eef2f6;
+      --panel: #ffffff;
+      --line: #d7dee8;
+      --text: #1f2937;
+      --muted: #667085;
+      --primary: #2468c9;
+      --success: #19733f;
+      --danger: #c73535;
+      --warn: #b7791f;
+      --soft-primary: #eaf2ff;
+      --soft-danger: #fff1f1;
+      --soft-success: #edf8f1;
+      --shadow: 0 1px 2px rgba(16, 24, 40, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-width: 1440px;
+      min-height: 900px;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font: 13px/1.5 "Microsoft YaHei UI", "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      border-radius: 4px;
+      height: 32px;
+      padding: 0 12px;
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+      white-space: nowrap;
+    }
+
+    button:hover:not(:disabled) {
+      border-color: #b7c4d6;
+      background: #f8fafc;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      color: #98a2b3;
+      background: #f5f7fa;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 48px 236px minmax(620px, 1fr) 304px;
+      grid-template-rows: 48px minmax(852px, 1fr);
+      width: 1440px;
+      min-height: 900px;
+      margin: 0 auto;
+    }
+
+    .topbar {
+      grid-column: 1 / 5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--line);
+      background: #f7f9fc;
+    }
+
+    .topbar-left,
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .crumb {
+      color: var(--muted);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 26px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .primary {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .primary:hover:not(:disabled) {
+      border-color: #1856ab;
+      background: #1856ab;
+    }
+
+    .nav {
+      border-right: 1px solid var(--line);
+      background: #f8fafc;
+      padding: 10px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      background: #fff;
+      font-size: 12px;
+    }
+
+    .nav-dot.active {
+      border-color: var(--primary);
+      background: var(--soft-primary);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .sidebar,
+    .inspector,
+    .canvas-wrap {
+      min-height: 852px;
+    }
+
+    .sidebar,
+    .inspector {
+      padding: 14px;
+      background: var(--panel);
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--line);
+    }
+
+    .inspector {
+      border-left: 1px solid var(--line);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .section-note {
+      margin-bottom: 12px;
+      color: var(--muted);
+    }
+
+    .history-list,
+    .check-list,
+    .timeline {
+      display: grid;
+      gap: 10px;
+    }
+
+    .history-item,
+    .timeline-item,
+    .card,
+    .detail-block {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .history-item {
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .history-item.active {
+      border-color: var(--primary);
+      background: var(--soft-primary);
+    }
+
+    .history-meta,
+    .tiny {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .history-head,
+    .row-between {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .state-tag {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .state-safe {
+      color: var(--success);
+      background: var(--soft-success);
+      border-color: #cbe8d3;
+    }
+
+    .state-risk {
+      color: var(--danger);
+      background: var(--soft-danger);
+      border-color: #f0c9c9;
+    }
+
+    .state-warn {
+      color: var(--warn);
+      background: #fff7e8;
+      border-color: #eed9ae;
+    }
+
+    .canvas-wrap {
+      padding: 16px;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 12px;
+    }
+
+    .banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+    }
+
+    .banner strong {
+      font-size: 15px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+    }
+
+    .toolbar-left,
+    .toolbar-right,
+    .action-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(580px, 1fr) 300px;
+      gap: 12px;
+      min-height: 0;
+    }
+
+    .board {
+      padding: 16px;
+    }
+
+    .board-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .board-title {
+      font-size: 17px;
+      font-weight: 600;
+      margin: 0 0 4px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .stat {
+      padding: 12px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .compare {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .field-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field {
+      display: grid;
+      grid-template-columns: 88px 1fr auto;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fbfcfe;
+    }
+
+    .field-label {
+      color: var(--muted);
+    }
+
+    .field-value {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .diff-chip {
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #fff7e8;
+      color: var(--warn);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .impact {
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .impact-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .impact-row:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .impact-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .timeline {
+      margin-top: 12px;
+    }
+
+    .timeline-item {
+      padding: 10px 12px;
+    }
+
+    .inspector .detail-block {
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .property-grid {
+      display: grid;
+      grid-template-columns: 84px 1fr;
+      gap: 8px 10px;
+      color: var(--muted);
+    }
+
+    .property-grid strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .check {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 10px 12px;
+    }
+
+    .check-mark {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      flex: none;
+      margin-top: 1px;
+      background: #fff;
+      color: var(--muted);
+    }
+
+    .check.done .check-mark {
+      color: var(--success);
+      border-color: #b7d9c1;
+      background: var(--soft-success);
+    }
+
+    .console {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #f8fafc;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .console strong {
+      color: var(--text);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="app" data-prototype="PT-015" data-state="reviewing" data-testid="prototype-root" id="prototypeRoot">
+    <header class="topbar" data-testid="topbar">
+      <div class="topbar-left">
+        <div class="brand">&#x8868;&#x5355;&#x8BBE;&#x8BA1;&#x5668;</div>
+        <div class="crumb">T-207 / PT-015 / &#x7248;&#x672C;&#x56DE;&#x6EDA;</div>
+      </div>
+      <div class="topbar-right">
+        <div class="pill" data-testid="header-environment">&#x5F53;&#x524D;&#x73AF;&#x5883;&#xFF1A;&#x9884;&#x53D1;</div>
+        <div class="pill" data-testid="header-operator">&#x5904;&#x7406;&#x4EBA;&#xFF1A;&#x53D1;&#x5E03;&#x7BA1;&#x7406;&#x5458;</div>
+        <button type="button" data-testid="header-preview">&#x9884;&#x89C8;&#x8868;&#x5355;</button>
+        <button type="button" class="primary" data-testid="header-save">&#x4FDD;&#x5B58;&#x5FEB;&#x7167;</button>
+      </div>
+    </header>
+
+    <aside class="nav" data-testid="left-nav">
+      <div class="nav-dot">&#x7EC4;</div>
+      <div class="nav-dot active">&#x7248;</div>
+      <div class="nav-dot">&#x53D1;</div>
+      <div class="nav-dot">&#x6821;</div>
+      <div class="nav-dot">&#x914D;</div>
+    </aside>
+
+    <section class="sidebar" data-testid="version-sidebar">
+      <div class="section-title">
+        <span>&#x53EF;&#x56DE;&#x6EDA;&#x7248;&#x672C;</span>
+        <span class="tiny">3 &#x4E2A;&#x5019;&#x9009;</span>
+      </div>
+      <div class="section-note">&#x5BF9;&#x6BD4;&#x53D1;&#x5E03;&#x4E2D;&#x7248;&#x672C;&#x4E0E;&#x5386;&#x53F2;&#x5FEB;&#x7167;&#xFF0C;&#x8BC4;&#x4F30;&#x98CE;&#x9669;&#x540E;&#x6267;&#x884C;&#x56DE;&#x6EDA;&#x3002;</div>
+      <div class="history-list" data-testid="version-list">
+        <div class="history-item active" data-testid="version-item-v312" data-version="V3.1.2" data-risk="medium">
+          <div class="history-head">
+            <strong>V3.1.2</strong>
+            <span class="state-tag state-warn">&#x5F85;&#x590D;&#x6838;</span>
+          </div>
+          <div class="history-meta">&#x63D0;&#x4EA4;&#x65F6;&#x95F4; 2026-07-09 18:40</div>
+          <div class="history-meta">&#x53D8;&#x66F4; 12 &#x9879;&#x7EC4;&#x4EF6;&#x3001;3 &#x6761;&#x6821;&#x9A8C;&#x89C4;&#x5219;</div>
+        </div>
+        <div class="history-item" data-testid="version-item-v311" data-version="V3.1.1" data-risk="low">
+          <div class="history-head">
+            <strong>V3.1.1</strong>
+            <span class="state-tag state-safe">&#x7A33;&#x5B9A;</span>
+          </div>
+          <div class="history-meta">&#x63D0;&#x4EA4;&#x65F6;&#x95F4; 2026-07-06 21:15</div>
+          <div class="history-meta">&#x4E0A;&#x7EBF; 7 &#x5929;&#x65E0;&#x5F02;&#x5E38;&#x8B66;&#x62A5;</div>
+        </div>
+        <div class="history-item" data-testid="version-item-v308" data-version="V3.0.8" data-risk="high">
+          <div class="history-head">
+            <strong>V3.0.8</strong>
+            <span class="state-tag state-risk">&#x9700;&#x8FC1;&#x79FB;</span>
+          </div>
+          <div class="history-meta">&#x63D0;&#x4EA4;&#x65F6;&#x95F4; 2026-06-28 09:20</div>
+          <div class="history-meta">&#x4E0D;&#x517C;&#x5BB9;&#x65B0;&#x8FDB;&#x4EF6;&#x4E0A;&#x4F20;&#x7EC4;&#x4EF6;</div>
+        </div>
+      </div>
+      <div class="timeline" data-testid="sidebar-timeline">
+        <div class="timeline-item">
+          <div class="row-between">
+            <strong>&#x53D1;&#x5E03;&#x72B6;&#x6001;</strong>
+            <span class="tiny">&#x4ECA;&#x65E5; 19:10</span>
+          </div>
+          <div class="tiny">&#x5F53;&#x524D;&#x751F;&#x4EA7;&#x7248;&#x672C; V3.1.3 &#x51FA;&#x73B0;&#x6821;&#x9A8C;&#x811A;&#x672C;&#x8BEF;&#x62E6;&#x622A;&#x3002;</div>
+        </div>
+        <div class="timeline-item">
+          <div class="row-between">
+            <strong>&#x56DE;&#x6EDA;&#x5EFA;&#x8BAE;</strong>
+            <span class="tiny">&#x81EA;&#x52A8;&#x5206;&#x6790;</span>
+          </div>
+          <div class="tiny">&#x4F18;&#x5148;&#x56DE;&#x6EDA;&#x81F3; V3.1.1&#xFF0C;&#x53EF;&#x4FDD;&#x6301;&#x63D0;&#x4EA4;&#x94FE;&#x8DEF;&#x7A33;&#x5B9A;&#x3002;</div>
+        </div>
+      </div>
+    </section>
+
+    <main class="canvas-wrap" data-testid="rollback-main">
+      <section class="banner" data-testid="rollback-banner">
+        <div>
+          <strong>&#x751F;&#x4EA7;&#x6545;&#x969C;&#x5904;&#x7F6E;&#x4E2D;</strong>
+          <div class="muted" id="bannerText">&#x8BF7;&#x5BF9;&#x76EE;&#x6807;&#x7248;&#x672C;&#x8FDB;&#x884C;&#x5F71;&#x54CD;&#x786E;&#x8BA4;&#x540E;&#x6267;&#x884C;&#x56DE;&#x6EDA;&#x3002;</div>
+        </div>
+        <div class="pill" id="bannerState" data-testid="banner-state">&#x5F53;&#x524D;&#x72B6;&#x6001;&#xFF1A;&#x5F85;&#x590D;&#x6838;</div>
+      </section>
+
+      <section class="toolbar" data-testid="rollback-toolbar">
+        <div class="toolbar-left">
+          <div class="pill" data-testid="current-version-pill">&#x5F53;&#x524D;&#x751F;&#x4EA7;&#x7248;&#x672C; V3.1.3</div>
+          <div class="pill" id="targetVersionPill" data-testid="target-version-pill">&#x76EE;&#x6807;&#x56DE;&#x6EDA; V3.1.2</div>
+          <div class="pill" id="impactPill" data-testid="impact-pill">&#x9884;&#x4F30;&#x5F71;&#x54CD;&#xFF1A;4 &#x4E2A;&#x5B57;&#x6BB5;</div>
+        </div>
+        <div class="toolbar-right">
+          <button type="button" data-testid="compare-button">&#x67E5;&#x770B;&#x5DEE;&#x5F02;</button>
+          <button type="button" data-testid="simulate-button">&#x6A21;&#x62DF;&#x56DE;&#x6EDA;</button>
+          <button type="button" id="rollbackButton" class="primary" data-testid="rollback-button">&#x6267;&#x884C;&#x56DE;&#x6EDA;</button>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <div class="card board" data-testid="compare-board">
+          <div class="board-header">
+            <div>
+              <h1 class="board-title">&#x5DF2;&#x9009;&#x7248;&#x672C;&#x5DEE;&#x5F02;&#x5BF9;&#x6BD4;</h1>
+              <div class="muted" id="boardSummary">&#x76EE;&#x6807; V3.1.2 &#x4E0E;&#x5F53;&#x524D;&#x751F;&#x4EA7; V3.1.3 &#x76F8;&#x6BD4;&#xFF0C;&#x9700;&#x56DE;&#x9000; 4 &#x9879;&#x7F16;&#x8F91;&#x5668;&#x53D8;&#x66F4;&#x3002;</div>
+            </div>
+            <div class="state-tag state-warn" id="riskTag" data-testid="risk-tag">&#x98CE;&#x9669;&#x7EA7;&#x522B;&#xFF1A;&#x4E2D;</div>
+          </div>
+
+          <div class="stats">
+            <div class="card stat" data-testid="stat-component">
+              <div class="stat-label">&#x56DE;&#x9000;&#x7EC4;&#x4EF6;</div>
+              <div class="stat-value" id="statComponent">12</div>
+            </div>
+            <div class="card stat" data-testid="stat-rule">
+              <div class="stat-label">&#x6821;&#x9A8C;&#x89C4;&#x5219;</div>
+              <div class="stat-value" id="statRule">3</div>
+            </div>
+            <div class="card stat" data-testid="stat-template">
+              <div class="stat-label">&#x53D7;&#x5F71;&#x54CD;&#x6A21;&#x677F;</div>
+              <div class="stat-value" id="statTemplate">8</div>
+            </div>
+          </div>
+
+          <div class="compare">
+            <div class="card" data-testid="current-version-panel">
+              <div class="panel-head">
+                <span>V3.1.3 &#x5F53;&#x524D;&#x751F;&#x4EA7;</span>
+                <span class="tiny">&#x65B0;&#x5E03;&#x5C40;&#x3001;&#x65B0;&#x6821;&#x9A8C;</span>
+              </div>
+              <div class="field-list" id="currentFields">
+                <div class="field">
+                  <span class="field-label">&#x63D0;&#x4EA4;&#x6309;&#x94AE;</span>
+                  <span class="field-value">&#x540C;&#x6B65;&#x89E6;&#x53D1; API &#x524D;&#x6821;&#x9A8C;</span>
+                  <span class="diff-chip">&#x65B0;&#x589E;</span>
+                </div>
+                <div class="field">
+                  <span class="field-label">&#x9644;&#x4EF6;&#x7EC4;&#x4EF6;</span>
+                  <span class="field-value">&#x6539;&#x4E3A;&#x5F3A;&#x5236;&#x4E0A;&#x4F20;</span>
+                  <span class="diff-chip">&#x53D8;&#x66F4;</span>
+                </div>
+                <div class="field">
+                  <span class="field-label">&#x5BA1;&#x6279;&#x4EBA;</span>
+                  <span class="field-value">&#x652F;&#x6301;&#x5D4C;&#x5957;&#x811A;&#x672C;&#x9ED8;&#x8BA4;&#x503C;</span>
+                  <span class="diff-chip">&#x65B0;&#x589E;</span>
+                </div>
+                <div class="field">
+                  <span class="field-label">&#x63D0;&#x793A;&#x6D6E;&#x5C42;</span>
+                  <span class="field-value">&#x63D0;&#x4EA4;&#x65F6;&#x5F3A;&#x5236;&#x62E6;&#x622A;&#x7A7A;&#x503C;</span>
+                  <span class="diff-chip">&#x53D8;&#x66F4;</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card" data-testid="target-version-panel">
+              <div class="panel-head">
+                <span id="targetPanelTitle">V3.1.2 &#x76EE;&#x6807;&#x5FEB;&#x7167;</span>
+                <span class="tiny" id="targetPanelMeta">&#x5386;&#x53F2;&#x7A33;&#x5B9A;&#x7248;</span>
+              </div>
+              <div class="field-list" id="targetFields">
+                <div class="field">
+                  <span class="field-label">&#x63D0;&#x4EA4;&#x6309;&#x94AE;</span>
+                  <span class="field-value">&#x5EF6;&#x7EED;&#x5F02;&#x6B65;&#x6821;&#x9A8C;&#x961F;&#x5217;</span>
+                  <span class="diff-chip">&#x56DE;&#x9000;</span>
+                </div>
+                <div class="field">
+                  <span class="field-label">&#x9644;&#x4EF6;&#x7EC4;&#x4EF6;</span>
+                  <span class="field-value">&#x975E;&#x5FC5;&#x586B;&#xFF0C;&#x6309;&#x89C4;&#x5219;&#x89E6;&#x53D1;</span>
+                  <span class="diff-chip">&#x56DE;&#x9000;</span>
+                </div>
+                <div class="field">
+                  <span class="field-label">&#x5BA1;&#x6279;&#x4EBA;</span>
+                  <span class="field-value">&#x4FDD;&#x7559;&#x4EBA;&#x5DE5;&#x9009;&#x62E9;</span>
+                  <span class="diff-chip">&#x56DE;&#x9000;</span>
+                </div>
+                <div class="field">
+                  <span class="field-label">&#x63D0;&#x793A;&#x6D6E;&#x5C42;</span>
+                  <span class="field-value">&#x4EC5;&#x5728;&#x9519;&#x8BEF;&#x540E;&#x5C55;&#x793A;&#x62E6;&#x622A;&#x539F;&#x56E0;</span>
+                  <span class="diff-chip">&#x56DE;&#x9000;</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card impact" data-testid="impact-assessment">
+            <div class="panel-head">
+              <span>&#x56DE;&#x6EDA;&#x5F71;&#x54CD;&#x8BC4;&#x4F30;</span>
+              <span class="tiny" id="impactHint">&#x9700;&#x8986;&#x76D6; 8 &#x4E2A;&#x6A21;&#x677F;</span>
+            </div>
+            <div class="impact-row">
+              <div>
+                <div class="impact-name">&#x6D41;&#x7A0B;&#x8868;&#x5355;&#x63D0;&#x4EA4;&#x6210;&#x529F;&#x7387;</div>
+                <div class="tiny">&#x56DE;&#x9000;&#x540E;&#x6062;&#x590D;&#x65E7;&#x6821;&#x9A8C;&#x961F;&#x5217;&#xFF0C;&#x9884;&#x8BA1;&#x7ACB;&#x5373;&#x6D88;&#x9664;&#x963B;&#x585E;&#x3002;</div>
+              </div>
+              <span class="state-tag state-safe">&#x53EF;&#x63A7;</span>
+            </div>
+            <div class="impact-row">
+              <div>
+                <div class="impact-name">&#x9644;&#x4EF6;&#x5B57;&#x6BB5;&#x8981;&#x6C42;</div>
+                <div class="tiny">&#x56DE;&#x5230;&#x6309;&#x89C4;&#x5219;&#x89E6;&#x53D1;&#x5FC5;&#x586B;&#xFF0C;&#x9700;&#x540C;&#x6B65;&#x901A;&#x77E5;&#x8FD0;&#x8425;&#x3002;</div>
+              </div>
+              <span class="state-tag state-warn">&#x9700;&#x901A;&#x77E5;</span>
+            </div>
+            <div class="impact-row">
+              <div>
+                <div class="impact-name">&#x6A21;&#x677F;&#x7F16;&#x8F91;&#x5386;&#x53F2;</div>
+                <div class="tiny">&#x5DF2;&#x4FDD;&#x7559;&#x5F53;&#x524D; V3.1.3 &#x5FEB;&#x7167;&#xFF0C;&#x53EF;&#x968F;&#x65F6;&#x518D;&#x6B21;&#x524D;&#x8FDB;&#x3002;</div>
+              </div>
+              <span class="state-tag state-safe">&#x53EF;&#x56DE;&#x524D;</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="inspector" data-testid="rollback-inspector">
+          <div class="section-title">
+            <span>&#x6267;&#x884C;&#x9762;&#x677F;</span>
+            <span class="tiny" id="inspectorMode">&#x590D;&#x6838;&#x6A21;&#x5F0F;</span>
+          </div>
+
+          <div class="detail-block" data-testid="detail-selected-version">
+            <div class="panel-head">
+              <span>&#x9009;&#x4E2D;&#x7248;&#x672C;</span>
+              <span class="tiny" id="selectedVersionLabel">V3.1.2</span>
+            </div>
+            <div class="property-grid">
+              <span>&#x521B;&#x5EFA;&#x4EBA;</span><strong id="propOwner">&#x6797;&#x4E91;</strong>
+              <span>&#x63D0;&#x4EA4;&#x8BF4;&#x660E;</span><strong id="propNote">&#x56DE;&#x9000;&#x63D0;&#x793A;&#x6D6E;&#x5C42;&#x4E0E;&#x5FC5;&#x586B;&#x7B56;&#x7565;</strong>
+              <span>&#x98CE;&#x9669;&#x6807;&#x7B7E;</span><strong id="propRisk">&#x4E2D;&#x98CE;&#x9669;</strong>
+            </div>
+          </div>
+
+          <div class="detail-block" data-testid="detail-checklist">
+            <div class="panel-head">
+              <span>&#x56DE;&#x6EDA;&#x524D;&#x68C0;&#x67E5;</span>
+              <span class="tiny">&#x81EA;&#x52A8;&#x52FE;&#x7A3D;</span>
+            </div>
+            <div class="check-list">
+              <div class="check done">
+                <div class="check-mark">1</div>
+                <div>
+                  <strong>&#x751F;&#x4EA7;&#x5F02;&#x5E38;&#x5DF2;&#x590D;&#x73B0;</strong>
+                  <div class="tiny">&#x9519;&#x8BEF;&#x6808;&#x5B9A;&#x4F4D;&#x5230;&#x63D0;&#x4EA4;&#x524D;&#x6821;&#x9A8C;&#x811A;&#x672C;</div>
+                </div>
+              </div>
+              <div class="check done">
+                <div class="check-mark">2</div>
+                <div>
+                  <strong>&#x5F53;&#x524D;&#x7248;&#x672C;&#x5FEB;&#x7167;&#x5DF2;&#x4FDD;&#x5B58;</strong>
+                  <div class="tiny">&#x53EF;&#x5728;&#x56DE;&#x6EDA;&#x540E;&#x91CD;&#x65B0;&#x524D;&#x8FDB;&#x5230; V3.1.3</div>
+                </div>
+              </div>
+              <div class="check" id="rollbackCheck" data-testid="rollback-check">
+                <div class="check-mark" id="rollbackCheckMark">3</div>
+                <div>
+                  <strong id="rollbackCheckTitle">&#x7B49;&#x5F85;&#x6267;&#x884C;&#x56DE;&#x6EDA;</strong>
+                  <div class="tiny" id="rollbackCheckDesc">&#x6267;&#x884C;&#x540E;&#x5C06;&#x66F4;&#x65B0;&#x53D1;&#x5E03;&#x72B6;&#x6001;&#x4E0E;&#x5F71;&#x54CD;&#x6458;&#x8981;</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-block" data-testid="detail-notice">
+            <div class="panel-head">
+              <span>&#x53D1;&#x5E03;&#x901A;&#x77E5;</span>
+              <span class="tiny">&#x534F;&#x540C;&#x5BF9;&#x8C61;</span>
+            </div>
+            <div class="tiny">&#x5C06;&#x540C;&#x6B65;&#x901A;&#x77E5;&#x8FD0;&#x8425;&#x3001;&#x5BA1;&#x6279;&#x6A21;&#x677F;&#x7BA1;&#x7406;&#x5458;&#x3001;&#x53D1;&#x5E03;&#x503C;&#x5B88;&#x4EBA;&#x3002;</div>
+            <div class="action-row" style="margin-top:10px;">
+              <button type="button" data-testid="notice-button">&#x9884;&#x89C8;&#x901A;&#x77E5;</button>
+              <button type="button" disabled data-testid="sync-button" title="&#x9700;&#x5728;&#x56DE;&#x6EDA;&#x6210;&#x529F;&#x540E;&#x624D;&#x80FD;&#x53D1;&#x9001;">&#x53D1;&#x9001;&#x540C;&#x6B65;</button>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <footer class="console" data-testid="rollback-console">
+        <div><strong id="consoleTitle">&#x7CFB;&#x7EDF;&#x5EFA;&#x8BAE;</strong> <span id="consoleText">&#x4F18;&#x5148;&#x9009;&#x62E9;&#x5DF2;&#x7ECF;&#x7A33;&#x5B9A;&#x8FD0;&#x884C;&#x7684; V3.1.1 &#x6216;&#x5F53;&#x524D;&#x5DF2;&#x9009; V3.1.2 &#x8FDB;&#x884C;&#x590D;&#x6838;&#x3002;</span></div>
+        <div class="tiny" id="consoleState" data-testid="console-state">&#x72B6;&#x6001;&#xFF1A;reviewing</div>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const root = document.getElementById("prototypeRoot");
+      const items = Array.from(document.querySelectorAll(".history-item"));
+      const bannerText = document.getElementById("bannerText");
+      const bannerState = document.getElementById("bannerState");
+      const targetVersionPill = document.getElementById("targetVersionPill");
+      const boardSummary = document.getElementById("boardSummary");
+      const riskTag = document.getElementById("riskTag");
+      const impactPill = document.getElementById("impactPill");
+      const targetPanelTitle = document.getElementById("targetPanelTitle");
+      const targetPanelMeta = document.getElementById("targetPanelMeta");
+      const selectedVersionLabel = document.getElementById("selectedVersionLabel");
+      const propOwner = document.getElementById("propOwner");
+      const propNote = document.getElementById("propNote");
+      const propRisk = document.getElementById("propRisk");
+      const inspectorMode = document.getElementById("inspectorMode");
+      const rollbackButton = document.getElementById("rollbackButton");
+      const rollbackCheck = document.getElementById("rollbackCheck");
+      const rollbackCheckMark = document.getElementById("rollbackCheckMark");
+      const rollbackCheckTitle = document.getElementById("rollbackCheckTitle");
+      const rollbackCheckDesc = document.getElementById("rollbackCheckDesc");
+      const consoleTitle = document.getElementById("consoleTitle");
+      const consoleText = document.getElementById("consoleText");
+      const consoleState = document.getElementById("consoleState");
+      const statComponent = document.getElementById("statComponent");
+      const statRule = document.getElementById("statRule");
+      const statTemplate = document.getElementById("statTemplate");
+      const impactHint = document.getElementById("impactHint");
+
+      const versionData = {
+        "V3.1.2": {
+          riskText: "中",
+          riskClass: "state-warn",
+          impactFields: 4,
+          components: 12,
+          rules: 3,
+          templates: 8,
+          owner: "林云",
+          note: "回退提交前校验与附件必填策略",
+          panelMeta: "历史灰度版，回滚后保留二次前进入口",
+          banner: "V3.1.2 可快速解除提交拦截，但需要同步附件规则回退说明。",
+          console: "建议先执行该版本回滚，再安排夜间修复 V3.1.3 校验脚本。",
+          riskLabel: "中风险"
+        },
+        "V3.1.1": {
+          riskText: "低",
+          riskClass: "state-safe",
+          impactFields: 2,
+          components: 9,
+          rules: 1,
+          templates: 6,
+          owner: "周岚",
+          note: "回到已稳定运行七天的审批表单快照",
+          panelMeta: "稳定窗口版本，变更面最小",
+          banner: "V3.1.1 稳定性最高，适合直接作为生产回滚目标。",
+          console: "如果优先控制风险，推荐切换至 V3.1.1 并保留当前 V3.1.3 快照。",
+          riskLabel: "低风险"
+        },
+        "V3.0.8": {
+          riskText: "高",
+          riskClass: "state-risk",
+          impactFields: 7,
+          components: 15,
+          rules: 5,
+          templates: 11,
+          owner: "发布基线",
+          note: "缺少新上传组件兼容能力，不建议直接回退",
+          panelMeta: "旧基线版本，需要同步迁移附件控件",
+          banner: "V3.0.8 缺少新组件兼容层，除非做紧急止血，不建议直接回滚。",
+          console: "该版本风险过高，若必须使用，需要同时禁用新附件组件。",
+          riskLabel: "高风险"
+        }
+      };
+
+      function setRiskClass(node, className) {
+        node.className = "state-tag " + className;
+      }
+
+      function selectVersion(version) {
+        const data = versionData[version];
+        items.forEach((item) => {
+          item.classList.toggle("active", item.dataset.version === version);
+        });
+        root.dataset.state = "reviewing";
+        bannerState.textContent = "当前状态：待复核";
+        bannerText.textContent = data.banner;
+        targetVersionPill.textContent = "目标回滚 " + version;
+        boardSummary.textContent = "目标 " + version + " 与当前生产 V3.1.3 相比，需要回退 " + data.impactFields + " 项编辑器变更。";
+        riskTag.textContent = "风险级别：" + data.riskText;
+        setRiskClass(riskTag, data.riskClass);
+        impactPill.textContent = "预估影响：" + data.impactFields + " 个字段";
+        targetPanelTitle.textContent = version + " 目标快照";
+        targetPanelMeta.textContent = data.panelMeta;
+        selectedVersionLabel.textContent = version;
+        propOwner.textContent = data.owner;
+        propNote.textContent = data.note;
+        propRisk.textContent = data.riskLabel;
+        inspectorMode.textContent = "复核模式";
+        rollbackButton.disabled = false;
+        rollbackCheck.classList.remove("done");
+        rollbackCheckMark.textContent = "3";
+        rollbackCheckTitle.textContent = "等待执行回滚";
+        rollbackCheckDesc.textContent = "执行后将更新发布状态与影响摘要";
+        consoleTitle.textContent = "系统建议";
+        consoleText.textContent = data.console;
+        consoleState.textContent = "状态：reviewing";
+        statComponent.textContent = String(data.components);
+        statRule.textContent = String(data.rules);
+        statTemplate.textContent = String(data.templates);
+        impactHint.textContent = "需覆盖 " + data.templates + " 个模板";
+      }
+
+      items.forEach((item) => {
+        item.addEventListener("click", function () {
+          selectVersion(item.dataset.version);
+        });
+      });
+
+      rollbackButton.addEventListener("click", function () {
+        const current = document.querySelector(".history-item.active");
+        const version = current ? current.dataset.version : "V3.1.2";
+        root.dataset.state = "rolled-back";
+        bannerState.textContent = "当前状态：已回滚";
+        bannerText.textContent = "已完成版本回滚，生产设计器已切换至 " + version + "，等待统一验证器做后续确认。";
+        inspectorMode.textContent = "执行完成";
+        rollbackButton.disabled = true;
+        rollbackCheck.classList.add("done");
+        rollbackCheckMark.textContent = "✓";
+        rollbackCheckTitle.textContent = "回滚执行完成";
+        rollbackCheckDesc.textContent = "生产设计器已切换至 " + version + "，当前快照 V3.1.3 仍可再次恢复。";
+        consoleTitle.textContent = "回滚结果";
+        consoleText.textContent = version + " 已设为当前生产版本，待运营通知与统一验证器完成后续检查。";
+        consoleState.textContent = "状态：rolled-back";
+      });
+    })();
+  </script>
+</body>
+</html>
