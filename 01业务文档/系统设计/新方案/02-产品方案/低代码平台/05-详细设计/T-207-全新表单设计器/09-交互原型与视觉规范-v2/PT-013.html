@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PT-013 草稿冲突</title>
+  <style>
+    :root {
+      --bg: #eef2f6;
+      --panel: #ffffff;
+      --text: #1f2937;
+      --muted: #667085;
+      --line: #d7dee8;
+      --primary: #2468c9;
+      --success: #19733f;
+      --danger: #c73535;
+      --warn: #b7791f;
+      --soft-primary: #e8f0fb;
+      --soft-danger: #fdecec;
+      --soft-success: #eaf6ef;
+      --soft-warn: #fff5e8;
+      --shadow: 0 1px 2px rgba(31, 41, 55, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-width: 1440px;
+      height: 100%;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Microsoft YaHei UI", "Segoe UI", sans-serif;
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .app-shell {
+      width: 1440px;
+      height: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 48px 244px 1fr 300px;
+      grid-template-rows: 48px 1fr;
+      grid-template-areas:
+        "top top top top"
+        "rail nav main side";
+      border: 1px solid var(--line);
+      background: var(--bg);
+    }
+
+    .topbar {
+      grid-area: top;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-left,
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .brand-mark {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      background: var(--primary);
+      position: relative;
+    }
+
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border: 2px solid rgba(255, 255, 255, 0.9);
+      border-top-width: 1px;
+      border-left-width: 1px;
+    }
+
+    .status-pill {
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: #f7f9fc;
+    }
+
+    .status-pill.danger {
+      background: var(--soft-danger);
+      color: var(--danger);
+      border-color: #efc1c1;
+    }
+
+    .status-pill.success {
+      background: var(--soft-success);
+      color: var(--success);
+      border-color: #bddcc9;
+    }
+
+    .ghost-btn,
+    .primary-btn,
+    .danger-btn {
+      height: 30px;
+      padding: 0 12px;
+      border-radius: 4px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      cursor: pointer;
+      min-width: 74px;
+      white-space: nowrap;
+    }
+
+    .ghost-btn:hover:not(:disabled),
+    .primary-btn:hover:not(:disabled),
+    .danger-btn:hover:not(:disabled) {
+      filter: brightness(0.98);
+    }
+
+    .primary-btn {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .danger-btn {
+      background: #fff5f5;
+      border-color: #efc1c1;
+      color: var(--danger);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      color: #98a2b3;
+      background: #f2f4f7;
+      border-color: #e4e7ec;
+    }
+
+    .rail {
+      grid-area: rail;
+      border-right: 1px solid var(--line);
+      background: #f6f8fb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0;
+      gap: 10px;
+    }
+
+    .rail-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
+
+    .rail-icon.active {
+      background: var(--soft-primary);
+      border-color: #bfd2ef;
+      color: var(--primary);
+    }
+
+    .nav {
+      grid-area: nav;
+      border-right: 1px solid var(--line);
+      background: var(--panel);
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .panel-head {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--line);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .tree {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .tree-group {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      overflow: hidden;
+      background: #fbfcfe;
+    }
+
+    .tree-title {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--line);
+      font-weight: 600;
+      background: #f8fafc;
+    }
+
+    .tree-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 9px 10px;
+      border-top: 1px solid #edf1f5;
+      color: var(--muted);
+    }
+
+    .tree-item:first-of-type {
+      border-top: 0;
+    }
+
+    .tree-item.current {
+      background: var(--soft-primary);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .side {
+      grid-area: side;
+      border-left: 1px solid var(--line);
+      background: var(--panel);
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .side-section {
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .side-label {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 84px 1fr;
+      row-gap: 8px;
+      column-gap: 8px;
+      align-items: center;
+    }
+
+    .meta-grid strong {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .stack-card {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 10px;
+      background: #fafcff;
+    }
+
+    .stack-card.active {
+      border-color: #bfd2ef;
+      background: var(--soft-primary);
+    }
+
+    .stack-card strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    .stack-card span {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .main {
+      grid-area: main;
+      padding: 16px;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 12px;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 14px;
+      border: 1px solid #efc1c1;
+      border-radius: 4px;
+      background: var(--soft-danger);
+      box-shadow: var(--shadow);
+    }
+
+    .banner-copy strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 15px;
+    }
+
+    .banner-copy p,
+    .info-copy p,
+    .timeline-item p,
+    .feed-row p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .banner-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr;
+      gap: 12px;
+      min-height: 0;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-head {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .card-head strong {
+      font-size: 14px;
+    }
+
+    .info-line {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .canvas {
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .info-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .info-block {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 10px;
+      background: #fbfcfe;
+    }
+
+    .info-block strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 13px;
+    }
+
+    .conflict-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 12px;
+    }
+
+    .conflict-table th,
+    .conflict-table td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #edf1f5;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .conflict-table th {
+      color: var(--muted);
+      font-weight: 600;
+      background: #f8fafc;
+    }
+
+    .diff-chip {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      border: 1px solid #edd6a3;
+      background: var(--soft-warn);
+      color: var(--warn);
+    }
+
+    .result-box {
+      margin-top: auto;
+      padding: 12px 14px;
+      border-top: 1px solid var(--line);
+      background: #fafcff;
+      display: grid;
+      gap: 10px;
+    }
+
+    .result-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .result-title strong {
+      font-size: 14px;
+    }
+
+    .result-note {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .result-note strong {
+      color: var(--text);
+    }
+
+    .result-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      border: 1px solid #bfd2ef;
+      color: var(--primary);
+      background: var(--soft-primary);
+    }
+
+    .result-tag.success {
+      border-color: #bddcc9;
+      color: var(--success);
+      background: var(--soft-success);
+    }
+
+    .aside-panel {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 12px;
+      min-height: 0;
+    }
+
+    .timeline {
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .timeline-item strong {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .feed {
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 0;
+      overflow: auto;
+    }
+
+    .feed-row {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 10px;
+      background: #fcfdff;
+    }
+
+    .feed-row strong {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    .inline-code {
+      font-family: "Segoe UI", sans-serif;
+      padding: 1px 5px;
+      border-radius: 4px;
+      background: #f2f4f7;
+      color: #344054;
+    }
+  </style>
+</head>
+<body>
+  <div
+    class="app-shell"
+    data-prototype="PT-013"
+    data-state="conflict-detected"
+    data-testid="prototype-root"
+    id="prototypeRoot"
+  >
+    <header class="topbar" data-testid="topbar">
+      <div class="topbar-left">
+        <div class="brand" data-testid="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>表单设计器</span>
+        </div>
+        <span class="status-pill danger" id="globalStatePill" data-testid="global-state-pill">草稿冲突</span>
+        <span class="status-pill" data-testid="draft-meta-pill">表单 F-203 / 当前草稿 17</span>
+      </div>
+      <div class="topbar-right">
+        <button class="ghost-btn" type="button" data-testid="preview-btn">预览</button>
+        <button class="ghost-btn" type="button" data-testid="save-btn">保存本地副本</button>
+        <button class="primary-btn" type="button" data-testid="submit-btn">提交合并结果</button>
+      </div>
+    </header>
+
+    <aside class="rail" data-testid="left-rail">
+      <button class="rail-icon active" type="button" title="页面" data-testid="rail-pages">P</button>
+      <button class="rail-icon" type="button" title="组件" data-testid="rail-components">C</button>
+      <button class="rail-icon" type="button" title="数据" data-testid="rail-data">D</button>
+      <button class="rail-icon" type="button" title="校验" data-testid="rail-rules">R</button>
+    </aside>
+
+    <section class="nav" data-testid="resource-panel">
+      <div class="panel-head">
+        <span>页面结构</span>
+        <span class="info-line">冲突节点 3</span>
+      </div>
+      <div class="tree">
+        <div class="tree-group">
+          <div class="tree-title">客户信息表单</div>
+          <div class="tree-item">
+            <span>页面标题</span>
+            <span class="diff-chip">一致</span>
+          </div>
+          <div class="tree-item current" data-testid="tree-current-node">
+            <span>联系电话</span>
+            <span class="diff-chip">冲突</span>
+          </div>
+          <div class="tree-item">
+            <span>证件类型</span>
+            <span class="diff-chip">冲突</span>
+          </div>
+          <div class="tree-item">
+            <span>客户等级</span>
+            <span class="diff-chip">冲突</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <main class="main" data-testid="main-workspace">
+      <section class="banner" data-testid="conflict-banner">
+        <div class="banner-copy">
+          <strong>发现远端草稿已更新，当前会话与版本 18 存在差异</strong>
+          <p>处理要求：保留客户经理刚调整的字段校验，同时决定“联系电话”组件以本地配置、远端配置或手工合并为准。</p>
+        </div>
+        <div class="banner-actions">
+          <button class="ghost-btn" type="button" id="selectRemoteBtn" data-testid="choose-remote-btn">采用远端</button>
+          <button class="primary-btn" type="button" id="mergeBtn" data-testid="merge-btn">保留本地并标记已处理</button>
+          <button class="ghost-btn" type="button" disabled data-testid="compare-all-btn" title="批量比对仅在全部冲突加载后可用">批量比对</button>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <article class="card" data-testid="diff-card">
+          <div class="card-head">
+            <div>
+              <strong>冲突明细</strong>
+              <div class="info-line">节点：联系电话 / 组件 ID field_phone</div>
+            </div>
+            <span class="result-tag" id="resolutionBadge" data-testid="resolution-badge">待决策</span>
+          </div>
+          <div class="canvas">
+            <div class="info-row">
+              <div class="info-block" data-testid="local-version-card">
+                <strong>本地草稿</strong>
+                <p class="info-copy">字段名为“联系电话”，开启必填，校验规则为手机号或座机，帮助文案提示“支持区号”。</p>
+              </div>
+              <div class="info-block" data-testid="remote-version-card">
+                <strong>远端草稿</strong>
+                <p class="info-copy">字段名为“联系电话”，开启必填，校验规则仅手机号，帮助文案提示“用于回访通知”。</p>
+              </div>
+            </div>
+
+            <table class="conflict-table" data-testid="diff-table">
+              <thead>
+                <tr>
+                  <th style="width: 140px;">配置项</th>
+                  <th>本地版本</th>
+                  <th>远端版本</th>
+                  <th style="width: 140px;">差异级别</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>校验规则</td>
+                  <td>手机号 / 座机</td>
+                  <td>仅手机号</td>
+                  <td><span class="diff-chip">高风险</span></td>
+                </tr>
+                <tr>
+                  <td>帮助文案</td>
+                  <td>支持区号</td>
+                  <td>用于回访通知</td>
+                  <td><span class="diff-chip">提示差异</span></td>
+                </tr>
+                <tr>
+                  <td>最近保存人</td>
+                  <td>李晨 10:21</td>
+                  <td>周岚 10:24</td>
+                  <td><span class="diff-chip">时间差 3 分钟</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="result-box" data-testid="resolution-box">
+            <div class="result-title">
+              <strong>当前处置结果</strong>
+              <span class="status-pill danger" id="stateCaption" data-testid="state-caption">尚未解决</span>
+            </div>
+            <div class="result-note" id="resolutionSummary" data-testid="resolution-summary">
+              当前状态为 <strong>conflict-detected</strong>。请完成一次处置，系统才允许继续发布草稿。
+            </div>
+          </div>
+        </article>
+
+        <section class="aside-panel">
+          <article class="card" data-testid="timeline-card">
+            <div class="card-head">
+              <strong>时间线</strong>
+              <span class="info-line">最近 30 分钟</span>
+            </div>
+            <div class="timeline">
+              <div class="timeline-item" data-testid="timeline-item-local">
+                <strong>10:21</strong>
+                <p>李晨修改本地草稿，补充“支持区号”的帮助提示，并保留座机校验。</p>
+              </div>
+              <div class="timeline-item" data-testid="timeline-item-remote">
+                <strong>10:24</strong>
+                <p>周岚在远端草稿中收紧校验范围，仅允许手机号以满足短信回访链路。</p>
+              </div>
+              <div class="timeline-item" data-testid="timeline-item-lock">
+                <strong>10:25</strong>
+                <p>系统在再次保存时发现版本号不一致，自动进入冲突处置视图。</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="card" data-testid="feed-card">
+            <div class="card-head">
+              <strong>协作提示</strong>
+              <span class="info-line">关联记录</span>
+            </div>
+            <div class="feed">
+              <div class="feed-row" data-testid="hint-row-1">
+                <strong><span>推荐动作</span><span class="inline-code">保留本地校验</span></strong>
+                <p>当前表单用于线下登记，座机仍有业务场景。保留本地版本后，建议同步提醒远端编辑人更新短信回访模板。</p>
+              </div>
+              <div class="feed-row" data-testid="hint-row-2">
+                <strong><span>系统约束</span><span class="inline-code">发布前必处理</span></strong>
+                <p>冲突未消解时，顶部“提交合并结果”只做记录，不会触发正式发布。</p>
+              </div>
+              <div class="feed-row" data-testid="hint-row-3">
+                <strong><span>同步信息</span><span class="inline-code">版本 18</span></strong>
+                <p>完成处置后，根节点 <span class="inline-code">data-state</span> 会切换，供宿主端继续后续流程判断。</p>
+              </div>
+            </div>
+          </article>
+        </section>
+      </section>
+    </main>
+
+    <aside class="side" data-testid="property-panel">
+      <div class="panel-head">
+        <span>处置面板</span>
+        <span class="info-line">右侧属性</span>
+      </div>
+
+      <div class="side-section">
+        <div class="side-label">当前冲突字段</div>
+        <div class="meta-grid" data-testid="field-meta-grid">
+          <span>字段编码</span><strong>field_phone</strong>
+          <span>组件类型</span><strong>单行输入框</strong>
+          <span>远端版本</span><strong>v18</strong>
+          <span>本地版本</span><strong>v17</strong>
+        </div>
+      </div>
+
+      <div class="side-section">
+        <div class="side-label">建议方案</div>
+        <div class="stack">
+          <div class="stack-card active" data-testid="strategy-card-local">
+            <strong>方案 A：保留本地</strong>
+            <span>保留座机校验，避免线下登记表单录入失败；后续手工同步远端短信说明。</span>
+          </div>
+          <div class="stack-card" data-testid="strategy-card-remote">
+            <strong>方案 B：采用远端</strong>
+            <span>完全跟随短信回访约束，字段帮助文案以远端内容为准。</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="side-section">
+        <div class="side-label">合并状态</div>
+        <div class="stack-card" data-testid="merge-state-card">
+          <strong id="mergeStateText">待处理</strong>
+          <span id="mergeStateDesc">尚未记录处置决策，宿主端发布动作仍需阻断。</span>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.getElementById("prototypeRoot");
+      var mergeBtn = document.getElementById("mergeBtn");
+      var remoteBtn = document.getElementById("selectRemoteBtn");
+      var resolutionSummary = document.getElementById("resolutionSummary");
+      var resolutionBadge = document.getElementById("resolutionBadge");
+      var stateCaption = document.getElementById("stateCaption");
+      var mergeStateText = document.getElementById("mergeStateText");
+      var mergeStateDesc = document.getElementById("mergeStateDesc");
+      var globalStatePill = document.getElementById("globalStatePill");
+
+      function setResolved(mode) {
+        var isLocal = mode === "local";
+        var nextState = isLocal ? "resolved-local" : "resolved-remote";
+        root.setAttribute("data-state", nextState);
+        resolutionBadge.textContent = isLocal ? "已保留本地" : "已采用远端";
+        resolutionBadge.className = "result-tag success";
+        stateCaption.textContent = isLocal ? "已处理，本地优先" : "已处理，远端优先";
+        stateCaption.className = "status-pill success";
+        mergeStateText.textContent = isLocal ? "本地版本已锁定" : "远端版本已锁定";
+        mergeStateDesc.textContent = isLocal
+          ? "已记录处置决策：沿用座机校验与本地帮助文案，后续允许提交合并结果。"
+          : "已记录处置决策：采用远端手机号校验与远端帮助文案，后续允许提交合并结果。";
+        resolutionSummary.innerHTML = isLocal
+          ? '当前状态为 <strong>resolved-local</strong>。冲突已按本地方案处理，可继续提交流程。'
+          : '当前状态为 <strong>resolved-remote</strong>。冲突已按远端方案处理，可继续提交流程。';
+        globalStatePill.textContent = "冲突已处理";
+        globalStatePill.className = "status-pill success";
+      }
+
+      mergeBtn.addEventListener("click", function () {
+        setResolved("local");
+      });
+
+      remoteBtn.addEventListener("click", function () {
+        setResolved("remote");
+      });
+    })();
+  </script>
+</body>
+</html>

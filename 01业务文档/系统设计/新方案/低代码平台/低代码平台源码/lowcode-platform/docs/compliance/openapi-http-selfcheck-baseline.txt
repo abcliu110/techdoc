@@ -1,0 +1,5 @@
+# OpenAPI HTTP 门禁自测基线
+# 用于证明脚本能自动发现 controller 文件，并能拼接 class-level + method-level 路由。
+
+GET /api/selfcheck/direct/ping
+POST /api/selfcheck/prefix/submit

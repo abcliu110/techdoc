@@ -1,0 +1,14 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: traceability_matrix
+  artifact_id: TRACE-LOWCODE-V2-001
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  updated_at: 2026-07-11T23:59:00+08:00
+  created_by: codex
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+  status: ACTIVE
+traces:
+  - {task: TASK-001, requirements: [REQ-001, REQ-002, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008, REQ-009, REQ-010], decisions: [DDR-001, DDR-002, DDR-003, DDR-004, DDR-005], prototype: prototype/index.html, tests: [tests/designer-state.test.mjs, tests/prototype-contract.test.mjs, prototype-method/tests/interaction-tests.yaml, tests/geometry-check.js], reports: [reports/mechanical-report.md, reports/interaction-report.md], evidence: [EVD-KD-001, EVD-MX-001, EVD-OS-001, EVD-PA-001, EVD-RT-001, EVD-LOCAL-001]}
+  - {task: TASK-002, requirements: [REQ-005, REQ-007], decisions: [DDR-001, DDR-004], prototype: prototype/index.html, tests: [prototype-method/tests/interaction-tests.yaml, prototype-method/tests/state-coverage.yaml], reports: [reports/interaction-report.md], evidence: [EVD-RT-001, EVD-LOCAL-001]}
+  - {task: TASK-003, requirements: [REQ-003], decisions: [DDR-001], prototype: prototype/index.html, tests: [tests/designer-state.test.mjs, prototype-method/tests/interaction-tests.yaml], reports: [reports/interaction-report.md], evidence: [EVD-PA-002, EVD-LOCAL-001]}

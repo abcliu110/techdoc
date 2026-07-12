@@ -8,12 +8,14 @@
 
 **Tech Stack:** Markdown normative specification, browser geometry concepts, Playwright-oriented verification contracts.
 
+> Path migration note (2026-07-12): the normative target now lives at `00业务文档/系统设计/00-方法论与流程/AI竞品证据驱动的新产品原型统一工程方法.md`; task paths below are retained as historical plan inputs.
+
 ---
 
 ### Task 1: Strengthen normative entry and scope
 
 **Files:**
-- Modify: `00业务文档/系统设计/新方案/00-方法论与流程/新产品原型方法/AI竞品证据驱动的新产品原型统一工程方法.md`
+- Modify: `00业务文档/系统设计/00-方法论与流程/AI竞品证据驱动的新产品原型统一工程方法.md`
 
 - [ ] Raise the document revision to 5.1 while retaining candidate status.
 - [ ] Define visual reliability as geometry, content, layering, responsive, interaction-state, and visual-semantic correctness.
@@ -22,7 +24,7 @@
 ### Task 2: Add prevention and detection contracts
 
 **Files:**
-- Modify: `00业务文档/系统设计/新方案/00-方法论与流程/新产品原型方法/AI竞品证据驱动的新产品原型统一工程方法.md`
+- Modify: `00业务文档/系统设计/00-方法论与流程/AI竞品证据驱动的新产品原型统一工程方法.md`
 
 - [ ] Add the seven-layer visual reliability loop.
 - [ ] Extend the visual contract with anchors, containment, scroll ownership, overlay policy, content pressure, and state-change invariants.
@@ -32,7 +34,7 @@
 ### Task 3: Add repair, certification, and promotion rules
 
 **Files:**
-- Modify: `00业务文档/系统设计/新方案/00-方法论与流程/新产品原型方法/AI竞品证据驱动的新产品原型统一工程方法.md`
+- Modify: `00业务文档/系统设计/00-方法论与流程/AI竞品证据驱动的新产品原型统一工程方法.md`
 
 - [ ] Route defects to the earliest responsible layer and prohibit screenshot-specific CSS patches.
 - [ ] Add positive and negative detector certification fixtures covering common misalignment and overflow families.
@@ -42,7 +44,7 @@
 ### Task 4: Verify the document
 
 **Files:**
-- Test: `00业务文档/系统设计/新方案/00-方法论与流程/新产品原型方法/AI竞品证据驱动的新产品原型统一工程方法.md`
+- Test: `00业务文档/系统设计/00-方法论与流程/AI竞品证据驱动的新产品原型统一工程方法.md`
 
 - [ ] Confirm required new sections and rules exist.
 - [ ] Scan for contradictory truncation, lightweight-gate, and tool-authority wording.

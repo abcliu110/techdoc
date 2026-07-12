@@ -1,0 +1,125 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: source_index
+  artifact_id: SRC-INDEX-LOWCODE-V2-001
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  updated_at: 2026-07-11T10:20:00+08:00
+  created_by: codex
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+  status: FROZEN
+sources:
+  - id: SRC-KD-001
+    product: 金蝶云·苍穹
+    url: https://developer.kingdee.com/?productId=87&productLineId=29&lang=zh-CN
+    source_type: official_community
+    accessed_at: 2026-07-11T00:00:00+08:00
+    access_status: SUCCESS
+    observed: 开发服务云入口、项目工作台知识、字段属性版本信息、苍穹学习地图可见
+    limitations: 公开社区资料，不代表登录态产品行为
+  - id: SRC-KD-AUTH-001
+    product: 金蝶云·苍穹经典开发平台
+    url: https://f8f0d4cf.community.kdcloud.com/
+    source_type: authenticated_first_party_runtime
+    accessed_at: 2026-07-11T09:30:00+08:00
+    access_status: SUCCESS
+    observed: 在 tst 研究应用中实测应用页面列表、创建向导、基础资料、单据、动态表单和报表设计器
+    limitations: 社区版当前环境；未验证闭源服务端实现、物理表、完整 XML、发布和运行时权限优先级；未记录授权参数或会话凭据
+    local_evidence:
+      - ../../reports/screenshots/kingdee-classic-app-page-list.png
+      - ../../reports/screenshots/kingdee-classic-basedata-form.png
+      - ../../reports/screenshots/kingdee-classic-basedata-list.png
+      - ../../reports/screenshots/kingdee-classic-research-bill.png
+      - ../../reports/screenshots/kingdee-classic-research-dynamic-form.png
+      - ../../reports/screenshots/kingdee-classic-research-report.png
+      - ../../reports/screenshots/kingdee-new-designer-research-bill.png
+      - ../../reports/screenshots/kingdee-new-designer-page-rules.png
+      - ../../reports/screenshots/kingdee-new-designer-plugins.png
+      - ../../reports/screenshots/kingdee-basedata-name-properties.png
+      - ../../reports/screenshots/kingdee-basedata-preview-current.png
+      - ../../reports/screenshots/kingdee-bill-complex-controls-current.png
+      - ../../reports/screenshots/kingdee-dynamic-form-empty-canvas.png
+  - id: SRC-MENDIX-001
+    product: Mendix Studio Pro
+    url: https://docs.mendix.com/refguide/studio-pro-overview/
+    source_type: official_documentation
+    accessed_at: 2026-07-11T00:00:00+08:00
+    access_status: SUCCESS
+    document_version: Studio Pro 11
+    last_modified: 2026-03-05
+    observed: App Explorer、文档标签、页面/微流/域模型工作区、可停靠窗格、状态栏、运行和发布入口
+  - id: SRC-MENDIX-FAIL-001
+    product: Mendix
+    url: https://www.mendix.com/platform/visual-development/
+    source_type: official_website
+    accessed_at: 2026-07-11T00:00:00+08:00
+    access_status: NOT_FOUND
+    observed: 页面返回 Page Not Found
+  - id: SRC-OUTSYSTEMS-001
+    product: OutSystems Service Studio
+    url: https://success.outsystems.com/documentation/11/getting_started/
+    source_type: official_documentation
+    accessed_at: 2026-07-11T00:00:00+08:00
+    access_status: SUCCESS
+    last_modified: 2025-04-11
+    observed: Service Studio 使用可视化语言构建、编辑和调试应用，支持 UI/逻辑模板、组件复用、发布、部署、测试和生命周期管理
+  - id: SRC-OUTSYSTEMS-002
+    product: OutSystems
+    url: https://www.outsystems.com/low-code-platform
+    source_type: official_website
+    accessed_at: 2026-07-11T00:00:00+08:00
+    access_status: SUCCESS
+    observed: 数据管理、应用和工作流治理、DevSecOps、部署、复用、分析、安全和集成能力
+  - id: SRC-POWERAPPS-001
+    product: Microsoft Power Apps Studio
+    url: https://learn.microsoft.com/en-us/power-apps/maker/canvas-apps/power-apps-studio
+    source_type: official_documentation
+    accessed_at: 2026-07-11T00:00:00+08:00
+    access_status: SUCCESS
+    last_modified: 2026-03-26
+    observed: 动态命令栏、属性列表、公式栏、作者菜单、树、画布、数据源、变量、Monitor/Test、预览、保存和发布
+  - id: SRC-POWERAPPS-002
+    product: Microsoft Power Apps
+    url: https://www.microsoft.com/en-us/power-platform/products/power-apps
+    source_type: official_website
+    accessed_at: 2026-07-11T00:00:00+08:00
+    access_status: SUCCESS
+    observed: 需求、流程、数据模型、组件装配、企业治理和全栈应用定位
+  - id: SRC-RETOOL-001
+    product: Retool
+    url: https://retool.com/
+    source_type: official_website
+    accessed_at: 2026-07-11T00:00:00+08:00
+    access_status: SUCCESS
+    observed: App builder、数据库和外部数据连接、工作流、发布、权限、审计、自托管和企业治理
+  - id: SRC-RETOOL-FAIL-001
+    product: Retool
+    url: https://docs.retool.com/apps/guides/app-builder
+    source_type: official_documentation
+    accessed_at: 2026-07-11T00:00:00+08:00
+    access_status: NOT_FOUND
+    observed: Page not found
+  - id: SRC-APPIAN-FAIL-001
+    product: Appian Designer
+    url: https://appian.com/platform
+    source_type: official_website
+    accessed_at: 2026-07-11T00:00:00+08:00
+    access_status: BLOCKED_406
+    observed: 406 Not Acceptable
+  - id: SRC-APPIAN-FAIL-002
+    product: Appian Designer
+    url: https://docs.appian.com/suite/help/latest/application-building.html
+    source_type: official_documentation
+    accessed_at: 2026-07-11T00:00:00+08:00
+    access_status: BLOCKED_403
+    observed: 403 Forbidden
+  - id: SRC-LOCAL-001
+    product: 现有低代码平台 T-207
+    path: ../低代码平台/03-需求/T-207-表单设计器-PRD-产品需求规格说明书.md
+    source_type: approved_local_document
+    accessed_at: 2026-07-11T00:00:00+08:00
+    access_status: SUCCESS
+    observed: 企业单据、五区工作台、BO字段、强表格、规则权限、预览发布和超越金蝶目标
+negative_evidence:
+  - Appian 不能因访问失败被写成不具备某项能力
+  - Mendix 和 Retool 的失效旧链接不能作为产品能力缺失证据

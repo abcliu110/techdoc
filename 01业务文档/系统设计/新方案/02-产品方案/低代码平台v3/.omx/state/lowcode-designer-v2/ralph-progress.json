@@ -1,0 +1,23 @@
+{
+  "visual_verdict": {
+    "score": 94,
+    "verdict": "pass",
+    "category_match": true,
+    "threshold": 90,
+    "passed": true,
+    "reference_images": [
+      "reports/screenshots/designer-1440x900.png"
+    ],
+    "generated_screenshot": "reports/screenshots/designer-1280x800.png",
+    "differences": [
+      "1280px 下表单由三列响应为两列，信息密度低于 1440px 基线",
+      "明细表在窄画布中保留局部横向滚动"
+    ],
+    "suggestions": [],
+    "reasoning": "1280px 版本保持企业设计器的工作台层级、色彩、控件密度和完整业务操作区；响应式差异符合既定视觉合同，未发现页面级裁切或重叠。",
+    "next_actions": [
+      "执行 1280x800、1440x900、1920x1080 全视口几何复验",
+      "复验发布阻断、问题修复、候选版本和角色预览链路"
+    ]
+  }
+}

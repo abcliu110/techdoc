@@ -1,0 +1,57 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: review_package
+  artifact_id: REVIEW-PACK-LOWCODE-V2-001
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T23:59:00+08:00
+  updated_at: 2026-07-11T23:59:00+08:00
+  created_by: PackagingVerifier
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+  status: FROZEN
+package:
+  council_run_id: COUNCIL-LOWCODE-V2-001
+  prototype_id: LOWCODE-DESIGNER-V2-PROTOTYPE
+  runtime_url: http://127.0.0.1:4173/
+  task_refs: [TASK-001, TASK-002, TASK-003]
+  requirement_refs: [REQ-001, REQ-002, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008, REQ-009, REQ-010]
+  benchmark_refs: [BM-001]
+  evidence_refs: [EVD-KD-001, EVD-MX-001, EVD-OS-001, EVD-PA-001, EVD-PA-002, EVD-RT-001, EVD-APP-UNKNOWN-001, EVD-LOCAL-001]
+  viewports: [1280x800, 1440x900, 1920x1080]
+  required_interaction: 每席必须自行打开运行地址，至少复现字段选择、发布阻断或角色预览之一
+  files:
+    - {path: prototype-method/charter.yaml, sha256: 0D40B94EDF81C4E993FF8A67A854D0F5678EDCBF6D491BA4ED0D253B49E4CDA6}
+    - {path: prototype-method/requirements/requirements.yaml, sha256: 297032F3A015515144738AC2B2AF3DD6F40077FD71A4B2A0F91025F3F9F5BA95}
+    - {path: prototype-method/tasks/tasks.yaml, sha256: 222B592C47D93DDCE0A38DCF4C3F9FC281707E052D2F63C3EEAAB55348895CCC}
+    - {path: prototype-method/benchmarks/benchmarks.yaml, sha256: C66F432B024949200202A55402F9EF842B84BC493E60C74BDCC9B6B2418D1A0F}
+    - {path: prototype-method/evidence/evidence.yaml, sha256: F1F60F123A78F3AC7E27C04CF1D165014E365F46C192F81CEB351C840DBEBC39}
+    - {path: prototype/index.html, sha256: F7C1719A48A1F89FDC09D1542A81219A59929FC3B88C89162087ADBF84CEA561}
+    - {path: prototype/app.js, sha256: A62961489394F4B3CE24F69F3C7572D002B3DA8389DBA9948F6947020C4D66B8}
+    - {path: prototype/styles.css, sha256: 9CB20C2244DECA4162F9EAC2694796CA0040E9FA77D58B8A7548D3B21B107E3D}
+    - {path: reports/mechanical-report.md, sha256: 8A59E6B32A32CEBD3C2BC9E2B591039B6B2FF08F6710A157C50ADD1F4CFE17AF}
+    - {path: reports/interaction-report.md, sha256: 530FF482376C7BC98997A12CF2E3AF5FC020BC3AAC386FC2D421815B4BEDAFEE}
+  screenshots:
+    - {path: reports/screenshots/designer-1440x900.png, sha256: DF8563F85BE89AC70380EB1556FDD298DFEDF8FA3AD7FA584BF207D14D0B5C8E}
+    - {path: reports/screenshots/publish-blocked-1440x900.png, sha256: 9436EADB88C1B128D89B2525E2B1378B6ED042C9568C16452CFD002C4E63C3A2}
+    - {path: reports/screenshots/publish-ready-1440x900.png, sha256: 3C2A6D6DEF99A54CB4D00A3F39759155C04C99402E52517D14686AF6CF3CD512}
+    - {path: reports/screenshots/runtime-preview-1440x900.png, sha256: D873B0F294AD27F4A36E2BFDC9BF0F15B4B85D64C250DDAC1B63DEB24B65627B}
+  known_limitations:
+    - 真实后端、权限中心和部署服务不在原型范围
+    - 正式阶段8双源校验正在执行
+    - 六个商业平台无合法认证运行环境，同任务实测被外部条件阻断
+    - 项目几何脚本不是方法认证验证器
+    - 无签名密钥、外部审计锚点和不可变内容寻址存储
+  prohibited_conclusions:
+    - 不得声明全面领先竞品
+    - 不得把演示路径写成正式用户任务通过
+    - 不得把单席或同模型多席写成自治验收
+  seat_interaction_observations:
+    - {seat: ProductCritic, session: council-product, action: 点击含税金额字段, expected: selected=amount, observed: selected=customer, result: FAIL}
+    - {seat: EvidenceVerifier, session: council-evidence, action: 点击发布准备, expected: publish=blocked, observed: publish=blocked, result: PASS}
+    - {seat: UXCritic, session: council-ux, action: 点击规则工作区, expected: state=rules, observed: state=rules, result: PASS}
+packaging_verification:
+  hash_algorithm: SHA256
+  all_listed_files_present: true
+  signature_attestation: NOT_AVAILABLE
+  external_anchor: NOT_AVAILABLE
+  canonical_result: BLOCKED
+  failure_code: MISSING_SIGNED_CONTENT_ADDRESSED_AUDIT_CHAIN

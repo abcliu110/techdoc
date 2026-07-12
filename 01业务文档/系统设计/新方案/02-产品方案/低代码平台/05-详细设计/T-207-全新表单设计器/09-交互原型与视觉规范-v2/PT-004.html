@@ -1,0 +1,1081 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>T-207 表单设计器 V2 - PT-004</title>
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.js"></script>
+  <style>
+    :root {
+      --bg: #e8edf3;
+      --panel: #ffffff;
+      --panel-subtle: #f7f9fb;
+      --panel-muted: #f0f3f7;
+      --rail: #263241;
+      --rail-hover: #344154;
+      --rail-active: #3a4b61;
+      --text: #1f2937;
+      --text-2: #475467;
+      --muted: #667085;
+      --line: #d7dee8;
+      --line-strong: #b6c0cd;
+      --accent: #2468c9;
+      --accent-hover: #1e5db3;
+      --accent-soft: #edf4ff;
+      --accent-line: #8db3ee;
+      --success: #19733f;
+      --success-soft: #edf8f1;
+      --warning: #8a5a00;
+      --warning-soft: #fff8e6;
+      --danger: #b42318;
+      --radius: 4px;
+      --shadow: 0 5px 18px rgba(30, 41, 59, 0.13);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Microsoft YaHei UI", "Segoe UI", sans-serif;
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    select { font: inherit; letter-spacing: 0; }
+
+    button { cursor: pointer; }
+    [hidden] { display: none !important; }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 2px solid #4c8fe8;
+      outline-offset: 1px;
+    }
+
+    .app {
+      width: 100%;
+      height: 100vh;
+      min-width: 0;
+      display: grid;
+      grid-template-rows: 48px minmax(0, 1fr) 30px;
+      background: var(--bg);
+    }
+
+    .command-bar {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: minmax(250px, 320px) minmax(360px, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      padding: 0 10px;
+      border-bottom: 1px solid var(--line-strong);
+      background: var(--panel);
+      z-index: 5;
+    }
+
+    .brand,
+    .brand-copy,
+    .command-group,
+    .command-actions,
+    .status-main,
+    .status-metrics,
+    .panel-title-wrap,
+    .selection-meta,
+    .tree-row,
+    .tree-name,
+    .crumbs,
+    .view-tools,
+    .section-heading,
+    .field-label,
+    .toggle-line,
+    .binding-box,
+    .property-footer {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .brand { gap: 9px; }
+
+    .brand-mark {
+      width: 27px;
+      height: 27px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border-radius: var(--radius);
+      background: var(--rail);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .brand-copy { gap: 8px; overflow: hidden; }
+    .brand-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
+
+    .version-chip,
+    .state-chip,
+    .type-chip {
+      height: 22px;
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 0 7px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-subtle);
+      color: var(--text-2);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .version-chip { border-color: #e5c96f; background: var(--warning-soft); color: var(--warning); }
+    .state-chip.active { border-color: #a9c4ee; background: var(--accent-soft); color: var(--accent); }
+    .state-chip.success { border-color: #9fd0ad; background: var(--success-soft); color: var(--success); }
+    .type-chip { height: 20px; padding: 0 6px; border-radius: 3px; font-size: 11px; }
+
+    .command-group { justify-content: center; gap: 3px; }
+    .command-actions { justify-content: flex-end; gap: 5px; }
+
+    .icon-button,
+    .command-button,
+    .small-button,
+    .segment-button {
+      height: 30px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--text-2);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .icon-button { width: 32px; padding: 0; }
+    .command-button { padding: 0 9px; }
+    .small-button { height: 26px; padding: 0 7px; border-color: var(--line); background: #fff; }
+
+    .icon-button:hover,
+    .command-button:hover,
+    .small-button:hover { background: var(--panel-muted); color: var(--text); }
+
+    .command-button.primary { border-color: #1f61bc; background: var(--accent); color: #fff; }
+    .command-button.primary:hover { background: var(--accent-hover); color: #fff; }
+    .command-button.on { border-color: #acc7ef; background: var(--accent-soft); color: var(--accent); }
+    .icon-button[disabled] { opacity: 0.4; cursor: default; }
+
+    .icon-button svg,
+    .command-button svg,
+    .small-button svg,
+    .activity-button svg,
+    .panel-header svg,
+    .tree-row svg,
+    .field-icon svg,
+    .binding-box svg,
+    .status-bar svg { width: 15px; height: 15px; stroke-width: 1.8; }
+
+    .studio {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 52px 250px minmax(0, 1fr) 318px;
+      overflow: hidden;
+    }
+
+    .activity-rail {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      background: var(--rail);
+      color: #c8d2df;
+      border-right: 1px solid #1d2734;
+    }
+
+    .activity-button {
+      position: relative;
+      width: 52px;
+      height: 48px;
+      flex: 0 0 auto;
+      border: 0;
+      background: transparent;
+      color: #b8c4d2;
+      display: grid;
+      place-items: center;
+    }
+
+    .activity-button:hover { background: var(--rail-hover); color: #fff; }
+    .activity-button[aria-pressed="true"] { background: var(--rail-active); color: #fff; }
+    .activity-button[aria-pressed="true"]::before {
+      content: "";
+      position: absolute;
+      inset: 7px auto 7px 0;
+      width: 3px;
+      background: #64a0f4;
+    }
+
+    .activity-spacer { flex: 1; }
+
+    .outline-panel,
+    .inspector-panel {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 39px minmax(0, 1fr);
+      background: var(--panel);
+    }
+
+    .outline-panel { border-right: 1px solid var(--line-strong); }
+    .inspector-panel { border-left: 1px solid var(--line-strong); }
+
+    .panel-header {
+      min-width: 0;
+      height: 39px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 9px 0 12px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-subtle);
+    }
+
+    .panel-title-wrap { gap: 7px; }
+    .panel-title { font-weight: 700; }
+    .panel-body { min-height: 0; overflow: auto; }
+
+    .outline-search {
+      position: relative;
+      margin: 10px 10px 8px;
+    }
+
+    .outline-search svg {
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      width: 14px;
+      height: 14px;
+      color: var(--muted);
+    }
+
+    .outline-search input {
+      width: 100%;
+      height: 30px;
+      padding: 0 8px 0 29px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      color: var(--text);
+      background: #fff;
+    }
+
+    .outline-section-label {
+      height: 28px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .tree { padding: 0 6px 12px; }
+
+    .tree-row {
+      width: 100%;
+      height: 34px;
+      gap: 6px;
+      padding: 0 7px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--text-2);
+      text-align: left;
+    }
+
+    .tree-row:hover { background: var(--panel-muted); color: var(--text); }
+    .tree-row[data-selected="true"] { border-color: var(--accent-line); background: var(--accent-soft); color: #174f9f; }
+    .tree-row.level-1 { padding-left: 19px; }
+    .tree-row.level-2 { padding-left: 34px; }
+    .tree-row.level-3 { padding-left: 49px; }
+    .tree-row .chevron { width: 12px; height: 12px; color: var(--muted); }
+
+    .tree-name { flex: 1; gap: 5px; overflow: hidden; }
+    .tree-name span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .tree-code { flex: 0 0 auto; color: var(--muted); font-family: Consolas, monospace; font-size: 10px; }
+
+    .canvas-shell {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 39px minmax(0, 1fr);
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .canvas-toolbar {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 0 9px 0 12px;
+      border-bottom: 1px solid var(--line-strong);
+      background: var(--panel-subtle);
+    }
+
+    .crumbs { gap: 5px; overflow: hidden; color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .crumbs strong { color: var(--text-2); overflow: hidden; text-overflow: ellipsis; }
+    .view-tools { gap: 5px; }
+
+    .segmented {
+      height: 28px;
+      display: inline-grid;
+      grid-template-columns: repeat(2, 56px);
+      padding: 2px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-muted);
+    }
+
+    .segment-button { height: 22px; padding: 0 7px; border: 0; border-radius: 3px; font-size: 12px; }
+    .segment-button[aria-pressed="true"] { background: #fff; color: var(--accent); box-shadow: 0 1px 3px rgba(31, 41, 55, 0.14); }
+
+    .canvas-viewport {
+      min-width: 0;
+      min-height: 0;
+      overflow: auto;
+      padding: 24px 28px 42px;
+      background-color: #e6ebf1;
+      background-image: radial-gradient(circle, rgba(119, 133, 151, 0.34) 1px, transparent 1px);
+      background-size: 18px 18px;
+    }
+
+    .artboard {
+      width: min(820px, 100%);
+      min-height: 654px;
+      margin: 0 auto;
+      border: 1px solid #c9d1dc;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .document-bar {
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 0 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .document-title { font-size: 17px; font-weight: 700; }
+    .document-subtitle { margin-top: 3px; color: var(--muted); font-size: 11px; }
+    .document-actions { display: flex; gap: 6px; }
+
+    .form-content { padding: 18px 20px 24px; }
+
+    .design-section {
+      position: relative;
+      padding: 14px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .design-section + .design-section { margin-top: 16px; }
+
+    .section-heading {
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 13px;
+      color: var(--text-2);
+      font-weight: 700;
+    }
+
+    .section-code { color: var(--muted); font-family: Consolas, monospace; font-size: 10px; font-weight: 400; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .form-field {
+      position: relative;
+      min-width: 0;
+      height: 68px;
+      padding: 8px 10px;
+      border: 1px solid #d8dee7;
+      border-radius: var(--radius);
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .form-field.span-2 { grid-column: span 2; }
+    .form-field:hover { border-color: #a9bad0; background: #fbfcfe; }
+    .form-field[data-selected="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); background: #fbfdff; }
+
+    .selection-caption {
+      display: none;
+      position: absolute;
+      left: -2px;
+      top: -23px;
+      height: 20px;
+      align-items: center;
+      padding: 0 7px;
+      border-radius: 3px 3px 0 0;
+      background: var(--accent);
+      color: #fff;
+      font-size: 11px;
+      white-space: nowrap;
+      z-index: 2;
+    }
+
+    .form-field[data-selected="true"] .selection-caption { display: inline-flex; }
+
+    .resize-handle {
+      display: none;
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border: 1px solid #fff;
+      background: var(--accent);
+      z-index: 3;
+    }
+
+    .form-field[data-selected="true"] .resize-handle { display: block; }
+    .resize-handle.nw { left: -5px; top: -5px; }
+    .resize-handle.ne { right: -5px; top: -5px; }
+    .resize-handle.sw { left: -5px; bottom: -5px; }
+    .resize-handle.se { right: -5px; bottom: -5px; cursor: nwse-resize; }
+    .resize-handle.e { right: -5px; top: calc(50% - 4px); cursor: ew-resize; }
+
+    .field-label { justify-content: space-between; gap: 6px; color: var(--text-2); font-size: 12px; }
+    .required { color: var(--danger); }
+    .field-path { color: #8390a1; font-family: Consolas, monospace; font-size: 10px; }
+    .field-value { margin-top: 8px; overflow: hidden; color: var(--text); text-overflow: ellipsis; white-space: nowrap; }
+    .placeholder { color: #98a2b3; }
+
+    .entry-table {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .entry-toolbar {
+      height: 34px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0 8px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-subtle);
+    }
+
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    th,
+    td { height: 34px; padding: 0 9px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; font-weight: 400; }
+    th { background: #f2f5f8; color: var(--text-2); font-size: 12px; font-weight: 700; }
+    th:last-child,
+    td:last-child { border-right: 0; }
+    tbody tr:last-child td { border-bottom: 0; }
+
+    .inspector-content { min-height: 0; display: grid; grid-template-rows: auto 38px minmax(0, 1fr) 40px; overflow: hidden; }
+
+    .selection-context {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .selection-meta { justify-content: space-between; gap: 8px; }
+    .selection-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 700; }
+    .selection-path { margin-top: 6px; overflow: hidden; color: var(--muted); text-overflow: ellipsis; white-space: nowrap; font-family: Consolas, monospace; font-size: 10px; }
+
+    .inspector-tabs {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-subtle);
+    }
+
+    .inspector-tab {
+      position: relative;
+      min-width: 0;
+      height: 38px;
+      padding: 0 3px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .inspector-tab:hover { color: var(--text); background: var(--panel-muted); }
+    .inspector-tab[aria-selected="true"] { color: var(--accent); font-weight: 700; }
+    .inspector-tab[aria-selected="true"]::after { content: ""; position: absolute; inset: auto 7px -1px; height: 2px; background: var(--accent); }
+
+    .property-panel { min-height: 0; overflow: auto; padding: 4px 12px 16px; }
+
+    .property-group { padding-top: 12px; }
+    .property-group + .property-group { margin-top: 4px; border-top: 1px solid #e9edf2; }
+    .property-heading { margin-bottom: 10px; color: var(--text-2); font-size: 12px; font-weight: 700; }
+
+    .property-row {
+      display: grid;
+      grid-template-columns: 82px minmax(0, 1fr);
+      align-items: center;
+      gap: 8px;
+      min-height: 34px;
+      margin-bottom: 7px;
+    }
+
+    .property-label { color: var(--muted); font-size: 12px; }
+
+    .property-input,
+    .property-select,
+    .property-value {
+      width: 100%;
+      min-width: 0;
+      height: 30px;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--text);
+    }
+
+    .property-value { display: flex; align-items: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; background: var(--panel-subtle); color: var(--text-2); }
+    .property-input:focus,
+    .property-select:focus { border-color: var(--accent-line); }
+
+    .binding-box {
+      gap: 7px;
+      min-width: 0;
+      min-height: 48px;
+      padding: 8px;
+      border: 1px solid #b7cae5;
+      border-radius: var(--radius);
+      background: var(--accent-soft);
+      color: #174f9f;
+    }
+
+    .binding-copy { min-width: 0; }
+    .binding-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
+    .binding-path { margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: Consolas, monospace; font-size: 10px; }
+
+    .toggle-line { justify-content: space-between; gap: 8px; min-height: 36px; }
+    .toggle-copy { min-width: 0; }
+    .toggle-title { color: var(--text-2); }
+    .toggle-hint { margin-top: 2px; color: var(--muted); font-size: 10px; }
+
+    .switch {
+      position: relative;
+      width: 32px;
+      height: 18px;
+      flex: 0 0 auto;
+      padding: 0;
+      border: 0;
+      border-radius: 10px;
+      background: #aab4c2;
+    }
+
+    .switch::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform 140ms ease;
+    }
+
+    .switch[aria-checked="true"] { background: var(--accent); }
+    .switch[aria-checked="true"]::after { transform: translateX(14px); }
+
+    .span-stepper { display: grid; grid-template-columns: 30px minmax(0, 1fr) 30px; }
+    .span-stepper button,
+    .span-stepper output { height: 30px; border: 1px solid var(--line); background: #fff; display: grid; place-items: center; }
+    .span-stepper button:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+    .span-stepper button:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+    .span-stepper output { border-left: 0; border-right: 0; }
+
+    .property-footer {
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 12px;
+      border-top: 1px solid var(--line);
+      background: var(--panel-subtle);
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .status-bar {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 10px;
+      border-top: 1px solid #1e2a38;
+      background: var(--rail);
+      color: #d6dee8;
+      font-size: 11px;
+    }
+
+    .status-main { gap: 7px; overflow: hidden; white-space: nowrap; }
+    .status-main span { overflow: hidden; text-overflow: ellipsis; }
+    .status-main svg { color: #7fbe92; }
+    .status-metrics { justify-content: flex-end; gap: 9px; white-space: nowrap; color: #aeb9c7; }
+    .separator { width: 1px; height: 12px; background: #566273; }
+
+    .toast {
+      position: fixed;
+      right: 330px;
+      bottom: 44px;
+      z-index: 10;
+      min-width: 220px;
+      max-width: 360px;
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 11px;
+      border: 1px solid #94c5a3;
+      border-radius: var(--radius);
+      background: #f3fbf6;
+      box-shadow: var(--shadow);
+      color: var(--success);
+    }
+
+    .toast svg { width: 16px; height: 16px; }
+
+    @media (max-width: 1280px) {
+      .studio { grid-template-columns: 48px 218px minmax(0, 1fr) 286px; }
+      .activity-button { width: 48px; }
+      .command-button .button-label { display: none; }
+      .command-button { width: 32px; padding: 0; }
+      .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" data-testid="pt004-v2-root" data-selected-node="field_customer" data-inspector-tab="base" data-dirty="false">
+    <header class="command-bar" data-testid="pt004-command-bar">
+      <div class="brand">
+        <span class="brand-mark">T</span>
+        <div class="brand-copy">
+          <span class="brand-name">销售订单 · 表单设计器</span>
+          <span class="version-chip">草稿 v12</span>
+        </div>
+      </div>
+
+      <div class="command-group" aria-label="编辑命令">
+        <button class="icon-button" title="撤销" aria-label="撤销" disabled><i data-lucide="undo-2"></i></button>
+        <button class="icon-button" title="重做" aria-label="重做" disabled><i data-lucide="redo-2"></i></button>
+        <button class="command-button on"><i data-lucide="mouse-pointer-2"></i><span class="button-label">选择</span></button>
+        <button class="command-button"><i data-lucide="move"></i><span class="button-label">移动</span></button>
+        <button class="command-button"><i data-lucide="copy"></i><span class="button-label">复制</span></button>
+        <button class="command-button"><i data-lucide="trash-2"></i><span class="button-label">删除</span></button>
+      </div>
+
+      <div class="command-actions">
+        <span class="state-chip active" data-testid="pt004-dirty-chip"><i data-lucide="circle-check"></i>已保存</span>
+        <button class="command-button" data-testid="pt004-save"><i data-lucide="save"></i><span class="button-label">保存</span></button>
+        <button class="command-button" data-testid="pt004-preview"><i data-lucide="play"></i><span class="button-label">预览</span></button>
+        <button class="command-button primary"><i data-lucide="rocket"></i><span class="button-label">发布</span></button>
+      </div>
+    </header>
+
+    <main class="studio">
+      <nav class="activity-rail" aria-label="设计器工具栏">
+        <button class="activity-button" title="组件" aria-label="组件" aria-pressed="false"><i data-lucide="blocks"></i></button>
+        <button class="activity-button" title="字段" aria-label="字段" aria-pressed="false"><i data-lucide="list-tree"></i></button>
+        <button class="activity-button" title="结构" aria-label="结构" aria-pressed="true"><i data-lucide="panels-top-left"></i></button>
+        <button class="activity-button" title="问题" aria-label="问题" aria-pressed="false"><i data-lucide="triangle-alert"></i></button>
+        <button class="activity-button" title="版本" aria-label="版本" aria-pressed="false"><i data-lucide="history"></i></button>
+        <div class="activity-spacer"></div>
+        <button class="activity-button" title="数据连接" aria-label="数据连接" aria-pressed="false"><i data-lucide="database"></i></button>
+        <button class="activity-button" title="设置" aria-label="设置" aria-pressed="false"><i data-lucide="settings"></i></button>
+      </nav>
+
+      <aside class="outline-panel" data-testid="pt004-outline-panel">
+        <div class="panel-header">
+          <div class="panel-title-wrap"><i data-lucide="panels-top-left"></i><span class="panel-title">页面结构</span></div>
+          <button class="icon-button" title="折叠全部" aria-label="折叠全部"><i data-lucide="chevrons-up"></i></button>
+        </div>
+        <div class="panel-body">
+          <div class="outline-search"><i data-lucide="search"></i><input placeholder="搜索节点" aria-label="搜索节点" /></div>
+          <div class="outline-section-label"><span>组件树</span><span>9 个节点</span></div>
+          <div class="tree">
+            <button class="tree-row" data-node-id="page_root" data-selected="false"><i class="chevron" data-lucide="chevron-down"></i><span class="tree-name"><i data-lucide="file"></i><span>页面根节点</span></span><span class="tree-code">Page</span></button>
+            <button class="tree-row level-1" data-node-id="header_section" data-selected="false"><i class="chevron" data-lucide="chevron-down"></i><span class="tree-name"><i data-lucide="panel-top"></i><span>单据头</span></span><span class="tree-code">Section</span></button>
+            <button class="tree-row level-2" data-node-id="header_grid" data-selected="false"><i class="chevron" data-lucide="chevron-down"></i><span class="tree-name"><i data-lucide="grid-3x3"></i><span>基础信息网格</span></span><span class="tree-code">Grid</span></button>
+            <button class="tree-row level-3" data-node-id="field_customer" data-selected="true"><span class="tree-name"><i data-lucide="book-user"></i><span>客户</span></span><span class="tree-code">Field</span></button>
+            <button class="tree-row level-3" data-node-id="field_order_date" data-selected="false"><span class="tree-name"><i data-lucide="calendar-days"></i><span>订单日期</span></span><span class="tree-code">Field</span></button>
+            <button class="tree-row level-3" data-node-id="field_currency" data-selected="false"><span class="tree-name"><i data-lucide="coins"></i><span>币别</span></span><span class="tree-code">Field</span></button>
+            <button class="tree-row level-3" data-node-id="field_org" data-selected="false"><span class="tree-name"><i data-lucide="building-2"></i><span>销售组织</span></span><span class="tree-code">Field</span></button>
+            <button class="tree-row level-1" data-node-id="entry_table" data-selected="false"><i class="chevron" data-lucide="chevron-right"></i><span class="tree-name"><i data-lucide="table-2"></i><span>销售分录</span></span><span class="tree-code">Table</span></button>
+          </div>
+        </div>
+      </aside>
+
+      <section class="canvas-shell" data-testid="pt004-canvas-region">
+        <div class="canvas-toolbar">
+          <div class="crumbs"><i data-lucide="home"></i><span>页面根节点</span><span>/</span><span>单据头</span><span>/</span><strong data-testid="pt004-breadcrumb-node">客户</strong></div>
+          <div class="view-tools">
+            <div class="segmented" aria-label="画布模式">
+              <button class="segment-button" data-mode="design" aria-pressed="true">设计</button>
+              <button class="segment-button" data-mode="preview" aria-pressed="false">预览</button>
+            </div>
+            <button class="icon-button" title="显示网格" aria-label="显示网格"><i data-lucide="grid-2x2"></i></button>
+            <button class="small-button"><i data-lucide="search"></i>100%</button>
+          </div>
+        </div>
+
+        <div class="canvas-viewport">
+          <article class="artboard" data-testid="pt004-artboard">
+            <header class="document-bar">
+              <div>
+                <div class="document-title">销售订单</div>
+                <div class="document-subtitle">SalesOrder · 标准业务单据</div>
+              </div>
+              <div class="document-actions">
+                <button class="small-button"><i data-lucide="save"></i>保存</button>
+                <button class="small-button"><i data-lucide="send"></i>提交</button>
+                <button class="small-button"><i data-lucide="more-horizontal"></i>更多</button>
+              </div>
+            </header>
+
+            <div class="form-content">
+              <section class="design-section" data-testid="pt004-node-header-section">
+                <div class="section-heading"><span>单据头</span><span class="section-code">HeaderSection · Grid 4</span></div>
+                <div class="form-grid">
+                  <div class="form-field span-2" data-testid="pt004-node-field-customer" data-node-id="field_customer" data-node-name="客户" data-node-path="PageRoot.HeaderSection.GridLayout.field_customer" data-binding="salesOrder.customerId" data-selected="true" tabindex="0">
+                    <span class="selection-caption">客户 · ReferencePicker</span>
+                    <span class="resize-handle nw"></span><span class="resize-handle ne"></span><span class="resize-handle sw"></span><span class="resize-handle se"></span><span class="resize-handle e" data-testid="pt004-resize-handle-east"></span>
+                    <div class="field-label"><span><span class="required">*</span> 客户</span><span class="field-path">customerId</span></div>
+                    <div class="field-value">南京星河科技有限公司</div>
+                  </div>
+                  <div class="form-field" data-testid="pt004-node-field-order-date" data-node-id="field_order_date" data-node-name="订单日期" data-node-path="PageRoot.HeaderSection.GridLayout.field_orderDate" data-binding="salesOrder.orderDate" data-selected="false" tabindex="0">
+                    <span class="selection-caption">订单日期 · DatePicker</span>
+                    <span class="resize-handle nw"></span><span class="resize-handle ne"></span><span class="resize-handle sw"></span><span class="resize-handle se"></span><span class="resize-handle e"></span>
+                    <div class="field-label"><span><span class="required">*</span> 订单日期</span><span class="field-path">orderDate</span></div>
+                    <div class="field-value">2026-07-10</div>
+                  </div>
+                  <div class="form-field" data-testid="pt004-node-field-currency" data-node-id="field_currency" data-node-name="币别" data-node-path="PageRoot.HeaderSection.GridLayout.field_currency" data-binding="salesOrder.currencyId" data-selected="false" tabindex="0">
+                    <span class="selection-caption">币别 · Select</span>
+                    <span class="resize-handle nw"></span><span class="resize-handle ne"></span><span class="resize-handle sw"></span><span class="resize-handle se"></span><span class="resize-handle e"></span>
+                    <div class="field-label"><span>币别</span><span class="field-path">currencyId</span></div>
+                    <div class="field-value">人民币 CNY</div>
+                  </div>
+                  <div class="form-field span-2" data-testid="pt004-node-field-org" data-node-id="field_org" data-node-name="销售组织" data-node-path="PageRoot.HeaderSection.GridLayout.field_org" data-binding="salesOrder.salesOrgId" data-selected="false" tabindex="0">
+                    <span class="selection-caption">销售组织 · OrgPicker</span>
+                    <span class="resize-handle nw"></span><span class="resize-handle ne"></span><span class="resize-handle sw"></span><span class="resize-handle se"></span><span class="resize-handle e"></span>
+                    <div class="field-label"><span><span class="required">*</span> 销售组织</span><span class="field-path">salesOrgId</span></div>
+                    <div class="field-value">华东销售中心</div>
+                  </div>
+                  <div class="form-field" data-node-id="field_owner" data-node-name="销售员" data-node-path="PageRoot.HeaderSection.GridLayout.field_owner" data-binding="salesOrder.ownerId" data-selected="false" tabindex="0">
+                    <span class="selection-caption">销售员 · UserPicker</span>
+                    <span class="resize-handle nw"></span><span class="resize-handle ne"></span><span class="resize-handle sw"></span><span class="resize-handle se"></span><span class="resize-handle e"></span>
+                    <div class="field-label"><span>销售员</span><span class="field-path">ownerId</span></div>
+                    <div class="field-value">王明</div>
+                  </div>
+                  <div class="form-field" data-node-id="field_status" data-node-name="单据状态" data-node-path="PageRoot.HeaderSection.GridLayout.field_status" data-binding="salesOrder.status" data-selected="false" tabindex="0">
+                    <span class="selection-caption">单据状态 · StatusBadge</span>
+                    <span class="resize-handle nw"></span><span class="resize-handle ne"></span><span class="resize-handle sw"></span><span class="resize-handle se"></span><span class="resize-handle e"></span>
+                    <div class="field-label"><span>单据状态</span><span class="field-path">status</span></div>
+                    <div class="field-value"><span class="state-chip success">草稿</span></div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="design-section" data-node-id="entry_table" data-node-name="销售分录" data-node-path="PageRoot.EntryTable" data-binding="salesOrder.entries" data-selected="false" tabindex="0">
+                <div class="section-heading"><span>销售分录</span><span class="section-code">EntryTable · entries[]</span></div>
+                <div class="entry-table">
+                  <div class="entry-toolbar"><button class="small-button"><i data-lucide="plus"></i>新增行</button><button class="small-button"><i data-lucide="copy"></i>复制行</button><button class="icon-button" title="删除行" aria-label="删除行"><i data-lucide="trash-2"></i></button></div>
+                  <table>
+                    <thead><tr><th style="width: 38px">#</th><th>物料</th><th style="width: 90px">数量</th><th style="width: 110px">含税单价</th><th style="width: 110px">价税合计</th></tr></thead>
+                    <tbody><tr><td>1</td><td>企业服务标准版</td><td>10</td><td>8,800.00</td><td>88,000.00</td></tr><tr><td>2</td><td>实施交付服务</td><td>1</td><td>20,000.00</td><td>20,000.00</td></tr></tbody>
+                  </table>
+                </div>
+              </section>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <aside class="inspector-panel" data-testid="pt004-inspector">
+        <div class="panel-header">
+          <div class="panel-title-wrap"><i data-lucide="sliders-horizontal"></i><span class="panel-title">字段属性</span></div>
+          <span class="state-chip active">已同步</span>
+        </div>
+        <div class="inspector-content">
+          <div class="selection-context">
+            <div class="selection-meta"><div class="selection-name" data-testid="pt004-inspector-node-name">客户</div><span class="type-chip" data-testid="pt004-inspector-node-type">ReferencePicker</span></div>
+            <div class="selection-path" data-testid="pt004-inspector-node-path">PageRoot.HeaderSection.GridLayout.field_customer</div>
+          </div>
+
+          <div class="inspector-tabs" role="tablist" aria-label="属性分类">
+            <button class="inspector-tab" data-testid="pt004-tab-base" data-panel="base" role="tab" aria-selected="true">基础</button>
+            <button class="inspector-tab" data-testid="pt004-tab-layout" data-panel="layout" role="tab" aria-selected="false">布局</button>
+            <button class="inspector-tab" data-testid="pt004-tab-data" data-panel="data" role="tab" aria-selected="false">数据</button>
+            <button class="inspector-tab" data-testid="pt004-tab-validation" data-panel="validation" role="tab" aria-selected="false">校验</button>
+            <button class="inspector-tab" data-testid="pt004-tab-permission" data-panel="permission" role="tab" aria-selected="false">权限</button>
+          </div>
+
+          <section class="property-panel" data-property-panel="base">
+            <div class="property-group">
+              <div class="property-heading">显示</div>
+              <label class="property-row"><span class="property-label">标题</span><input class="property-input" data-testid="pt004-prop-title" value="客户" /></label>
+              <label class="property-row"><span class="property-label">组件</span><select class="property-select"><option>基础资料选择</option><option>下拉选择</option><option>文本输入</option></select></label>
+              <label class="property-row"><span class="property-label">占位提示</span><input class="property-input" value="请选择客户" /></label>
+            </div>
+            <div class="property-group">
+              <div class="property-heading">行为</div>
+              <div class="toggle-line"><div class="toggle-copy"><div class="toggle-title">显示字段</div><div class="toggle-hint">在设计态和运行态显示</div></div><button class="switch" role="switch" aria-checked="true" aria-label="显示字段"></button></div>
+              <div class="toggle-line"><div class="toggle-copy"><div class="toggle-title">允许清空</div><div class="toggle-hint">用户可移除已选客户</div></div><button class="switch" role="switch" aria-checked="true" aria-label="允许清空"></button></div>
+            </div>
+          </section>
+
+          <section class="property-panel" data-property-panel="layout" hidden>
+            <div class="property-group">
+              <div class="property-heading">网格位置</div>
+              <div class="property-row"><span class="property-label">字段跨度</span><div class="span-stepper"><button data-span-step="-1" aria-label="减少跨度">−</button><output data-testid="pt004-span-value">2 / 4</output><button data-span-step="1" aria-label="增加跨度">+</button></div></div>
+              <label class="property-row"><span class="property-label">标签宽度</span><select class="property-select"><option>自动</option><option>80 px</option><option>96 px</option><option>120 px</option></select></label>
+              <label class="property-row"><span class="property-label">对齐</span><select class="property-select"><option>左对齐</option><option>顶部对齐</option><option>右对齐</option></select></label>
+            </div>
+            <div class="property-group">
+              <div class="property-heading">尺寸与间距</div>
+              <div class="property-row"><span class="property-label">控件高度</span><div class="property-value">32 px</div></div>
+              <div class="property-row"><span class="property-label">外边距</span><div class="property-value">0 / 0 / 0 / 0</div></div>
+              <div class="toggle-line"><div class="toggle-copy"><div class="toggle-title">随容器拉伸</div><div class="toggle-hint">占满当前网格单元</div></div><button class="switch" role="switch" aria-checked="true" aria-label="随容器拉伸"></button></div>
+            </div>
+          </section>
+
+          <section class="property-panel" data-property-panel="data" hidden>
+            <div class="property-group">
+              <div class="property-heading">字段绑定</div>
+              <div class="binding-box"><i data-lucide="link-2"></i><div class="binding-copy"><div class="binding-title" data-testid="pt004-binding-title">客户</div><div class="binding-path" data-testid="pt004-binding-path">salesOrder.customerId</div></div></div>
+              <div class="property-row" style="margin-top: 10px"><span class="property-label">数据类型</span><div class="property-value">Reference&lt;Customer&gt;</div></div>
+              <div class="property-row"><span class="property-label">值字段</span><div class="property-value">id</div></div>
+              <div class="property-row"><span class="property-label">显示字段</span><div class="property-value">name</div></div>
+            </div>
+            <div class="property-group">
+              <div class="property-heading">数据来源</div>
+              <label class="property-row"><span class="property-label">业务对象</span><select class="property-select"><option>客户主数据</option><option>供应商主数据</option></select></label>
+              <label class="property-row"><span class="property-label">过滤条件</span><input class="property-input" value="status = ENABLED" /></label>
+            </div>
+          </section>
+
+          <section class="property-panel" data-property-panel="validation" hidden>
+            <div class="property-group">
+              <div class="property-heading">校验规则</div>
+              <div class="toggle-line"><div class="toggle-copy"><div class="toggle-title">必填</div><div class="toggle-hint">提交前必须选择客户</div></div><button class="switch" role="switch" aria-checked="true" aria-label="必填"></button></div>
+              <label class="property-row"><span class="property-label">错误提示</span><input class="property-input" value="请选择客户" /></label>
+              <label class="property-row"><span class="property-label">触发时机</span><select class="property-select"><option>失焦与提交</option><option>仅提交</option><option>值变化</option></select></label>
+            </div>
+            <div class="property-group">
+              <div class="property-heading">业务校验</div>
+              <div class="property-value" style="height: 44px">客户必须属于当前销售组织</div>
+            </div>
+          </section>
+
+          <section class="property-panel" data-property-panel="permission" hidden>
+            <div class="property-group">
+              <div class="property-heading">默认权限</div>
+              <label class="property-row"><span class="property-label">可见性</span><select class="property-select"><option>可见</option><option>条件可见</option><option>隐藏</option></select></label>
+              <label class="property-row"><span class="property-label">编辑性</span><select class="property-select"><option>可编辑</option><option>只读</option><option>条件编辑</option></select></label>
+            </div>
+            <div class="property-group">
+              <div class="property-heading">角色差异</div>
+              <div class="toggle-line"><div class="toggle-copy"><div class="toggle-title">销售经理</div><div class="toggle-hint">可见 · 可编辑</div></div><span class="state-chip success">完整</span></div>
+              <div class="toggle-line"><div class="toggle-copy"><div class="toggle-title">财务专员</div><div class="toggle-hint">可见 · 只读</div></div><span class="state-chip">只读</span></div>
+            </div>
+          </section>
+
+          <div class="property-footer"><span>UpdateProp 命令</span><span data-testid="pt004-command-count">0 项待保存</span></div>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="status-bar">
+      <div class="status-main"><i data-lucide="circle-check"></i><strong data-testid="pt004-status-title">字段已选中</strong><span data-testid="pt004-status-message">客户 · Inspector 已同步</span></div>
+      <div class="status-metrics"><span>PS-004 选中态</span><span class="separator"></span><span>Grid 4 列</span><span class="separator"></span><span>缩放 100%</span><span class="separator"></span><span>1440 工作区</span></div>
+    </footer>
+
+    <div class="toast" data-testid="pt004-toast" hidden><i data-lucide="circle-check"></i><span></span></div>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.querySelector('[data-testid="pt004-v2-root"]');
+      var statusTitle = root.querySelector('[data-testid="pt004-status-title"]');
+      var statusMessage = root.querySelector('[data-testid="pt004-status-message"]');
+      var nameEl = root.querySelector('[data-testid="pt004-inspector-node-name"]');
+      var pathEl = root.querySelector('[data-testid="pt004-inspector-node-path"]');
+      var typeEl = root.querySelector('[data-testid="pt004-inspector-node-type"]');
+      var breadcrumbEl = root.querySelector('[data-testid="pt004-breadcrumb-node"]');
+      var titleInput = root.querySelector('[data-testid="pt004-prop-title"]');
+      var bindingTitle = root.querySelector('[data-testid="pt004-binding-title"]');
+      var bindingPath = root.querySelector('[data-testid="pt004-binding-path"]');
+      var dirtyChip = root.querySelector('[data-testid="pt004-dirty-chip"]');
+      var commandCount = root.querySelector('[data-testid="pt004-command-count"]');
+      var toast = root.querySelector('[data-testid="pt004-toast"]');
+      var dirtyCount = 0;
+      var span = 2;
+
+      var typeByNode = {
+        field_customer: 'ReferencePicker',
+        field_order_date: 'DatePicker',
+        field_currency: 'Select',
+        field_org: 'OrgPicker',
+        field_owner: 'UserPicker',
+        field_status: 'StatusBadge',
+        entry_table: 'EntryTable'
+      };
+
+      function setStatus(title, message) {
+        statusTitle.textContent = title;
+        statusMessage.textContent = message;
+      }
+
+      function setDirty(message) {
+        dirtyCount += 1;
+        root.setAttribute('data-dirty', 'true');
+        dirtyChip.className = 'state-chip';
+        dirtyChip.innerHTML = '<i data-lucide="circle-dot-dashed"></i>未保存';
+        commandCount.textContent = dirtyCount + ' 项待保存';
+        setStatus('属性已更新', message + ' · UpdateProp 已入栈');
+        if (window.lucide) { window.lucide.createIcons(); }
+      }
+
+      function selectNode(node) {
+        if (!node || !node.getAttribute('data-node-id')) { return; }
+        var id = node.getAttribute('data-node-id');
+        var name = node.getAttribute('data-node-name') || node.textContent.trim();
+        var path = node.getAttribute('data-node-path') || ('PageRoot.' + id);
+        var binding = node.getAttribute('data-binding') || id;
+
+        root.setAttribute('data-selected-node', id);
+        root.querySelectorAll('[data-node-name]').forEach(function (item) {
+          item.setAttribute('data-selected', item === node ? 'true' : 'false');
+        });
+        root.querySelectorAll('.tree-row[data-node-id]').forEach(function (item) {
+          item.setAttribute('data-selected', item.getAttribute('data-node-id') === id ? 'true' : 'false');
+        });
+
+        nameEl.textContent = name;
+        pathEl.textContent = path;
+        typeEl.textContent = typeByNode[id] || 'Container';
+        breadcrumbEl.textContent = name;
+        titleInput.value = name;
+        bindingTitle.textContent = name;
+        bindingPath.textContent = binding;
+        setStatus('字段已选中', name + ' · Inspector 已同步');
+      }
+
+      root.querySelectorAll('[data-node-name]').forEach(function (node) {
+        node.addEventListener('click', function () { selectNode(node); });
+        node.addEventListener('keydown', function (event) {
+          if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectNode(node); }
+        });
+      });
+
+      root.querySelectorAll('.tree-row[data-node-id]').forEach(function (row) {
+        row.addEventListener('click', function () {
+          var target = root.querySelector('[data-node-name][data-node-id="' + row.getAttribute('data-node-id') + '"]');
+          if (target) { selectNode(target); }
+        });
+      });
+
+      root.querySelectorAll('.inspector-tab').forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          var panel = tab.getAttribute('data-panel');
+          root.setAttribute('data-inspector-tab', panel);
+          root.querySelectorAll('.inspector-tab').forEach(function (item) { item.setAttribute('aria-selected', item === tab ? 'true' : 'false'); });
+          root.querySelectorAll('[data-property-panel]').forEach(function (item) { item.hidden = item.getAttribute('data-property-panel') !== panel; });
+          setStatus('属性面板已切换', tab.textContent + '属性 · ' + nameEl.textContent);
+        });
+      });
+
+      root.querySelectorAll('.switch').forEach(function (toggle) {
+        toggle.addEventListener('click', function () {
+          var next = toggle.getAttribute('aria-checked') !== 'true';
+          toggle.setAttribute('aria-checked', next ? 'true' : 'false');
+          setDirty(toggle.getAttribute('aria-label') + '已' + (next ? '启用' : '关闭'));
+        });
+      });
+
+      titleInput.addEventListener('change', function () {
+        var value = titleInput.value.trim() || '未命名字段';
+        var selected = root.querySelector('[data-node-name][data-node-id="' + root.getAttribute('data-selected-node') + '"]');
+        if (selected) {
+          selected.setAttribute('data-node-name', value);
+          var label = selected.querySelector('.field-label > span:first-child');
+          if (label) { label.textContent = value; }
+        }
+        nameEl.textContent = value;
+        breadcrumbEl.textContent = value;
+        bindingTitle.textContent = value;
+        setDirty('标题已改为“' + value + '”');
+      });
+
+      root.querySelectorAll('[data-span-step]').forEach(function (button) {
+        button.addEventListener('click', function () {
+          span = Math.max(1, Math.min(4, span + Number(button.getAttribute('data-span-step'))));
+          root.querySelector('[data-testid="pt004-span-value"]').textContent = span + ' / 4';
+          var selected = root.querySelector('.form-field[data-selected="true"]');
+          if (selected) { selected.classList.toggle('span-2', span > 1); }
+          root.setAttribute('data-field-span', String(span));
+          setDirty('字段跨度调整为 ' + span);
+        });
+      });
+
+      root.querySelectorAll('.segment-button').forEach(function (button) {
+        button.addEventListener('click', function () {
+          root.querySelectorAll('.segment-button').forEach(function (item) { item.setAttribute('aria-pressed', item === button ? 'true' : 'false'); });
+          root.setAttribute('data-canvas-mode', button.getAttribute('data-mode'));
+          setStatus(button.textContent + '模式', button.getAttribute('data-mode') === 'preview' ? '画布交互已锁定为预览' : '可继续选择和编辑字段');
+        });
+      });
+
+      root.querySelector('[data-testid="pt004-save"]').addEventListener('click', function () {
+        root.setAttribute('data-dirty', 'false');
+        dirtyCount = 0;
+        dirtyChip.className = 'state-chip active';
+        dirtyChip.innerHTML = '<i data-lucide="circle-check"></i>已保存';
+        commandCount.textContent = '0 项待保存';
+        toast.querySelector('span').textContent = '草稿 v12 已保存';
+        toast.hidden = false;
+        setStatus('保存成功', '所有 UpdateProp 命令已写入草稿');
+        if (window.lucide) { window.lucide.createIcons(); }
+        window.setTimeout(function () { toast.hidden = true; }, 1800);
+      });
+
+      root.querySelector('[data-testid="pt004-preview"]').addEventListener('click', function () {
+        root.querySelector('[data-mode="preview"]').click();
+      });
+
+      if (window.lucide) { window.lucide.createIcons(); }
+    }());
+  </script>
+</body>
+</html>

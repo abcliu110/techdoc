@@ -1,0 +1,28 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: task_benchmarks
+  artifact_id: BM-LOWCODE-V2-001
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  updated_at: 2026-07-11T00:00:00+08:00
+  created_by: codex
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+  status: FROZEN
+benchmarks:
+  - id: BM-001
+    task_ref: TASK-001
+    environment:
+      browser: local Chromium through agent-browser
+      viewport: [1440x900, 1920x1080, 1280x800]
+      locale: zh-CN
+      input_mode: trusted pointer and keyboard input
+    thresholds:
+      console_errors: 0
+      unexpected_horizontal_overflow: 0
+      p0_p1_visual_findings: 0
+      state_assertions_pass_rate: 100%
+      publish_with_open_blocker: false
+    competitor_comparison:
+      mode: evidence_only
+      same_task_runtime_measurement: NOT_PERFORMED
+      reason: 无六家产品同条件合法运行环境和统一训练样本

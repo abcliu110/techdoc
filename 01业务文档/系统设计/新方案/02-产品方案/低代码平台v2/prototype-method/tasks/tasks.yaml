@@ -1,0 +1,49 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: user_tasks
+  artifact_id: TASKS-LOWCODE-V2-001
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  updated_at: 2026-07-11T00:00:00+08:00
+  created_by: codex
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+  status: FROZEN
+tasks:
+  - id: TASK-001
+    actor: 应用设计者
+    goal: 从销售订单业务对象创建企业单据页面并进入发布准备
+    preconditions:
+      - 销售订单及分录对象已存在
+      - 用户拥有设计权限
+    primary_flow:
+      - 查看业务对象和字段
+      - 切换页面设计并选择客户字段
+      - 编辑属性和布局
+      - 检查分录表格
+      - 配置客户变更规则
+      - 模拟销售角色权限
+      - 打开运行预览
+      - 运行发布前校验
+      - 关闭阻断问题后生成候选版本
+    failure_modes:
+      - 字段引用断裂
+      - 规则循环
+      - 权限策略缺失
+      - 预览与设计状态不一致
+    success_evidence:
+      - 工作区状态随导航变化
+      - 字段、属性和路径三向同步
+      - 阻断问题阻止发布准备
+      - 问题关闭后允许生成候选版本
+  - id: TASK-002
+    actor: 租户管理员
+    goal: 检查不同角色下字段可见、只读、脱敏和导出策略
+    success_evidence:
+      - 角色切换产生可观察状态
+      - 页面权限不能扩大服务端权限
+  - id: TASK-003
+    actor: 业务建模者
+    goal: 在不修改实体结构的情况下使用 BO 字段装配页面
+    success_evidence:
+      - 字段作为一等物料出现
+      - 页面只引用字段 code 和绑定，不直接变更实体

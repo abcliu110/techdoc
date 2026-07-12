@@ -1,0 +1,21 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: prototype_requirements
+  artifact_id: REQ-LOWCODE-V2-001
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  updated_at: 2026-07-11T00:00:00+08:00
+  created_by: codex
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+  status: FROZEN
+requirements:
+  - {id: REQ-001, priority: P0, statement: 提供对象、页面、规则、权限和预览五个稳定工作区, task_refs: [TASK-001]}
+  - {id: REQ-002, priority: P0, statement: 页面设计采用顶部命令、左资源、中画布、右属性、底问题与状态结构, task_refs: [TASK-001]}
+  - {id: REQ-003, priority: P0, statement: 字段选择同步画布、属性、资源树和路径, task_refs: [TASK-001, TASK-003]}
+  - {id: REQ-004, priority: P0, statement: 销售订单页面同时表达基本信息和分录表格, task_refs: [TASK-001]}
+  - {id: REQ-005, priority: P0, statement: 规则和权限具有可观察状态及影响说明, task_refs: [TASK-001, TASK-002]}
+  - {id: REQ-006, priority: P0, statement: P0/P1 问题未关闭时发布准备必须失败, task_refs: [TASK-001]}
+  - {id: REQ-007, priority: P0, statement: 运行预览使用草稿数据并明确非生产边界, task_refs: [TASK-001, TASK-002]}
+  - {id: REQ-008, priority: P1, statement: 支持属性搜索、设备切换、缩放和问题定位, task_refs: [TASK-001]}
+  - {id: REQ-009, priority: P1, statement: 1280 以上桌面视口不出现工作台横向溢出, task_refs: [TASK-001]}
+  - {id: REQ-010, priority: P1, statement: 关键交互提供稳定 data-testid 和 data-state, task_refs: [TASK-001]}

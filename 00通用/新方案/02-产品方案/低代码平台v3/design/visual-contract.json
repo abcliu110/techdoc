@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "artifactId": "VC-LOWCODE-V3-002",
+  "defaultHeight": 800,
+  "breakpointNeighborDelta": 1,
+  "maxAuditNodes": 5000,
+  "requiredViewports": [
+    { "width": 390, "height": 844, "name": "mobile" },
+    { "width": 665, "height": 731, "name": "compact" },
+    { "width": 768, "height": 800, "name": "tablet" },
+    { "width": 1024, "height": 768, "name": "compact-desktop" },
+    { "width": 1280, "height": 800, "name": "desktop-small" },
+    { "width": 1440, "height": 900, "name": "desktop-standard" },
+    { "width": 1920, "height": 1080, "name": "desktop-wide" }
+  ],
+  "requiredStates": [
+    "design.desktop",
+    "design.tablet",
+    "design.mobile",
+    "preview.desktop",
+    "overlay.preview",
+    "overlay.publish"
+  ],
+  "declaredScrollOwners": {
+    "canvas-scroll": ["x", "y"],
+    "entry-table-wrap": ["x"],
+    "resource-content": ["y"],
+    "category-filter": ["x"],
+    "palette-results": ["y"],
+    "inspector-body": ["y"],
+    "analysis-body": ["y"],
+    "preview-surface": ["x", "y"],
+    "publish-content": ["y"]
+  },
+  "blockingSeverities": ["P0", "P1"],
+  "rules": {
+    "ELEMENT_CLIPPED": "P1",
+    "ELEMENT_OFFSCREEN": "P1",
+    "TEXT_CLIPPED": "P1",
+    "LABEL_WRAPPED": "P1",
+    "HIT_TARGET_BLOCKED": "P1",
+    "UNDECLARED_SCROLL_X": "P1",
+    "UNDECLARED_SCROLL_Y": "P1",
+    "SCROLL_END_UNREACHABLE": "P1",
+    "AUDIT_TREE_INVALID": "P1",
+    "AUDIT_COVERAGE_INCOMPLETE": "P1"
+  }
+}

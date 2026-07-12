@@ -1,0 +1,165 @@
+{
+  "version": "1.1",
+  "project": {
+    "name": "低代码平台 T-207 表单设计器",
+    "description": "基于 AI 研发流程规范 v2.1 和金蝶表单设计器知识库，按 L3-strict 质量档位生成 T-207 表单设计器阶段 1-6 产物",
+    "createdAt": "2026-07-08",
+    "updatedAt": "2026-07-08"
+  },
+  "phases": {
+    "需求规格": {
+      "status": "completed",
+      "deliverables": [
+        "03-需求/T-207-表单设计器-用户需求-用例与用户故事.md",
+        "03-需求/T-207-表单设计器-PRD-产品需求规格说明书.md",
+        "03-需求/T-207-表单设计器-需求追溯表.md"
+      ],
+      "selfCheck": {
+        "passed": true,
+        "items": [
+          { "item": "复杂度等级和 L3-strict 门槛已记录", "passed": true },
+          { "item": "P0 需求绑定角色、场景和验收断言", "passed": true },
+          { "item": "销售订单 P0 业务闭环已定义", "passed": true },
+          { "item": "需求质量矩阵可支撑后续阶段", "passed": true }
+        ]
+      },
+      "notes": "已按 AI 研发流程规范 v2.1 重新执行阶段 1。"
+    },
+    "功能设计": {
+      "status": "completed",
+      "deliverables": [
+        "03-需求/T-207-表单设计器-功能规格文档.md"
+      ],
+      "selfCheck": {
+        "passed": true,
+        "items": [
+          { "item": "P0 功能交互规格已展开到入口、UI、字段、状态、权限、保存、发布、异常、断言", "passed": true },
+          { "item": "角色、状态、权限、规则、异常矩阵已生成", "passed": true },
+          { "item": "端到端销售订单样例承接数据、规则、权限、发布和运行态", "passed": true }
+        ]
+      },
+      "notes": "阶段 2 已按 L3 加严门槛重新生成。"
+    },
+    "详细设计": {
+      "status": "completed",
+      "deliverables": [
+        "05-详细设计/T-207-表单设计器-技术设计文档.md"
+      ],
+      "selfCheck": {
+        "passed": true,
+        "items": [
+          { "item": "模块职责、元数据模型、接口、表结构已定义", "passed": true },
+          { "item": "保存/发布核心逻辑和发布事务边界已定义", "passed": true },
+          { "item": "并发、安全、权限、插件、AI 风险已给出应对", "passed": true }
+        ]
+      },
+      "notes": "阶段 3 已基于新版功能规格重新生成。"
+    },
+    "自我评审": {
+      "status": "completed",
+      "deliverables": [
+        "05-详细设计/T-207-表单设计器-自我评审报告.md"
+      ],
+      "selfCheck": {
+        "passed": true,
+        "items": [
+          { "item": "需求覆盖率 32/32", "passed": true },
+          { "item": "L3 矩阵完整性已检查", "passed": true },
+          { "item": "阻断问题数量为 0", "passed": true },
+          { "item": "未声称实现或测试执行完成", "passed": true }
+        ]
+      },
+      "notes": "阶段 4 已重新评审新版设计产物。"
+    },
+    "测试规格": {
+      "status": "completed",
+      "deliverables": [
+        "06-任务与测试/测试规格/T-207-表单设计器-测试用例规格文档.md"
+      ],
+      "selfCheck": {
+        "passed": true,
+        "items": [
+          { "item": "P0 E2E 验收场景已定义", "passed": true },
+          { "item": "需求、规则、权限、状态、异常测试矩阵已生成", "passed": true },
+          { "item": "UI/交互、非功能和质量门禁已定义", "passed": true },
+          { "item": "未写成测试执行报告", "passed": true }
+        ]
+      },
+      "notes": "阶段 5 已按 L3 加严门槛重新生成。"
+    },
+    "任务分解": {
+      "status": "completed",
+      "deliverables": [
+        "06-任务与测试/任务卡/T-207-表单设计器-开发任务列表.md"
+      ],
+      "selfCheck": {
+        "passed": true,
+        "items": [
+          { "item": "每个功能点都有对应任务", "passed": true },
+          { "item": "每个任务有关联测试用例或准备/记录性质说明", "passed": true },
+          { "item": "依赖关系无循环", "passed": true },
+          { "item": "执行顺序从工程核对到 P0 闭环再到增强能力", "passed": true }
+        ]
+      },
+      "notes": "阶段 6 已基于新版测试规格重新生成。"
+    },
+    "实现": {
+      "status": "pending",
+      "notes": "未开始编码；不得生成代码实现记录。"
+    },
+    "代码自审": {
+      "status": "pending",
+      "notes": "需在阶段 7 真实代码完成后执行。"
+    },
+    "测试执行": {
+      "status": "pending",
+      "notes": "需在阶段 7 真实代码完成后按测试规格执行。"
+    },
+    "集成测试": {
+      "status": "pending",
+      "notes": "需在接口和模块实现后执行。"
+    },
+    "回归测试": {
+      "status": "pending",
+      "notes": "需在实现和集成测试后执行。"
+    }
+  },
+  "changes": [
+    {
+      "id": "CHG-FD-001",
+      "date": "2026-07-08",
+      "type": "scope-reset",
+      "status": "completed",
+      "description": "将 T-207 范围收敛为表单设计器，并删除旧版最终交付、实施总结、Phase 进度和非流程口径表单设计器文档，避免与 AI 研发流程阶段产物混淆。"
+    },
+    {
+      "id": "CHG-FD-002",
+      "date": "2026-07-08",
+      "type": "process-upgrade-and-rebaseline",
+      "status": "completed",
+      "description": "AI 研发流程规范升级到 v2.1，T-207 表单设计器按 L3-strict 回退并重新生成阶段 1-6。",
+      "affectedPhases": [
+        "需求规格",
+        "功能设计",
+        "详细设计",
+        "自我评审",
+        "测试规格",
+        "任务分解"
+      ]
+    }
+  ],
+  "metadata": {
+    "lastUpdated": "2026-07-08T00:00:00+08:00",
+    "lastPhase": "任务分解",
+    "totalPhases": 11,
+    "completedPhases": 6,
+    "processVersion": "AI研发流程规范.md v2.1",
+    "complexityLevel": "L3",
+    "qualityLevel": "L3-strict",
+    "strictGates": [
+      "stage-1-requirement-matrix",
+      "stage-2-interaction-rule-permission-state-matrix",
+      "stage-5-test-matrix"
+    ]
+  }
+}

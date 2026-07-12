@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>T-207 表单设计器 V2 原型检查台</title>
+  <style>
+    :root { --bg:#eef2f6; --panel:#fff; --text:#1f2937; --muted:#667085; --line:#d7dee8; --accent:#2468c9; --ok:#19733f; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:13px/1.5 "Microsoft YaHei UI","Segoe UI",sans-serif; letter-spacing:0; }
+    header { height:52px; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 18px; border-bottom:1px solid #b6c0cd; background:#fff; }
+    h1 { margin:0; font-size:17px; }
+    .progress { color:var(--muted); }
+    main { max-width:1180px; margin:0 auto; padding:20px; }
+    .notice { margin-bottom:14px; padding:10px 12px; border:1px solid #a9c4ee; border-radius:4px; background:#edf4ff; color:#234f8f; }
+    .grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+    .item { min-height:92px; display:grid; grid-template-rows:auto 1fr auto; gap:6px; padding:10px; border:1px solid var(--line); border-radius:4px; background:var(--panel); text-decoration:none; color:inherit; }
+    .item[data-state="complete"]:hover { border-color:#8db3ee; box-shadow:0 3px 10px rgba(31,41,55,.08); }
+    .item[data-state="pending"] { color:#98a2b3; background:#f8fafc; pointer-events:none; }
+    .item strong { font-size:14px; }
+    .item p { margin:0; color:var(--muted); font-size:12px; }
+    .state { justify-self:start; padding:1px 6px; border:1px solid var(--line); border-radius:999px; font-size:11px; }
+    [data-state="complete"] .state { border-color:#9fd0ad; background:#edf8f1; color:var(--ok); }
+    @media(max-width:1000px){ .grid{grid-template-columns:repeat(3,minmax(0,1fr));} }
+  </style>
+</head>
+<body>
+  <header><h1>T-207 表单设计器 V2 原型检查台</h1><div class="progress" data-testid="v2-progress">探测原型文件...</div></header>
+  <main>
+    <div class="notice">V1 已冻结。这里仅显示真正从零重做并已落为独立文件的 V2 原型；文件不存在时不会展示旧图代替。</div>
+    <div class="grid" data-testid="v2-prototype-grid"></div>
+  </main>
+  <script>
+    (function () {
+      var titles = [
+        '工作台整体布局','空画布与初始态','字段拖入布局','字段与属性面板','布局容器','页签/分割/滚动','分录表格基础','表格列设计','一层明细','规则权限入口','预览运行态','问题分析与发布','草稿冲突','发布阻断与成功','版本回滚','权限差异预览','大数据表格','性能门禁','组件库默认态','组件搜索空态','不可投放态','字段树','端到端搭建','页面大纲','左侧工具箱','右侧属性面板','画布工作区','强表格分录','列菜单与列管理'
+      ];
+      var grid = document.querySelector('[data-testid="v2-prototype-grid"]');
+      var progress = document.querySelector('[data-testid="v2-progress"]');
+      var complete = 0;
+      var pending = 29;
+      function renderProgress() { progress.textContent = '已完成 ' + complete + ' / 29 · 并行设计中 ' + pending; }
+      titles.forEach(function (title, index) {
+        var number = String(index + 1).padStart(3, '0');
+        var href = 'PT-' + number + '.html';
+        var item = document.createElement('a');
+        item.className = 'item';
+        item.href = href;
+        item.setAttribute('data-state', 'pending');
+        item.setAttribute('data-testid', 'v2-link-pt-' + number);
+        item.innerHTML = '<strong>PT-' + number + ' ' + title + '</strong><p>独立 V2 页面</p><span class="state">并行设计中</span>';
+        grid.appendChild(item);
+        fetch(href, { method: 'HEAD', cache: 'no-store' }).then(function (response) {
+          if (!response.ok || response.headers.get('content-length') === '0') return;
+          item.setAttribute('data-state', 'complete');
+          item.querySelector('.state').textContent = '已生成';
+          complete += 1;
+          pending -= 1;
+          renderProgress();
+        }).catch(function () {});
+      });
+      renderProgress();
+    })();
+  </script>
+</body>
+</html>

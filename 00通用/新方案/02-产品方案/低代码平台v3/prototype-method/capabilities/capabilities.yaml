@@ -1,0 +1,55 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: capability_tree
+  artifact_id: CAP-LOWCODE-V2-001
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  updated_at: 2026-07-11T10:20:00+08:00
+  created_by: codex
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+  status: FROZEN
+capabilities:
+  - id: CAP-MODEL
+    name: 业务对象与字段
+    children: [业务云, 应用, 功能分组, 页面类型, 页面模板, 对象浏览, 字段类型, 对象关系, 页面引用]
+    evidence_refs: [EVD-LOCAL-001, EVD-PA-002, EVD-KD-AUTH-001]
+  - id: CAP-PAGE
+    name: 页面与布局
+    children: [表单, 列表, 移动表单, 移动列表, 多视图, 栅格, 弹性布局, 页签, 分区, 分割面板, 侧边栏]
+    evidence_refs: [EVD-MX-001, EVD-PA-001, EVD-LOCAL-001, EVD-KD-AUTH-002]
+  - id: CAP-COMPONENT
+    name: 组件与业务部件
+    children: [字段控件, 基础资料引用, 分组与层级资料, 业务组件, 单据体, 子单据体, 树形单据体, 卡片分录, 附件面板, 操作栏, 状态条]
+    evidence_refs: [EVD-OS-001, EVD-PA-001, EVD-LOCAL-001, EVD-KD-AUTH-008, EVD-KD-AUTH-009]
+  - id: CAP-CONTAINER
+    name: 复杂容器与嵌套
+    children: [Flex容器, 高级容器, 页签, 字段布局面板, 向导, 分割容器, 轮播容器, 栅格容器, 父子合法性校验, 拖放失败原因]
+    evidence_refs: [EVD-KD-AUTH-008, EVD-KD-AUTH-010]
+  - id: CAP-DATA
+    name: 数据与绑定
+    children: [BO绑定, 外部数据, 级联刷新, 变量, 数据样本]
+    evidence_refs: [EVD-PA-002, EVD-RT-001]
+  - id: CAP-BILL
+    name: 企业单据
+    children: [组织隔离, 单据编号, 单据状态, 分录, 附件, 提交审核, 反审核撤销, 打印, 下推]
+    evidence_refs: [EVD-KD-AUTH-003, EVD-LOCAL-001]
+  - id: CAP-REPORT
+    name: 查询与报表
+    children: [快速过滤, 常用条件, 方案查询, 计算字段, 数据控件, 报表列表, 报表树, 报表配置, 引出]
+    evidence_refs: [EVD-KD-AUTH-005]
+  - id: CAP-RULE
+    name: 规则与公式
+    children: [界面规则, 业务规则, 公式, 循环检测, 影响分析]
+    evidence_refs: [EVD-PA-001, EVD-OS-001, EVD-LOCAL-001]
+  - id: CAP-PERM
+    name: 权限与治理
+    children: [角色模拟, 字段权限, 操作权限, 导出权限, 审计]
+    evidence_refs: [EVD-RT-001, EVD-LOCAL-001]
+  - id: CAP-LIFECYCLE
+    name: 检查与生命周期
+    children: [草稿保存, 预览, 发布校验, 版本, 依赖, 回滚边界]
+    evidence_refs: [EVD-MX-001, EVD-OS-001, EVD-PA-002]
+  - id: CAP-DX
+    name: 专业编辑体验
+    children: [对象树, 文档标签, 可停靠窗格, 属性搜索, 快捷键, 问题面板]
+    evidence_refs: [EVD-MX-001, EVD-PA-001]

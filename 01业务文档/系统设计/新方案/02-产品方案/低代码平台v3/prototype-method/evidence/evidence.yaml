@@ -1,0 +1,132 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: evidence_library
+  artifact_id: EVD-LIB-LOWCODE-V2-001
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  updated_at: 2026-07-11T09:30:00+08:00
+  created_by: codex
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+  status: FROZEN
+evidence:
+  - id: EVD-KD-001
+    fact: 金蝶官方社区存在开发服务云项目工作台、字段属性版本资料和苍穹开发学习入口。
+    source_refs: [SRC-KD-001]
+    confidence: medium
+    type: FACT
+    limitation: 仅为公开社区资料；登录态产品事实见 EVD-KD-AUTH 系列
+  - id: EVD-KD-AUTH-001
+    fact: 经典开发平台按业务云、应用、功能分组和页面组织开发资产，页面创建流程依次选择设备、页面类型、模板、编码和名称。
+    source_refs: [SRC-KD-AUTH-001]
+    confidence: high
+    type: FACT
+  - id: EVD-KD-AUTH-002
+    fact: 基础资料和单据均关联表单、列表、移动表单和移动列表四个设计面；移动设计使用独立模板而非桌面画布缩放。
+    source_refs: [SRC-KD-AUTH-001]
+    confidence: high
+    type: FACT
+  - id: EVD-KD-AUTH-003
+    fact: 单据模板由框架提供流水数据存储和查询，带组织模板预置主业务组织和组织隔离，并生成单据状态、分录、附件及提交审核等操作。
+    source_refs: [SRC-KD-AUTH-001]
+    confidence: high
+    type: FACT
+  - id: EVD-KD-AUTH-004
+    fact: 空白动态表单没有默认持久化字段和业务操作，存储查询由插件完成，但保留通用控件、容器、图表、工作流和属性扩展面。
+    source_refs: [SRC-KD-AUTH-001]
+    confidence: high
+    type: FACT
+  - id: EVD-KD-AUTH-005
+    fact: 通用查询报表由过滤条件、常用条件、方案查询、计算字段、数据控件、报表列表或报表树以及报表配置共同组成。
+    source_refs: [SRC-KD-AUTH-001]
+    confidence: high
+    type: FACT
+  - id: EVD-KD-AUTH-006
+    fact: 经典平台创建的业务对象会出现在新版开发平台，并可通过实体和布局入口编辑；新版布局设计器为同一资产提供页面设计、页面规则、插件管理、批量编辑和基本信息工作区。
+    source_refs: [SRC-KD-AUTH-001]
+    confidence: high
+    type: FACT
+  - id: EVD-KD-AUTH-007
+    fact: 新版页面规则按实体和服务分域，插件以可注册、脚本化、排序和禁用的有序表格管理，批量编辑以可搜索字段矩阵组织主实体与单据体字段。
+    source_refs: [SRC-KD-AUTH-001]
+    confidence: high
+    type: FACT
+  - id: EVD-KD-AUTH-008
+    fact: 基础资料字段与字段布局面板均支持按业务状态控制可见性和锁定性；模板可保留组织字段但将其全状态隐藏和锁定。
+    source_refs: [SRC-KD-AUTH-001]
+    confidence: high
+    type: FACT
+  - id: EVD-KD-AUTH-009
+    fact: 单据设计器将单据体、子单据体、树形单据体、卡片分录和子卡片分录建模为独立业务控件，现有分录自带行操作和表格或平铺视图。
+    source_refs: [SRC-KD-AUTH-001]
+    confidence: high
+    type: FACT
+  - id: EVD-KD-AUTH-010
+    fact: 动态表单控件库包含 Flex、高级、页签、字段布局、向导、分割、轮播和栅格容器，以及 Spread、图表、轻分析、树、文档、地图和工作流等复杂控件。
+    source_refs: [SRC-KD-AUTH-001]
+    confidence: high
+    type: FACT
+  - id: EVD-MX-001
+    fact: Mendix Studio Pro 11 使用 App Explorer、可切换编辑器的工作区、文档标签、可停靠窗格和状态栏组织应用设计工作。
+    source_refs: [SRC-MENDIX-001]
+    confidence: high
+    type: FACT
+  - id: EVD-OS-001
+    fact: OutSystems Service Studio 使用可视化语言统一构建、编辑、调试和发布应用，并提供 UI/逻辑模板和组件复用。
+    source_refs: [SRC-OUTSYSTEMS-001]
+    confidence: high
+    type: FACT
+  - id: EVD-PA-001
+    fact: Power Apps Studio 由动态命令栏、属性列表、公式栏、作者菜单、树、画布、属性面板和调试测试入口组成。
+    source_refs: [SRC-POWERAPPS-001]
+    confidence: high
+    type: FACT
+  - id: EVD-PA-002
+    fact: Power Apps 支持从数据源添加表和连接器，并提供预览、检查、保存版本和发布入口。
+    source_refs: [SRC-POWERAPPS-001]
+    confidence: high
+    type: FACT
+  - id: EVD-RT-001
+    fact: Retool 官方定位包含 App builder、生产数据连接、工作流、权限、审计、部署和企业治理。
+    source_refs: [SRC-RETOOL-001]
+    confidence: high
+    type: FACT
+  - id: EVD-APP-UNKNOWN-001
+    fact: 当前自动化环境未能访问 Appian 官网和官方文档正文。
+    source_refs: [SRC-APPIAN-FAIL-001, SRC-APPIAN-FAIL-002]
+    confidence: high
+    type: FACT
+  - id: EVD-LOCAL-001
+    fact: 现有 T-207 已批准需求要求企业单据、强 Web 布局、丰富元素、强表格、规则权限、运行预览和发布分析。
+    source_refs: [SRC-LOCAL-001]
+    confidence: high
+    type: FACT
+inferences:
+  - id: INF-001
+    statement: 专业设计器应采用稳定的 IDE 式多面板结构，同时让命令和属性随当前上下文变化。
+    evidence_refs: [EVD-MX-001, EVD-PA-001, EVD-LOCAL-001]
+    confidence: high
+  - id: INF-002
+    statement: 企业低代码设计器不能止于画布，必须把数据、逻辑、权限、检查和发布放在同一任务闭环。
+    evidence_refs: [EVD-OS-001, EVD-PA-002, EVD-RT-001, EVD-LOCAL-001]
+    confidence: high
+  - id: INF-003
+    statement: 自研平台应把页面类型和关联设计面作为业务对象元模型的一部分，并让模板携带数据、操作、权限和组织语义，而不只是视觉布局。
+    evidence_refs: [EVD-KD-AUTH-001, EVD-KD-AUTH-002, EVD-KD-AUTH-003, EVD-KD-AUTH-004]
+    confidence: high
+  - id: INF-004
+    statement: 报表工作区需要独立建模过滤方案、计算字段、数据控件和用户配置，不能仅复用普通页面中的表格组件。
+    evidence_refs: [EVD-KD-AUTH-005]
+    confidence: high
+  - id: INF-005
+    statement: 业务对象元模型应独立于具体编辑器；经典和新版工作台应被建模为对同一稳定实体、字段、规则和插件资产的不同专业投影。
+    evidence_refs: [EVD-KD-AUTH-006, EVD-KD-AUTH-007]
+    confidence: high
+  - id: INF-006
+    statement: 自研设计器的控件协议必须同时声明业务语义、合法父子关系、数据绑定、状态权限和布局样式，并在拖放失败时返回明确原因。
+    evidence_refs: [EVD-KD-AUTH-008, EVD-KD-AUTH-009, EVD-KD-AUTH-010]
+    confidence: high
+unknowns:
+  - Appian Designer 当前版本的具体工作台布局和对象/流程协作细节
+  - 金蝶云·苍穹经典开发平台与新版开发平台的完整迁移、兼容和版本差异
+  - 金蝶页面 XML、物理表映射、插件生命周期及权限优先级
+  - 六个产品在同一销售订单任务上的完成时间、错误率和学习成本

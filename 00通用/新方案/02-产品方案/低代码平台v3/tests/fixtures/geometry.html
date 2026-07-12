@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geometry audit fixtures</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 14px Arial, sans-serif; }
+    .fixture { position: relative; width: 320px; min-height: 150px; margin: 16px; border: 1px solid #777; }
+    .hard-clip { width: 100px; height: 70px; overflow: hidden; }
+    .hard-clip .nested { width: 80px; height: 30px; margin: 20px 0 0 70px; }
+    .legal-scroll { width: 100px; height: 70px; overflow-x: auto; overflow-y: hidden; }
+    .legal-scroll > div { width: 280px; height: 40px; }
+    .wrapped { width: 24px; height: 44px; padding: 0; }
+    .portal { position: fixed; top: 40px; left: 180px; width: 110px; height: 70px; background: white; border: 1px solid #333; }
+    .blocker { position: absolute; inset: 0; z-index: 2; background: rgba(255, 255, 255, .01); }
+  </style>
+</head>
+<body data-ui-component="fixture-root" data-component-type="FixtureRoot">
+  <section class="fixture" data-ui-component="nested-clip" data-component-type="Fixture">
+    <div class="hard-clip">
+      <div><button class="nested" type="button" data-ui-component="clipped-button" data-component-type="Button">裁切按钮</button></div>
+    </div>
+  </section>
+
+  <section class="fixture" data-ui-component="scroll-fixture" data-component-type="Fixture">
+    <div class="legal-scroll" data-scroll-owner="entry-table-wrap" data-scroll-axes="x"><div>Declared reachable horizontal content</div></div>
+  </section>
+
+  <section class="fixture" data-ui-component="wrap-fixture" data-component-type="Fixture">
+    <button class="wrapped" type="button" data-ui-component="wrapped-button" data-component-type="ToolbarButton" data-audit-single-line="true">平板</button>
+  </section>
+
+  <section class="fixture" data-ui-component="hit-fixture" data-component-type="Fixture">
+    <button type="button" data-ui-component="blocked-button" data-component-type="Button">Blocked</button>
+    <div class="blocker"></div>
+  </section>
+
+  <div class="portal" data-ui-component="portal" data-component-type="Popover" data-overlay-owner="fixture-root" data-overlay-boundary="body">Portal content</div>
+  <output data-testid="quality-gate-json" data-status="BLOCKED" hidden></output>
+  <script type="module" src="/prototype/quality-gate-runtime.mjs"></script>
+</body>
+</html>

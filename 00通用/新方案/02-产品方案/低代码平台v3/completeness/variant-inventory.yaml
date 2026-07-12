@@ -1,0 +1,4573 @@
+{
+  "execution_id": "COMPLETE-20260712-001",
+  "families": [
+    {
+      "family_id": "FAMILY-COMPONENTS",
+      "name": "Registered component family",
+      "source_snapshots": [
+        {
+          "source_id": "SRC-COMPONENT-REGISTRY",
+          "location": "prototype/component-registry.mjs",
+          "artifact_hash": "PENDING_C6_HASH",
+          "member_ids": [
+            "VAR-COMP-QUICKSECTION",
+            "VAR-COMP-FIELDLAYOUT",
+            "VAR-COMP-FIELDGROUP",
+            "VAR-COMP-SECTION",
+            "VAR-COMP-COLUMNS",
+            "VAR-COMP-FLEX",
+            "VAR-COMP-ADVANCEDPANEL",
+            "VAR-COMP-TABS",
+            "VAR-COMP-WIZARD",
+            "VAR-COMP-SPLITPANE",
+            "VAR-COMP-DASHBOARDGRID",
+            "VAR-COMP-CAROUSEL",
+            "VAR-COMP-DRAWER",
+            "VAR-COMP-TEXTFIELD",
+            "VAR-COMP-TEXTAREA",
+            "VAR-COMP-MULTILINGUALTEXT",
+            "VAR-COMP-MASKEDTEXT",
+            "VAR-COMP-PASSWORD",
+            "VAR-COMP-INTEGER",
+            "VAR-COMP-DECIMAL",
+            "VAR-COMP-MONEYFIELD",
+            "VAR-COMP-PERCENT",
+            "VAR-COMP-MEASUREMENT",
+            "VAR-COMP-STEPPER",
+            "VAR-COMP-DATE",
+            "VAR-COMP-TIME",
+            "VAR-COMP-DATETIME",
+            "VAR-COMP-DATERANGE",
+            "VAR-COMP-SELECT",
+            "VAR-COMP-RADIOGROUP",
+            "VAR-COMP-CHECKBOXGROUP",
+            "VAR-COMP-SWITCH",
+            "VAR-COMP-CASCADER",
+            "VAR-COMP-TAGSELECT",
+            "VAR-COMP-RICHTEXTINPUT",
+            "VAR-COMP-MARKDOWNINPUT",
+            "VAR-COMP-ATTACHMENT",
+            "VAR-COMP-IMAGEUPLOAD",
+            "VAR-COMP-REFERENCEPICKER",
+            "VAR-COMP-TREEREFERENCEPICKER",
+            "VAR-COMP-PARENTREFERENCE",
+            "VAR-COMP-GROUPPICKER",
+            "VAR-COMP-ORGANIZATIONPICKER",
+            "VAR-COMP-PERSONPICKER",
+            "VAR-COMP-DEPARTMENTPICKER",
+            "VAR-COMP-ADDRESSPICKER",
+            "VAR-COMP-MASTERDATAID",
+            "VAR-COMP-STATUSENUM",
+            "VAR-COMP-DATAGRID",
+            "VAR-COMP-TREEGRID",
+            "VAR-COMP-ENTRYGRID",
+            "VAR-COMP-SUBENTRYGRID",
+            "VAR-COMP-TREEENTRYGRID",
+            "VAR-COMP-TREESUBENTRYGRID",
+            "VAR-COMP-CARDENTRY",
+            "VAR-COMP-SUBCARDENTRY",
+            "VAR-COMP-READONLYGRID",
+            "VAR-COMP-SPREADSHEET",
+            "VAR-COMP-QUERYFILTER",
+            "VAR-COMP-PAGINATION",
+            "VAR-COMP-TREE",
+            "VAR-COMP-TREEPICKER",
+            "VAR-COMP-TREEBROWSER",
+            "VAR-COMP-COLUMNBROWSER",
+            "VAR-COMP-HEADING",
+            "VAR-COMP-TEXTDISPLAY",
+            "VAR-COMP-DIVIDER",
+            "VAR-COMP-BADGE",
+            "VAR-COMP-ALERT",
+            "VAR-COMP-EMPTYSTATE",
+            "VAR-COMP-PROGRESS",
+            "VAR-COMP-STATISTIC",
+            "VAR-COMP-TIMELINE",
+            "VAR-COMP-IMAGE",
+            "VAR-COMP-AUDIO",
+            "VAR-COMP-VIDEO",
+            "VAR-COMP-MAP",
+            "VAR-COMP-QRCODE",
+            "VAR-COMP-RICHTEXTDISPLAY",
+            "VAR-COMP-MARKDOWNDISPLAY",
+            "VAR-COMP-WEBOFFICE",
+            "VAR-COMP-ACTIONBAR",
+            "VAR-COMP-BUTTONGROUP",
+            "VAR-COMP-CONTEXTMENU",
+            "VAR-COMP-NAVIGATIONMENU",
+            "VAR-COMP-TREEMENU",
+            "VAR-COMP-BREADCRUMB",
+            "VAR-COMP-STATUSBAR",
+            "VAR-COMP-APPROVALRECORDS",
+            "VAR-COMP-PROCESSTRACE",
+            "VAR-COMP-OPERATIONLOG",
+            "VAR-COMP-COMMENTS",
+            "VAR-COMP-METRICCARD",
+            "VAR-COMP-CHART",
+            "VAR-COMP-COMBOCHART",
+            "VAR-COMP-PIVOTTABLE",
+            "VAR-COMP-REPORTLIST",
+            "VAR-COMP-REPORTTREE",
+            "VAR-COMP-ANALYTICSFILTER",
+            "VAR-COMP-ANALYTICSWORKSPACE",
+            "VAR-COMP-IFRAME",
+            "VAR-COMP-HTML",
+            "VAR-COMP-CUSTOMCOMPONENT",
+            "VAR-COMP-COMPONENTCOMPOSITION",
+            "VAR-COMP-PAGEFRAGMENT",
+            "VAR-COMP-BUSINESSTEMPLATE"
+          ]
+        }
+      ],
+      "family_operations": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "declared_count": 106,
+      "inventory_count": 106,
+      "scope": "REQUIRED",
+      "variant_ids": [
+        "VAR-COMP-QUICKSECTION",
+        "VAR-COMP-FIELDLAYOUT",
+        "VAR-COMP-FIELDGROUP",
+        "VAR-COMP-SECTION",
+        "VAR-COMP-COLUMNS",
+        "VAR-COMP-FLEX",
+        "VAR-COMP-ADVANCEDPANEL",
+        "VAR-COMP-TABS",
+        "VAR-COMP-WIZARD",
+        "VAR-COMP-SPLITPANE",
+        "VAR-COMP-DASHBOARDGRID",
+        "VAR-COMP-CAROUSEL",
+        "VAR-COMP-DRAWER",
+        "VAR-COMP-TEXTFIELD",
+        "VAR-COMP-TEXTAREA",
+        "VAR-COMP-MULTILINGUALTEXT",
+        "VAR-COMP-MASKEDTEXT",
+        "VAR-COMP-PASSWORD",
+        "VAR-COMP-INTEGER",
+        "VAR-COMP-DECIMAL",
+        "VAR-COMP-MONEYFIELD",
+        "VAR-COMP-PERCENT",
+        "VAR-COMP-MEASUREMENT",
+        "VAR-COMP-STEPPER",
+        "VAR-COMP-DATE",
+        "VAR-COMP-TIME",
+        "VAR-COMP-DATETIME",
+        "VAR-COMP-DATERANGE",
+        "VAR-COMP-SELECT",
+        "VAR-COMP-RADIOGROUP",
+        "VAR-COMP-CHECKBOXGROUP",
+        "VAR-COMP-SWITCH",
+        "VAR-COMP-CASCADER",
+        "VAR-COMP-TAGSELECT",
+        "VAR-COMP-RICHTEXTINPUT",
+        "VAR-COMP-MARKDOWNINPUT",
+        "VAR-COMP-ATTACHMENT",
+        "VAR-COMP-IMAGEUPLOAD",
+        "VAR-COMP-REFERENCEPICKER",
+        "VAR-COMP-TREEREFERENCEPICKER",
+        "VAR-COMP-PARENTREFERENCE",
+        "VAR-COMP-GROUPPICKER",
+        "VAR-COMP-ORGANIZATIONPICKER",
+        "VAR-COMP-PERSONPICKER",
+        "VAR-COMP-DEPARTMENTPICKER",
+        "VAR-COMP-ADDRESSPICKER",
+        "VAR-COMP-MASTERDATAID",
+        "VAR-COMP-STATUSENUM",
+        "VAR-COMP-DATAGRID",
+        "VAR-COMP-TREEGRID",
+        "VAR-COMP-ENTRYGRID",
+        "VAR-COMP-SUBENTRYGRID",
+        "VAR-COMP-TREEENTRYGRID",
+        "VAR-COMP-TREESUBENTRYGRID",
+        "VAR-COMP-CARDENTRY",
+        "VAR-COMP-SUBCARDENTRY",
+        "VAR-COMP-READONLYGRID",
+        "VAR-COMP-SPREADSHEET",
+        "VAR-COMP-QUERYFILTER",
+        "VAR-COMP-PAGINATION",
+        "VAR-COMP-TREE",
+        "VAR-COMP-TREEPICKER",
+        "VAR-COMP-TREEBROWSER",
+        "VAR-COMP-COLUMNBROWSER",
+        "VAR-COMP-HEADING",
+        "VAR-COMP-TEXTDISPLAY",
+        "VAR-COMP-DIVIDER",
+        "VAR-COMP-BADGE",
+        "VAR-COMP-ALERT",
+        "VAR-COMP-EMPTYSTATE",
+        "VAR-COMP-PROGRESS",
+        "VAR-COMP-STATISTIC",
+        "VAR-COMP-TIMELINE",
+        "VAR-COMP-IMAGE",
+        "VAR-COMP-AUDIO",
+        "VAR-COMP-VIDEO",
+        "VAR-COMP-MAP",
+        "VAR-COMP-QRCODE",
+        "VAR-COMP-RICHTEXTDISPLAY",
+        "VAR-COMP-MARKDOWNDISPLAY",
+        "VAR-COMP-WEBOFFICE",
+        "VAR-COMP-ACTIONBAR",
+        "VAR-COMP-BUTTONGROUP",
+        "VAR-COMP-CONTEXTMENU",
+        "VAR-COMP-NAVIGATIONMENU",
+        "VAR-COMP-TREEMENU",
+        "VAR-COMP-BREADCRUMB",
+        "VAR-COMP-STATUSBAR",
+        "VAR-COMP-APPROVALRECORDS",
+        "VAR-COMP-PROCESSTRACE",
+        "VAR-COMP-OPERATIONLOG",
+        "VAR-COMP-COMMENTS",
+        "VAR-COMP-METRICCARD",
+        "VAR-COMP-CHART",
+        "VAR-COMP-COMBOCHART",
+        "VAR-COMP-PIVOTTABLE",
+        "VAR-COMP-REPORTLIST",
+        "VAR-COMP-REPORTTREE",
+        "VAR-COMP-ANALYTICSFILTER",
+        "VAR-COMP-ANALYTICSWORKSPACE",
+        "VAR-COMP-IFRAME",
+        "VAR-COMP-HTML",
+        "VAR-COMP-CUSTOMCOMPONENT",
+        "VAR-COMP-COMPONENTCOMPOSITION",
+        "VAR-COMP-PAGEFRAGMENT",
+        "VAR-COMP-BUSINESSTEMPLATE"
+      ],
+      "unexpanded_variant_ids": [],
+      "aggregate_result": "NOT_RUN"
+    }
+  ],
+  "variants": [
+    {
+      "variant_id": "VAR-COMP-QUICKSECTION",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "QuickSection",
+      "name": "常用分区",
+      "category": "common",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-QUICKSECTION-DESIGN",
+        "SCN-QUICKSECTION-CONFIGURE",
+        "SCN-QUICKSECTION-PREVIEW",
+        "SCN-QUICKSECTION-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-FIELDLAYOUT",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "FieldLayout",
+      "name": "字段布局",
+      "category": "layout",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-FIELDLAYOUT-DESIGN",
+        "SCN-FIELDLAYOUT-CONFIGURE",
+        "SCN-FIELDLAYOUT-PREVIEW",
+        "SCN-FIELDLAYOUT-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-FIELDGROUP",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "FieldGroup",
+      "name": "字段组合",
+      "category": "layout",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-FIELDGROUP-DESIGN",
+        "SCN-FIELDGROUP-CONFIGURE",
+        "SCN-FIELDGROUP-PREVIEW",
+        "SCN-FIELDGROUP-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-SECTION",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Section",
+      "name": "语义分区",
+      "category": "layout",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-SECTION-DESIGN",
+        "SCN-SECTION-CONFIGURE",
+        "SCN-SECTION-PREVIEW",
+        "SCN-SECTION-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-COLUMNS",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Columns",
+      "name": "约束多列",
+      "category": "layout",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-COLUMNS-DESIGN",
+        "SCN-COLUMNS-CONFIGURE",
+        "SCN-COLUMNS-PREVIEW",
+        "SCN-COLUMNS-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-FLEX",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Flex",
+      "name": "弹性布局",
+      "category": "layout",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-FLEX-DESIGN",
+        "SCN-FLEX-CONFIGURE",
+        "SCN-FLEX-PREVIEW",
+        "SCN-FLEX-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-ADVANCEDPANEL",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "AdvancedPanel",
+      "name": "高级面板",
+      "category": "layout",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-ADVANCEDPANEL-DESIGN",
+        "SCN-ADVANCEDPANEL-CONFIGURE",
+        "SCN-ADVANCEDPANEL-PREVIEW",
+        "SCN-ADVANCEDPANEL-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-TABS",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Tabs",
+      "name": "页签",
+      "category": "layout",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-TABS-DESIGN",
+        "SCN-TABS-CONFIGURE",
+        "SCN-TABS-PREVIEW",
+        "SCN-TABS-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-WIZARD",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Wizard",
+      "name": "向导",
+      "category": "layout",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-WIZARD-DESIGN",
+        "SCN-WIZARD-CONFIGURE",
+        "SCN-WIZARD-PREVIEW",
+        "SCN-WIZARD-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-SPLITPANE",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "SplitPane",
+      "name": "分割容器",
+      "category": "layout",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-SPLITPANE-DESIGN",
+        "SCN-SPLITPANE-CONFIGURE",
+        "SCN-SPLITPANE-PREVIEW",
+        "SCN-SPLITPANE-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-DASHBOARDGRID",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "DashboardGrid",
+      "name": "栅格看板",
+      "category": "layout",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-DASHBOARDGRID-DESIGN",
+        "SCN-DASHBOARDGRID-CONFIGURE",
+        "SCN-DASHBOARDGRID-PREVIEW",
+        "SCN-DASHBOARDGRID-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-CAROUSEL",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Carousel",
+      "name": "轮播容器",
+      "category": "layout",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-CAROUSEL-DESIGN",
+        "SCN-CAROUSEL-CONFIGURE",
+        "SCN-CAROUSEL-PREVIEW",
+        "SCN-CAROUSEL-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-DRAWER",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Drawer",
+      "name": "侧边栏/抽屉",
+      "category": "layout",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-DRAWER-DESIGN",
+        "SCN-DRAWER-CONFIGURE",
+        "SCN-DRAWER-PREVIEW",
+        "SCN-DRAWER-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-TEXTFIELD",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "TextField",
+      "name": "单行文本",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-TEXTFIELD-DESIGN",
+        "SCN-TEXTFIELD-CONFIGURE",
+        "SCN-TEXTFIELD-PREVIEW",
+        "SCN-TEXTFIELD-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-TEXTAREA",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Textarea",
+      "name": "多行文本",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-TEXTAREA-DESIGN",
+        "SCN-TEXTAREA-CONFIGURE",
+        "SCN-TEXTAREA-PREVIEW",
+        "SCN-TEXTAREA-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-MULTILINGUALTEXT",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "MultilingualText",
+      "name": "多语言文本",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-MULTILINGUALTEXT-DESIGN",
+        "SCN-MULTILINGUALTEXT-CONFIGURE",
+        "SCN-MULTILINGUALTEXT-PREVIEW",
+        "SCN-MULTILINGUALTEXT-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-MASKEDTEXT",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "MaskedText",
+      "name": "掩码文本",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-MASKEDTEXT-DESIGN",
+        "SCN-MASKEDTEXT-CONFIGURE",
+        "SCN-MASKEDTEXT-PREVIEW",
+        "SCN-MASKEDTEXT-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-PASSWORD",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Password",
+      "name": "密码",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-PASSWORD-DESIGN",
+        "SCN-PASSWORD-CONFIGURE",
+        "SCN-PASSWORD-PREVIEW",
+        "SCN-PASSWORD-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-INTEGER",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Integer",
+      "name": "整数",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-INTEGER-DESIGN",
+        "SCN-INTEGER-CONFIGURE",
+        "SCN-INTEGER-PREVIEW",
+        "SCN-INTEGER-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-DECIMAL",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Decimal",
+      "name": "小数",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-DECIMAL-DESIGN",
+        "SCN-DECIMAL-CONFIGURE",
+        "SCN-DECIMAL-PREVIEW",
+        "SCN-DECIMAL-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-MONEYFIELD",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "MoneyField",
+      "name": "金额",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-MONEYFIELD-DESIGN",
+        "SCN-MONEYFIELD-CONFIGURE",
+        "SCN-MONEYFIELD-PREVIEW",
+        "SCN-MONEYFIELD-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-PERCENT",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Percent",
+      "name": "百分比",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-PERCENT-DESIGN",
+        "SCN-PERCENT-CONFIGURE",
+        "SCN-PERCENT-PREVIEW",
+        "SCN-PERCENT-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-MEASUREMENT",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Measurement",
+      "name": "计量单位",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-MEASUREMENT-DESIGN",
+        "SCN-MEASUREMENT-CONFIGURE",
+        "SCN-MEASUREMENT-PREVIEW",
+        "SCN-MEASUREMENT-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-STEPPER",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Stepper",
+      "name": "步进器",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-STEPPER-DESIGN",
+        "SCN-STEPPER-CONFIGURE",
+        "SCN-STEPPER-PREVIEW",
+        "SCN-STEPPER-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-DATE",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Date",
+      "name": "日期",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-DATE-DESIGN",
+        "SCN-DATE-CONFIGURE",
+        "SCN-DATE-PREVIEW",
+        "SCN-DATE-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-TIME",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Time",
+      "name": "时间",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-TIME-DESIGN",
+        "SCN-TIME-CONFIGURE",
+        "SCN-TIME-PREVIEW",
+        "SCN-TIME-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-DATETIME",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Datetime",
+      "name": "日期时间",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-DATETIME-DESIGN",
+        "SCN-DATETIME-CONFIGURE",
+        "SCN-DATETIME-PREVIEW",
+        "SCN-DATETIME-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-DATERANGE",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "DateRange",
+      "name": "日期范围",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-DATERANGE-DESIGN",
+        "SCN-DATERANGE-CONFIGURE",
+        "SCN-DATERANGE-PREVIEW",
+        "SCN-DATERANGE-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-SELECT",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Select",
+      "name": "下拉选择",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-SELECT-DESIGN",
+        "SCN-SELECT-CONFIGURE",
+        "SCN-SELECT-PREVIEW",
+        "SCN-SELECT-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-RADIOGROUP",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "RadioGroup",
+      "name": "单选组",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-RADIOGROUP-DESIGN",
+        "SCN-RADIOGROUP-CONFIGURE",
+        "SCN-RADIOGROUP-PREVIEW",
+        "SCN-RADIOGROUP-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-CHECKBOXGROUP",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "CheckboxGroup",
+      "name": "复选组",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-CHECKBOXGROUP-DESIGN",
+        "SCN-CHECKBOXGROUP-CONFIGURE",
+        "SCN-CHECKBOXGROUP-PREVIEW",
+        "SCN-CHECKBOXGROUP-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-SWITCH",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Switch",
+      "name": "开关",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-SWITCH-DESIGN",
+        "SCN-SWITCH-CONFIGURE",
+        "SCN-SWITCH-PREVIEW",
+        "SCN-SWITCH-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-CASCADER",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Cascader",
+      "name": "级联选择",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-CASCADER-DESIGN",
+        "SCN-CASCADER-CONFIGURE",
+        "SCN-CASCADER-PREVIEW",
+        "SCN-CASCADER-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-TAGSELECT",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "TagSelect",
+      "name": "标签选择",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-TAGSELECT-DESIGN",
+        "SCN-TAGSELECT-CONFIGURE",
+        "SCN-TAGSELECT-PREVIEW",
+        "SCN-TAGSELECT-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-RICHTEXTINPUT",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "RichTextInput",
+      "name": "富文本输入",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-RICHTEXTINPUT-DESIGN",
+        "SCN-RICHTEXTINPUT-CONFIGURE",
+        "SCN-RICHTEXTINPUT-PREVIEW",
+        "SCN-RICHTEXTINPUT-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-MARKDOWNINPUT",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "MarkdownInput",
+      "name": "Markdown 输入",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-MARKDOWNINPUT-DESIGN",
+        "SCN-MARKDOWNINPUT-CONFIGURE",
+        "SCN-MARKDOWNINPUT-PREVIEW",
+        "SCN-MARKDOWNINPUT-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-ATTACHMENT",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Attachment",
+      "name": "附件",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-ATTACHMENT-DESIGN",
+        "SCN-ATTACHMENT-CONFIGURE",
+        "SCN-ATTACHMENT-PREVIEW",
+        "SCN-ATTACHMENT-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-IMAGEUPLOAD",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "ImageUpload",
+      "name": "图片上传",
+      "category": "input",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-IMAGEUPLOAD-DESIGN",
+        "SCN-IMAGEUPLOAD-CONFIGURE",
+        "SCN-IMAGEUPLOAD-PREVIEW",
+        "SCN-IMAGEUPLOAD-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-REFERENCEPICKER",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "ReferencePicker",
+      "name": "基础资料选择",
+      "category": "reference",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-REFERENCEPICKER-DESIGN",
+        "SCN-REFERENCEPICKER-CONFIGURE",
+        "SCN-REFERENCEPICKER-PREVIEW",
+        "SCN-REFERENCEPICKER-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-TREEREFERENCEPICKER",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "TreeReferencePicker",
+      "name": "树形基础资料选择",
+      "category": "reference",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-TREEREFERENCEPICKER-DESIGN",
+        "SCN-TREEREFERENCEPICKER-CONFIGURE",
+        "SCN-TREEREFERENCEPICKER-PREVIEW",
+        "SCN-TREEREFERENCEPICKER-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-PARENTREFERENCE",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "ParentReference",
+      "name": "上级基础资料",
+      "category": "reference",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-PARENTREFERENCE-DESIGN",
+        "SCN-PARENTREFERENCE-CONFIGURE",
+        "SCN-PARENTREFERENCE-PREVIEW",
+        "SCN-PARENTREFERENCE-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-GROUPPICKER",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "GroupPicker",
+      "name": "分组选择",
+      "category": "reference",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-GROUPPICKER-DESIGN",
+        "SCN-GROUPPICKER-CONFIGURE",
+        "SCN-GROUPPICKER-PREVIEW",
+        "SCN-GROUPPICKER-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-ORGANIZATIONPICKER",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "OrganizationPicker",
+      "name": "组织选择",
+      "category": "reference",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-ORGANIZATIONPICKER-DESIGN",
+        "SCN-ORGANIZATIONPICKER-CONFIGURE",
+        "SCN-ORGANIZATIONPICKER-PREVIEW",
+        "SCN-ORGANIZATIONPICKER-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-PERSONPICKER",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "PersonPicker",
+      "name": "人员选择",
+      "category": "reference",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-PERSONPICKER-DESIGN",
+        "SCN-PERSONPICKER-CONFIGURE",
+        "SCN-PERSONPICKER-PREVIEW",
+        "SCN-PERSONPICKER-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-DEPARTMENTPICKER",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "DepartmentPicker",
+      "name": "部门选择",
+      "category": "reference",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-DEPARTMENTPICKER-DESIGN",
+        "SCN-DEPARTMENTPICKER-CONFIGURE",
+        "SCN-DEPARTMENTPICKER-PREVIEW",
+        "SCN-DEPARTMENTPICKER-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-ADDRESSPICKER",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "AddressPicker",
+      "name": "地址选择",
+      "category": "reference",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-ADDRESSPICKER-DESIGN",
+        "SCN-ADDRESSPICKER-CONFIGURE",
+        "SCN-ADDRESSPICKER-PREVIEW",
+        "SCN-ADDRESSPICKER-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-MASTERDATAID",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "MasterDataId",
+      "name": "主数据内码",
+      "category": "reference",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-MASTERDATAID-DESIGN",
+        "SCN-MASTERDATAID-CONFIGURE",
+        "SCN-MASTERDATAID-PREVIEW",
+        "SCN-MASTERDATAID-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-STATUSENUM",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "StatusEnum",
+      "name": "状态/枚举",
+      "category": "reference",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-STATUSENUM-DESIGN",
+        "SCN-STATUSENUM-CONFIGURE",
+        "SCN-STATUSENUM-PREVIEW",
+        "SCN-STATUSENUM-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-DATAGRID",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "DataGrid",
+      "name": "DataGrid",
+      "category": "data",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-DATAGRID-DESIGN",
+        "SCN-DATAGRID-CONFIGURE",
+        "SCN-DATAGRID-PREVIEW",
+        "SCN-DATAGRID-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-TREEGRID",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "TreeGrid",
+      "name": "TreeGrid",
+      "category": "data",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-TREEGRID-DESIGN",
+        "SCN-TREEGRID-CONFIGURE",
+        "SCN-TREEGRID-PREVIEW",
+        "SCN-TREEGRID-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-ENTRYGRID",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "EntryGrid",
+      "name": "单据体",
+      "category": "data",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-ENTRYGRID-DESIGN",
+        "SCN-ENTRYGRID-CONFIGURE",
+        "SCN-ENTRYGRID-PREVIEW",
+        "SCN-ENTRYGRID-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-SUBENTRYGRID",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "SubEntryGrid",
+      "name": "子单据体",
+      "category": "data",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-SUBENTRYGRID-DESIGN",
+        "SCN-SUBENTRYGRID-CONFIGURE",
+        "SCN-SUBENTRYGRID-PREVIEW",
+        "SCN-SUBENTRYGRID-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-TREEENTRYGRID",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "TreeEntryGrid",
+      "name": "树形单据体",
+      "category": "data",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-TREEENTRYGRID-DESIGN",
+        "SCN-TREEENTRYGRID-CONFIGURE",
+        "SCN-TREEENTRYGRID-PREVIEW",
+        "SCN-TREEENTRYGRID-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-TREESUBENTRYGRID",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "TreeSubEntryGrid",
+      "name": "树形子单据体",
+      "category": "data",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-TREESUBENTRYGRID-DESIGN",
+        "SCN-TREESUBENTRYGRID-CONFIGURE",
+        "SCN-TREESUBENTRYGRID-PREVIEW",
+        "SCN-TREESUBENTRYGRID-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-CARDENTRY",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "CardEntry",
+      "name": "卡片分录",
+      "category": "data",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-CARDENTRY-DESIGN",
+        "SCN-CARDENTRY-CONFIGURE",
+        "SCN-CARDENTRY-PREVIEW",
+        "SCN-CARDENTRY-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-SUBCARDENTRY",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "SubCardEntry",
+      "name": "子卡片分录",
+      "category": "data",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-SUBCARDENTRY-DESIGN",
+        "SCN-SUBCARDENTRY-CONFIGURE",
+        "SCN-SUBCARDENTRY-PREVIEW",
+        "SCN-SUBCARDENTRY-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-READONLYGRID",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "ReadonlyGrid",
+      "name": "只读表格",
+      "category": "data",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-READONLYGRID-DESIGN",
+        "SCN-READONLYGRID-CONFIGURE",
+        "SCN-READONLYGRID-PREVIEW",
+        "SCN-READONLYGRID-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-SPREADSHEET",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Spreadsheet",
+      "name": "Spread 电子表格",
+      "category": "data",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "planned",
+      "scope": "PLANNED",
+      "applicable_operation_ids": [
+        "OP-CATALOGUE",
+        "OP-DISABLED-EXPLANATION"
+      ],
+      "proof_obligations": [
+        "catalogue",
+        "disabled-explanation"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-SPREADSHEET-CATALOGUE",
+        "SCN-SPREADSHEET-DISABLED-EXPLANATION"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M1",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-QUERYFILTER",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "QueryFilter",
+      "name": "查询过滤器",
+      "category": "data",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-QUERYFILTER-DESIGN",
+        "SCN-QUERYFILTER-CONFIGURE",
+        "SCN-QUERYFILTER-PREVIEW",
+        "SCN-QUERYFILTER-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-PAGINATION",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Pagination",
+      "name": "分页器",
+      "category": "data",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-PAGINATION-DESIGN",
+        "SCN-PAGINATION-CONFIGURE",
+        "SCN-PAGINATION-PREVIEW",
+        "SCN-PAGINATION-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-TREE",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Tree",
+      "name": "Tree",
+      "category": "hierarchy",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-TREE-DESIGN",
+        "SCN-TREE-CONFIGURE",
+        "SCN-TREE-PREVIEW",
+        "SCN-TREE-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-TREEPICKER",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "TreePicker",
+      "name": "Tree Picker",
+      "category": "hierarchy",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-TREEPICKER-DESIGN",
+        "SCN-TREEPICKER-CONFIGURE",
+        "SCN-TREEPICKER-PREVIEW",
+        "SCN-TREEPICKER-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-TREEBROWSER",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "TreeBrowser",
+      "name": "Tree Browser",
+      "category": "hierarchy",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-TREEBROWSER-DESIGN",
+        "SCN-TREEBROWSER-CONFIGURE",
+        "SCN-TREEBROWSER-PREVIEW",
+        "SCN-TREEBROWSER-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-COLUMNBROWSER",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "ColumnBrowser",
+      "name": "Column Browser",
+      "category": "hierarchy",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-COLUMNBROWSER-DESIGN",
+        "SCN-COLUMNBROWSER-CONFIGURE",
+        "SCN-COLUMNBROWSER-PREVIEW",
+        "SCN-COLUMNBROWSER-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-HEADING",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Heading",
+      "name": "标题",
+      "category": "display",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-HEADING-DESIGN",
+        "SCN-HEADING-CONFIGURE",
+        "SCN-HEADING-PREVIEW",
+        "SCN-HEADING-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-TEXTDISPLAY",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "TextDisplay",
+      "name": "文本展示",
+      "category": "display",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-TEXTDISPLAY-DESIGN",
+        "SCN-TEXTDISPLAY-CONFIGURE",
+        "SCN-TEXTDISPLAY-PREVIEW",
+        "SCN-TEXTDISPLAY-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-DIVIDER",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Divider",
+      "name": "分隔线",
+      "category": "display",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-DIVIDER-DESIGN",
+        "SCN-DIVIDER-CONFIGURE",
+        "SCN-DIVIDER-PREVIEW",
+        "SCN-DIVIDER-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-BADGE",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Badge",
+      "name": "徽标",
+      "category": "display",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-BADGE-DESIGN",
+        "SCN-BADGE-CONFIGURE",
+        "SCN-BADGE-PREVIEW",
+        "SCN-BADGE-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-ALERT",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Alert",
+      "name": "提示",
+      "category": "display",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-ALERT-DESIGN",
+        "SCN-ALERT-CONFIGURE",
+        "SCN-ALERT-PREVIEW",
+        "SCN-ALERT-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-EMPTYSTATE",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "EmptyState",
+      "name": "空状态",
+      "category": "display",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-EMPTYSTATE-DESIGN",
+        "SCN-EMPTYSTATE-CONFIGURE",
+        "SCN-EMPTYSTATE-PREVIEW",
+        "SCN-EMPTYSTATE-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-PROGRESS",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Progress",
+      "name": "进度",
+      "category": "display",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-PROGRESS-DESIGN",
+        "SCN-PROGRESS-CONFIGURE",
+        "SCN-PROGRESS-PREVIEW",
+        "SCN-PROGRESS-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-STATISTIC",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Statistic",
+      "name": "统计指标",
+      "category": "display",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-STATISTIC-DESIGN",
+        "SCN-STATISTIC-CONFIGURE",
+        "SCN-STATISTIC-PREVIEW",
+        "SCN-STATISTIC-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-TIMELINE",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Timeline",
+      "name": "时间线",
+      "category": "display",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-TIMELINE-DESIGN",
+        "SCN-TIMELINE-CONFIGURE",
+        "SCN-TIMELINE-PREVIEW",
+        "SCN-TIMELINE-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-IMAGE",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Image",
+      "name": "图片",
+      "category": "display",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-IMAGE-DESIGN",
+        "SCN-IMAGE-CONFIGURE",
+        "SCN-IMAGE-PREVIEW",
+        "SCN-IMAGE-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-AUDIO",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Audio",
+      "name": "音频",
+      "category": "display",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-AUDIO-DESIGN",
+        "SCN-AUDIO-CONFIGURE",
+        "SCN-AUDIO-PREVIEW",
+        "SCN-AUDIO-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-VIDEO",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Video",
+      "name": "视频",
+      "category": "display",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-VIDEO-DESIGN",
+        "SCN-VIDEO-CONFIGURE",
+        "SCN-VIDEO-PREVIEW",
+        "SCN-VIDEO-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-MAP",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Map",
+      "name": "地图",
+      "category": "display",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-MAP-DESIGN",
+        "SCN-MAP-CONFIGURE",
+        "SCN-MAP-PREVIEW",
+        "SCN-MAP-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-QRCODE",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Qrcode",
+      "name": "二维码",
+      "category": "display",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-QRCODE-DESIGN",
+        "SCN-QRCODE-CONFIGURE",
+        "SCN-QRCODE-PREVIEW",
+        "SCN-QRCODE-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-RICHTEXTDISPLAY",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "RichTextDisplay",
+      "name": "富文本展示",
+      "category": "display",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-RICHTEXTDISPLAY-DESIGN",
+        "SCN-RICHTEXTDISPLAY-CONFIGURE",
+        "SCN-RICHTEXTDISPLAY-PREVIEW",
+        "SCN-RICHTEXTDISPLAY-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-MARKDOWNDISPLAY",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "MarkdownDisplay",
+      "name": "Markdown 展示",
+      "category": "display",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-MARKDOWNDISPLAY-DESIGN",
+        "SCN-MARKDOWNDISPLAY-CONFIGURE",
+        "SCN-MARKDOWNDISPLAY-PREVIEW",
+        "SCN-MARKDOWNDISPLAY-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-WEBOFFICE",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "WebOffice",
+      "name": "WebOffice",
+      "category": "display",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "planned",
+      "scope": "PLANNED",
+      "applicable_operation_ids": [
+        "OP-CATALOGUE",
+        "OP-DISABLED-EXPLANATION"
+      ],
+      "proof_obligations": [
+        "catalogue",
+        "disabled-explanation"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-WEBOFFICE-CATALOGUE",
+        "SCN-WEBOFFICE-DISABLED-EXPLANATION"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M1",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-ACTIONBAR",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "ActionBar",
+      "name": "操作栏",
+      "category": "workflow",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-ACTIONBAR-DESIGN",
+        "SCN-ACTIONBAR-CONFIGURE",
+        "SCN-ACTIONBAR-PREVIEW",
+        "SCN-ACTIONBAR-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-BUTTONGROUP",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "ButtonGroup",
+      "name": "按钮组",
+      "category": "workflow",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-BUTTONGROUP-DESIGN",
+        "SCN-BUTTONGROUP-CONFIGURE",
+        "SCN-BUTTONGROUP-PREVIEW",
+        "SCN-BUTTONGROUP-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-CONTEXTMENU",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "ContextMenu",
+      "name": "上下文菜单",
+      "category": "workflow",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-CONTEXTMENU-DESIGN",
+        "SCN-CONTEXTMENU-CONFIGURE",
+        "SCN-CONTEXTMENU-PREVIEW",
+        "SCN-CONTEXTMENU-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-NAVIGATIONMENU",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "NavigationMenu",
+      "name": "导航菜单",
+      "category": "workflow",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-NAVIGATIONMENU-DESIGN",
+        "SCN-NAVIGATIONMENU-CONFIGURE",
+        "SCN-NAVIGATIONMENU-PREVIEW",
+        "SCN-NAVIGATIONMENU-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-TREEMENU",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "TreeMenu",
+      "name": "树形菜单",
+      "category": "workflow",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-TREEMENU-DESIGN",
+        "SCN-TREEMENU-CONFIGURE",
+        "SCN-TREEMENU-PREVIEW",
+        "SCN-TREEMENU-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-BREADCRUMB",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Breadcrumb",
+      "name": "面包屑",
+      "category": "workflow",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-BREADCRUMB-DESIGN",
+        "SCN-BREADCRUMB-CONFIGURE",
+        "SCN-BREADCRUMB-PREVIEW",
+        "SCN-BREADCRUMB-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-STATUSBAR",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "StatusBar",
+      "name": "状态条",
+      "category": "workflow",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-STATUSBAR-DESIGN",
+        "SCN-STATUSBAR-CONFIGURE",
+        "SCN-STATUSBAR-PREVIEW",
+        "SCN-STATUSBAR-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-APPROVALRECORDS",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "ApprovalRecords",
+      "name": "审批记录",
+      "category": "workflow",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-APPROVALRECORDS-DESIGN",
+        "SCN-APPROVALRECORDS-CONFIGURE",
+        "SCN-APPROVALRECORDS-PREVIEW",
+        "SCN-APPROVALRECORDS-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-PROCESSTRACE",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "ProcessTrace",
+      "name": "流程轨迹",
+      "category": "workflow",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-PROCESSTRACE-DESIGN",
+        "SCN-PROCESSTRACE-CONFIGURE",
+        "SCN-PROCESSTRACE-PREVIEW",
+        "SCN-PROCESSTRACE-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-OPERATIONLOG",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "OperationLog",
+      "name": "操作日志",
+      "category": "workflow",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-OPERATIONLOG-DESIGN",
+        "SCN-OPERATIONLOG-CONFIGURE",
+        "SCN-OPERATIONLOG-PREVIEW",
+        "SCN-OPERATIONLOG-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-COMMENTS",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Comments",
+      "name": "评论协作",
+      "category": "workflow",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-COMMENTS-DESIGN",
+        "SCN-COMMENTS-CONFIGURE",
+        "SCN-COMMENTS-PREVIEW",
+        "SCN-COMMENTS-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-METRICCARD",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "MetricCard",
+      "name": "指标卡",
+      "category": "analytics",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-METRICCARD-DESIGN",
+        "SCN-METRICCARD-CONFIGURE",
+        "SCN-METRICCARD-PREVIEW",
+        "SCN-METRICCARD-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-CHART",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Chart",
+      "name": "基础图表",
+      "category": "analytics",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-CHART-DESIGN",
+        "SCN-CHART-CONFIGURE",
+        "SCN-CHART-PREVIEW",
+        "SCN-CHART-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-COMBOCHART",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "ComboChart",
+      "name": "组合图表",
+      "category": "analytics",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-COMBOCHART-DESIGN",
+        "SCN-COMBOCHART-CONFIGURE",
+        "SCN-COMBOCHART-PREVIEW",
+        "SCN-COMBOCHART-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-PIVOTTABLE",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "PivotTable",
+      "name": "透视表",
+      "category": "analytics",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-PIVOTTABLE-DESIGN",
+        "SCN-PIVOTTABLE-CONFIGURE",
+        "SCN-PIVOTTABLE-PREVIEW",
+        "SCN-PIVOTTABLE-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-REPORTLIST",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "ReportList",
+      "name": "报表列表",
+      "category": "analytics",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-REPORTLIST-DESIGN",
+        "SCN-REPORTLIST-CONFIGURE",
+        "SCN-REPORTLIST-PREVIEW",
+        "SCN-REPORTLIST-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-REPORTTREE",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "ReportTree",
+      "name": "报表树",
+      "category": "analytics",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-REPORTTREE-DESIGN",
+        "SCN-REPORTTREE-CONFIGURE",
+        "SCN-REPORTTREE-PREVIEW",
+        "SCN-REPORTTREE-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-ANALYTICSFILTER",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "AnalyticsFilter",
+      "name": "分析筛选器",
+      "category": "analytics",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-ANALYTICSFILTER-DESIGN",
+        "SCN-ANALYTICSFILTER-CONFIGURE",
+        "SCN-ANALYTICSFILTER-PREVIEW",
+        "SCN-ANALYTICSFILTER-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-ANALYTICSWORKSPACE",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "AnalyticsWorkspace",
+      "name": "嵌入式分析工作区",
+      "category": "analytics",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "planned",
+      "scope": "PLANNED",
+      "applicable_operation_ids": [
+        "OP-CATALOGUE",
+        "OP-DISABLED-EXPLANATION"
+      ],
+      "proof_obligations": [
+        "catalogue",
+        "disabled-explanation"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-ANALYTICSWORKSPACE-CATALOGUE",
+        "SCN-ANALYTICSWORKSPACE-DISABLED-EXPLANATION"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M1",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-IFRAME",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Iframe",
+      "name": "IFrame",
+      "category": "extension",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "preview",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-IFRAME-DESIGN",
+        "SCN-IFRAME-CONFIGURE",
+        "SCN-IFRAME-PREVIEW",
+        "SCN-IFRAME-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-HTML",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "Html",
+      "name": "HTML",
+      "category": "extension",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "preview",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-HTML-DESIGN",
+        "SCN-HTML-CONFIGURE",
+        "SCN-HTML-PREVIEW",
+        "SCN-HTML-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-CUSTOMCOMPONENT",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "CustomComponent",
+      "name": "自定义组件",
+      "category": "extension",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "preview",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-CUSTOMCOMPONENT-DESIGN",
+        "SCN-CUSTOMCOMPONENT-CONFIGURE",
+        "SCN-CUSTOMCOMPONENT-PREVIEW",
+        "SCN-CUSTOMCOMPONENT-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-COMPONENTCOMPOSITION",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "ComponentComposition",
+      "name": "组件组合",
+      "category": "extension",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-COMPONENTCOMPOSITION-DESIGN",
+        "SCN-COMPONENTCOMPOSITION-CONFIGURE",
+        "SCN-COMPONENTCOMPOSITION-PREVIEW",
+        "SCN-COMPONENTCOMPOSITION-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-PAGEFRAGMENT",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "PageFragment",
+      "name": "页面片段",
+      "category": "extension",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-PAGEFRAGMENT-DESIGN",
+        "SCN-PAGEFRAGMENT-CONFIGURE",
+        "SCN-PAGEFRAGMENT-PREVIEW",
+        "SCN-PAGEFRAGMENT-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    },
+    {
+      "variant_id": "VAR-COMP-BUSINESSTEMPLATE",
+      "family_id": "FAMILY-COMPONENTS",
+      "stable_key": "BusinessTemplate",
+      "name": "业务模板",
+      "category": "extension",
+      "source_refs": [
+        "prototype/component-registry.mjs"
+      ],
+      "registry_claim": "ready",
+      "scope": "REQUIRED",
+      "applicable_operation_ids": [
+        "OP-DESIGN",
+        "OP-CONFIGURE",
+        "OP-PREVIEW",
+        "OP-RUNTIME"
+      ],
+      "proof_obligations": [
+        "design",
+        "configure",
+        "preview",
+        "runtime"
+      ],
+      "equivalence_class_id": null,
+      "equivalence_certificate_ref": null,
+      "scenario_ids": [
+        "SCN-BUSINESSTEMPLATE-DESIGN",
+        "SCN-BUSINESSTEMPLATE-CONFIGURE",
+        "SCN-BUSINESSTEMPLATE-PREVIEW",
+        "SCN-BUSINESSTEMPLATE-RUNTIME"
+      ],
+      "prototype_case_ids": [],
+      "prototype_unit_ids": [],
+      "implementation_refs": [],
+      "test_case_ids": [],
+      "evidence_refs": [],
+      "target_maturity": "M4",
+      "actual_maturity": "M1",
+      "result": "NOT_RUN",
+      "finding_ids": []
+    }
+  ]
+}

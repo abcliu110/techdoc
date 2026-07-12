@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>案例：店长经营看板 - Dashboard</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f0f2f5; color: #333; font-size: 14px; }
+    .workbench { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+    /* Header */
+    .workbench-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .greeting h1 { font-size: 28px; font-weight: 600; color: #1a1a1a; }
+    .org-scope { font-size: 14px; color: #666; margin-top: 4px; display: block; }
+    .time-range { font-size: 13px; color: #999; background: #f0f0f0; padding: 8px 16px; border-radius: 20px; }
+
+    /* KPI Cards */
+    .kpi-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .kpi-card { background: #fff; border-radius: 12px; padding: 20px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: all 0.2s; }
+    .kpi-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); transform: translateY(-2px); }
+    .kpi-value { font-size: 32px; font-weight: 700; color: #1a1a1a; }
+    .kpi-label { color: #666; font-size: 14px; margin: 8px 0; }
+    .kpi-trend { font-size: 14px; font-weight: 500; }
+    .kpi-trend.up { color: #52c41a; }
+    .kpi-trend.down { color: #ff4d4f; }
+    .kpi-target { font-size: 12px; color: #999; margin-top: 8px; }
+    .kpi-status { font-size: 13px; padding: 2px 8px; border-radius: 4px; display: inline-block; }
+    .kpi-status.normal { background: #f6ffed; color: #52c41a; }
+    .kpi-status.warning { background: #fffbe6; color: #ad6800; }
+
+    /* Grid Layout */
+    .workbench-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+    /* Section Cards */
+    .chart-section, .todo-section, .rank-section, .compare-section { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .section-title { font-size: 15px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+
+    /* Trend Chart */
+    .trend-chart { display: flex; align-items: flex-end; gap: 12px; height: 120px; padding: 0 8px; }
+    .chart-bar { flex: 1; background: linear-gradient(to top, #1890ff, #69c0ff); border-radius: 4px 4px 0 0; position: relative; transition: all 0.2s; cursor: pointer; }
+    .chart-bar:hover { opacity: 0.8; }
+    .chart-bar span { position: absolute; top: -24px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #666; white-space: nowrap; }
+    .chart-x-axis { display: flex; justify-content: space-around; font-size: 12px; color: #999; margin-top: 8px; }
+    .chart-hint { text-align: center; font-size: 12px; color: #1890ff; margin-top: 16px; cursor: pointer; }
+
+    /* Todo List */
+    .todo-item { display: flex; align-items: center; padding: 12px; border-radius: 8px; margin-bottom: 8px; background: #fafafa; cursor: pointer; transition: background 0.2s; }
+    .todo-item:hover { background: #f0f0f0; }
+    .todo-item.urgent { border-left: 3px solid #ff4d4f; }
+    .todo-item.warning { border-left: 3px solid #faad14; }
+    .todo-icon { font-size: 18px; margin-right: 12px; }
+    .todo-content { flex: 1; }
+    .todo-title { display: block; font-weight: 500; font-size: 14px; }
+    .todo-meta { font-size: 12px; color: #999; margin-top: 2px; }
+    .todo-action { padding: 6px 16px; border-radius: 4px; border: none; background: #1890ff; color: #fff; cursor: pointer; font-size: 13px; }
+    .todo-action:hover { background: #40a9ff; }
+    .badge { background: #ff4d4f; color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 12px; margin-left: 8px; }
+
+    /* Rank List */
+    .rank-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+    .rank-item:last-child { border-bottom: none; }
+    .rank-num { width: 24px; height: 24px; background: #f0f0f0; border-radius: 50%; text-align: center; line-height: 24px; font-size: 12px; margin-right: 12px; font-weight: 600; }
+    .rank-num.gold { background: #ffe58f; color: #ad6800; }
+    .rank-num.silver { background: #e8e8e8; color: #666; }
+    .rank-num.bronze { background: #ffe0b2; color: #8c5a00; }
+    .rank-value { margin-left: auto; color: #666; font-size: 13px; }
+    .link-more { display: block; text-align: center; color: #1890ff; font-size: 13px; margin-top: 12px; text-decoration: none; }
+
+    /* Compare Bar */
+    .compare-bar { display: flex; align-items: center; margin-bottom: 16px; }
+    .compare-bar:last-child { margin-bottom: 0; }
+    .compare-bar span:first-child { width: 80px; font-size: 13px; color: #666; }
+    .compare-bar .bar { height: 20px; background: linear-gradient(to right, #1890ff, #69c0ff); border-radius: 4px; margin: 0 12px; transition: width 0.3s; }
+    .compare-bar span:last-child { width: 70px; text-align: right; font-size: 13px; font-weight: 500; }
+
+    /* Tabs */
+    .tab-bar { background: #fff; border-radius: 8px; padding: 12px 20px; margin-bottom: 16px; display: flex; gap: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .tab-item { color: #666; font-size: 14px; cursor: pointer; padding-bottom: 8px; border-bottom: 2px solid transparent; }
+    .tab-item.active { color: #1890ff; border-bottom-color: #1890ff; font-weight: 500; }
+
+    /* Case Badge */
+    .case-badge { position: fixed; top: 20px; right: 20px; background: #1890ff; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 12px; z-index: 100; box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3); }
+    .case-badge::before { content: "案例 "; }
+  </style>
+</head>
+<body>
+  <div class="case-badge">Dashboard 模型</div>
+
+  <div class="workbench">
+    <!-- Header -->
+    <header class="workbench-header">
+      <div class="greeting">
+        <h1>早安，李店长</h1>
+        <span class="org-scope">人民广场店 | 2026年7月12日 周一</span>
+      </div>
+      <div class="time-range">昨日数据（17:00 更新）</div>
+    </header>
+
+    <!-- Tab Bar -->
+    <div class="tab-bar">
+      <div class="tab-item active">经营概览</div>
+      <div class="tab-item">商品分析</div>
+      <div class="tab-item">库存预警</div>
+      <div class="tab-item">会员分析</div>
+    </div>
+
+    <!-- KPI Cards -->
+    <section class="kpi-cards">
+      <div class="kpi-card" data-drill="sales">
+        <div class="kpi-value">¥48,520</div>
+        <div class="kpi-label">昨日销售额</div>
+        <div class="kpi-trend up">↑ 12.3%</div>
+        <div class="kpi-target">目标 ¥90,000 · 完成 53.9%</div>
+      </div>
+
+      <div class="kpi-card" data-drill="orders">
+        <div class="kpi-value">156</div>
+        <div class="kpi-label">昨日订单数</div>
+        <div class="kpi-trend down">↓ 3.2%</div>
+        <div class="kpi-target">目标 200 · 完成 78%</div>
+      </div>
+
+      <div class="kpi-card" data-drill="avg">
+        <div class="kpi-value">¥311.03</div>
+        <div class="kpi-label">昨日客单价</div>
+        <div class="kpi-trend up">↑ 8.5%</div>
+      </div>
+
+      <div class="kpi-card" data-drill="rate">
+        <div class="kpi-value">89.2%</div>
+        <div class="kpi-label">订单完成率</div>
+        <div class="kpi-status normal">正常</div>
+      </div>
+    </section>
+
+    <!-- Double Column Grid -->
+    <div class="workbench-grid">
+      <!-- Chart Section -->
+      <section class="chart-section">
+        <h3 class="section-title">📊 今日销售趋势</h3>
+        <div class="trend-chart">
+          <div class="chart-bar" style="height: 30%"><span>¥2,340</span></div>
+          <div class="chart-bar" style="height: 50%"><span>¥4,560</span></div>
+          <div class="chart-bar" style="height: 80%"><span>¥8,120</span></div>
+          <div class="chart-bar" style="height: 65%"><span>¥6,280</span></div>
+          <div class="chart-bar" style="height: 40%"><span>¥3,850</span></div>
+        </div>
+        <div class="chart-x-axis">
+          <span>10:00</span><span>11:00</span><span>12:00</span><span>13:00</span><span>14:00</span>
+        </div>
+        <div class="chart-hint">📍 点击时段查看明细</div>
+      </section>
+
+      <!-- Todo Section -->
+      <section class="todo-section">
+        <h3 class="section-title">⚠️ 待处理事项 <span class="badge">8</span></h3>
+        <div class="todo-list">
+          <div class="todo-item urgent" data-action="ship">
+            <span class="todo-icon">🔴</span>
+            <div class="todo-content">
+              <span class="todo-title">待发货订单</span>
+              <span class="todo-meta">12 笔 · 即将超时 3 笔</span>
+            </div>
+            <button class="todo-action">处理</button>
+          </div>
+
+          <div class="todo-item warning" data-action="inventory">
+            <span class="todo-icon">🟡</span>
+            <div class="todo-content">
+              <span class="todo-title">库存预警</span>
+              <span class="todo-meta">5 个商品低于安全库存</span>
+            </div>
+            <button class="todo-action">查看</button>
+          </div>
+
+          <div class="todo-item warning" data-action="refund">
+            <span class="todo-icon">🟡</span>
+            <div class="todo-content">
+              <span class="todo-title">退款申请</span>
+              <span class="todo-meta">3 笔待审批</span>
+            </div>
+            <button class="todo-action">审批</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Double Column Grid -->
+    <div class="workbench-grid">
+      <!-- Rank Section -->
+      <section class="rank-section">
+        <h3 class="section-title">🏆 商品销售排行</h3>
+        <div class="rank-list">
+          <div class="rank-item">
+            <span class="rank-num gold">1</span>
+            <span>可乐 500ml</span>
+            <span class="rank-value">128 件</span>
+          </div>
+          <div class="rank-item">
+            <span class="rank-num silver">2</span>
+            <span>矿泉水 550ml</span>
+            <span class="rank-value">98 件</span>
+          </div>
+          <div class="rank-item">
+            <span class="rank-num bronze">3</span>
+            <span>全麦面包</span>
+            <span class="rank-value">67 件</span>
+          </div>
+          <div class="rank-item">
+            <span class="rank-num">4</span>
+            <span>薯片 120g</span>
+            <span class="rank-value">45 件</span>
+          </div>
+          <div class="rank-item">
+            <span class="rank-num">5</span>
+            <span>牛奶 250ml</span>
+            <span class="rank-value">38 件</span>
+          </div>
+        </div>
+        <a href="#" class="link-more">查看全部排行 →</a>
+      </section>
+
+      <!-- Compare Section -->
+      <section class="compare-section">
+        <h3 class="section-title">📍 门店对比（销售额）</h3>
+        <div class="compare-bar"><span>人民广场店</span><div class="bar" style="width:100%"></div><span>¥48,520</span></div>
+        <div class="compare-bar"><span>淮海路店</span><div class="bar" style="width:87%"></div><span>¥42,300</span></div>
+        <div class="compare-bar"><span>南京路店</span><div class="bar" style="width:80%"></div><span>¥38,900</span></div>
+        <div class="compare-bar"><span>徐家汇店</span><div class="bar" style="width:72%"></div><span>¥34,800</span></div>
+        <a href="#" class="link-more">查看门店明细 →</a>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

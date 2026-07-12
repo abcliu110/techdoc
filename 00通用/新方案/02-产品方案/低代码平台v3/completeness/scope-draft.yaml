@@ -1,0 +1,16 @@
+{
+  "execution_id": "COMPLETE-20260712-001",
+  "candidate_required_capability_ids": [
+    "CAP-BO",
+    "CAP-PAGE",
+    "CAP-RULE",
+    "CAP-PERMISSION",
+    "CAP-PREVIEW",
+    "CAP-PUBLISH",
+    "CAP-COMPONENT-FAMILY"
+  ],
+  "enumerable_families": [
+    "FAMILY-COMPONENTS"
+  ],
+  "unresolved": []
+}

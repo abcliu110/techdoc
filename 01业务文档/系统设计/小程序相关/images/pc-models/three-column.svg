@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+<defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/></marker></defs>
+<style>
+  .bg{fill:#f6f8fb}
+  .panel{fill:#ffffff;stroke:#d7dde8;stroke-width:2}
+  .soft{fill:#f1f5f9;stroke:#d7dde8;stroke-width:1.5}
+  .brandSoft{fill:#dbeafe;stroke:#93c5fd;stroke-width:1.5}
+  .warn{fill:#fff7ed;stroke:#fdba74;stroke-width:1.5}
+  .danger{fill:#fee2e2;stroke:#fca5a5;stroke-width:1.5}
+  .success{fill:#dcfce7;stroke:#86efac;stroke-width:1.5}
+  .line{stroke:#64748b;stroke-width:2;fill:none;marker-end:url(#arrow)}
+  .title{font:700 24px Arial, sans-serif;fill:#0f172a}
+  .h{font:700 16px Arial, sans-serif;fill:#0f172a}
+  .t{font:14px Arial, sans-serif;fill:#334155}
+  .s{font:12px Arial, sans-serif;fill:#64748b}
+</style>
+<rect class="bg" x="0" y="0" width="960" height="540"/>
+<text class="title" x="40" y="46">Three Column Workbench</text>
+<rect class="panel" x="45" y="90" width="210" height="390" rx="12"/>
+<rect class="panel" x="275" y="90" width="270" height="390" rx="12"/>
+<rect class="panel" x="565" y="90" width="350" height="390" rx="12"/>
+<text class="h" x="70" y="125">Queue Category</text>
+<rect class="brandSoft" x="65" y="150" width="155" height="34" rx="8"/>
+<text class="t" x="82" y="173">Todo</text>
+<text class="t" x="82" y="225">Overdue</text>
+<text class="t" x="82" y="277">Mine</text>
+<text class="t" x="82" y="329">Done</text>
+<text class="h" x="300" y="125">Queue Items</text>
+<rect class="warn" x="295" y="150" width="220" height="36" rx="8"/>
+<text class="t" x="310" y="174">Ticket 001 High</text>
+<text class="t" x="310" y="229">Ticket 002 Mid</text>
+<text class="t" x="310" y="284">Ticket 003 Low</text>
+<text class="t" x="310" y="339">Ticket 004 Low</text>
+<text class="h" x="590" y="125">Current Detail</text>
+<rect class="soft" x="590" y="150" width="295" height="120" rx="8"/>
+<text class="t" x="610" y="185">Issue description</text>
+<text class="t" x="610" y="220">Process history</text>
+<rect class="brandSoft" x="590" y="300" width="295" height="70" rx="8"/>
+<text class="t" x="610" y="342">Actions: Process | Transfer | Close</text>
+<path class="line" d="M255,285 L275,285"/>
+<path class="line" d="M545,285 L565,285"/>
+</svg>

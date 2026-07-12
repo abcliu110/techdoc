@@ -1,0 +1,233 @@
+{
+  "manifest_schema_version": "1.0",
+  "execution_id": "COMPLETE-20260712-001",
+  "spec_version": "1.1",
+  "generated_at": "2026-07-11T23:09:12.022Z",
+  "artifacts": [
+    {
+      "artifact_id": "ART-AUTHORITATIVE-STATE-CONTRACTS-YAML",
+      "path": "completeness/authoritative-state-contracts.yaml",
+      "artifact_type": "authoritative-state-contracts",
+      "schema_version": "1.0",
+      "sha256": "sha256:580d7486edca70a35383971d9f58633761df82ff08b389c4277efde5f9bfc023",
+      "byte_size": 427,
+      "non_empty": true
+    },
+    {
+      "artifact_id": "ART-CAPABILITY-BASELINE-YAML",
+      "path": "completeness/capability-baseline.yaml",
+      "artifact_type": "capability-baseline",
+      "schema_version": "1.0",
+      "sha256": "sha256:93d643d65f63dd7fff53cbad395515a39dd5fe4f8197409bc714d0d9ee7dfb7e",
+      "byte_size": 5952,
+      "non_empty": true
+    },
+    {
+      "artifact_id": "ART-CAPABILITY-GATE-REPORT-JSON",
+      "path": "completeness/capability-gate-report.json",
+      "artifact_type": "capability-gate-report",
+      "schema_version": "1.0",
+      "sha256": "sha256:0e7b6fecd50c01427840b6993a835da8ee5b91f6e485ee257898a0ce1028a05f",
+      "byte_size": 9998,
+      "non_empty": true,
+      "producer_stage": "C10",
+      "validation_refs": [
+        "completeness/generate-c8-c10.mjs"
+      ]
+    },
+    {
+      "artifact_id": "ART-CAPABILITY-GATE-REPORT-MD",
+      "path": "completeness/capability-gate-report.md",
+      "artifact_type": "capability-gate-report-markdown",
+      "schema_version": "1.0",
+      "sha256": "sha256:1fc40f97cc0c2bcf2550f4f683eb34138b6581f65199726a28de4c44c65e268e",
+      "byte_size": 393,
+      "non_empty": true,
+      "producer_stage": "C10",
+      "validation_refs": [
+        "completeness/generate-c8-c10.mjs"
+      ]
+    },
+    {
+      "artifact_id": "ART-CAPABILITY-RECONCILIATION-YAML",
+      "path": "completeness/capability-reconciliation.yaml",
+      "artifact_type": "capability-reconciliation",
+      "schema_version": "1.0",
+      "sha256": "sha256:cff3ccb3204b2b9f15097e5641ae0ab66fc9b2e43efe0a2238e70284ad5f4106",
+      "byte_size": 1461,
+      "non_empty": true
+    },
+    {
+      "artifact_id": "ART-CAPABILITY-VERIFICATION-JSON",
+      "path": "completeness/capability-verification.json",
+      "artifact_type": "capability-verification",
+      "schema_version": "1.0",
+      "sha256": "sha256:997fe53bd35bb6651ad2282bfee7cf629d074f0250c24a72350011e573a0f055",
+      "byte_size": 51278,
+      "non_empty": true,
+      "producer_stage": "C9",
+      "validation_refs": [
+        "completeness/generate-c8-c10.mjs"
+      ]
+    },
+    {
+      "artifact_id": "ART-EXECUTION-YAML",
+      "path": "completeness/execution.yaml",
+      "artifact_type": "execution",
+      "schema_version": "1.0",
+      "sha256": "sha256:7e48dcd1af1482cf30cc3ff43e65e722e7513aacf13b1a0ffd7c78a6e6f41f86",
+      "byte_size": 1872,
+      "non_empty": true
+    },
+    {
+      "artifact_id": "ART-FEATURE-INVENTORY-YAML",
+      "path": "completeness/feature-inventory.yaml",
+      "artifact_type": "feature-inventory",
+      "schema_version": "1.0",
+      "sha256": "sha256:6a6851b78b85fcff88ce66e82a1c15aed4c3c316ea562fe90b1855ba30ac4851",
+      "byte_size": 151300,
+      "non_empty": true
+    },
+    {
+      "artifact_id": "ART-IMPLEMENTATION-MAP-YAML",
+      "path": "completeness/implementation-map.yaml",
+      "artifact_type": "implementation-map",
+      "schema_version": "1.0",
+      "sha256": "sha256:89e33a35433897dbffd560c7091f21adc712d7d6602ac3f8ac764d1684c51700",
+      "byte_size": 91747,
+      "non_empty": true
+    },
+    {
+      "artifact_id": "ART-MISS-ANALYSIS-YAML",
+      "path": "completeness/miss-analysis.yaml",
+      "artifact_type": "miss-analysis",
+      "schema_version": "1.0",
+      "sha256": "sha256:cf3af1677d64f39f4fa4448f78c90d5c73e687ed3a37fb26e943fce95f5c85af",
+      "byte_size": 571,
+      "non_empty": true,
+      "producer_stage": "C9",
+      "validation_refs": [
+        "completeness/generate-c8-c10.mjs"
+      ]
+    },
+    {
+      "artifact_id": "ART-MISSING-OR-FAKE-JSON",
+      "path": "completeness/missing-or-fake.json",
+      "artifact_type": "missing-or-fake",
+      "schema_version": "1.0",
+      "sha256": "sha256:b9a90a03fe1e9b349844fbb4737920163f175f335ae168b34636cd324787c089",
+      "byte_size": 141,
+      "non_empty": true
+    },
+    {
+      "artifact_id": "ART-PRODUCT-CHARTER-YAML",
+      "path": "completeness/product-charter.yaml",
+      "artifact_type": "product-charter",
+      "schema_version": "1.0",
+      "sha256": "sha256:ddcf58e22ae581c3266f5e9f4c0a045309b553dc86b677adc651e1d836f6e5ef",
+      "byte_size": 686,
+      "non_empty": true
+    },
+    {
+      "artifact_id": "ART-PROTOTYPE-FLOW-YAML",
+      "path": "completeness/prototype-flow.yaml",
+      "artifact_type": "prototype-flow",
+      "schema_version": "1.0",
+      "sha256": "sha256:289905a6e280f022f5fae761f4cbc3f636df04411df012cc0f26cdcb2bca57f8",
+      "byte_size": 116,
+      "non_empty": true
+    },
+    {
+      "artifact_id": "ART-PROTOTYPE-MAP-YAML",
+      "path": "completeness/prototype-map.yaml",
+      "artifact_type": "prototype-map",
+      "schema_version": "1.0",
+      "sha256": "sha256:3ed4a29a9c31079103d6db57f465f949a758ce21ad3e6fb4b673a1800a3a8619",
+      "byte_size": 107011,
+      "non_empty": true
+    },
+    {
+      "artifact_id": "ART-SCENARIO-INVENTORY-YAML",
+      "path": "completeness/scenario-inventory.yaml",
+      "artifact_type": "scenario-inventory",
+      "schema_version": "1.0",
+      "sha256": "sha256:47ecac46058b30a32fab95a2ff9cbf1a9f467b05e835753f74ac47a3e99e23f5",
+      "byte_size": 201179,
+      "non_empty": true
+    },
+    {
+      "artifact_id": "ART-SCOPE-CONTRACT-YAML",
+      "path": "completeness/scope-contract.yaml",
+      "artifact_type": "scope-contract",
+      "schema_version": "1.0",
+      "sha256": "sha256:ca1135ec30becba679e197869f9fceacf8eac79b3a4fefcc5b702b3158f3839a",
+      "byte_size": 3733,
+      "non_empty": true
+    },
+    {
+      "artifact_id": "ART-SCOPE-DRAFT-YAML",
+      "path": "completeness/scope-draft.yaml",
+      "artifact_type": "scope-draft",
+      "schema_version": "1.0",
+      "sha256": "sha256:4cd3bd2708c90c4755cb0df87cec24d1952ab8a5c6387c868883060f65005e6e",
+      "byte_size": 301,
+      "non_empty": true
+    },
+    {
+      "artifact_id": "ART-SURFACE-INVENTORY-YAML",
+      "path": "completeness/surface-inventory.yaml",
+      "artifact_type": "surface-inventory",
+      "schema_version": "1.0",
+      "sha256": "sha256:d86dc6c9c4835465e6f835ab0fc67d4868c7bcb79610b84ba5e19ba53a55bbf6",
+      "byte_size": 978,
+      "non_empty": true
+    },
+    {
+      "artifact_id": "ART-TASK-VERIFICATION-JSON",
+      "path": "completeness/task-verification.json",
+      "artifact_type": "task-verification",
+      "schema_version": "1.0",
+      "sha256": "sha256:c1f07e9f3919c34582fc31963ebd8391b5507cff8eb5f311f0ab2f46831b6d68",
+      "byte_size": 283993,
+      "non_empty": true,
+      "producer_stage": "C8",
+      "validation_refs": [
+        "tests/completeness-c8-c10.test.mjs"
+      ]
+    },
+    {
+      "artifact_id": "ART-TRACEABILITY-MATRIX-YAML",
+      "path": "completeness/traceability-matrix.yaml",
+      "artifact_type": "traceability-matrix",
+      "schema_version": "1.0",
+      "sha256": "sha256:d1605607645e319421965f9387b8192dbbabe0da146f85bc2c4497275d02c29e",
+      "byte_size": 88142,
+      "non_empty": true
+    },
+    {
+      "artifact_id": "ART-VARIANT-INVENTORY-YAML",
+      "path": "completeness/variant-inventory.yaml",
+      "artifact_type": "variant-inventory",
+      "schema_version": "1.0",
+      "sha256": "sha256:7787a86305a406db0c542e5fd7722bc3926cd1625fc84d659e38e0ed9f123678",
+      "byte_size": 122052,
+      "non_empty": true
+    }
+  ],
+  "required_artifact_types_by_mode": {
+    "DELIVERY_AUDIT": [
+      "execution",
+      "scope-contract",
+      "variant-inventory",
+      "scenario-inventory",
+      "prototype-map",
+      "implementation-map",
+      "traceability-matrix",
+      "missing-or-fake",
+      "capability-verification",
+      "task-verification",
+      "miss-analysis",
+      "capability-gate-report"
+    ]
+  }
+}

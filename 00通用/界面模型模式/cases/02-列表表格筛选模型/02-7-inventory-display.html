@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>案例：库存字段设计 - Inventory Display</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f0f2f5; color: #333; font-size: 14px; }
+    .page { max-width: 900px; margin: 0 auto; padding: 24px; }
+
+    /* Header */
+    .page-header { margin-bottom: 20px; }
+    .page-title { font-size: 20px; font-weight: 600; }
+    .page-subtitle { font-size: 13px; color: #666; margin-top: 4px; }
+
+    /* Data Table */
+    .data-table { background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 24px; }
+    .data-table table { width: 100%; border-collapse: collapse; }
+    .data-table th { background: #fafafa; padding: 14px 16px; text-align: left; font-weight: 500; color: #666; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+    .data-table td { padding: 14px 16px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+    .data-table tbody tr:hover { background: #fafafa; }
+
+    /* Stock Values */
+    .stock-cell { display: flex; align-items: center; gap: 16px; }
+    .stock-value { font-weight: 500; min-width: 60px; }
+    .stock-value.normal { color: #1a1a1a; }
+    .stock-value.warning { color: #fa8c16; }
+    .stock-value.danger { color: #ff4d4f; }
+    .stock-value.low { background: #fff2f0; padding: 2px 6px; border-radius: 2px; }
+
+    /* Stock Bar */
+    .stock-bar { width: 80px; height: 8px; background: #f0f0f0; border-radius: 4px; overflow: hidden; }
+    .stock-bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+    .stock-bar-fill.high { background: #52c41a; }
+    .stock-bar-fill.medium { background: #faad14; }
+    .stock-bar-fill.low { background: #ff4d4f; }
+
+    /* Product Cell */
+    .product-cell { display: flex; align-items: center; gap: 12px; }
+    .product-thumb { width: 48px; height: 48px; background: #f5f5f5; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+    .product-info { }
+    .product-name { font-weight: 500; color: #1a1a1a; }
+    .product-code { font-size: 12px; color: #999; margin-top: 2px; }
+
+    /* Status Badges */
+    .status { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 500; }
+    .status.success { background: #f6ffed; color: #52c41a; }
+    .status.warning { background: #fffbe6; color: #ad6800; }
+    .status.danger { background: #fff2f0; color: #ff4d4f; }
+
+    /* Action Links */
+    .action-link { color: #1890ff; text-decoration: none; font-size: 13px; margin-right: 12px; }
+    .action-link:hover { text-decoration: underline; }
+
+    /* Legend Card */
+    .legend-card { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 16px; }
+    .legend-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; }
+    .legend-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .legend-item { display: flex; align-items: center; gap: 12px; }
+    .legend-indicator { width: 12px; height: 12px; border-radius: 2px; }
+    .legend-indicator.high { background: #52c41a; }
+    .legend-indicator.medium { background: #faad14; }
+    .legend-indicator.low { background: #ff4d4f; }
+    .legend-label { font-size: 13px; color: #666; }
+    .legend-value { font-size: 13px; color: #1a1a1a; font-weight: 500; margin-left: auto; }
+
+    /* Case Badge */
+    .case-badge { position: fixed; top: 20px; right: 20px; background: #1890ff; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 12px; z-index: 100; box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3); }
+    .case-badge::before { content: "案例 "; }
+
+    /* Design Note */
+    .design-note { background: #f6ffed; border: 1px solid #b7eb8f; border-radius: 8px; padding: 16px; margin-top: 24px; }
+    .design-note h4 { font-size: 14px; color: #52c41a; margin-bottom: 8px; }
+    .design-note ul { font-size: 13px; color: #666; padding-left: 20px; }
+    .design-note li { margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+  <div class="case-badge">数值展示模型</div>
+
+  <div class="page">
+    <!-- Header -->
+    <header class="page-header">
+      <h1 class="page-title">商品库存查询</h1>
+      <p class="page-subtitle">门店：人民广场店 | 更新于 2026-07-12 17:00</p>
+    </header>
+
+    <!-- Legend -->
+    <div class="legend-card">
+      <div class="legend-title">📊 库存状态说明</div>
+      <div class="legend-grid">
+        <div class="legend-item">
+          <div class="legend-indicator high"></div>
+          <span class="legend-label">充足</span>
+          <span class="legend-value">> 预警值 × 2</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-indicator medium"></div>
+          <span class="legend-label">正常</span>
+          <span class="legend-value">> 预警值</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-indicator low"></div>
+          <span class="legend-label">预警</span>
+          <span class="legend-value">≤ 预警值</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="data-table">
+      <table>
+        <thead>
+          <tr>
+            <th>商品</th>
+            <th>可用库存</th>
+            <th>锁定库存</th>
+            <th>在途库存</th>
+            <th>总库存</th>
+            <th>预警值</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Normal Stock -->
+          <tr>
+            <td>
+              <div class="product-cell">
+                <div class="product-thumb">🥤</div>
+                <div class="product-info">
+                  <div class="product-name">可口可乐 500ml</div>
+                  <div class="product-code">SKU: BEV001</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="stock-cell">
+                <span class="stock-value normal">120 件</span>
+                <div class="stock-bar"><div class="stock-bar-fill high" style="width:80%;"></div></div>
+              </div>
+            </td>
+            <td>25 件</td>
+            <td>50 件</td>
+            <td><strong>195 件</strong></td>
+            <td>20 件</td>
+            <td><span class="status success">充足</span></td>
+            <td><a href="#" class="action-link">调拨</a><a href="#" class="action-link">查看明细</a></td>
+          </tr>
+
+          <!-- Medium Stock -->
+          <tr>
+            <td>
+              <div class="product-cell">
+                <div class="product-thumb">💧</div>
+                <div class="product-info">
+                  <div class="product-name">农夫山泉 550ml</div>
+                  <div class="product-code">SKU: BEV002</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="stock-cell">
+                <span class="stock-value warning">45 件</span>
+                <div class="stock-bar"><div class="stock-bar-fill medium" style="width:45%;"></div></div>
+              </div>
+            </td>
+            <td>10 件</td>
+            <td>30 件</td>
+            <td><strong>85 件</strong></td>
+            <td>20 件</td>
+            <td><span class="status warning">正常</span></td>
+            <td><a href="#" class="action-link">调拨</a><a href="#" class="action-link">查看明细</a></td>
+          </tr>
+
+          <!-- Low Stock (Warning) -->
+          <tr style="background:#fffbe6;">
+            <td>
+              <div class="product-cell">
+                <div class="product-thumb">🍞</div>
+                <div class="product-info">
+                  <div class="product-name">全麦面包</div>
+                  <div class="product-code">SKU: FOOD001</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="stock-cell">
+                <span class="stock-value danger low">5 件</span>
+                <div class="stock-bar"><div class="stock-bar-fill low" style="width:25%;"></div></div>
+              </div>
+            </td>
+            <td>12 件</td>
+            <td>0 件</td>
+            <td><strong>17 件</strong></td>
+            <td>20 件</td>
+            <td><span class="status danger">⚠️ 预警</span></td>
+            <td><a href="#" class="action-link">补货</a><a href="#" class="action-link">查看明细</a></td>
+          </tr>
+
+          <!-- Very Low Stock -->
+          <tr style="background:#fff2f0;">
+            <td>
+              <div class="product-cell">
+                <div class="product-thumb">🥚</div>
+                <div class="product-info">
+                  <div class="product-name">鲜鸡蛋 10枚装</div>
+                  <div class="product-code">SKU: FOOD002</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="stock-cell">
+                <span class="stock-value danger low">2 件</span>
+                <div class="stock-bar"><div class="stock-bar-fill low" style="width:10%;"></div></div>
+              </div>
+            </td>
+            <td>8 件</td>
+            <td>20 件</td>
+            <td><strong>30 件</strong></td>
+            <td>15 件</td>
+            <td><span class="status danger">⚠️ 紧急补货</span></td>
+            <td><a href="#" class="action-link" style="color:#ff4d4f;font-weight:500;">紧急补货</a><a href="#" class="action-link">查看明细</a></td>
+          </tr>
+
+          <!-- Zero Stock (Negative) -->
+          <tr style="background:#fff2f0;">
+            <td>
+              <div class="product-cell">
+                <div class="product-thumb">🧊</div>
+                <div class="product-info">
+                  <div class="product-name">伊利纯牛奶 250ml</div>
+                  <div class="product-code">SKU: DAIRY001</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="stock-cell">
+                <span class="stock-value danger low">-3 件</span>
+                <div class="stock-bar"><div class="stock-bar-fill low" style="width:0%;"></div></div>
+              </div>
+            </td>
+            <td>15 件</td>
+            <td>0 件</td>
+            <td><strong>12 件</strong></td>
+            <td>10 件</td>
+            <td><span class="status danger">⚠️ 负库存</span></td>
+            <td><a href="#" class="action-link" style="color:#ff4d4f;font-weight:500;">超卖待处理</a><a href="#" class="action-link">查看明细</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Design Notes -->
+    <div class="design-note">
+      <h4>💡 设计要点</h4>
+      <ul>
+        <li><strong>区分账面库存、可用库存、锁定库存、在途库存</strong>：各维度含义明确</li>
+        <li><strong>库存变化必须能追到流水</strong>：提供查看明细入口</li>
+        <li><strong>负库存、超卖、过期批次要突出</strong>：用红色背景高亮显示</li>
+        <li><strong>数量带单位</strong>：如"120 件"，单位明确</li>
+        <li><strong>预警值可视化</strong>：进度条直观展示库存充足程度</li>
+        <li><strong>状态文案解释业务含义</strong>："充足"、"预警"、"紧急补货"、"负库存"</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

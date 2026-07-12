@@ -1,0 +1,74 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: design_decisions
+  artifact_id: DDR-LOWCODE-V2-001
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  updated_at: 2026-07-11T09:30:00+08:00
+  created_by: codex
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+  status: FROZEN
+decisions:
+  - id: DDR-001
+    question: 设计器主模型由什么驱动
+    options: [自由画布优先, 业务对象优先, 流程优先]
+    decision: 业务对象优先，页面、规则和权限围绕稳定 code 组织
+    evidence_refs: [EVD-KD-001, EVD-LOCAL-001, EVD-PA-002]
+    rejected:
+      - 自由画布优先会弱化企业数据、规则和权限语义
+      - 流程优先不能覆盖全部单据与资料维护任务
+  - id: DDR-002
+    question: 工作台如何组织复杂能力
+    options: [单页卡片导航, IDE 式稳定多区, 多步向导]
+    decision: IDE 式稳定多区，命令和属性按上下文变化
+    evidence_refs: [EVD-MX-001, EVD-PA-001]
+    rejected:
+      - 单页卡片导航降低重复编辑效率
+      - 多步向导不适合跨对象、页面、规则反复迭代
+  - id: DDR-003
+    question: 如何表达设计与运行一致性
+    decision: 原型复用同一页面节点生成运行预览，设计态只增加选择与编辑覆盖层
+    evidence_refs: [EVD-LOCAL-001]
+  - id: DDR-004
+    question: 发布准备如何处理风险
+    decision: P0/P1 失败关闭，按钮禁用；关闭阻断后才允许生成候选版本
+    evidence_refs: [EVD-OS-001, EVD-RT-001, EVD-LOCAL-001]
+  - id: DDR-005
+    question: 原型采用什么技术
+    decision: 独立 HTML/CSS/ES Modules 和 Node 内置测试，不引入新依赖
+    reason: 用户要求所有产物落入新目录，且目标是可验证原型而非修改生产工程
+  - id: DDR-006
+    question: 页面创建从自由画布还是业务语义开始
+    options: [所有页面从自由画布开始, 先选择页面类型和模板]
+    decision: 先选择基础资料、单据、动态表单或报表等页面类型，再选择携带业务语义的模板
+    evidence_refs: [EVD-KD-AUTH-001, EVD-KD-AUTH-003, EVD-KD-AUTH-004, EVD-KD-AUTH-005]
+    rejected:
+      - 所有页面从自由画布开始会丢失存储、状态、组织隔离、操作集和查询模型等类型语义
+  - id: DDR-007
+    question: 同一业务对象的桌面和移动视图如何组织
+    options: [一个响应式画布自动缩放, 关联但独立的多设计面]
+    decision: 使用表单、列表、移动表单和移动列表等关联但独立的设计面，共享业务对象语义
+    evidence_refs: [EVD-KD-AUTH-002]
+    rejected:
+      - 单一画布自动缩放无法覆盖列表任务、移动场景卡片和端侧交互差异
+  - id: DDR-008
+    question: 报表是否复用普通页面表格
+    options: [复用普通表格组件, 建立独立报表模型]
+    decision: 建立过滤方案、计算字段、数据控件、报表视图和用户配置组成的独立报表模型
+    evidence_refs: [EVD-KD-AUTH-005]
+    rejected:
+      - 普通表格组件无法表达查询条件、计算口径、用户方案和报表配置
+  - id: DDR-009
+    question: 经典和新版工作台是否使用独立业务对象模型
+    options: [每个编辑器维护独立模型, 多个专业编辑器共享业务对象元模型]
+    decision: 多个专业编辑器共享稳定的业务对象、实体、字段、规则和插件资产，各自提供适合任务的投影视图
+    evidence_refs: [EVD-KD-AUTH-006, EVD-KD-AUTH-007]
+    rejected:
+      - 独立模型会造成字段、规则、插件和多端布局之间的同步与迁移问题
+  - id: DDR-010
+    question: 复杂控件是否只需要渲染和样式属性
+    options: [只定义渲染与样式, 定义完整控件协议]
+    decision: 每个控件必须声明业务类型、允许父容器、允许子控件、数据绑定、状态权限、业务属性、样式、布局、端侧差异、校验和失败原因
+    evidence_refs: [EVD-KD-AUTH-008, EVD-KD-AUTH-009, EVD-KD-AUTH-010]
+    rejected:
+      - 只定义渲染与样式无法表达单据体、组织管控、业务状态和复杂容器的合法嵌套

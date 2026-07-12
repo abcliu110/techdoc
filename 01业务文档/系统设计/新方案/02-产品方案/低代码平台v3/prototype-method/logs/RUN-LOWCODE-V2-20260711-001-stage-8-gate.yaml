@@ -1,0 +1,27 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: stage_gate
+  artifact_id: GATE-LOWCODE-V2-STAGE-8
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  updated_at: 2026-07-11T00:00:00+08:00
+  created_by: codex
+  status: FINAL
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+gate:
+  gate_id: GATE-LOWCODE-V2-STAGE-8
+  run_id: RUN-LOWCODE-V2-20260711-001
+  stage: 8
+  evaluated_at: 2026-07-11T00:00:00+08:00
+  predicates:
+    - {id: G8-001, description: 项目级演示路径浏览器执行, result: PASS, measured_value: 3条真实点击与下拉选择轨迹通过, threshold: 项目演示证据, evidence_refs: [prototype-method/tests/independent-browser-replay.yaml, reports/interaction-report.md]}
+    - {id: G8-002, description: 独立测试清单双源校验, result: FAIL, measured_value: 7项派生任务中4项存在缺失或部分覆盖, threshold: 无开放核心覆盖争议, evidence_refs: [prototype-method/tests/independent-task-derivation.yaml, prototype-method/tests/coverage-reconciliation.yaml], failure_code: TASK_COVERAGE_DISPUTE}
+    - {id: G8-003, description: 上游视觉正式门禁已通过, result: BLOCKED, measured_value: BLOCKED, threshold: PASSED, evidence_refs: [GATE-LOWCODE-V2-STAGE-7], failure_code: UPSTREAM_GATE_BLOCKED}
+  p0_count: 0
+  p1_count: 0
+  canonical_result:
+    result: NOT_RUN
+    failure_code: TASK_COVERAGE_DISPUTE
+    retryable: true
+    return_plan: [{stage: 2, finding_ids: [COV-P1-001]}, {stage: 5, finding_ids: [COV-P1-002, COV-P1-003, COV-P1-004]}, {stage: 7, finding_ids: [G7-004]}]
+    blocker_id: null

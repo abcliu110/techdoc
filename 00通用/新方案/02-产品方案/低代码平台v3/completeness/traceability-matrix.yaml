@@ -1,0 +1,2231 @@
+{
+  "execution_id": "COMPLETE-20260712-001",
+  "traces": [
+    {
+      "trace_id": "TRACE-QUICKSECTION",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-QUICKSECTION",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-quick-section",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#QuickSection",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-FIELDLAYOUT",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-FIELDLAYOUT",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-field-layout",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#FieldLayout",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-FIELDGROUP",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-FIELDGROUP",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-field-group",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#FieldGroup",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-SECTION",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-SECTION",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-section",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Section",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-COLUMNS",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-COLUMNS",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-columns",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Columns",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-FLEX",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-FLEX",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-flex",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Flex",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-ADVANCEDPANEL",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-ADVANCEDPANEL",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-advanced-panel",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#AdvancedPanel",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-TABS",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-TABS",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-tabs",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Tabs",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-WIZARD",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-WIZARD",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-wizard",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Wizard",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-SPLITPANE",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-SPLITPANE",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-split-pane",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#SplitPane",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-DASHBOARDGRID",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-DASHBOARDGRID",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-dashboard-grid",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#DashboardGrid",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-CAROUSEL",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-CAROUSEL",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-carousel",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Carousel",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-DRAWER",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-DRAWER",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-drawer",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Drawer",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-TEXTFIELD",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-TEXTFIELD",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-text-field",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#TextField",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-TEXTAREA",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-TEXTAREA",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-textarea",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Textarea",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-MULTILINGUALTEXT",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-MULTILINGUALTEXT",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-multilingual-text",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#MultilingualText",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-MASKEDTEXT",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-MASKEDTEXT",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-masked-text",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#MaskedText",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-PASSWORD",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-PASSWORD",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-password",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Password",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-INTEGER",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-INTEGER",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-integer",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Integer",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-DECIMAL",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-DECIMAL",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-decimal",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Decimal",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-MONEYFIELD",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-MONEYFIELD",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-money-field",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#MoneyField",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-PERCENT",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-PERCENT",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-percent",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Percent",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-MEASUREMENT",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-MEASUREMENT",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-measurement",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Measurement",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-STEPPER",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-STEPPER",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-stepper",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Stepper",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-DATE",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-DATE",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-date",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Date",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-TIME",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-TIME",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-time",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Time",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-DATETIME",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-DATETIME",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-datetime",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Datetime",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-DATERANGE",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-DATERANGE",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-date-range",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#DateRange",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-SELECT",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-SELECT",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-select",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Select",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-RADIOGROUP",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-RADIOGROUP",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-radio-group",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#RadioGroup",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-CHECKBOXGROUP",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-CHECKBOXGROUP",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-checkbox-group",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#CheckboxGroup",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-SWITCH",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-SWITCH",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-switch",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Switch",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-CASCADER",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-CASCADER",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-cascader",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Cascader",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-TAGSELECT",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-TAGSELECT",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-tag-select",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#TagSelect",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-RICHTEXTINPUT",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-RICHTEXTINPUT",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-rich-text-input",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#RichTextInput",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-MARKDOWNINPUT",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-MARKDOWNINPUT",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-markdown-input",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#MarkdownInput",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-ATTACHMENT",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-ATTACHMENT",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-attachment",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Attachment",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-IMAGEUPLOAD",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-IMAGEUPLOAD",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-image-upload",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#ImageUpload",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-REFERENCEPICKER",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-REFERENCEPICKER",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-reference-picker",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#ReferencePicker",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-TREEREFERENCEPICKER",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-TREEREFERENCEPICKER",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-tree-reference-picker",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#TreeReferencePicker",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-PARENTREFERENCE",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-PARENTREFERENCE",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-parent-reference",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#ParentReference",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-GROUPPICKER",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-GROUPPICKER",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-group-picker",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#GroupPicker",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-ORGANIZATIONPICKER",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-ORGANIZATIONPICKER",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-organization-picker",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#OrganizationPicker",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-PERSONPICKER",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-PERSONPICKER",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-person-picker",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#PersonPicker",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-DEPARTMENTPICKER",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-DEPARTMENTPICKER",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-department-picker",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#DepartmentPicker",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-ADDRESSPICKER",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-ADDRESSPICKER",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-address-picker",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#AddressPicker",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-MASTERDATAID",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-MASTERDATAID",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-master-data-id",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#MasterDataId",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-STATUSENUM",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-STATUSENUM",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-status-enum",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#StatusEnum",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-DATAGRID",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-DATAGRID",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-data-grid",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#DataGrid",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-TREEGRID",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-TREEGRID",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-tree-grid",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#TreeGrid",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-ENTRYGRID",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-ENTRYGRID",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-entry-grid",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#EntryGrid",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-SUBENTRYGRID",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-SUBENTRYGRID",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-sub-entry-grid",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#SubEntryGrid",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-TREEENTRYGRID",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-TREEENTRYGRID",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-tree-entry-grid",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#TreeEntryGrid",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-TREESUBENTRYGRID",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-TREESUBENTRYGRID",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-tree-sub-entry-grid",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#TreeSubEntryGrid",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-CARDENTRY",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-CARDENTRY",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-card-entry",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#CardEntry",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-SUBCARDENTRY",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-SUBCARDENTRY",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-sub-card-entry",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#SubCardEntry",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-READONLYGRID",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-READONLYGRID",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-readonly-grid",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#ReadonlyGrid",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-SPREADSHEET",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-SPREADSHEET",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-spreadsheet",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Spreadsheet",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PLANNED_DISABLED"
+    },
+    {
+      "trace_id": "TRACE-QUERYFILTER",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-QUERYFILTER",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-query-filter",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#QueryFilter",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-PAGINATION",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-PAGINATION",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-pagination",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Pagination",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-TREE",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-TREE",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-tree",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Tree",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-TREEPICKER",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-TREEPICKER",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-tree-picker",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#TreePicker",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-TREEBROWSER",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-TREEBROWSER",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-tree-browser",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#TreeBrowser",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-COLUMNBROWSER",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-COLUMNBROWSER",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-column-browser",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#ColumnBrowser",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-HEADING",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-HEADING",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-heading",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Heading",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-TEXTDISPLAY",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-TEXTDISPLAY",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-text-display",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#TextDisplay",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-DIVIDER",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-DIVIDER",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-divider",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Divider",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-BADGE",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-BADGE",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-badge",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Badge",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-ALERT",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-ALERT",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-alert",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Alert",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-EMPTYSTATE",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-EMPTYSTATE",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-empty-state",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#EmptyState",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-PROGRESS",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-PROGRESS",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-progress",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Progress",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-STATISTIC",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-STATISTIC",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-statistic",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Statistic",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-TIMELINE",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-TIMELINE",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-timeline",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Timeline",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-IMAGE",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-IMAGE",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-image",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Image",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-AUDIO",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-AUDIO",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-audio",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Audio",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-VIDEO",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-VIDEO",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-video",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Video",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-MAP",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-MAP",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-map",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Map",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-QRCODE",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-QRCODE",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-qrcode",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Qrcode",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-RICHTEXTDISPLAY",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-RICHTEXTDISPLAY",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-rich-text-display",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#RichTextDisplay",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-MARKDOWNDISPLAY",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-MARKDOWNDISPLAY",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-markdown-display",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#MarkdownDisplay",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-WEBOFFICE",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-WEBOFFICE",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-web-office",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#WebOffice",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PLANNED_DISABLED"
+    },
+    {
+      "trace_id": "TRACE-ACTIONBAR",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-ACTIONBAR",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-action-bar",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#ActionBar",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-BUTTONGROUP",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-BUTTONGROUP",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-button-group",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#ButtonGroup",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-CONTEXTMENU",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-CONTEXTMENU",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-context-menu",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#ContextMenu",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-NAVIGATIONMENU",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-NAVIGATIONMENU",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-navigation-menu",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#NavigationMenu",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-TREEMENU",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-TREEMENU",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-tree-menu",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#TreeMenu",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-BREADCRUMB",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-BREADCRUMB",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-breadcrumb",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Breadcrumb",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-STATUSBAR",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-STATUSBAR",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-status-bar",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#StatusBar",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-APPROVALRECORDS",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-APPROVALRECORDS",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-approval-records",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#ApprovalRecords",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-PROCESSTRACE",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-PROCESSTRACE",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-process-trace",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#ProcessTrace",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-OPERATIONLOG",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-OPERATIONLOG",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-operation-log",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#OperationLog",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-COMMENTS",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-COMMENTS",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-comments",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Comments",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-METRICCARD",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-METRICCARD",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-metric-card",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#MetricCard",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-CHART",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-CHART",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-chart",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Chart",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-COMBOCHART",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-COMBOCHART",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-combo-chart",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#ComboChart",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-PIVOTTABLE",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-PIVOTTABLE",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-pivot-table",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#PivotTable",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-REPORTLIST",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-REPORTLIST",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-report-list",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#ReportList",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-REPORTTREE",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-REPORTTREE",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-report-tree",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#ReportTree",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-ANALYTICSFILTER",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-ANALYTICSFILTER",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-analytics-filter",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#AnalyticsFilter",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-ANALYTICSWORKSPACE",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-ANALYTICSWORKSPACE",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-analytics-workspace",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#AnalyticsWorkspace",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PLANNED_DISABLED"
+    },
+    {
+      "trace_id": "TRACE-IFRAME",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-IFRAME",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-iframe",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Iframe",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-HTML",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-HTML",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-html",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#Html",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-CUSTOMCOMPONENT",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-CUSTOMCOMPONENT",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-custom-component",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#CustomComponent",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-COMPONENTCOMPOSITION",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-COMPONENTCOMPOSITION",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-component-composition",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#ComponentComposition",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-PAGEFRAGMENT",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-PAGEFRAGMENT",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-page-fragment",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#PageFragment",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "trace_id": "TRACE-BUSINESSTEMPLATE",
+      "capability_id": "CAP-COMPONENT-FAMILY",
+      "claim_family_id": "FAMILY-COMPONENTS",
+      "claim_variant_id": "VAR-COMP-BUSINESSTEMPLATE",
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "prototype_case_id": "component-business-template",
+      "implementation_ref": "prototype/component-runtime-renderer.mjs#BusinessTemplate",
+      "test_case_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "evidence_ids": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs",
+        "tests/component-runtime-state.test.mjs"
+      ],
+      "result": "PASS"
+    }
+  ]
+}

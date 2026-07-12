@@ -1,0 +1,2191 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>T-207 Web 页面设计器 — 综合推荐方案</title>
+  <style>
+    :root {
+      --bg: #e8edf4;
+      --panel: #ffffff;
+      --soft: #f5f7fa;
+      --head: #eef2f7;
+      --line: #cbd5e1;
+      --line-dark: #a7b4c5;
+      --text: #1f2937;
+      --muted: #66758a;
+      --blue: #1f5fbf;
+      --blue-2: #2d74d7;
+      --blue-soft: #e8f1ff;
+      --blue-light: #f0f6ff;
+      --green: #0f7a4c;
+      --green-soft: #eefaf4;
+      --amber: #a15c06;
+      --amber-soft: #fff8ed;
+      --red: #b42318;
+      --red-soft: #fef2f2;
+      --purple: #6d28d9;
+      --purple-soft: #faf5ff;
+      font-family: "Microsoft YaHei UI", "Segoe UI", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    button, input, select { font: inherit; }
+
+    /* ===== PAGE LAYOUT ===== */
+    .page {
+      min-width: 1360px;
+      padding: 20px;
+    }
+
+    .header-doc {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 18px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .tag-list {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .tag {
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 9px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #fff;
+      color: var(--muted);
+      white-space: nowrap;
+      font-size: 11px;
+    }
+
+    .tag.blue { background: var(--blue-soft); color: var(--blue); border-color: #b9cdfc; }
+    .tag.green { background: var(--green-soft); color: var(--green); border-color: #b7dfcd; }
+    .tag.amber { background: var(--amber-soft); color: var(--amber); border-color: #efca92; }
+
+    /* ===== SECTION ===== */
+    .section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.07);
+    }
+
+    .section-head {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-head h2::before {
+      content: "";
+      display: inline-block;
+      width: 4px;
+      height: 16px;
+      background: var(--blue);
+      border-radius: 2px;
+    }
+
+    .section-head .desc {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .section-body {
+      padding: 16px;
+    }
+
+    /* ===== DESIGNER PROTOTYPE ===== */
+    .designer {
+      height: 580px;
+      display: grid;
+      grid-template-rows: 26px 36px minmax(0, 1fr) 62px 22px;
+      border: 1px solid var(--line-dark);
+      background: #fff;
+    }
+
+    .menu-bar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0 10px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      color: #536276;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .cmd-bar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: 8px;
+      padding: 0 10px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-icon {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 4px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .brand-text strong {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .brand-text span {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cmd-tools {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn {
+      height: 26px;
+      min-width: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 9px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      color: #334155;
+      font-size: 10px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .btn.primary {
+      border-color: var(--blue);
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .btn.warn {
+      border-color: #e3bf81;
+      background: var(--amber-soft);
+      color: var(--amber);
+    }
+
+    .pill {
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      color: var(--muted);
+      white-space: nowrap;
+      font-size: 10px;
+    }
+
+    .pill.blue { background: var(--blue-soft); color: var(--blue); border-color: #b9cdfc; }
+    .pill.green { background: var(--green-soft); color: var(--green); border-color: #b7dfcd; }
+
+    /* ===== WORKSPACE 3-PANEL ===== */
+    .workspace {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr) 252px;
+      background: #e6edf5;
+    }
+
+    .panel-left,
+    .panel-right {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 27px minmax(0, 1fr);
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .panel-left { border-right: 1px solid var(--line); }
+    .panel-right { border-left: 1px solid var(--line); }
+
+    .panel-tabs {
+      display: flex;
+      align-items: end;
+      gap: 1px;
+      padding: 0 5px;
+      background: var(--head);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tab {
+      height: 23px;
+      padding: 0 7px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid transparent;
+      border-bottom: 0;
+      border-radius: 3px 3px 0 0;
+      color: #536276;
+      font-size: 10px;
+      white-space: nowrap;
+      cursor: pointer;
+      background: transparent;
+    }
+
+    .tab.active {
+      border-color: var(--line);
+      background: #fff;
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .panel-content {
+      min-height: 0;
+      overflow: auto;
+      padding: 8px;
+    }
+
+    .search-box {
+      width: 100%;
+      height: 24px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 0 8px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-size: 10px;
+    }
+
+    .group-label {
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6px;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-bottom: 0;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .group-label.single {
+      border-bottom: 1px solid var(--line);
+      border-radius: 3px 3px 0 0;
+    }
+
+    .item-list {
+      border: 1px solid var(--line);
+      border-top: 0;
+      border-radius: 0 0 3px 3px;
+      margin-bottom: 8px;
+    }
+
+    .item {
+      height: 26px;
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 5px;
+      padding: 0 6px;
+      border-bottom: 1px solid #edf2f7;
+      font-size: 10px;
+      color: #334155;
+      cursor: pointer;
+    }
+
+    .item:last-child { border-bottom: 0; }
+
+    .item:hover { background: #f0f5ff; }
+
+    .item.active {
+      background: var(--blue-soft);
+      box-shadow: inset 2px 0 0 var(--blue);
+    }
+
+    .ico {
+      width: 16px;
+      height: 16px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line-dark);
+      border-radius: 2px;
+      background: #fff;
+      color: #526174;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .ico.blue { border-color: var(--blue); background: var(--blue-soft); color: var(--blue); }
+    .ico.green { border-color: var(--green); background: var(--green-soft); color: var(--green); }
+    .ico.amber { border-color: var(--amber); background: var(--amber-soft); color: var(--amber); }
+    .ico.purple { border-color: var(--purple); background: var(--purple-soft); color: var(--purple); }
+
+    .badge {
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    /* ===== CENTER CANVAS ===== */
+    .panel-center {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 27px minmax(0, 1fr);
+      overflow: hidden;
+      background: #e6edf5;
+    }
+
+    .canvas-bar {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      padding: 0 7px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .doc-tab {
+      height: 23px;
+      min-width: 130px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 7px;
+      border: 1px solid var(--line);
+      border-bottom: 0;
+      border-radius: 4px 4px 0 0;
+      background: #fff;
+      color: #334155;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .doc-tab.active {
+      background: #fff;
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .canvas-tools {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .viewport {
+      min-height: 0;
+      padding: 14px;
+      overflow: auto;
+      background:
+        linear-gradient(#edf2f7 1px, transparent 1px),
+        linear-gradient(90deg, #edf2f7 1px, transparent 1px),
+        #dfe7f0;
+      background-size: 22px 22px;
+      position: relative;
+    }
+
+    /* Grid area overlays */
+    .grid-lines {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .grid-line-v {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--blue);
+      opacity: 0.35;
+    }
+
+    .grid-line-h {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--blue);
+      opacity: 0.35;
+    }
+
+    .snap-tip {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      height: 18px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 9px;
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    /* ===== WEBPAGE CANVAS ===== */
+    .webpage {
+      height: 100%;
+      min-height: 480px;
+      border: 1px solid var(--line-dark);
+      background: #fff;
+      display: grid;
+      grid-template-rows: 34px 30px minmax(0, 1fr) 34px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 18px rgba(15, 23, 42, 0.12);
+      z-index: 2;
+    }
+
+    .page-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 10px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .page-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .page-actions {
+      display: flex;
+      gap: 4px;
+    }
+
+    .page-nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 9px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+    }
+
+    .nav-chip {
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 8px;
+      border-radius: 3px;
+      color: var(--muted);
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .nav-chip.active {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .page-main {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 200px minmax(0, 1fr) 240px;
+      overflow: hidden;
+    }
+
+    /* Dock Nav */
+    .dock-nav {
+      min-height: 0;
+      border-right: 1px solid var(--line);
+      background: #f7f9fc;
+      display: grid;
+      grid-template-rows: 26px minmax(0, 1fr);
+    }
+
+    .dock-head {
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 7px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      font-size: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .dock-body {
+      padding: 6px;
+      display: grid;
+      align-content: start;
+      gap: 3px;
+      overflow: hidden;
+    }
+
+    .dock-row {
+      height: 24px;
+      display: flex;
+      align-items: center;
+      padding: 0 6px;
+      border-radius: 3px;
+      color: var(--muted);
+      font-size: 10px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .dock-row:hover { background: #eef2f8; }
+
+    .dock-row.active {
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    /* Main Content */
+    .content {
+      min-width: 0;
+      min-height: 0;
+      padding: 8px;
+      display: grid;
+      grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+      gap: 8px;
+      overflow: hidden;
+      background: #fbfcfe;
+    }
+
+    /* Sections */
+    .section-block {
+      border: 1px solid var(--line);
+      background: #fff;
+      position: relative;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .section-block.selected {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 1px var(--blue);
+    }
+
+    .sel-badge {
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 6px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 9px;
+      z-index: 3;
+    }
+
+    .section-head-bar {
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .section-head-bar span {
+      color: var(--muted);
+      font-weight: 400;
+      font-size: 9px;
+    }
+
+    /* Resize handles */
+    .handle {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      border: 1px solid var(--blue);
+      background: #fff;
+      z-index: 4;
+    }
+
+    .h1 { left: -4px; top: -4px; cursor: nw-resize; }
+    .h2 { right: -4px; top: -4px; cursor: ne-resize; }
+    .h3 { left: -4px; bottom: -4px; cursor: sw-resize; }
+    .h4 { right: -4px; bottom: -4px; cursor: se-resize; }
+
+    /* Form Grid */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(24, minmax(0, 1fr));
+      gap: 6px 8px;
+      padding: 22px 10px 10px;
+    }
+
+    .field {
+      height: 22px;
+      display: grid;
+      grid-template-columns: 50px minmax(0, 1fr);
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+      font-size: 9px;
+    }
+
+    .span4 { grid-column: span 4; }
+    .span6 { grid-column: span 6; }
+    .span8 { grid-column: span 8; }
+    .span12 { grid-column: span 12; }
+    .span16 { grid-column: span 16; }
+
+    .field label {
+      color: var(--muted);
+      text-align: right;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .field input {
+      height: 20px;
+      display: flex;
+      align-items: center;
+      padding: 0 5px;
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      color: #334155;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 9px;
+    }
+
+    /* Toolbar Strip */
+    .toolbar-strip {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 8px;
+      overflow: hidden;
+    }
+
+    .op-btn {
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #fff;
+      color: #526174;
+      font-size: 9px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .op-btn.active {
+      border-color: #9fb9e8;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    /* Table */
+    .table-wrap {
+      min-height: 0;
+      overflow: auto;
+    }
+
+    .data-table {
+      width: 100%;
+      min-width: 400px;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 9px;
+    }
+
+    .data-table th,
+    .data-table td {
+      height: 24px;
+      padding: 0 5px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .data-table th {
+      background: #f5f7fa;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .nested-row td {
+      height: 40px;
+      background: #fafbfe;
+      padding: 4px;
+    }
+
+    .nested-row .nested {
+      height: 32px;
+      display: grid;
+      grid-template-columns: 60px minmax(0, 1fr);
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .nested-row .nested strong {
+      display: grid;
+      place-items: center;
+      border-right: 1px solid var(--line);
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-size: 9px;
+    }
+
+    .nested-row .nested span {
+      display: flex;
+      align-items: center;
+      padding: 0 6px;
+      color: var(--muted);
+      font-size: 9px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Aside Panel */
+    .aside-panel {
+      min-height: 0;
+      border-left: 1px solid var(--line);
+      background: #f8fafc;
+      display: grid;
+      grid-template-rows: 26px minmax(0, 1fr);
+      overflow: hidden;
+    }
+
+    .aside-body {
+      padding: 6px;
+      display: grid;
+      gap: 6px;
+      align-content: start;
+      overflow: auto;
+    }
+
+    .info-card {
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .info-card-head {
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6px;
+      background: #f5f7fa;
+      border-bottom: 1px solid var(--line);
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .info-card-body {
+      padding: 6px;
+      font-size: 9px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 14px minmax(0, 1fr);
+      gap: 5px;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 9px;
+    }
+
+    .timeline-item .dot {
+      width: 6px;
+      height: 6px;
+      display: inline-block;
+      margin-top: 4px;
+    }
+
+    .timeline-item .dot.filled { background: var(--green); }
+    .timeline-item .dot.empty { background: none; border: 1px solid var(--line); border-radius: 50%; }
+
+    /* Page Bottom */
+    .page-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      padding: 0 8px;
+      border-top: 1px solid var(--line);
+      background: #fff;
+    }
+
+    /* Drop indicator */
+    .drop-indicator {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      border: 1.5px dashed var(--blue);
+      background: rgba(31, 95, 191, 0.05);
+      color: var(--blue);
+      font-size: 9px;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    /* ===== RIGHT PANEL: PROPERTIES ===== */
+    .prop-select {
+      width: 100%;
+      height: 26px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #334155;
+      font-size: 10px;
+      margin-bottom: 8px;
+      padding: 0 6px;
+      border-radius: 4px;
+    }
+
+    .prop-box {
+      border: 1px solid var(--line);
+      margin-bottom: 8px;
+      background: #fff;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .prop-cat {
+      height: 24px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      background: var(--soft);
+      border-bottom: 1px solid var(--line);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .prop-row {
+      min-height: 26px;
+      display: grid;
+      grid-template-columns: 86px minmax(0, 1fr);
+      border-bottom: 1px solid #edf2f7;
+      font-size: 9px;
+    }
+
+    .prop-row:last-child { border-bottom: 0; }
+
+    .prop-row span {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      padding: 0 6px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .prop-row span:first-child {
+      border-right: 1px solid #edf2f7;
+      background: #fbfcfe;
+      color: var(--muted);
+    }
+
+    .prop-row span:last-child {
+      color: #334155;
+    }
+
+    .prop-value-input {
+      height: 100%;
+      width: 100%;
+      border: none;
+      padding: 0 4px;
+      font-size: 9px;
+      color: #334155;
+      background: transparent;
+    }
+
+    /* Layout specific */
+    .layout-prop {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      padding: 6px;
+    }
+
+    .layout-cell {
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      font-size: 9px;
+      color: var(--muted);
+      cursor: pointer;
+      background: #fff;
+    }
+
+    .layout-cell.active {
+      border-color: var(--blue);
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    /* ===== BOTTOM STATUS BAR ===== */
+    .bottom-bar {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 230px;
+      border-top: 1px solid var(--line);
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .errors-panel {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: 22px minmax(0, 1fr);
+      overflow: hidden;
+    }
+
+    .bottom-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 8px;
+      background: var(--head);
+      border-bottom: 1px solid var(--line);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .err-row {
+      height: 20px;
+      display: grid;
+      grid-template-columns: 56px 72px minmax(0, 1fr) 90px;
+      align-items: center;
+      border-bottom: 1px solid #edf2f7;
+      color: var(--muted);
+      font-size: 9px;
+      padding: 0 7px;
+      gap: 6px;
+    }
+
+    .err-row .type { font-weight: 700; }
+    .err-row .type.error { color: var(--red); }
+    .err-row .type.warn { color: var(--amber); }
+    .err-row .type.info { color: var(--green); }
+
+    .schema-preview {
+      border-left: 1px solid var(--line);
+      background: #fbfcfe;
+      padding: 6px;
+      color: #334155;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 9px;
+      line-height: 1.5;
+      white-space: pre;
+      overflow: auto;
+    }
+
+    .status-bar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto auto;
+      align-items: center;
+      gap: 10px;
+      padding: 0 8px;
+      background: #f8fafc;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .breadcrumb {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .kbd {
+      display: inline-flex;
+      align-items: center;
+      height: 18px;
+      padding: 0 4px;
+      border: 1px solid var(--line-dark);
+      border-radius: 3px;
+      background: #fff;
+      color: #475569;
+      font-size: 9px;
+    }
+
+    /* ===== FEATURE CARDS ===== */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .feature-card {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 14px;
+      background: #fafcfe;
+    }
+
+    .feature-card h3 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .feature-card h3 .ico {
+      width: 20px;
+      height: 20px;
+      font-size: 11px;
+    }
+
+    .feature-card p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .feature-card ul {
+      margin: 0;
+      padding: 0 0 0 16px;
+      color: var(--text);
+      font-size: 11px;
+      line-height: 1.8;
+    }
+
+    /* ===== COMPARISON TABLE ===== */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    th, td {
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      text-align: left;
+    }
+
+    th {
+      background: var(--soft);
+      font-weight: 700;
+    }
+
+    tr:nth-child(even) td { background: #fafcfe; }
+
+    .score-a { color: var(--green); font-weight: 700; }
+    .score-b { color: var(--blue); font-weight: 700; }
+    .score-c { color: var(--muted); }
+
+    /* ===== ARCHITECTURE ===== */
+    .arch-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .arch-layer {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .arch-layer-head {
+      padding: 8px 12px;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 700;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .arch-layer-head.amber { background: var(--amber); }
+    .arch-layer-head.green { background: var(--green); }
+    .arch-layer-head.purple { background: var(--purple); }
+
+    .arch-layer-body {
+      padding: 8px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .arch-item {
+      padding: 6px 8px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #fff;
+      font-size: 10px;
+      text-align: center;
+    }
+
+    /* ===== PROTOTYPE NAV ===== */
+    .proto-nav {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .proto-nav .btn {
+      height: 30px;
+      padding: 0 14px;
+      font-size: 11px;
+      border-radius: 4px;
+    }
+
+    .proto-nav .btn.active {
+      background: var(--blue);
+      color: #fff;
+      border-color: var(--blue);
+    }
+
+    /* ===== MODES ===== */
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .mode-card {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .mode-card h4 {
+      margin: 0 0 6px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .mode-card p {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .mode-tags {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+<main class="page">
+
+  <!-- ===== HEADER ===== -->
+  <header class="header-doc">
+    <div>
+      <h1>T-207 Web 页面设计器 — 综合推荐方案</h1>
+      <p class="lead">基于 10 套原型评审结论，以 01 企业单据页面为基线，融合 04 布局引擎、05 表格设计、10 双视图质量管控的综合推荐方案。目标是成为最接近金蝶/DevExpress 体验的 Web 页面可视化设计器。</p>
+    </div>
+    <div class="tag-list">
+      <span class="tag blue">01 基线 + 04 布局</span>
+      <span class="tag green">05 表格</span>
+      <span class="tag">10 双视图</span>
+    </div>
+  </header>
+
+  <!-- ===== SECTION 1: DESIGNER PROTOTYPE ===== -->
+  <section class="section">
+    <div class="section-head">
+      <h2>综合推荐设计器原型</h2>
+      <span class="desc">01 企业单据页面 + 04 强布局容器 + 05 母子表格 + 10 双视图质量 — 四合一</span>
+    </div>
+    <div class="section-body" style="padding:0;">
+      <div class="designer">
+
+        <!-- Menu Bar -->
+        <div class="menu-bar">
+          <span>文件</span><span>编辑</span><span>视图</span><span style="color:var(--blue);font-weight:700;">布局</span><span>数据</span><span>规则</span><span>权限</span><span>发布</span><span>帮助</span>
+          <span style="margin-left:auto;color:var(--line-dark);">T-207 Web 页面设计器 v1.0</span>
+        </div>
+
+        <!-- Command Bar -->
+        <div class="cmd-bar">
+          <div class="brand">
+            <div class="brand-icon">T</div>
+            <div class="brand-text">
+              <strong>企业单据页面设计器</strong>
+              <span>销售订单 PC Web 页面 / GridLayout + EntryTable</span>
+            </div>
+          </div>
+          <div class="cmd-tools">
+            <span class="btn">↶ 撤销</span>
+            <span class="btn">↷ 重做</span>
+            <span class="btn">保存</span>
+            <span class="btn warn">校验 3</span>
+            <span class="btn">📐 布局</span>
+            <span class="btn">📊 表格</span>
+            <span class="btn">👁 双视图</span>
+            <span class="btn primary">发布</span>
+          </div>
+          <div class="cmd-tools">
+            <span class="pill">1440</span>
+            <span class="pill blue">Grid Area</span>
+          </div>
+        </div>
+
+        <!-- Workspace 3-Panel -->
+        <div class="workspace">
+
+          <!-- LEFT: Toolbox -->
+          <aside class="panel-left">
+            <div class="panel-tabs">
+              <span class="tab active">容器</span>
+              <span class="tab">表格</span>
+              <span class="tab">字段</span>
+              <span class="tab">大纲</span>
+            </div>
+            <div class="panel-content">
+              <input class="search-box" value="搜索组件">
+
+              <!-- Layout Containers -->
+              <div class="group-label">布局容器 <span style="font-weight:400;color:var(--muted);font-size:9px;">P0</span></div>
+              <div class="item-list">
+                <div class="item active">
+                  <span class="ico blue">G</span>
+                  <span>GridLayout</span>
+                  <span class="badge">grid</span>
+                </div>
+                <div class="item">
+                  <span class="ico">F</span>
+                  <span>FlexLayout</span>
+                  <span class="badge">flex</span>
+                </div>
+                <div class="item">
+                  <span class="ico">D</span>
+                  <span>DockLayout</span>
+                  <span class="badge">dock</span>
+                </div>
+                <div class="item">
+                  <span class="ico">S</span>
+                  <span>SplitPane</span>
+                  <span class="badge">split</span>
+                </div>
+                <div class="item">
+                  <span class="ico">K</span>
+                  <span>StickyRegion</span>
+                  <span class="badge">sticky</span>
+                </div>
+                <div class="item">
+                  <span class="ico">P</span>
+                  <span>Portal Overlay</span>
+                  <span class="badge">portal</span>
+                </div>
+              </div>
+
+              <!-- Business Containers -->
+              <div class="group-label">业务容器 <span style="font-weight:400;color:var(--muted);font-size:9px;">P0</span></div>
+              <div class="item-list">
+                <div class="item">
+                  <span class="ico green">B</span>
+                  <span>BillPage</span>
+                  <span class="badge">单据</span>
+                </div>
+                <div class="item">
+                  <span class="ico green">M</span>
+                  <span>MasterDetail</span>
+                  <span class="badge">主从</span>
+                </div>
+              </div>
+
+              <!-- Table Section (from 05) -->
+              <div class="group-label">表格组件 <span style="font-weight:400;color:var(--muted);font-size:9px;">P0</span></div>
+              <div class="item-list">
+                <div class="item">
+                  <span class="ico amber">T</span>
+                  <span>EntryTable</span>
+                  <span class="badge">分录</span>
+                </div>
+                <div class="item">
+                  <span class="ico amber">C</span>
+                  <span>BatchDetail</span>
+                  <span class="badge">批次</span>
+                </div>
+                <div class="item">
+                  <span class="ico amber">L</span>
+                  <span>SerialDetail</span>
+                  <span class="badge">序列号</span>
+                </div>
+              </div>
+
+              <!-- Business Fields -->
+              <div class="group-label">业务字段 <span style="font-weight:400;color:var(--muted);font-size:9px;">ref</span></div>
+              <div class="item-list">
+                <div class="item">
+                  <span class="ico purple">C</span>
+                  <span>客户</span>
+                  <span class="badge">ref</span>
+                </div>
+                <div class="item">
+                  <span class="ico purple">M</span>
+                  <span>物料</span>
+                  <span class="badge">ref</span>
+                </div>
+                <div class="item">
+                  <span class="ico purple">$</span>
+                  <span>金额 / 单价</span>
+                  <span class="badge">money</span>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <!-- CENTER: Canvas -->
+          <section class="panel-center">
+            <div class="canvas-bar">
+              <div style="display:flex;gap:4px;align-items:center;">
+                <div class="doc-tab active">销售订单.page.json ✕</div>
+                <div class="doc-tab">预览</div>
+              </div>
+              <div class="canvas-tools">
+                <span class="btn">📏 列线</span>
+                <span class="btn">🧲 吸附</span>
+                <span class="btn">📱 断点</span>
+                <span class="btn">📐 Grid区</span>
+                <span class="pill">100%</span>
+              </div>
+            </div>
+            <div class="viewport">
+              <!-- Grid area lines from 04 -->
+              <div class="grid-lines">
+                <div class="grid-line-v" style="left:24%;"></div>
+                <div class="grid-line-v" style="left:calc(24% + 200px);"></div>
+                <div class="grid-line-v" style="left:calc(24% + 200px + 240px);"></div>
+              </div>
+              <div class="snap-tip">Grid: nav 200px | main minmax(0,1fr) | aside 240px</div>
+              <!-- Drop indicator -->
+              <div class="drop-indicator" style="left:28%;right:6%;top:38%;height:28px;">可投放: FormSection / EntryTable / SplitPane</div>
+
+              <div class="webpage">
+                <!-- Page Topbar -->
+                <div class="page-top">
+                  <div class="page-title"><span class="dot"></span>销售订单</div>
+                  <div class="page-actions">
+                    <span class="btn" style="height:22px;font-size:9px;padding:0 6px;">保存草稿</span>
+                    <span class="btn primary" style="height:22px;font-size:9px;padding:0 6px;">运行预览</span>
+                  </div>
+                </div>
+
+                <!-- Tab Navigation -->
+                <div class="page-nav">
+                  <span class="nav-chip active">基本信息</span>
+                  <span class="nav-chip">订单明细</span>
+                  <span class="nav-chip">批次明细</span>
+                  <span class="nav-chip">交付计划</span>
+                  <span class="nav-chip">审批记录</span>
+                  <span class="nav-chip">关联单据</span>
+                </div>
+
+                <!-- 3-Column Layout: Dock + Main + Aside -->
+                <div class="page-main">
+                  <!-- Dock Navigation (from 04) -->
+                  <nav class="dock-nav">
+                    <div class="dock-head">业务导航 <span style="font-weight:400;font-size:9px;">200px</span></div>
+                    <div class="dock-body">
+                      <div class="dock-row active">📋 基本信息</div>
+                      <div class="dock-row">📦 订单明细</div>
+                      <div class="dock-row">📑 批次明细</div>
+                      <div class="dock-row">📎 合同附件</div>
+                      <div class="dock-row">✅ 审批记录</div>
+                      <div class="dock-row">🔗 关联单据</div>
+                    </div>
+                  </nav>
+
+                  <!-- Main Content Area -->
+                  <main class="content">
+                    <!-- Section 1: Header FormGrid (from 01 + 04) -->
+                    <section class="section-block selected">
+                      <div class="sel-badge">HeaderFormGrid selected — grid 24col</div>
+                      <span class="handle h1"></span>
+                      <span class="handle h2"></span>
+                      <span class="handle h3"></span>
+                      <span class="handle h4"></span>
+                      <div class="form-grid">
+                        <div class="field span6"><label>客户</label><input value="杭州未来科技"></div>
+                        <div class="field span6"><label>销售组织</label><input value="华东销售中心"></div>
+                        <div class="field span6"><label>订单日期</label><input value="2026-07-09"></div>
+                        <div class="field span6"><label>币种</label><input value="CNY 人民币"></div>
+                        <div class="field span12"><label>收货地址</label><input value="浙江省杭州市余杭区文一西路 999 号"></div>
+                        <div class="field span6"><label>状态</label><input value="草稿"></div>
+                        <div class="field span6"><label>业务员</label><input value="张明"></div>
+                      </div>
+                    </section>
+
+                    <!-- Section 2: Action Toolbar (from 01) -->
+                    <section class="section-block">
+                      <div class="section-head-bar">
+                        FlexLayout 操作区 <span>flex-wrap / action buttons</span>
+                      </div>
+                      <div class="toolbar-strip">
+                        <span class="op-btn active">💾 保存</span>
+                        <span class="op-btn">📤 提交审批</span>
+                        <span class="op-btn">✅ 审核</span>
+                        <span class="op-btn">🔄 反审核</span>
+                        <span class="op-btn">🖨 打印</span>
+                        <span class="op-btn">📦 下推采购</span>
+                        <span class="op-btn">🔗 关联发货</span>
+                        <span class="op-btn">⋯ 更多</span>
+                      </div>
+                    </section>
+
+                    <!-- Section 3: SplitPane + EntryTable (from 05) -->
+                    <section class="section-block">
+                      <div class="section-head-bar">
+                        EntryTable 分录表格 <span>冻结列 / 嵌套批次 / 虚拟滚动</span>
+                      </div>
+                      <div class="toolbar-strip" style="border-bottom:1px solid var(--line);">
+                        <span class="op-btn active">➕ 新增行</span>
+                        <span class="op-btn">📋 复制行</span>
+                        <span class="op-btn">🗑 删除行</span>
+                        <span class="op-btn">📥 批量填充</span>
+                        <span class="op-btn">📦 批次</span>
+                        <span class="op-btn">🏷 序列号</span>
+                        <span class="op-btn" style="margin-left:auto;">汇总: ¥ 14,420.00</span>
+                      </div>
+                      <div class="table-wrap">
+                        <table class="data-table">
+                          <colgroup>
+                            <col style="width:36px"><col style="width:120px"><col style="width:70px"><col style="width:70px"><col style="width:90px"><col style="width:80px"><col style="width:80px">
+                          </colgroup>
+                          <thead>
+                            <tr><th>#</th><th>物料</th><th>单位</th><th>数量</th><th>单价</th><th>金额</th><th>交付日期</th></tr>
+                          </thead>
+                          <tbody>
+                            <tr><td>1</td><td>A-1001 标准件</td><td>PCS</td><td>20</td><td>128.00</td><td>2,560.00</td><td>07-20</td></tr>
+                            <tr class="nested-row"><td></td><td colspan="6"><div class="nested"><strong>批次明细</strong><span>批次号 B-001 / 库位 A-01-02 / 可用量 20 / 序列号子表 20 行</span></div></td></tr>
+                            <tr><td>2</td><td>B-2048 工业屏</td><td>PCS</td><td>8</td><td>860.00</td><td>6,880.00</td><td>07-26</td></tr>
+                            <tr><td>3</td><td>C-3100 线束组件</td><td>PCS</td><td>120</td><td>16.50</td><td>1,980.00</td><td>07-30</td></tr>
+                            <tr><td>4</td><td>D-5000 维保服务</td><td>次</td><td>1</td><td>2,000.00</td><td>2,000.00</td><td>08-01</td></tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+
+                    <!-- Section 4: Tabs (from 04) -->
+                    <section class="section-block">
+                      <div class="section-head-bar">
+                        Tabs / Collapse 扩展区 <span>懒加载 / 权限隐藏 / 局部滚动</span>
+                      </div>
+                      <div class="toolbar-strip">
+                        <span class="op-btn active">订单明细</span>
+                        <span class="op-btn">批次明细</span>
+                        <span class="op-btn">序列号</span>
+                        <span class="op-btn">合同条款</span>
+                        <span class="op-btn">交付计划</span>
+                        <span class="op-btn">变更记录</span>
+                      </div>
+                    </section>
+
+                    <!-- Sticky Bottom Actions -->
+                    <div class="toolbar-strip" style="background:#fff;border:1px solid var(--line);border-radius:4px;padding:0 8px;justify-content:flex-end;gap:6px;">
+                      <span class="btn" style="height:26px;font-size:10px;">关闭</span>
+                      <span class="btn" style="height:26px;font-size:10px;">保存草稿</span>
+                      <span class="btn primary" style="height:26px;font-size:10px;">提交审批</span>
+                    </div>
+                  </main>
+
+                  <!-- Aside Panel (from 01) -->
+                  <aside class="aside-panel">
+                    <div class="dock-head">AsidePanel <span style="font-weight:400;font-size:9px;">240px</span></div>
+                    <div class="aside-body">
+                      <div class="info-card">
+                        <div class="info-card-head">审批轨迹 <span class="pill" style="height:16px;font-size:8px;padding:0 4px;">sticky</span></div>
+                        <div class="info-card-body">
+                          <div class="timeline-item"><span class="dot filled"></span><span>销售创建草稿，等待提交审批。</span></div>
+                          <div class="timeline-item"><span class="dot filled"></span><span>系统校验客户信用额度和交付风险。</span></div>
+                          <div class="timeline-item"><span class="dot empty"></span><span>区域经理审批后订单生效。</span></div>
+                        </div>
+                      </div>
+                      <div class="info-card">
+                        <div class="info-card-head">风险提示 <span style="color:var(--amber);font-weight:700;">1</span></div>
+                        <div class="info-card-body">客户信用额度即将超出预警线。</div>
+                      </div>
+                      <div class="info-card">
+                        <div class="info-card-head">附件 <span style="color:var(--muted);">3</span></div>
+                        <div class="info-card-body">
+                          <div class="timeline-item"><span class="dot empty"></span><span>客户合同.pdf</span></div>
+                          <div class="timeline-item"><span class="dot empty"></span><span>技术规格.xlsx</span></div>
+                          <div class="timeline-item"><span class="dot empty"></span><span>报价确认.png</span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </aside>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- RIGHT: Properties Panel -->
+          <aside class="panel-right">
+            <div class="panel-tabs">
+              <span class="tab active">属性</span>
+              <span class="tab">布局</span>
+              <span class="tab">断点</span>
+              <span class="tab">规则</span>
+            </div>
+            <div class="panel-content">
+              <select class="prop-select">
+                <option>HeaderFormGrid : GridLayout</option>
+                <option>ActionToolbar : FlexLayout</option>
+                <option>EntryTable : EntryTable</option>
+              </select>
+
+              <!-- Layout Properties (from 04) -->
+              <div class="prop-box">
+                <div class="prop-cat">📐 布局属性</div>
+                <div class="layout-prop">
+                  <div class="layout-cell">nav</div>
+                  <div class="layout-cell active">main</div>
+                  <div class="layout-cell">aside</div>
+                </div>
+                <div class="prop-row"><span>display</span><span>grid</span></div>
+                <div class="prop-row"><span>columns</span><span>repeat(24, 1fr)</span></div>
+                <div class="prop-row"><span>rowGap</span><span>6px</span></div>
+                <div class="prop-row"><span>colGap</span><span>8px</span></div>
+                <div class="prop-row"><span>labelWidth</span><span>50px</span></div>
+              </div>
+
+              <!-- Grid Area (from 04) -->
+              <div class="prop-box">
+                <div class="prop-cat">🧱 Grid Area</div>
+                <div class="prop-row"><span>areas</span><span>nav main aside</span></div>
+                <div class="prop-row"><span>columns</span><span>200px 1fr 240px</span></div>
+                <div class="prop-row"><span>scroll</span><span>main:auto</span></div>
+                <div class="prop-row"><span>sticky</span><span>top / bottom</span></div>
+              </div>
+
+              <!-- Constraint Properties (from 04) -->
+              <div class="prop-box">
+                <div class="prop-cat">⚡ 约束属性</div>
+                <div class="prop-row"><span>minWidth</span><span>1180px</span></div>
+                <div class="prop-row"><span>maxWidth</span><span>none</span></div>
+                <div class="prop-row"><span>overflow</span><span>main:auto</span></div>
+              </div>
+
+              <!-- Data Binding (from 06) -->
+              <div class="prop-box">
+                <div class="prop-cat">🔗 数据绑定</div>
+                <div class="prop-row"><span>BO</span><span>SalesOrder</span></div>
+                <div class="prop-row"><span>scope</span><span>header</span></div>
+                <div class="prop-row"><span>lazyLoad</span><span>false</span></div>
+              </div>
+
+              <!-- Permission (from 01) -->
+              <div class="prop-box">
+                <div class="prop-cat">🔒 权限</div>
+                <div class="prop-row"><span>查看</span><span>销售员</span></div>
+                <div class="prop-row"><span>编辑</span><span>制单人</span></div>
+              </div>
+
+              <!-- Responsive (from 07) -->
+              <div class="prop-box">
+                <div class="prop-cat">📱 响应式</div>
+                <div class="prop-row"><span>1280</span><span>aside collapse</span></div>
+                <div class="prop-row"><span>1440</span><span>nav 200 / aside 240</span></div>
+                <div class="prop-row"><span>1600</span><span>aside 280</span></div>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <!-- Bottom Status Bar -->
+        <div class="bottom-bar">
+          <div class="errors-panel">
+            <div class="bottom-title">
+              <span>错误列表 / 设计分析器</span>
+              <span style="margin-left:auto;font-weight:400;color:var(--muted);">4 项</span>
+            </div>
+            <div style="overflow:auto;">
+              <div class="err-row">
+                <span class="type error">Error</span>
+                <span>P-033</span>
+                <span>反审核按钮缺少岗位权限配置</span>
+                <span>权限</span>
+              </div>
+              <div class="err-row">
+                <span class="type warn">Warning</span>
+                <span>L-201</span>
+                <span>1280 断点下右侧 Aside 应折叠</span>
+                <span>Layout</span>
+              </div>
+              <div class="err-row">
+                <span class="type warn">Warning</span>
+                <span>B-102</span>
+                <span>客户变更将触发价格政策重算</span>
+                <span>规则</span>
+              </div>
+              <div class="err-row">
+                <span class="type info">Info</span>
+                <span>T-020</span>
+                <span>EntryTable 已启用虚拟滚动</span>
+                <span>性能</span>
+              </div>
+            </div>
+          </div>
+          <pre class="schema-preview">{
+  layout: {
+    display: "grid",
+    areas: ["nav main aside"],
+    columns: "200px 1fr 240px",
+    scrollContainers: ["main"],
+    sticky: ["top", "bottom"]
+  },
+  formGrid: {
+    columns: 24,
+    rowGap: "6px",
+    colGap: "8px"
+  },
+  table: {
+    type: "EntryTable",
+    detail: "BatchDetail",
+    virtualRows: true
+  }
+}</pre>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+          <div class="breadcrumb">SalesOrder.page / RootGrid / HeaderFormGrid / EntryTable / BatchDetail</div>
+          <span>布局校验: <strong style="color:var(--red);">1 blocker</strong> / 3 warning</span>
+          <span><span class="kbd">Alt</span>+拖动复制</span>
+          <span>缩放 100%</span>
+          <span>DevExpress 壳 | 金蝶密度 | VS 属性窗 | Grid 布局 | 双视图</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 2: FEATURE SUMMARY ===== -->
+  <section class="section">
+    <div class="section-head">
+      <h2>核心能力模块</h2>
+      <span class="desc">五大能力模块，对应评审中最强的五个方案</span>
+    </div>
+    <div class="section-body">
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h3><span class="ico blue">G</span> Web 布局引擎</h3>
+          <p>基于 CSS Grid/Flex 的可视化布局设计，覆盖所有 Web 布局模式。Grid Area 可视化辅助线，吸附到最近网格交点。</p>
+          <ul>
+            <li>GridLayout — 24 列栅格、area 命名布局</li>
+            <li>FlexLayout — wrap / grow / shrink / basis</li>
+            <li>DockLayout — top/left/right/bottom/fill 停靠</li>
+            <li>SplitPane — 可拖拽手柄、比例约束</li>
+            <li>StickyRegion — 固定表头/底栏</li>
+            <li>Portal Overlay — 统一浮层层级管理</li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <h3><span class="ico amber">T</span> 母子嵌套表格</h3>
+          <p>企业分录表格的核心能力。支持冻结列、嵌套批次/序列号子表、虚拟滚动、键盘导航、父子汇总。</p>
+          <ul>
+            <li>EntryTable — 分录表格主组件</li>
+            <li>BatchDetail — 批次明细嵌套行</li>
+            <li>SerialDetail — 序列号子表</li>
+            <li>列配置 — freeze/edit/sum/format</li>
+            <li>虚拟滚动 — 10 万行级性能保障</li>
+            <li>主子汇总 — 自动跨行聚合计算</li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <h3><span class="ico green">Q</span> 双视图质量管控</h3>
+          <p>设计态和运行态同屏对照，发布前质量门禁检查：性能指标、权限裁剪、规则耗时、布局校验。</p>
+          <ul>
+            <li>设计态 + 运行态并排预览</li>
+            <li>渲染耗时 / API 调用数监控</li>
+            <li>规则执行耗时分析</li>
+            <li>权限裁剪模拟（按角色）</li>
+            <li>布局断点校验（1280/1440/1600/1920）</li>
+            <li>发布门禁 — blocker 必须清零</li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <h3><span class="ico purple">D</span> 字段驱动绑定</h3>
+          <p>业务对象字段拖入页面，自动生成控件、列定义、校验规则、权限绑定和数据血缘关系。</p>
+          <ul>
+            <li>BO 字段树 — 层级化业务对象</li>
+            <li>ReferencePicker — 基础资料选择</li>
+            <li>MoneyInput — 金额字段（含币种）</li>
+            <li>自动校验 — required / range / format</li>
+            <li>权限绑定 — 字段级 read/write</li>
+            <li>数据血缘 — 影响分析可视化</li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <h3><span class="ico blue">R</span> PC 响应式</h3>
+          <p>专注企业 PC 多分辨率：1280/1440/1600/1920。解决字段换行、表格横滚、侧栏折叠等真实问题。</p>
+          <ul>
+            <li>4 档断点独立配置</li>
+            <li>aside collapse 折叠动画</li>
+            <li>表格宽度自适应 + 横向滚动</li>
+            <li>字段 span 跨列动态调整</li>
+            <li>断点预览即时生效</li>
+            <li>断点切换不丢失编辑状态</li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <h3><span class="ico green">W</span> 规则与审批联动</h3>
+          <p>选中字段即可看到联动规则、审批路线、权限影响和发布风险。字段变更触发的规则链可视化。</p>
+          <ul>
+            <li>onChange 事件 → 字段联动</li>
+            <li>beforeSubmit → 审批路线</li>
+            <li>字段变更 → 价格/信用影响分析</li>
+            <li>规则依赖拓扑图</li>
+            <li>发布影响预估</li>
+            <li>规则冲突检测</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 3: ARCHITECTURE ===== -->
+  <section class="section">
+    <div class="section-head">
+      <h2>系统架构</h2>
+      <span class="desc">四层分离：存储层 / 布局引擎层 / 设计器层 / 运行态渲染层</span>
+    </div>
+    <div class="section-body">
+      <div class="arch-grid">
+        <div class="arch-layer">
+          <div class="arch-layer-head">📦 存储层</div>
+          <div class="arch-layer-body">
+            <div class="arch-item">PageSchema JSON</div>
+            <div class="arch-item">ComponentRegistry</div>
+            <div class="arch-item">DesignToken 主题</div>
+            <div class="arch-item">LayoutBreakpoint 规则</div>
+            <div class="arch-item">PermissionBinding</div>
+            <div class="arch-item">RuleDefinition</div>
+          </div>
+        </div>
+        <div class="arch-layer">
+          <div class="arch-layer-head amber">⚙️ 布局引擎层</div>
+          <div class="arch-layer-body">
+            <div class="arch-item">LayoutEngine</div>
+            <div class="arch-item">GridAreaResolver</div>
+            <div class="arch-item">DockManager</div>
+            <div class="arch-item">SplitPaneHandler</div>
+            <div class="arch-item">ScrollContainer</div>
+            <div class="arch-item">ResponsiveBreaks</div>
+          </div>
+        </div>
+        <div class="arch-layer">
+          <div class="arch-layer-head green">🎨 设计器层</div>
+          <div class="arch-layer-body">
+            <div class="arch-item">DragDropManager</div>
+            <div class="arch-item">SnapLineEngine</div>
+            <div class="arch-item">SelectionManager</div>
+            <div class="arch-item">ResizeObserver</div>
+            <div class="arch-item">PropertyGrid</div>
+            <div class="arch-item">SchemaBuilder</div>
+          </div>
+        </div>
+        <div class="arch-layer">
+          <div class="arch-layer-head purple">🚀 运行态层</div>
+          <div class="arch-layer-body">
+            <div class="arch-item">RuntimeRenderer</div>
+            <div class="arch-item">VirtualScroll</div>
+            <div class="arch-item">PermissionFilter</div>
+            <div class="arch-item">RuleExecutor</div>
+            <div class="arch-item">PortalManager</div>
+            <div class="arch-item">PerfMonitor</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 4: INTERACTION PATTERNS ===== -->
+  <section class="section">
+    <div class="section-head">
+      <h2>交互设计规范</h2>
+      <span class="desc">参考 DevExpress + 金蝶 + VS 三大平台最佳实践</span>
+    </div>
+    <div class="section-body">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:160px;">交互场景</th>
+            <th>行为规范</th>
+            <th style="width:240px;">参考来源</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>拖放组件</strong></td>
+            <td>从左侧工具箱拖出时，画布显示蓝色虚线投放区（drop zone），吸附到最近网格交点后显示 snap line 辅助线，松手后组件自动插入对应位置</td>
+            <td>DevExpress LayoutControl 对齐 + VS Designer 投放</td>
+          </tr>
+          <tr>
+            <td><strong>选中组件</strong></td>
+            <td>单击选中显示蓝色边框 + box-shadow，4 个角显示调整手柄（可拖拽改变 span），右侧属性面板自动切换到该组件的属性</td>
+            <td>VS WinForms Designer 选中态 + DevExpress Selection</td>
+          </tr>
+          <tr>
+            <td><strong>调整尺寸</strong></td>
+            <td>拖拽调整手柄时，Grid 容器内组件的 span-X 自动更新；Flex 容器内组件的 flex-grow/flex-basis 实时变化；右侧属性面板同步显示新值</td>
+            <td>VS TableLayoutPanel + DevExpress 自适应布局</td>
+          </tr>
+          <tr>
+            <td><strong>大纲视图</strong></td>
+            <td>左侧大纲（Outline）Tab 显示组件树层级，点击大纲项自动选中画布对应组件并滚动到可见区域，支持拖拽调整嵌套关系</td>
+            <td>VS Document Outline + DevExpress 组件树</td>
+          </tr>
+          <tr>
+            <td><strong>属性编辑</strong></td>
+            <td>右侧属性面板支持直接编辑数值，编辑后画布实时更新（无需确认）；部分属性提供下拉选择（如 display: grid/flex）</td>
+            <td>VS PropertyGrid + DevExpress OptionsForm</td>
+          </tr>
+          <tr>
+            <td><strong>断点预览</strong></td>
+            <td>点击工具栏"断点"按钮，画布从 1440 切换到目标分辨率，布局重新计算，属性面板显示该断点下的差异项；不影响编辑状态的原始值</td>
+            <td>浏览器 DevTools Responsive + 金蝶多分辨率适配</td>
+          </tr>
+          <tr>
+            <td><strong>双视图切换</strong></td>
+            <td>点击"双视图"按钮，中央面板水平分栏：左为设计态（可编辑），右为运行态（只读预览 + 监控指标面板）；刷新运行态保持当前设计态位置</td>
+            <td>DevExpress 预览模式 + 自研性能监控</td>
+          </tr>
+          <tr>
+            <td><strong>校验反馈</strong></td>
+            <td>底部错误列表实时更新；Error 行红色高亮，点击定位到对应组件；发布按钮在存在 blocker 时禁用，悬停显示阻断原因</td>
+            <td>VS Error List + 金蝶单据发布检查</td>
+          </tr>
+          <tr>
+            <td><strong>Undo/Redo</strong></td>
+            <td>支持 Ctrl+Z / Ctrl+Y，多步撤销；工具栏撤销/重做按钮显示步数角标；Schema 变更前自动保存 checkpoint</td>
+            <td>VS + DevExpress Command History</td>
+          </tr>
+          <tr>
+            <td><strong>键盘导航</strong></td>
+            <td>方向键切换选中相邻组件；Delete 删除选中组件；Alt+拖动 复制组件；Ctrl+S 保存；F5 运行预览</td>
+            <td>VS Designer 快捷键 + DevExpress Keyboard</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 5: MODE SWITCHING ===== -->
+  <section class="section">
+    <div class="section-head">
+      <h2>模式切换机制</h2>
+      <span class="desc">四种设计模式，适应不同用户和使用阶段</span>
+    </div>
+    <div class="section-body">
+      <div class="mode-grid">
+        <div class="mode-card">
+          <h4>🎯 默认模式（01 企业单据）</h4>
+          <p>DevExpress 经典三区结构。左侧工具箱，中央画布，右侧属性。适合业务实施人员快速上手。</p>
+          <div class="mode-tags">
+            <span class="tag blue">新手指引</span>
+            <span class="tag">快速配置</span>
+            <span class="tag">单据页面</span>
+          </div>
+        </div>
+        <div class="mode-card">
+          <h4>📐 布局模式（04 强布局）</h4>
+          <p>左侧切换到"容器"Tab，右侧属性切换到"布局"Tab。画布显示 Grid Area 辅助线。适合复杂 Web 应用页面。</p>
+          <div class="mode-tags">
+            <span class="tag blue">强布局</span>
+            <span class="tag">CSS Grid/Flex</span>
+            <span class="tag">Dock/Split</span>
+          </div>
+        </div>
+        <div class="mode-card">
+          <h4>📊 表格模式（05 母子嵌套）</h4>
+          <p>中央画布切换到 EntryTable 设计视图。左侧切换到"表格树"Tab。右侧切换到"列属性"Tab。支持批次/序列号嵌套配置。</p>
+          <div class="mode-tags">
+            <span class="tag amber">强表格</span>
+            <span class="tag">母子嵌套</span>
+            <span class="tag">虚拟滚动</span>
+          </div>
+        </div>
+        <div class="mode-card">
+          <h4>👁 双视图模式（10 质量管控）</h4>
+          <p>中央画布水平分栏：左设计右运行。右侧监控面板展示渲染耗时、API 调用、权限裁剪、规则耗时。适合发布前质量检查。</p>
+          <div class="mode-tags">
+            <span class="tag green">质量门禁</span>
+            <span class="tag">性能监控</span>
+            <span class="tag">权限模拟</span>
+          </div>
+        </div>
+      </div>
+      <p style="margin-top:12px;color:var(--muted);font-size:11px;text-align:center;">模式切换通过顶部工具栏按钮触发，不影响已编辑内容。所有模式共用同一 PageSchema 存储格式。</p>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 6: COMPARISON ===== -->
+  <section class="section">
+    <div class="section-head">
+      <h2>与参考系统的能力对比</h2>
+      <span class="desc">证明 T-207 在 Web 单据设计器领域的差异化价值</span>
+    </div>
+    <div class="section-body" style="padding:0 16px 16px;">
+      <table>
+        <thead>
+          <tr>
+            <th>能力维度</th>
+            <th>金蝶 EAS BOS</th>
+            <th>DevExpress WinForms</th>
+            <th>VS WinForms Designer</th>
+            <th>T-207（推荐）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Web 原生画布</td>
+            <td class="score-c">✗ JSP 渲染</td>
+            <td class="score-c">✗ WinForms 原生</td>
+            <td class="score-c">✗ WinForms 原生</td>
+            <td class="score-a">✓ 纯 Web DOM</td>
+          </tr>
+          <tr>
+            <td>CSS Grid Area 可视化</td>
+            <td class="score-c">✗ 无</td>
+            <td class="score-c">✗ 无</td>
+            <td class="score-c">✗ 无</td>
+            <td class="score-a">✓ Grid Area 辅助线</td>
+          </tr>
+          <tr>
+            <td>母子嵌套表格</td>
+            <td class="score-b">△ 有限支持</td>
+            <td class="score-b">✓ XtraGrid</td>
+            <td class="score-c">✗ DataGridView</td>
+            <td class="score-a">✓ BatchDetail + SerialDetail</td>
+          </tr>
+          <tr>
+            <td>PC 响应式断点</td>
+            <td class="score-c">✗ 无</td>
+            <td class="score-c">✗ WinForms 固定</td>
+            <td class="score-c">✗ WinForms 固定</td>
+            <td class="score-a">✓ 1280/1440/1600/1920</td>
+          </tr>
+          <tr>
+            <td>双视图质量门禁</td>
+            <td class="score-c">✗ 无</td>
+            <td class="score-c">✗ 无</td>
+            <td class="score-c">✗ 无</td>
+            <td class="score-a">✓ 性能+权限+规则监控</td>
+          </tr>
+          <tr>
+            <td>字段驱动绑定</td>
+            <td class="score-b">✓ BOS 业务单元</td>
+            <td class="score-c">✗ 无</td>
+            <td class="score-c">✗ 无</td>
+            <td class="score-a">✓ BO 树 → 控件自动生成</td>
+          </tr>
+          <tr>
+            <td>规则联动可视化</td>
+            <td class="score-b">△ EAS 工作流</td>
+            <td class="score-c">✗ 无</td>
+            <td class="score-c">✗ 无</td>
+            <td class="score-a">✓ 字段变更 → 规则链图</td>
+          </tr>
+          <tr>
+            <td>Schema 输出</td>
+            <td class="score-b">△ XML 配置</td>
+            <td class="score-c">✗ 编译后 DLL</td>
+            <td class="score-c">✗ 编译后 DLL</td>
+            <td class="score-a">✓ JSON Schema → 运行时解析</td>
+          </tr>
+          <tr>
+            <td>布局校验分析器</td>
+            <td class="score-c">✗ 无</td>
+            <td class="score-c">✗ 无</td>
+            <td class="score-b">△ Error List</td>
+            <td class="score-a">✓ Layout + Permission + Rule Analyzer</td>
+          </tr>
+          <tr>
+            <td>多分辨率实时预览</td>
+            <td class="score-c">✗ 无</td>
+            <td class="score-c">✗ 无</td>
+            <td class="score-c">✗ WinForms 固定</td>
+            <td class="score-a">✓ 一键切换 4 档断点</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 7: DELIVERY SUMMARY ===== -->
+  <section class="section">
+    <div class="section-head">
+      <h2>交付说明</h2>
+      <span class="desc">基于评审结论的最终交付计划</span>
+    </div>
+    <div class="section-body">
+      <table>
+        <thead>
+          <tr><th>交付项</th><th>来源原型</th><th>优先级</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>企业单据页面设计器（基线）</td>
+            <td>01 企业单据页面</td>
+            <td class="score-a">P0 — 必做</td>
+            <td>默认工作台，DevExpress 三区结构，金蝶密度，VS 属性窗</td>
+          </tr>
+          <tr>
+            <td>Web 布局引擎（容器组件）</td>
+            <td>04 强布局容器</td>
+            <td class="score-a">P0 — 必做</td>
+            <td>Grid/Flex/Dock/Split/Scroll/Sticky/Portal，含 Grid Area 辅助线和断点配置</td>
+          </tr>
+          <tr>
+            <td>母子嵌套表格设计</td>
+            <td>05 强表格</td>
+            <td class="score-a">P0 — 必做</td>
+            <td>EntryTable + BatchDetail + SerialDetail，冻结列、虚拟滚动、父子汇总</td>
+          </tr>
+          <tr>
+            <td>双视图质量门禁</td>
+            <td>10 双视图</td>
+            <td class="score-b">P1 — 建议做</td>
+            <td>设计态/运行态并排，性能监控、权限模拟、规则耗时分析</td>
+          </tr>
+          <tr>
+            <td>PC 响应式断点预览</td>
+            <td>07 响应式</td>
+            <td class="score-b">P1 — 建议做</td>
+            <td>4 档断点即时预览，aside 折叠、字段换行、表格横滚检查</td>
+          </tr>
+          <tr>
+            <td>字段驱动 BO 绑定</td>
+            <td>06 字段驱动</td>
+            <td class="score-b">P1 — 建议做</td>
+            <td>BO 字段树拖入页面，自动生成控件 + 列定义 + 校验 + 权限</td>
+          </tr>
+          <tr>
+            <td>规则联动可视化</td>
+            <td>08 规则联动</td>
+            <td class="score-c">P2 — 可选</td>
+            <td>字段变更触发的规则链拓扑图，审批路线影响分析</td>
+          </tr>
+          <tr>
+            <td>组件库 / 设计系统</td>
+            <td>09 组件库</td>
+            <td class="score-c">P2 — 可选</td>
+            <td>平台管理员入口，Design Token 治理，组件版本管理</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>

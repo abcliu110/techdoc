@@ -1,0 +1,22 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: geometry_policy
+  artifact_id: GEO-POLICY-LOWCODE-V2-001
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  updated_at: 2026-07-11T00:00:00+08:00
+  created_by: codex
+  status: FROZEN
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+policy:
+  viewports: [1280x800, 1440x900, 1920x1080]
+  required_regions: [topbar, workspace-nav, resource-panel, design-canvas, property-inspector, analysis-panel]
+  assertions:
+    - body.scrollWidth <= body.clientWidth
+    - required regions remain inside viewport
+    - business-actions remains inside design-canvas visible bounds
+  declared_scroll_owners: [canvas-scroll, entry-table-wrap, resource-content, inspector-body, analysis-body]
+  exceptions: []
+limitations:
+  - 本策略不是方法第 14.4 节认证几何验证器，未覆盖全部缩放、强制色、内容压力和夹具矩阵
+

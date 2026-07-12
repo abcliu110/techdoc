@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+<defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/></marker></defs>
+<style>
+  .bg{fill:#f6f8fb}
+  .panel{fill:#ffffff;stroke:#d7dde8;stroke-width:2}
+  .soft{fill:#f1f5f9;stroke:#d7dde8;stroke-width:1.5}
+  .brandSoft{fill:#dbeafe;stroke:#93c5fd;stroke-width:1.5}
+  .warn{fill:#fff7ed;stroke:#fdba74;stroke-width:1.5}
+  .danger{fill:#fee2e2;stroke:#fca5a5;stroke-width:1.5}
+  .success{fill:#dcfce7;stroke:#86efac;stroke-width:1.5}
+  .line{stroke:#64748b;stroke-width:2;fill:none;marker-end:url(#arrow)}
+  .title{font:700 24px Arial, sans-serif;fill:#0f172a}
+  .h{font:700 16px Arial, sans-serif;fill:#0f172a}
+  .t{font:14px Arial, sans-serif;fill:#334155}
+  .s{font:12px Arial, sans-serif;fill:#64748b}
+</style>
+<rect class="bg" x="0" y="0" width="960" height="540"/>
+<text class="title" x="40" y="46">Tree + Table Pattern</text>
+<rect class="panel" x="40" y="80" width="245" height="410" rx="12"/>
+<rect class="panel" x="305" y="80" width="615" height="410" rx="12"/>
+<text class="h" x="65" y="115">Scope Tree</text>
+<text class="t" x="75" y="150">All</text>
+<text class="t" x="93" y="192">East Region</text>
+<rect class="brandSoft" x="98" y="210" width="139" height="32" rx="8"/>
+<text class="t" x="111" y="234">Shanghai</text>
+<text class="t" x="111" y="276">Hangzhou</text>
+<text class="t" x="93" y="318">South Region</text>
+<text class="h" x="330" y="115">Current Scope: East / Shanghai</text>
+<rect class="soft" x="330" y="135" width="560" height="48" rx="8"/>
+<text class="t" x="350" y="165">Search | Status | Date | Owner</text>
+<rect class="brandSoft" x="330" y="195" width="560" height="48" rx="8"/>
+<text class="t" x="350" y="225">Actions: New | Batch | Export</text>
+<rect class="soft" x="330" y="260" width="560" height="190" rx="8"/>
+<text class="h" x="350" y="292">Code       Name        Status      Owner       Action</text>
+<text class="t" x="350" y="330">001        Store A     Active      Alice       Edit</text>
+<text class="t" x="350" y="368">002        Store B     Disabled    Bob         View</text>
+<text class="t" x="350" y="406">003        Store C     Active      Chen        Edit</text>
+<path class="line" d="M285,285 L330,285"/>
+</svg>

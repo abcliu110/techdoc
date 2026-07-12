@@ -1,0 +1,22 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: task_simulation
+  artifact_id: TASK-SIM-LOWCODE-V2-001
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  updated_at: 2026-07-11T00:00:00+08:00
+  created_by: codex
+  status: EXECUTED
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+simulation:
+  simulation_only: true
+  roles: [应用设计者, 租户管理员, 业务建模者]
+  findings:
+    - id: SIM-001
+      severity: P2
+      statement: 折扣规则尚未覆盖空客户场景
+      disposition: 作为建议保留，不阻断原型任务
+  unknowns:
+    - 未执行真实用户可发现性、完成耗时和学习成本测试
+    - 未由独立 TestDeriver 重新推导任务清单
+

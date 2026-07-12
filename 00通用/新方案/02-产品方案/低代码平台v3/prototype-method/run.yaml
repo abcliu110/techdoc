@@ -1,0 +1,51 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: run_manifest
+  artifact_id: RUN-LOWCODE-V2-20260711-001
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  updated_at: 2026-07-11T23:59:00+08:00
+  created_by: codex
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+  status: FINAL
+run:
+  status: BLOCKED
+  method_version: "5.1"
+  active_stage: 7
+  acceptance_level: null
+  limitations:
+    - 真实用户研究未执行
+    - Appian 官网与官方文档自动访问分别返回 406 和 403
+    - 金蝶部分开发服务云能力需要登录后才能完整查看
+    - 原型不连接真实后端、权限中心和发布服务
+    - 方法附带工具已被清理，本项目使用独立 Node 测试和 agent-browser 验证
+    - 项目级机械与浏览器验收已执行，但不是方法要求的认证验证器和完整风险矩阵
+    - 独立只读评审第二次执行成功并关闭其发现，但不等同于方法要求的五席委员会或签名 attestation
+  input_drift:
+    - lowcode-platform/CLAUDE.md 引用的 packages/demo/src/设计器AI可控API设计方案.md 不存在
+    - lowcode-platform/CLAUDE.md 引用的 packages/demo/src/elementCapabilities.ts 不存在
+  stages:
+    - {id: 0, name: 立项, status: PASSED, gate: GATE-0-PASS}
+    - {id: 1, name: 竞品采集, status: PASSED, gate: GATE-1-PASS-WITH-LIMITATIONS}
+    - {id: 2, name: 知识建模, status: PASSED, gate: GATE-2-PASS}
+    - {id: 3, name: 综合设计, status: PASSED, gate: GATE-3-PASS}
+    - {id: 4, name: 基准定义, status: PASSED, gate: GATE-4-PASS}
+    - {id: 5, name: 交互设计, status: PASSED, gate: GATE-5-PASS}
+    - {id: 6, name: 原型实现, status: PASSED, gate: GATE-6-PASS}
+    - {id: 7, name: 视觉质量, status: BLOCKED, gate: prototype-method/logs/RUN-LOWCODE-V2-20260711-001-stage-7-gate.yaml}
+    - {id: 8, name: 任务验证, status: NOT_STARTED, gate: prototype-method/logs/RUN-LOWCODE-V2-20260711-001-stage-8-gate.yaml}
+    - {id: 9, name: 竞品对标, status: NOT_STARTED, gate: prototype-method/logs/RUN-LOWCODE-V2-20260711-001-stage-9-gate.yaml}
+    - {id: 10, name: 自治验收, status: NOT_STARTED, gate: prototype-method/logs/RUN-LOWCODE-V2-20260711-001-stage-10-gate.yaml}
+  blocked_by:
+    - {id: BLK-STAGE7-CERTIFIED-VISUAL-EVIDENCE, successor_action: ACT-RUN-CERTIFIED-VISUAL-AND-INDEPENDENT-REVIEW}
+    - {id: BLK-STAGE9-COMPETITOR-RUNTIME-DATA, successor_action: ACT-COLLECT-SAME-CONDITION-COMPETITOR-DATA}
+    - {id: BLK-STAGE10-INDEPENDENT-COUNCIL, successor_action: ACT-RUN-FIVE-SEAT-COUNCIL}
+budgets:
+  max_stage_retry: 2
+  max_same_root_cause: 3
+  max_concurrent_readonly_research: 5
+  authoritative_writer: root-agent
+reopen_conditions:
+  - 竞品版本或官方证据变化
+  - 核心任务、角色或发布边界变化
+  - 视觉合同或状态模型变化

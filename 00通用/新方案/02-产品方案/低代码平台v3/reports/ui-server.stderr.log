@@ -1,0 +1,6 @@
+::ffff:127.0.0.1 - - [11/Jul/2026 15:57:55] "GET / HTTP/1.1" 200 -
+::ffff:127.0.0.1 - - [11/Jul/2026 15:58:08] "GET / HTTP/1.1" 200 -
+::ffff:127.0.0.1 - - [11/Jul/2026 15:58:08] "GET /styles.css HTTP/1.1" 200 -
+::ffff:127.0.0.1 - - [11/Jul/2026 15:58:08] "GET /app.js HTTP/1.1" 200 -
+::ffff:127.0.0.1 - - [11/Jul/2026 15:58:08] "GET /designer-state.mjs HTTP/1.1" 200 -
+::ffff:127.0.0.1 - - [11/Jul/2026 15:58:08] "GET /component-registry.mjs HTTP/1.1" 200 -

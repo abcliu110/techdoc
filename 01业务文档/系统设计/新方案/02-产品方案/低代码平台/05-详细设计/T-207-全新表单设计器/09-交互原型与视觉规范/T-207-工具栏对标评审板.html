@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>T-207 工具栏对标评审板</title>
+  <style>
+    :root {
+      --bg: #eef2f6;
+      --panel: #fff;
+      --line: #d7dee8;
+      --line-strong: #aeb8c5;
+      --text: #1f2933;
+      --muted: #64748b;
+      --blue: #1d5fd1;
+      --blue-soft: #e9f1ff;
+      --danger: #b42318;
+      --danger-soft: #fff1f0;
+      --warn: #946200;
+      --warn-soft: #fff7d6;
+      --ok: #16803c;
+      --ok-soft: #e8f6ee;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 1360px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
+    .page {
+      padding: 18px 22px 40px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      letter-spacing: 0;
+    }
+
+    h1 { font-size: 20px; }
+    h2 { font-size: 16px; margin-bottom: 10px; }
+    h3 { font-size: 13px; margin-bottom: 8px; }
+
+    .meta {
+      color: var(--muted);
+      line-height: 1.6;
+      margin-top: 6px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #f8fafc;
+      color: #475467;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+
+    .badge.ok { background: var(--ok-soft); color: var(--ok); border-color: #a7d7b8; }
+    .badge.warn { background: var(--warn-soft); color: var(--warn); border-color: #efd980; }
+    .badge.danger { background: var(--danger-soft); color: var(--danger); border-color: #f4b3ac; }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .grid.cols-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .grid.cols-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .card-head {
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      border-bottom: 1px solid var(--line);
+      background: #f8fafc;
+      font-weight: 700;
+    }
+
+    .card-body {
+      padding: 12px;
+    }
+
+    .compare-shell {
+      height: 520px;
+      border: 1px solid var(--line-strong);
+      background: #edf1f5;
+      display: grid;
+      grid-template-rows: 38px 1fr 26px;
+      overflow: hidden;
+    }
+
+    .mock-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 10px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .mock-topbar.blue {
+      background: #1f63c8;
+      color: #fff;
+      border-color: #164b9d;
+    }
+
+    .cmds {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .cmd {
+      height: 24px;
+      border: 1px solid rgba(100, 116, 139, .35);
+      border-radius: 3px;
+      padding: 0 7px;
+      display: inline-flex;
+      align-items: center;
+      background: #fff;
+      color: #344054;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .blue .cmd {
+      border-color: rgba(255, 255, 255, .35);
+      background: rgba(255, 255, 255, .12);
+      color: #fff;
+    }
+
+    .mock-body {
+      display: grid;
+      min-height: 0;
+    }
+
+    .mock-body.kingdee {
+      grid-template-columns: 278px minmax(0, 1fr) 286px;
+    }
+
+    .mock-body.devexpress {
+      grid-template-columns: 236px minmax(0, 1fr) 300px;
+    }
+
+    .mock-body.t207 {
+      grid-template-columns: 52px 304px minmax(0, 1fr) 304px;
+    }
+
+    .mock-left,
+    .mock-right {
+      background: #fff;
+      border-right: 1px solid var(--line);
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .mock-right {
+      border-right: 0;
+      border-left: 1px solid var(--line);
+    }
+
+    .panel-title {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      border-bottom: 1px solid var(--line);
+      background: #f8fafc;
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .panel-pad {
+      padding: 8px;
+      overflow: hidden;
+    }
+
+    .search {
+      height: 26px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      color: var(--muted);
+      padding: 0 7px;
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      background: #fff;
+      font-size: 12px;
+    }
+
+    .group-title {
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #edf1f5;
+      color: #344054;
+      font-weight: 700;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    .kingdee-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+      padding-top: 7px;
+    }
+
+    .kingdee-item {
+      height: 62px;
+      border: 1px solid #d9e2ee;
+      border-radius: 2px;
+      background: #fff;
+      display: grid;
+      justify-items: center;
+      align-content: center;
+      gap: 5px;
+      font-size: 12px;
+      color: #475467;
+    }
+
+    .kd-icon {
+      width: 26px;
+      height: 26px;
+      border: 1px solid #aac3ee;
+      color: #1d5fd1;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      background: #eef4ff;
+      border-radius: 2px;
+    }
+
+    .activity {
+      background: #263241;
+      border-right: 1px solid #18212c;
+      padding: 7px 5px;
+      display: grid;
+      gap: 7px;
+      align-content: start;
+    }
+
+    .activity-cell {
+      height: 34px;
+      border-radius: 4px;
+      display: grid;
+      place-items: center;
+      color: #d6e0ec;
+      font-weight: 700;
+      font-size: 12px;
+      border: 1px solid transparent;
+    }
+
+    .activity-cell.active {
+      background: #fff;
+      color: var(--blue);
+      border-color: #bfd2f6;
+    }
+
+    .t207-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 5px;
+      padding-top: 6px;
+    }
+
+    .t207-item {
+      min-height: 54px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      padding: 6px;
+      display: grid;
+      grid-template-columns: 22px 1fr 12px;
+      gap: 5px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .t207-item .name {
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .grip {
+      height: 16px;
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      background: repeating-linear-gradient(90deg, #aeb8c5 0 1px, transparent 1px 4px);
+    }
+
+    .tree {
+      display: grid;
+      gap: 4px;
+      font-size: 12px;
+    }
+
+    .tree-row {
+      height: 26px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid transparent;
+      padding: 0 6px;
+      border-radius: 3px;
+      background: #fff;
+      color: #344054;
+    }
+
+    .tree-row.active {
+      background: var(--blue-soft);
+      color: var(--blue);
+      border-color: #bfd2f6;
+    }
+
+    .canvas {
+      min-width: 0;
+      background:
+        linear-gradient(#e1e7ee 1px, transparent 1px),
+        linear-gradient(90deg, #e1e7ee 1px, transparent 1px);
+      background-size: 24px 24px;
+      padding: 18px;
+      overflow: hidden;
+    }
+
+    .paper {
+      height: 100%;
+      background: #fff;
+      border: 1px solid #cdd6e0;
+      box-shadow: 0 2px 10px rgba(31, 41, 51, .12);
+      padding: 12px;
+    }
+
+    .form-title {
+      height: 36px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 700;
+      margin: -12px -12px 12px;
+      padding: 0 12px;
+      background: #fbfcfe;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .field {
+      height: 48px;
+      border: 1px solid #d8dee6;
+      border-radius: 3px;
+      padding: 6px;
+      background: #fff;
+    }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      color: #667085;
+      margin-bottom: 5px;
+    }
+
+    .line {
+      height: 18px;
+      border: 1px solid #d8dee6;
+      background: #f8fafc;
+    }
+
+    .prop {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 6px;
+      align-items: center;
+      min-height: 30px;
+      border-bottom: 1px solid #eef2f6;
+      font-size: 12px;
+    }
+
+    .prop-value {
+      height: 22px;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 3px;
+    }
+
+    .bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      border-top: 1px solid var(--line);
+      background: #fbfcfe;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .issues-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+    }
+
+    .issues-table th,
+    .issues-table td {
+      border: 1px solid var(--line);
+      padding: 8px;
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.55;
+    }
+
+    .issues-table th {
+      background: #f8fafc;
+      font-weight: 700;
+    }
+
+    .live-frame {
+      width: 100%;
+      height: 760px;
+      border: 1px solid var(--line-strong);
+      background: #fff;
+    }
+
+    .source-list {
+      display: grid;
+      gap: 5px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    .source-list a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="header">
+      <div>
+        <h1>T-207 表单设计器工具栏对标评审板</h1>
+        <div class="meta">目标：把当前原型与金蝶、DevExpress、Visual Studio / Power Apps 的设计器工具栏放在同一个判断框架下，对比出问题在哪里。</div>
+      </div>
+      <div class="cmds">
+        <span class="badge warn">参考复刻，不直接搬运竞品截图</span>
+        <span class="badge ok">重点：左侧工具栏</span>
+      </div>
+    </section>
+
+    <section class="grid cols-3">
+      <div class="card">
+        <div class="card-head"><span>金蝶表单设计器参考</span><span class="badge">三列高密度</span></div>
+        <div class="card-body">
+          <div class="compare-shell">
+            <div class="mock-topbar blue">
+              <strong>表单设计器</strong>
+              <div class="cmds"><span class="cmd">保存</span><span class="cmd">预览</span><span class="cmd">发布</span></div>
+            </div>
+            <div class="mock-body kingdee">
+              <aside class="mock-left">
+                <div class="panel-title">控件库</div>
+                <div class="panel-pad">
+                  <div class="search">搜索控件</div>
+                  <div class="group-title"><span>通用字段</span><span>▾</span></div>
+                  <div class="kingdee-grid">
+                    <div class="kingdee-item"><span class="kd-icon">文</span><span>文本</span></div>
+                    <div class="kingdee-item"><span class="kd-icon">数</span><span>数值</span></div>
+                    <div class="kingdee-item"><span class="kd-icon">日</span><span>日期</span></div>
+                  </div>
+                  <div class="group-title"><span>布局容器</span><span>▾</span></div>
+                  <div class="kingdee-grid">
+                    <div class="kingdee-item"><span class="kd-icon">组</span><span>分组</span></div>
+                    <div class="kingdee-item"><span class="kd-icon">签</span><span>页签</span></div>
+                    <div class="kingdee-item"><span class="kd-icon">列</span><span>分栏</span></div>
+                  </div>
+                </div>
+              </aside>
+              <section class="canvas">
+                <div class="paper">
+                  <div class="form-title">销售订单 <span class="badge">选中蓝框</span></div>
+                  <div class="field-grid">
+                    <div class="field"><label>客户</label><div class="line"></div></div>
+                    <div class="field"><label>日期</label><div class="line"></div></div>
+                    <div class="field"><label>组织</label><div class="line"></div></div>
+                    <div class="field"><label>金额</label><div class="line"></div></div>
+                  </div>
+                </div>
+              </section>
+              <aside class="mock-right">
+                <div class="panel-title">属性</div>
+                <div class="panel-pad">
+                  <div class="cmds"><span class="badge">业务</span><span class="badge">样式</span><span class="badge">布局</span></div>
+                  <div class="prop"><span>名称</span><span class="prop-value"></span></div>
+                  <div class="prop"><span>必填</span><span class="prop-value"></span></div>
+                  <div class="prop"><span>宽度</span><span class="prop-value"></span></div>
+                </div>
+              </aside>
+            </div>
+            <div class="bottom"><span>底部路径：表单 / 分组 / 字段</span><span>约 265-290px 左栏</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span>DevExpress / Visual Studio 参考</span><span class="badge">Dock 面板分离</span></div>
+        <div class="card-body">
+          <div class="compare-shell">
+            <div class="mock-topbar">
+              <strong>Designer IDE</strong>
+              <div class="cmds"><span class="cmd">Undo</span><span class="cmd">Preview</span><span class="cmd">Publish</span></div>
+            </div>
+            <div class="mock-body devexpress">
+              <aside class="mock-left">
+                <div class="panel-title">Toolbox / Field List / Explorer</div>
+                <div class="panel-pad">
+                  <div class="search">Search controls or fields</div>
+                  <div class="tree">
+                    <div class="tree-row active">▾ Toolbox</div>
+                    <div class="tree-row">  TextBox</div>
+                    <div class="tree-row">  TableLayoutPanel</div>
+                    <div class="tree-row">  SplitContainer</div>
+                    <div class="tree-row active">▾ Field List</div>
+                    <div class="tree-row">  DataSource.customerId</div>
+                    <div class="tree-row">  DataSource.entries.qty</div>
+                    <div class="tree-row active">▾ Report Explorer</div>
+                    <div class="tree-row">  Page / Band / Control</div>
+                  </div>
+                </div>
+              </aside>
+              <section class="canvas">
+                <div class="paper">
+                  <div class="form-title">Design Surface <span class="badge">Snapline / Smart Tag</span></div>
+                  <div class="field-grid">
+                    <div class="field"><label>Control</label><div class="line"></div></div>
+                    <div class="field"><label>Data Bound</label><div class="line"></div></div>
+                    <div class="field"><label>Layout</label><div class="line"></div></div>
+                    <div class="field"><label>Action</label><div class="line"></div></div>
+                  </div>
+                </div>
+              </section>
+              <aside class="mock-right">
+                <div class="panel-title">Properties</div>
+                <div class="panel-pad">
+                  <div class="search">Search property</div>
+                  <div class="prop"><span>Name</span><span class="prop-value"></span></div>
+                  <div class="prop"><span>Layout</span><span class="prop-value"></span></div>
+                  <div class="prop"><span>Binding</span><span class="prop-value"></span></div>
+                </div>
+              </aside>
+            </div>
+            <div class="bottom"><span>特点：Toolbox、Field List、Explorer、Properties 各司其职</span><span>上下文可用</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span>T-207 当前目标形态</span><span class="badge warn">需继续修正</span></div>
+        <div class="card-body">
+          <div class="compare-shell">
+            <div class="mock-topbar">
+              <strong>销售订单表单设计器</strong>
+              <div class="cmds"><span class="cmd">保存</span><span class="cmd">预览</span><span class="cmd">发布</span></div>
+            </div>
+            <div class="mock-body t207">
+              <aside class="activity">
+                <div class="activity-cell active">组件</div>
+                <div class="activity-cell">字段</div>
+                <div class="activity-cell">结构</div>
+                <div class="activity-cell">问题</div>
+                <div class="activity-cell">版本</div>
+                <div class="activity-cell">数据</div>
+              </aside>
+              <aside class="mock-left">
+                <div class="panel-title">组件工具箱 <span class="badge ok">3列</span></div>
+                <div class="panel-pad">
+                  <div class="search">搜索组件、模板</div>
+                  <div class="group-title"><span>布局容器</span><span>8</span></div>
+                  <div class="t207-grid">
+                    <div class="t207-item"><span class="kd-icon">网</span><span class="name">网格布局</span><span class="grip"></span></div>
+                    <div class="t207-item"><span class="kd-icon">组</span><span class="name">分组面板</span><span class="grip"></span></div>
+                    <div class="t207-item"><span class="kd-icon">签</span><span class="name">页签容器</span><span class="grip"></span></div>
+                    <div class="t207-item"><span class="kd-icon">弹</span><span class="name">弹性布局</span><span class="grip"></span></div>
+                  </div>
+                  <div class="group-title"><span>基础表单</span><span>12</span></div>
+                  <div class="t207-grid">
+                    <div class="t207-item"><span class="kd-icon">文</span><span class="name">单行文本</span><span class="grip"></span></div>
+                    <div class="t207-item"><span class="kd-icon">额</span><span class="name">金额输入</span><span class="grip"></span></div>
+                    <div class="t207-item"><span class="kd-icon">资</span><span class="name">基础资料选择</span><span class="grip"></span></div>
+                    <div class="t207-item"><span class="kd-icon">日</span><span class="name">日期选择</span><span class="grip"></span></div>
+                  </div>
+                </div>
+              </aside>
+              <section class="canvas">
+                <div class="paper">
+                  <div class="form-title">销售订单 <span class="badge">WYSIWYG</span></div>
+                  <div class="field-grid">
+                    <div class="field"><label>客户</label><div class="line"></div></div>
+                    <div class="field"><label>日期</label><div class="line"></div></div>
+                    <div class="field"><label>组织</label><div class="line"></div></div>
+                    <div class="field"><label>金额</label><div class="line"></div></div>
+                  </div>
+                </div>
+              </section>
+              <aside class="mock-right">
+                <div class="panel-title">Inspector</div>
+                <div class="panel-pad">
+                  <div class="prop"><span>节点</span><span class="prop-value"></span></div>
+                  <div class="prop"><span>schema</span><span class="prop-value"></span></div>
+                  <div class="prop"><span>布局</span><span class="prop-value"></span></div>
+                </div>
+              </aside>
+            </div>
+            <div class="bottom"><span>优势：入口分离、三列可读、自动化抓手</span><span>问题：需继续补停靠交互</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:14px;">
+      <div class="card-head"><span>问题定位：从对比中看到的差距</span><span class="badge danger">需要回改原型</span></div>
+      <div class="card-body">
+        <table class="issues-table">
+          <thead>
+            <tr>
+              <th style="width:150px;">维度</th>
+              <th>金蝶 / 商业软件做法</th>
+              <th>当前 T-207 问题</th>
+              <th>修正方向</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>左侧宽度</td>
+              <td>金蝶左控件栏约 265-290px；Visual Studio 可折叠 / 固定 / 隐藏；DevExpress 多 Dock 面板按需切换。</td>
+              <td>T-207 调整为 52px + 304px，总宽约 356px。三列保证中文名可读，并减少对画布的挤压。</td>
+              <td>保留三列，必须支持折叠到仅 Activity Bar；默认宽度建议约 304px，且不能再扩大。</td>
+            </tr>
+            <tr>
+              <td>组件项形态</td>
+              <td>金蝶是图标在上、名称在下的高密度网格；Visual Studio Toolbox 更像列表/小图标工具箱。</td>
+              <td>T-207 卡片调整为图标上、中文名下、抓手角标；三列时中文名称更稳定。</td>
+              <td>改成“图标居中 + 中文名两行内 + 抓手右上角”的紧凑工具箱块，减少横向挤压。</td>
+            </tr>
+            <tr>
+              <td>分组展开策略</td>
+              <td>金蝶分类标题清晰，可折叠；IDE 工具箱按上下文和分类逐步展开。</td>
+              <td>T-207 一次展开七组，首屏信息过载，用户找不到重点。</td>
+              <td>默认展开“布局容器、基础表单、表格明细”三组，其余折叠；搜索时展开命中分组。</td>
+            </tr>
+            <tr>
+              <td>Activity Bar</td>
+              <td>Power Apps / Retool 左侧入口是工作模式，不是同一列表筛选；通常图标优先，文字通过 tooltip 或面板标题说明。</td>
+              <td>T-207 用文字按钮直接占用 52px 宽度，信息明确但不够专业；视觉更像导航按钮，不像 IDE 活动栏。</td>
+              <td>Activity Bar 改为图标 + tooltip；面板标题显示中文工作模式，如“组件工具箱”。</td>
+            </tr>
+            <tr>
+              <td>字段入口</td>
+              <td>DevExpress Field List 明确独立于 Toolbox；Power Apps Data / Tree view 也与 Insert 分离。</td>
+              <td>T-207 文档定义正确，但 PT-001 主图只显示组件，用户无法在首屏理解字段入口切换后是什么。</td>
+              <td>PT-001 增加 Activity 切换说明区或小型状态预览；PT-025 继续展示完整六入口切换内容。</td>
+            </tr>
+            <tr>
+              <td>右侧属性</td>
+              <td>金蝶按业务 / 样式 / 布局分层；DevExpress Properties 支持搜索、分类、说明、表达式。</td>
+              <td>T-207 PT-001 右侧 Inspector 信息太少，看不出专业属性面板能力。</td>
+              <td>主图右侧至少展示“业务、布局、样式、规则、权限、事件”页签和属性搜索。</td>
+            </tr>
+            <tr>
+              <td>测试抓手</td>
+              <td>商业软件不一定暴露测试抓手，但我们的自动化平台必须可稳定模拟用户。</td>
+              <td>T-207 已有 data-testid 和拖拽抓手，这是超越点；但视觉抓手占用横向空间。</td>
+              <td>抓手视觉缩小为角标，DOM 抓手保持稳定，不牺牲卡片名称可读性。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:14px;">
+      <div class="card-head"><span>当前 T-207 原型实时嵌入</span><span class="badge">用于刷新后对照</span></div>
+      <div class="card-body">
+        <iframe class="live-frame" src="T-207-表单设计器-09原型.html#pt-001"></iframe>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:14px;">
+      <div class="card-head"><span>参考来源</span><span class="badge">只吸收结构，不照搬视觉</span></div>
+      <div class="card-body source-list">
+        <div>金蝶：本地知识库 `UI-KINGDEE-FORM-002-表单设计器像素级参考.md`，记录左控件栏约 265-290px、三列控件网格、右侧业务 / 样式 / 布局属性页。</div>
+        <div>DevExpress Properties Panel：<a href="https://docs.devexpress.com/XtraReports/17563/web-reporting/end-user-report-designer-for-web/interface-elements/properties-panel">docs.devexpress.com/XtraReports/17563</a></div>
+        <div>DevExpress Report Explorer：<a href="https://docs.devexpress.com/XtraReports/115045/web-reporting/end-user-report-designer-for-web/interface-elements/report-explorer">docs.devexpress.com/XtraReports/115045</a></div>
+        <div>Visual Studio Toolbox：<a href="https://learn.microsoft.com/en-us/visualstudio/ide/toolbox?view=visualstudio">learn.microsoft.com/visualstudio/ide/toolbox</a></div>
+        <div>Visual Studio Windows Forms Designer：<a href="https://learn.microsoft.com/en-us/visualstudio/designers/walkthrough-windows-forms-designer?view=visualstudio">learn.microsoft.com/visualstudio/designers/walkthrough-windows-forms-designer</a></div>
+        <div>Power Apps Studio：<a href="https://learn.microsoft.com/en-us/power-apps/maker/canvas-apps/power-apps-studio">learn.microsoft.com/power-apps/.../power-apps-studio</a></div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

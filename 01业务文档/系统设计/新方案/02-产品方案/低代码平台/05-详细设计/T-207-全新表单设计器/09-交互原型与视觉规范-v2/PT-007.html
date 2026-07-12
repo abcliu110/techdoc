@@ -1,0 +1,980 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>T-207 表单设计器 V2 - PT-007</title>
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.js"></script>
+  <style>
+    :root {
+      --bg: #e8edf3;
+      --panel: #ffffff;
+      --panel-subtle: #f7f9fb;
+      --panel-muted: #f0f3f7;
+      --rail: #263241;
+      --rail-hover: #344154;
+      --rail-active: #3a4b61;
+      --text: #1f2937;
+      --text-2: #344054;
+      --muted: #667085;
+      --line: #d7dee8;
+      --line-strong: #b6c0cd;
+      --accent: #2468c9;
+      --accent-strong: #1858ad;
+      --accent-soft: #edf4ff;
+      --accent-line: #8db3ee;
+      --success: #19733f;
+      --success-soft: #edf8f1;
+      --warning: #8a5a00;
+      --warning-soft: #fff8e6;
+      --danger: #b42318;
+      --danger-soft: #fff1f0;
+      --shadow: 0 4px 16px rgba(30, 41, 59, 0.12);
+      --radius: 4px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { width: 100%; height: 100%; margin: 0; }
+
+    body {
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Microsoft YaHei UI", "Segoe UI", sans-serif;
+      font-size: 12px;
+      letter-spacing: 0;
+    }
+
+    button, input, select { font: inherit; letter-spacing: 0; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2px solid rgba(36, 104, 201, 0.35);
+      outline-offset: 1px;
+    }
+    svg { width: 15px; height: 15px; stroke-width: 1.8; }
+
+    .app {
+      width: 100vw;
+      height: 100vh;
+      min-width: 0;
+      display: grid;
+      grid-template-rows: 48px minmax(0, 1fr) 26px;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .command-bar {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: minmax(290px, 1fr) auto minmax(290px, 1fr);
+      align-items: center;
+      gap: 14px;
+      padding: 0 12px 0 10px;
+      border-bottom: 1px solid var(--line-strong);
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(30, 41, 59, 0.08);
+      z-index: 5;
+    }
+
+    .brand-area, .command-actions, .command-meta {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .brand-area { overflow: hidden; }
+    .command-actions { justify-content: center; }
+    .command-meta { justify-content: flex-end; }
+
+    .brand-mark {
+      flex: 0 0 auto;
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: var(--radius);
+      background: var(--rail);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .brand-copy { min-width: 0; }
+    .brand-title { overflow: hidden; color: #152033; font-size: 13px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+    .brand-path { margin-top: 1px; overflow: hidden; color: var(--muted); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+
+    .icon-button, .command-button, .small-button, .row-action {
+      height: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--text-2);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 0 9px;
+      white-space: nowrap;
+    }
+
+    .icon-button { width: 28px; padding: 0; }
+    .command-button:hover, .small-button:hover, .icon-button:hover, .row-action:hover { border-color: #a9b6c6; background: var(--panel-subtle); }
+    .command-button.primary { border-color: var(--accent); background: var(--accent); color: #fff; }
+    .command-button.primary:hover { border-color: var(--accent-strong); background: var(--accent-strong); }
+    .command-button.active { border-color: var(--accent-line); background: var(--accent-soft); color: var(--accent); }
+    .command-divider { width: 1px; height: 20px; background: var(--line); }
+
+    .status-chip {
+      height: 23px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 7px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-subtle);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .status-chip.success { border-color: #b7ddc6; background: var(--success-soft); color: var(--success); }
+    .status-chip svg { width: 13px; height: 13px; }
+
+    .workbench {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 52px 248px minmax(0, 1fr) 292px;
+      overflow: hidden;
+    }
+
+    .activity-bar {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      padding: 6px 0;
+      background: var(--rail);
+      color: #cad3df;
+    }
+
+    .activity-button {
+      position: relative;
+      width: 52px;
+      height: 48px;
+      border: 0;
+      background: transparent;
+      color: #bcc7d4;
+      display: grid;
+      place-items: center;
+      align-content: center;
+      gap: 2px;
+      padding: 0;
+    }
+    .activity-button:hover { background: var(--rail-hover); color: #fff; }
+    .activity-button[aria-selected="true"] { background: var(--rail-active); color: #fff; box-shadow: inset 3px 0 0 #71a8ff; }
+    .activity-button svg { width: 17px; height: 17px; }
+    .activity-label { font-size: 9px; line-height: 11px; }
+    .activity-spacer { flex: 1; }
+
+    .asset-panel, .inspector-panel {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 38px minmax(0, 1fr);
+      background: var(--panel);
+    }
+    .asset-panel { border-right: 1px solid var(--line); }
+    .inspector-panel { border-left: 1px solid var(--line); }
+
+    .panel-header {
+      min-width: 0;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 9px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+    .panel-title { min-width: 0; flex: 1; overflow: hidden; color: #243043; font-size: 12px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+    .count-badge {
+      min-width: 21px;
+      height: 19px;
+      display: inline-grid;
+      place-items: center;
+      padding: 0 5px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .panel-body { min-height: 0; overflow: auto; }
+    .left-search { padding: 9px 9px 7px; border-bottom: 1px solid #e7ebf0; }
+    .search-wrap { position: relative; }
+    .search-wrap svg { position: absolute; left: 8px; top: 7px; width: 14px; height: 14px; color: var(--muted); pointer-events: none; }
+    .search-input { width: 100%; height: 28px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; color: var(--text); padding: 0 8px 0 28px; }
+
+    .tree-section { padding: 6px 0 7px; border-bottom: 1px solid #e7ebf0; }
+    .tree-heading {
+      height: 27px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 9px;
+      color: #344054;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .tree-heading svg { width: 13px; height: 13px; }
+    .tree-heading .count-badge { margin-left: auto; }
+
+    .tree-row {
+      width: 100%;
+      height: 34px;
+      border: 0;
+      border-left: 3px solid transparent;
+      background: transparent;
+      color: var(--text-2);
+      display: grid;
+      grid-template-columns: 24px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 6px;
+      padding: 0 9px 0 10px;
+      text-align: left;
+    }
+    .tree-row:hover { background: var(--panel-subtle); }
+    .tree-row[aria-selected="true"] { border-left-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+    .tree-icon { width: 23px; height: 23px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 3px; background: #fff; color: #536176; }
+    .tree-icon svg { width: 13px; height: 13px; }
+    .tree-copy { min-width: 0; }
+    .tree-name { overflow: hidden; font-size: 11px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+    .tree-path { margin-top: 1px; overflow: hidden; color: var(--muted); font-family: Consolas, monospace; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+    .field-type { color: var(--muted); font-size: 9px; }
+
+    .palette-callout {
+      margin: 10px 9px;
+      border-left: 3px solid #dfa321;
+      background: var(--warning-soft);
+      color: #5f491b;
+      padding: 8px 9px;
+      font-size: 10px;
+      line-height: 1.55;
+    }
+
+    .canvas-shell {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 38px minmax(0, 1fr);
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .canvas-toolbar {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 10px;
+      border-bottom: 1px solid var(--line-strong);
+      background: #f8fafc;
+    }
+    .breadcrumbs { min-width: 0; flex: 1; overflow: hidden; color: #475467; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+    .breadcrumbs strong { color: #243043; }
+    .canvas-tools { display: flex; align-items: center; gap: 5px; }
+    .small-button { height: 26px; padding: 0 7px; font-size: 11px; }
+    .small-button[aria-pressed="true"] { border-color: var(--accent-line); background: var(--accent-soft); color: var(--accent); }
+
+    .canvas-viewport {
+      min-width: 0;
+      min-height: 0;
+      overflow: auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 18px;
+      background-color: #e8edf3;
+      background-image: radial-gradient(#c8d1dc 0.75px, transparent 0.75px);
+      background-size: 14px 14px;
+    }
+
+    .artboard {
+      width: min(100%, 900px);
+      min-width: 700px;
+      min-height: 610px;
+      border: 1px solid #bdc7d4;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .document-head {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+    .document-icon { width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid #b7c9e5; border-radius: var(--radius); background: var(--accent-soft); color: var(--accent); }
+    .document-icon svg { width: 17px; height: 17px; }
+    .document-copy { min-width: 0; flex: 1; }
+    .document-title { color: #172033; font-size: 14px; font-weight: 700; }
+    .document-subtitle { margin-top: 2px; color: var(--muted); font-size: 10px; }
+    .document-code { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; color: var(--muted); padding: 4px 7px; font-family: Consolas, monospace; font-size: 10px; }
+
+    .document-body { padding: 14px 16px 16px; }
+    .design-section {
+      position: relative;
+      border: 1px solid #4d87dd;
+      background: #fff;
+      box-shadow: 0 0 0 2px rgba(54, 112, 202, 0.12);
+    }
+    .selection-label {
+      position: absolute;
+      left: -1px;
+      top: -20px;
+      height: 19px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 3px 3px 0 0;
+      background: var(--accent);
+      color: #fff;
+      padding: 0 7px;
+      font-size: 9px;
+      font-weight: 700;
+    }
+    .selection-label svg { width: 11px; height: 11px; }
+
+    .section-head {
+      height: 39px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 10px;
+      border-bottom: 1px solid var(--line);
+      background: #f7f9fc;
+    }
+    .section-title { flex: 1; color: #243043; font-size: 12px; font-weight: 700; }
+    .table-meta { color: var(--muted); font-size: 10px; }
+
+    .table-toolbar {
+      min-width: 0;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0 8px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+    .table-toolbar .row-action { height: 25px; padding: 0 7px; font-size: 10px; }
+    .table-toolbar .row-action.primary { border-color: var(--accent); background: var(--accent); color: #fff; }
+    .table-toolbar-spacer { flex: 1; }
+    .table-filter { width: 118px; height: 25px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; padding: 0 7px; color: var(--text); font-size: 10px; }
+
+    .table-scroll { width: 100%; overflow-x: auto; }
+    .entry-table { width: 100%; min-width: 690px; border-collapse: separate; border-spacing: 0; table-layout: fixed; }
+    .entry-table col.select-col { width: 36px; }
+    .entry-table col.material-col { width: 156px; }
+    .entry-table col.qty-col { width: 68px; }
+    .entry-table col.price-col { width: 87px; }
+    .entry-table col.discount-col { width: 68px; }
+    .entry-table col.amount-col { width: 96px; }
+    .entry-table col.date-col { width: 108px; }
+    .entry-table col.action-col { width: 70px; }
+
+    .entry-table th, .entry-table td {
+      height: 34px;
+      border-right: 1px solid #e1e6ed;
+      border-bottom: 1px solid #e1e6ed;
+      overflow: hidden;
+      padding: 0 8px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .entry-table th:last-child, .entry-table td:last-child { border-right: 0; }
+    .entry-table th { position: relative; background: #eef2f6; color: #344054; font-size: 10px; font-weight: 700; text-align: left; }
+    .entry-table td { background: #fff; color: #344054; font-size: 10px; }
+    .entry-table tbody tr:hover td { background: #f8fbff; }
+    .entry-table tbody tr[data-selected="true"] td { background: var(--accent-soft); }
+    .entry-table .center { text-align: center; }
+    .entry-table .number { text-align: right; font-variant-numeric: tabular-nums; }
+    .entry-table .frozen-column { position: sticky; left: 36px; z-index: 2; box-shadow: 2px 0 0 #cbd4df; }
+    .entry-table th.frozen-column { z-index: 3; background: #e8eef6; }
+    .entry-table tr[data-selected="true"] .frozen-column { background: var(--accent-soft); }
+    .entry-table tr:hover .frozen-column { background: #f8fbff; }
+    .entry-table .required { color: var(--danger); }
+    .entry-table input[type="checkbox"] { width: 14px; height: 14px; margin: 0; accent-color: var(--accent); }
+    .cell-code { color: #1d5ea9; font-family: Consolas, monospace; font-weight: 700; }
+    .cell-name { margin-left: 5px; color: var(--muted); }
+    .detail-button { width: 25px; height: 23px; border: 1px solid transparent; border-radius: 3px; background: transparent; color: var(--accent); display: inline-grid; place-items: center; padding: 0; }
+    .detail-button:hover { border-color: var(--accent-line); background: #fff; }
+    .detail-button svg { width: 14px; height: 14px; }
+
+    .summary-row td { height: 36px; border-bottom: 0; background: #f7f9fb; color: #243043; font-weight: 700; }
+    .summary-row .frozen-column { background: #f7f9fb; }
+    .summary-caption { display: inline-flex; align-items: center; gap: 5px; color: #475467; }
+    .summary-caption svg { width: 13px; height: 13px; color: var(--accent); }
+
+    .drop-zone {
+      height: 44px;
+      margin: 10px;
+      border: 1px dashed #9bb7dc;
+      background: #f8fbff;
+      color: #5e789b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 10px;
+    }
+    .drop-zone svg { width: 14px; height: 14px; }
+
+    .inspector-content { min-height: 0; overflow: auto; }
+    .selection-context { padding: 10px; border-bottom: 1px solid var(--line); background: #fff; }
+    .context-title { display: flex; align-items: center; gap: 7px; color: #243043; font-size: 12px; font-weight: 700; }
+    .context-title svg { width: 15px; height: 15px; color: var(--accent); }
+    .context-path { margin-top: 5px; overflow: hidden; color: var(--muted); font-family: Consolas, monospace; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+
+    .inspector-tabs { height: 34px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-bottom: 1px solid var(--line); background: #fbfcfe; }
+    .inspector-tab { border: 0; border-right: 1px solid var(--line); background: transparent; color: var(--muted); font-size: 10px; }
+    .inspector-tab:last-child { border-right: 0; }
+    .inspector-tab[aria-selected="true"] { background: #fff; color: var(--accent); box-shadow: inset 0 -2px 0 var(--accent); font-weight: 700; }
+
+    .property-panel { padding: 2px 10px 10px; }
+    .property-group { border-bottom: 1px solid #e8ecf1; padding: 7px 0; }
+    .property-group-title { height: 25px; display: flex; align-items: center; gap: 6px; color: #344054; font-size: 10px; font-weight: 700; }
+    .property-group-title svg { width: 12px; height: 12px; color: var(--muted); }
+    .property-row { min-height: 31px; display: grid; grid-template-columns: 88px minmax(0, 1fr); align-items: center; gap: 7px; }
+    .property-label { color: var(--muted); font-size: 10px; }
+    .property-input, .property-select {
+      width: 100%;
+      height: 26px;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #fff;
+      color: var(--text-2);
+      padding: 0 7px;
+      font-size: 10px;
+    }
+    .property-value { min-width: 0; overflow: hidden; color: #344054; font-family: Consolas, monospace; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+    .toggle {
+      justify-self: start;
+      width: 32px;
+      height: 18px;
+      border: 0;
+      border-radius: 10px;
+      background: #aeb8c5;
+      padding: 2px;
+    }
+    .toggle::after { content: ""; display: block; width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(16, 24, 40, 0.2); transition: transform 120ms ease; }
+    .toggle[aria-pressed="true"] { background: var(--accent); }
+    .toggle[aria-pressed="true"]::after { transform: translateX(14px); }
+
+    .analysis-strip {
+      margin: 9px 10px 10px;
+      border: 1px solid #b7ddc6;
+      border-radius: var(--radius);
+      background: var(--success-soft);
+      color: #245c3b;
+      padding: 8px;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+    .analysis-strip strong { display: flex; align-items: center; gap: 5px; margin-bottom: 3px; color: var(--success); }
+    .analysis-strip svg { width: 13px; height: 13px; }
+
+    .status-bar {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 0 10px;
+      border-top: 1px solid var(--line-strong);
+      background: #f8fafc;
+      color: #596579;
+      font-size: 10px;
+    }
+    .status-main { min-width: 0; flex: 1; display: flex; align-items: center; gap: 6px; overflow: hidden; white-space: nowrap; }
+    .status-main strong { color: #243043; }
+    .status-message { overflow: hidden; text-overflow: ellipsis; }
+    .status-dot { width: 7px; height: 7px; flex: 0 0 auto; border-radius: 50%; background: #2f9e5b; box-shadow: 0 0 0 2px #dcefe3; }
+    .status-metrics { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+    .separator { width: 1px; height: 12px; background: var(--line); }
+
+    .toast {
+      position: fixed;
+      right: 310px;
+      bottom: 38px;
+      z-index: 20;
+      min-width: 210px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid #a9d6ba;
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--success);
+      box-shadow: var(--shadow);
+      padding: 0 11px;
+      font-size: 11px;
+    }
+    .toast[hidden] { display: none; }
+    .toast svg { width: 15px; height: 15px; }
+
+    @media (max-width: 1180px) {
+      .workbench { grid-template-columns: 48px 220px minmax(0, 1fr) 270px; }
+      .activity-button { width: 48px; }
+      .command-meta .status-chip:first-child { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="pt-007" data-testid="pt007-v2-root" data-version="v2" data-row-count="3" data-selected-node="entry-table" data-selected-row="row-001" data-frozen="true" data-inspector-tab="table" data-last-action="ready">
+    <header class="command-bar" data-testid="workbench-region-top">
+      <div class="brand-area">
+        <div class="brand-mark">T</div>
+        <div class="brand-copy">
+          <div class="brand-title">销售订单 · 分录表格设计</div>
+          <div class="brand-path">表单设计器 / 销售订单 / EntryTable</div>
+        </div>
+      </div>
+
+      <div class="command-actions" aria-label="设计器命令栏">
+        <button class="icon-button" title="撤销" aria-label="撤销"><i data-lucide="undo-2"></i></button>
+        <button class="icon-button" title="重做" aria-label="重做"><i data-lucide="redo-2"></i></button>
+        <span class="command-divider"></span>
+        <button class="command-button" data-testid="top-command-save"><i data-lucide="save"></i>保存</button>
+        <button class="command-button" data-testid="top-command-preview"><i data-lucide="play"></i>预览</button>
+        <button class="command-button primary" data-testid="top-command-publish"><i data-lucide="rocket"></i>发布</button>
+      </div>
+
+      <div class="command-meta">
+        <span class="status-chip"><i data-lucide="cloud"></i>草稿 v12</span>
+        <span class="status-chip success"><i data-lucide="circle-check"></i>结构合法</span>
+      </div>
+    </header>
+
+    <main class="workbench" data-testid="pt007-workbench">
+      <nav class="activity-bar" aria-label="设计器资源模式">
+        <button class="activity-button" title="组件库" aria-label="组件库"><i data-lucide="blocks"></i><span class="activity-label">组件</span></button>
+        <button class="activity-button" aria-selected="true" title="字段与业务对象" aria-label="字段与业务对象"><i data-lucide="database"></i><span class="activity-label">字段</span></button>
+        <button class="activity-button" title="页面大纲" aria-label="页面大纲"><i data-lucide="list-tree"></i><span class="activity-label">大纲</span></button>
+        <button class="activity-button" title="问题与校验" aria-label="问题与校验"><i data-lucide="circle-alert"></i><span class="activity-label">问题</span></button>
+        <button class="activity-button" title="版本历史" aria-label="版本历史"><i data-lucide="history"></i><span class="activity-label">版本</span></button>
+        <div class="activity-spacer"></div>
+        <button class="activity-button" title="设计器设置" aria-label="设计器设置"><i data-lucide="settings"></i><span class="activity-label">设置</span></button>
+      </nav>
+
+      <aside class="asset-panel" data-testid="workbench-region-left">
+        <div class="panel-header">
+          <span class="panel-title">销售分录 · 字段集合</span>
+          <span class="count-badge">7</span>
+        </div>
+        <div class="panel-body">
+          <div class="left-search">
+            <div class="search-wrap"><i data-lucide="search"></i><input class="search-input" aria-label="搜索分录字段" placeholder="搜索分录字段" /></div>
+          </div>
+
+          <section class="tree-section" aria-label="业务对象">
+            <div class="tree-heading"><i data-lucide="braces"></i>业务对象<span class="count-badge">1</span></div>
+            <button class="tree-row" aria-selected="true" data-node="entry-table">
+              <span class="tree-icon"><i data-lucide="table-2"></i></span>
+              <span class="tree-copy"><span class="tree-name">销售分录</span><span class="tree-path">salesOrder.entries[]</span></span>
+              <span class="field-type">EntryTable</span>
+            </button>
+          </section>
+
+          <section class="tree-section" aria-label="分录字段">
+            <div class="tree-heading"><i data-lucide="list-tree"></i>分录字段<span class="count-badge">6</span></div>
+            <button class="tree-row" aria-selected="false" data-node="materialId">
+              <span class="tree-icon"><i data-lucide="package"></i></span>
+              <span class="tree-copy"><span class="tree-name">物料</span><span class="tree-path">entries[].materialId</span></span>
+              <span class="field-type">Ref</span>
+            </button>
+            <button class="tree-row" aria-selected="false" data-node="qty">
+              <span class="tree-icon"><i data-lucide="binary"></i></span>
+              <span class="tree-copy"><span class="tree-name">数量</span><span class="tree-path">entries[].qty</span></span>
+              <span class="field-type">Number</span>
+            </button>
+            <button class="tree-row" aria-selected="false" data-node="price">
+              <span class="tree-icon"><i data-lucide="badge-dollar-sign"></i></span>
+              <span class="tree-copy"><span class="tree-name">单价</span><span class="tree-path">entries[].price</span></span>
+              <span class="field-type">Money</span>
+            </button>
+            <button class="tree-row" aria-selected="false" data-node="discount">
+              <span class="tree-icon"><i data-lucide="percent"></i></span>
+              <span class="tree-copy"><span class="tree-name">折扣</span><span class="tree-path">entries[].discount</span></span>
+              <span class="field-type">Percent</span>
+            </button>
+            <button class="tree-row" aria-selected="false" data-node="amount">
+              <span class="tree-icon"><i data-lucide="calculator"></i></span>
+              <span class="tree-copy"><span class="tree-name">金额</span><span class="tree-path">entries[].amount</span></span>
+              <span class="field-type">Formula</span>
+            </button>
+            <button class="tree-row" aria-selected="false" data-node="deliveryDate">
+              <span class="tree-icon"><i data-lucide="calendar-days"></i></span>
+              <span class="tree-copy"><span class="tree-name">交付日期</span><span class="tree-path">entries[].deliveryDate</span></span>
+              <span class="field-type">Date</span>
+            </button>
+          </section>
+
+          <div class="palette-callout"><strong>字段投放</strong><br />拖动字段到表头区域可创建新列；列顺序与 Schema 保持同步。</div>
+        </div>
+      </aside>
+
+      <section class="canvas-shell" data-testid="workbench-region-center">
+        <div class="canvas-toolbar">
+          <div class="breadcrumbs"><strong>PageRoot</strong> / SalesOrderForm / EntryTable</div>
+          <div class="canvas-tools">
+            <button class="small-button" aria-pressed="true"><i data-lucide="mouse-pointer-2"></i>选择</button>
+            <button class="small-button" title="显示网格" aria-label="显示网格"><i data-lucide="grid-2x2"></i></button>
+            <button class="small-button"><i data-lucide="search"></i>100%</button>
+          </div>
+        </div>
+
+        <div class="canvas-viewport" data-testid="pt007-canvas-viewport">
+          <article class="artboard" data-testid="pt007-artboard">
+            <header class="document-head">
+              <span class="document-icon"><i data-lucide="file-spreadsheet"></i></span>
+              <div class="document-copy">
+                <div class="document-title">销售订单</div>
+                <div class="document-subtitle">SalesOrderForm · PC 单据编辑态</div>
+              </div>
+              <span class="document-code">SO-20260710-018</span>
+            </header>
+
+            <div class="document-body">
+              <section class="design-section" data-testid="designer-node-entry-table" data-selected="true">
+                <span class="selection-label"><i data-lucide="table-2"></i>EntryTable · 销售分录</span>
+                <div class="section-head">
+                  <span class="section-title">销售分录</span>
+                  <span class="table-meta"><span data-testid="pt007-visible-row-count">3</span> 行 · 7 列 · 左侧冻结</span>
+                </div>
+
+                <div class="table-toolbar" aria-label="分录行操作">
+                  <button class="row-action primary" data-testid="pt007-add-row"><i data-lucide="plus"></i>新增行</button>
+                  <button class="row-action" data-testid="pt007-copy-row"><i data-lucide="copy"></i>复制行</button>
+                  <button class="row-action" data-testid="pt007-delete-row"><i data-lucide="trash-2"></i>删除行</button>
+                  <span class="command-divider"></span>
+                  <button class="row-action active" data-testid="pt007-freeze-toggle" aria-pressed="true"><i data-lucide="pin"></i>冻结物料列</button>
+                  <div class="table-toolbar-spacer"></div>
+                  <select class="table-filter" aria-label="行显示范围"><option>全部分录</option><option>仅异常行</option></select>
+                </div>
+
+                <div class="table-scroll">
+                  <table class="entry-table" aria-label="销售分录设计表格">
+                    <colgroup>
+                      <col class="select-col" /><col class="material-col" /><col class="qty-col" /><col class="price-col" />
+                      <col class="discount-col" /><col class="amount-col" /><col class="date-col" /><col class="action-col" />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th class="center"><input type="checkbox" aria-label="选择全部分录" /></th>
+                        <th class="frozen-column" data-testid="table-frozen-column-entry-table-material"><span class="required">*</span> 物料 <i data-lucide="pin"></i></th>
+                        <th class="number"><span class="required">*</span> 数量</th>
+                        <th class="number">单价</th>
+                        <th class="number">折扣</th>
+                        <th class="number">金额</th>
+                        <th>交付日期</th>
+                        <th class="center">明细</th>
+                      </tr>
+                    </thead>
+                    <tbody data-testid="pt007-table-body">
+                      <tr data-row-id="row-001" data-selected="true">
+                        <td class="center"><input type="checkbox" aria-label="选择第 1 行" checked /></td>
+                        <td class="frozen-column"><span class="cell-code">A-1001</span><span class="cell-name">工业传感器</span></td>
+                        <td class="number">10</td><td class="number">120.00</td><td class="number">100%</td><td class="number" data-amount="1200">1,200.00</td><td>2026-07-20</td>
+                        <td class="center"><button class="detail-button" title="展开明细" aria-label="展开第 1 行明细"><i data-lucide="panel-bottom-open"></i></button></td>
+                      </tr>
+                      <tr data-row-id="row-002" data-selected="false">
+                        <td class="center"><input type="checkbox" aria-label="选择第 2 行" /></td>
+                        <td class="frozen-column"><span class="cell-code">B-2002</span><span class="cell-name">控制模块</span></td>
+                        <td class="number">4</td><td class="number">520.00</td><td class="number">95%</td><td class="number" data-amount="1976">1,976.00</td><td>2026-07-22</td>
+                        <td class="center"><button class="detail-button" title="展开明细" aria-label="展开第 2 行明细"><i data-lucide="panel-bottom-open"></i></button></td>
+                      </tr>
+                      <tr data-row-id="row-003" data-selected="false">
+                        <td class="center"><input type="checkbox" aria-label="选择第 3 行" /></td>
+                        <td class="frozen-column"><span class="cell-code">C-3048</span><span class="cell-name">电源适配器</span></td>
+                        <td class="number">6</td><td class="number">86.00</td><td class="number">100%</td><td class="number" data-amount="516">516.00</td><td>2026-07-24</td>
+                        <td class="center"><button class="detail-button" title="展开明细" aria-label="展开第 3 行明细"><i data-lucide="panel-bottom-open"></i></button></td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr class="summary-row">
+                        <td class="center"></td>
+                        <td class="frozen-column"><span class="summary-caption"><i data-lucide="sigma"></i>合计</span></td>
+                        <td class="number" data-testid="pt007-summary-qty">20</td><td></td><td></td><td class="number" data-testid="pt007-summary-amount">3,692.00</td><td></td><td></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+
+                <div class="drop-zone" data-testid="pt007-column-dropzone"><i data-lucide="columns-3"></i>拖放字段到此处新增表格列</div>
+              </section>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <aside class="inspector-panel" data-testid="workbench-region-right">
+        <div class="panel-header"><span class="panel-title">属性</span><span class="status-chip success"><i data-lucide="refresh-cw"></i>已同步</span></div>
+        <div class="inspector-content">
+          <div class="selection-context">
+            <div class="context-title"><i data-lucide="table-2"></i><span data-testid="pt007-inspector-title">销售分录</span></div>
+            <div class="context-path" data-testid="pt007-inspector-path">PageRoot.SalesOrderForm.EntryTable</div>
+          </div>
+
+          <div class="inspector-tabs" role="tablist" aria-label="表格属性类型">
+            <button class="inspector-tab" data-tab="table" role="tab" aria-selected="true">表格</button>
+            <button class="inspector-tab" data-tab="rows" role="tab" aria-selected="false">行行为</button>
+            <button class="inspector-tab" data-tab="summary" role="tab" aria-selected="false">汇总</button>
+          </div>
+
+          <div class="property-panel" data-panel="table">
+            <section class="property-group">
+              <div class="property-group-title"><i data-lucide="chevron-down"></i>基础</div>
+              <div class="property-row"><span class="property-label">标题</span><input class="property-input" value="销售分录" /></div>
+              <div class="property-row"><span class="property-label">数据绑定</span><span class="property-value">salesOrder.entries</span></div>
+              <div class="property-row"><span class="property-label">rowKey</span><span class="property-value">entryId</span></div>
+              <div class="property-row"><span class="property-label">列数量</span><span class="property-value">7</span></div>
+            </section>
+            <section class="property-group">
+              <div class="property-group-title"><i data-lucide="chevron-down"></i>布局与滚动</div>
+              <div class="property-row"><span class="property-label">密度</span><select class="property-select"><option>紧凑 34px</option><option>标准 40px</option></select></div>
+              <div class="property-row"><span class="property-label">表头固定</span><button class="toggle" aria-label="表头固定" aria-pressed="true"></button></div>
+              <div class="property-row"><span class="property-label">冻结首列</span><button class="toggle" data-testid="pt007-inspector-freeze" aria-label="冻结首列" aria-pressed="true"></button></div>
+              <div class="property-row"><span class="property-label">最小宽度</span><span class="property-value">690px</span></div>
+            </section>
+          </div>
+
+          <div class="property-panel" data-panel="rows" hidden>
+            <section class="property-group">
+              <div class="property-group-title"><i data-lucide="chevron-down"></i>行操作</div>
+              <div class="property-row"><span class="property-label">允许新增</span><button class="toggle" aria-label="允许新增" aria-pressed="true"></button></div>
+              <div class="property-row"><span class="property-label">允许复制</span><button class="toggle" aria-label="允许复制" aria-pressed="true"></button></div>
+              <div class="property-row"><span class="property-label">允许删除</span><button class="toggle" aria-label="允许删除" aria-pressed="true"></button></div>
+              <div class="property-row"><span class="property-label">默认行数</span><span class="property-value">1</span></div>
+            </section>
+          </div>
+
+          <div class="property-panel" data-panel="summary" hidden>
+            <section class="property-group">
+              <div class="property-group-title"><i data-lucide="chevron-down"></i>汇总规则</div>
+              <div class="property-row"><span class="property-label">显示汇总行</span><button class="toggle" aria-label="显示汇总行" aria-pressed="true"></button></div>
+              <div class="property-row"><span class="property-label">数量</span><span class="property-value">qty.sum</span></div>
+              <div class="property-row"><span class="property-label">金额</span><span class="property-value">amount.sum</span></div>
+              <div class="property-row"><span class="property-label">币别</span><span class="property-value">CNY</span></div>
+            </section>
+          </div>
+
+          <div class="analysis-strip"><strong><i data-lucide="circle-check"></i>TABLE_OK</strong>columns / rowKey / summary 结构合法，可进入发布检查。</div>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="status-bar" data-testid="workbench-region-bottom">
+      <div class="status-main"><span class="status-dot"></span><strong data-testid="pt007-status-title">表格就绪</strong><span class="status-message" data-testid="pt007-status-message">已选择第 1 行，冻结列与汇总规则已启用</span></div>
+      <div class="status-metrics"><span data-testid="pt007-footer-rows">3 行</span><span class="separator"></span><span>7 列</span><span class="separator"></span><span>0 错误</span><span class="separator"></span><span>画布 100%</span></div>
+    </footer>
+
+    <div class="toast" data-testid="pt007-toast" hidden><i data-lucide="circle-check"></i><span></span></div>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.querySelector('[data-testid="pt007-v2-root"]');
+      var body = root.querySelector('[data-testid="pt007-table-body"]');
+      var rowCount = root.querySelector('[data-testid="pt007-visible-row-count"]');
+      var footerRows = root.querySelector('[data-testid="pt007-footer-rows"]');
+      var summaryQty = root.querySelector('[data-testid="pt007-summary-qty"]');
+      var summaryAmount = root.querySelector('[data-testid="pt007-summary-amount"]');
+      var statusTitle = root.querySelector('[data-testid="pt007-status-title"]');
+      var statusMessage = root.querySelector('[data-testid="pt007-status-message"]');
+      var toast = root.querySelector('[data-testid="pt007-toast"]');
+      var toastTimer;
+
+      function refreshIcons() {
+        if (window.lucide) { window.lucide.createIcons(); }
+      }
+
+      function setStatus(title, message) {
+        statusTitle.textContent = title;
+        statusMessage.textContent = message;
+      }
+
+      function showToast(message) {
+        toast.querySelector('span').textContent = message;
+        toast.hidden = false;
+        window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(function () { toast.hidden = true; }, 1600);
+      }
+
+      function setSelectedRow(row) {
+        body.querySelectorAll('tr[data-row-id]').forEach(function (item) {
+          var selected = item === row;
+          item.setAttribute('data-selected', selected ? 'true' : 'false');
+          item.querySelector('input[type="checkbox"]').checked = selected;
+        });
+        root.setAttribute('data-selected-row', row.getAttribute('data-row-id'));
+        setStatus('已选择分录', row.getAttribute('data-row-id') + '，行级命令已就绪');
+      }
+
+      function syncTotals() {
+        var rows = Array.from(body.querySelectorAll('tr[data-row-id]'));
+        var qty = rows.reduce(function (sum, row) { return sum + Number(row.children[2].textContent); }, 0);
+        var amount = rows.reduce(function (sum, row) { return sum + Number(row.querySelector('[data-amount]').getAttribute('data-amount')); }, 0);
+        root.setAttribute('data-row-count', String(rows.length));
+        rowCount.textContent = String(rows.length);
+        footerRows.textContent = rows.length + ' 行';
+        summaryQty.textContent = String(qty);
+        summaryAmount.textContent = amount.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      function createRow(index) {
+        var row = document.createElement('tr');
+        var id = 'row-' + String(index).padStart(3, '0');
+        row.setAttribute('data-row-id', id);
+        row.setAttribute('data-selected', 'false');
+        row.innerHTML = '<td class="center"><input type="checkbox" aria-label="选择第 ' + index + ' 行" /></td>' +
+          '<td class="frozen-column"><span class="cell-code">NEW-' + String(index).padStart(3, '0') + '</span><span class="cell-name">待选择物料</span></td>' +
+          '<td class="number">1</td><td class="number">0.00</td><td class="number">100%</td>' +
+          '<td class="number" data-amount="0">0.00</td><td>2026-07-31</td>' +
+          '<td class="center"><button class="detail-button" title="展开明细" aria-label="展开第 ' + index + ' 行明细"><i data-lucide="panel-bottom-open"></i></button></td>';
+        return row;
+      }
+
+      root.querySelector('[data-testid="pt007-add-row"]').addEventListener('click', function () {
+        var nextIndex = body.querySelectorAll('tr[data-row-id]').length + 1;
+        var row = createRow(nextIndex);
+        body.appendChild(row);
+        setSelectedRow(row);
+        syncTotals();
+        root.setAttribute('data-last-action', 'row:add');
+        setStatus('新增行成功', '已新增第 ' + nextIndex + ' 行，汇总已重新计算');
+        showToast('已新增第 ' + nextIndex + ' 行');
+        refreshIcons();
+      });
+
+      root.querySelector('[data-testid="pt007-copy-row"]').addEventListener('click', function () {
+        var selected = body.querySelector('tr[data-selected="true"]');
+        var nextIndex = body.querySelectorAll('tr[data-row-id]').length + 1;
+        var row = selected.cloneNode(true);
+        row.setAttribute('data-row-id', 'row-' + String(nextIndex).padStart(3, '0'));
+        row.querySelector('input[type="checkbox"]').setAttribute('aria-label', '选择第 ' + nextIndex + ' 行');
+        body.appendChild(row);
+        setSelectedRow(row);
+        syncTotals();
+        root.setAttribute('data-last-action', 'row:copy');
+        setStatus('复制行成功', '已从当前分录创建第 ' + nextIndex + ' 行');
+        showToast('当前行已复制');
+      });
+
+      root.querySelector('[data-testid="pt007-delete-row"]').addEventListener('click', function () {
+        var rows = body.querySelectorAll('tr[data-row-id]');
+        if (rows.length === 1) {
+          setStatus('无法删除', '分录表格至少保留 1 行');
+          root.setAttribute('data-last-action', 'row:delete-blocked');
+          return;
+        }
+        var selected = body.querySelector('tr[data-selected="true"]');
+        var next = selected.nextElementSibling || selected.previousElementSibling;
+        selected.remove();
+        setSelectedRow(next);
+        syncTotals();
+        root.setAttribute('data-last-action', 'row:delete');
+        setStatus('删除行成功', '当前分录已删除，汇总已重新计算');
+        showToast('当前行已删除');
+      });
+
+      body.addEventListener('click', function (event) {
+        var row = event.target.closest('tr[data-row-id]');
+        if (row) {
+          setSelectedRow(row);
+          root.setAttribute('data-last-action', 'row:select');
+        }
+      });
+
+      function setFrozen(frozen) {
+        root.setAttribute('data-frozen', frozen ? 'true' : 'false');
+        root.querySelectorAll('.frozen-column').forEach(function (cell) { cell.classList.toggle('frozen-column', frozen); });
+        var toolbarToggle = root.querySelector('[data-testid="pt007-freeze-toggle"]');
+        var inspectorToggle = root.querySelector('[data-testid="pt007-inspector-freeze"]');
+        toolbarToggle.setAttribute('aria-pressed', frozen ? 'true' : 'false');
+        toolbarToggle.classList.toggle('active', frozen);
+        inspectorToggle.setAttribute('aria-pressed', frozen ? 'true' : 'false');
+        root.setAttribute('data-last-action', frozen ? 'column:freeze' : 'column:unfreeze');
+        setStatus(frozen ? '已冻结物料列' : '已取消冻结', frozen ? '横向滚动时物料列保持可见' : '所有列随表格同步滚动');
+      }
+
+      root.querySelector('[data-testid="pt007-freeze-toggle"]').addEventListener('click', function () {
+        setFrozen(root.getAttribute('data-frozen') !== 'true');
+      });
+      root.querySelector('[data-testid="pt007-inspector-freeze"]').addEventListener('click', function () {
+        setFrozen(root.getAttribute('data-frozen') !== 'true');
+      });
+
+      root.querySelectorAll('.inspector-tab').forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          var name = tab.getAttribute('data-tab');
+          root.querySelectorAll('.inspector-tab').forEach(function (item) { item.setAttribute('aria-selected', item === tab ? 'true' : 'false'); });
+          root.querySelectorAll('.property-panel[data-panel]').forEach(function (panel) { panel.hidden = panel.getAttribute('data-panel') !== name; });
+          root.setAttribute('data-inspector-tab', name);
+          root.setAttribute('data-last-action', 'inspector:' + name);
+          setStatus('Inspector 已切换', tab.textContent + '属性已显示');
+        });
+      });
+
+      root.querySelectorAll('.tree-row').forEach(function (row) {
+        row.addEventListener('click', function () {
+          root.querySelectorAll('.tree-row').forEach(function (item) { item.setAttribute('aria-selected', item === row ? 'true' : 'false'); });
+          root.setAttribute('data-selected-node', row.getAttribute('data-node'));
+          root.setAttribute('data-last-action', 'field:select');
+          setStatus('已选择字段', row.querySelector('.tree-name').textContent + ' · ' + row.querySelector('.tree-path').textContent);
+        });
+      });
+
+      root.querySelectorAll('.toggle:not([data-testid="pt007-inspector-freeze"])').forEach(function (toggle) {
+        toggle.addEventListener('click', function () {
+          var active = toggle.getAttribute('aria-pressed') === 'true';
+          toggle.setAttribute('aria-pressed', active ? 'false' : 'true');
+          root.setAttribute('data-last-action', 'property:toggle');
+        });
+      });
+
+      root.querySelector('[data-testid="top-command-save"]').addEventListener('click', function () {
+        root.setAttribute('data-last-action', 'document:save');
+        setStatus('保存成功', '草稿 v12 已保存，所有表格配置已同步');
+        showToast('草稿 v12 已保存');
+      });
+
+      root.querySelector('[data-testid="top-command-preview"]').addEventListener('click', function () {
+        root.setAttribute('data-last-action', 'document:preview');
+        setStatus('预览已准备', '运行态将使用同源 EntryTable Renderer');
+        showToast('预览数据已准备');
+      });
+
+      root.querySelector('[data-testid="top-command-publish"]').addEventListener('click', function () {
+        root.setAttribute('data-last-action', 'document:publish-check');
+        setStatus('发布检查通过', 'EntryTable 结构合法，0 个阻断项');
+        showToast('发布检查通过');
+      });
+
+      syncTotals();
+      refreshIcons();
+    })();
+  </script>
+</body>
+</html>

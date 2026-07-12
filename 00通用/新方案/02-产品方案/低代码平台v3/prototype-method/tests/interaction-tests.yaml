@@ -1,0 +1,33 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: interaction_tests
+  artifact_id: INT-TEST-LOWCODE-V2-001
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  updated_at: 2026-07-11T00:00:00+08:00
+  created_by: codex
+  status: EXECUTED
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+tests:
+  - id: IT-001
+    task_ref: TASK-001
+    steps: [选择含税金额字段, 打开发布准备, 关闭对话框, 配置权限策略, 再次发布检查, 生成候选版本]
+    assertions: [selected=amount, inspector=含税金额, publish=blocked, summary=0个阻断问题, publish=ready, release=v19]
+    result: DEMO_PATH_PASS
+  - id: IT-002
+    task_ref: TASK-002
+    steps: [打开运行预览, 切换财务审核员]
+    assertions: [root_state=preview-财务审核员, customer_readonly=true]
+    result: DEMO_PATH_PASS
+  - id: IT-003
+    task_ref: TASK-003
+    steps: [依次打开对象页面规则权限预览工作区]
+    assertions: [model, page, rules, permissions, preview]
+    result: PARTIAL_DEMO_PASS
+execution:
+  runtime_url: http://127.0.0.1:4173/
+  browser: agent-browser Chromium
+  console_errors: 0
+  page_errors: 0
+  real_user_validation: NOT_PERFORMED
+  formal_stage_8_result: NOT_RUN

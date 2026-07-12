@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>低代码设计中心 - 销售订单</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles.css?v=20260712-5">
+</head>
+<body>
+  <div class="designer" data-testid="designer-root" data-ui-component="app-shell" data-component-type="DesignerShell" data-state="page" data-selected="customer">
+    <header class="topbar" data-testid="topbar" data-ui-component="topbar" data-component-type="Topbar">
+      <div class="brand-block">
+        <button class="icon-button home-button" type="button" data-action="home" title="返回业务对象" aria-label="返回业务对象">⌂</button>
+        <div class="brand-copy">
+          <strong>低代码设计中心</strong>
+          <span>销售管理 / 销售订单</span>
+        </div>
+      </div>
+      <nav class="document-tabs" aria-label="已打开的设计文档">
+        <button type="button" class="document-tab" data-document-workspace="model">业务对象</button>
+        <button type="button" class="document-tab active" data-document-workspace="page" aria-current="page">销售订单表单 <span class="dirty-dot" title="有未保存变更"></span></button>
+        <button type="button" class="document-tab" disabled aria-disabled="true" title="列表设计不在本表单设计器范围内">销售订单列表</button>
+      </nav>
+      <div class="top-actions">
+        <span class="save-state" data-testid="save-state">草稿已保存</span>
+        <button class="icon-button" type="button" data-action="undo" title="撤销" aria-label="撤销">↶</button>
+        <button class="icon-button" type="button" data-action="redo" title="重做" aria-label="重做">↷</button>
+        <span class="toolbar-divider"></span>
+        <button class="button secondary" type="button" data-action="preview">预览</button>
+        <button class="button primary" type="button" data-action="publish">发布准备</button>
+        <button class="avatar-button" type="button" data-action="user-menu" title="当前用户：陈设计" aria-label="用户菜单">陈</button>
+      </div>
+    </header>
+
+    <main class="workbench">
+      <nav class="workspace-nav" data-testid="workspace-nav" data-ui-component="workspace-nav" data-component-type="WorkspaceNav" aria-label="设计模块">
+        <button type="button" class="workspace-button" data-workspace="model" aria-label="业务对象" title="业务对象"><span>数</span><small>对象</small></button>
+        <button type="button" class="workspace-button active" data-workspace="page" aria-label="页面设计" title="页面设计"><span>□</span><small>页面</small></button>
+        <button type="button" class="workspace-button" data-workspace="components" aria-label="组件设计" title="组件设计"><span>▦</span><small>组件</small></button>
+        <button type="button" class="workspace-button" data-workspace="rules" aria-label="规则编排" title="规则编排"><span>◇</span><small>规则</small></button>
+        <button type="button" class="workspace-button" data-workspace="permissions" aria-label="权限设计" title="权限设计"><span>⌾</span><small>权限</small></button>
+        <button type="button" class="workspace-button" data-workspace="preview" aria-label="运行预览" title="运行预览"><span>▷</span><small>预览</small></button>
+        <div class="workspace-spacer"></div>
+        <button type="button" class="workspace-button" data-action="settings" aria-label="设计设置" title="设计设置"><span>⚙</span><small>设置</small></button>
+      </nav>
+
+      <aside class="resource-panel" data-testid="resource-panel" data-ui-component="resource-panel" data-component-type="ResourcePanel">
+        <div class="panel-heading">
+          <div>
+            <strong data-testid="resource-title">页面资源</strong>
+            <span data-testid="resource-subtitle">组件、字段与页面结构</span>
+          </div>
+          <button class="icon-button compact" type="button" data-action="collapse-left" title="收起资源面板" aria-label="收起资源面板">‹</button>
+        </div>
+        <div class="resource-content" data-testid="resource-content" data-palette-host></div>
+      </aside>
+
+      <section class="center-stage">
+        <div class="canvas-toolbar" data-testid="canvas-toolbar" data-ui-component="canvas-toolbar" data-component-type="CanvasToolbar">
+          <div class="view-switcher" role="group" aria-label="页面类型">
+            <button type="button" class="segmented active" data-view="form">表单</button>
+            <button type="button" class="segmented" data-view="list" disabled aria-disabled="true" title="列表设计器尚未实现">列表</button>
+            <button type="button" class="segmented" data-view="detail" disabled aria-disabled="true" title="详情设计器尚未实现">详情</button>
+          </div>
+          <div class="canvas-actions">
+            <button class="icon-button" type="button" data-action="zoom-out" title="缩小" aria-label="缩小">−</button>
+            <output data-testid="zoom-value">90%</output>
+            <button class="icon-button" type="button" data-action="zoom-in" title="放大" aria-label="放大">＋</button>
+            <button class="icon-button" type="button" data-action="fit" title="适应画布" aria-label="适应画布">⤢</button>
+            <span class="toolbar-divider"></span>
+            <button class="device-button active" type="button" data-device="desktop">桌面</button>
+            <button class="device-button" type="button" data-device="tablet">平板</button>
+            <button class="device-button" type="button" data-device="mobile">手机</button>
+            <select class="context-select" data-business-state aria-label="业务状态"><option value="create">新增态</option><option value="edit">修改态</option><option value="view">查看态</option><option value="approve">审核态</option></select>
+          </div>
+          <div class="context-actions">
+            <button class="button ghost" type="button" data-action="check">运行检查</button>
+            <button class="button ghost" type="button" data-action="role">角色：<span data-testid="role-label">销售主管</span></button>
+          </div>
+        </div>
+
+        <div class="canvas-scroll" data-testid="design-canvas" data-ui-component="design-canvas" data-component-type="CanvasViewport" data-scroll-owner="canvas-scroll" data-scroll-axes="x,y" data-component-dropzone>
+          <section class="workspace-editor" data-testid="workspace-editor" data-ui-component="workspace-editor" hidden></section>
+          <section class="component-studio" data-testid="component-studio" data-ui-component="component-studio" hidden></section>
+          <div class="canvas-frame" data-testid="canvas-frame" data-device="desktop">
+            <div class="page-shell" data-schema-id="page" data-component-type="FormPage" data-schema-drop-target="page">
+              <header class="business-header">
+                <div>
+                  <div class="business-title-row">
+                    <h1>销售订单</h1>
+                    <span class="status-badge">草稿</span>
+                  </div>
+                  <p>销售订单 · 标准单据</p>
+                </div>
+                <div class="business-actions">
+                  <button type="button" class="runtime-button secondary" data-action="save-draft">暂存</button>
+                  <button type="button" class="runtime-button primary" data-action="submit-runtime">提交</button>
+                </div>
+              </header>
+
+              <div class="page-tabs">
+                <button type="button" class="page-tab active" data-action="select-page-tab" data-page-tab="basic">基本信息</button>
+                <button type="button" class="page-tab" data-action="select-page-tab" data-page-tab="delivery">交付与结算</button>
+                <button type="button" class="page-tab" data-action="select-page-tab" data-page-tab="attachments">附件与备注</button>
+              </div>
+
+              <div data-testid="page-tab-content" data-active-tab="basic">
+              <section class="form-section" data-page-panel="basic">
+                <div class="section-heading">
+                  <strong>基本信息</strong>
+                  <span>6 个字段</span>
+                </div>
+                <div class="form-grid" data-testid="header-schema-fields">
+                  <button class="field-node placeholder-node" type="button" data-action="add-field">
+                    <span>＋ 添加字段</span>
+                  </button>
+                </div>
+              </section>
+
+              <section class="form-section entry-section field-node" data-page-panel="basic" data-schema-id="entries" data-component-type="EntryGrid" data-field-id="entries" data-schema-drop-target="entries" data-testid="field-entries" role="button" tabindex="0" aria-label="选择销售订单分录">
+                <div class="section-heading table-heading">
+                  <div><strong>销售订单分录</strong><span data-testid="entry-summary">3 行 · 7 列</span></div>
+                  <div class="table-actions"><button type="button" data-action="add-entry-row">＋ 增行</button><button type="button" data-action="batch-fill">批量填充</button><button type="button" data-action="column-settings">列设置</button></div>
+                </div>
+                <div class="entry-table-wrap" data-scroll-owner="entry-table-wrap" data-scroll-axes="x">
+                  <table class="entry-table" data-testid="entry-runtime-table"></table>
+                </div>
+                <aside class="inline-tool-panel" data-testid="column-settings-panel" hidden></aside>
+                <div class="entry-schema-components" data-testid="entry-schema-components" hidden></div>
+              </section>
+
+              <section class="form-section" data-page-panel="delivery" hidden>
+                <div class="section-heading"><strong>交付与结算</strong><span>4 个字段</span></div>
+                <div class="form-grid runtime-tab-grid">
+                  <label class="runtime-field"><span>默认仓库</span><select data-page-value="warehouse"><option value="">请选择</option><option value="W-01">华东成品仓</option><option value="W-02">华南备货仓</option></select></label>
+                  <label class="runtime-field"><span>交货方式</span><select data-page-value="deliveryMethod"><option value="pickup">客户自提</option><option value="logistics">物流配送</option><option value="project">项目交付</option></select></label>
+                  <label class="runtime-field"><span>收款条件</span><select data-page-value="paymentTerms"><option value="prepaid">款到发货</option><option value="monthly">月结 30 天</option><option value="milestone">里程碑收款</option></select></label>
+                  <label class="runtime-field"><span>发票类型</span><select data-page-value="invoiceType"><option value="vat-special">增值税专用发票</option><option value="vat-normal">增值税普通发票</option></select></label>
+                </div>
+              </section>
+              <section class="form-section" data-page-panel="attachments" hidden>
+                <div class="section-heading"><strong>附件与备注</strong><span>3 个字段</span></div>
+                <div class="form-grid runtime-tab-grid">
+                  <label class="runtime-field"><span>合同文件名</span><input type="text" data-page-value="contractFile" placeholder="例如：销售合同-2026-0018.pdf"></label>
+                  <label class="runtime-field full-row"><span>客户可见备注</span><textarea data-page-value="externalRemark" rows="3" placeholder="随订单交付给客户的说明"></textarea></label>
+                  <label class="runtime-field full-row"><span>内部协作备注</span><textarea data-page-value="internalRemark" rows="3" placeholder="仅内部角色可见"></textarea></label>
+                </div>
+              </section>
+              </div>
+
+              <section class="schema-components" data-testid="schema-components" aria-label="拖放新增的页面组件" hidden></section>
+            </div>
+          </div>
+        </div>
+
+        <section class="analysis-panel" data-testid="analysis-panel" data-ui-component="analysis-panel" data-component-type="AnalysisPanel" data-state="open">
+          <header class="analysis-header">
+            <div class="analysis-tabs">
+              <button type="button" class="analysis-tab active" data-analysis="findings">问题 <span class="count danger" data-testid="finding-count">2</span></button>
+              <button type="button" class="analysis-tab" data-analysis="data">数据绑定 <span class="count">6</span></button>
+              <button type="button" class="analysis-tab" data-analysis="performance">性能</button>
+              <button type="button" class="analysis-tab" data-analysis="audit">变更记录</button>
+            </div>
+            <div class="analysis-summary"><span class="dot danger"></span><span data-testid="analysis-summary">1 个阻断问题，1 个建议</span><button class="icon-button compact" type="button" data-action="collapse-analysis" aria-label="收起分析面板">⌄</button></div>
+          </header>
+          <div class="analysis-body" data-testid="analysis-body" data-scroll-owner="analysis-body" data-scroll-axes="y"></div>
+        </section>
+      </section>
+
+      <aside class="property-inspector" data-testid="property-inspector" data-ui-component="property-inspector" data-component-type="PropertyInspector">
+        <div class="inspector-heading">
+          <div class="component-icon">客</div>
+          <div><strong data-testid="inspector-title">客户</strong><span data-testid="inspector-type">基础资料字段 · customer</span></div>
+          <button class="icon-button compact" type="button" data-action="more" aria-label="更多属性操作">···</button>
+        </div>
+        <label class="inspector-search"><span>⌕</span><input type="search" placeholder="搜索属性、规则或权限" data-testid="inspector-search"></label>
+        <div class="inspector-tabs" role="tablist">
+          <button type="button" class="inspector-tab active" data-inspector="property">属性</button>
+          <button type="button" class="inspector-tab" data-inspector="layout">布局</button>
+          <button type="button" class="inspector-tab" data-inspector="rule">规则</button>
+          <button type="button" class="inspector-tab" data-inspector="permission">权限</button>
+        </div>
+        <div class="inspector-body" data-testid="inspector-body" data-scroll-owner="inspector-body" data-scroll-axes="y"></div>
+      </aside>
+    </main>
+
+    <footer class="statusbar">
+      <div class="breadcrumb" data-testid="breadcrumb"><span>销售订单</span><b>›</b><span>基本信息</span><b>›</b><strong>客户</strong></div>
+      <div class="status-items"><span>节点 <b data-testid="schema-node-count">2</b></span><span data-testid="drop-result">等待设计操作</span><span>本地自动保存</span><span class="status-ready"><i></i> 模拟服务可用</span></div>
+      <output data-testid="schema-json" hidden></output>
+      <output data-testid="quality-gate-json" data-status="BLOCKED" hidden></output>
+    </footer>
+
+    <aside class="settings-panel" data-testid="settings-panel" aria-label="设计设置" hidden>
+      <header><div><strong>设计设置</strong><span>当前表单的画布与保存选项</span></div><button class="icon-button compact" type="button" data-action="settings" aria-label="关闭设计设置">×</button></header>
+        <div class="settings-content"><label class="switch-row"><span>自动保存本地草稿</span><button type="button" class="switch on" role="switch" aria-checked="true" data-setting="auto-save"></button></label><label class="property-row"><span>默认设备</span><select class="property-select" data-setting="default-device"><option value="desktop">桌面</option><option value="tablet">平板</option><option value="mobile">手机</option></select></label><div class="risk-note">设置仅作用于当前本地原型，不写入生产配置。</div></div>
+    </aside>
+    <div class="command-menu" data-testid="command-menu" hidden></div>
+
+    <div class="dialog-backdrop" data-testid="preview-dialog" data-dialog="preview" data-overlay-owner="app-shell" data-overlay-boundary="body" hidden>
+      <section class="dialog preview-dialog" role="dialog" aria-modal="true" aria-labelledby="preview-title">
+        <header><div><strong id="preview-title">运行预览</strong><span>使用草稿 Schema，不生成发布版本</span></div><button class="icon-button" type="button" data-close="preview" aria-label="关闭预览">×</button></header>
+        <div class="preview-toolbar"><label>模拟角色<select data-testid="preview-role"><option>销售主管</option><option>销售专员</option><option>财务审核员</option></select></label><span class="preview-device">桌面 · 1440</span><span class="preview-status"><i></i> 运行态 Renderer</span></div>
+        <div class="preview-surface" data-testid="preview-surface" data-scroll-owner="preview-surface" data-scroll-axes="x,y"></div>
+      </section>
+    </div>
+
+    <div class="dialog-backdrop" data-testid="publish-dialog" data-dialog="publish" data-overlay-owner="app-shell" data-overlay-boundary="body" hidden>
+      <section class="dialog publish-dialog" role="dialog" aria-modal="true" aria-labelledby="publish-title">
+        <header><div><strong id="publish-title">发布准备</strong><span>校验元数据、规则、权限和运行兼容性</span></div><button class="icon-button" type="button" data-close="publish" aria-label="关闭发布准备">×</button></header>
+        <div class="publish-content" data-testid="publish-content" data-scroll-owner="publish-content" data-scroll-axes="y"></div>
+        <footer><button class="button secondary" type="button" data-close="publish">取消</button><button class="button primary" type="button" data-action="create-release" disabled>生成候选版本</button></footer>
+      </section>
+    </div>
+
+    <div class="toast-region" aria-live="polite" data-testid="toast-region"></div>
+  </div>
+    <script type="module" src="app.js?v=20260712-9"></script>
+  <script type="module" src="quality-gate-runtime.mjs"></script>
+</body>
+</html>

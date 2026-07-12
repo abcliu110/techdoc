@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "methodVersion": "5.2",
+  "artifact": "low-code-form-designer-v3",
+  "generatedAt": "2026-07-11T21:10:00+08:00",
+  "status": "FAIL",
+  "evidence": {
+    "architectureDetection": {
+      "status": "PASS",
+      "stateArchitecture": "SCHEMA",
+      "selectedValidationPath": "input-command -> control-state -> memory-state -> schema -> renderer -> observable-result",
+      "evidenceRefs": [
+        "prototype/schema-engine.mjs",
+        "prototype/designer-state.mjs",
+        "prototype/designer-storage.mjs",
+        "prototype/component-registry.mjs",
+        "tests/drag-contract.test.mjs"
+      ],
+      "note": "Schema is selected from implementation evidence; persistence and undo are tested because the designer exposes them, not because the SCHEMA path mandates them."
+    },
+    "skill": {
+      "name": "enterprise-ui-quality-gate",
+      "validation": "PASS",
+      "scope": "recursive-rendering-and-evidence-contract"
+    },
+    "mechanical": {
+      "status": "PASS",
+      "matrixSamples": 22,
+      "passedSamples": 22,
+      "findings": 0,
+      "coverage": {
+        "discoveredNodes": 1032,
+        "scannedNodes": 994,
+        "excludedNodes": 38,
+        "truncated": false
+      }
+    },
+    "stateConsistency": {
+      "status": "FAIL",
+      "passed": [
+        "property-to-schema",
+        "snapshot-refresh-restore",
+        "undo-redo",
+        "preview-editor-affordance-cleanup",
+        "unimplemented-view-disabled"
+      ],
+      "failed": [
+        "publish-validation-authenticity",
+        "schema-single-source-of-truth",
+        "model-to-renderer-projection",
+        "complex-container-structural-usability",
+        "component-maturity-authenticity"
+      ]
+    },
+    "commandCoverage": {
+      "status": "FAIL",
+      "declaredCommandFamilies": 40,
+      "executedCommandFamilies": 40,
+      "passedCommandFamilies": 20,
+      "failedCommandFamilies": 20,
+      "executionCoveragePercent": 100,
+      "passPercent": 50
+    },
+    "automatedTests": { "status": "PASS", "passed": 90, "failed": 0 },
+    "syntax": { "status": "PASS", "filesChecked": 20 }
+  },
+  "findings": [
+    { "id": "F-REVIEW-001", "severity": "P0", "title": "发布检查可以基于硬编码证据通过" },
+    { "id": "F-REVIEW-002", "severity": "P1", "title": "样例主表字段不在权威 Schema 节点树中" },
+    { "id": "F-REVIEW-003", "severity": "P1", "title": "部分属性可保存但不产生设计效果" },
+    { "id": "F-REVIEW-004", "severity": "P1", "title": "复杂布局容器可拖入但无法形成可用结构" },
+    { "id": "F-REVIEW-005", "severity": "P1", "title": "组件成熟度默认值与协议冲突" }
+  ]
+}

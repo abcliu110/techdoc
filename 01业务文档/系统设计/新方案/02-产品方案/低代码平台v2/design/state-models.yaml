@@ -1,0 +1,24 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: state_models
+  artifact_id: STATE-LOWCODE-V2-001
+  status: FROZEN
+workspace_state:
+  states: [model, page, rules, permissions, preview]
+  initial: page
+  transitions: 任意工作区之间可切换，保持当前对象、文档和节点上下文
+dialog_state:
+  states: [closed, preview-open, publish-blocked, publish-ready]
+  initial: closed
+  transitions:
+    - page -> preview-open: 点击预览
+    - page -> publish-blocked: 存在 P0/P1 时点击发布准备
+    - page -> publish-ready: 无 P0/P1 时点击发布准备
+    - preview-open -> page: 关闭或 Escape
+    - publish-blocked -> page: 关闭或 Escape
+    - publish-ready -> page: 生成候选版本
+selection_state:
+  invariant: selectedNodeId 同时驱动画布选中、资源树选中、属性标题和路径
+publish_state:
+  invariant: 任一开放 P0/P1 finding 时 allowed=false，生成候选版本按钮 disabled
+

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>案例：零售门店新增分类表单 - Simple Form</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f0f2f5; color: #333; font-size: 14px; }
+    .page { max-width: 600px; margin: 0 auto; padding: 24px; }
+
+    /* Card */
+    .card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .card-title { font-size: 18px; font-weight: 600; margin-bottom: 24px; }
+
+    /* Form */
+    .form-field { margin-bottom: 20px; }
+    .form-field:last-of-type { margin-bottom: 0; }
+    .form-label { font-size: 13px; color: #666; margin-bottom: 6px; display: block; }
+    .form-label .required { color: #ff4d4f; margin-right: 2px; }
+    .form-input { width: 100%; padding: 10px 12px; border: 1px solid #d9d9d9; border-radius: 4px; font-size: 14px; transition: border-color 0.2s; }
+    .form-input:focus { border-color: #1890ff; outline: none; box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2); }
+    .form-input:read-only { background: #fafafa; color: #999; }
+    .form-select { width: 100%; padding: 10px 12px; border: 1px solid #d9d9d9; border-radius: 4px; font-size: 14px; background: #fff; }
+    .form-textarea { width: 100%; padding: 10px 12px; border: 1px solid #d9d9d9; border-radius: 4px; font-size: 14px; resize: vertical; min-height: 80px; }
+    .form-hint { font-size: 12px; color: #999; margin-top: 4px; }
+
+    /* Error State */
+    .form-field.error .form-input,
+    .form-field.error .form-select { border-color: #ff4d4f; }
+    .form-field.error .form-error { color: #ff4d4f; font-size: 12px; margin-top: 4px; display: block; }
+
+    /* Actions */
+    .form-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; padding-top: 24px; border-top: 1px solid #f0f0f0; }
+    .btn { padding: 10px 24px; border-radius: 4px; font-size: 14px; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; }
+    .btn-primary { background: #1890ff; color: #fff; border-color: #1890ff; }
+    .btn-primary:hover { background: #40a9ff; }
+    .btn-default { background: #fff; color: #333; border-color: #d9d9d9; }
+    .btn-default:hover { color: #1890ff; border-color: #1890ff; }
+
+    /* Error Summary */
+    .error-summary { background: #fff2f0; border: 1px solid #ffccc7; border-radius: 8px; padding: 16px; margin-bottom: 20px; }
+    .error-summary-title { font-size: 14px; color: #ff4d4f; font-weight: 600; margin-bottom: 8px; }
+    .error-summary ul { font-size: 13px; color: #ff4d4f; padding-left: 20px; }
+    .error-summary li { margin-bottom: 4px; }
+
+    /* Case Badge */
+    .case-badge { position: fixed; top: 20px; right: 20px; background: #1890ff; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 12px; z-index: 100; box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3); }
+    .case-badge::before { content: "案例 "; }
+
+    /* Design Note */
+    .design-note { background: #f6ffed; border: 1px solid #b7eb8f; border-radius: 8px; padding: 16px; margin-top: 24px; }
+    .design-note h4 { font-size: 14px; color: #52c41a; margin-bottom: 8px; }
+    .design-note ul { font-size: 13px; color: #666; padding-left: 20px; }
+    .design-note li { margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+  <div class="case-badge">简单表单模型</div>
+
+  <div class="page">
+    <div class="card">
+      <h2 class="card-title">新增分类</h2>
+
+      <!-- Error Summary (shown when validation fails) -->
+      <div class="error-summary">
+        <div class="error-summary-title">⚠️ 请修正以下问题：</div>
+        <ul>
+          <li>分类名称：已存在同名分类，请检查或使用其他名称</li>
+          <li>分类编码：格式不正确，只能包含字母和下划线</li>
+        </ul>
+      </div>
+
+      <form>
+        <div class="form-field error">
+          <label class="form-label"><span class="required">*</span>分类名称</label>
+          <input type="text" class="form-input" value="进口零食" placeholder="请输入分类名称">
+          <span class="form-error">已存在同名分类，请检查或使用其他名称</span>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label">上级分类</label>
+          <select class="form-select">
+            <option selected>零食饮料</option>
+            <option>酒水</option>
+            <option>日用品</option>
+            <option>生鲜</option>
+          </select>
+        </div>
+
+        <div class="form-field error">
+          <label class="form-label"><span class="required">*</span>分类编码</label>
+          <input type="text" class="form-input" value="SNACK-IMPORT" placeholder="请输入分类编码">
+          <span class="form-error">格式不正确，只能包含字母和下划线</span>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label">排序号</label>
+          <input type="number" class="form-input" value="5" placeholder="数字越小排序越靠前">
+          <span class="form-hint">数字越小排序越靠前，不填则自动排在最后</span>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label">备注</label>
+          <textarea class="form-textarea" placeholder="可选，添加分类备注信息"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-default">取消</button>
+          <button type="submit" class="btn btn-primary">保存分类</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Design Notes -->
+    <div class="design-note">
+      <h4>💡 设计要点</h4>
+      <ul>
+        <li><strong>字段数量控制在 7 个以内</strong>：简单表单只服务一个明确任务</li>
+        <li><strong>按钮文案表达业务动作</strong>："保存分类"而非"确定"</li>
+        <li><strong>错误提示紧贴对应字段</strong>：用户知道问题在哪里</li>
+        <li><strong>提示信息内嵌在表单中</strong>：不依赖外部文档</li>
+        <li><strong>校验失败顶部有汇总</strong>：帮助用户快速定位所有问题</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

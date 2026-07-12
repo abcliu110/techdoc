@@ -1,0 +1,20 @@
+{
+  "execution_id": "COMPLETE-20260712-001",
+  "contracts": [
+    {
+      "contract_id": "STATE-PAGE-SCHEMA",
+      "owner": "designer state",
+      "source_of_truth": "state.schema",
+      "writers": [
+        "schema transactions"
+      ],
+      "consumers": [
+        "canvas renderer",
+        "outline",
+        "inspector",
+        "preview"
+      ],
+      "persistence": "versioned local prototype snapshot"
+    }
+  ]
+}

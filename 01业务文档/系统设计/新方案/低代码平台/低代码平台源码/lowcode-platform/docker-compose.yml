@@ -1,0 +1,38 @@
+services:
+  mysql:
+    image: mysql:8.0.37
+    container_name: lowcode-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: lowcode
+      MYSQL_DATABASE: lowcode
+      MYSQL_USER: lowcode
+      MYSQL_PASSWORD: lowcode
+      TZ: UTC
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+      - --default-time-zone=+00:00
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-plowcode"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  redis:
+    image: redis:7.4.8
+    container_name: lowcode-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mysql-data:

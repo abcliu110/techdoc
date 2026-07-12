@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+<defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/></marker></defs>
+<style>
+  .bg{fill:#f6f8fb}
+  .panel{fill:#ffffff;stroke:#d7dde8;stroke-width:2}
+  .soft{fill:#f1f5f9;stroke:#d7dde8;stroke-width:1.5}
+  .brandSoft{fill:#dbeafe;stroke:#93c5fd;stroke-width:1.5}
+  .warn{fill:#fff7ed;stroke:#fdba74;stroke-width:1.5}
+  .danger{fill:#fee2e2;stroke:#fca5a5;stroke-width:1.5}
+  .success{fill:#dcfce7;stroke:#86efac;stroke-width:1.5}
+  .line{stroke:#64748b;stroke-width:2;fill:none;marker-end:url(#arrow)}
+  .title{font:700 24px Arial, sans-serif;fill:#0f172a}
+  .h{font:700 16px Arial, sans-serif;fill:#0f172a}
+  .t{font:14px Arial, sans-serif;fill:#334155}
+  .s{font:12px Arial, sans-serif;fill:#64748b}
+</style>
+<rect class="bg" x="0" y="0" width="960" height="540"/>
+<text class="title" x="40" y="46">Matrix Configuration Pattern</text>
+<rect class="panel" x="75" y="95" width="810" height="355" rx="12"/>
+<text class="h" x="100" y="130">Role / Permission</text>
+<text class="h" x="335" y="130">View</text>
+<text class="h" x="455" y="130">Create</text>
+<text class="h" x="575" y="130">Delete</text>
+<text class="h" x="695" y="130">Export</text>
+<text class="t" x="105" y="185">Manager</text>
+<rect class="danger" x="315" y="157" width="72" height="36" rx="8"/>
+<text class="s" x="345" y="185">No</text>
+<rect class="success" x="435" y="157" width="72" height="36" rx="8"/>
+<text class="s" x="465" y="185">Yes</text>
+<rect class="success" x="555" y="157" width="72" height="36" rx="8"/>
+<text class="s" x="585" y="185">Yes</text>
+<rect class="danger" x="675" y="157" width="72" height="36" rx="8"/>
+<text class="s" x="705" y="185">No</text>
+<text class="t" x="105" y="247">Cashier</text>
+<rect class="success" x="315" y="219" width="72" height="36" rx="8"/>
+<text class="s" x="345" y="247">Yes</text>
+<rect class="success" x="435" y="219" width="72" height="36" rx="8"/>
+<text class="s" x="465" y="247">Yes</text>
+<rect class="danger" x="555" y="219" width="72" height="36" rx="8"/>
+<text class="s" x="585" y="247">No</text>
+<rect class="success" x="675" y="219" width="72" height="36" rx="8"/>
+<text class="s" x="705" y="247">Yes</text>
+<text class="t" x="105" y="309">Finance</text>
+<rect class="success" x="315" y="281" width="72" height="36" rx="8"/>
+<text class="s" x="345" y="309">Yes</text>
+<rect class="danger" x="435" y="281" width="72" height="36" rx="8"/>
+<text class="s" x="465" y="309">No</text>
+<rect class="success" x="555" y="281" width="72" height="36" rx="8"/>
+<text class="s" x="585" y="309">Yes</text>
+<rect class="success" x="675" y="281" width="72" height="36" rx="8"/>
+<text class="s" x="705" y="309">Yes</text>
+<text class="t" x="105" y="371">Auditor</text>
+<rect class="danger" x="315" y="343" width="72" height="36" rx="8"/>
+<text class="s" x="345" y="371">No</text>
+<rect class="success" x="435" y="343" width="72" height="36" rx="8"/>
+<text class="s" x="465" y="371">Yes</text>
+<rect class="success" x="555" y="343" width="72" height="36" rx="8"/>
+<text class="s" x="585" y="371">Yes</text>
+<rect class="danger" x="675" y="343" width="72" height="36" rx="8"/>
+<text class="s" x="705" y="371">No</text>
+<rect class="brandSoft" x="75" y="465" width="810" height="44" rx="8"/>
+<text class="t" x="100" y="493">Changed 12 cells | Save | Cancel | Audit required</text>
+</svg>

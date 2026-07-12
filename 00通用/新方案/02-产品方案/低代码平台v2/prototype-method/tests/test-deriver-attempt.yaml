@@ -1,0 +1,48 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: test_deriver_attempt
+  artifact_id: TEST-DERIVER-LOWCODE-V2-20260711-001
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  created_by: codex-test-deriver-coordinator
+  status: BLOCKED
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+independence_contract:
+  prohibited_inputs:
+    - prototype-method/tasks/tasks.yaml
+    - prototype-method/tests/interaction-tests.yaml
+    - prototype-method/tests/task-simulation.yaml
+    - prototype-method/logs
+    - reports/interaction-report.md
+  permitted_inputs:
+    - prototype-method/charter.yaml
+    - prototype-method/capabilities/capabilities.yaml
+    - prototype-method/requirements/requirements.yaml
+    - prototype-method/advantages/advantages.yaml
+    - prototype-method/benchmarks/benchmarks.yaml
+    - design/product-design.md
+    - design/information-architecture.md
+    - design/flows.yaml
+    - design/state-models.yaml
+attempts:
+  - executor: gemini-cli
+    isolation: external_model_context
+    result: BLOCKED
+    evidence: "CLI requested interactive authentication and produced no derivation."
+  - executor: claude-cli
+    isolation: external_model_context
+    result: BLOCKED
+    evidence: "CLI timed out after 124 seconds and produced no derivation."
+  - executor: codex-native-subagent
+    isolation: fresh_context_without_inherited_turns
+    result: BLOCKED
+    evidence: "Collaboration runtime delivered an empty delegated payload; no derivation was produced."
+canonical_result:
+  result: NOT_RUN
+  failure_code: INSUFFICIENT_INDEPENDENCE
+  blocker_id: BLK-STAGE8-TEST-DERIVER-CONTEXT
+  retryable: true
+  successor_action_id: ACT-STAGE8-RERUN-INDEPENDENT-TEST-DERIVER
+truthfulness_note: >-
+  No independent task list is claimed. Browser task execution evidence is recorded separately and
+  cannot substitute for the independent double-source derivation required by method section 10.1.1.

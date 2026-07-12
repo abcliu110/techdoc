@@ -1,0 +1,41 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: advantage_hypotheses
+  artifact_id: ADV-LOWCODE-V2-001
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  updated_at: 2026-07-11T00:00:00+08:00
+  created_by: codex
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+  status: FROZEN
+advantages:
+  - id: ADV-001
+    statement: 以业务对象为起点，把页面、规则、权限、预览和发布分析放入同一连续工作台。
+    target_task: TASK-001
+    baseline_products: [金蝶云·苍穹, Mendix, OutSystems, Power Apps, Retool, Appian]
+    metric: 核心任务无需离开设计器主窗口
+    status: prototype_supported
+  - id: ADV-002
+    statement: 发布阻断问题与修复入口在工作台内可见，且阻断不能被评分覆盖。
+    target_task: TASK-001
+    baseline_products: [金蝶云·苍穹, OutSystems, Power Apps, Retool]
+    metric: P0/P1 未关闭时生成候选版本按钮不可用
+    status: prototype_supported
+  - id: ADV-003
+    statement: BO 字段、画布节点、属性和底部路径保持同一选择上下文。
+    target_task: TASK-003
+    baseline_products: [金蝶云·苍穹, Mendix, Power Apps]
+    metric: 单次选择同步四个区域
+    status: prototype_supported
+  - id: ADV-004
+    statement: 在同一画布表达企业单据头和可横向滚动的分录表格。
+    target_task: TASK-001
+    baseline_products: [金蝶云·苍穹, Retool, Power Apps]
+    metric: 订单头与分录主任务无页面跳转
+    status: prototype_supported
+claims:
+  prohibited:
+    - 全面领先六个竞品
+    - 已获得真实用户认可
+    - 已达到生产可用
+  reason: 缺少同条件竞品实测和真实用户验证

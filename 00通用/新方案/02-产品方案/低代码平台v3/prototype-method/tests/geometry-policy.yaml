@@ -1,0 +1,81 @@
+meta:
+  schema_version: "2.0"
+  artifact_type: geometry_policy
+  artifact_id: GEO-POLICY-LOWCODE-V3-002
+  project_id: LOWCODE-DESIGNER-V3
+  updated_at: 2026-07-11T00:00:00+08:00
+  updated_by: codex
+  status: ACTIVE
+  executable_contract: ../../design/visual-contract.json
+  implementation: ../../prototype/geometry-audit.mjs
+  browser_runtime: ../../prototype/quality-gate-runtime.mjs
+
+policy:
+  traversal:
+    rendered_tree: 递归遍历全部可见 DOM 后代，不限制嵌套深度
+    schema_tree: 校验唯一 ID、父节点存在性和无环，并作为 finding 归属树
+    aggregation: 子组件出现 P0/P1 时，其全部 Schema 祖先状态均为 FAIL
+    node_limit: 5000
+    fail_closed: 节点截断、树无效、覆盖计数不一致或排除原因不完整均为 P1
+
+  boundaries:
+    root: 浏览器视口
+    hard_clip: 每层 overflow hidden/clip 与上层有效边界按 x、y 轴分别求交
+    viewport_rule: overlay 边界不能授权任何元素越过浏览器视口
+    assertions:
+      - 元素四个方向均不得越过有效硬裁剪边界
+      - 完全离开视口的元素必须产生 ELEMENT_OFFSCREEN
+      - 父层自身无 finding 不能覆盖后代 finding
+
+  scrolling:
+    contract_source: ../../design/visual-contract.json#declaredScrollOwners
+    assertions:
+      - 只有声明的 scroll owner 和轴可以承接溢出
+      - 未声明的横向或纵向溢出分别产生 UNDECLARED_SCROLL_X 或 UNDECLARED_SCROLL_Y
+      - 声明滚动容器中的暂时不可见内容不直接判裁切，但滚动终点必须可达
+      - 交互验证覆盖每个高风险滚动容器的起点、中点和终点
+    side_effect_rule: 几何采集器不得修改 scrollLeft 或 scrollTop
+
+  text_and_interaction:
+    assertions:
+      - 标记为单行或 2 至 6 个字符的操作标签不得换行
+      - 文本超出可见盒且没有显式 data-allow-truncation 时产生 TEXT_CLIPPED
+      - 可交互控件的中心或安全内缩点至少一处命中自身或其后代
+      - 激活模态框时，背景控件不参与可交互命中结论
+
+  overlays:
+    ownership_attribute: data-overlay-owner
+    boundary_attribute: data-overlay-boundary
+    assertion: Portal 的 DOM 父节点不决定业务归属；finding 归属声明的逻辑所有者
+
+  matrix:
+    required_viewports: [390x844, 665x731, 768x800, 1024x768, 1280x800, 1440x900, 1920x1080]
+    css_breakpoint_neighbors: [-1, 0, 1]
+    required_states: [design.desktop, design.tablet, design.mobile, preview.desktop, overlay.preview, overlay.publish]
+    resize_rule: 设置视口后等待稳定帧重新审计，直到报告 viewport 与请求尺寸一致
+    stale_report_status: BLOCKED
+
+  result:
+    mechanical_fail: 任一 P0/P1 finding
+    blocked: 审计未运行、报告失配或必需 mechanical/interaction/visual 证据缺失
+    pass: mechanical、interaction、visual 均为 PASS
+
+fixtures:
+  must_fail:
+    - 三层嵌套硬裁切
+    - 中文短标签换行
+    - 命中目标被完全阻挡
+    - 未声明轴溢出
+    - DOM 或 Schema 树无效
+    - 遍历覆盖不完整
+  must_pass:
+    - 已声明且终点可达的水平滚动
+    - 显式允许的辅助文本截断
+    - Portal 脱离 DOM 父裁剪但仍在 overlay 和视口边界内
+
+evidence:
+  machine_report_json: ../../reports/quality-gate-report.json
+  human_report_markdown: ../../reports/quality-gate-report.md
+  screenshots: ../../reports/screenshots/quality-gate-*.png
+  rule: 报告必须来自当前代码和当前视口矩阵；历史截图不能替代本轮证据
+

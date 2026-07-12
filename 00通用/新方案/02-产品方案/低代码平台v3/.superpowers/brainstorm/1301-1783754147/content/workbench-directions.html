@@ -1,0 +1,67 @@
+<style>
+  .direction-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:22px}
+  .direction{border:1px solid #d8dee7;background:#fff;cursor:pointer;transition:.18s;overflow:hidden}
+  .direction:hover{border-color:#2563eb;box-shadow:0 8px 28px rgba(27,48,78,.12);transform:translateY(-2px)}
+  .direction.selected{outline:3px solid #2563eb;outline-offset:2px}
+  .stage{height:390px;background:#f4f6f8;display:grid;grid-template-rows:34px 1fr 48px;font-size:8px;color:#344054}
+  .topbar{background:#fff;border-bottom:1px solid #dfe3e8;display:flex;align-items:center;padding:0 8px;gap:7px}
+  .brand{font-weight:800;color:#172b4d;font-size:10px}.crumb{color:#667085}.top-spacer{flex:1}.action{padding:3px 7px;border:1px solid #cfd6df;background:#fff}.primary{background:#1769e0;color:#fff;border-color:#1769e0}
+  .workspace{display:grid;min-height:0}.a .workspace{grid-template-columns:128px 1fr 140px}.b .workspace{grid-template-columns:92px 152px 1fr 140px}.c .workspace{grid-template-columns:115px 1fr 152px}
+  .pane{background:#fff;border-right:1px solid #dfe3e8;min-width:0}.pane.right{border-right:0;border-left:1px solid #dfe3e8}.pane-title{height:26px;padding:0 8px;display:flex;align-items:center;font-weight:700;border-bottom:1px solid #edf0f3}.search{margin:6px;height:20px;border:1px solid #d8dee7;background:#fafbfc;padding:0 6px;display:flex;align-items:center;color:#8a94a3}.tree-row,.material{height:22px;display:flex;align-items:center;padding:0 8px;gap:5px}.tree-row.active{background:#eaf2ff;color:#1458b8}.indent{padding-left:19px}.material{margin:4px 6px;border:1px solid #e0e5eb;background:#fff}.material.layout{border-left:3px solid #2878d0}.material.field{border-left:3px solid #22a06b}
+  .canvas-wrap{padding:12px;overflow:hidden;background:#eef1f5}.canvas-head{display:flex;align-items:center;margin-bottom:7px}.canvas-title{font-weight:800;font-size:9px}.device{margin-left:auto;background:#fff;border:1px solid #d8dee7;padding:3px 6px}.canvas{height:100%;max-height:315px;background:#fff;border:1px solid #ccd4de;box-shadow:0 3px 12px rgba(16,24,40,.08);padding:10px;position:relative}.section-box{border:1px solid #a9c7ef;background:#fbfdff;margin-bottom:8px}.section-head{height:22px;background:#edf5ff;padding:0 7px;display:flex;align-items:center;font-weight:700}.fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:9px}.field{height:28px;border-bottom:1px solid #98a2b3}.field span{display:block;font-size:7px;color:#667085}.entry{border:1px solid #cfd6df;margin:8px;height:86px}.entry-head{height:22px;background:#f7f8fa;display:grid;grid-template-columns:28px 1fr 1fr 1fr;align-items:center;padding:0 6px;font-weight:700}.row{display:grid;grid-template-columns:28px 1fr 1fr 1fr;padding:0 6px;height:24px;align-items:center;border-top:1px solid #edf0f3}.drop{border:2px dashed #2f7de1;background:#eaf3ff;height:24px;margin:7px;display:flex;align-items:center;justify-content:center;color:#1458b8;font-weight:700}
+  .tabs{display:flex;height:24px;border-bottom:1px solid #e4e7ec}.tab{padding:0 8px;display:flex;align-items:center}.tab.active{color:#1769e0;border-bottom:2px solid #1769e0}.prop{padding:7px}.prop-label{color:#667085;margin-top:7px}.prop-input{height:20px;border:1px solid #d8dee7;margin-top:3px;padding:0 5px;display:flex;align-items:center}.switch{width:23px;height:12px;border-radius:7px;background:#1769e0;margin-top:4px;position:relative}.switch:after{content:'';position:absolute;width:8px;height:8px;border-radius:50%;background:#fff;right:2px;top:2px}
+  .bottom{background:#fff;border-top:1px solid #dfe3e8;display:flex;align-items:center;padding:0 9px;gap:14px}.metric{display:flex;gap:4px}.ok{color:#17875d}.warn{color:#b54708}
+  .modebar{display:flex;background:#172b4d;color:#fff;padding:4px;gap:2px}.mode{padding:5px 7px}.mode.active{background:#2d4567}.object-card{margin:6px;border:1px solid #d8dee7;padding:7px;background:#fff}.object-card strong{display:block;margin-bottom:4px}.chip{display:inline-block;padding:2px 4px;background:#eef2f6;margin:2px 1px}
+  .card-body{padding:14px}.card-body h3{margin:0 0 6px}.card-body p{margin:0;color:#667085;font-size:14px;line-height:1.45}.recommend{display:inline-block;margin-top:9px;padding:4px 7px;background:#e8f3ff;color:#1458b8;font-weight:700;font-size:12px}
+  @media(max-width:1050px){.direction-grid{grid-template-columns:1fr}.stage{height:420px}}
+</style>
+
+<h2>选择 V3 表单设计器的工作台方向</h2>
+<p class="subtitle">三套方案都支持真实拖放、容器嵌套、跨容器排序、合法落点、大纲同步、属性编辑、撤销重做和响应式预览。差异在于工作的主入口。</p>
+
+<div class="direction-grid">
+  <div class="direction a" data-choice="a-object-driven" onclick="toggleSelect(this)">
+    <div class="stage">
+      <div class="topbar"><span class="brand">Forge V3</span><span class="crumb">采购申请 / 编辑表单</span><span class="top-spacer"></span><span class="action">预览</span><span class="action primary">发布</span></div>
+      <div class="workspace">
+        <div class="pane"><div class="pane-title">业务对象</div><div class="search">搜索字段</div><div class="tree-row active">采购申请</div><div class="tree-row indent">基础信息</div><div class="tree-row indent">申请明细</div><div class="pane-title">物料</div><div class="material layout">字段分组</div><div class="material layout">两列布局</div><div class="material field">引用字段</div></div>
+        <div class="canvas-wrap"><div class="canvas-head"><span class="canvas-title">PC 布局</span><span class="device">1440 · 新增态</span></div><div class="canvas"><div class="section-box"><div class="section-head">基础信息</div><div class="fields"><div class="field"><span>申请组织 *</span>华东采购中心</div><div class="field"><span>申请日期 *</span>2026-07-11</div><div class="field"><span>申请人</span>陈明</div><div class="field"><span>成本中心</span>运营管理部</div></div></div><div class="drop">放入字段、布局或分录容器</div><div class="entry"><div class="entry-head"><span>#</span><span>物料</span><span>数量</span><span>含税金额</span></div><div class="row"><span>1</span><span>服务器</span><span>2</span><span>68,000</span></div><div class="row"><span>2</span><span>交换机</span><span>4</span><span>12,800</span></div></div></div></div>
+        <div class="pane right"><div class="tabs"><div class="tab active">属性</div><div class="tab">规则</div><div class="tab">权限</div></div><div class="prop"><b>字段分组</b><div class="prop-label">标题</div><div class="prop-input">基础信息</div><div class="prop-label">列数</div><div class="prop-input">2 列 · 响应式</div><div class="prop-label">新增态可见</div><div class="switch"></div><div class="prop-label">绑定对象</div><div class="prop-input">PurchaseRequest</div></div></div>
+      </div>
+      <div class="bottom"><span class="ok">● 已保存</span><span>大纲 12 节点</span><span>问题 0</span><span class="top-spacer"></span><span>撤销 4 · 重做 0</span></div>
+    </div>
+    <div class="card-body"><h3>A. 对象驱动工作台</h3><p>业务对象、字段和实体层级是左侧主轴，画布负责布局。最适合复杂基础资料、单据和分录。</p><span class="recommend">推荐</span></div>
+  </div>
+
+  <div class="direction b" data-choice="b-canvas-first" onclick="toggleSelect(this)">
+    <div class="stage">
+      <div class="topbar"><span class="brand">Forge V3</span><span class="crumb">动态表单 / 设计</span><span class="top-spacer"></span><span class="action">运行</span><span class="action primary">发布</span></div>
+      <div class="workspace">
+        <div class="pane"><div class="pane-title">插入</div><div class="material layout">容器</div><div class="material field">字段</div><div class="material">表格</div><div class="material">树</div><div class="material">页签</div></div>
+        <div class="pane"><div class="pane-title">页面大纲</div><div class="tree-row active">采购申请</div><div class="tree-row indent">字段分组</div><div class="tree-row indent">两列布局</div><div class="tree-row indent">申请组织</div><div class="tree-row indent">申请日期</div><div class="tree-row indent">单据体</div></div>
+        <div class="canvas-wrap"><div class="canvas-head"><span class="canvas-title">自由编排画布</span><span class="device">桌面</span></div><div class="canvas"><div class="section-box"><div class="section-head">采购信息</div><div class="fields"><div class="field"><span>供应商</span>选择供应商</div><div class="field"><span>采购类型</span>集中采购</div></div></div><div class="section-box"><div class="section-head">交付与结算</div><div class="fields"><div class="field"><span>交付地址</span>上海市浦东新区</div><div class="field"><span>结算方式</span>月结 30 天</div></div></div><div class="drop">拖入这里 · inside</div></div></div>
+        <div class="pane right"><div class="tabs"><div class="tab active">配置</div><div class="tab">样式</div></div><div class="prop"><b>两列布局</b><div class="prop-label">方向</div><div class="prop-input">横向</div><div class="prop-label">间距</div><div class="prop-input">12 px</div><div class="prop-label">移动端</div><div class="prop-input">堆叠</div></div></div>
+      </div>
+      <div class="bottom"><span>组件 28</span><span class="ok">● 合法结构</span><span>规则 6</span><span class="top-spacer"></span><span>缩放 90%</span></div>
+    </div>
+    <div class="card-body"><h3>B. 画布优先工作台</h3><p>物料和大纲并列，强调直接搭建页面。上手快，但业务对象和复杂单据的上下文更容易被弱化。</p></div>
+  </div>
+
+  <div class="direction c" data-choice="c-task-modes" onclick="toggleSelect(this)">
+    <div class="stage">
+      <div class="topbar"><span class="brand">Forge V3</span><span class="crumb">采购申请</span><span class="top-spacer"></span><span class="action">验证</span><span class="action primary">发布</span></div>
+      <div class="workspace">
+        <div class="pane"><div class="modebar"><div class="mode active">页面</div><div class="mode">数据</div><div class="mode">规则</div></div><div class="pane-title">页面结构</div><div class="tree-row active">主表单</div><div class="tree-row indent">基础信息</div><div class="tree-row indent">申请明细</div><div class="pane-title">快速添加</div><div class="material layout">字段布局</div><div class="material field">业务字段</div></div>
+        <div class="canvas-wrap"><div class="canvas-head"><span class="canvas-title">页面模式</span><span class="device">PC / 新增态</span></div><div class="canvas"><div class="section-box"><div class="section-head">申请信息</div><div class="fields"><div class="field"><span>申请主题 *</span>数据中心设备扩容</div><div class="field"><span>优先级</span>高</div><div class="field"><span>预算组织</span>信息技术中心</div><div class="field"><span>预算项目</span>基础设施升级</div></div></div><div class="entry"><div class="entry-head"><span>#</span><span>费用科目</span><span>预算</span><span>已占用</span></div><div class="row"><span>1</span><span>硬件采购</span><span>100,000</span><span>81,200</span></div></div><div class="drop">移动组件到这里</div></div></div>
+        <div class="pane right"><div class="pane-title">对象与属性</div><div class="object-card"><strong>绑定对象</strong>PurchaseRequest<div><span class="chip">主实体</span><span class="chip">12 字段</span></div></div><div class="tabs"><div class="tab active">属性</div><div class="tab">事件</div></div><div class="prop"><div class="prop-label">标题</div><div class="prop-input">申请信息</div><div class="prop-label">可见条件</div><div class="prop-input">status != 'closed'</div><div class="prop-label">设备覆盖</div><div class="prop-input">PC / Mobile</div></div></div>
+      </div>
+      <div class="bottom"><span class="ok">● 模型一致</span><span>依赖 8</span><span class="warn">发布检查 1</span><span class="top-spacer"></span><span>事件时间线</span></div>
+    </div>
+    <div class="card-body"><h3>C. 任务模式工作台</h3><p>页面、数据、规则、权限在同一工作台切换。能力完整，但模式切换会提高学习成本和实现复杂度。</p></div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:24px">
+  <h3>我的建议：A 对象驱动</h3>
+  <p class="subtitle">它最符合本地知识库中“业务模型优先”的结论，也最适合复杂基础资料与单据。后续仍吸收 B 的快速物料面板和 C 的数据/规则调试区，但不让模式切换成为主导航。</p>
+</div>

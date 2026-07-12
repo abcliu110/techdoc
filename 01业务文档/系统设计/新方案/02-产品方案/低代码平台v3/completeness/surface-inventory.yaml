@@ -1,0 +1,41 @@
+{
+  "execution_id": "COMPLETE-20260712-001",
+  "surfaces": [
+    {
+      "surface_id": "SURFACE-MODEL",
+      "route": "model",
+      "name": "Business object workspace",
+      "entry": "workspace:model"
+    },
+    {
+      "surface_id": "SURFACE-PAGE",
+      "route": "page",
+      "name": "Page designer workspace",
+      "entry": "workspace:page"
+    },
+    {
+      "surface_id": "SURFACE-RULES",
+      "route": "rules",
+      "name": "Rule workspace",
+      "entry": "workspace:rules"
+    },
+    {
+      "surface_id": "SURFACE-PERMISSIONS",
+      "route": "permissions",
+      "name": "Permission workspace",
+      "entry": "workspace:permissions"
+    },
+    {
+      "surface_id": "SURFACE-PREVIEW",
+      "route": "preview",
+      "name": "Runtime preview",
+      "entry": "workspace:preview"
+    },
+    {
+      "surface_id": "SURFACE-COMPONENT-STUDIO",
+      "route": "components",
+      "name": "Component design studio",
+      "entry": "workspace:components"
+    }
+  ]
+}

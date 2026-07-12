@@ -1,0 +1,93 @@
+meta:
+  schema_version: "2.0"
+  artifact_type: visual_contract
+  artifact_id: VC-LOWCODE-V3-002
+  status: ACTIVE
+  executable_source: visual-contract.json
+
+# 本文件供人阅读；视口、状态、规则级别和滚动所有权以同目录
+# visual-contract.json 为唯一可执行来源。两者不一致时门禁必须 BLOCKED。
+gate:
+  blocking_severities: [P0, P1]
+  evidence_required: [mechanical, interaction, visual]
+  status_derivation:
+    FAIL: 任一证据为 FAIL
+    BLOCKED: 没有 FAIL，但任一必需证据缺失、过期或无法对应目标视口/状态
+    PASS: 三类必需证据均为 PASS，且不存在 P0/P1 finding
+
+viewports:
+  required:
+    - {name: mobile, width: 390, height: 844}
+    - {name: compact, width: 665, height: 731}
+    - {name: tablet, width: 768, height: 800}
+    - {name: compact-desktop, width: 1024, height: 768}
+    - {name: desktop-small, width: 1280, height: 800}
+    - {name: desktop-standard, width: 1440, height: 900}
+    - {name: desktop-wide, width: 1920, height: 1080}
+  breakpoint_sampling:
+    source: prototype/styles.css
+    delta_px: 1
+    rule: 每个 CSS 宽度断点必须检查 breakpoint-1、breakpoint、breakpoint+1
+  synchronization:
+    rule: 浏览器报告中的 viewport 必须与请求尺寸完全一致
+    mismatch_status: BLOCKED
+
+states:
+  required:
+    - design.desktop
+    - design.tablet
+    - design.mobile
+    - preview.desktop
+    - overlay.preview
+    - overlay.publish
+  risk_states:
+    - 滚动容器的起点、中点和终点
+    - 标签页、步骤、折叠区和树节点的展开状态
+    - 最长业务对象名、字段名、客户名及至少 8 列表格
+
+ownership_model:
+  schema_tree: 负责业务组件身份、合法父子关系和 finding 归属
+  rendered_dom_tree: 负责实际矩形、裁剪、滚动、文本行数和命中测试
+  overlay_tree: Portal 内容通过 data-overlay-owner 归属 Schema，通过 data-overlay-boundary 确定可见边界
+  recursive_rule: 父组件通过不代表子组件通过；父组件状态必须聚合全部后代 finding
+  coverage_rule: 所有发现的 DOM 节点必须已检查，或以可计数原因明确排除
+
+declared_scroll_owners:
+  canvas-scroll: [x, y]
+  entry-table-wrap: [x]
+  resource-content: [y]
+  category-filter: [x]
+  palette-results: [y]
+  inspector-body: [y]
+  analysis-body: [y]
+  preview-surface: [x, y]
+  publish-content: [y]
+  rule: 未在 visual-contract.json 声明的滚动所有者或滚动轴不得作为合法溢出的依据
+
+invariants:
+  - body 不出现横向滚动，固定工作台区域不相互遮挡
+  - 所有可见后代均在视口和每一层 overflow hidden/clip 的有效交集内
+  - 合法 auto/scroll 容器只豁免已声明轴，且内容终点必须可达
+  - 短操作标签不得换行；文本裁切必须有显式 truncation 合同
+  - 可交互控件至少一个安全命中点可达，不被其他元素阻挡
+  - Portal 和对话框不得借 overlay 边界越过浏览器视口
+  - Schema 树和渲染树必须有稳定唯一 ID、有效父节点、无环且不超节点上限
+  - 审计覆盖不完整、报告视口失配或浏览器证据缺失时禁止 PASS
+
+blocking_rules:
+  - ELEMENT_CLIPPED
+  - ELEMENT_OFFSCREEN
+  - TEXT_CLIPPED
+  - LABEL_WRAPPED
+  - HIT_TARGET_BLOCKED
+  - UNDECLARED_SCROLL_X
+  - UNDECLARED_SCROLL_Y
+  - SCROLL_END_UNREACHABLE
+  - AUDIT_TREE_INVALID
+  - AUDIT_COVERAGE_INCOMPLETE
+
+accessibility:
+  - 所有图标按钮有 aria-label 或 title
+  - 键盘焦点可见，主要操作可通过键盘完成
+  - 对话框 Escape 可关闭，关闭按钮和主要操作在要求视口内可达
+  - reduced-motion 下不依赖动画完成状态更新

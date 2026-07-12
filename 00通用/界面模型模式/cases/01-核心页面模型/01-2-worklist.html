@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>案例：待发货订单处理台 - Worklist</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f0f2f5; color: #333; font-size: 14px; }
+    .worklist-page { max-width: 900px; margin: 0 auto; padding: 24px; }
+
+    /* Header */
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .page-title { font-size: 24px; font-weight: 600; }
+    .page-title span { font-size: 18px; color: #ff4d4f; font-weight: 700; }
+    .page-hint { color: #666; font-size: 13px; }
+
+    /* Tabs */
+    .tabs { background: #fff; border-radius: 8px 8px 0 0; display: flex; border-bottom: 1px solid #f0f0f0; }
+    .tab { padding: 14px 24px; cursor: pointer; font-size: 14px; color: #666; border-bottom: 2px solid transparent; transition: all 0.2s; }
+    .tab:hover { color: #1890ff; }
+    .tab.active { color: #1890ff; border-bottom-color: #1890ff; font-weight: 500; }
+    .tab .count { background: #f0f0f0; padding: 2px 8px; border-radius: 10px; font-size: 12px; margin-left: 6px; }
+    .tab.active .count { background: #e6f7ff; color: #1890ff; }
+
+    /* Task List */
+    .task-list { background: #fff; border-radius: 0 0 8px 8px; }
+    .task-item { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: flex-start; gap: 16px; transition: background 0.2s; }
+    .task-item:hover { background: #fafafa; }
+    .task-item:last-child { border-bottom: none; }
+    .task-item.urgent { border-left: 3px solid #ff4d4f; background: #fffbe6; }
+    .task-item.warning { border-left: 3px solid #faad14; }
+
+    /* Urgency Badge */
+    .urgency-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
+    .urgency-badge.red { background: #fff2f0; color: #ff4d4f; }
+    .urgency-badge.orange { background: #fff7e6; color: #fa8c16; }
+    .urgency-badge.yellow { background: #fffbe6; color: #ad6800; }
+
+    /* Task Main */
+    .task-main { flex: 1; }
+    .task-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+    .task-order { font-weight: 600; font-size: 15px; color: #1a1a1a; }
+    .task-order a { color: #1890ff; text-decoration: none; }
+    .task-meta { font-size: 13px; color: #666; display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+    .task-meta span { display: flex; align-items: center; gap: 4px; }
+    .task-reason { font-size: 13px; color: #8c8c8c; margin-bottom: 12px; padding: 8px 12px; background: #fafafa; border-radius: 4px; }
+    .task-reason strong { color: #1a1a1a; }
+
+    /* Task Actions */
+    .task-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+    /* Countdown */
+    .countdown { display: inline-block; padding: 2px 8px; background: #fff2f0; color: #ff4d4f; border-radius: 4px; font-size: 12px; font-weight: 500; }
+
+    /* Buttons */
+    .btn { padding: 6px 16px; border-radius: 4px; font-size: 13px; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; }
+    .btn-primary { background: #1890ff; color: #fff; border-color: #1890ff; }
+    .btn-primary:hover { background: #40a9ff; }
+    .btn-default { background: #fff; color: #333; border-color: #d9d9d9; }
+    .btn-default:hover { color: #1890ff; border-color: #1890ff; }
+    .btn-success { background: #52c41a; color: #fff; border-color: #52c41a; }
+    .btn-success:hover { background: #73d13d; }
+    .btn-danger { background: #fff; color: #ff4d4f; border-color: #ff4d4f; }
+    .btn-danger:hover { background: #fff2f0; }
+
+    /* Keyboard Hint */
+    .keyboard-hint { background: #f0f2f5; padding: 12px 20px; border-radius: 8px; margin-top: 16px; font-size: 13px; color: #666; }
+    .keyboard-hint kbd { background: #fff; border: 1px solid #d9d9d9; border-radius: 3px; padding: 2px 6px; font-size: 12px; box-shadow: 0 1px 0 #d9d9d9; }
+
+    /* Case Badge */
+    .case-badge { position: fixed; top: 20px; right: 20px; background: #1890ff; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 12px; z-index: 100; box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3); }
+    .case-badge::before { content: "案例 "; }
+  </style>
+</head>
+<body>
+  <div class="case-badge">Worklist 模型</div>
+
+  <div class="worklist-page">
+    <!-- Page Header -->
+    <header class="page-header">
+      <h1 class="page-title">待发货订单 <span>25</span></h1>
+      <span class="page-hint">收银员工作台 · 人民广场店</span>
+    </header>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active">待我处理 <span class="count">25</span></div>
+      <div class="tab">即将超时 <span class="count">3</span></div>
+      <div class="tab">已退回 <span class="count">2</span></div>
+      <div class="tab">已处理 <span class="count">156</span></div>
+    </div>
+
+    <!-- Task List -->
+    <div class="task-list">
+      <!-- Urgent Task -->
+      <div class="task-item urgent">
+        <div style="flex-shrink:0;margin-top:2px;">
+          <span class="urgency-badge red">🔴 紧急</span>
+        </div>
+        <div class="task-main">
+          <div class="task-header">
+            <span class="task-order"><a href="#">订单 #SO202607120045</a></span>
+            <span class="urgency-badge yellow">🟡 待发货</span>
+          </div>
+          <div class="task-meta">
+            <span>张三 138****1234</span>
+            <span>|</span>
+            <span class="countdown">⚠️ 2小时12分后超时</span>
+            <span>|</span>
+            <span>顺丰同城配送</span>
+            <span>|</span>
+            <span>下单：14:32</span>
+          </div>
+          <div class="task-reason">
+            <strong>发货原因：</strong>客户已付款，库存已锁定，等待门店发货
+          </div>
+          <div style="font-size:12px;color:#999;">商品：可口可乐500ml ×2、农夫山泉550ml ×3、全麦面包 ×1</div>
+        </div>
+        <div class="task-actions">
+          <button class="btn btn-success">发货</button>
+          <button class="btn btn-default">查看详情</button>
+          <button class="btn btn-danger">退款</button>
+        </div>
+      </div>
+
+      <!-- Warning Task -->
+      <div class="task-item warning">
+        <div style="flex-shrink:0;margin-top:2px;">
+          <span class="urgency-badge orange">⚠️ 超时预警</span>
+        </div>
+        <div class="task-main">
+          <div class="task-header">
+            <span class="task-order"><a href="#">订单 #SO202607120044</a></span>
+            <span class="urgency-badge yellow">🟡 待发货</span>
+          </div>
+          <div class="task-meta">
+            <span>李四 139****5678</span>
+            <span>|</span>
+            <span class="countdown">⏰ 45分后超时</span>
+            <span>|</span>
+            <span>同省快递</span>
+            <span>|</span>
+            <span>下单：13:25</span>
+          </div>
+          <div class="task-reason">
+            <strong>发货原因：</strong>客户已付款，库存已锁定
+          </div>
+          <div style="font-size:12px;color:#999;">商品：薯片 ×2、饼干 ×1</div>
+        </div>
+        <div class="task-actions">
+          <button class="btn btn-success">发货</button>
+          <button class="btn btn-default">查看详情</button>
+        </div>
+      </div>
+
+      <!-- Normal Task -->
+      <div class="task-item">
+        <div style="flex-shrink:0;margin-top:2px;">
+          <span class="urgency-badge yellow">🟡 普通</span>
+        </div>
+        <div class="task-main">
+          <div class="task-header">
+            <span class="task-order"><a href="#">订单 #SO202607120043</a></span>
+            <span class="urgency-badge yellow">🟡 待发货</span>
+          </div>
+          <div class="task-meta">
+            <span>王五 137****9012</span>
+            <span>|</span>
+            <span>到店自提</span>
+            <span>|</span>
+            <span>下单：11:20</span>
+          </div>
+          <div class="task-reason">
+            <strong>发货原因：</strong>客户选择到店自提，已备货完成
+          </div>
+          <div style="font-size:12px;color:#999;">商品：牛奶 ×1、面包 ×2</div>
+        </div>
+        <div class="task-actions">
+          <button class="btn btn-success">确认自提</button>
+          <button class="btn btn-default">查看详情</button>
+        </div>
+      </div>
+
+      <!-- Completed Task Example -->
+      <div class="task-item" style="opacity:0.7;">
+        <div class="task-main">
+          <div class="task-header">
+            <span class="task-order"><a href="#">订单 #SO202607120042</a></span>
+            <span class="urgency-badge" style="background:#f6ffed;color:#52c41a;">🟢 已完成</span>
+          </div>
+          <div class="task-meta">
+            <span>赵六 136****3456</span>
+            <span>|</span>
+            <span>已发货 · 顺丰 SF987654321</span>
+            <span>|</span>
+            <span>处理时间：10:35</span>
+          </div>
+        </div>
+        <div class="task-actions">
+          <button class="btn btn-default">查看详情</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Keyboard Hints -->
+    <div class="keyboard-hint">
+      <strong>快捷键：</strong>
+      <kbd>Enter</kbd> 打开详情侧边栏 ·
+      <kbd>Y</kbd> 快速发货（当前选中项） ·
+      <kbd>↑</kbd><kbd>↓</kbd> 切换待办 ·
+      <kbd>Esc</kbd> 取消选中
+    </div>
+  </div>
+</body>
+</html>

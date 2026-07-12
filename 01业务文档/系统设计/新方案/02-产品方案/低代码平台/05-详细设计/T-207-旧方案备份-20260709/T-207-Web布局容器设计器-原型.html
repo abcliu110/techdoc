@@ -1,0 +1,1592 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>T-207 Enterprise Web Form Designer Prototype</title>
+  <style>
+    :root {
+      --app-bg: #e8edf4;
+      --panel: #ffffff;
+      --panel-soft: #f5f7fa;
+      --panel-head: #edf2f7;
+      --line: #ccd6e2;
+      --line-dark: #aab7c7;
+      --text: #1f2937;
+      --muted: #607085;
+      --blue: #1f5fbf;
+      --blue-2: #2f74d0;
+      --blue-soft: #e9f2ff;
+      --green: #0f7a4c;
+      --amber: #a15c06;
+      --red: #b42318;
+      --shadow: 0 10px 26px rgba(15, 23, 42, 0.10);
+      font-family: "Microsoft YaHei UI", "Segoe UI", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 1440px;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--app-bg);
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    .app {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: 28px 44px minmax(0, 1fr) 150px 26px;
+    }
+
+    .menubar {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 8px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .menu-item {
+      height: 24px;
+      min-width: 48px;
+      padding: 0 10px;
+      border: 0;
+      border-radius: 3px;
+      background: transparent;
+      color: #253044;
+      text-align: center;
+    }
+
+    .menu-item.active,
+    .menu-item:hover {
+      background: var(--blue-soft);
+      color: var(--blue);
+    }
+
+    .commandbar {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr) 360px;
+      align-items: center;
+      gap: 10px;
+      padding: 0 10px;
+      background: #fbfcfe;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .title-block {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .app-mark {
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      border-radius: 4px;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .title-text {
+      min-width: 0;
+      display: grid;
+      gap: 1px;
+    }
+
+    .title-text strong {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .title-text span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .quick-tools,
+    .run-tools,
+    .canvas-tools,
+    .panel-actions {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .quick-tools {
+      justify-content: center;
+    }
+
+    .run-tools {
+      justify-content: flex-end;
+    }
+
+    .btn {
+      height: 28px;
+      min-width: 28px;
+      padding: 0 9px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #fff;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      border-color: var(--blue-2);
+      background: #f7fbff;
+    }
+
+    .btn.icon {
+      width: 28px;
+      padding: 0;
+      font-weight: 600;
+    }
+
+    .btn.primary {
+      border-color: var(--blue);
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .btn.warn {
+      border-color: #e6c28b;
+      background: #fff8ed;
+      color: var(--amber);
+    }
+
+    .separator {
+      width: 1px;
+      height: 24px;
+      background: var(--line);
+      margin: 0 3px;
+    }
+
+    .workspace {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 300px minmax(760px, 1fr) 360px;
+    }
+
+    .left-shell,
+    .right-shell {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 32px minmax(0, 1fr);
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    .left-shell {
+      border-right: 1px solid var(--line);
+    }
+
+    .right-shell {
+      border-left: 1px solid var(--line);
+    }
+
+    .panel-tabs {
+      display: flex;
+      align-items: end;
+      gap: 1px;
+      padding: 0 6px;
+      background: var(--panel-head);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tab {
+      height: 27px;
+      padding: 0 10px;
+      border: 1px solid transparent;
+      border-bottom: 0;
+      border-radius: 3px 3px 0 0;
+      background: transparent;
+      color: #526174;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      border-color: var(--line);
+      background: #fff;
+      color: var(--blue);
+      font-weight: 600;
+    }
+
+    .panel-body {
+      min-height: 0;
+      overflow: auto;
+      padding: 8px;
+    }
+
+    .search {
+      width: 100%;
+      height: 28px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      padding: 0 8px;
+      color: #1f2937;
+      margin-bottom: 8px;
+    }
+
+    .group {
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      margin-bottom: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .group-title {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      background: var(--panel-soft);
+      border-bottom: 1px solid var(--line);
+      font-weight: 600;
+    }
+
+    .group-title small {
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .tool {
+      height: 31px;
+      display: grid;
+      grid-template-columns: 22px minmax(0, 1fr) 38px;
+      align-items: center;
+      gap: 7px;
+      padding: 0 7px;
+      border-bottom: 1px solid #eef2f7;
+    }
+
+    .tool:last-child {
+      border-bottom: 0;
+    }
+
+    .tool:hover,
+    .tool.active {
+      background: var(--blue-soft);
+    }
+
+    .tool.active {
+      box-shadow: inset 3px 0 0 var(--blue);
+    }
+
+    .tool-ico {
+      width: 20px;
+      height: 20px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line-dark);
+      border-radius: 3px;
+      background: #fff;
+      color: #42526a;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .tool-text {
+      min-width: 0;
+      display: grid;
+      gap: 1px;
+    }
+
+    .tool-text strong,
+    .tree-line strong {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+
+    .tool-text span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .tool-badge {
+      color: var(--muted);
+      font-size: 10px;
+      text-align: right;
+    }
+
+    .tree {
+      display: grid;
+      padding: 4px 0;
+    }
+
+    .tree-line {
+      height: 27px;
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr) 42px;
+      align-items: center;
+      gap: 4px;
+      padding: 0 8px;
+    }
+
+    .tree-line.child-1 { padding-left: 22px; }
+    .tree-line.child-2 { padding-left: 38px; }
+    .tree-line.selected {
+      background: var(--blue-soft);
+      color: var(--blue);
+    }
+
+    .tree-tag {
+      color: var(--muted);
+      font-size: 10px;
+      text-align: right;
+    }
+
+    .center-shell {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 33px minmax(0, 1fr);
+      background: #dfe6ef;
+    }
+
+    .document-tabs {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      padding: 0 8px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .doc-list {
+      display: flex;
+      align-items: end;
+      gap: 2px;
+    }
+
+    .doc-tab {
+      height: 28px;
+      min-width: 170px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 9px;
+      border: 1px solid var(--line);
+      border-bottom: 0;
+      border-radius: 3px 3px 0 0;
+      background: #fff;
+      color: #253044;
+    }
+
+    .doc-tab.inactive {
+      background: #eef3f8;
+      color: var(--muted);
+    }
+
+    .canvas-wrap {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 30px minmax(0, 1fr);
+    }
+
+    .designer-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      background: #f2f5f9;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .zoom-select {
+      height: 24px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #fff;
+      color: #334155;
+    }
+
+    .stage {
+      min-height: 0;
+      overflow: auto;
+      padding: 22px;
+      position: relative;
+    }
+
+    .designer-board {
+      width: 1260px;
+      min-height: 860px;
+      margin: 0 auto 28px;
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr);
+      grid-template-rows: 26px minmax(0, 1fr);
+      filter: drop-shadow(0 12px 22px rgba(15, 23, 42, 0.12));
+    }
+
+    .corner {
+      grid-column: 1;
+      grid-row: 1;
+      background: #f4f7fb;
+      border: 1px solid var(--line-dark);
+      border-right: 0;
+      border-bottom: 0;
+    }
+
+    .ruler-x,
+    .ruler-y {
+      background: #f8fafc;
+      border: 1px solid var(--line-dark);
+      color: #6b778c;
+      font-size: 10px;
+      overflow: hidden;
+    }
+
+    .ruler-x {
+      grid-column: 2;
+      grid-row: 1;
+      border-bottom: 0;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+    }
+
+    .ruler-x span {
+      padding-left: 5px;
+      border-left: 1px solid #e0e7ef;
+      line-height: 25px;
+    }
+
+    .ruler-y {
+      grid-column: 1;
+      grid-row: 2;
+      border-right: 0;
+      display: grid;
+      grid-template-rows: repeat(12, 64px);
+    }
+
+    .ruler-y span {
+      padding-top: 4px;
+      text-align: center;
+      border-top: 1px solid #e0e7ef;
+    }
+
+    .design-surface {
+      grid-column: 2;
+      grid-row: 2;
+      min-height: 830px;
+      background:
+        linear-gradient(#f3f6fa 1px, transparent 1px),
+        linear-gradient(90deg, #f3f6fa 1px, transparent 1px),
+        #ffffff;
+      background-size: 24px 24px;
+      border: 1px solid var(--line-dark);
+      position: relative;
+    }
+
+    .page {
+      position: absolute;
+      left: 32px;
+      right: 32px;
+      top: 28px;
+      bottom: 32px;
+      display: grid;
+      grid-template-rows: 42px 42px minmax(0, 1fr) 42px;
+      border: 1px solid #c6d1df;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .form-titlebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    .form-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .state-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 5px;
+    }
+
+    .runtime-nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 12px;
+      border-bottom: 1px solid var(--line);
+      background: #f8fafc;
+    }
+
+    .runtime-tab {
+      height: 28px;
+      padding: 0 11px;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 3px;
+      color: var(--muted);
+    }
+
+    .runtime-tab.active {
+      background: #fff;
+      border: 1px solid var(--line);
+      color: var(--blue);
+      font-weight: 600;
+    }
+
+    .business-page {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 214px minmax(0, 1fr) 270px;
+      background: #fbfcfe;
+    }
+
+    .dock-menu {
+      min-height: 0;
+      border-right: 1px solid var(--line);
+      background: #f7f9fc;
+      display: grid;
+      grid-template-rows: 32px minmax(0, 1fr);
+    }
+
+    .dock-head,
+    .side-head,
+    .section-head {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 9px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+      font-weight: 600;
+    }
+
+    .dock-list {
+      min-height: 0;
+      overflow: auto;
+      padding: 8px;
+      display: grid;
+      align-content: start;
+      gap: 4px;
+    }
+
+    .nav-row {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 8px;
+      border-radius: 3px;
+      color: #536276;
+    }
+
+    .nav-row.active {
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-weight: 600;
+    }
+
+    .content-area {
+      min-width: 0;
+      min-height: 0;
+      overflow: auto;
+      padding: 10px;
+      display: grid;
+      grid-template-rows: auto auto minmax(245px, auto) auto;
+      align-content: start;
+      gap: 10px;
+    }
+
+    .section {
+      border: 1px solid var(--line);
+      background: #fff;
+      position: relative;
+    }
+
+    .selected-widget {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 1px var(--blue);
+    }
+
+    .selection-label {
+      position: absolute;
+      top: -23px;
+      left: -1px;
+      height: 22px;
+      padding: 3px 7px;
+      background: var(--blue);
+      color: #fff;
+      border-radius: 3px 3px 0 0;
+      font-size: 11px;
+      z-index: 4;
+    }
+
+    .handle {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      background: #fff;
+      border: 1px solid var(--blue);
+      z-index: 5;
+    }
+
+    .h-nw { left: -4px; top: -4px; }
+    .h-ne { right: -4px; top: -4px; }
+    .h-sw { left: -4px; bottom: -4px; }
+    .h-se { right: -4px; bottom: -4px; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(24, minmax(0, 1fr));
+      gap: 8px 12px;
+      padding: 11px;
+    }
+
+    .field {
+      min-width: 0;
+      height: 28px;
+      display: grid;
+      grid-template-columns: 78px minmax(0, 1fr);
+      align-items: center;
+      gap: 7px;
+    }
+
+    .span-6 { grid-column: span 6; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+    .span-24 { grid-column: span 24; }
+
+    .label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: right;
+      color: #56657a;
+    }
+
+    .input-box {
+      min-width: 0;
+      height: 25px;
+      display: flex;
+      align-items: center;
+      padding: 0 7px;
+      border: 1px solid #c9d3df;
+      background: #fff;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .layout-hint {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 400;
+    }
+
+    .toolbar-strip {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 10px;
+    }
+
+    .chip {
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #fff;
+      color: #526174;
+      white-space: nowrap;
+    }
+
+    .chip.active {
+      border-color: #9fc1f7;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-weight: 600;
+    }
+
+    .table-box {
+      min-height: 0;
+      overflow: auto;
+    }
+
+    .data-grid {
+      width: 100%;
+      min-width: 820px;
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+      font-size: 12px;
+    }
+
+    .data-grid th,
+    .data-grid td {
+      height: 30px;
+      padding: 0 7px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      background: #fff;
+    }
+
+    .data-grid th {
+      background: #f4f7fb;
+      font-weight: 600;
+    }
+
+    .data-grid th:first-child,
+    .data-grid td:first-child {
+      background: #f8fafc;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .detail-row td {
+      height: 78px;
+      background: #fbfcfe;
+      padding: 7px;
+    }
+
+    .nested-detail {
+      border: 1px solid var(--line);
+      background: #fff;
+      height: 62px;
+      display: grid;
+      grid-template-columns: 110px minmax(0, 1fr);
+    }
+
+    .nested-title {
+      display: grid;
+      place-items: center;
+      border-right: 1px solid var(--line);
+      background: #f4f7fb;
+      color: var(--blue);
+      font-weight: 600;
+    }
+
+    .nested-cols {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .nested-cols span {
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      border-right: 1px solid var(--line);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .side-panel {
+      min-height: 0;
+      border-left: 1px solid var(--line);
+      background: #f8fafc;
+      display: grid;
+      grid-template-rows: 32px minmax(0, 1fr) 40px;
+    }
+
+    .side-scroll {
+      min-height: 0;
+      overflow: auto;
+      padding: 9px;
+      display: grid;
+      align-content: start;
+      gap: 8px;
+    }
+
+    .info-card {
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .info-card h4 {
+      height: 29px;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      border-bottom: 1px solid var(--line);
+      background: #f4f7fb;
+      font-size: 12px;
+    }
+
+    .info-list {
+      display: grid;
+      gap: 7px;
+      padding: 8px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .side-bottom,
+    .form-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      padding: 0 10px;
+      border-top: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .snapline-v,
+    .snapline-h {
+      position: absolute;
+      background: var(--blue);
+      z-index: 8;
+      opacity: 0.58;
+      pointer-events: none;
+    }
+
+    .snapline-v {
+      top: 72px;
+      bottom: 56px;
+      left: 603px;
+      width: 1px;
+    }
+
+    .snapline-h {
+      left: 32px;
+      right: 32px;
+      top: 300px;
+      height: 1px;
+    }
+
+    .snap-badge {
+      position: absolute;
+      left: 610px;
+      top: 304px;
+      z-index: 9;
+      height: 20px;
+      padding: 2px 6px;
+      background: var(--blue);
+      color: #fff;
+      border-radius: 3px;
+      font-size: 11px;
+    }
+
+    .drop-zone {
+      position: absolute;
+      left: 476px;
+      right: 304px;
+      top: 468px;
+      height: 46px;
+      border: 1px dashed var(--blue);
+      background: rgba(31, 95, 191, 0.06);
+      color: var(--blue);
+      display: grid;
+      place-items: center;
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    .prop-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .object-select {
+      min-width: 0;
+      height: 28px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #253044;
+    }
+
+    .view-buttons {
+      display: flex;
+      gap: 3px;
+    }
+
+    .view-buttons .btn {
+      height: 26px;
+      min-width: 26px;
+      padding: 0 6px;
+    }
+
+    .property-grid {
+      border: 1px solid var(--line);
+      background: #fff;
+      margin-bottom: 8px;
+    }
+
+    .prop-category {
+      height: 27px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      background: var(--panel-soft);
+      border-bottom: 1px solid var(--line);
+      font-weight: 600;
+    }
+
+    .prop-row {
+      min-height: 29px;
+      display: grid;
+      grid-template-columns: 122px minmax(0, 1fr);
+      border-bottom: 1px solid #edf2f7;
+    }
+
+    .prop-row:last-child {
+      border-bottom: 0;
+    }
+
+    .prop-name,
+    .prop-value {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      padding: 0 7px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .prop-name {
+      color: #536276;
+      border-right: 1px solid #edf2f7;
+      background: #fbfcfe;
+    }
+
+    .prop-value {
+      color: #1f2937;
+      justify-content: space-between;
+    }
+
+    .prop-value.editing {
+      background: #fffef4;
+      box-shadow: inset 0 0 0 1px #e2b654;
+    }
+
+    .description-box {
+      border: 1px solid var(--line);
+      background: #fff;
+      min-height: 76px;
+      padding: 8px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .bottom-panel {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 31px minmax(0, 1fr);
+      border-top: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .bottom-tabs {
+      display: flex;
+      align-items: end;
+      gap: 2px;
+      padding: 0 8px;
+      background: var(--panel-head);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .bottom-content {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+    }
+
+    .error-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .error-table th,
+    .error-table td {
+      height: 28px;
+      padding: 0 8px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid #edf2f7;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: left;
+    }
+
+    .error-table th {
+      background: #f8fafc;
+      font-weight: 600;
+    }
+
+    .severity-warning {
+      color: var(--amber);
+      font-weight: 600;
+    }
+
+    .severity-error {
+      color: var(--red);
+      font-weight: 600;
+    }
+
+    .schema-pane {
+      border-left: 1px solid var(--line);
+      background: #fbfcfe;
+      padding: 8px;
+      display: grid;
+      grid-template-rows: 24px minmax(0, 1fr);
+      min-width: 0;
+    }
+
+    .codebox {
+      min-width: 0;
+      overflow: auto;
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 7px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 11px;
+      line-height: 1.45;
+      color: #334155;
+      white-space: pre;
+    }
+
+    .statusbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto auto auto;
+      align-items: center;
+      gap: 14px;
+      padding: 0 10px;
+      background: #f8fafc;
+      border-top: 1px solid var(--line);
+      color: #536276;
+    }
+
+    .breadcrumb {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .pill {
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 7px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #fff;
+      color: var(--muted);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .pill.ok {
+      border-color: #a6d7bd;
+      background: #eefaf4;
+      color: var(--green);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <nav class="menubar">
+      <button class="menu-item active">文件</button>
+      <button class="menu-item">编辑</button>
+      <button class="menu-item">视图</button>
+      <button class="menu-item">布局</button>
+      <button class="menu-item">数据</button>
+      <button class="menu-item">规则</button>
+      <button class="menu-item">发布</button>
+      <button class="menu-item">帮助</button>
+    </nav>
+
+    <header class="commandbar">
+      <div class="title-block">
+        <div class="app-mark">T</div>
+        <div class="title-text">
+          <strong>T-207 企业级 Web 表单设计器</strong>
+          <span>参考 DevExpress 工作台 / 金蝶企业密度 / Visual Studio Form Designer</span>
+        </div>
+      </div>
+
+      <div class="quick-tools">
+        <button class="btn icon" title="撤销">U</button>
+        <button class="btn icon" title="重做">R</button>
+        <div class="separator"></div>
+        <button class="btn">保存</button>
+        <button class="btn">另存模板</button>
+        <button class="btn">预览</button>
+        <button class="btn warn">校验 3</button>
+        <button class="btn primary">发布</button>
+      </div>
+
+      <div class="run-tools">
+        <span class="pill ok">RuntimeRenderer</span>
+        <span class="pill">LayoutEngine</span>
+        <span class="pill">PC 1440</span>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="left-shell">
+        <div class="panel-tabs">
+          <button class="tab active">Toolbox</button>
+          <button class="tab">字段列表</button>
+          <button class="tab">大纲</button>
+          <button class="tab">数据源</button>
+        </div>
+
+        <div class="panel-body">
+          <input class="search" value="搜索控件 / 字段 / 容器">
+
+          <section class="group">
+            <div class="group-title">Web 布局容器 <small>DevExpress 工具箱式</small></div>
+            <div class="tool active">
+              <span class="tool-ico">G</span>
+              <span class="tool-text"><strong>GridLayout</strong><span>24 列、area、minmax、gap、断点</span></span>
+              <span class="tool-badge">P0</span>
+            </div>
+            <div class="tool">
+              <span class="tool-ico">F</span>
+              <span class="tool-text"><strong>FlexLayout</strong><span>row/column/wrap/grow/shrink</span></span>
+              <span class="tool-badge">P0</span>
+            </div>
+            <div class="tool">
+              <span class="tool-ico">D</span>
+              <span class="tool-text"><strong>DockLayout</strong><span>top/left/right/bottom/fill</span></span>
+              <span class="tool-badge">P0</span>
+            </div>
+            <div class="tool">
+              <span class="tool-ico">S</span>
+              <span class="tool-text"><strong>SplitPane</strong><span>左右/上下分割、拖拽比例</span></span>
+              <span class="tool-badge">P0</span>
+            </div>
+            <div class="tool">
+              <span class="tool-ico">T</span>
+              <span class="tool-text"><strong>TabsRegion</strong><span>懒加载、权限隐藏、局部滚动</span></span>
+              <span class="tool-badge">P0</span>
+            </div>
+            <div class="tool">
+              <span class="tool-ico">O</span>
+              <span class="tool-text"><strong>OverlayPortal</strong><span>弹窗、抽屉、下拉统一层</span></span>
+              <span class="tool-badge">P1</span>
+            </div>
+          </section>
+
+          <section class="group">
+            <div class="group-title">表单元素 <small>金蝶式业务字段</small></div>
+            <div class="tool">
+              <span class="tool-ico">A</span>
+              <span class="tool-text"><strong>基础资料</strong><span>客户、物料、部门、人员、组织</span></span>
+              <span class="tool-badge">ref</span>
+            </div>
+            <div class="tool">
+              <span class="tool-ico">N</span>
+              <span class="tool-text"><strong>金额 / 数量</strong><span>精度、币种、汇率、合计</span></span>
+              <span class="tool-badge">num</span>
+            </div>
+            <div class="tool">
+              <span class="tool-ico">P</span>
+              <span class="tool-text"><strong>附件 / 图片</strong><span>合同、图纸、签章、发票</span></span>
+              <span class="tool-badge">file</span>
+            </div>
+          </section>
+
+          <section class="group">
+            <div class="group-title">Document Outline <small>VS 风格结构树</small></div>
+            <div class="tree">
+              <div class="tree-line selected"><span>-</span><strong>SalesOrderDesigner</strong><span class="tree-tag">Page</span></div>
+              <div class="tree-line child-1"><span>-</span><strong>RootGridLayout</strong><span class="tree-tag">Grid</span></div>
+              <div class="tree-line child-2"><span></span><strong>DockMenu</strong><span class="tree-tag">Left</span></div>
+              <div class="tree-line child-2 selected"><span></span><strong>HeaderFormGrid</strong><span class="tree-tag">Form</span></div>
+              <div class="tree-line child-2"><span></span><strong>EntryTable</strong><span class="tree-tag">Table</span></div>
+              <div class="tree-line child-2"><span></span><strong>ApprovalAside</strong><span class="tree-tag">Aside</span></div>
+            </div>
+          </section>
+        </div>
+      </aside>
+
+      <section class="center-shell">
+        <div class="document-tabs">
+          <div class="doc-list">
+            <div class="doc-tab">销售订单.form.json <span>x</span></div>
+            <div class="doc-tab inactive">运行预览 <span>x</span></div>
+            <div class="doc-tab inactive">Schema <span>x</span></div>
+          </div>
+          <div class="canvas-tools">
+            <select class="zoom-select">
+              <option>100%</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="canvas-wrap">
+          <div class="designer-toolbar">
+            <div class="canvas-tools">
+              <button class="btn icon" title="选择">P</button>
+              <button class="btn icon" title="吸附">S</button>
+              <button class="btn icon" title="左对齐">L</button>
+              <button class="btn icon" title="垂直居中">M</button>
+              <button class="btn icon" title="等宽">W</button>
+              <div class="separator"></div>
+              <button class="btn">显示标尺</button>
+              <button class="btn">显示网格</button>
+              <button class="btn">断点 1440</button>
+            </div>
+            <span>真实 Web DOM 画布 + 设计器 Overlay，主体布局禁止绝对定位</span>
+          </div>
+
+          <div class="stage">
+            <div class="designer-board">
+              <div class="corner"></div>
+              <div class="ruler-x">
+                <span>0</span><span>100</span><span>200</span><span>300</span><span>400</span><span>500</span>
+                <span>600</span><span>700</span><span>800</span><span>900</span><span>1000</span><span>1100</span>
+              </div>
+              <div class="ruler-y">
+                <span>0</span><span>64</span><span>128</span><span>192</span><span>256</span><span>320</span>
+                <span>384</span><span>448</span><span>512</span><span>576</span><span>640</span><span>704</span>
+              </div>
+
+              <div class="design-surface">
+                <div class="snapline-v"></div>
+                <div class="snapline-h"></div>
+                <div class="snap-badge">Snapline: label baseline / grid column 12</div>
+                <div class="drop-zone">可投放：GridLayout / EntryTable / FormSection</div>
+
+                <div class="page">
+                  <div class="form-titlebar">
+                    <div class="form-title"><span class="state-dot"></span>销售订单</div>
+                    <div class="form-actions">
+                      <button class="btn">保存</button>
+                      <button class="btn">提交</button>
+                      <button class="btn">审核</button>
+                      <button class="btn">打印</button>
+                      <button class="btn primary">运行预览</button>
+                    </div>
+                  </div>
+
+                  <div class="runtime-nav">
+                    <span class="runtime-tab active">基本信息</span>
+                    <span class="runtime-tab">订单明细</span>
+                    <span class="runtime-tab">交付计划</span>
+                    <span class="runtime-tab">审批记录</span>
+                    <span class="runtime-tab">附件</span>
+                  </div>
+
+                  <div class="business-page">
+                    <nav class="dock-menu">
+                      <div class="dock-head">业务导航 <span class="pill">Dock left</span></div>
+                      <div class="dock-list">
+                        <div class="nav-row active">基本信息</div>
+                        <div class="nav-row">订单明细</div>
+                        <div class="nav-row">批次 / 序列号</div>
+                        <div class="nav-row">合同条款</div>
+                        <div class="nav-row">关联单据</div>
+                        <div class="nav-row">变更日志</div>
+                      </div>
+                    </nav>
+
+                    <main class="content-area">
+                      <section class="section selected-widget">
+                        <div class="selection-label">HeaderFormGrid selected</div>
+                        <span class="handle h-nw"></span>
+                        <span class="handle h-ne"></span>
+                        <span class="handle h-sw"></span>
+                        <span class="handle h-se"></span>
+                        <div class="section-head">
+                          <span>基本信息</span>
+                          <span class="layout-hint">GridLayout: 24 columns / gap 12 / label 78</span>
+                        </div>
+                        <div class="form-grid">
+                          <div class="field span-8"><span class="label">客户</span><span class="input-box">杭州未来科技有限公司</span></div>
+                          <div class="field span-8"><span class="label">销售组织</span><span class="input-box">华东销售中心</span></div>
+                          <div class="field span-8"><span class="label">订单日期</span><span class="input-box">2026-07-08</span></div>
+                          <div class="field span-12"><span class="label">收货地址</span><span class="input-box">浙江省杭州市余杭区文一西路</span></div>
+                          <div class="field span-6"><span class="label">币种</span><span class="input-box">CNY</span></div>
+                          <div class="field span-6"><span class="label">状态</span><span class="input-box">草稿</span></div>
+                        </div>
+                      </section>
+
+                      <section class="section">
+                        <div class="section-head">
+                          <span>单据操作区</span>
+                          <span class="layout-hint">FlexLayout: wrap / grow / permission visible</span>
+                        </div>
+                        <div class="toolbar-strip">
+                          <span class="chip active">保存</span>
+                          <span class="chip">提交审批</span>
+                          <span class="chip">审核</span>
+                          <span class="chip">反审核</span>
+                          <span class="chip">下推采购</span>
+                          <span class="chip">关联发货</span>
+                          <span class="chip">更多</span>
+                        </div>
+                      </section>
+
+                      <section class="section">
+                        <div class="section-head">
+                          <span>订单明细 EntryTable</span>
+                          <span class="layout-hint">DevExpress/AG Grid master-detail reference</span>
+                        </div>
+                        <div class="table-box">
+                          <table class="data-grid">
+                            <colgroup>
+                              <col style="width:44px">
+                              <col style="width:150px">
+                              <col style="width:120px">
+                              <col style="width:82px">
+                              <col style="width:92px">
+                              <col style="width:104px">
+                              <col style="width:130px">
+                            </colgroup>
+                            <thead>
+                              <tr>
+                                <th>#</th><th>物料</th><th>规格</th><th>数量</th><th>单价</th><th>金额</th><th>交付日期</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>1</td><td>A-1001 标准件</td><td>蓝色/工业</td><td>20</td><td>128.00</td><td>2,560.00</td><td>2026-07-20</td>
+                              </tr>
+                              <tr class="detail-row">
+                                <td></td>
+                                <td colspan="6">
+                                  <div class="nested-detail">
+                                    <div class="nested-title">批次明细</div>
+                                    <div class="nested-cols">
+                                      <span>批次号 B2026070801</span>
+                                      <span>库位 A-01-03</span>
+                                      <span>可用量 38</span>
+                                      <span>序列号子表 20 行</span>
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>2</td><td>B-2048 工业屏</td><td>12.1 inch</td><td>8</td><td>860.00</td><td>6,880.00</td><td>2026-07-26</td>
+                              </tr>
+                              <tr>
+                                <td>3</td><td>C-3100 线束</td><td>2m</td><td>120</td><td>16.50</td><td>1,980.00</td><td>2026-07-30</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </section>
+
+                      <section class="section">
+                        <div class="section-head">
+                          <span>页签 / 局部滚动 / 懒加载区域</span>
+                          <span class="layout-hint">TabsRegion</span>
+                        </div>
+                        <div class="toolbar-strip">
+                          <span class="chip active">订单分录</span>
+                          <span class="chip">批次明细</span>
+                          <span class="chip">序列号</span>
+                          <span class="chip">合同附件</span>
+                          <span class="chip">审批影响</span>
+                        </div>
+                      </section>
+                    </main>
+
+                    <aside class="side-panel">
+                      <div class="side-head">右侧信息区 <span class="pill">Dock right</span></div>
+                      <div class="side-scroll">
+                        <div class="info-card">
+                          <h4>审批轨迹 <span>3</span></h4>
+                          <div class="info-list">
+                            <span>销售创建草稿，等待提交审批。</span>
+                            <span>系统校验信用额度和交付风险。</span>
+                            <span>区域经理审批后进入订单生效。</span>
+                          </div>
+                        </div>
+                        <div class="info-card">
+                          <h4>附件 <span>3</span></h4>
+                          <div class="info-list">
+                            <span>客户合同.pdf</span>
+                            <span>技术规格.xlsx</span>
+                            <span>报价确认.png</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="side-bottom">
+                        <button class="btn">收起</button>
+                        <button class="btn primary">查看影响</button>
+                      </div>
+                    </aside>
+                  </div>
+
+                  <div class="form-bottom">
+                    <button class="btn">关闭</button>
+                    <button class="btn">保存草稿</button>
+                    <button class="btn primary">提交审批</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="right-shell">
+        <div class="panel-tabs">
+          <button class="tab active">属性</button>
+          <button class="tab">事件</button>
+          <button class="tab">布局</button>
+          <button class="tab">规则</button>
+          <button class="tab">权限</button>
+        </div>
+
+        <div class="panel-body">
+          <div class="prop-header">
+            <select class="object-select">
+              <option>HeaderFormGrid : GridLayout</option>
+            </select>
+            <div class="view-buttons">
+              <button class="btn">AZ</button>
+              <button class="btn">CAT</button>
+              <button class="btn">EVT</button>
+            </div>
+          </div>
+
+          <section class="property-grid">
+            <div class="prop-category">外观</div>
+            <div class="prop-row"><span class="prop-name">Name</span><span class="prop-value">HeaderFormGrid</span></div>
+            <div class="prop-row"><span class="prop-name">Caption</span><span class="prop-value">基本信息</span></div>
+            <div class="prop-row"><span class="prop-name">Density</span><span class="prop-value">Compact</span></div>
+            <div class="prop-row"><span class="prop-name">Visible</span><span class="prop-value">true</span></div>
+          </section>
+
+          <section class="property-grid">
+            <div class="prop-category">布局</div>
+            <div class="prop-row"><span class="prop-name">display</span><span class="prop-value editing">grid</span></div>
+            <div class="prop-row"><span class="prop-name">columns</span><span class="prop-value">repeat(24, 1fr)</span></div>
+            <div class="prop-row"><span class="prop-name">rowGap</span><span class="prop-value">8px</span></div>
+            <div class="prop-row"><span class="prop-name">columnGap</span><span class="prop-value">12px</span></div>
+            <div class="prop-row"><span class="prop-name">labelWidth</span><span class="prop-value">78px</span></div>
+            <div class="prop-row"><span class="prop-name">overflow</span><span class="prop-value">visible</span></div>
+          </section>
+
+          <section class="property-grid">
+            <div class="prop-category">数据绑定</div>
+            <div class="prop-row"><span class="prop-name">BusinessObject</span><span class="prop-value">SalesOrder</span></div>
+            <div class="prop-row"><span class="prop-name">DataScope</span><span class="prop-value">header</span></div>
+            <div class="prop-row"><span class="prop-name">FieldDrop</span><span class="prop-value">auto label + editor</span></div>
+          </section>
+
+          <section class="property-grid">
+            <div class="prop-category">发布校验</div>
+            <div class="prop-row"><span class="prop-name">Responsive</span><span class="prop-value">1280 / 1440 / 1600</span></div>
+            <div class="prop-row"><span class="prop-name">Permission</span><span class="prop-value">inherit page role</span></div>
+            <div class="prop-row"><span class="prop-name">Risk</span><span class="prop-value">0 blocker / 1 warning</span></div>
+          </section>
+
+          <div class="description-box">
+            <strong>HeaderFormGrid</strong><br>
+            Visual Studio 式属性窗口：分类、字母序、事件切换。属性由 ComponentRegistry 元数据生成，保存为 LayoutSchema，不保存自由 DOM。
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <section class="bottom-panel">
+      <div class="bottom-tabs">
+        <button class="tab active">错误列表</button>
+        <button class="tab">设计分析器</button>
+        <button class="tab">字段绑定</button>
+        <button class="tab">输出</button>
+      </div>
+      <div class="bottom-content">
+        <table class="error-table">
+          <colgroup>
+            <col style="width:70px">
+            <col style="width:110px">
+            <col>
+            <col style="width:170px">
+            <col style="width:120px">
+          </colgroup>
+          <thead>
+            <tr><th>级别</th><th>代码</th><th>说明</th><th>对象</th><th>来源</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="severity-warning">Warning</td><td>L-201</td><td>1280 断点下右侧信息区应自动折叠，避免主体表格过窄。</td><td>ApprovalAside</td><td>LayoutEngine</td></tr>
+            <tr><td class="severity-warning">Warning</td><td>T-118</td><td>EntryTable 启用二级明细后建议开启懒加载和最大高度。</td><td>EntryTable</td><td>TableEngine</td></tr>
+            <tr><td class="severity-error">Error</td><td>P-033</td><td>发布前需要补充“反审核”按钮的岗位权限。</td><td>ToolbarAction</td><td>Permission</td></tr>
+          </tbody>
+        </table>
+        <div class="schema-pane">
+          <strong>当前选中 Schema</strong>
+          <pre class="codebox">{
+  "id": "HeaderFormGrid",
+  "type": "GridLayout",
+  "columns": 24,
+  "labelWidth": 78,
+  "allowedChildren": ["Field", "Reference", "Money"],
+  "breakpoints": {
+    "1280": { "columns": 12 },
+    "1440": { "columns": 24 }
+  }
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <footer class="statusbar">
+      <div class="breadcrumb">SalesOrderDesigner / RootGridLayout / ContentArea / HeaderFormGrid</div>
+      <span>参考：DevExpress Designer Shell</span>
+      <span>参考：金蝶企业密度</span>
+      <span>参考：Visual Studio Property Grid</span>
+      <span>缩放 100%</span>
+    </footer>
+  </div>
+</body>
+</html>

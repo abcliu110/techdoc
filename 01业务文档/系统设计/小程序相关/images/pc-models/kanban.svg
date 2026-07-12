@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+<defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/></marker></defs>
+<style>
+  .bg{fill:#f6f8fb}
+  .panel{fill:#ffffff;stroke:#d7dde8;stroke-width:2}
+  .soft{fill:#f1f5f9;stroke:#d7dde8;stroke-width:1.5}
+  .brandSoft{fill:#dbeafe;stroke:#93c5fd;stroke-width:1.5}
+  .warn{fill:#fff7ed;stroke:#fdba74;stroke-width:1.5}
+  .danger{fill:#fee2e2;stroke:#fca5a5;stroke-width:1.5}
+  .success{fill:#dcfce7;stroke:#86efac;stroke-width:1.5}
+  .line{stroke:#64748b;stroke-width:2;fill:none;marker-end:url(#arrow)}
+  .title{font:700 24px Arial, sans-serif;fill:#0f172a}
+  .h{font:700 16px Arial, sans-serif;fill:#0f172a}
+  .t{font:14px Arial, sans-serif;fill:#334155}
+  .s{font:12px Arial, sans-serif;fill:#64748b}
+</style>
+<rect class="bg" x="0" y="0" width="960" height="540"/>
+<text class="title" x="40" y="46">Kanban State Pattern</text>
+<rect class="panel" x="55" y="95" width="180" height="360" rx="12"/>
+<text class="h" x="75" y="128">Todo</text>
+<rect class="soft" x="75" y="155" width="140" height="50" rx="8"/>
+<text class="t" x="93" y="185">Task T1</text>
+<rect class="soft" x="75" y="235" width="140" height="50" rx="8"/>
+<text class="t" x="93" y="265">Task T2</text>
+<rect class="soft" x="75" y="315" width="140" height="50" rx="8"/>
+<text class="t" x="93" y="345">Task T3</text>
+<rect class="panel" x="285" y="95" width="180" height="360" rx="12"/>
+<text class="h" x="305" y="128">Doing</text>
+<rect class="soft" x="305" y="155" width="140" height="50" rx="8"/>
+<text class="t" x="323" y="185">Task D1</text>
+<rect class="soft" x="305" y="235" width="140" height="50" rx="8"/>
+<text class="t" x="323" y="265">Task D2</text>
+<rect class="soft" x="305" y="315" width="140" height="50" rx="8"/>
+<text class="t" x="323" y="345">Task D3</text>
+<rect class="panel" x="515" y="95" width="180" height="360" rx="12"/>
+<text class="h" x="535" y="128">Review</text>
+<rect class="warn" x="535" y="155" width="140" height="50" rx="8"/>
+<text class="t" x="553" y="185">Task R1</text>
+<rect class="soft" x="535" y="235" width="140" height="50" rx="8"/>
+<text class="t" x="553" y="265">Task R2</text>
+<rect class="soft" x="535" y="315" width="140" height="50" rx="8"/>
+<text class="t" x="553" y="345">Task R3</text>
+<rect class="panel" x="745" y="95" width="180" height="360" rx="12"/>
+<text class="h" x="765" y="128">Done</text>
+<rect class="soft" x="765" y="155" width="140" height="50" rx="8"/>
+<text class="t" x="783" y="185">Task D1</text>
+<rect class="soft" x="765" y="235" width="140" height="50" rx="8"/>
+<text class="t" x="783" y="265">Task D2</text>
+<path class="line" d="M235,275 L285,275"/>
+<path class="line" d="M465,275 L515,275"/>
+<path class="line" d="M695,275 L745,275"/>
+</svg>

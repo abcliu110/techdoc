@@ -1,0 +1,25 @@
+{
+  "execution_id": "COMPLETE-20260712-001",
+  "product": "Enterprise low-code form designer V3 prototype",
+  "product_type": "complex enterprise design tool",
+  "primary_roles": [
+    "application designer",
+    "business modeler"
+  ],
+  "core_tasks": [
+    "model business objects",
+    "compose forms and entries",
+    "configure rules and permissions",
+    "preview runtime",
+    "analyze publishing"
+  ],
+  "prototype_boundary": "local evidence-backed interactive prototype",
+  "non_goals": [
+    "production database writes",
+    "real permission center",
+    "formal production publish",
+    "reports",
+    "mobile-first full editing",
+    "arbitrary JavaScript execution"
+  ]
+}

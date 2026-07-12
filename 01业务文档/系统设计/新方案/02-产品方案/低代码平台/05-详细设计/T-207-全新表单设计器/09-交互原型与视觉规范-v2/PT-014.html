@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PT-014 发布阻断与成功</title>
+  <style>
+    :root {
+      --bg: #eef2f6;
+      --panel: #ffffff;
+      --panel-muted: #f7f9fc;
+      --text: #1f2937;
+      --subtext: #667085;
+      --border: #d7dee8;
+      --primary: #2468c9;
+      --primary-soft: #e8f0fb;
+      --success: #19733f;
+      --success-soft: #e8f5ed;
+      --danger: #c73535;
+      --danger-soft: #fceaea;
+      --warning: #8a5a00;
+      --warning-soft: #fff5dd;
+      --shadow: 0 8px 24px rgba(31, 41, 55, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font: 13px/1.5 "Microsoft YaHei UI", "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    body {
+      min-width: 1440px;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      border-radius: 4px;
+      padding: 0 12px;
+      height: 30px;
+      cursor: pointer;
+      transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+
+    button:hover:not(:disabled) {
+      background: #f8fbff;
+      border-color: #b8c8dc;
+    }
+
+    button:disabled {
+      color: #98a2b3;
+      background: #f5f7fa;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #185ab6;
+      border-color: #185ab6;
+    }
+
+    .btn-danger {
+      border-color: var(--danger);
+      color: var(--danger);
+      background: #fff;
+    }
+
+    .shell {
+      width: 1440px;
+      height: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 48px 244px 1fr 304px;
+      grid-template-rows: 48px 1fr;
+      box-shadow: var(--shadow);
+    }
+
+    .topbar {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      background: var(--primary);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.32);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .brand p {
+      margin: 0;
+      color: var(--subtext);
+      white-space: nowrap;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rail {
+      background: #edf2f7;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 10px;
+      gap: 10px;
+    }
+
+    .rail-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      background: #fff;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--subtext);
+      font-size: 12px;
+    }
+
+    .rail-icon.active {
+      color: var(--primary);
+      border-color: #bfd2ee;
+      background: var(--primary-soft);
+    }
+
+    .sidebar,
+    .inspector,
+    .canvas-pane {
+      min-height: 0;
+    }
+
+    .sidebar {
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .panel-title {
+      margin: 0 0 8px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .subtle {
+      color: var(--subtext);
+    }
+
+    .scene-list,
+    .check-list,
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .scene-item,
+    .check-item,
+    .timeline-item {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--panel-muted);
+      padding: 10px 12px;
+    }
+
+    .scene-item.active {
+      border-color: #bfd2ee;
+      background: var(--primary-soft);
+    }
+
+    .item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .item-title {
+      font-weight: 600;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+
+    .tag-danger {
+      color: var(--danger);
+      border-color: #efc2c2;
+      background: var(--danger-soft);
+    }
+
+    .tag-warning {
+      color: var(--warning);
+      border-color: #edd59d;
+      background: var(--warning-soft);
+    }
+
+    .tag-success {
+      color: var(--success);
+      border-color: #b8ddc6;
+      background: var(--success-soft);
+    }
+
+    .canvas-pane {
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      gap: 16px;
+      background: #f3f6fa;
+    }
+
+    .hero {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .hero h2 {
+      margin: 0 0 6px;
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--subtext);
+    }
+
+    .status-strip {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 16px;
+      min-height: 0;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 14px 16px;
+      min-height: 0;
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .card-head h3 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .block-banner,
+    .success-banner {
+      display: none;
+      border-radius: 4px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      border: 1px solid transparent;
+    }
+
+    .block-banner {
+      background: var(--danger-soft);
+      border-color: #efc2c2;
+      color: var(--danger);
+    }
+
+    .success-banner {
+      background: var(--success-soft);
+      border-color: #b8ddc6;
+      color: var(--success);
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .metric {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px 12px;
+      background: var(--panel-muted);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .timeline {
+      max-height: 334px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .timeline-item.done {
+      background: #f6fbf8;
+      border-color: #cfe7d8;
+    }
+
+    .timeline-item.current {
+      background: #eef5ff;
+      border-color: #c7d8f2;
+    }
+
+    .timeline-item.blocked {
+      background: #fff6f6;
+      border-color: #f0c8c8;
+    }
+
+    .timeline-item p,
+    .check-item p,
+    .scene-item p {
+      margin: 4px 0 0;
+      color: var(--subtext);
+    }
+
+    .inspector {
+      background: var(--panel);
+      border-left: 1px solid var(--border);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .property-group {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 12px;
+      background: var(--panel-muted);
+    }
+
+    .property-group h4 {
+      margin: 0 0 10px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .property-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 7px 0;
+      border-bottom: 1px solid #e7edf4;
+    }
+
+    .property-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .property-row:first-child {
+      padding-top: 0;
+    }
+
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toggle input {
+      width: 14px;
+      height: 14px;
+      margin: 0;
+      accent-color: var(--primary);
+    }
+
+    .helper {
+      padding: 10px 12px;
+      border-radius: 4px;
+      background: #eff4fb;
+      border: 1px solid #d5e1f2;
+      color: #345075;
+    }
+
+    [data-state="blocked"] .block-banner {
+      display: block;
+    }
+
+    [data-state="success"] .success-banner {
+      display: block;
+    }
+
+    [data-state="blocked"] .publish-success-only,
+    [data-state="success"] .publish-block-only {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell" data-prototype="PT-014" data-state="blocked" data-testid="prototype-root" id="prototypeRoot">
+    <header class="topbar" data-testid="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <div>
+          <h1>全新表单设计器</h1>
+          <p>发布前校验 / 发布阻断与成功反馈</p>
+        </div>
+      </div>
+      <div class="toolbar">
+        <button type="button" data-testid="preview-button" title="保持当前草稿结构不变，仅预览发布后效果">预览</button>
+        <button type="button" data-testid="save-button" title="保存当前设计器草稿">保存草稿</button>
+        <button type="button" class="btn-primary" id="publishButton" data-testid="publish-button" title="发布前先执行必填校验与流程绑定校验">立即发布</button>
+      </div>
+    </header>
+
+    <aside class="rail" data-testid="left-rail">
+      <div class="rail-icon">组</div>
+      <div class="rail-icon active">页</div>
+      <div class="rail-icon">流</div>
+      <div class="rail-icon">数</div>
+      <div class="rail-icon">版</div>
+    </aside>
+
+    <section class="sidebar" data-testid="resource-panel">
+      <div>
+        <h2 class="panel-title">发布场景</h2>
+        <div class="scene-list">
+          <div class="scene-item active" data-testid="scene-publish-status">
+            <div class="item-row">
+              <span class="item-title">发布阻断与成功</span>
+              <span class="tag tag-danger" id="sceneBadge">阻断中</span>
+            </div>
+            <p>发布入口先给出阻断原因，修复后同区域转为发布成功反馈。</p>
+          </div>
+          <div class="scene-item" data-testid="scene-related-flow">
+            <div class="item-row">
+              <span class="item-title">关联流程提示</span>
+              <span class="tag tag-warning">待确认</span>
+            </div>
+            <p>展示流程绑定缺失、规则冲突等阻断明细，不跳离当前设计页。</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="panel-title">阻断清单</h2>
+        <div class="check-list" data-testid="blocker-list">
+          <div class="check-item" data-testid="blocker-schema">
+            <div class="item-row">
+              <span class="item-title">提交流程未绑定审批流</span>
+              <span class="tag tag-danger publish-block-only">阻断</span>
+              <span class="tag tag-success publish-success-only">已修复</span>
+            </div>
+            <p>表单“请假申请”启用了提交动作，但没有绑定审批流程。</p>
+          </div>
+          <div class="check-item" data-testid="blocker-validation">
+            <div class="item-row">
+              <span class="item-title">手机号字段缺少格式校验</span>
+              <span class="tag tag-danger publish-block-only">阻断</span>
+              <span class="tag tag-success publish-success-only">已修复</span>
+            </div>
+            <p>生产环境已开启外部调用，手机号需具备格式规则才能发布。</p>
+          </div>
+          <div class="check-item" data-testid="blocker-scope">
+            <div class="item-row">
+              <span class="item-title">发布说明未填写</span>
+              <span class="tag tag-warning publish-block-only">提醒</span>
+              <span class="tag tag-success publish-success-only">已补充</span>
+            </div>
+            <p>说明文案将进入版本中心，供运营和测试回溯本次变更。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="helper" data-testid="publish-helper">
+        阻断说明放在当前页左侧与主画布顶部同步展示，避免用户发布后才发现缺项。
+      </div>
+    </section>
+
+    <main class="canvas-pane" data-testid="canvas-area">
+      <section class="hero" data-testid="hero-panel">
+        <div>
+          <h2 id="heroTitle">发布已被阻断，请先处理 2 个必修问题</h2>
+          <p id="heroSubtitle">点击“修复并重新发布”后，场景会模拟校验通过并切换为成功反馈。</p>
+        </div>
+        <div class="toolbar">
+          <button type="button" class="btn-danger publish-block-only" id="repairButton" data-testid="repair-button" title="模拟逐项修复阻断问题并重新执行发布">修复并重新发布</button>
+          <button type="button" class="btn-primary publish-success-only" id="versionButton" data-testid="version-button" title="发布完成后可前往版本中心查看新版本">查看版本</button>
+        </div>
+      </section>
+
+      <section class="status-strip">
+        <div class="card" data-testid="result-card">
+          <div class="card-head">
+            <h3>发布结果</h3>
+            <span class="tag tag-danger publish-block-only" id="resultBadge">未通过</span>
+            <span class="tag tag-success publish-success-only" id="resultBadgeSuccess">已发布</span>
+          </div>
+
+          <div class="block-banner" id="blockBanner" data-testid="block-banner">
+            发布阻断：审批流绑定、字段校验均属于强校验项，当前版本不能进入运行环境。
+          </div>
+          <div class="success-banner" id="successBanner" data-testid="success-banner">
+            发布成功：版本 V2.7.14 已写入版本中心，运行态配置与审批流程同步完成。
+          </div>
+
+          <div class="metrics">
+            <div class="metric" data-testid="metric-blockers">
+              <strong id="metricBlockers">2</strong>
+              <span class="subtle">阻断项</span>
+            </div>
+            <div class="metric" data-testid="metric-warnings">
+              <strong id="metricWarnings">1</strong>
+              <span class="subtle">提醒项</span>
+            </div>
+            <div class="metric" data-testid="metric-version">
+              <strong id="metricVersion">V2.7.13</strong>
+              <span class="subtle">当前版本</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" data-testid="summary-card">
+          <div class="card-head">
+            <h3>发布摘要</h3>
+            <span class="subtle" id="summaryTime">最近校验：10:24</span>
+          </div>
+          <div class="timeline" data-testid="timeline">
+            <div class="timeline-item done" data-testid="timeline-design">
+              <div class="item-row">
+                <span class="item-title">设计器保存成功</span>
+                <span class="tag tag-success">完成</span>
+              </div>
+              <p>画布组件、字段映射和联动规则已落草稿。</p>
+            </div>
+            <div class="timeline-item current publish-block-only" id="timelineBlock" data-testid="timeline-block">
+              <div class="item-row">
+                <span class="item-title">发布前校验阻断</span>
+                <span class="tag tag-danger">停止发布</span>
+              </div>
+              <p id="timelineBlockText">检测到 2 个强校验项未通过，等待设计器内修复后重新发布。</p>
+            </div>
+            <div class="timeline-item blocked publish-block-only" data-testid="timeline-routing">
+              <div class="item-row">
+                <span class="item-title">运行环境同步</span>
+                <span class="tag tag-warning">待执行</span>
+              </div>
+              <p>阻断解除前不会向运行环境下发新版本配置。</p>
+            </div>
+            <div class="timeline-item current publish-success-only" id="timelineSuccess" data-testid="timeline-success">
+              <div class="item-row">
+                <span class="item-title">发布成功并完成同步</span>
+                <span class="tag tag-success">已完成</span>
+              </div>
+              <p id="timelineSuccessText">已生成版本号、同步审批流并通知测试环境，用户可继续查看版本详情。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="inspector" data-testid="property-panel">
+      <div>
+        <h2 class="panel-title">发布属性</h2>
+        <p class="subtle">右侧属性面板只承载说明与校验项，不离开当前设计上下文。</p>
+      </div>
+
+      <div class="property-group" data-testid="property-version">
+        <h4>版本信息</h4>
+        <div class="property-row">
+          <span>版本号</span>
+          <strong id="propertyVersion">V2.7.13</strong>
+        </div>
+        <div class="property-row">
+          <span>目标环境</span>
+          <strong data-testid="property-env">测试环境 / 生产候选</strong>
+        </div>
+        <div class="property-row">
+          <span>发布状态</span>
+          <strong id="propertyState">阻断中</strong>
+        </div>
+      </div>
+
+      <div class="property-group" data-testid="property-guards">
+        <h4>校验开关</h4>
+        <div class="property-row">
+          <span>审批流强校验</span>
+          <label class="toggle">
+            <input type="checkbox" checked disabled data-testid="toggle-process" />
+            <span>已启用</span>
+          </label>
+        </div>
+        <div class="property-row">
+          <span>字段规则校验</span>
+          <label class="toggle">
+            <input type="checkbox" checked disabled data-testid="toggle-field" />
+            <span>已启用</span>
+          </label>
+        </div>
+        <div class="property-row">
+          <span>自动发布</span>
+          <label class="toggle">
+            <input type="checkbox" disabled data-testid="toggle-auto" />
+            <span>已禁用</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="helper" id="sideNote" data-testid="side-note">
+        当前为阻断态：发布按钮可点击，但系统会拦截并明确指出阻断原因，而不是静默失败。
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.getElementById("prototypeRoot");
+      var publishButton = document.getElementById("publishButton");
+      var repairButton = document.getElementById("repairButton");
+      var versionButton = document.getElementById("versionButton");
+
+      var heroTitle = document.getElementById("heroTitle");
+      var heroSubtitle = document.getElementById("heroSubtitle");
+      var metricBlockers = document.getElementById("metricBlockers");
+      var metricWarnings = document.getElementById("metricWarnings");
+      var metricVersion = document.getElementById("metricVersion");
+      var propertyVersion = document.getElementById("propertyVersion");
+      var propertyState = document.getElementById("propertyState");
+      var sceneBadge = document.getElementById("sceneBadge");
+      var resultBadge = document.getElementById("resultBadge");
+      var summaryTime = document.getElementById("summaryTime");
+      var sideNote = document.getElementById("sideNote");
+      var timelineBlockText = document.getElementById("timelineBlockText");
+
+      function setBlockedState() {
+        root.setAttribute("data-state", "blocked");
+        heroTitle.textContent = "发布已被阻断，请先处理 2 个必修问题";
+        heroSubtitle.textContent = "点击“修复并重新发布”后，场景会模拟校验通过并切换为成功反馈。";
+        metricBlockers.textContent = "2";
+        metricWarnings.textContent = "1";
+        metricVersion.textContent = "V2.7.13";
+        propertyVersion.textContent = "V2.7.13";
+        propertyState.textContent = "阻断中";
+        sceneBadge.textContent = "阻断中";
+        sceneBadge.className = "tag tag-danger";
+        resultBadge.textContent = "未通过";
+        resultBadge.className = "tag tag-danger publish-block-only";
+        summaryTime.textContent = "最近校验：10:24";
+        sideNote.textContent = "当前为阻断态：发布按钮可点击，但系统会拦截并明确指出阻断原因，而不是静默失败。";
+        timelineBlockText.textContent = "检测到 2 个强校验项未通过，等待设计器内修复后重新发布。";
+        publishButton.disabled = false;
+      }
+
+      function setSuccessState() {
+        root.setAttribute("data-state", "success");
+        heroTitle.textContent = "发布成功，版本已进入版本中心";
+        heroSubtitle.textContent = "阻断项已清零，审批流与字段规则已同步，当前页面直接给出成功反馈。";
+        metricBlockers.textContent = "0";
+        metricWarnings.textContent = "0";
+        metricVersion.textContent = "V2.7.14";
+        propertyVersion.textContent = "V2.7.14";
+        propertyState.textContent = "已发布";
+        sceneBadge.textContent = "已发布";
+        sceneBadge.className = "tag tag-success";
+        resultBadge.textContent = "已发布";
+        resultBadge.className = "tag tag-success publish-block-only";
+        summaryTime.textContent = "最近发布：10:31";
+        sideNote.textContent = "当前为成功态：页面保留结果摘要、版本号和查看版本入口，方便继续核对。";
+        timelineBlockText.textContent = "阻断已解除，系统已继续执行环境同步与版本登记。";
+        publishButton.disabled = true;
+      }
+
+      publishButton.addEventListener("click", function () {
+        if (root.getAttribute("data-state") === "success") {
+          return;
+        }
+        setBlockedState();
+      });
+
+      repairButton.addEventListener("click", function () {
+        setSuccessState();
+      });
+
+      versionButton.addEventListener("click", function () {
+        if (root.getAttribute("data-state") === "success") {
+          sideNote.textContent = "已定位到版本中心：V2.7.14，支持继续查看发布记录与回滚入口。";
+        }
+      });
+
+      setBlockedState();
+    })();
+  </script>
+</body>
+</html>

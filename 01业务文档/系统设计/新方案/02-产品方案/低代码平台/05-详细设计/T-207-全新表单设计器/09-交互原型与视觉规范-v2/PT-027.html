@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PT-027 画布工作区</title>
+  <style>
+    :root {
+      --bg: #eef2f6;
+      --panel: #ffffff;
+      --text: #1f2937;
+      --muted: #667085;
+      --border: #d7dee8;
+      --primary: #2468c9;
+      --success: #19733f;
+      --danger: #c73535;
+      --soft: #f7f9fc;
+      --canvas: #f4f7fb;
+      --line: rgba(36, 104, 201, 0.12);
+      --shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      min-width: 1440px;
+      height: 100%;
+      overflow: hidden;
+      font-family: "Microsoft YaHei UI", "Segoe UI", sans-serif;
+      font-size: 12px;
+      letter-spacing: 0;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    button, input {
+      font: inherit;
+    }
+
+    button {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      border-radius: 4px;
+      height: 30px;
+      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: border-color 120ms ease, color 120ms ease, background 120ms ease;
+    }
+
+    button:hover:not(:disabled) {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    button:disabled {
+      color: #98a2b3;
+      background: #f5f7fa;
+      cursor: not-allowed;
+    }
+
+    .icon {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex: 0 0 auto;
+    }
+
+    .shell {
+      display: grid;
+      grid-template-rows: 48px 1fr 28px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .topbar-left,
+    .topbar-right,
+    .topbar-center {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .brand-badge {
+      width: 24px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      background: #eaf1fb;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .crumb {
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .mode-switch {
+      display: inline-flex;
+      padding: 3px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #f8fafc;
+      gap: 2px;
+    }
+
+    .mode-switch button {
+      border: 0;
+      height: 28px;
+      padding: 0 14px;
+      color: var(--muted);
+      background: transparent;
+    }
+
+    .mode-switch button.active {
+      background: var(--panel);
+      color: var(--primary);
+      box-shadow: inset 0 0 0 1px var(--border);
+    }
+
+    .topbar-right button.primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 48px 248px minmax(0, 1fr) 304px;
+      min-height: 0;
+    }
+
+    .activitybar,
+    .sidebar,
+    .inspector,
+    .center {
+      min-height: 0;
+    }
+
+    .activitybar {
+      background: #f6f8fb;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0;
+      gap: 8px;
+    }
+
+    .activitybar button {
+      width: 32px;
+      padding: 0;
+    }
+
+    .activitybar button.active {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: #edf4ff;
+    }
+
+    .sidebar,
+    .inspector {
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .inspector {
+      border-right: 0;
+      border-left: 1px solid var(--border);
+    }
+
+    .panel-head {
+      height: 40px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .panel-section {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-title {
+      margin: 0 0 8px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .chip-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .chip-grid button {
+      justify-content: flex-start;
+      padding: 0 10px;
+      background: var(--soft);
+    }
+
+    .chip-grid button.active {
+      border-color: var(--primary);
+      background: #edf4ff;
+      color: var(--primary);
+    }
+
+    .outline-list {
+      display: grid;
+      gap: 6px;
+    }
+
+    .outline-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #fbfcfe;
+      cursor: pointer;
+    }
+
+    .outline-item.active {
+      border-color: var(--primary);
+      background: #edf4ff;
+    }
+
+    .outline-item small {
+      color: var(--muted);
+    }
+
+    .center {
+      display: grid;
+      grid-template-rows: 36px minmax(0, 1fr);
+      min-width: 0;
+    }
+
+    .canvas-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 14px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .canvas-toolbar .group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .zoom-pill,
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 24px;
+      padding: 0 8px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--panel);
+      color: var(--muted);
+    }
+
+    .canvas-stage {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      padding: 18px;
+      background: var(--canvas);
+      overflow: hidden;
+    }
+
+    .canvas-stage.design::before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border-radius: 4px;
+      background-image:
+        linear-gradient(to right, var(--line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+    }
+
+    .canvas-stage.preview::before,
+    .canvas-stage.annotate::before {
+      display: none;
+    }
+
+    .artboard {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 660px;
+      height: 100%;
+      min-height: 580px;
+      margin: 0 auto;
+      padding: 22px 24px;
+      background: var(--panel);
+      border: 1px solid #cfd8e3;
+      border-radius: 4px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .form-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .form-title {
+      display: grid;
+      gap: 4px;
+    }
+
+    .form-title h1 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .form-title p,
+    .field-meta,
+    .helper,
+    .empty-tip,
+    .field-note {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .header-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 4px;
+      background: #f4f7fb;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .canvas-blocks {
+      display: grid;
+      gap: 12px;
+      min-height: 0;
+    }
+
+    .field-card {
+      position: relative;
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #fcfdff;
+      cursor: pointer;
+    }
+
+    .field-card.selected {
+      border-color: var(--primary);
+      box-shadow: inset 0 0 0 1px rgba(36, 104, 201, 0.12);
+      background: #f7fbff;
+    }
+
+    .field-card.annotated::after {
+      content: "待确认";
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      height: 20px;
+      line-height: 20px;
+      padding: 0 8px;
+      border-radius: 4px;
+      background: #fff4e8;
+      color: #9a6700;
+      border: 1px solid #f2d1a4;
+      font-size: 12px;
+    }
+
+    .field-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .field-name {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .field-type {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .input-shell {
+      height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      color: var(--muted);
+    }
+
+    .double-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .preview-banner,
+    .annotate-banner {
+      display: none;
+      padding: 10px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .preview-banner {
+      background: #edf7ee;
+      color: var(--success);
+      border: 1px solid rgba(25, 115, 63, 0.2);
+    }
+
+    .annotate-banner {
+      background: #fff7ed;
+      color: #9a6700;
+      border: 1px solid #f2d1a4;
+    }
+
+    .canvas-stage.preview .preview-banner,
+    .canvas-stage.annotate .annotate-banner {
+      display: block;
+    }
+
+    .canvas-stage.preview .field-card {
+      cursor: default;
+    }
+
+    .canvas-stage.preview .field-card.selected {
+      border-color: var(--border);
+      box-shadow: none;
+      background: #fcfdff;
+    }
+
+    .inspector-card {
+      display: grid;
+      gap: 10px;
+    }
+
+    .kv {
+      display: grid;
+      gap: 8px;
+    }
+
+    .kv-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .kv-row strong {
+      font-weight: 600;
+    }
+
+    .micro-input {
+      height: 28px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      color: var(--text);
+    }
+
+    .state-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .state-item {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .state-dot {
+      width: 8px;
+      height: 8px;
+      margin-top: 4px;
+      border-radius: 50%;
+      background: var(--primary);
+      flex: 0 0 auto;
+    }
+
+    .state-item.warn .state-dot {
+      background: #e39a14;
+    }
+
+    .footerbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      background: var(--panel);
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .footerbar .group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+  </style>
+</head>
+<body>
+  <div
+    class="shell"
+    data-prototype="PT-027"
+    data-state="design:basic-info"
+    data-testid="pt-027-root"
+  >
+    <header class="topbar" data-testid="topbar">
+      <div class="topbar-left">
+        <div class="brand" data-testid="designer-brand">
+          <span class="brand-badge">F</span>
+          <span>全新表单设计器</span>
+        </div>
+        <span class="crumb" data-testid="page-crumb">画布工作区 / 采购申请单</span>
+      </div>
+      <div class="topbar-center">
+        <div class="mode-switch" data-testid="mode-switch">
+          <button type="button" class="active" data-mode="design" data-testid="mode-design">设计态</button>
+          <button type="button" data-mode="preview" data-testid="mode-preview">预览态</button>
+          <button type="button" data-mode="annotate" data-testid="mode-annotate">联动标注</button>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button type="button" title="保留当前表单版本" data-testid="save-button">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V7l4-4h10l4 4v12a2 2 0 0 1-2 2Z"></path><path d="M17 21v-8H7v8"></path><path d="M7 3v5h8"></path></svg>
+          保存版本
+        </button>
+        <button type="button" class="primary" title="发布到流程配置中心" data-testid="publish-button">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m17 8-5-5-5 5"></path><path d="M5 21h14"></path></svg>
+          提交发布
+        </button>
+      </div>
+    </header>
+
+    <main class="workspace" data-testid="workspace">
+      <aside class="activitybar" data-testid="activitybar">
+        <button type="button" class="active" title="组件资源" data-testid="activity-components">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        </button>
+        <button type="button" title="页面结构" data-testid="activity-outline">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h13"></path><path d="M8 12h13"></path><path d="M8 18h13"></path><path d="M3 6h.01"></path><path d="M3 12h.01"></path><path d="M3 18h.01"></path></svg>
+        </button>
+        <button type="button" title="联动规则" data-testid="activity-rules">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 1 7.54.46l3.4 3.4a5 5 0 0 1-7.07 7.08l-1.7-1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.46l-3.4 3.4a5 5 0 0 0 7.07 7.08l1.7-1.71"></path></svg>
+        </button>
+      </aside>
+
+      <section class="sidebar" data-testid="resource-panel">
+        <div class="panel-head">
+          <span>资源面板</span>
+          <span class="crumb">画布组件</span>
+        </div>
+        <div class="panel-section">
+          <p class="section-title">常用字段</p>
+          <div class="chip-grid">
+            <button type="button" class="active" data-select="basic-info" data-testid="chip-basic-info">基础信息区</button>
+            <button type="button" data-select="applicant" data-testid="chip-applicant">申请人</button>
+            <button type="button" data-select="expense-grid" data-testid="chip-expense-grid">费用明细表</button>
+            <button type="button" data-select="approval-note" data-testid="chip-approval-note">审批说明</button>
+          </div>
+        </div>
+        <div class="panel-section">
+          <p class="section-title">页面结构</p>
+          <div class="outline-list" data-testid="outline-list">
+            <div class="outline-item active" data-select="basic-info" data-testid="outline-basic-info">
+              <div>
+                <div>基础信息区</div>
+                <small>分组容器 / 双列布局</small>
+              </div>
+              <small>01</small>
+            </div>
+            <div class="outline-item" data-select="expense-grid" data-testid="outline-expense-grid">
+              <div>
+                <div>费用明细表</div>
+                <small>子表格 / 合计金额联动</small>
+              </div>
+              <small>02</small>
+            </div>
+            <div class="outline-item" data-select="approval-note" data-testid="outline-approval-note">
+              <div>
+                <div>审批说明</div>
+                <small>长文本 / 条件显示</small>
+              </div>
+              <small>03</small>
+            </div>
+          </div>
+        </div>
+        <div class="panel-section">
+          <p class="section-title">当前提示</p>
+          <p class="helper" data-testid="resource-hint">单击左侧节点可切换右侧属性；预览态会隐藏网格辅助线。</p>
+        </div>
+      </section>
+
+      <section class="center" data-testid="canvas-area">
+        <div class="canvas-toolbar" data-testid="canvas-toolbar">
+          <div class="group">
+            <span class="status-pill" data-testid="status-pill">画布状态：<strong id="statusModeText">设计态</strong></span>
+            <span class="zoom-pill" data-testid="zoom-pill">缩放 100%</span>
+          </div>
+          <div class="group">
+            <button type="button" title="对齐吸附暂不可用" disabled data-testid="snap-disabled">吸附辅助</button>
+            <button type="button" title="保持当前字段分布" data-testid="align-button">对齐分布</button>
+          </div>
+        </div>
+
+        <div class="canvas-stage design" id="canvasStage" data-testid="canvas-stage">
+          <div class="artboard" data-testid="artboard">
+            <div class="preview-banner" data-testid="preview-banner">预览态已启用，当前字段以最终填写视图呈现，拖拽与锚点已隐藏。</div>
+            <div class="annotate-banner" data-testid="annotate-banner">联动标注态显示待确认规则，便于与流程配置、字段显隐规则同步核对。</div>
+
+            <div class="form-header" data-testid="form-header">
+              <div class="form-title">
+                <h1>采购申请单</h1>
+                <p>场景：画布工作区中设计通用表单的主编辑区域。</p>
+              </div>
+              <div class="header-tags">
+                <span class="tag" data-testid="tag-layout">双列表单</span>
+                <span class="tag" data-testid="tag-rule">3 条联动</span>
+                <span class="tag" data-testid="tag-version">版本 v2.7</span>
+              </div>
+            </div>
+
+            <div class="canvas-blocks" data-testid="canvas-blocks">
+              <div class="field-card selected" data-field="basic-info" data-testid="field-basic-info">
+                <div class="field-row">
+                  <div>
+                    <div class="field-name">基础信息区</div>
+                    <p class="field-meta">表单标题、申请部门、申请日期</p>
+                  </div>
+                  <span class="field-type">分组容器</span>
+                </div>
+                <div class="double-grid">
+                  <div>
+                    <p class="field-note">申请部门</p>
+                    <div class="input-shell">自动带出当前组织</div>
+                  </div>
+                  <div>
+                    <p class="field-note">申请日期</p>
+                    <div class="input-shell">YYYY-MM-DD</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="field-card" data-field="expense-grid" data-testid="field-expense-grid">
+                <div class="field-row">
+                  <div>
+                    <div class="field-name">费用明细表</div>
+                    <p class="field-meta">明细行录入、金额计算、预算校验</p>
+                  </div>
+                  <span class="field-type">子表格</span>
+                </div>
+                <div class="input-shell">包含费用科目、数量、含税金额、预算项目四列</div>
+              </div>
+
+              <div class="field-card annotated" data-field="approval-note" data-testid="field-approval-note">
+                <div class="field-row">
+                  <div>
+                    <div class="field-name">审批说明</div>
+                    <p class="field-meta">当总金额大于 1 万时自动展示</p>
+                  </div>
+                  <span class="field-type">多行文本</span>
+                </div>
+                <div class="input-shell">请输入补充说明，最多 300 字</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="inspector" data-testid="property-panel">
+        <div class="panel-head">
+          <span>属性面板</span>
+          <span class="crumb" id="inspectorModeText">设计态</span>
+        </div>
+        <div class="panel-section">
+          <div class="inspector-card">
+            <p class="section-title">当前选中</p>
+            <div class="kv">
+              <div class="kv-row">
+                <span>节点名称</span>
+                <strong id="selectedName" data-testid="selected-name">基础信息区</strong>
+              </div>
+              <div class="kv-row">
+                <span>绑定编码</span>
+                <span id="selectedCode" data-testid="selected-code">basic_info_group</span>
+              </div>
+              <div class="kv-row">
+                <span>交互模式</span>
+                <span id="selectedMode" data-testid="selected-mode">设计态</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <p class="section-title">字段参数</p>
+          <div class="kv">
+            <div class="kv-row">
+              <span>标题</span>
+              <div class="micro-input" id="fieldTitleInput" data-testid="field-title">基础信息区</div>
+            </div>
+            <div class="kv-row">
+              <span>布局</span>
+              <div class="micro-input" id="fieldLayoutInput" data-testid="field-layout">双列 6/6</div>
+            </div>
+            <div class="kv-row">
+              <span>校验</span>
+              <div class="micro-input" id="fieldRuleInput" data-testid="field-rule">必填 + 自动带出</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <p class="section-title">交互状态</p>
+          <div class="state-list" data-testid="state-list">
+            <div class="state-item">
+              <div style="display:flex; gap:8px;">
+                <span class="state-dot"></span>
+                <div>
+                  <div id="stateLine1">设计态可拖拽并显示栅格辅助。</div>
+                  <p class="helper">当前用于定位字段和调整分组宽度。</p>
+                </div>
+              </div>
+            </div>
+            <div class="state-item warn">
+              <div style="display:flex; gap:8px;">
+                <span class="state-dot"></span>
+                <div>
+                  <div id="stateLine2">审批说明节点存在一条待确认联动规则。</div>
+                  <p class="helper">切到联动标注可直接核对显示条件。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="footerbar" data-testid="footerbar">
+      <div class="group">
+        <span data-testid="footer-selection">当前节点：<strong id="footerSelection">基础信息区</strong></span>
+        <span data-testid="footer-state">根状态：<strong id="footerState">design:basic-info</strong></span>
+      </div>
+      <div class="group">
+        <span data-testid="footer-hint">主交互：切换模式或选中节点时，画布与属性区同步刷新。</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      const root = document.querySelector('[data-testid="pt-027-root"]');
+      const canvasStage = document.getElementById('canvasStage');
+      const modeButtons = Array.from(document.querySelectorAll('[data-mode]'));
+      const selectableNodes = Array.from(document.querySelectorAll('[data-select], .field-card[data-field]'));
+      const outlineItems = Array.from(document.querySelectorAll('.outline-item'));
+      const chipItems = Array.from(document.querySelectorAll('.chip-grid button'));
+      const fieldCards = Array.from(document.querySelectorAll('.field-card'));
+
+      const selectedName = document.getElementById('selectedName');
+      const selectedCode = document.getElementById('selectedCode');
+      const selectedMode = document.getElementById('selectedMode');
+      const fieldTitleInput = document.getElementById('fieldTitleInput');
+      const fieldLayoutInput = document.getElementById('fieldLayoutInput');
+      const fieldRuleInput = document.getElementById('fieldRuleInput');
+      const footerSelection = document.getElementById('footerSelection');
+      const footerState = document.getElementById('footerState');
+      const statusModeText = document.getElementById('statusModeText');
+      const inspectorModeText = document.getElementById('inspectorModeText');
+      const stateLine1 = document.getElementById('stateLine1');
+      const stateLine2 = document.getElementById('stateLine2');
+
+      const fieldMeta = {
+        'basic-info': {
+          name: '基础信息区',
+          code: 'basic_info_group',
+          layout: '双列 6/6',
+          rule: '必填 + 自动带出'
+        },
+        'applicant': {
+          name: '申请人',
+          code: 'applicant_user',
+          layout: '单列 12',
+          rule: '默认当前登录人'
+        },
+        'expense-grid': {
+          name: '费用明细表',
+          code: 'expense_detail_table',
+          layout: '整行 12',
+          rule: '金额联动 + 预算校验'
+        },
+        'approval-note': {
+          name: '审批说明',
+          code: 'approval_note_textarea',
+          layout: '整行 12',
+          rule: '总额 > 10000 时显示'
+        }
+      };
+
+      const modeMeta = {
+        design: {
+          label: '设计态',
+          line1: '设计态可拖拽并显示栅格辅助。',
+          line2: '审批说明节点存在一条待确认联动规则。'
+        },
+        preview: {
+          label: '预览态',
+          line1: '预览态隐藏栅格，仅保留最终填写视图。',
+          line2: '当前预览可用于核查字段顺序、默认值和必填提示。'
+        },
+        annotate: {
+          label: '联动标注',
+          line1: '联动标注态会突出待确认规则与条件显示节点。',
+          line2: '请重点核对审批说明的金额阈值与预算明细联动。'
+        }
+      };
+
+      let currentMode = 'design';
+      let currentField = 'basic-info';
+
+      function syncState() {
+        const modeInfo = modeMeta[currentMode];
+        const fieldInfo = fieldMeta[currentField];
+        root.dataset.state = currentMode + ':' + currentField;
+        canvasStage.className = 'canvas-stage ' + currentMode;
+        footerState.textContent = root.dataset.state;
+        statusModeText.textContent = modeInfo.label;
+        inspectorModeText.textContent = modeInfo.label;
+        selectedMode.textContent = modeInfo.label;
+        selectedName.textContent = fieldInfo.name;
+        selectedCode.textContent = fieldInfo.code;
+        fieldTitleInput.textContent = fieldInfo.name;
+        fieldLayoutInput.textContent = fieldInfo.layout;
+        fieldRuleInput.textContent = fieldInfo.rule;
+        footerSelection.textContent = fieldInfo.name;
+        stateLine1.textContent = modeInfo.line1;
+        stateLine2.textContent = modeInfo.line2;
+
+        modeButtons.forEach(function (button) {
+          button.classList.toggle('active', button.dataset.mode === currentMode);
+        });
+
+        outlineItems.forEach(function (item) {
+          item.classList.toggle('active', item.dataset.select === currentField);
+        });
+
+        chipItems.forEach(function (item) {
+          item.classList.toggle('active', item.dataset.select === currentField);
+        });
+
+        fieldCards.forEach(function (card) {
+          card.classList.toggle('selected', card.dataset.field === currentField && currentMode !== 'preview');
+          if (currentMode === 'preview') {
+            card.classList.remove('selected');
+          }
+        });
+      }
+
+      modeButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          currentMode = button.dataset.mode;
+          syncState();
+        });
+      });
+
+      selectableNodes.forEach(function (node) {
+        node.addEventListener('click', function () {
+          const nextField = node.dataset.select || node.dataset.field;
+          if (!fieldMeta[nextField]) {
+            return;
+          }
+          currentField = nextField;
+          syncState();
+        });
+      });
+
+      syncState();
+    }());
+  </script>
+</body>
+</html>

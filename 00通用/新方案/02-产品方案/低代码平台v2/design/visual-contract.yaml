@@ -1,0 +1,35 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: visual_contract
+  artifact_id: VC-LOWCODE-V2-001
+  status: FROZEN
+viewports:
+  required: [1440x900, 1920x1080, 1280x800]
+  minimum_width: 1080
+regions:
+  topbar: {height: 52, scroll_owner: none}
+  workspace_nav: {width: 58, scroll_owner: none}
+  resource_panel: {width: 248, responsive_min: 226, scroll_owner: vertical}
+  center_stage: {width: flexible, scroll_owner: canvas}
+  property_inspector: {width: 316, responsive_min: 292, scroll_owner: vertical}
+  analysis_panel: {height: 158, responsive_min: 128, scroll_owner: vertical}
+  statusbar: {height: 26, scroll_owner: none}
+invariants:
+  - 顶部、活动栏、资源、画布、属性、分析器和状态栏不重叠
+  - 固定工具按钮在 hover、selected 和动态文字下尺寸不变
+  - body 不出现横向滚动
+  - 画布内容溢出由 canvas-scroll 或 entry-table-wrap 承担
+  - 选中标签不得遮挡字段正文
+  - 对话框在所有要求视口内可关闭且主要操作可达
+  - P0/P1 视觉、几何、交互和可访问性 finding 必须为零
+content_pressure:
+  - 最长对象名: 跨区域销售订单与渠道返利结算业务对象
+  - 最长字段名: 含税金额与本位币折算后累计可开票余额
+  - 最长客户名: 深圳市远航工业互联网与智能制造技术服务有限公司
+  - 表格最小列数: 8
+accessibility:
+  - 所有图标按钮有 aria-label 或 title
+  - 键盘焦点可见
+  - 对话框 Escape 可关闭
+  - reduced-motion 下不依赖动画完成状态更新
+

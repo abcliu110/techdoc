@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PT-020 组件搜索空态</title>
+  <style>
+    :root {
+      --bg: #eef2f6;
+      --panel: #ffffff;
+      --line: #d7dee8;
+      --text: #1f2937;
+      --muted: #667085;
+      --primary: #2468c9;
+      --success: #19733f;
+      --danger: #c73535;
+      --hover: #f5f8fc;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-width: 1440px;
+      height: 100%;
+      overflow-x: hidden;
+      font-family: "Microsoft YaHei UI", "Segoe UI", sans-serif;
+      font-size: 13px;
+      color: var(--text);
+      background: var(--bg);
+      letter-spacing: 0;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app-shell {
+      width: 1440px;
+      height: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 48px 244px 1fr 300px;
+      grid-template-rows: 48px 1fr;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .topbar {
+      grid-column: 1 / 5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--line);
+      background: #f7f9fc;
+    }
+
+    .topbar-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .topbar-meta {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .activity-nav {
+      border-right: 1px solid var(--line);
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0;
+      gap: 8px;
+    }
+
+    .nav-item {
+      width: 32px;
+      height: 32px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .nav-item.active {
+      border-color: #bfd0e8;
+      background: #eaf1fb;
+      color: var(--primary);
+    }
+
+    .resource-panel,
+    .property-panel {
+      background: var(--panel);
+    }
+
+    .resource-panel {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--line);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 44px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-header h2,
+    .property-panel h2,
+    .canvas-header h2 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .search-area {
+      padding: 12px 12px 10px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .search-input-wrap {
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 34px;
+      padding: 0 66px 0 30px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      color: var(--text);
+    }
+
+    .search-input:focus {
+      outline: 1px solid #b8d0f1;
+      border-color: #9fbce6;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 9px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .ghost-action {
+      position: absolute;
+      right: 6px;
+      top: 5px;
+      height: 24px;
+      padding: 0 8px;
+      border: 0;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      padding: 3px 8px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      color: var(--muted);
+    }
+
+    .filter-chip.active {
+      border-color: #bfd0e8;
+      background: #eaf1fb;
+      color: var(--primary);
+    }
+
+    .component-body {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      background: #fbfcfe;
+    }
+
+    .status-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 34px;
+      padding: 0 12px;
+      color: var(--muted);
+      border-bottom: 1px solid #edf1f6;
+      background: #f8fafc;
+    }
+
+    .empty-state,
+    .result-state {
+      flex: 1;
+      padding: 16px 12px;
+    }
+
+    .empty-card {
+      height: 100%;
+      border: 1px dashed #c6d1df;
+      border-radius: 4px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-align: center;
+      padding: 18px;
+    }
+
+    .empty-visual {
+      width: 52px;
+      height: 52px;
+      border-radius: 4px;
+      border: 1px solid #dbe4ee;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      background: #f8fafc;
+      font-size: 20px;
+    }
+
+    .empty-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .empty-text {
+      margin: 0;
+      max-width: 180px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .empty-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      height: 30px;
+      padding: 0 12px;
+      border-radius: 4px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+    }
+
+    .btn-primary {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn:disabled {
+      cursor: not-allowed;
+      color: #98a2b3;
+      background: #f2f4f7;
+      border-color: #e4e7ec;
+    }
+
+    .result-state {
+      display: none;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .result-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .result-item {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .result-name {
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .result-meta {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .tag {
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #edf4ff;
+      color: var(--primary);
+      font-size: 12px;
+    }
+
+    .canvas-zone {
+      display: flex;
+      flex-direction: column;
+      background: #f3f6fa;
+    }
+
+    .canvas-header {
+      height: 44px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .canvas-hint {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .canvas-main {
+      flex: 1;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .notice-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border: 1px solid #d6e4f5;
+      border-radius: 4px;
+      background: #f8fbff;
+      color: #31537a;
+    }
+
+    .notice-bar strong {
+      color: var(--primary);
+    }
+
+    .canvas-card {
+      flex: 1;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .field-block {
+      border: 1px solid #e8edf3;
+      border-radius: 4px;
+      padding: 12px;
+      background: #fbfcfe;
+    }
+
+    .field-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .field-box {
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+    }
+
+    .property-panel {
+      border-left: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .property-content {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .property-section {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      padding: 12px;
+    }
+
+    .property-section h3 {
+      margin: 0 0 10px;
+      font-size: 13px;
+    }
+
+    .property-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 28px;
+      color: var(--muted);
+    }
+
+    .property-row strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .history-note {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .state-empty .empty-state {
+      display: block;
+    }
+
+    .state-empty .result-state {
+      display: none;
+    }
+
+    .state-filled .empty-state {
+      display: none;
+    }
+
+    .state-filled .result-state {
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell state-empty" data-prototype="PT-020" data-state="empty-search" data-testid="prototype-root">
+    <header class="topbar" data-testid="topbar">
+      <div class="topbar-title">
+        <span>表单设计器</span>
+        <span class="topbar-meta" data-testid="scene-badge">场景：组件搜索空态</span>
+      </div>
+      <div class="topbar-meta" data-testid="topbar-meta">当前焦点：资源面板搜索反馈</div>
+    </header>
+
+    <aside class="activity-nav" data-testid="activity-nav">
+      <button class="nav-item active" type="button" data-testid="nav-components" title="组件">◫</button>
+      <button class="nav-item" type="button" data-testid="nav-layout" title="布局">▥</button>
+      <button class="nav-item" type="button" data-testid="nav-outline" title="结构">☰</button>
+      <button class="nav-item" type="button" data-testid="nav-assets" title="资源">◎</button>
+    </aside>
+
+    <section class="resource-panel" data-testid="resource-panel">
+      <div class="panel-header">
+        <h2>组件库</h2>
+        <button class="btn" type="button" data-testid="favorite-filter">常用</button>
+      </div>
+      <div class="search-area" data-testid="search-area">
+        <div class="search-input-wrap">
+          <span class="search-icon">⌕</span>
+          <input class="search-input" type="text" value="日期范围扩展" readonly data-testid="search-input" aria-label="组件搜索关键词">
+          <button class="ghost-action" type="button" data-testid="clear-search">清空</button>
+        </div>
+        <div class="filter-row" data-testid="filter-row">
+          <button class="filter-chip active" type="button" data-testid="filter-all">全部</button>
+          <button class="filter-chip" type="button" data-testid="filter-form">表单</button>
+          <button class="filter-chip" type="button" data-testid="filter-layout">布局</button>
+        </div>
+      </div>
+      <div class="component-body" data-testid="component-body">
+        <div class="status-strip" data-testid="status-strip">
+          <span id="resultSummary">未找到匹配组件</span>
+          <button class="btn" id="toggleStateBtn" type="button" data-testid="toggle-search-state">查看推荐</button>
+        </div>
+
+        <div class="empty-state" data-testid="empty-state">
+          <div class="empty-card">
+            <div class="empty-visual" data-testid="empty-visual">⌁</div>
+            <h3 class="empty-title" data-testid="empty-title">没有搜索到组件</h3>
+            <p class="empty-text" data-testid="empty-text">尝试缩短关键词，或从右侧推荐词回退到通用字段组件。</p>
+            <div class="empty-actions">
+              <button class="btn btn-primary" id="useSuggestionBtn" type="button" data-testid="use-suggestion">使用推荐结果</button>
+              <button class="btn" type="button" disabled data-testid="create-component" title="当前版本不支持在空态下新建组件">新建组件</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-state" data-testid="result-state">
+          <div class="result-list" data-testid="result-list">
+            <div class="result-item" data-testid="result-item-1">
+              <div>
+                <div class="result-name">日期范围</div>
+                <div class="result-meta">表单组件 · 支持默认时间区间与快捷选择</div>
+              </div>
+              <span class="tag">推荐</span>
+            </div>
+            <div class="result-item" data-testid="result-item-2">
+              <div>
+                <div class="result-name">高级筛选组</div>
+                <div class="result-meta">布局组件 · 适合多条件检索区</div>
+              </div>
+              <span class="tag">关联</span>
+            </div>
+          </div>
+          <button class="btn" id="resetStateBtn" type="button" data-testid="reset-search-state">返回空态</button>
+        </div>
+      </div>
+    </section>
+
+    <main class="canvas-zone" data-testid="canvas-zone">
+      <div class="canvas-header">
+        <h2>表单画布</h2>
+        <div class="canvas-hint" data-testid="canvas-hint">空态时保持画布不跳动，仅更新面板反馈</div>
+      </div>
+      <div class="canvas-main">
+        <div class="notice-bar" data-testid="notice-bar">
+          <span>搜索结果影响左侧资源区，不打断当前表单编辑。</span>
+          <strong id="canvasStateText" data-testid="canvas-state-text">当前为搜索空态反馈</strong>
+        </div>
+        <div class="canvas-card" data-testid="canvas-card">
+          <div class="field-block" data-testid="field-block-name">
+            <div class="field-label">名称</div>
+            <div class="field-box"></div>
+          </div>
+          <div class="field-block" data-testid="field-block-code">
+            <div class="field-label">编码</div>
+            <div class="field-box"></div>
+          </div>
+          <div class="field-block" data-testid="field-block-date">
+            <div class="field-label">有效日期</div>
+            <div class="field-box"></div>
+          </div>
+          <div class="field-block" data-testid="field-block-owner">
+            <div class="field-label">负责人</div>
+            <div class="field-box"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <aside class="property-panel" data-testid="property-panel">
+      <div class="panel-header">
+        <h2>搜索建议</h2>
+        <button class="btn" type="button" data-testid="property-action">同步词库</button>
+      </div>
+      <div class="property-content">
+        <section class="property-section" data-testid="suggestion-section">
+          <h3>推荐处理</h3>
+          <div class="property-row"><span>纠错词</span><strong data-testid="suggestion-keyword">日期范围</strong></div>
+          <div class="property-row"><span>备选分类</span><strong data-testid="suggestion-category">表单组件</strong></div>
+          <div class="property-row"><span>命中方式</span><strong data-testid="suggestion-mode">模糊推荐</strong></div>
+        </section>
+        <section class="property-section" data-testid="history-section">
+          <h3>交互说明</h3>
+          <div class="history-note" data-testid="history-note">当搜索无结果时，提供纠错推荐和返回空态入口，避免用户误以为组件库加载失败。</div>
+        </section>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.querySelector('[data-testid="prototype-root"]');
+      var toggleStateBtn = document.getElementById('toggleStateBtn');
+      var useSuggestionBtn = document.getElementById('useSuggestionBtn');
+      var resetStateBtn = document.getElementById('resetStateBtn');
+      var resultSummary = document.getElementById('resultSummary');
+      var canvasStateText = document.getElementById('canvasStateText');
+
+      function setState(nextState) {
+        root.dataset.state = nextState;
+        root.classList.toggle('state-empty', nextState === 'empty-search');
+        root.classList.toggle('state-filled', nextState === 'suggested-results');
+
+        if (nextState === 'suggested-results') {
+          resultSummary.textContent = '找到 2 个推荐组件';
+          canvasStateText.textContent = '当前展示推荐结果，可直接拖入画布';
+          toggleStateBtn.textContent = '已显示推荐';
+          toggleStateBtn.disabled = true;
+        } else {
+          resultSummary.textContent = '未找到匹配组件';
+          canvasStateText.textContent = '当前为搜索空态反馈';
+          toggleStateBtn.textContent = '查看推荐';
+          toggleStateBtn.disabled = false;
+        }
+      }
+
+      toggleStateBtn.addEventListener('click', function () {
+        setState('suggested-results');
+      });
+
+      useSuggestionBtn.addEventListener('click', function () {
+        setState('suggested-results');
+      });
+
+      resetStateBtn.addEventListener('click', function () {
+        setState('empty-search');
+      });
+    }());
+  </script>
+</body>
+</html>

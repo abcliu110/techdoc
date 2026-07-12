@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>案例：零售商品批量导入 - Import Flow</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f0f2f5; color: #333; font-size: 14px; }
+    .import-page { max-width: 600px; margin: 0 auto; padding: 24px; }
+
+    /* Steps */
+    .steps { display: flex; justify-content: space-between; margin-bottom: 32px; position: relative; padding: 0 20px; }
+    .steps::before { content: ''; position: absolute; top: 16px; left: 60px; right: 60px; height: 2px; background: #f0f0f0; z-index: 0; }
+    .step { display: flex; flex-direction: column; align-items: center; z-index: 1; }
+    .step-number { width: 32px; height: 32px; border-radius: 50%; background: #f0f0f0; color: #999; display: flex; align-items: center; justify-content: center; font-weight: 600; margin-bottom: 8px; }
+    .step.active .step-number { background: #1890ff; color: #fff; }
+    .step.completed .step-number { background: #52c41a; color: #fff; }
+    .step-label { font-size: 12px; color: #999; text-align: center; }
+    .step.active .step-label { color: #1890ff; font-weight: 500; }
+    .step.completed .step-label { color: #52c41a; }
+
+    /* Card */
+    .card { background: #fff; border-radius: 12px; padding: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .card-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .card-subtitle { font-size: 13px; color: #666; margin-bottom: 24px; }
+
+    /* Download Template */
+    .download-area { background: #fafafa; border: 2px dashed #d9d9d9; border-radius: 8px; padding: 32px; text-align: center; margin-bottom: 24px; }
+    .download-icon { font-size: 48px; margin-bottom: 16px; }
+    .btn-download { display: inline-flex; align-items: center; gap: 8px; background: #1890ff; color: #fff; padding: 12px 24px; border-radius: 6px; font-size: 14px; cursor: pointer; border: none; text-decoration: none; }
+    .btn-download:hover { background: #40a9ff; }
+
+    /* Template Info */
+    .template-info { background: #e6f7ff; border-radius: 6px; padding: 16px; margin-bottom: 24px; }
+    .template-info h4 { font-size: 14px; color: #1890ff; margin-bottom: 8px; }
+    .template-info ul { font-size: 13px; color: #666; padding-left: 20px; }
+    .template-info li { margin-bottom: 4px; }
+    .template-fields { margin-top: 12px; padding-top: 12px; border-top: 1px solid #91d5ff; font-family: monospace; font-size: 12px; color: #333; }
+
+    /* Upload Area */
+    .upload-area { border: 2px dashed #d9d9d9; border-radius: 8px; padding: 40px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .upload-area:hover { border-color: #1890ff; background: #f0f7ff; }
+    .upload-icon { font-size: 48px; margin-bottom: 16px; }
+    .upload-text { font-size: 14px; color: #666; margin-bottom: 8px; }
+    .upload-hint { font-size: 12px; color: #999; }
+    .upload-formats { margin-top: 16px; font-size: 13px; color: #666; }
+
+    /* File Info */
+    .file-info { background: #f6ffed; border: 1px solid #b7eb8f; border-radius: 6px; padding: 16px; display: flex; align-items: center; gap: 12px; margin-top: 16px; }
+    .file-icon { font-size: 32px; }
+    .file-details { flex: 1; }
+    .file-name { font-weight: 500; color: #1a1a1a; }
+    .file-meta { font-size: 12px; color: #666; margin-top: 2px; }
+    .file-remove { color: #999; cursor: pointer; font-size: 18px; }
+    .file-remove:hover { color: #ff4d4f; }
+
+    /* Validation Results */
+    .validation-result { margin-top: 24px; }
+    .validation-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .validation-title { font-size: 16px; font-weight: 600; }
+    .validation-stats { display: flex; gap: 16px; }
+    .stat { display: flex; align-items: center; gap: 6px; font-size: 14px; }
+    .stat.success { color: #52c41a; }
+    .stat.danger { color: #ff4d4f; }
+
+    /* Error List */
+    .error-list { background: #fff2f0; border: 1px solid #ffccc7; border-radius: 6px; padding: 16px; margin-top: 16px; }
+    .error-title { font-size: 14px; font-weight: 600; color: #ff4d4f; margin-bottom: 12px; }
+    .error-item { padding: 8px 0; border-bottom: 1px solid #ffccc7; font-size: 13px; }
+    .error-item:last-child { border-bottom: none; }
+    .error-row { font-weight: 500; color: #1a1a1a; }
+    .error-reason { color: #ff4d4f; margin-top: 2px; }
+
+    /* Action Buttons */
+    .action-bar { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; }
+    .btn { padding: 10px 24px; border-radius: 4px; font-size: 14px; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; }
+    .btn-primary { background: #1890ff; color: #fff; border-color: #1890ff; }
+    .btn-primary:hover { background: #40a9ff; }
+    .btn-default { background: #fff; color: #333; border-color: #d9d9d9; }
+    .btn-default:hover { color: #1890ff; border-color: #1890ff; }
+
+    /* Warning Box */
+    .warning-box { background: #fffbe6; border: 1px solid #ffe58f; border-radius: 6px; padding: 12px 16px; margin-top: 16px; }
+    .warning-box span { color: #ad6800; font-size: 13px; }
+
+    /* Case Badge */
+    .case-badge { position: fixed; top: 20px; right: 20px; background: #1890ff; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 12px; z-index: 100; box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3); }
+    .case-badge::before { content: "案例 "; }
+
+    /* Design Note */
+    .design-note { background: #f6ffed; border: 1px solid #b7eb8f; border-radius: 8px; padding: 16px; margin-top: 24px; }
+    .design-note h4 { font-size: 14px; color: #52c41a; margin-bottom: 8px; }
+    .design-note ul { font-size: 13px; color: #666; padding-left: 20px; }
+    .design-note li { margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+  <div class="case-badge">导入导出模型</div>
+
+  <div class="import-page">
+    <!-- Steps -->
+    <div class="steps">
+      <div class="step completed">
+        <div class="step-number">✓</div>
+        <span class="step-label">下载模板</span>
+      </div>
+      <div class="step active">
+        <div class="step-number">2</div>
+        <span class="step-label">上传文件</span>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <span class="step-label">预校验</span>
+      </div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <span class="step-label">导入完成</span>
+      </div>
+    </div>
+
+    <!-- Card -->
+    <div class="card">
+      <h2 class="card-title">商品批量导入</h2>
+      <p class="card-subtitle">上传已填写的商品信息文件，系统将自动校验并导入</p>
+
+      <!-- Upload Area -->
+      <div class="upload-area">
+        <div class="upload-icon">📁</div>
+        <div class="upload-text">拖拽文件到此处，或点击上传</div>
+        <div class="upload-hint">支持点击选择文件</div>
+        <div class="upload-formats">支持格式：.xlsx .csv | 文件大小：不超过 10MB | 单次导入上限：500 条</div>
+      </div>
+
+      <!-- File Info -->
+      <div class="file-info">
+        <div class="file-icon">📄</div>
+        <div class="file-details">
+          <div class="file-name">商品导入模板_20260712.xlsx</div>
+          <div class="file-meta">500 条数据 | 23.5KB | 已上传</div>
+        </div>
+        <div class="file-remove">×</div>
+      </div>
+
+      <!-- Validation Results -->
+      <div class="validation-result">
+        <div class="validation-header">
+          <div class="validation-title">预校验结果（3/500 失败）</div>
+          <div class="validation-stats">
+            <div class="stat success">✓ 通过 497 条</div>
+            <div class="stat danger">✗ 失败 3 条</div>
+          </div>
+        </div>
+
+        <!-- Error List -->
+        <div class="error-list">
+          <div class="error-title">失败详情</div>
+          <div class="error-item">
+            <div class="error-row">第 15 行：商品编码 "A001"</div>
+            <div class="error-reason">原因：商品编码已存在，请检查或使用其他编码</div>
+          </div>
+          <div class="error-item">
+            <div class="error-row">第 23 行：类目编码 "C999"</div>
+            <div class="error-reason">原因：类目编码不存在，请检查后重新填写</div>
+          </div>
+          <div class="error-item">
+            <div class="error-row">第 45 行：零售价</div>
+            <div class="error-reason">原因：价格格式错误，请填写数字</div>
+          </div>
+        </div>
+
+        <div class="warning-box">
+          ⚠️ 修正时请保留原始错误行，在对应单元格中修改后重新上传
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="action-bar">
+        <button class="btn btn-default">下载错误报告</button>
+        <button class="btn btn-default">修正后重新上传</button>
+        <button class="btn btn-primary">继续导入（跳过错误）</button>
+      </div>
+    </div>
+
+    <!-- Design Notes -->
+    <div class="design-note">
+      <h4>💡 设计要点</h4>
+      <ul>
+        <li><strong>提供模板下载</strong>：说明必填项和格式要求</li>
+        <li><strong>预校验机制</strong>：上传后先校验，展示错误行和错误原因</li>
+        <li><strong>支持部分成功</strong>：允许跳过错误继续导入</li>
+        <li><strong>导入结果可下载</strong>：生成完整报告供用户存档</li>
+        <li>导入设计要支持：模板下载、预校验、错误展示、部分成功策略</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

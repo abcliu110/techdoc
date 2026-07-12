@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+<defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/></marker></defs>
+<style>
+  .bg{fill:#f6f8fb}
+  .panel{fill:#ffffff;stroke:#d7dde8;stroke-width:2}
+  .soft{fill:#f1f5f9;stroke:#d7dde8;stroke-width:1.5}
+  .brandSoft{fill:#dbeafe;stroke:#93c5fd;stroke-width:1.5}
+  .warn{fill:#fff7ed;stroke:#fdba74;stroke-width:1.5}
+  .danger{fill:#fee2e2;stroke:#fca5a5;stroke-width:1.5}
+  .success{fill:#dcfce7;stroke:#86efac;stroke-width:1.5}
+  .line{stroke:#64748b;stroke-width:2;fill:none;marker-end:url(#arrow)}
+  .title{font:700 24px Arial, sans-serif;fill:#0f172a}
+  .h{font:700 16px Arial, sans-serif;fill:#0f172a}
+  .t{font:14px Arial, sans-serif;fill:#334155}
+  .s{font:12px Arial, sans-serif;fill:#64748b}
+</style>
+<rect class="bg" x="0" y="0" width="960" height="540"/>
+<text class="title" x="40" y="46">Tree Grid Pattern</text>
+<rect class="panel" x="70" y="90" width="820" height="380" rx="12"/>
+<text class="h" x="95" y="125">Name                         Type       Status      Action</text>
+<text class="t" x="105" y="170">v Product Management</text>
+<text class="t" x="430" y="170">Menu</text>
+<text class="t" x="560" y="170">Active</text>
+<text class="t" x="705" y="170">Edit</text>
+<rect class="brandSoft" x="90" y="200" width="760" height="36" rx="8"/>
+<text class="t" x="105" y="225">  - Product List</text>
+<text class="t" x="430" y="225">Page</text>
+<text class="t" x="560" y="225">Active</text>
+<text class="t" x="705" y="225">Edit</text>
+<text class="t" x="105" y="280">  - Product Create</text>
+<text class="t" x="430" y="280">Button</text>
+<text class="t" x="560" y="280">Active</text>
+<text class="t" x="705" y="280">Edit</text>
+<text class="t" x="105" y="335">&gt; Order Management</text>
+<text class="t" x="430" y="335">Menu</text>
+<text class="t" x="560" y="335">Active</text>
+<text class="t" x="705" y="335">Edit</text>
+<text class="t" x="105" y="390">&gt; Permission Center</text>
+<text class="t" x="430" y="390">Menu</text>
+<text class="t" x="560" y="390">Disabled</text>
+<text class="t" x="705" y="390">View</text>
+</svg>

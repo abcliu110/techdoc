@@ -1,0 +1,27 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: stage_gate
+  artifact_id: GATE-LOWCODE-V2-STAGE-9
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  updated_at: 2026-07-11T00:00:00+08:00
+  created_by: codex
+  status: FINAL
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+gate:
+  gate_id: GATE-LOWCODE-V2-STAGE-9
+  run_id: RUN-LOWCODE-V2-20260711-001
+  stage: 9
+  evaluated_at: 2026-07-11T00:00:00+08:00
+  predicates:
+    - {id: G9-001, description: 优势命题有原型内证据, result: PASS, measured_value: 4/4 prototype_supported, threshold: 4/4, evidence_refs: [ADV-001, ADV-002, ADV-003, ADV-004]}
+    - {id: G9-002, description: 六个对标产品同条件任务测量完整, result: BLOCKED, measured_value: NOT_PERFORMED, threshold: 6/6, evidence_refs: [reports/competitive-assessment.md], failure_code: MISSING_SAME_CONDITION_COMPETITOR_DATA}
+  p0_count: 0
+  p1_count: 0
+  canonical_result:
+    result: NOT_RUN
+    failure_code: UPSTREAM_GATE_BLOCKED
+    retryable: true
+    return_plan: [{stage: 7, finding_ids: [G7-004]}]
+    blocker_id: BLK-STAGE9-COMPETITOR-RUNTIME-DATA
+

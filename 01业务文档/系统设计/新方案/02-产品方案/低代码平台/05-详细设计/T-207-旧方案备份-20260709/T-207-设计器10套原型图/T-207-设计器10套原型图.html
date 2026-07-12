@@ -1,0 +1,1487 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>T-207 Web 页面设计器 10 套候选原型图</title>
+  <style>
+    :root {
+      --bg: #e8edf4;
+      --panel: #ffffff;
+      --soft: #f5f7fa;
+      --head: #eef2f7;
+      --line: #cbd5e1;
+      --line-dark: #a7b4c5;
+      --text: #1f2937;
+      --muted: #66758a;
+      --blue: #1f5fbf;
+      --blue-2: #2d74d7;
+      --blue-soft: #e8f1ff;
+      --green: #0f7a4c;
+      --amber: #a15c06;
+      --red: #b42318;
+      font-family: "Microsoft YaHei UI", "Segoe UI", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    button, input, select { font: inherit; }
+
+    .page {
+      min-width: 1360px;
+      padding: 20px;
+    }
+
+    .header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 18px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .legend {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .pill {
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 9px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #fff;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    .card-head {
+      min-height: 64px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+
+    .card-head h2 {
+      margin: 0 0 4px;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .card-head p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .score {
+      display: grid;
+      gap: 3px;
+      text-align: right;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .score strong {
+      color: var(--blue);
+      font-size: 18px;
+    }
+
+    .shot {
+      height: 520px;
+      padding: 12px;
+      background: #dfe7f0;
+      overflow: hidden;
+    }
+
+    .notes {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      padding: 10px 12px 12px;
+      border-top: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .note {
+      min-height: 54px;
+      border: 1px solid #e2e8f0;
+      background: #fbfcfe;
+      padding: 7px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .note strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .designer {
+      height: 100%;
+      display: grid;
+      grid-template-rows: 26px 38px minmax(0, 1fr) 62px 22px;
+      border: 1px solid var(--line-dark);
+      background: #fff;
+    }
+
+    .zone-region {
+      position: relative;
+      outline: 1px solid rgba(31, 95, 191, .36);
+      outline-offset: -1px;
+    }
+
+    .zone-region::before {
+      content: attr(data-zone);
+      position: absolute;
+      z-index: 20;
+      height: 17px;
+      max-width: calc(100% - 8px);
+      display: inline-flex;
+      align-items: center;
+      padding: 0 5px;
+      border: 1px solid #8bb4ed;
+      background: #f6f9ff;
+      color: var(--blue);
+      font-size: 9px;
+      font-weight: 700;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      pointer-events: none;
+    }
+
+    .zone-top::before {
+      right: 4px;
+      top: 3px;
+    }
+
+    .zone-left::before,
+    .zone-center::before,
+    .zone-right::before {
+      left: 4px;
+      top: 31px;
+    }
+
+    .zone-bottom::before {
+      left: 6px;
+      top: 3px;
+    }
+
+    .zone-left .panel,
+    .zone-right .panel {
+      padding-top: 24px;
+    }
+
+    .zone-center .viewport {
+      padding-top: 28px;
+    }
+
+    .zone-bottom .errors {
+      padding-top: 20px;
+    }
+
+    .menu {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 0 10px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      color: #536276;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .cmd {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: 8px;
+      padding: 0 10px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mark {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border-radius: 3px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .brand span {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tools {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .mini-btn {
+      height: 23px;
+      min-width: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 7px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #fff;
+      color: #334155;
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .mini-btn.primary {
+      border-color: var(--blue);
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .mini-btn.warn {
+      border-color: #e3bf81;
+      background: #fff8ed;
+      color: var(--amber);
+    }
+
+    .work {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 210px minmax(0, 1fr) 245px;
+      background: #e6edf5;
+    }
+
+    .left,
+    .right {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 27px minmax(0, 1fr);
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .left { border-right: 1px solid var(--line); }
+    .right { border-left: 1px solid var(--line); }
+
+    .tabs {
+      display: flex;
+      align-items: end;
+      gap: 1px;
+      padding: 0 5px;
+      background: var(--head);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tab {
+      height: 23px;
+      padding: 0 7px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid transparent;
+      border-bottom: 0;
+      border-radius: 3px 3px 0 0;
+      color: #536276;
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      border-color: var(--line);
+      background: #fff;
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .panel {
+      min-height: 0;
+      overflow: hidden;
+      padding: 7px;
+    }
+
+    .search {
+      width: 100%;
+      height: 23px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      padding: 0 7px;
+      color: var(--muted);
+      margin-bottom: 7px;
+      font-size: 10px;
+    }
+
+    .group-title {
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6px;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-bottom: 0;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .list {
+      border: 1px solid var(--line);
+      margin-bottom: 7px;
+    }
+
+    .item {
+      height: 25px;
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 5px;
+      padding: 0 6px;
+      border-bottom: 1px solid #edf2f7;
+      font-size: 10px;
+      color: #334155;
+    }
+
+    .item:last-child { border-bottom: 0; }
+    .item.active {
+      background: var(--blue-soft);
+      box-shadow: inset 2px 0 0 var(--blue);
+    }
+
+    .ico {
+      width: 16px;
+      height: 16px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line-dark);
+      border-radius: 2px;
+      background: #fff;
+      color: #526174;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .item span:nth-child(2) {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .badge {
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    .center {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 27px minmax(0, 1fr);
+      overflow: hidden;
+    }
+
+    .docbar {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      padding: 0 7px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .doc {
+      height: 23px;
+      min-width: 130px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 7px;
+      border: 1px solid var(--line);
+      border-bottom: 0;
+      border-radius: 3px 3px 0 0;
+      background: #fff;
+      color: #334155;
+      font-size: 10px;
+    }
+
+    .viewport {
+      min-height: 0;
+      padding: 12px;
+      overflow: hidden;
+      background:
+        linear-gradient(#edf2f7 1px, transparent 1px),
+        linear-gradient(90deg, #edf2f7 1px, transparent 1px),
+        #dfe7f0;
+      background-size: 22px 22px;
+      position: relative;
+    }
+
+    .webpage {
+      height: 100%;
+      border: 1px solid var(--line-dark);
+      background: #fff;
+      display: grid;
+      grid-template-rows: 34px 32px minmax(0, 1fr) 34px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 18px rgba(15, 23, 42, 0.12);
+    }
+
+    .page-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 10px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .page-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .page-actions {
+      display: flex;
+      gap: 4px;
+    }
+
+    .page-nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 9px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+    }
+
+    .nav-chip {
+      height: 23px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 8px;
+      border-radius: 3px;
+      color: var(--muted);
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .nav-chip.active {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .page-main {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 132px minmax(0, 1fr) 150px;
+      overflow: hidden;
+    }
+
+    .dock {
+      min-height: 0;
+      border-right: 1px solid var(--line);
+      background: #f7f9fc;
+      display: grid;
+      grid-template-rows: 26px minmax(0, 1fr);
+    }
+
+    .dock-head,
+    .side-head,
+    .section-head {
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 7px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      font-size: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .dock-list {
+      padding: 6px;
+      display: grid;
+      align-content: start;
+      gap: 3px;
+      overflow: hidden;
+    }
+
+    .dock-row {
+      height: 23px;
+      display: flex;
+      align-items: center;
+      padding: 0 6px;
+      border-radius: 3px;
+      color: var(--muted);
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .dock-row.active {
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .content {
+      min-width: 0;
+      min-height: 0;
+      padding: 7px;
+      display: grid;
+      grid-template-rows: auto auto minmax(118px, 1fr) auto;
+      gap: 7px;
+      overflow: hidden;
+      background: #fbfcfe;
+    }
+
+    .section {
+      border: 1px solid var(--line);
+      background: #fff;
+      position: relative;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .section.selected {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 1px var(--blue);
+    }
+
+    .sel-label {
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 6px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 9px;
+      z-index: 3;
+    }
+
+    .handle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border: 1px solid var(--blue);
+      background: #fff;
+      z-index: 4;
+    }
+
+    .h1 { left: -3px; top: -3px; }
+    .h2 { right: -3px; top: -3px; }
+    .h3 { left: -3px; bottom: -3px; }
+    .h4 { right: -3px; bottom: -3px; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 5px 7px;
+      padding: 25px 8px 8px;
+    }
+
+    .field {
+      height: 22px;
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+      font-size: 9px;
+    }
+
+    .span4 { grid-column: span 4; }
+    .span6 { grid-column: span 6; }
+    .span12 { grid-column: span 12; }
+
+    .field label {
+      color: var(--muted);
+      text-align: right;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .input {
+      height: 20px;
+      display: flex;
+      align-items: center;
+      padding: 0 5px;
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      color: #334155;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .toolbar-strip {
+      height: 34px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 8px;
+      overflow: hidden;
+    }
+
+    .op {
+      height: 21px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 7px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #fff;
+      color: #526174;
+      font-size: 9px;
+      white-space: nowrap;
+    }
+
+    .op.active {
+      border-color: #9fb9e8;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .table-wrap {
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .data-table {
+      width: 100%;
+      min-width: 430px;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 9px;
+    }
+
+    .data-table th,
+    .data-table td {
+      height: 24px;
+      padding: 0 5px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .data-table th {
+      background: #f5f7fa;
+      font-weight: 700;
+    }
+
+    .detail td {
+      height: 46px;
+      background: #fbfcfe;
+      padding: 5px;
+    }
+
+    .nested {
+      height: 34px;
+      display: grid;
+      grid-template-columns: 70px minmax(0, 1fr);
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .nested strong {
+      display: grid;
+      place-items: center;
+      border-right: 1px solid var(--line);
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-size: 9px;
+    }
+
+    .nested span {
+      display: flex;
+      align-items: center;
+      padding: 0 6px;
+      color: var(--muted);
+      font-size: 9px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .side {
+      min-height: 0;
+      border-left: 1px solid var(--line);
+      background: #f8fafc;
+      display: grid;
+      grid-template-rows: 26px minmax(0, 1fr);
+      overflow: hidden;
+    }
+
+    .side-body {
+      padding: 6px;
+      display: grid;
+      gap: 6px;
+      align-content: start;
+      overflow: hidden;
+    }
+
+    .info {
+      border: 1px solid var(--line);
+      background: #fff;
+      min-height: 48px;
+    }
+
+    .info b {
+      height: 20px;
+      display: flex;
+      align-items: center;
+      padding: 0 6px;
+      border-bottom: 1px solid var(--line);
+      background: #f5f7fa;
+      font-size: 9px;
+    }
+
+    .info span {
+      display: block;
+      padding: 5px 6px;
+      color: var(--muted);
+      font-size: 9px;
+      line-height: 1.45;
+    }
+
+    .page-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      padding: 0 8px;
+      border-top: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .prop-select {
+      width: 100%;
+      height: 23px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #334155;
+      font-size: 10px;
+      margin-bottom: 7px;
+    }
+
+    .prop-box {
+      border: 1px solid var(--line);
+      margin-bottom: 7px;
+      background: #fff;
+    }
+
+    .prop-cat {
+      height: 22px;
+      display: flex;
+      align-items: center;
+      padding: 0 6px;
+      background: var(--soft);
+      border-bottom: 1px solid var(--line);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .prop-row {
+      min-height: 23px;
+      display: grid;
+      grid-template-columns: 84px minmax(0, 1fr);
+      border-bottom: 1px solid #edf2f7;
+      font-size: 9px;
+    }
+
+    .prop-row:last-child { border-bottom: 0; }
+
+    .prop-row span {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      padding: 0 5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .prop-row span:first-child {
+      border-right: 1px solid #edf2f7;
+      background: #fbfcfe;
+      color: var(--muted);
+    }
+
+    .bottom {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 230px;
+      border-top: 1px solid var(--line);
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .errors {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: 22px minmax(0, 1fr);
+      overflow: hidden;
+    }
+
+    .bottom-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 8px;
+      background: var(--head);
+      border-bottom: 1px solid var(--line);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .err-row {
+      height: 20px;
+      display: grid;
+      grid-template-columns: 58px 74px minmax(0, 1fr) 100px;
+      align-items: center;
+      border-bottom: 1px solid #edf2f7;
+      color: var(--muted);
+      font-size: 9px;
+      padding: 0 7px;
+      gap: 6px;
+    }
+
+    .schema {
+      border-left: 1px solid var(--line);
+      background: #fbfcfe;
+      padding: 6px;
+      color: #334155;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 9px;
+      line-height: 1.45;
+      white-space: pre;
+      overflow: hidden;
+    }
+
+    .status {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto auto;
+      align-items: center;
+      gap: 10px;
+      padding: 0 8px;
+      background: #f8fafc;
+      color: var(--muted);
+      font-size: 10px;
+      overflow: hidden;
+    }
+
+    .breadcrumb {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .snap-v,
+    .snap-h,
+    .drop {
+      position: absolute;
+      pointer-events: none;
+      z-index: 6;
+    }
+
+    .snap-v {
+      top: 58px;
+      bottom: 42px;
+      left: 50%;
+      width: 1px;
+      background: var(--blue);
+    }
+
+    .snap-h {
+      left: 18px;
+      right: 18px;
+      top: 50%;
+      height: 1px;
+      background: var(--blue);
+    }
+
+    .drop {
+      left: 34%;
+      right: 20%;
+      top: 63%;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border: 1px dashed var(--blue);
+      background: rgba(31, 95, 191, 0.06);
+      color: var(--blue);
+      font-size: 9px;
+    }
+
+    .variant-grid .page-main { grid-template-columns: 0 minmax(0, 1fr) 150px; }
+    .variant-grid .dock { display: none; }
+
+    .variant-layout .page-main { grid-template-columns: 120px minmax(0, 1fr) 120px; }
+    .variant-layout .content { grid-template-rows: auto minmax(190px, 1fr) auto; }
+    .variant-layout .section:nth-child(1) { min-height: 130px; }
+
+    .variant-table .content { grid-template-rows: auto minmax(210px, 1fr) auto; }
+    .variant-table .section.selected { min-height: 228px; }
+    .variant-table .form-grid { display: none; }
+    .variant-table .section.selected .section-head { border-bottom: 1px solid var(--line); }
+
+    .variant-data .work { grid-template-columns: 250px minmax(0, 1fr) 250px; }
+    .variant-data .left { grid-template-rows: 27px minmax(0, 1fr); }
+    .variant-data .content { grid-template-rows: auto minmax(180px, 1fr) auto; }
+
+    .variant-responsive .page-main { grid-template-columns: minmax(0, 1fr); }
+    .variant-responsive .dock,
+    .variant-responsive .side { display: none; }
+    .breakpoints {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      bottom: 14px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      z-index: 8;
+    }
+
+    .bp {
+      height: 38px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.96);
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .bp.active {
+      border-color: var(--blue);
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .flow-canvas {
+      min-height: 0;
+      height: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 260px;
+      gap: 8px;
+    }
+
+    .rule-flow {
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 10px;
+      position: relative;
+    }
+
+    .node {
+      height: 34px;
+      min-width: 110px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      background: var(--soft);
+      color: #334155;
+      font-size: 10px;
+      margin: 8px;
+    }
+
+    .node.active {
+      border-color: var(--blue);
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .runtime-split {
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .runtime-pane {
+      min-width: 0;
+      border: 1px solid var(--line);
+      background: #fff;
+      display: grid;
+      grid-template-rows: 24px minmax(0, 1fr);
+      overflow: hidden;
+    }
+
+    .metric-list {
+      padding: 8px;
+      display: grid;
+      gap: 6px;
+      align-content: start;
+      font-size: 10px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <div>
+        <h1>T-207 Web 页面设计器 10 套候选原型图（非报表版）</h1>
+        <p class="lead">本版全部按“PC Web 可视化页面设计器”重做：画布里是复杂业务 Web 单据页面，重点展示布局容器、表单元素、强表格、属性面板和发布诊断，不再使用报表设计器的 band/分页/报表预览形态。</p>
+      </div>
+      <div class="legend">
+        <span class="pill">真实 Web 页面画布</span>
+        <span class="pill">Grid / Flex / Dock / Split</span>
+        <span class="pill">母子嵌套表格</span>
+        <span class="pill">企业高密度</span>
+      </div>
+    </header>
+
+    <section class="grid">
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h2>01 DevExpress 标准五区型</h2>
+            <p>五区已显式标注：顶部命令区、左侧工具箱区、中央设计画布区、右侧属性区、底部错误/校验区。</p>
+          </div>
+          <div class="score"><strong>A</strong><span>推荐基线</span></div>
+        </div>
+        <div class="shot">
+          <div class="designer">
+            <div class="menu">文件 编辑 视图 布局 数据 规则 权限 发布 帮助</div>
+            <div class="cmd zone-region zone-top" data-zone="01 Top Command / 菜单与命令区">
+              <div class="brand"><div class="mark">T</div><div><strong>企业单据页面设计器</strong><span>设计销售订单 PC Web 页面</span></div></div>
+              <div class="tools"><span class="mini-btn">撤销</span><span class="mini-btn">保存</span><span class="mini-btn warn">校验 3</span><span class="mini-btn primary">发布</span></div>
+              <div class="tools"><span class="pill">1440</span></div>
+            </div>
+            <div class="work">
+              <aside class="left zone-region zone-left" data-zone="02 Left Toolbox / 字段、控件、大纲">
+                <div class="tabs"><span class="tab active">容器</span><span class="tab">字段</span><span class="tab">大纲</span></div>
+                <div class="panel">
+                  <input class="search" value="搜索布局容器">
+                  <div class="group-title">Web 布局容器</div>
+                  <div class="list">
+                    <div class="item active"><span class="ico">G</span><span>GridLayout</span><span class="badge">P0</span></div>
+                    <div class="item"><span class="ico">F</span><span>FlexLayout</span><span class="badge">P0</span></div>
+                    <div class="item"><span class="ico">D</span><span>DockLayout</span><span class="badge">P0</span></div>
+                    <div class="item"><span class="ico">T</span><span>EntryTable</span><span class="badge">P0</span></div>
+                  </div>
+                  <div class="group-title">业务字段</div>
+                  <div class="list">
+                    <div class="item"><span class="ico">C</span><span>客户</span><span class="badge">ref</span></div>
+                    <div class="item"><span class="ico">M</span><span>物料</span><span class="badge">ref</span></div>
+                    <div class="item"><span class="ico">N</span><span>数量 / 金额</span><span class="badge">num</span></div>
+                  </div>
+                </div>
+              </aside>
+              <section class="center zone-region zone-center" data-zone="03 Center Designer / PC Web 可见即可得画布">
+                <div class="docbar"><span class="doc">销售订单.page.json <b>x</b></span><span class="mini-btn">100%</span></div>
+                <div class="viewport">
+                  <div class="snap-v"></div><div class="snap-h"></div><div class="drop">可投放：FormSection / EntryTable / SplitPane</div>
+                  <div class="webpage">
+                    <div class="page-top"><div class="page-title"><span class="dot"></span>销售订单</div><div class="page-actions"><span class="mini-btn">保存</span><span class="mini-btn">提交</span><span class="mini-btn primary">预览</span></div></div>
+                    <div class="page-nav"><span class="nav-chip active">基本信息</span><span class="nav-chip">订单明细</span><span class="nav-chip">交付计划</span><span class="nav-chip">审批记录</span></div>
+                    <div class="page-main">
+                      <nav class="dock"><div class="dock-head">业务导航</div><div class="dock-list"><div class="dock-row active">基本信息</div><div class="dock-row">分录表格</div><div class="dock-row">批次明细</div><div class="dock-row">合同附件</div></div></nav>
+                      <main class="content">
+                        <section class="section selected"><div class="sel-label">HeaderFormGrid selected</div><span class="handle h1"></span><span class="handle h2"></span><span class="handle h3"></span><span class="handle h4"></span><div class="form-grid"><div class="field span4"><label>客户</label><span class="input">杭州未来</span></div><div class="field span4"><label>组织</label><span class="input">华东中心</span></div><div class="field span4"><label>日期</label><span class="input">2026-07-09</span></div><div class="field span6"><label>地址</label><span class="input">浙江杭州</span></div><div class="field span6"><label>状态</label><span class="input">草稿</span></div></div></section>
+                        <section class="section"><div class="toolbar-strip"><span class="op active">保存</span><span class="op">提交审批</span><span class="op">审核</span><span class="op">下推采购</span></div></section>
+                        <section class="section"><div class="section-head">订单明细 EntryTable</div><div class="table-wrap"><table class="data-table"><tr><th>#</th><th>物料</th><th>数量</th><th>金额</th><th>交付</th></tr><tr><td>1</td><td>A-1001</td><td>20</td><td>2560</td><td>07-20</td></tr><tr class="detail"><td></td><td colspan="4"><div class="nested"><strong>批次</strong><span>批次号 / 库位 / 可用量 / 序列号子表</span></div></td></tr><tr><td>2</td><td>B-2048</td><td>8</td><td>6880</td><td>07-26</td></tr></table></div></section>
+                        <section class="section"><div class="toolbar-strip"><span class="op active">分录</span><span class="op">批次</span><span class="op">序列号</span><span class="op">附件</span></div></section>
+                      </main>
+                      <aside class="side"><div class="side-head">右侧信息</div><div class="side-body"><div class="info"><b>审批轨迹</b><span>创建草稿，等待提交审批。</span></div><div class="info"><b>风险提示</b><span>信用额度需校验。</span></div></div></aside>
+                    </div>
+                    <div class="page-bottom"><span class="mini-btn">关闭</span><span class="mini-btn">保存草稿</span><span class="mini-btn primary">提交审批</span></div>
+                  </div>
+                </div>
+              </section>
+              <aside class="right zone-region zone-right" data-zone="04 Right Property Grid / 属性、布局、规则">
+                <div class="tabs"><span class="tab active">属性</span><span class="tab">布局</span><span class="tab">规则</span></div>
+                <div class="panel">
+                  <select class="prop-select"><option>HeaderFormGrid : GridLayout</option></select>
+                  <div class="prop-box"><div class="prop-cat">布局</div><div class="prop-row"><span>display</span><span>grid</span></div><div class="prop-row"><span>columns</span><span>repeat(24,1fr)</span></div><div class="prop-row"><span>labelWidth</span><span>78px</span></div></div>
+                  <div class="prop-box"><div class="prop-cat">数据</div><div class="prop-row"><span>BO</span><span>SalesOrder</span></div><div class="prop-row"><span>scope</span><span>header</span></div></div>
+                </div>
+              </aside>
+            </div>
+            <div class="bottom zone-region zone-bottom" data-zone="05 Bottom Error List / 校验、错误、Schema 摘要"><div class="errors"><div class="bottom-title">错误列表 / 设计分析器</div><div><div class="err-row"><span>Warning</span><span>L-201</span><span>1280 下右侧信息区应折叠</span><span>Layout</span></div><div class="err-row"><span>Error</span><span>P-033</span><span>反审核按钮缺少岗位权限</span><span>Permission</span></div></div></div><pre class="schema">{ type:"GridLayout",
+columns:24,
+children:["Field","Table"] }</pre></div>
+            <div class="status"><span class="breadcrumb">五区壳层：Top Command / Left Toolbox / Center Designer / Right PropertyGrid / Bottom ErrorList</span><span>DevExpress 壳层</span><span>金蝶密度</span><span>VS 属性窗</span></div>
+          </div>
+        </div>
+        <div class="notes">
+          <div class="note"><strong>五区定义</strong>Top 命令、Left 工具箱、Center 画布、Right 属性、Bottom 错误列表。</div>
+          <div class="note"><strong>优势</strong>壳层清晰，中央仍是真实 Web 单据页面。</div>
+          <div class="note"><strong>适合</strong>T-207 默认主工作台。</div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h2>02 Visual Studio Web Form Designer 型</h2>
+            <p>强调文档页签、工具箱、大纲、属性窗、吸附线和错误列表，但画布仍是 Web 页面。</p>
+          </div>
+          <div class="score"><strong>A-</strong><span>专家友好</span></div>
+        </div>
+        <div class="shot">
+          <div class="designer">
+            <div class="menu">文件 编辑 视图 生成 调试 工具 窗口</div>
+            <div class="cmd"><div class="brand"><div class="mark">VS</div><div><strong>Web Form Designer</strong><span>Document tabs + Toolbox + PropertyGrid</span></div></div><div class="tools"><span class="mini-btn">选择</span><span class="mini-btn">对齐</span><span class="mini-btn">等宽</span><span class="mini-btn primary">运行</span></div><div class="tools"><span class="pill">Snapline ON</span></div></div>
+            <div class="work">
+              <aside class="left"><div class="tabs"><span class="tab active">Toolbox</span><span class="tab">Outline</span></div><div class="panel"><div class="group-title">工具箱</div><div class="list"><div class="item active"><span class="ico">P</span><span>Pointer</span><span></span></div><div class="item"><span class="ico">G</span><span>GridLayout</span><span></span></div><div class="item"><span class="ico">F</span><span>Field Editor</span><span></span></div><div class="item"><span class="ico">T</span><span>Data Table</span><span></span></div></div><div class="group-title">Document Outline</div><div class="list"><div class="item"><span>-</span><span>SalesOrderPage</span><span></span></div><div class="item active"><span></span><span>HeaderFormGrid</span><span></span></div><div class="item"><span></span><span>EntryTable</span><span></span></div></div></div></aside>
+              <section class="center"><div class="docbar"><span class="doc">SalesOrder.webform <b>x</b></span><span class="doc">Preview <b>x</b></span><span class="mini-btn">100%</span></div><div class="viewport"><div class="snap-v"></div><div class="snap-h"></div><div class="webpage"><div class="page-top"><div class="page-title"><span class="dot"></span>采购申请</div><div class="page-actions"><span class="mini-btn">保存</span><span class="mini-btn primary">运行</span></div></div><div class="page-nav"><span class="nav-chip active">申请信息</span><span class="nav-chip">明细</span><span class="nav-chip">预算</span></div><div class="page-main"><main class="content" style="grid-column:1 / -1;"><section class="section selected"><div class="sel-label">selected container</div><span class="handle h1"></span><span class="handle h2"></span><span class="handle h3"></span><span class="handle h4"></span><div class="form-grid"><div class="field span4"><label>申请人</label><span class="input">张三</span></div><div class="field span4"><label>部门</label><span class="input">研发部</span></div><div class="field span4"><label>日期</label><span class="input">2026-07-09</span></div><div class="field span12"><label>用途</label><span class="input">项目采购</span></div></div></section><section class="section"><div class="section-head">采购明细表格</div><div class="table-wrap"><table class="data-table"><tr><th>#</th><th>品类</th><th>数量</th><th>预算</th></tr><tr><td>1</td><td>服务器</td><td>2</td><td>48000</td></tr><tr><td>2</td><td>交换机</td><td>4</td><td>12000</td></tr></table></div></section></main></div><div class="page-bottom"><span class="mini-btn">取消</span><span class="mini-btn primary">提交</span></div></div></div></section>
+              <aside class="right"><div class="tabs"><span class="tab active">Properties</span><span class="tab">Events</span></div><div class="panel"><select class="prop-select"><option>HeaderFormGrid</option></select><div class="prop-box"><div class="prop-cat">Appearance</div><div class="prop-row"><span>Name</span><span>HeaderFormGrid</span></div><div class="prop-row"><span>Caption</span><span>申请信息</span></div></div><div class="prop-box"><div class="prop-cat">Layout</div><div class="prop-row"><span>Dock</span><span>Fill</span></div><div class="prop-row"><span>GridSpan</span><span>12</span></div></div></div></aside>
+            </div>
+            <div class="bottom"><div class="errors"><div class="bottom-title">Error List</div><div><div class="err-row"><span>Info</span><span>S-010</span><span>Schema build succeeded</span><span>Build</span></div><div class="err-row"><span>Warning</span><span>L-018</span><span>用途字段在 1280 下过窄</span><span>Layout</span></div></div></div><pre class="schema">selected:
+HeaderFormGrid
+snaplines:true</pre></div>
+            <div class="status"><span class="breadcrumb">Designer / Document / HeaderFormGrid</span><span>VS 风格</span><span>Web 页面</span><span>属性窗</span></div>
+          </div>
+        </div>
+        <div class="notes">
+          <div class="note"><strong>优势</strong>开发者和实施顾问理解最快。</div>
+          <div class="note"><strong>风险</strong>普通业务用户可能觉得工具感较重。</div>
+          <div class="note"><strong>适合</strong>专家模式。</div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h2>03 金蝶单据高密度型</h2>
+            <p>弱化装饰，强化业务字段、按钮、分录、审批、权限，适合企业实施。</p>
+          </div>
+          <div class="score"><strong>B+</strong><span>业务熟悉</span></div>
+        </div>
+        <div class="shot">
+          <div class="designer variant-grid">
+            <div class="menu">单据设计 基础资料 分录 权限 编码规则 单据转换 审批 发布</div>
+            <div class="cmd"><div class="brand"><div class="mark">K</div><div><strong>销售订单单据设计</strong><span>高密度业务配置 + Web 页面画布</span></div></div><div class="tools"><span class="mini-btn">保存</span><span class="mini-btn">提交</span><span class="mini-btn">审核</span><span class="mini-btn warn">权限 1</span><span class="mini-btn primary">发布</span></div><div></div></div>
+            <div class="work">
+              <aside class="left"><div class="tabs"><span class="tab active">字段</span><span class="tab">控件</span><span class="tab">规则</span></div><div class="panel"><div class="group-title">业务字段</div><div class="list"><div class="item active"><span class="ico">C</span><span>FCustomerId 客户</span><span></span></div><div class="item"><span class="ico">O</span><span>FOrgId 销售组织</span><span></span></div><div class="item"><span class="ico">M</span><span>FMaterialId 物料</span><span></span></div><div class="item"><span class="ico">Q</span><span>FQty 数量</span><span></span></div><div class="item"><span class="ico">A</span><span>FAmount 金额</span><span></span></div></div></div></aside>
+              <section class="center"><div class="docbar"><span class="doc">销售订单单据设计 <b>x</b></span><span class="mini-btn">紧凑密度</span></div><div class="viewport"><div class="webpage"><div class="page-top"><div class="page-title"><span class="dot"></span>销售订单</div><div class="page-actions"><span class="mini-btn">保存</span><span class="mini-btn">提交</span><span class="mini-btn">审核</span><span class="mini-btn">下推</span></div></div><div class="page-nav"><span class="nav-chip active">基本信息</span><span class="nav-chip">财务</span><span class="nav-chip">物流</span><span class="nav-chip">关联</span></div><div class="page-main"><main class="content"><section class="section selected"><div class="sel-label">业务字段区</div><div class="form-grid"><div class="field span4"><label>客户</label><span class="input">未来科技</span></div><div class="field span4"><label>销售组织</label><span class="input">华东</span></div><div class="field span4"><label>业务员</label><span class="input">王五</span></div><div class="field span4"><label>币种</label><span class="input">CNY</span></div><div class="field span4"><label>汇率</label><span class="input">1.0000</span></div><div class="field span4"><label>状态</label><span class="input">草稿</span></div></div></section><section class="section"><div class="toolbar-strip"><span class="op active">新增行</span><span class="op">复制行</span><span class="op">批量填充</span><span class="op">批次</span></div></section><section class="section"><div class="section-head">销售订单分录</div><div class="table-wrap"><table class="data-table"><tr><th>#</th><th>物料</th><th>单位</th><th>数量</th><th>单价</th><th>金额</th></tr><tr><td>1</td><td>A-1001</td><td>PCS</td><td>20</td><td>128</td><td>2560</td></tr><tr><td>2</td><td>B-2048</td><td>PCS</td><td>8</td><td>860</td><td>6880</td></tr></table></div></section></main></div><div class="page-bottom"><span class="mini-btn">关闭</span><span class="mini-btn primary">提交审批</span></div></div></div></section>
+              <aside class="right"><div class="tabs"><span class="tab active">属性</span><span class="tab">权限</span><span class="tab">规则</span></div><div class="panel"><select class="prop-select"><option>FCustomerId</option></select><div class="prop-box"><div class="prop-cat">业务属性</div><div class="prop-row"><span>字段</span><span>客户</span></div><div class="prop-row"><span>基础资料</span><span>客户档案</span></div><div class="prop-row"><span>必录</span><span>true</span></div></div><div class="prop-box"><div class="prop-cat">权限</div><div class="prop-row"><span>查看</span><span>销售员</span></div><div class="prop-row"><span>编辑</span><span>制单人</span></div></div></div></aside>
+            </div>
+            <div class="bottom"><div class="errors"><div class="bottom-title">单据发布检查</div><div><div class="err-row"><span>Error</span><span>P-033</span><span>反审核按钮缺少岗位权限</span><span>权限</span></div><div class="err-row"><span>Warning</span><span>B-102</span><span>客户变更将触发价格政策重算</span><span>规则</span></div></div></div><pre class="schema">billType:"SalesOrder"
+density:"compact"</pre></div>
+            <div class="status"><span class="breadcrumb">销售订单 / 基本信息 / 客户字段</span><span>金蝶密度</span><span>业务单据</span><span>权限规则</span></div>
+          </div>
+        </div>
+        <div class="notes">
+          <div class="note"><strong>优势</strong>企业用户熟悉，最像业务系统配置。</div>
+          <div class="note"><strong>风险</strong>创新感不强，布局能力需要显式露出。</div>
+          <div class="note"><strong>适合</strong>业务实施默认视图。</div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h2>04 强 Web 布局容器型</h2>
+            <p>突出 Grid/Flex/Dock/Split/Scroll/Sticky/Portal，可设计复杂 Web 应用页面。</p>
+          </div>
+          <div class="score"><strong>A</strong><span>差异化最强</span></div>
+        </div>
+        <div class="shot">
+          <div class="designer variant-layout">
+            <div class="menu">布局容器 Grid Flex Dock Split Scroll Sticky Portal Responsive</div>
+            <div class="cmd"><div class="brand"><div class="mark">L</div><div><strong>LayoutEngine 页面设计器</strong><span>设计复杂 PC Web 布局，不保存自由 HTML</span></div></div><div class="tools"><span class="mini-btn">列线</span><span class="mini-btn">吸附</span><span class="mini-btn">断点</span><span class="mini-btn primary">预览</span></div><div class="tools"><span class="pill">1440</span></div></div>
+            <div class="work">
+              <aside class="left"><div class="tabs"><span class="tab active">容器</span><span class="tab">模板</span></div><div class="panel"><div class="group-title">布局容器</div><div class="list"><div class="item active"><span class="ico">G</span><span>CSS Grid Area</span><span></span></div><div class="item"><span class="ico">F</span><span>Flex Wrap</span><span></span></div><div class="item"><span class="ico">D</span><span>Dock Layout</span><span></span></div><div class="item"><span class="ico">S</span><span>Split Pane</span><span></span></div><div class="item"><span class="ico">P</span><span>Portal Overlay</span><span></span></div></div></div></aside>
+              <section class="center"><div class="docbar"><span class="doc">复杂工作台.page.json <b>x</b></span><span class="mini-btn">Grid area visible</span></div><div class="viewport"><div class="snap-v"></div><div class="snap-h"></div><div class="drop">Drop target: main / split-right / tab-body</div><div class="webpage"><div class="page-top"><div class="page-title"><span class="dot"></span>客户经营工作台</div><div class="page-actions"><span class="mini-btn">刷新</span><span class="mini-btn primary">保存布局</span></div></div><div class="page-nav"><span class="nav-chip active">总览</span><span class="nav-chip">销售</span><span class="nav-chip">回款</span><span class="nav-chip">风险</span></div><div class="page-main"><nav class="dock"><div class="dock-head">left dock</div><div class="dock-list"><div class="dock-row active">客户画像</div><div class="dock-row">机会</div><div class="dock-row">合同</div></div></nav><main class="content"><section class="section selected"><div class="sel-label">RootGridLayout selected</div><div class="form-grid"><div class="field span4"><label>布局</label><span class="input">nav main aside</span></div><div class="field span4"><label>列</label><span class="input">120 1fr 120</span></div><div class="field span4"><label>滚动</label><span class="input">main auto</span></div></div></section><section class="section"><div class="section-head">SplitPane 内容区</div><div class="toolbar-strip"><span class="op active">左 38%</span><span class="op">拖拽手柄</span><span class="op">右 fill</span></div></section><section class="section"><div class="section-head">可嵌套表格区域</div><div class="table-wrap"><table class="data-table"><tr><th>客户</th><th>机会</th><th>回款</th><th>风险</th></tr><tr><td>未来科技</td><td>6</td><td>82%</td><td>低</td></tr><tr><td>海川制造</td><td>2</td><td>45%</td><td>中</td></tr></table></div></section></main><aside class="side"><div class="side-head">right dock</div><div class="side-body"><div class="info"><b>Sticky</b><span>右侧面板固定。</span></div></div></aside></div><div class="page-bottom"><span class="mini-btn">收起侧栏</span><span class="mini-btn primary">应用布局</span></div></div></div></section>
+              <aside class="right"><div class="tabs"><span class="tab active">布局</span><span class="tab">断点</span><span class="tab">约束</span></div><div class="panel"><select class="prop-select"><option>RootGridLayout</option></select><div class="prop-box"><div class="prop-cat">Grid</div><div class="prop-row"><span>areas</span><span>nav main aside</span></div><div class="prop-row"><span>columns</span><span>120px 1fr 120px</span></div><div class="prop-row"><span>overflow</span><span>body hidden</span></div></div><div class="prop-box"><div class="prop-cat">Drop Rules</div><div class="prop-row"><span>Table</span><span>main/tabs</span></div><div class="prop-row"><span>Portal</span><span>root only</span></div></div></div></aside>
+            </div>
+            <div class="bottom"><div class="errors"><div class="bottom-title">Layout Analyzer</div><div><div class="err-row"><span>Warning</span><span>L-201</span><span>1280 断点 aside 应折叠</span><span>Layout</span></div><div class="err-row"><span>Info</span><span>L-011</span><span>主体布局无绝对定位</span><span>Layout</span></div></div></div><pre class="schema">layout:{
+display:"grid",
+areas:"nav main aside"}</pre></div>
+            <div class="status"><span class="breadcrumb">RootGridLayout / Main / SplitPane</span><span>强布局</span><span>Web CSS 能力</span><span>响应式</span></div>
+          </div>
+        </div>
+        <div class="notes">
+          <div class="note"><strong>优势</strong>最符合“强 Web 布局能力是关键”。</div>
+          <div class="note"><strong>风险</strong>需要给业务用户简化入口。</div>
+          <div class="note"><strong>适合</strong>作为 T-207 核心差异化。</div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h2>05 强表格 / 母子嵌套型</h2>
+            <p>围绕企业分录表格设计：列、冻结、虚拟滚动、主从、批次、序列号子表。</p>
+          </div>
+          <div class="score"><strong>A-</strong><span>表格最强</span></div>
+        </div>
+        <div class="shot">
+          <div class="designer variant-table">
+            <div class="menu">表格 列 分组 过滤 冻结 汇总 主从 明细 虚拟滚动</div>
+            <div class="cmd"><div class="brand"><div class="mark">T</div><div><strong>TableEngine 表格设计器</strong><span>DevExpress + AG Grid 风格的 Web 分录表格</span></div></div><div class="tools"><span class="mini-btn">新增列</span><span class="mini-btn">冻结列</span><span class="mini-btn">明细模板</span><span class="mini-btn primary">预览</span></div><div></div></div>
+            <div class="work">
+              <aside class="left"><div class="tabs"><span class="tab active">表格树</span><span class="tab">列</span><span class="tab">字段</span></div><div class="panel"><div class="group-title">表格层级</div><div class="list"><div class="item active"><span class="ico">M</span><span>EntryTable</span><span></span></div><div class="item"><span class="ico">B</span><span>BatchDetail</span><span></span></div><div class="item"><span class="ico">S</span><span>SerialDetail</span><span></span></div></div><div class="group-title">列</div><div class="list"><div class="item active"><span class="ico">C</span><span>物料</span><span>fixed</span></div><div class="item"><span class="ico">Q</span><span>数量</span><span>edit</span></div><div class="item"><span class="ico">A</span><span>金额</span><span>sum</span></div></div></div></aside>
+              <section class="center"><div class="docbar"><span class="doc">EntryTable.table.json <b>x</b></span><span class="mini-btn">Master Detail ON</span></div><div class="viewport"><div class="webpage"><div class="page-top"><div class="page-title"><span class="dot"></span>销售订单分录设计</div><div class="page-actions"><span class="mini-btn">列菜单</span><span class="mini-btn primary">运行预览</span></div></div><div class="page-nav"><span class="nav-chip active">主表</span><span class="nav-chip">批次明细</span><span class="nav-chip">序列号</span><span class="nav-chip">汇总</span></div><div class="page-main"><main class="content" style="grid-column:1 / -1;"><section class="section selected"><div class="sel-label">EntryTable selected</div><div class="section-head">分录表格：冻结列 / 嵌套明细 / 虚拟滚动</div><div class="table-wrap"><table class="data-table"><tr><th>#</th><th>物料</th><th>规格</th><th>数量</th><th>单价</th><th>金额</th><th>交付</th></tr><tr><td>1</td><td>A-1001</td><td>工业件</td><td>20</td><td>128</td><td>2560</td><td>07-20</td></tr><tr class="detail"><td></td><td colspan="6"><div class="nested"><strong>批次明细</strong><span>批次号 / 库位 / 数量 / 生产日期 / 序列号子表 20 行</span></div></td></tr><tr><td>2</td><td>B-2048</td><td>显示屏</td><td>8</td><td>860</td><td>6880</td><td>07-26</td></tr><tr><td>3</td><td>C-3100</td><td>线束</td><td>120</td><td>16.5</td><td>1980</td><td>07-30</td></tr></table></div></section><section class="section"><div class="toolbar-strip"><span class="op active">虚拟行</span><span class="op">列虚拟化</span><span class="op">键盘编辑</span><span class="op">复制粘贴</span><span class="op">父子汇总</span></div></section></main></div><div class="page-bottom"><span class="mini-btn">关闭</span><span class="mini-btn primary">保存表格配置</span></div></div></div></section>
+              <aside class="right"><div class="tabs"><span class="tab active">列属性</span><span class="tab">明细</span><span class="tab">性能</span></div><div class="panel"><select class="prop-select"><option>Column: 物料</option></select><div class="prop-box"><div class="prop-cat">ColumnSchema</div><div class="prop-row"><span>field</span><span>materialId</span></div><div class="prop-row"><span>editor</span><span>ReferencePicker</span></div><div class="prop-row"><span>freeze</span><span>left</span></div></div><div class="prop-box"><div class="prop-cat">Detail</div><div class="prop-row"><span>type</span><span>childGrid</span></div><div class="prop-row"><span>lazyLoad</span><span>true</span></div></div></div></aside>
+            </div>
+            <div class="bottom"><div class="errors"><div class="bottom-title">Table Analyzer</div><div><div class="err-row"><span>Warning</span><span>T-118</span><span>二级明细建议设置 maxHeight</span><span>Table</span></div><div class="err-row"><span>Info</span><span>T-020</span><span>已启用虚拟滚动</span><span>Perf</span></div></div></div><pre class="schema">table:{
+detail:"BatchDetail",
+virtualRows:true}</pre></div>
+            <div class="status"><span class="breadcrumb">EntryTable / Column materialId / Detail Batch</span><span>强表格</span><span>母子嵌套</span><span>分录录入</span></div>
+          </div>
+        </div>
+        <div class="notes">
+          <div class="note"><strong>优势</strong>复杂企业单据的关键竞争力。</div>
+          <div class="note"><strong>风险</strong>不能让默认入口变成单纯表格工具。</div>
+          <div class="note"><strong>适合</strong>表格设计模式。</div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h2>06 业务对象字段驱动型</h2>
+            <p>字段树拖入 Web 页面，自动生成表单控件、分录列、校验、权限和绑定关系。</p>
+          </div>
+          <div class="score"><strong>B+</strong><span>数据清楚</span></div>
+        </div>
+        <div class="shot">
+          <div class="designer variant-data">
+            <div class="menu">业务对象 字段 关系 数据源 校验 血缘 权限 发布影响</div>
+            <div class="cmd"><div class="brand"><div class="mark">D</div><div><strong>字段驱动 Web 页面设计器</strong><span>BO Field List -> Web controls / columns</span></div></div><div class="tools"><span class="mini-btn">生成控件</span><span class="mini-btn">绑定检查</span><span class="mini-btn primary">保存</span></div><div></div></div>
+            <div class="work">
+              <aside class="left"><div class="tabs"><span class="tab active">BO 字段</span><span class="tab">关系</span></div><div class="panel"><div class="group-title">SalesOrder</div><div class="list"><div class="item active"><span class="ico">C</span><span>header.customerId</span><span></span></div><div class="item"><span class="ico">O</span><span>header.orgId</span><span></span></div><div class="item"><span class="ico">E</span><span>entries[].materialId</span><span></span></div><div class="item"><span class="ico">Q</span><span>entries[].qty</span><span></span></div><div class="item"><span class="ico">A</span><span>entries[].amount</span><span></span></div></div></div></aside>
+              <section class="center"><div class="docbar"><span class="doc">字段绑定.page.json <b>x</b></span><span class="mini-btn">Drag field</span></div><div class="viewport"><div class="drop">拖入字段生成 ReferencePicker / MoneyInput / TableColumn</div><div class="webpage"><div class="page-top"><div class="page-title"><span class="dot"></span>报价单</div><div class="page-actions"><span class="mini-btn">保存</span><span class="mini-btn primary">预览</span></div></div><div class="page-nav"><span class="nav-chip active">基本信息</span><span class="nav-chip">报价明细</span><span class="nav-chip">利润分析</span></div><div class="page-main"><main class="content" style="grid-column:1 / -1;"><section class="section selected"><div class="sel-label">customerId bound</div><div class="form-grid"><div class="field span4"><label>客户</label><span class="input">header.customerId</span></div><div class="field span4"><label>销售组织</label><span class="input">header.orgId</span></div><div class="field span4"><label>报价日期</label><span class="input">header.quoteDate</span></div></div></section><section class="section"><div class="section-head">字段映射表格</div><div class="table-wrap"><table class="data-table"><tr><th>页面控件</th><th>绑定路径</th><th>编辑器</th><th>权限</th></tr><tr><td>客户</td><td>header.customerId</td><td>Reference</td><td>read/write</td></tr><tr><td>物料列</td><td>entries.materialId</td><td>Reference</td><td>row</td></tr></table></div></section></main></div><div class="page-bottom"><span class="mini-btn">绑定血缘</span><span class="mini-btn primary">保存绑定</span></div></div></div></section>
+              <aside class="right"><div class="tabs"><span class="tab active">绑定</span><span class="tab">血缘</span><span class="tab">权限</span></div><div class="panel"><select class="prop-select"><option>customerId</option></select><div class="prop-box"><div class="prop-cat">Binding</div><div class="prop-row"><span>path</span><span>header.customerId</span></div><div class="prop-row"><span>editor</span><span>ReferencePicker</span></div><div class="prop-row"><span>required</span><span>true</span></div></div><div class="prop-box"><div class="prop-cat">Lineage</div><div class="prop-row"><span>影响</span><span>价格政策</span></div><div class="prop-row"><span>影响</span><span>信用额度</span></div></div></div></aside>
+            </div>
+            <div class="bottom"><div class="errors"><div class="bottom-title">Binding Analyzer</div><div><div class="err-row"><span>Warning</span><span>B-090</span><span>entries.discountRate 未绑定</span><span>Binding</span></div></div></div><pre class="schema">binding:
+header.customerId
+editor:ReferencePicker</pre></div>
+            <div class="status"><span class="breadcrumb">SalesOrderBO / customerId / ReferencePicker</span><span>字段驱动</span><span>血缘</span><span>权限</span></div>
+          </div>
+        </div>
+        <div class="notes">
+          <div class="note"><strong>优势</strong>数据绑定、规则、权限关系非常清楚。</div>
+          <div class="note"><strong>风险</strong>视觉设计能力容易被弱化。</div>
+          <div class="note"><strong>适合</strong>字段绑定和数据建模模式。</div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h2>07 PC 响应式布局预览型</h2>
+            <p>同一 Web 页面在 1280/1440/1600/1920 下预览，检查字段换行和表格宽度。</p>
+          </div>
+          <div class="score"><strong>B+</strong><span>断点清楚</span></div>
+        </div>
+        <div class="shot">
+          <div class="designer variant-responsive">
+            <div class="menu">响应式 断点 布局校验 表格横滚 侧栏折叠 字段换行</div>
+            <div class="cmd"><div class="brand"><div class="mark">R</div><div><strong>PC 响应式页面设计器</strong><span>不是移动端，专注企业 PC 宽屏断点</span></div></div><div class="tools"><span class="mini-btn">1280</span><span class="mini-btn primary">1440</span><span class="mini-btn">1600</span><span class="mini-btn">1920</span></div><div></div></div>
+            <div class="work">
+              <aside class="left"><div class="tabs"><span class="tab active">断点</span><span class="tab">规则</span></div><div class="panel"><div class="list"><div class="item"><span class="ico">1</span><span>1280 aside collapse</span><span></span></div><div class="item active"><span class="ico">2</span><span>1440 normal</span><span></span></div><div class="item"><span class="ico">3</span><span>1600 wide aside</span><span></span></div><div class="item"><span class="ico">4</span><span>1920 max content</span><span></span></div></div></div></aside>
+              <section class="center"><div class="docbar"><span class="doc">响应式预览 <b>x</b></span><span class="mini-btn">selected 1440</span></div><div class="viewport"><div class="webpage"><div class="page-top"><div class="page-title"><span class="dot"></span>销售订单响应式预览</div><div class="page-actions"><span class="mini-btn primary">应用断点</span></div></div><div class="page-nav"><span class="nav-chip active">1440</span><span class="nav-chip">布局</span><span class="nav-chip">表格</span></div><div class="page-main"><main class="content"><section class="section selected"><div class="sel-label">1440 breakpoint</div><div class="form-grid"><div class="field span4"><label>客户</label><span class="input">未来科技</span></div><div class="field span4"><label>组织</label><span class="input">华东</span></div><div class="field span4"><label>日期</label><span class="input">2026-07-09</span></div></div></section><section class="section"><div class="section-head">表格宽度检查</div><div class="table-wrap"><table class="data-table"><tr><th>物料</th><th>数量</th><th>金额</th><th>交付</th></tr><tr><td>A-1001</td><td>20</td><td>2560</td><td>07-20</td></tr></table></div></section></main></div><div class="page-bottom"><span class="mini-btn">折叠右侧</span><span class="mini-btn primary">保存规则</span></div></div><div class="breakpoints"><div class="bp">1280<br>aside off</div><div class="bp active">1440<br>normal</div><div class="bp">1600<br>wide</div><div class="bp">1920<br>max</div></div></div></section>
+              <aside class="right"><div class="tabs"><span class="tab active">断点属性</span><span class="tab">问题</span></div><div class="panel"><div class="prop-box"><div class="prop-cat">1440</div><div class="prop-row"><span>nav</span><span>214px</span></div><div class="prop-row"><span>aside</span><span>270px</span></div><div class="prop-row"><span>table</span><span>auto width</span></div></div></div></aside>
+            </div>
+            <div class="bottom"><div class="errors"><div class="bottom-title">Responsive Analyzer</div><div><div class="err-row"><span>Warning</span><span>R-1280</span><span>表格在 1280 下需要横向滚动</span><span>Responsive</span></div></div></div><pre class="schema">breakpoints:
+1280,1440,1600,1920</pre></div>
+            <div class="status"><span class="breadcrumb">Responsive / 1440 / EntryTable</span><span>PC 断点</span><span>换行检查</span><span>横滚检查</span></div>
+          </div>
+        </div>
+        <div class="notes">
+          <div class="note"><strong>优势</strong>解决 PC Web 多分辨率真实问题。</div>
+          <div class="note"><strong>风险</strong>不适合作为默认长期设计态。</div>
+          <div class="note"><strong>适合</strong>布局检查模式。</div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h2>08 规则 / 审批联动型</h2>
+            <p>表单设计和规则流并排，选中字段即可看到联动、审批、权限和发布影响。</p>
+          </div>
+          <div class="score"><strong>B</strong><span>治理突出</span></div>
+        </div>
+        <div class="shot">
+          <div class="designer">
+            <div class="menu">规则 事件 审批 权限 影响分析 发布门禁</div>
+            <div class="cmd"><div class="brand"><div class="mark">W</div><div><strong>Web 页面 + 规则联动设计器</strong><span>字段选中后展示规则、权限、审批影响</span></div></div><div class="tools"><span class="mini-btn">新增规则</span><span class="mini-btn">影响分析</span><span class="mini-btn primary">发布检查</span></div><div></div></div>
+            <div class="work">
+              <aside class="left"><div class="tabs"><span class="tab active">事件</span><span class="tab">规则</span></div><div class="panel"><div class="list"><div class="item active"><span class="ico">C</span><span>onCustomerChange</span><span></span></div><div class="item"><span class="ico">Q</span><span>onQtyChange</span><span></span></div><div class="item"><span class="ico">S</span><span>beforeSubmit</span><span></span></div></div></div></aside>
+              <section class="center"><div class="docbar"><span class="doc">表单 + 规则 <b>x</b></span><span class="mini-btn">impact view</span></div><div class="viewport"><div class="flow-canvas"><div class="webpage"><div class="page-top"><div class="page-title"><span class="dot"></span>销售订单</div><div class="page-actions"><span class="mini-btn primary">运行规则</span></div></div><div class="page-nav"><span class="nav-chip active">表单</span><span class="nav-chip">规则</span></div><div class="page-main"><main class="content" style="grid-column:1 / -1;"><section class="section selected"><div class="sel-label">客户字段 selected</div><div class="form-grid"><div class="field span4"><label>客户</label><span class="input">未来科技</span></div><div class="field span4"><label>信用</label><span class="input">需校验</span></div><div class="field span4"><label>路线</label><span class="input">区域经理</span></div></div></section><section class="section"><div class="section-head">分录表格：数量变化触发金额计算</div></section></main></div><div class="page-bottom"><span class="mini-btn">保存</span><span class="mini-btn primary">提交</span></div></div><div class="rule-flow"><div class="node active">客户变更</div><div class="node">价格政策</div><div class="node">信用额度</div><div class="node">审批路线</div><div class="node">字段联动</div><div class="node">发布影响</div></div></div></div></section>
+              <aside class="right"><div class="tabs"><span class="tab active">规则属性</span><span class="tab">影响</span></div><div class="panel"><div class="prop-box"><div class="prop-cat">onCustomerChange</div><div class="prop-row"><span>触发</span><span>客户字段</span></div><div class="prop-row"><span>动作</span><span>重算价格</span></div><div class="prop-row"><span>影响</span><span>审批路线</span></div></div></div></aside>
+            </div>
+            <div class="bottom"><div class="errors"><div class="bottom-title">Rule Analyzer</div><div><div class="err-row"><span>Warning</span><span>R-066</span><span>规则依赖审批路线，发布需复核</span><span>Rule</span></div></div></div><pre class="schema">event:
+onCustomerChange
+effects:["price","approval"]</pre></div>
+            <div class="status"><span class="breadcrumb">CustomerField / onCustomerChange / Approval</span><span>规则</span><span>审批</span><span>影响分析</span></div>
+          </div>
+        </div>
+        <div class="notes">
+          <div class="note"><strong>优势</strong>治理和发布风险可见。</div>
+          <div class="note"><strong>风险</strong>主画布空间变小。</div>
+          <div class="note"><strong>适合</strong>规则编辑和发布校验。</div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h2>09 组件库 / 设计系统型</h2>
+            <p>围绕 Web 控件、业务组件、设计 token 和变体治理，保证设计器输出一致。</p>
+          </div>
+          <div class="score"><strong>B</strong><span>平台治理</span></div>
+        </div>
+        <div class="shot">
+          <div class="designer">
+            <div class="menu">组件库 设计 Token 变体 主题 密度 可访问性 版本治理</div>
+            <div class="cmd"><div class="brand"><div class="mark">C</div><div><strong>Component Registry 页面设计器</strong><span>不是组件展示页，组件直接服务 Web 页面设计</span></div></div><div class="tools"><span class="mini-btn">新建组件</span><span class="mini-btn">发布版本</span><span class="mini-btn primary">应用到页面</span></div><div></div></div>
+            <div class="work">
+              <aside class="left"><div class="tabs"><span class="tab active">组件</span><span class="tab">Token</span></div><div class="panel"><div class="list"><div class="item active"><span class="ico">R</span><span>ReferencePicker</span><span></span></div><div class="item"><span class="ico">M</span><span>MoneyInput</span><span></span></div><div class="item"><span class="ico">T</span><span>EntryTable</span><span></span></div><div class="item"><span class="ico">A</span><span>ApprovalPanel</span><span></span></div></div></div></aside>
+              <section class="center"><div class="docbar"><span class="doc">组件应用到页面 <b>x</b></span><span class="mini-btn">compact tokens</span></div><div class="viewport"><div class="webpage"><div class="page-top"><div class="page-title"><span class="dot"></span>组件化销售订单</div><div class="page-actions"><span class="mini-btn primary">同步组件</span></div></div><div class="page-nav"><span class="nav-chip active">页面</span><span class="nav-chip">组件变体</span><span class="nav-chip">主题</span></div><div class="page-main"><main class="content" style="grid-column:1 / -1;"><section class="section selected"><div class="sel-label">ReferencePicker variant</div><div class="form-grid"><div class="field span6"><label>客户</label><span class="input">ReferencePicker / compact</span></div><div class="field span6"><label>金额</label><span class="input">MoneyInput / CNY</span></div></div></section><section class="section"><div class="section-head">EntryTable 组件变体</div><div class="toolbar-strip"><span class="op active">Default</span><span class="op">Readonly</span><span class="op">Error</span><span class="op">Compact</span></div></section></main></div><div class="page-bottom"><span class="mini-btn">预览主题</span><span class="mini-btn primary">应用组件</span></div></div></div></section>
+              <aside class="right"><div class="tabs"><span class="tab active">Token</span><span class="tab">API</span></div><div class="panel"><div class="prop-box"><div class="prop-cat">Design Token</div><div class="prop-row"><span>fieldHeight</span><span>28px</span></div><div class="prop-row"><span>labelWidth</span><span>78px</span></div><div class="prop-row"><span>density</span><span>compact</span></div></div><div class="prop-box"><div class="prop-cat">propsSchema</div><div class="prop-row"><span>field</span><span>required</span></div><div class="prop-row"><span>permission</span><span>enabled</span></div></div></div></aside>
+            </div>
+            <div class="bottom"><div class="errors"><div class="bottom-title">Component Analyzer</div><div><div class="err-row"><span>Info</span><span>C-010</span><span>页面组件均使用最新稳定版本</span><span>Component</span></div></div></div><pre class="schema">component:
+ReferencePicker@2.4
+density:"compact"</pre></div>
+            <div class="status"><span class="breadcrumb">ComponentRegistry / ReferencePicker / SalesOrderPage</span><span>组件治理</span><span>Token</span><span>变体</span></div>
+          </div>
+        </div>
+        <div class="notes">
+          <div class="note"><strong>优势</strong>长期一致性和规范性最好。</div>
+          <div class="note"><strong>风险</strong>不是默认业务设计流程。</div>
+          <div class="note"><strong>适合</strong>平台管理员和组件设计。</div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h2>10 设计态 / 运行态双视图型</h2>
+            <p>左边设计 Web 页面，右边实时运行预览和性能/权限监控，适合发布前质量控制。</p>
+          </div>
+          <div class="score"><strong>B+</strong><span>质量导向</span></div>
+        </div>
+        <div class="shot">
+          <div class="designer">
+            <div class="menu">设计态 运行态 权限裁剪 性能指标 接口调用 规则耗时 发布门禁</div>
+            <div class="cmd"><div class="brand"><div class="mark">Q</div><div><strong>Design + Runtime 双态设计器</strong><span>可见即可得，同时看到运行质量</span></div></div><div class="tools"><span class="mini-btn">刷新运行态</span><span class="mini-btn">权限模拟</span><span class="mini-btn primary">发布门禁</span></div><div></div></div>
+            <div class="work">
+              <aside class="left"><div class="tabs"><span class="tab active">对象</span><span class="tab">问题</span></div><div class="panel"><div class="list"><div class="item active"><span class="ico">P</span><span>SalesOrderPage</span><span></span></div><div class="item"><span class="ico">F</span><span>HeaderFormGrid</span><span></span></div><div class="item"><span class="ico">T</span><span>EntryTable</span><span></span></div><div class="item"><span class="ico">A</span><span>ApprovalAside</span><span></span></div></div></div></aside>
+              <section class="center"><div class="docbar"><span class="doc">设计态 / 运行态 <b>x</b></span><span class="mini-btn">role: sales</span></div><div class="viewport"><div class="runtime-split"><div class="runtime-pane"><div class="dock-head">设计态</div><div class="webpage" style="height:auto;box-shadow:none;border:0;"><div class="page-top"><div class="page-title"><span class="dot"></span>销售订单设计</div></div><div class="page-main" style="grid-template-columns:minmax(0,1fr);"><main class="content"><section class="section selected"><div class="sel-label">EntryTable selected</div><div class="form-grid"><div class="field span6"><label>客户</label><span class="input">可编辑</span></div><div class="field span6"><label>状态</label><span class="input">草稿</span></div></div></section><section class="section"><div class="section-head">分录表格设计态</div></section></main></div></div></div><div class="runtime-pane"><div class="dock-head">运行态 + 监控</div><div class="metric-list"><b>Runtime Preview</b><span>客户字段：按销售角色可编辑</span><span>EntryTable：虚拟滚动已启用</span><span>接口调用：3 次</span><span>首屏渲染：42ms</span><span>规则耗时：8ms</span><span>权限裁剪：2 个按钮隐藏</span></div></div></div></div></section>
+              <aside class="right"><div class="tabs"><span class="tab active">监控</span><span class="tab">权限</span><span class="tab">性能</span></div><div class="panel"><div class="prop-box"><div class="prop-cat">Runtime</div><div class="prop-row"><span>render</span><span>42ms</span></div><div class="prop-row"><span>api</span><span>3 calls</span></div><div class="prop-row"><span>rule</span><span>8ms</span></div></div><div class="prop-box"><div class="prop-cat">Permission</div><div class="prop-row"><span>hidden</span><span>2 actions</span></div><div class="prop-row"><span>readonly</span><span>1 field</span></div></div></div></aside>
+            </div>
+            <div class="bottom"><div class="errors"><div class="bottom-title">Runtime Analyzer</div><div><div class="err-row"><span>Warning</span><span>Q-021</span><span>审批面板接口可延迟加载</span><span>Perf</span></div><div class="err-row"><span>Info</span><span>Q-030</span><span>当前角色权限裁剪通过</span><span>Permission</span></div></div></div><pre class="schema">runtime:
+render:42ms
+apiCalls:3</pre></div>
+            <div class="status"><span class="breadcrumb">SalesOrder / RuntimeRole:sales / EntryTable</span><span>设计态</span><span>运行态</span><span>质量门禁</span></div>
+          </div>
+        </div>
+        <div class="notes">
+          <div class="note"><strong>优势</strong>设计和运行质量同时可控。</div>
+          <div class="note"><strong>风险</strong>信息密度较高，适合高级场景。</div>
+          <div class="note"><strong>适合</strong>发布前检查和性能治理。</div>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

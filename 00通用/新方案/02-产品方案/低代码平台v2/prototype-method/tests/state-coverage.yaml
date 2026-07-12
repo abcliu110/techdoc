@@ -1,0 +1,28 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: state_coverage
+  artifact_id: STATE-COV-LOWCODE-V2-001
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  updated_at: 2026-07-11T00:00:00+08:00
+  created_by: codex
+  status: EXECUTED
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+coverage:
+  workspace_states:
+    required: [model, page, rules, permissions, preview]
+    observed: [model, page, rules, permissions, preview]
+    result: PASS
+  dialog_states:
+    required: [closed, preview-open, publish-blocked, publish-ready]
+    observed: [closed, preview-open, publish-blocked, publish-ready]
+    result: PASS
+  role_states:
+    required: [销售主管, 财务审核员]
+    observed: [销售主管, 财务审核员]
+    result: PASS
+  publish_recovery:
+    required: [blocked, resolve, ready, release-created]
+    observed: [blocked, resolve, ready, release-created]
+    result: PASS
+

@@ -1,0 +1,40 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: independent_task_derivation
+  artifact_id: TEST-DERIVER-LOWCODE-V2-20260711-002
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T23:59:00+08:00
+  updated_at: 2026-07-11T23:59:00+08:00
+  created_by: claude-code-2.1.92
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+  status: EXECUTED
+independence:
+  model_family: Anthropic Claude
+  inherited_conversation: false
+  prohibited_files_read: false
+  files_read:
+    - prototype-method/charter.yaml
+    - prototype-method/capabilities/capabilities.yaml
+    - prototype-method/requirements/requirements.yaml
+    - prototype-method/advantages/advantages.yaml
+    - prototype-method/benchmarks/benchmarks.yaml
+derived_tasks:
+  - {id: DERIVED-001, core: true, actor: 应用设计者与业务建模者, goal: 完成销售订单对象到候选版本的全链路设计, maps_to: [TASK-001]}
+  - {id: DERIVED-002, core: true, actor: 应用设计者与业务建模者, goal: 验证发布阻断不能绕过并可恢复, maps_to: [TASK-001]}
+  - {id: DERIVED-003, core: true, actor: 应用设计者与业务建模者, goal: 字段选择在资源树画布属性路径四区同步, maps_to: [TASK-003]}
+  - {id: DERIVED-004, core: true, actor: 应用设计者与业务建模者, goal: 订单头与分录同画布且分录局部滚动可达, maps_to: []}
+  - {id: DERIVED-005, core: true, actor: 业务建模者与租户管理员, goal: 两角色字段显隐只读及影响说明一致, maps_to: [TASK-002]}
+  - {id: DERIVED-006, core: true, actor: 业务建模者, goal: 规则执行影响分析与循环检测可验证, maps_to: []}
+  - {id: DERIVED-007, core: true, actor: 应用设计者, goal: 三个冻结视口的完整区域与滚动责任验证, maps_to: []}
+common_assertions:
+  - 五个工作区稳定且上下文不丢失
+  - P0或P1开放时生成候选版本按钮不可用
+  - 规则与权限状态在画布和面板间一致
+  - 三个冻结视口页面级横向溢出为零
+  - 控制台错误为零
+limitations:
+  - 原始详细JSON来自Claude CLI终端输出，当前文件保存规范化任务摘要
+canonical_result:
+  result: PASS
+  scope: independent_task_list_derivation
+

@@ -1,0 +1,116 @@
+{
+  "manifest_schema_version": "1.0",
+  "execution_id": "COMPLETE-20260712-001",
+  "spec_id": "08-complex-product-completeness",
+  "spec_version": "1.1",
+  "generated_at": "2026-07-11T23:09:11.820Z",
+  "mode": "DELIVERY_AUDIT",
+  "active_stage": "C10",
+  "stages": {
+    "C0": {
+      "status": "passed",
+      "outputs": [
+        "product-charter.yaml",
+        "scope-draft.yaml"
+      ]
+    },
+    "C1": {
+      "status": "passed",
+      "outputs": [
+        "capability-baseline.yaml",
+        "variant-inventory.yaml"
+      ]
+    },
+    "C2": {
+      "status": "passed",
+      "outputs": [
+        "capability-reconciliation.yaml"
+      ],
+      "verification": [
+        "reconciliation result is PASS"
+      ]
+    },
+    "C3": {
+      "status": "passed",
+      "outputs": [
+        "scope-contract.yaml"
+      ]
+    },
+    "C4": {
+      "status": "passed",
+      "outputs": [
+        "feature-inventory.yaml",
+        "scenario-inventory.yaml"
+      ]
+    },
+    "C5": {
+      "status": "passed",
+      "outputs": [
+        "surface-inventory.yaml",
+        "prototype-map.yaml",
+        "prototype-flow.yaml"
+      ],
+      "verification": [
+        "106/106 prototype variants accounted for"
+      ]
+    },
+    "C6": {
+      "status": "passed",
+      "outputs": [
+        "implementation-map.yaml",
+        "authoritative-state-contracts.yaml",
+        "traceability-matrix.yaml"
+      ],
+      "verification": [
+        "106/106 implementation variants accounted for"
+      ]
+    },
+    "C7": {
+      "status": "passed",
+      "outputs": [
+        "missing-or-fake.json"
+      ],
+      "verification": [
+        "0 open implementation findings recorded"
+      ]
+    },
+    "C8": {
+      "status": "passed",
+      "outputs": [
+        "task-verification.json"
+      ],
+      "verification": [
+        "636 component state checks executed"
+      ]
+    },
+    "C9": {
+      "status": "passed",
+      "outputs": [
+        "capability-verification.json",
+        "miss-analysis.yaml"
+      ],
+      "verification": [
+        "103 required prototype variants verified",
+        "0 variants have production-readiness evidence"
+      ]
+    },
+    "C10": {
+      "status": "failed",
+      "outputs": [
+        "capability-gate-report.json",
+        "capability-gate-report.md"
+      ],
+      "verification": [
+        "103 production-readiness evidence gaps remain"
+      ]
+    }
+  },
+  "run_result": "FAIL",
+  "product_completeness": "FAIL",
+  "blockers": [
+    "production-readiness evidence gaps remain"
+  ],
+  "residual_risks": [
+    "Production-readiness evidence is incomplete for required component variants."
+  ]
+}

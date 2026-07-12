@@ -1,0 +1,29 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: stage_gate
+  artifact_id: GATE-LOWCODE-V2-STAGE-7
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  updated_at: 2026-07-11T00:00:00+08:00
+  created_by: codex
+  status: FINAL
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+gate:
+  gate_id: GATE-LOWCODE-V2-STAGE-7
+  run_id: RUN-LOWCODE-V2-20260711-001
+  stage: 7
+  evaluated_at: 2026-07-11T00:00:00+08:00
+  predicates:
+    - {id: G7-001, description: 三个冻结视口无页面级横向溢出且主区域在视口内, result: PASS, measured_value: 3/3, threshold: 3/3, evidence_refs: [reports/mechanical-report.md]}
+    - {id: G7-002, description: 浏览器控制台和页面错误为零, result: PASS, measured_value: 0, threshold: 0, evidence_refs: [reports/mechanical-report.md]}
+    - {id: G7-003, description: 项目级视觉判定达到阈值, result: PASS, measured_value: 94, threshold: 90, evidence_refs: [.omx/state/lowcode-designer-v2/ralph-progress.json]}
+    - {id: G7-004, description: 认证几何矩阵和独立视觉评审证据包完整, result: BLOCKED, measured_value: NOT_PERFORMED, threshold: CERTIFIED, evidence_refs: [reports/reviews/final-review.md], failure_code: INSUFFICIENT_EVIDENCE}
+  p0_count: 0
+  p1_count: 0
+  canonical_result:
+    result: BLOCKED
+    failure_code: INSUFFICIENT_EVIDENCE
+    retryable: true
+    return_plan: []
+    blocker_id: BLK-STAGE7-CERTIFIED-VISUAL-EVIDENCE
+

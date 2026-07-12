@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PT-022 字段树</title>
+  <style>
+    :root {
+      --bg: #eef2f6;
+      --panel: #ffffff;
+      --line: #d7dee8;
+      --text: #1f2937;
+      --muted: #667085;
+      --primary: #2468c9;
+      --primary-soft: #e8f1ff;
+      --success: #19733f;
+      --danger: #c73535;
+      --hover: #f5f8fc;
+      --shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-width: 1440px;
+      height: 100%;
+      overflow: hidden;
+      font-family: "Microsoft YaHei UI", "Segoe UI", sans-serif;
+      font-size: 12px;
+      color: var(--text);
+      background: var(--bg);
+      letter-spacing: 0;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 0 12px;
+      height: 30px;
+      transition: border-color 0.16s ease, background-color 0.16s ease, color 0.16s ease;
+      white-space: nowrap;
+    }
+
+    button:hover:not(:disabled) {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-soft);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      color: #98a2b3;
+      background: #f3f5f8;
+      border-color: #e4e7ec;
+    }
+
+    .app-shell {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-rows: 48px 1fr;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .topbar-left,
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand {
+      font-size: 15px;
+      font-weight: 600;
+      margin-right: 14px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: #f4f7fb;
+      color: var(--muted);
+    }
+
+    .layout {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 48px 248px 1fr 300px;
+    }
+
+    .activitybar {
+      background: #f3f6fa;
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0;
+      gap: 10px;
+    }
+
+    .activity-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      border: 1px solid transparent;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      background: transparent;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .activity-dot.active {
+      background: var(--primary-soft);
+      color: var(--primary);
+      border-color: #bfd3f6;
+    }
+
+    .sidebar,
+    .inspector,
+    .canvas {
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .sidebar,
+    .inspector {
+      background: var(--panel);
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .inspector {
+      border-left: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-head {
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .panel-tools {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .icon-btn {
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+    }
+
+    .tree-toolbar {
+      padding: 12px 12px 10px;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      gap: 10px;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 30px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 0 10px;
+      color: var(--text);
+      background: #fff;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(36, 104, 201, 0.1);
+    }
+
+    .tree-toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .tree-wrap {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      padding: 10px 8px 14px 10px;
+    }
+
+    .tree-group-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px 6px;
+      color: var(--muted);
+    }
+
+    .tree-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .tree-node {
+      margin-bottom: 2px;
+    }
+
+    .tree-row {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      padding: 6px 8px;
+      background: transparent;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .tree-row:hover {
+      background: var(--hover);
+      border-color: #e6ebf2;
+    }
+
+    .tree-node.selected > .tree-row {
+      background: var(--primary-soft);
+      border-color: #bfd3f6;
+    }
+
+    .tree-row-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .toggle {
+      width: 16px;
+      flex: 0 0 16px;
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .toggle.placeholder {
+      visibility: hidden;
+    }
+
+    .node-main {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .node-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .node-meta {
+      color: var(--muted);
+      flex: 0 0 auto;
+    }
+
+    .node-tag {
+      display: inline-flex;
+      align-items: center;
+      height: 20px;
+      padding: 0 6px;
+      border-radius: 4px;
+      background: #f4f6fa;
+      color: var(--muted);
+      font-size: 11px;
+      flex: 0 0 auto;
+    }
+
+    .tree-children {
+      list-style: none;
+      margin: 2px 0 2px 0;
+      padding: 0 0 0 22px;
+    }
+
+    .tree-node.collapsed > .tree-children {
+      display: none;
+    }
+
+    .canvas {
+      background: #f6f8fb;
+      display: grid;
+      grid-template-rows: 42px 1fr 124px;
+    }
+
+    .canvas-head {
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+    }
+
+    .canvas-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .canvas-stage {
+      min-height: 0;
+      padding: 18px;
+      overflow: hidden;
+    }
+
+    .stage-card {
+      width: 100%;
+      height: 100%;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-rows: 52px 1fr;
+      overflow: hidden;
+    }
+
+    .stage-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .stage-body {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      min-height: 0;
+    }
+
+    .structure-pane,
+    .detail-pane {
+      min-width: 0;
+      min-height: 0;
+      padding: 18px;
+    }
+
+    .structure-pane {
+      border-right: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .outline-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .outline-item {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      padding: 12px 14px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .outline-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .outline-caption,
+    .field-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .outline-caption strong,
+    .field-line strong {
+      font-weight: 600;
+    }
+
+    .outline-sub {
+      color: var(--muted);
+    }
+
+    .field-chip {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 4px;
+      background: #f5f7fa;
+      color: var(--muted);
+    }
+
+    .state-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 18px;
+      border-top: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .state-copy {
+      display: grid;
+      gap: 4px;
+    }
+
+    .state-copy strong {
+      font-size: 13px;
+    }
+
+    .state-copy span {
+      color: var(--muted);
+    }
+
+    .detail-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .detail-card {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .detail-row {
+      display: grid;
+      grid-template-columns: 76px 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .detail-row label {
+      color: var(--muted);
+    }
+
+    .detail-value {
+      min-height: 28px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #f8fafc;
+    }
+
+    .status-good {
+      color: var(--success);
+    }
+
+    .mini-note {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .summary-list {
+      margin: 0;
+      padding-left: 16px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .inspector-body {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      padding: 12px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .prop-group {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .prop-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+      font-weight: 600;
+    }
+
+    .prop-body {
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .kv-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .kv-row span:first-child {
+      color: var(--muted);
+    }
+
+    .kv-pill {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 4px;
+      background: #f2f5fa;
+      color: var(--text);
+    }
+
+    .footer-actions {
+      display: flex;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div
+    class="app-shell"
+    data-prototype="PT-022"
+    data-state="focused-customer-name"
+    data-testid="pt022-root"
+    id="prototypeRoot"
+  >
+    <header class="topbar" data-testid="topbar">
+      <div class="topbar-left">
+        <div class="brand" data-testid="brand">全新表单设计器</div>
+        <span class="badge" data-testid="scene-badge">场景 / 字段树</span>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" type="button" data-testid="btn-search" title="搜索字段">⌕</button>
+        <button type="button" data-testid="btn-preview">预览表单</button>
+        <button type="button" data-testid="btn-publish" disabled title="字段变更未完成校验">发布版本</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="activitybar" data-testid="activitybar">
+        <div class="activity-dot active" data-testid="activity-fields">树</div>
+        <div class="activity-dot" data-testid="activity-layout">布</div>
+        <div class="activity-dot" data-testid="activity-rule">规</div>
+      </aside>
+
+      <section class="sidebar" data-testid="field-sidebar">
+        <div class="panel-head">
+          <div class="panel-title">字段树</div>
+          <div class="panel-tools">
+            <button class="icon-btn" type="button" data-testid="btn-collapse-all" title="收起全部">⌃</button>
+            <button class="icon-btn" type="button" data-testid="btn-add-folder" title="新增分组">＋</button>
+          </div>
+        </div>
+
+        <div class="tree-toolbar">
+          <input
+            class="search-input"
+            type="text"
+            value="关键字 / 字段编码"
+            readonly
+            aria-label="字段搜索"
+            data-testid="tree-search"
+          />
+          <div class="tree-toolbar-row">
+            <span class="badge" data-testid="tree-count">已加载 12 个字段</span>
+            <button type="button" data-testid="btn-new-field">新建字段</button>
+          </div>
+        </div>
+
+        <div class="tree-wrap" data-testid="tree-wrap">
+          <div class="tree-group-label">
+            <span>表单结构</span>
+            <span data-testid="tree-selection-count">当前定位 1 / 12</span>
+          </div>
+
+          <ul class="tree-list" data-testid="field-tree">
+            <li class="tree-node expanded" data-node-id="baseInfo">
+              <button class="tree-row" type="button" data-testid="node-baseInfo">
+                <span class="tree-row-left">
+                  <span class="toggle">▾</span>
+                  <span class="node-main">
+                    <span class="node-name">基础信息</span>
+                    <span class="node-tag">分组</span>
+                  </span>
+                </span>
+                <span class="node-meta">4</span>
+              </button>
+              <ul class="tree-children">
+                <li class="tree-node selected" data-node-id="customerName">
+                  <button class="tree-row" type="button" data-testid="node-customerName">
+                    <span class="tree-row-left">
+                      <span class="toggle placeholder">•</span>
+                      <span class="node-main">
+                        <span class="node-name">客户名称</span>
+                        <span class="node-tag">文本</span>
+                      </span>
+                    </span>
+                    <span class="node-meta">必填</span>
+                  </button>
+                </li>
+                <li class="tree-node" data-node-id="customerLevel">
+                  <button class="tree-row" type="button" data-testid="node-customerLevel">
+                    <span class="tree-row-left">
+                      <span class="toggle placeholder">•</span>
+                      <span class="node-main">
+                        <span class="node-name">客户级别</span>
+                        <span class="node-tag">单选</span>
+                      </span>
+                    </span>
+                    <span class="node-meta">映射</span>
+                  </button>
+                </li>
+                <li class="tree-node" data-node-id="ownerDept">
+                  <button class="tree-row" type="button" data-testid="node-ownerDept">
+                    <span class="tree-row-left">
+                      <span class="toggle placeholder">•</span>
+                      <span class="node-main">
+                        <span class="node-name">归属部门</span>
+                        <span class="node-tag">组织</span>
+                      </span>
+                    </span>
+                    <span class="node-meta">同步</span>
+                  </button>
+                </li>
+                <li class="tree-node" data-node-id="contactPhone">
+                  <button class="tree-row" type="button" data-testid="node-contactPhone">
+                    <span class="tree-row-left">
+                      <span class="toggle placeholder">•</span>
+                      <span class="node-main">
+                        <span class="node-name">联系电话</span>
+                        <span class="node-tag">号码</span>
+                      </span>
+                    </span>
+                    <span class="node-meta">校验</span>
+                  </button>
+                </li>
+              </ul>
+            </li>
+
+            <li class="tree-node expanded" data-node-id="contractInfo">
+              <button class="tree-row" type="button" data-testid="node-contractInfo">
+                <span class="tree-row-left">
+                  <span class="toggle">▾</span>
+                  <span class="node-main">
+                    <span class="node-name">合同信息</span>
+                    <span class="node-tag">分组</span>
+                  </span>
+                </span>
+                <span class="node-meta">3</span>
+              </button>
+              <ul class="tree-children">
+                <li class="tree-node" data-node-id="contractType">
+                  <button class="tree-row" type="button" data-testid="node-contractType">
+                    <span class="tree-row-left">
+                      <span class="toggle placeholder">•</span>
+                      <span class="node-main">
+                        <span class="node-name">合同类型</span>
+                        <span class="node-tag">下拉</span>
+                      </span>
+                    </span>
+                    <span class="node-meta">模板</span>
+                  </button>
+                </li>
+                <li class="tree-node" data-node-id="contractAmount">
+                  <button class="tree-row" type="button" data-testid="node-contractAmount">
+                    <span class="tree-row-left">
+                      <span class="toggle placeholder">•</span>
+                      <span class="node-main">
+                        <span class="node-name">合同金额</span>
+                        <span class="node-tag">金额</span>
+                      </span>
+                    </span>
+                    <span class="node-meta">计算</span>
+                  </button>
+                </li>
+                <li class="tree-node" data-node-id="signDate">
+                  <button class="tree-row" type="button" data-testid="node-signDate">
+                    <span class="tree-row-left">
+                      <span class="toggle placeholder">•</span>
+                      <span class="node-main">
+                        <span class="node-name">签约日期</span>
+                        <span class="node-tag">日期</span>
+                      </span>
+                    </span>
+                    <span class="node-meta">默认值</span>
+                  </button>
+                </li>
+              </ul>
+            </li>
+
+            <li class="tree-node expanded" data-node-id="deliveryInfo">
+              <button class="tree-row" type="button" data-testid="node-deliveryInfo">
+                <span class="tree-row-left">
+                  <span class="toggle">▾</span>
+                  <span class="node-main">
+                    <span class="node-name">交付信息</span>
+                    <span class="node-tag">分组</span>
+                  </span>
+                </span>
+                <span class="node-meta">2</span>
+              </button>
+              <ul class="tree-children">
+                <li class="tree-node" data-node-id="deliveryOwner">
+                  <button class="tree-row" type="button" data-testid="node-deliveryOwner">
+                    <span class="tree-row-left">
+                      <span class="toggle placeholder">•</span>
+                      <span class="node-main">
+                        <span class="node-name">交付负责人</span>
+                        <span class="node-tag">成员</span>
+                      </span>
+                    </span>
+                    <span class="node-meta">角色</span>
+                  </button>
+                </li>
+                <li class="tree-node" data-node-id="deliveryRegion">
+                  <button class="tree-row" type="button" data-testid="node-deliveryRegion">
+                    <span class="tree-row-left">
+                      <span class="toggle placeholder">•</span>
+                      <span class="node-main">
+                        <span class="node-name">交付区域</span>
+                        <span class="node-tag">地区</span>
+                      </span>
+                    </span>
+                    <span class="node-meta">联动</span>
+                  </button>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <main class="canvas" data-testid="designer-canvas">
+        <div class="canvas-head">
+          <div class="canvas-title">
+            <span>字段定位面板</span>
+            <span class="badge" id="focusBadge" data-testid="focus-badge">当前焦点：客户名称</span>
+          </div>
+          <div class="panel-tools">
+            <button type="button" data-testid="btn-expand-path">展开父级</button>
+            <button type="button" data-testid="btn-locate-layout">定位画布</button>
+          </div>
+        </div>
+
+        <div class="canvas-stage">
+          <div class="stage-card" data-testid="stage-card">
+            <div class="stage-head">
+              <div class="canvas-title">
+                <span id="previewTitle" data-testid="preview-title">客户名称</span>
+                <span class="badge" id="previewState" data-testid="preview-state">已定位到字段树</span>
+              </div>
+              <div class="footer-actions">
+                <button type="button" data-testid="btn-insert-sibling">插入同级字段</button>
+                <button type="button" data-testid="btn-link-rule">配置联动</button>
+              </div>
+            </div>
+
+            <div class="stage-body">
+              <section class="structure-pane">
+                <div class="section-title">
+                  <span>分组结构预览</span>
+                  <span class="badge" id="groupBadge" data-testid="group-badge">基础信息 / 展开</span>
+                </div>
+
+                <div class="outline-list" data-testid="outline-list">
+                  <div class="outline-item">
+                    <div class="outline-top">
+                      <div class="outline-caption">
+                        <strong>基础信息</strong>
+                        <span class="outline-sub">用于主表身份识别与录入优先级</span>
+                      </div>
+                      <span class="field-chip" data-testid="outline-status">已锁定焦点</span>
+                    </div>
+                    <div class="field-line">
+                      <strong id="activeFieldName" data-testid="active-field-name">客户名称</strong>
+                      <span class="field-chip" id="activeFieldType" data-testid="active-field-type">文本字段</span>
+                    </div>
+                    <div class="mini-note" id="activeFieldHint" data-testid="active-field-hint">
+                      树上点击字段时，右侧属性和当前分组说明同步刷新，便于快速确认字段归属。
+                    </div>
+                  </div>
+
+                  <div class="outline-item">
+                    <div class="outline-top">
+                      <div class="outline-caption">
+                        <strong>合同信息</strong>
+                        <span class="outline-sub">结构节点可保持展开，支持跨分组查找</span>
+                      </div>
+                      <span class="field-chip">3 个字段</span>
+                    </div>
+                    <div class="mini-note">保持树层级稳定，避免频繁跳转属性面板时丢失定位。</div>
+                  </div>
+
+                  <div class="outline-item">
+                    <div class="outline-top">
+                      <div class="outline-caption">
+                        <strong>交付信息</strong>
+                        <span class="outline-sub">用于交付域字段的批量梳理与筛选</span>
+                      </div>
+                      <span class="field-chip">2 个字段</span>
+                    </div>
+                    <div class="mini-note">字段树在设计器中承担导航职责，交互重点是“快速展开、聚焦、同步属性”。</div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="detail-pane">
+                <div class="section-title">
+                  <span>字段详情</span>
+                  <span class="badge" id="pathBadge" data-testid="path-badge">路径 / 基础信息 / 客户名称</span>
+                </div>
+
+                <div class="detail-grid">
+                  <div class="detail-card" data-testid="detail-card-basic">
+                    <div class="detail-row">
+                      <label>字段编码</label>
+                      <div class="detail-value" id="detailCode" data-testid="detail-code">customer_name</div>
+                    </div>
+                    <div class="detail-row">
+                      <label>字段类型</label>
+                      <div class="detail-value" id="detailType" data-testid="detail-type">单行文本</div>
+                    </div>
+                    <div class="detail-row">
+                      <label>数据来源</label>
+                      <div class="detail-value" id="detailSource" data-testid="detail-source">业务手工录入</div>
+                    </div>
+                  </div>
+
+                  <div class="detail-card" data-testid="detail-card-rule">
+                    <div class="detail-row">
+                      <label>校验策略</label>
+                      <div class="detail-value status-good" id="detailRule" data-testid="detail-rule">名称唯一性校验</div>
+                    </div>
+                    <div class="detail-row">
+                      <label>联动说明</label>
+                      <div class="detail-value" id="detailLink" data-testid="detail-link">联动联系人、合同信息默认展开</div>
+                    </div>
+                    <div class="mini-note" id="detailNote" data-testid="detail-note">
+                      点击左侧字段树节点后，本区域展示该节点的主要属性摘要，减少来回切换成本。
+                    </div>
+                  </div>
+
+                  <div class="detail-card" data-testid="detail-card-summary">
+                    <div class="section-title" style="margin: 0;">
+                      <span>当前交互结果</span>
+                    </div>
+                    <ul class="summary-list" id="interactionSummary" data-testid="interaction-summary">
+                      <li>字段树根节点保持展开，当前焦点停留在“客户名称”。</li>
+                      <li>根节点 `data-state` 随焦点变化，供验收脚本直接断言。</li>
+                      <li>预览面板与属性面板同步刷新，不使用弹窗占位。</li>
+                    </ul>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+
+        <div class="state-banner" data-testid="state-banner">
+          <div class="state-copy">
+            <strong id="stateTitle">主交互：点击字段树节点，刷新定位与属性摘要</strong>
+            <span id="stateText">当前已选中“客户名称”，字段树用于快速锁定字段位置与所属分组。</span>
+          </div>
+          <button type="button" id="nextFieldBtn" data-testid="btn-next-field">切换到合同金额</button>
+        </div>
+      </main>
+
+      <aside class="inspector" data-testid="property-inspector">
+        <div class="panel-head">
+          <div class="panel-title">属性摘要</div>
+          <div class="panel-tools">
+            <button class="icon-btn" type="button" data-testid="btn-pin" title="固定面板">⌂</button>
+          </div>
+        </div>
+
+        <div class="inspector-body">
+          <section class="prop-group" data-testid="prop-group-location">
+            <div class="prop-head">
+              <span>树内定位</span>
+              <span class="badge" id="propStatus">已聚焦</span>
+            </div>
+            <div class="prop-body">
+              <div class="kv-row">
+                <span>当前分组</span>
+                <span class="kv-pill" id="propGroup" data-testid="prop-group">基础信息</span>
+              </div>
+              <div class="kv-row">
+                <span>层级路径</span>
+                <span class="kv-pill" id="propPath" data-testid="prop-path">根 / 基础信息 / 客户名称</span>
+              </div>
+              <div class="kv-row">
+                <span>字段状态</span>
+                <span class="kv-pill" id="propFieldState" data-testid="prop-field-state">必填 / 已展开定位</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="prop-group" data-testid="prop-group-ops">
+            <div class="prop-head">
+              <span>树操作建议</span>
+              <span class="badge">只读摘要</span>
+            </div>
+            <div class="prop-body">
+              <div class="mini-note">字段树适合在大表单中处理“查找字段归属”“确认分组层级”“切换编辑焦点”三类动作。</div>
+              <div class="mini-note">当前页面只实现字段树聚焦场景，不扩展规则编排、接口映射或版本比较。</div>
+            </div>
+          </section>
+
+          <section class="prop-group" data-testid="prop-group-footer">
+            <div class="prop-head">
+              <span>交互校验</span>
+              <span class="badge" id="verifyBadge">state-ready</span>
+            </div>
+            <div class="prop-body">
+              <div class="mini-note" id="verifyText">点击“切换到合同金额”后，根节点 `data-state` 将更新为 `focused-contract-amount`。</div>
+            </div>
+          </section>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const prototypeRoot = document.getElementById("prototypeRoot");
+      const nextFieldBtn = document.getElementById("nextFieldBtn");
+      const focusBadge = document.getElementById("focusBadge");
+      const previewTitle = document.getElementById("previewTitle");
+      const previewState = document.getElementById("previewState");
+      const groupBadge = document.getElementById("groupBadge");
+      const activeFieldName = document.getElementById("activeFieldName");
+      const activeFieldType = document.getElementById("activeFieldType");
+      const activeFieldHint = document.getElementById("activeFieldHint");
+      const pathBadge = document.getElementById("pathBadge");
+      const detailCode = document.getElementById("detailCode");
+      const detailType = document.getElementById("detailType");
+      const detailSource = document.getElementById("detailSource");
+      const detailRule = document.getElementById("detailRule");
+      const detailLink = document.getElementById("detailLink");
+      const detailNote = document.getElementById("detailNote");
+      const stateTitle = document.getElementById("stateTitle");
+      const stateText = document.getElementById("stateText");
+      const propStatus = document.getElementById("propStatus");
+      const propGroup = document.getElementById("propGroup");
+      const propPath = document.getElementById("propPath");
+      const propFieldState = document.getElementById("propFieldState");
+      const verifyBadge = document.getElementById("verifyBadge");
+      const verifyText = document.getElementById("verifyText");
+      const interactionSummary = document.getElementById("interactionSummary");
+      const treeSelectionCount = document.querySelector("[data-testid='tree-selection-count']");
+      const allNodes = Array.from(document.querySelectorAll(".tree-node[data-node-id]"));
+
+      const fieldMap = {
+        customerName: {
+          state: "focused-customer-name",
+          group: "基础信息",
+          label: "客户名称",
+          typeLabel: "文本字段",
+          detailType: "单行文本",
+          code: "customer_name",
+          source: "业务手工录入",
+          rule: "名称唯一性校验",
+          link: "联动联系人、合同信息默认展开",
+          path: "根 / 基础信息 / 客户名称",
+          shortPath: "路径 / 基础信息 / 客户名称",
+          fieldState: "必填 / 已展开定位",
+          summary: [
+            "字段树根节点保持展开，当前焦点停留在“客户名称”。",
+            "根节点 data-state 已更新为 focused-customer-name。",
+            "预览面板与属性面板同步刷新，用于确认字段归属和输入规则。"
+          ],
+          hint: "树上点击字段时，右侧属性和当前分组说明同步刷新，便于快速确认字段归属。",
+          banner: "当前已选中“客户名称”，字段树用于快速锁定字段位置与所属分组。"
+        },
+        contractAmount: {
+          state: "focused-contract-amount",
+          group: "合同信息",
+          label: "合同金额",
+          typeLabel: "金额字段",
+          detailType: "金额输入框",
+          code: "contract_amount",
+          source: "合同模板回填",
+          rule: "金额范围与币种格式校验",
+          link: "联动付款计划、审批节点自动展开",
+          path: "根 / 合同信息 / 合同金额",
+          shortPath: "路径 / 合同信息 / 合同金额",
+          fieldState: "计算字段 / 已切换焦点",
+          summary: [
+            "字段树焦点已切换到“合同金额”，并保持父分组展开。",
+            "根节点 data-state 已更新为 focused-contract-amount。",
+            "属性摘要已同步到金额字段，突出校验和联动信息。"
+          ],
+          hint: "金额字段在树中切换后，会优先展示计算规则与关联业务节点，避免错配字段。",
+          banner: "当前已切换到“合同金额”，用于验证跨分组切换时树定位和属性面板保持同步。"
+        }
+      };
+
+      function setSelectedNode(targetNodeId) {
+        allNodes.forEach(function (node) {
+          node.classList.toggle("selected", node.dataset.nodeId === targetNodeId);
+        });
+      }
+
+      function renderSummary(items) {
+        interactionSummary.innerHTML = "";
+        items.forEach(function (item) {
+          const li = document.createElement("li");
+          li.textContent = item;
+          interactionSummary.appendChild(li);
+        });
+      }
+
+      function updateField(nodeId) {
+        const payload = fieldMap[nodeId];
+        if (!payload) {
+          return;
+        }
+
+        setSelectedNode(nodeId);
+        prototypeRoot.dataset.state = payload.state;
+        focusBadge.textContent = "当前焦点：" + payload.label;
+        previewTitle.textContent = payload.label;
+        previewState.textContent = payload.state;
+        groupBadge.textContent = payload.group + " / 展开";
+        activeFieldName.textContent = payload.label;
+        activeFieldType.textContent = payload.typeLabel;
+        activeFieldHint.textContent = payload.hint;
+        pathBadge.textContent = payload.shortPath;
+        detailCode.textContent = payload.code;
+        detailType.textContent = payload.detailType;
+        detailSource.textContent = payload.source;
+        detailRule.textContent = payload.rule;
+        detailLink.textContent = payload.link;
+        detailNote.textContent = payload.hint;
+        stateTitle.textContent = "主交互：字段树焦点已切换到“" + payload.label + "”";
+        stateText.textContent = payload.banner;
+        propStatus.textContent = payload.state;
+        propGroup.textContent = payload.group;
+        propPath.textContent = payload.path;
+        propFieldState.textContent = payload.fieldState;
+        verifyBadge.textContent = payload.state;
+        verifyText.textContent = "当前根节点 data-state = " + payload.state + "，可直接用于自动验收断言。";
+        treeSelectionCount.textContent = "当前定位 " + (nodeId === "customerName" ? "1 / 12" : "6 / 12");
+        renderSummary(payload.summary);
+      }
+
+      document.querySelectorAll(".tree-node > .tree-row").forEach(function (button) {
+        button.addEventListener("click", function () {
+          const parentNode = button.parentElement;
+          const nodeId = parentNode.dataset.nodeId;
+
+          if (fieldMap[nodeId]) {
+            updateField(nodeId);
+            return;
+          }
+
+          parentNode.classList.toggle("collapsed");
+          const toggle = button.querySelector(".toggle");
+          if (toggle && !toggle.classList.contains("placeholder")) {
+            toggle.textContent = parentNode.classList.contains("collapsed") ? "▸" : "▾";
+          }
+        });
+      });
+
+      nextFieldBtn.addEventListener("click", function () {
+        updateField("contractAmount");
+      });
+    })();
+  </script>
+</body>
+</html>

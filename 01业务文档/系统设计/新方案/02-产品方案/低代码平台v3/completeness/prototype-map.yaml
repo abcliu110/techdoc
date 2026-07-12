@@ -1,0 +1,3512 @@
+{
+  "execution_id": "COMPLETE-20260712-001",
+  "applications": [
+    {
+      "application_id": "APP-V3",
+      "entry": "prototype/index.html"
+    }
+  ],
+  "units": [
+    {
+      "prototype_unit_id": "PROTO-FORM-DESIGNER",
+      "application_id": "APP-V3",
+      "entry": "workspace:page",
+      "reset_method": "reload saved fixture",
+      "status": "IMPLEMENTED"
+    },
+    {
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "application_id": "APP-V3",
+      "entry": "workspace:components",
+      "reset_method": "select component and state",
+      "status": "IMPLEMENTED"
+    }
+  ],
+  "prototype_cases": [
+    {
+      "prototype_case_id": "component-quick-section",
+      "variant_id": "VAR-COMP-QUICKSECTION",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=QuickSection",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "section-layout",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-QUICKSECTION-DESIGN",
+        "SCN-QUICKSECTION-CONFIGURE",
+        "SCN-QUICKSECTION-PREVIEW",
+        "SCN-QUICKSECTION-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-QUICKSECTION-DESIGN",
+        "SCN-QUICKSECTION-CONFIGURE",
+        "SCN-QUICKSECTION-PREVIEW",
+        "SCN-QUICKSECTION-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-field-layout",
+      "variant_id": "VAR-COMP-FIELDLAYOUT",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=FieldLayout",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "layout-container",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-FIELDLAYOUT-DESIGN",
+        "SCN-FIELDLAYOUT-CONFIGURE",
+        "SCN-FIELDLAYOUT-PREVIEW",
+        "SCN-FIELDLAYOUT-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-FIELDLAYOUT-DESIGN",
+        "SCN-FIELDLAYOUT-CONFIGURE",
+        "SCN-FIELDLAYOUT-PREVIEW",
+        "SCN-FIELDLAYOUT-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-field-group",
+      "variant_id": "VAR-COMP-FIELDGROUP",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=FieldGroup",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "layout-container",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-FIELDGROUP-DESIGN",
+        "SCN-FIELDGROUP-CONFIGURE",
+        "SCN-FIELDGROUP-PREVIEW",
+        "SCN-FIELDGROUP-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-FIELDGROUP-DESIGN",
+        "SCN-FIELDGROUP-CONFIGURE",
+        "SCN-FIELDGROUP-PREVIEW",
+        "SCN-FIELDGROUP-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-section",
+      "variant_id": "VAR-COMP-SECTION",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Section",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "layout-container",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-SECTION-DESIGN",
+        "SCN-SECTION-CONFIGURE",
+        "SCN-SECTION-PREVIEW",
+        "SCN-SECTION-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-SECTION-DESIGN",
+        "SCN-SECTION-CONFIGURE",
+        "SCN-SECTION-PREVIEW",
+        "SCN-SECTION-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-columns",
+      "variant_id": "VAR-COMP-COLUMNS",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Columns",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "columns-layout",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-COLUMNS-DESIGN",
+        "SCN-COLUMNS-CONFIGURE",
+        "SCN-COLUMNS-PREVIEW",
+        "SCN-COLUMNS-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-COLUMNS-DESIGN",
+        "SCN-COLUMNS-CONFIGURE",
+        "SCN-COLUMNS-PREVIEW",
+        "SCN-COLUMNS-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-flex",
+      "variant_id": "VAR-COMP-FLEX",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Flex",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "layout-container",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-FLEX-DESIGN",
+        "SCN-FLEX-CONFIGURE",
+        "SCN-FLEX-PREVIEW",
+        "SCN-FLEX-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-FLEX-DESIGN",
+        "SCN-FLEX-CONFIGURE",
+        "SCN-FLEX-PREVIEW",
+        "SCN-FLEX-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-advanced-panel",
+      "variant_id": "VAR-COMP-ADVANCEDPANEL",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=AdvancedPanel",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "layout-container",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-ADVANCEDPANEL-DESIGN",
+        "SCN-ADVANCEDPANEL-CONFIGURE",
+        "SCN-ADVANCEDPANEL-PREVIEW",
+        "SCN-ADVANCEDPANEL-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-ADVANCEDPANEL-DESIGN",
+        "SCN-ADVANCEDPANEL-CONFIGURE",
+        "SCN-ADVANCEDPANEL-PREVIEW",
+        "SCN-ADVANCEDPANEL-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-tabs",
+      "variant_id": "VAR-COMP-TABS",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Tabs",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "tabs-layout",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-TABS-DESIGN",
+        "SCN-TABS-CONFIGURE",
+        "SCN-TABS-PREVIEW",
+        "SCN-TABS-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-TABS-DESIGN",
+        "SCN-TABS-CONFIGURE",
+        "SCN-TABS-PREVIEW",
+        "SCN-TABS-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-wizard",
+      "variant_id": "VAR-COMP-WIZARD",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Wizard",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "wizard-flow",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-WIZARD-DESIGN",
+        "SCN-WIZARD-CONFIGURE",
+        "SCN-WIZARD-PREVIEW",
+        "SCN-WIZARD-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-WIZARD-DESIGN",
+        "SCN-WIZARD-CONFIGURE",
+        "SCN-WIZARD-PREVIEW",
+        "SCN-WIZARD-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-split-pane",
+      "variant_id": "VAR-COMP-SPLITPANE",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=SplitPane",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "split-layout",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-SPLITPANE-DESIGN",
+        "SCN-SPLITPANE-CONFIGURE",
+        "SCN-SPLITPANE-PREVIEW",
+        "SCN-SPLITPANE-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-SPLITPANE-DESIGN",
+        "SCN-SPLITPANE-CONFIGURE",
+        "SCN-SPLITPANE-PREVIEW",
+        "SCN-SPLITPANE-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-dashboard-grid",
+      "variant_id": "VAR-COMP-DASHBOARDGRID",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=DashboardGrid",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "dashboard-grid",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-DASHBOARDGRID-DESIGN",
+        "SCN-DASHBOARDGRID-CONFIGURE",
+        "SCN-DASHBOARDGRID-PREVIEW",
+        "SCN-DASHBOARDGRID-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-DASHBOARDGRID-DESIGN",
+        "SCN-DASHBOARDGRID-CONFIGURE",
+        "SCN-DASHBOARDGRID-PREVIEW",
+        "SCN-DASHBOARDGRID-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-carousel",
+      "variant_id": "VAR-COMP-CAROUSEL",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Carousel",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "layout-container",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-CAROUSEL-DESIGN",
+        "SCN-CAROUSEL-CONFIGURE",
+        "SCN-CAROUSEL-PREVIEW",
+        "SCN-CAROUSEL-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-CAROUSEL-DESIGN",
+        "SCN-CAROUSEL-CONFIGURE",
+        "SCN-CAROUSEL-PREVIEW",
+        "SCN-CAROUSEL-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-drawer",
+      "variant_id": "VAR-COMP-DRAWER",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Drawer",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "layout-container",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-DRAWER-DESIGN",
+        "SCN-DRAWER-CONFIGURE",
+        "SCN-DRAWER-PREVIEW",
+        "SCN-DRAWER-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-DRAWER-DESIGN",
+        "SCN-DRAWER-CONFIGURE",
+        "SCN-DRAWER-PREVIEW",
+        "SCN-DRAWER-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-text-field",
+      "variant_id": "VAR-COMP-TEXTFIELD",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=TextField",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-TEXTFIELD-DESIGN",
+        "SCN-TEXTFIELD-CONFIGURE",
+        "SCN-TEXTFIELD-PREVIEW",
+        "SCN-TEXTFIELD-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-TEXTFIELD-DESIGN",
+        "SCN-TEXTFIELD-CONFIGURE",
+        "SCN-TEXTFIELD-PREVIEW",
+        "SCN-TEXTFIELD-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-textarea",
+      "variant_id": "VAR-COMP-TEXTAREA",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Textarea",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-TEXTAREA-DESIGN",
+        "SCN-TEXTAREA-CONFIGURE",
+        "SCN-TEXTAREA-PREVIEW",
+        "SCN-TEXTAREA-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-TEXTAREA-DESIGN",
+        "SCN-TEXTAREA-CONFIGURE",
+        "SCN-TEXTAREA-PREVIEW",
+        "SCN-TEXTAREA-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-multilingual-text",
+      "variant_id": "VAR-COMP-MULTILINGUALTEXT",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=MultilingualText",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-MULTILINGUALTEXT-DESIGN",
+        "SCN-MULTILINGUALTEXT-CONFIGURE",
+        "SCN-MULTILINGUALTEXT-PREVIEW",
+        "SCN-MULTILINGUALTEXT-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-MULTILINGUALTEXT-DESIGN",
+        "SCN-MULTILINGUALTEXT-CONFIGURE",
+        "SCN-MULTILINGUALTEXT-PREVIEW",
+        "SCN-MULTILINGUALTEXT-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-masked-text",
+      "variant_id": "VAR-COMP-MASKEDTEXT",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=MaskedText",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-MASKEDTEXT-DESIGN",
+        "SCN-MASKEDTEXT-CONFIGURE",
+        "SCN-MASKEDTEXT-PREVIEW",
+        "SCN-MASKEDTEXT-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-MASKEDTEXT-DESIGN",
+        "SCN-MASKEDTEXT-CONFIGURE",
+        "SCN-MASKEDTEXT-PREVIEW",
+        "SCN-MASKEDTEXT-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-password",
+      "variant_id": "VAR-COMP-PASSWORD",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Password",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-PASSWORD-DESIGN",
+        "SCN-PASSWORD-CONFIGURE",
+        "SCN-PASSWORD-PREVIEW",
+        "SCN-PASSWORD-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-PASSWORD-DESIGN",
+        "SCN-PASSWORD-CONFIGURE",
+        "SCN-PASSWORD-PREVIEW",
+        "SCN-PASSWORD-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-integer",
+      "variant_id": "VAR-COMP-INTEGER",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Integer",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-INTEGER-DESIGN",
+        "SCN-INTEGER-CONFIGURE",
+        "SCN-INTEGER-PREVIEW",
+        "SCN-INTEGER-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-INTEGER-DESIGN",
+        "SCN-INTEGER-CONFIGURE",
+        "SCN-INTEGER-PREVIEW",
+        "SCN-INTEGER-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-decimal",
+      "variant_id": "VAR-COMP-DECIMAL",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Decimal",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-DECIMAL-DESIGN",
+        "SCN-DECIMAL-CONFIGURE",
+        "SCN-DECIMAL-PREVIEW",
+        "SCN-DECIMAL-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-DECIMAL-DESIGN",
+        "SCN-DECIMAL-CONFIGURE",
+        "SCN-DECIMAL-PREVIEW",
+        "SCN-DECIMAL-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-money-field",
+      "variant_id": "VAR-COMP-MONEYFIELD",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=MoneyField",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-MONEYFIELD-DESIGN",
+        "SCN-MONEYFIELD-CONFIGURE",
+        "SCN-MONEYFIELD-PREVIEW",
+        "SCN-MONEYFIELD-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-MONEYFIELD-DESIGN",
+        "SCN-MONEYFIELD-CONFIGURE",
+        "SCN-MONEYFIELD-PREVIEW",
+        "SCN-MONEYFIELD-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-percent",
+      "variant_id": "VAR-COMP-PERCENT",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Percent",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-PERCENT-DESIGN",
+        "SCN-PERCENT-CONFIGURE",
+        "SCN-PERCENT-PREVIEW",
+        "SCN-PERCENT-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-PERCENT-DESIGN",
+        "SCN-PERCENT-CONFIGURE",
+        "SCN-PERCENT-PREVIEW",
+        "SCN-PERCENT-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-measurement",
+      "variant_id": "VAR-COMP-MEASUREMENT",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Measurement",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-MEASUREMENT-DESIGN",
+        "SCN-MEASUREMENT-CONFIGURE",
+        "SCN-MEASUREMENT-PREVIEW",
+        "SCN-MEASUREMENT-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-MEASUREMENT-DESIGN",
+        "SCN-MEASUREMENT-CONFIGURE",
+        "SCN-MEASUREMENT-PREVIEW",
+        "SCN-MEASUREMENT-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-stepper",
+      "variant_id": "VAR-COMP-STEPPER",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Stepper",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-STEPPER-DESIGN",
+        "SCN-STEPPER-CONFIGURE",
+        "SCN-STEPPER-PREVIEW",
+        "SCN-STEPPER-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-STEPPER-DESIGN",
+        "SCN-STEPPER-CONFIGURE",
+        "SCN-STEPPER-PREVIEW",
+        "SCN-STEPPER-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-date",
+      "variant_id": "VAR-COMP-DATE",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Date",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-DATE-DESIGN",
+        "SCN-DATE-CONFIGURE",
+        "SCN-DATE-PREVIEW",
+        "SCN-DATE-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-DATE-DESIGN",
+        "SCN-DATE-CONFIGURE",
+        "SCN-DATE-PREVIEW",
+        "SCN-DATE-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-time",
+      "variant_id": "VAR-COMP-TIME",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Time",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-TIME-DESIGN",
+        "SCN-TIME-CONFIGURE",
+        "SCN-TIME-PREVIEW",
+        "SCN-TIME-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-TIME-DESIGN",
+        "SCN-TIME-CONFIGURE",
+        "SCN-TIME-PREVIEW",
+        "SCN-TIME-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-datetime",
+      "variant_id": "VAR-COMP-DATETIME",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Datetime",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-DATETIME-DESIGN",
+        "SCN-DATETIME-CONFIGURE",
+        "SCN-DATETIME-PREVIEW",
+        "SCN-DATETIME-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-DATETIME-DESIGN",
+        "SCN-DATETIME-CONFIGURE",
+        "SCN-DATETIME-PREVIEW",
+        "SCN-DATETIME-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-date-range",
+      "variant_id": "VAR-COMP-DATERANGE",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=DateRange",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-DATERANGE-DESIGN",
+        "SCN-DATERANGE-CONFIGURE",
+        "SCN-DATERANGE-PREVIEW",
+        "SCN-DATERANGE-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-DATERANGE-DESIGN",
+        "SCN-DATERANGE-CONFIGURE",
+        "SCN-DATERANGE-PREVIEW",
+        "SCN-DATERANGE-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-select",
+      "variant_id": "VAR-COMP-SELECT",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Select",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-SELECT-DESIGN",
+        "SCN-SELECT-CONFIGURE",
+        "SCN-SELECT-PREVIEW",
+        "SCN-SELECT-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-SELECT-DESIGN",
+        "SCN-SELECT-CONFIGURE",
+        "SCN-SELECT-PREVIEW",
+        "SCN-SELECT-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-radio-group",
+      "variant_id": "VAR-COMP-RADIOGROUP",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=RadioGroup",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-RADIOGROUP-DESIGN",
+        "SCN-RADIOGROUP-CONFIGURE",
+        "SCN-RADIOGROUP-PREVIEW",
+        "SCN-RADIOGROUP-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-RADIOGROUP-DESIGN",
+        "SCN-RADIOGROUP-CONFIGURE",
+        "SCN-RADIOGROUP-PREVIEW",
+        "SCN-RADIOGROUP-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-checkbox-group",
+      "variant_id": "VAR-COMP-CHECKBOXGROUP",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=CheckboxGroup",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-CHECKBOXGROUP-DESIGN",
+        "SCN-CHECKBOXGROUP-CONFIGURE",
+        "SCN-CHECKBOXGROUP-PREVIEW",
+        "SCN-CHECKBOXGROUP-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-CHECKBOXGROUP-DESIGN",
+        "SCN-CHECKBOXGROUP-CONFIGURE",
+        "SCN-CHECKBOXGROUP-PREVIEW",
+        "SCN-CHECKBOXGROUP-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-switch",
+      "variant_id": "VAR-COMP-SWITCH",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Switch",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-SWITCH-DESIGN",
+        "SCN-SWITCH-CONFIGURE",
+        "SCN-SWITCH-PREVIEW",
+        "SCN-SWITCH-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-SWITCH-DESIGN",
+        "SCN-SWITCH-CONFIGURE",
+        "SCN-SWITCH-PREVIEW",
+        "SCN-SWITCH-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-cascader",
+      "variant_id": "VAR-COMP-CASCADER",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Cascader",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-CASCADER-DESIGN",
+        "SCN-CASCADER-CONFIGURE",
+        "SCN-CASCADER-PREVIEW",
+        "SCN-CASCADER-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-CASCADER-DESIGN",
+        "SCN-CASCADER-CONFIGURE",
+        "SCN-CASCADER-PREVIEW",
+        "SCN-CASCADER-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-tag-select",
+      "variant_id": "VAR-COMP-TAGSELECT",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=TagSelect",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-TAGSELECT-DESIGN",
+        "SCN-TAGSELECT-CONFIGURE",
+        "SCN-TAGSELECT-PREVIEW",
+        "SCN-TAGSELECT-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-TAGSELECT-DESIGN",
+        "SCN-TAGSELECT-CONFIGURE",
+        "SCN-TAGSELECT-PREVIEW",
+        "SCN-TAGSELECT-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-rich-text-input",
+      "variant_id": "VAR-COMP-RICHTEXTINPUT",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=RichTextInput",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-RICHTEXTINPUT-DESIGN",
+        "SCN-RICHTEXTINPUT-CONFIGURE",
+        "SCN-RICHTEXTINPUT-PREVIEW",
+        "SCN-RICHTEXTINPUT-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-RICHTEXTINPUT-DESIGN",
+        "SCN-RICHTEXTINPUT-CONFIGURE",
+        "SCN-RICHTEXTINPUT-PREVIEW",
+        "SCN-RICHTEXTINPUT-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-markdown-input",
+      "variant_id": "VAR-COMP-MARKDOWNINPUT",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=MarkdownInput",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-MARKDOWNINPUT-DESIGN",
+        "SCN-MARKDOWNINPUT-CONFIGURE",
+        "SCN-MARKDOWNINPUT-PREVIEW",
+        "SCN-MARKDOWNINPUT-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-MARKDOWNINPUT-DESIGN",
+        "SCN-MARKDOWNINPUT-CONFIGURE",
+        "SCN-MARKDOWNINPUT-PREVIEW",
+        "SCN-MARKDOWNINPUT-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-attachment",
+      "variant_id": "VAR-COMP-ATTACHMENT",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Attachment",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-ATTACHMENT-DESIGN",
+        "SCN-ATTACHMENT-CONFIGURE",
+        "SCN-ATTACHMENT-PREVIEW",
+        "SCN-ATTACHMENT-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-ATTACHMENT-DESIGN",
+        "SCN-ATTACHMENT-CONFIGURE",
+        "SCN-ATTACHMENT-PREVIEW",
+        "SCN-ATTACHMENT-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-image-upload",
+      "variant_id": "VAR-COMP-IMAGEUPLOAD",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=ImageUpload",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "field-input",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-IMAGEUPLOAD-DESIGN",
+        "SCN-IMAGEUPLOAD-CONFIGURE",
+        "SCN-IMAGEUPLOAD-PREVIEW",
+        "SCN-IMAGEUPLOAD-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-IMAGEUPLOAD-DESIGN",
+        "SCN-IMAGEUPLOAD-CONFIGURE",
+        "SCN-IMAGEUPLOAD-PREVIEW",
+        "SCN-IMAGEUPLOAD-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-reference-picker",
+      "variant_id": "VAR-COMP-REFERENCEPICKER",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=ReferencePicker",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "business-reference",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-REFERENCEPICKER-DESIGN",
+        "SCN-REFERENCEPICKER-CONFIGURE",
+        "SCN-REFERENCEPICKER-PREVIEW",
+        "SCN-REFERENCEPICKER-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-REFERENCEPICKER-DESIGN",
+        "SCN-REFERENCEPICKER-CONFIGURE",
+        "SCN-REFERENCEPICKER-PREVIEW",
+        "SCN-REFERENCEPICKER-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-tree-reference-picker",
+      "variant_id": "VAR-COMP-TREEREFERENCEPICKER",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=TreeReferencePicker",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "business-reference",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-TREEREFERENCEPICKER-DESIGN",
+        "SCN-TREEREFERENCEPICKER-CONFIGURE",
+        "SCN-TREEREFERENCEPICKER-PREVIEW",
+        "SCN-TREEREFERENCEPICKER-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-TREEREFERENCEPICKER-DESIGN",
+        "SCN-TREEREFERENCEPICKER-CONFIGURE",
+        "SCN-TREEREFERENCEPICKER-PREVIEW",
+        "SCN-TREEREFERENCEPICKER-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-parent-reference",
+      "variant_id": "VAR-COMP-PARENTREFERENCE",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=ParentReference",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "business-reference",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-PARENTREFERENCE-DESIGN",
+        "SCN-PARENTREFERENCE-CONFIGURE",
+        "SCN-PARENTREFERENCE-PREVIEW",
+        "SCN-PARENTREFERENCE-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-PARENTREFERENCE-DESIGN",
+        "SCN-PARENTREFERENCE-CONFIGURE",
+        "SCN-PARENTREFERENCE-PREVIEW",
+        "SCN-PARENTREFERENCE-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-group-picker",
+      "variant_id": "VAR-COMP-GROUPPICKER",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=GroupPicker",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "business-reference",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-GROUPPICKER-DESIGN",
+        "SCN-GROUPPICKER-CONFIGURE",
+        "SCN-GROUPPICKER-PREVIEW",
+        "SCN-GROUPPICKER-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-GROUPPICKER-DESIGN",
+        "SCN-GROUPPICKER-CONFIGURE",
+        "SCN-GROUPPICKER-PREVIEW",
+        "SCN-GROUPPICKER-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-organization-picker",
+      "variant_id": "VAR-COMP-ORGANIZATIONPICKER",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=OrganizationPicker",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "business-reference",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-ORGANIZATIONPICKER-DESIGN",
+        "SCN-ORGANIZATIONPICKER-CONFIGURE",
+        "SCN-ORGANIZATIONPICKER-PREVIEW",
+        "SCN-ORGANIZATIONPICKER-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-ORGANIZATIONPICKER-DESIGN",
+        "SCN-ORGANIZATIONPICKER-CONFIGURE",
+        "SCN-ORGANIZATIONPICKER-PREVIEW",
+        "SCN-ORGANIZATIONPICKER-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-person-picker",
+      "variant_id": "VAR-COMP-PERSONPICKER",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=PersonPicker",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "business-reference",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-PERSONPICKER-DESIGN",
+        "SCN-PERSONPICKER-CONFIGURE",
+        "SCN-PERSONPICKER-PREVIEW",
+        "SCN-PERSONPICKER-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-PERSONPICKER-DESIGN",
+        "SCN-PERSONPICKER-CONFIGURE",
+        "SCN-PERSONPICKER-PREVIEW",
+        "SCN-PERSONPICKER-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-department-picker",
+      "variant_id": "VAR-COMP-DEPARTMENTPICKER",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=DepartmentPicker",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "business-reference",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-DEPARTMENTPICKER-DESIGN",
+        "SCN-DEPARTMENTPICKER-CONFIGURE",
+        "SCN-DEPARTMENTPICKER-PREVIEW",
+        "SCN-DEPARTMENTPICKER-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-DEPARTMENTPICKER-DESIGN",
+        "SCN-DEPARTMENTPICKER-CONFIGURE",
+        "SCN-DEPARTMENTPICKER-PREVIEW",
+        "SCN-DEPARTMENTPICKER-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-address-picker",
+      "variant_id": "VAR-COMP-ADDRESSPICKER",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=AddressPicker",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "business-reference",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-ADDRESSPICKER-DESIGN",
+        "SCN-ADDRESSPICKER-CONFIGURE",
+        "SCN-ADDRESSPICKER-PREVIEW",
+        "SCN-ADDRESSPICKER-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-ADDRESSPICKER-DESIGN",
+        "SCN-ADDRESSPICKER-CONFIGURE",
+        "SCN-ADDRESSPICKER-PREVIEW",
+        "SCN-ADDRESSPICKER-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-master-data-id",
+      "variant_id": "VAR-COMP-MASTERDATAID",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=MasterDataId",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "business-reference",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-MASTERDATAID-DESIGN",
+        "SCN-MASTERDATAID-CONFIGURE",
+        "SCN-MASTERDATAID-PREVIEW",
+        "SCN-MASTERDATAID-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-MASTERDATAID-DESIGN",
+        "SCN-MASTERDATAID-CONFIGURE",
+        "SCN-MASTERDATAID-PREVIEW",
+        "SCN-MASTERDATAID-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-status-enum",
+      "variant_id": "VAR-COMP-STATUSENUM",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=StatusEnum",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "business-reference",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-STATUSENUM-DESIGN",
+        "SCN-STATUSENUM-CONFIGURE",
+        "SCN-STATUSENUM-PREVIEW",
+        "SCN-STATUSENUM-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-STATUSENUM-DESIGN",
+        "SCN-STATUSENUM-CONFIGURE",
+        "SCN-STATUSENUM-PREVIEW",
+        "SCN-STATUSENUM-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-data-grid",
+      "variant_id": "VAR-COMP-DATAGRID",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=DataGrid",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "data-grid",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-DATAGRID-DESIGN",
+        "SCN-DATAGRID-CONFIGURE",
+        "SCN-DATAGRID-PREVIEW",
+        "SCN-DATAGRID-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-DATAGRID-DESIGN",
+        "SCN-DATAGRID-CONFIGURE",
+        "SCN-DATAGRID-PREVIEW",
+        "SCN-DATAGRID-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-tree-grid",
+      "variant_id": "VAR-COMP-TREEGRID",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=TreeGrid",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "tree-grid",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-TREEGRID-DESIGN",
+        "SCN-TREEGRID-CONFIGURE",
+        "SCN-TREEGRID-PREVIEW",
+        "SCN-TREEGRID-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-TREEGRID-DESIGN",
+        "SCN-TREEGRID-CONFIGURE",
+        "SCN-TREEGRID-PREVIEW",
+        "SCN-TREEGRID-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-entry-grid",
+      "variant_id": "VAR-COMP-ENTRYGRID",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=EntryGrid",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "entry-grid",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-ENTRYGRID-DESIGN",
+        "SCN-ENTRYGRID-CONFIGURE",
+        "SCN-ENTRYGRID-PREVIEW",
+        "SCN-ENTRYGRID-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-ENTRYGRID-DESIGN",
+        "SCN-ENTRYGRID-CONFIGURE",
+        "SCN-ENTRYGRID-PREVIEW",
+        "SCN-ENTRYGRID-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-sub-entry-grid",
+      "variant_id": "VAR-COMP-SUBENTRYGRID",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=SubEntryGrid",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "sub-entry-grid",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-SUBENTRYGRID-DESIGN",
+        "SCN-SUBENTRYGRID-CONFIGURE",
+        "SCN-SUBENTRYGRID-PREVIEW",
+        "SCN-SUBENTRYGRID-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-SUBENTRYGRID-DESIGN",
+        "SCN-SUBENTRYGRID-CONFIGURE",
+        "SCN-SUBENTRYGRID-PREVIEW",
+        "SCN-SUBENTRYGRID-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-tree-entry-grid",
+      "variant_id": "VAR-COMP-TREEENTRYGRID",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=TreeEntryGrid",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "tree-entry-grid",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-TREEENTRYGRID-DESIGN",
+        "SCN-TREEENTRYGRID-CONFIGURE",
+        "SCN-TREEENTRYGRID-PREVIEW",
+        "SCN-TREEENTRYGRID-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-TREEENTRYGRID-DESIGN",
+        "SCN-TREEENTRYGRID-CONFIGURE",
+        "SCN-TREEENTRYGRID-PREVIEW",
+        "SCN-TREEENTRYGRID-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-tree-sub-entry-grid",
+      "variant_id": "VAR-COMP-TREESUBENTRYGRID",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=TreeSubEntryGrid",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "tree-sub-entry-grid",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-TREESUBENTRYGRID-DESIGN",
+        "SCN-TREESUBENTRYGRID-CONFIGURE",
+        "SCN-TREESUBENTRYGRID-PREVIEW",
+        "SCN-TREESUBENTRYGRID-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-TREESUBENTRYGRID-DESIGN",
+        "SCN-TREESUBENTRYGRID-CONFIGURE",
+        "SCN-TREESUBENTRYGRID-PREVIEW",
+        "SCN-TREESUBENTRYGRID-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-card-entry",
+      "variant_id": "VAR-COMP-CARDENTRY",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=CardEntry",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "card-entry",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-CARDENTRY-DESIGN",
+        "SCN-CARDENTRY-CONFIGURE",
+        "SCN-CARDENTRY-PREVIEW",
+        "SCN-CARDENTRY-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-CARDENTRY-DESIGN",
+        "SCN-CARDENTRY-CONFIGURE",
+        "SCN-CARDENTRY-PREVIEW",
+        "SCN-CARDENTRY-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-sub-card-entry",
+      "variant_id": "VAR-COMP-SUBCARDENTRY",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=SubCardEntry",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "sub-card-entry",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-SUBCARDENTRY-DESIGN",
+        "SCN-SUBCARDENTRY-CONFIGURE",
+        "SCN-SUBCARDENTRY-PREVIEW",
+        "SCN-SUBCARDENTRY-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-SUBCARDENTRY-DESIGN",
+        "SCN-SUBCARDENTRY-CONFIGURE",
+        "SCN-SUBCARDENTRY-PREVIEW",
+        "SCN-SUBCARDENTRY-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-readonly-grid",
+      "variant_id": "VAR-COMP-READONLYGRID",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=ReadonlyGrid",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "data-surface",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-READONLYGRID-DESIGN",
+        "SCN-READONLYGRID-CONFIGURE",
+        "SCN-READONLYGRID-PREVIEW",
+        "SCN-READONLYGRID-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-READONLYGRID-DESIGN",
+        "SCN-READONLYGRID-CONFIGURE",
+        "SCN-READONLYGRID-PREVIEW",
+        "SCN-READONLYGRID-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-spreadsheet",
+      "variant_id": "VAR-COMP-SPREADSHEET",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Spreadsheet",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "data-surface",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-SPREADSHEET-DESIGN",
+        "SCN-SPREADSHEET-CONFIGURE",
+        "SCN-SPREADSHEET-PREVIEW",
+        "SCN-SPREADSHEET-RUNTIME"
+      ],
+      "verified_scenario_ids": [],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PLANNED_DISABLED"
+    },
+    {
+      "prototype_case_id": "component-query-filter",
+      "variant_id": "VAR-COMP-QUERYFILTER",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=QueryFilter",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "data-surface",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-QUERYFILTER-DESIGN",
+        "SCN-QUERYFILTER-CONFIGURE",
+        "SCN-QUERYFILTER-PREVIEW",
+        "SCN-QUERYFILTER-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-QUERYFILTER-DESIGN",
+        "SCN-QUERYFILTER-CONFIGURE",
+        "SCN-QUERYFILTER-PREVIEW",
+        "SCN-QUERYFILTER-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-pagination",
+      "variant_id": "VAR-COMP-PAGINATION",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Pagination",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "data-surface",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-PAGINATION-DESIGN",
+        "SCN-PAGINATION-CONFIGURE",
+        "SCN-PAGINATION-PREVIEW",
+        "SCN-PAGINATION-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-PAGINATION-DESIGN",
+        "SCN-PAGINATION-CONFIGURE",
+        "SCN-PAGINATION-PREVIEW",
+        "SCN-PAGINATION-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-tree",
+      "variant_id": "VAR-COMP-TREE",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Tree",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "tree",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-TREE-DESIGN",
+        "SCN-TREE-CONFIGURE",
+        "SCN-TREE-PREVIEW",
+        "SCN-TREE-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-TREE-DESIGN",
+        "SCN-TREE-CONFIGURE",
+        "SCN-TREE-PREVIEW",
+        "SCN-TREE-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-tree-picker",
+      "variant_id": "VAR-COMP-TREEPICKER",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=TreePicker",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "tree-picker",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-TREEPICKER-DESIGN",
+        "SCN-TREEPICKER-CONFIGURE",
+        "SCN-TREEPICKER-PREVIEW",
+        "SCN-TREEPICKER-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-TREEPICKER-DESIGN",
+        "SCN-TREEPICKER-CONFIGURE",
+        "SCN-TREEPICKER-PREVIEW",
+        "SCN-TREEPICKER-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-tree-browser",
+      "variant_id": "VAR-COMP-TREEBROWSER",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=TreeBrowser",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "tree-browser",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-TREEBROWSER-DESIGN",
+        "SCN-TREEBROWSER-CONFIGURE",
+        "SCN-TREEBROWSER-PREVIEW",
+        "SCN-TREEBROWSER-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-TREEBROWSER-DESIGN",
+        "SCN-TREEBROWSER-CONFIGURE",
+        "SCN-TREEBROWSER-PREVIEW",
+        "SCN-TREEBROWSER-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-column-browser",
+      "variant_id": "VAR-COMP-COLUMNBROWSER",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=ColumnBrowser",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "column-browser",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-COLUMNBROWSER-DESIGN",
+        "SCN-COLUMNBROWSER-CONFIGURE",
+        "SCN-COLUMNBROWSER-PREVIEW",
+        "SCN-COLUMNBROWSER-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-COLUMNBROWSER-DESIGN",
+        "SCN-COLUMNBROWSER-CONFIGURE",
+        "SCN-COLUMNBROWSER-PREVIEW",
+        "SCN-COLUMNBROWSER-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-heading",
+      "variant_id": "VAR-COMP-HEADING",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Heading",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "content-display",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-HEADING-DESIGN",
+        "SCN-HEADING-CONFIGURE",
+        "SCN-HEADING-PREVIEW",
+        "SCN-HEADING-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-HEADING-DESIGN",
+        "SCN-HEADING-CONFIGURE",
+        "SCN-HEADING-PREVIEW",
+        "SCN-HEADING-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-text-display",
+      "variant_id": "VAR-COMP-TEXTDISPLAY",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=TextDisplay",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "content-display",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-TEXTDISPLAY-DESIGN",
+        "SCN-TEXTDISPLAY-CONFIGURE",
+        "SCN-TEXTDISPLAY-PREVIEW",
+        "SCN-TEXTDISPLAY-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-TEXTDISPLAY-DESIGN",
+        "SCN-TEXTDISPLAY-CONFIGURE",
+        "SCN-TEXTDISPLAY-PREVIEW",
+        "SCN-TEXTDISPLAY-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-divider",
+      "variant_id": "VAR-COMP-DIVIDER",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Divider",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "content-display",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-DIVIDER-DESIGN",
+        "SCN-DIVIDER-CONFIGURE",
+        "SCN-DIVIDER-PREVIEW",
+        "SCN-DIVIDER-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-DIVIDER-DESIGN",
+        "SCN-DIVIDER-CONFIGURE",
+        "SCN-DIVIDER-PREVIEW",
+        "SCN-DIVIDER-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-badge",
+      "variant_id": "VAR-COMP-BADGE",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Badge",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "content-display",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-BADGE-DESIGN",
+        "SCN-BADGE-CONFIGURE",
+        "SCN-BADGE-PREVIEW",
+        "SCN-BADGE-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-BADGE-DESIGN",
+        "SCN-BADGE-CONFIGURE",
+        "SCN-BADGE-PREVIEW",
+        "SCN-BADGE-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-alert",
+      "variant_id": "VAR-COMP-ALERT",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Alert",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "content-display",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-ALERT-DESIGN",
+        "SCN-ALERT-CONFIGURE",
+        "SCN-ALERT-PREVIEW",
+        "SCN-ALERT-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-ALERT-DESIGN",
+        "SCN-ALERT-CONFIGURE",
+        "SCN-ALERT-PREVIEW",
+        "SCN-ALERT-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-empty-state",
+      "variant_id": "VAR-COMP-EMPTYSTATE",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=EmptyState",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "content-display",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-EMPTYSTATE-DESIGN",
+        "SCN-EMPTYSTATE-CONFIGURE",
+        "SCN-EMPTYSTATE-PREVIEW",
+        "SCN-EMPTYSTATE-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-EMPTYSTATE-DESIGN",
+        "SCN-EMPTYSTATE-CONFIGURE",
+        "SCN-EMPTYSTATE-PREVIEW",
+        "SCN-EMPTYSTATE-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-progress",
+      "variant_id": "VAR-COMP-PROGRESS",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Progress",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "content-display",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-PROGRESS-DESIGN",
+        "SCN-PROGRESS-CONFIGURE",
+        "SCN-PROGRESS-PREVIEW",
+        "SCN-PROGRESS-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-PROGRESS-DESIGN",
+        "SCN-PROGRESS-CONFIGURE",
+        "SCN-PROGRESS-PREVIEW",
+        "SCN-PROGRESS-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-statistic",
+      "variant_id": "VAR-COMP-STATISTIC",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Statistic",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "content-display",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-STATISTIC-DESIGN",
+        "SCN-STATISTIC-CONFIGURE",
+        "SCN-STATISTIC-PREVIEW",
+        "SCN-STATISTIC-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-STATISTIC-DESIGN",
+        "SCN-STATISTIC-CONFIGURE",
+        "SCN-STATISTIC-PREVIEW",
+        "SCN-STATISTIC-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-timeline",
+      "variant_id": "VAR-COMP-TIMELINE",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Timeline",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "content-display",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-TIMELINE-DESIGN",
+        "SCN-TIMELINE-CONFIGURE",
+        "SCN-TIMELINE-PREVIEW",
+        "SCN-TIMELINE-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-TIMELINE-DESIGN",
+        "SCN-TIMELINE-CONFIGURE",
+        "SCN-TIMELINE-PREVIEW",
+        "SCN-TIMELINE-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-image",
+      "variant_id": "VAR-COMP-IMAGE",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Image",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "content-display",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-IMAGE-DESIGN",
+        "SCN-IMAGE-CONFIGURE",
+        "SCN-IMAGE-PREVIEW",
+        "SCN-IMAGE-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-IMAGE-DESIGN",
+        "SCN-IMAGE-CONFIGURE",
+        "SCN-IMAGE-PREVIEW",
+        "SCN-IMAGE-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-audio",
+      "variant_id": "VAR-COMP-AUDIO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Audio",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "content-display",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-AUDIO-DESIGN",
+        "SCN-AUDIO-CONFIGURE",
+        "SCN-AUDIO-PREVIEW",
+        "SCN-AUDIO-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-AUDIO-DESIGN",
+        "SCN-AUDIO-CONFIGURE",
+        "SCN-AUDIO-PREVIEW",
+        "SCN-AUDIO-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-video",
+      "variant_id": "VAR-COMP-VIDEO",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Video",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "content-display",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-VIDEO-DESIGN",
+        "SCN-VIDEO-CONFIGURE",
+        "SCN-VIDEO-PREVIEW",
+        "SCN-VIDEO-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-VIDEO-DESIGN",
+        "SCN-VIDEO-CONFIGURE",
+        "SCN-VIDEO-PREVIEW",
+        "SCN-VIDEO-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-map",
+      "variant_id": "VAR-COMP-MAP",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Map",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "content-display",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-MAP-DESIGN",
+        "SCN-MAP-CONFIGURE",
+        "SCN-MAP-PREVIEW",
+        "SCN-MAP-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-MAP-DESIGN",
+        "SCN-MAP-CONFIGURE",
+        "SCN-MAP-PREVIEW",
+        "SCN-MAP-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-qrcode",
+      "variant_id": "VAR-COMP-QRCODE",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Qrcode",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "content-display",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-QRCODE-DESIGN",
+        "SCN-QRCODE-CONFIGURE",
+        "SCN-QRCODE-PREVIEW",
+        "SCN-QRCODE-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-QRCODE-DESIGN",
+        "SCN-QRCODE-CONFIGURE",
+        "SCN-QRCODE-PREVIEW",
+        "SCN-QRCODE-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-rich-text-display",
+      "variant_id": "VAR-COMP-RICHTEXTDISPLAY",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=RichTextDisplay",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "content-display",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-RICHTEXTDISPLAY-DESIGN",
+        "SCN-RICHTEXTDISPLAY-CONFIGURE",
+        "SCN-RICHTEXTDISPLAY-PREVIEW",
+        "SCN-RICHTEXTDISPLAY-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-RICHTEXTDISPLAY-DESIGN",
+        "SCN-RICHTEXTDISPLAY-CONFIGURE",
+        "SCN-RICHTEXTDISPLAY-PREVIEW",
+        "SCN-RICHTEXTDISPLAY-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-markdown-display",
+      "variant_id": "VAR-COMP-MARKDOWNDISPLAY",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=MarkdownDisplay",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "content-display",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-MARKDOWNDISPLAY-DESIGN",
+        "SCN-MARKDOWNDISPLAY-CONFIGURE",
+        "SCN-MARKDOWNDISPLAY-PREVIEW",
+        "SCN-MARKDOWNDISPLAY-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-MARKDOWNDISPLAY-DESIGN",
+        "SCN-MARKDOWNDISPLAY-CONFIGURE",
+        "SCN-MARKDOWNDISPLAY-PREVIEW",
+        "SCN-MARKDOWNDISPLAY-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-web-office",
+      "variant_id": "VAR-COMP-WEBOFFICE",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=WebOffice",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "content-display",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-WEBOFFICE-DESIGN",
+        "SCN-WEBOFFICE-CONFIGURE",
+        "SCN-WEBOFFICE-PREVIEW",
+        "SCN-WEBOFFICE-RUNTIME"
+      ],
+      "verified_scenario_ids": [],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PLANNED_DISABLED"
+    },
+    {
+      "prototype_case_id": "component-action-bar",
+      "variant_id": "VAR-COMP-ACTIONBAR",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=ActionBar",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "command-workflow",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-ACTIONBAR-DESIGN",
+        "SCN-ACTIONBAR-CONFIGURE",
+        "SCN-ACTIONBAR-PREVIEW",
+        "SCN-ACTIONBAR-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-ACTIONBAR-DESIGN",
+        "SCN-ACTIONBAR-CONFIGURE",
+        "SCN-ACTIONBAR-PREVIEW",
+        "SCN-ACTIONBAR-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-button-group",
+      "variant_id": "VAR-COMP-BUTTONGROUP",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=ButtonGroup",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "command-workflow",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-BUTTONGROUP-DESIGN",
+        "SCN-BUTTONGROUP-CONFIGURE",
+        "SCN-BUTTONGROUP-PREVIEW",
+        "SCN-BUTTONGROUP-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-BUTTONGROUP-DESIGN",
+        "SCN-BUTTONGROUP-CONFIGURE",
+        "SCN-BUTTONGROUP-PREVIEW",
+        "SCN-BUTTONGROUP-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-context-menu",
+      "variant_id": "VAR-COMP-CONTEXTMENU",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=ContextMenu",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "command-workflow",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-CONTEXTMENU-DESIGN",
+        "SCN-CONTEXTMENU-CONFIGURE",
+        "SCN-CONTEXTMENU-PREVIEW",
+        "SCN-CONTEXTMENU-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-CONTEXTMENU-DESIGN",
+        "SCN-CONTEXTMENU-CONFIGURE",
+        "SCN-CONTEXTMENU-PREVIEW",
+        "SCN-CONTEXTMENU-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-navigation-menu",
+      "variant_id": "VAR-COMP-NAVIGATIONMENU",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=NavigationMenu",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "command-workflow",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-NAVIGATIONMENU-DESIGN",
+        "SCN-NAVIGATIONMENU-CONFIGURE",
+        "SCN-NAVIGATIONMENU-PREVIEW",
+        "SCN-NAVIGATIONMENU-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-NAVIGATIONMENU-DESIGN",
+        "SCN-NAVIGATIONMENU-CONFIGURE",
+        "SCN-NAVIGATIONMENU-PREVIEW",
+        "SCN-NAVIGATIONMENU-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-tree-menu",
+      "variant_id": "VAR-COMP-TREEMENU",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=TreeMenu",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "command-workflow",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-TREEMENU-DESIGN",
+        "SCN-TREEMENU-CONFIGURE",
+        "SCN-TREEMENU-PREVIEW",
+        "SCN-TREEMENU-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-TREEMENU-DESIGN",
+        "SCN-TREEMENU-CONFIGURE",
+        "SCN-TREEMENU-PREVIEW",
+        "SCN-TREEMENU-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-breadcrumb",
+      "variant_id": "VAR-COMP-BREADCRUMB",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Breadcrumb",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "command-workflow",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-BREADCRUMB-DESIGN",
+        "SCN-BREADCRUMB-CONFIGURE",
+        "SCN-BREADCRUMB-PREVIEW",
+        "SCN-BREADCRUMB-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-BREADCRUMB-DESIGN",
+        "SCN-BREADCRUMB-CONFIGURE",
+        "SCN-BREADCRUMB-PREVIEW",
+        "SCN-BREADCRUMB-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-status-bar",
+      "variant_id": "VAR-COMP-STATUSBAR",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=StatusBar",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "command-workflow",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-STATUSBAR-DESIGN",
+        "SCN-STATUSBAR-CONFIGURE",
+        "SCN-STATUSBAR-PREVIEW",
+        "SCN-STATUSBAR-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-STATUSBAR-DESIGN",
+        "SCN-STATUSBAR-CONFIGURE",
+        "SCN-STATUSBAR-PREVIEW",
+        "SCN-STATUSBAR-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-approval-records",
+      "variant_id": "VAR-COMP-APPROVALRECORDS",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=ApprovalRecords",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "command-workflow",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-APPROVALRECORDS-DESIGN",
+        "SCN-APPROVALRECORDS-CONFIGURE",
+        "SCN-APPROVALRECORDS-PREVIEW",
+        "SCN-APPROVALRECORDS-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-APPROVALRECORDS-DESIGN",
+        "SCN-APPROVALRECORDS-CONFIGURE",
+        "SCN-APPROVALRECORDS-PREVIEW",
+        "SCN-APPROVALRECORDS-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-process-trace",
+      "variant_id": "VAR-COMP-PROCESSTRACE",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=ProcessTrace",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "command-workflow",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-PROCESSTRACE-DESIGN",
+        "SCN-PROCESSTRACE-CONFIGURE",
+        "SCN-PROCESSTRACE-PREVIEW",
+        "SCN-PROCESSTRACE-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-PROCESSTRACE-DESIGN",
+        "SCN-PROCESSTRACE-CONFIGURE",
+        "SCN-PROCESSTRACE-PREVIEW",
+        "SCN-PROCESSTRACE-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-operation-log",
+      "variant_id": "VAR-COMP-OPERATIONLOG",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=OperationLog",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "command-workflow",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-OPERATIONLOG-DESIGN",
+        "SCN-OPERATIONLOG-CONFIGURE",
+        "SCN-OPERATIONLOG-PREVIEW",
+        "SCN-OPERATIONLOG-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-OPERATIONLOG-DESIGN",
+        "SCN-OPERATIONLOG-CONFIGURE",
+        "SCN-OPERATIONLOG-PREVIEW",
+        "SCN-OPERATIONLOG-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-comments",
+      "variant_id": "VAR-COMP-COMMENTS",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Comments",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "command-workflow",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-COMMENTS-DESIGN",
+        "SCN-COMMENTS-CONFIGURE",
+        "SCN-COMMENTS-PREVIEW",
+        "SCN-COMMENTS-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-COMMENTS-DESIGN",
+        "SCN-COMMENTS-CONFIGURE",
+        "SCN-COMMENTS-PREVIEW",
+        "SCN-COMMENTS-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-metric-card",
+      "variant_id": "VAR-COMP-METRICCARD",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=MetricCard",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "analytics-view",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-METRICCARD-DESIGN",
+        "SCN-METRICCARD-CONFIGURE",
+        "SCN-METRICCARD-PREVIEW",
+        "SCN-METRICCARD-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-METRICCARD-DESIGN",
+        "SCN-METRICCARD-CONFIGURE",
+        "SCN-METRICCARD-PREVIEW",
+        "SCN-METRICCARD-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-chart",
+      "variant_id": "VAR-COMP-CHART",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Chart",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "chart",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-CHART-DESIGN",
+        "SCN-CHART-CONFIGURE",
+        "SCN-CHART-PREVIEW",
+        "SCN-CHART-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-CHART-DESIGN",
+        "SCN-CHART-CONFIGURE",
+        "SCN-CHART-PREVIEW",
+        "SCN-CHART-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-combo-chart",
+      "variant_id": "VAR-COMP-COMBOCHART",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=ComboChart",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "combo-chart",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-COMBOCHART-DESIGN",
+        "SCN-COMBOCHART-CONFIGURE",
+        "SCN-COMBOCHART-PREVIEW",
+        "SCN-COMBOCHART-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-COMBOCHART-DESIGN",
+        "SCN-COMBOCHART-CONFIGURE",
+        "SCN-COMBOCHART-PREVIEW",
+        "SCN-COMBOCHART-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-pivot-table",
+      "variant_id": "VAR-COMP-PIVOTTABLE",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=PivotTable",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "pivot-table",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-PIVOTTABLE-DESIGN",
+        "SCN-PIVOTTABLE-CONFIGURE",
+        "SCN-PIVOTTABLE-PREVIEW",
+        "SCN-PIVOTTABLE-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-PIVOTTABLE-DESIGN",
+        "SCN-PIVOTTABLE-CONFIGURE",
+        "SCN-PIVOTTABLE-PREVIEW",
+        "SCN-PIVOTTABLE-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-report-list",
+      "variant_id": "VAR-COMP-REPORTLIST",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=ReportList",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "analytics-view",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-REPORTLIST-DESIGN",
+        "SCN-REPORTLIST-CONFIGURE",
+        "SCN-REPORTLIST-PREVIEW",
+        "SCN-REPORTLIST-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-REPORTLIST-DESIGN",
+        "SCN-REPORTLIST-CONFIGURE",
+        "SCN-REPORTLIST-PREVIEW",
+        "SCN-REPORTLIST-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-report-tree",
+      "variant_id": "VAR-COMP-REPORTTREE",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=ReportTree",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "analytics-view",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-REPORTTREE-DESIGN",
+        "SCN-REPORTTREE-CONFIGURE",
+        "SCN-REPORTTREE-PREVIEW",
+        "SCN-REPORTTREE-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-REPORTTREE-DESIGN",
+        "SCN-REPORTTREE-CONFIGURE",
+        "SCN-REPORTTREE-PREVIEW",
+        "SCN-REPORTTREE-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-analytics-filter",
+      "variant_id": "VAR-COMP-ANALYTICSFILTER",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=AnalyticsFilter",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "analytics-view",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-ANALYTICSFILTER-DESIGN",
+        "SCN-ANALYTICSFILTER-CONFIGURE",
+        "SCN-ANALYTICSFILTER-PREVIEW",
+        "SCN-ANALYTICSFILTER-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-ANALYTICSFILTER-DESIGN",
+        "SCN-ANALYTICSFILTER-CONFIGURE",
+        "SCN-ANALYTICSFILTER-PREVIEW",
+        "SCN-ANALYTICSFILTER-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-analytics-workspace",
+      "variant_id": "VAR-COMP-ANALYTICSWORKSPACE",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=AnalyticsWorkspace",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "analytics-view",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-ANALYTICSWORKSPACE-DESIGN",
+        "SCN-ANALYTICSWORKSPACE-CONFIGURE",
+        "SCN-ANALYTICSWORKSPACE-PREVIEW",
+        "SCN-ANALYTICSWORKSPACE-RUNTIME"
+      ],
+      "verified_scenario_ids": [],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PLANNED_DISABLED"
+    },
+    {
+      "prototype_case_id": "component-iframe",
+      "variant_id": "VAR-COMP-IFRAME",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Iframe",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "sandboxed-extension",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-IFRAME-DESIGN",
+        "SCN-IFRAME-CONFIGURE",
+        "SCN-IFRAME-PREVIEW",
+        "SCN-IFRAME-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-IFRAME-DESIGN",
+        "SCN-IFRAME-CONFIGURE",
+        "SCN-IFRAME-PREVIEW",
+        "SCN-IFRAME-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-html",
+      "variant_id": "VAR-COMP-HTML",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=Html",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "html-host",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-HTML-DESIGN",
+        "SCN-HTML-CONFIGURE",
+        "SCN-HTML-PREVIEW",
+        "SCN-HTML-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-HTML-DESIGN",
+        "SCN-HTML-CONFIGURE",
+        "SCN-HTML-PREVIEW",
+        "SCN-HTML-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-custom-component",
+      "variant_id": "VAR-COMP-CUSTOMCOMPONENT",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=CustomComponent",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "custom-component-host",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-CUSTOMCOMPONENT-DESIGN",
+        "SCN-CUSTOMCOMPONENT-CONFIGURE",
+        "SCN-CUSTOMCOMPONENT-PREVIEW",
+        "SCN-CUSTOMCOMPONENT-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-CUSTOMCOMPONENT-DESIGN",
+        "SCN-CUSTOMCOMPONENT-CONFIGURE",
+        "SCN-CUSTOMCOMPONENT-PREVIEW",
+        "SCN-CUSTOMCOMPONENT-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-component-composition",
+      "variant_id": "VAR-COMP-COMPONENTCOMPOSITION",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=ComponentComposition",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "component-composition",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-COMPONENTCOMPOSITION-DESIGN",
+        "SCN-COMPONENTCOMPOSITION-CONFIGURE",
+        "SCN-COMPONENTCOMPOSITION-PREVIEW",
+        "SCN-COMPONENTCOMPOSITION-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-COMPONENTCOMPOSITION-DESIGN",
+        "SCN-COMPONENTCOMPOSITION-CONFIGURE",
+        "SCN-COMPONENTCOMPOSITION-PREVIEW",
+        "SCN-COMPONENTCOMPOSITION-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-page-fragment",
+      "variant_id": "VAR-COMP-PAGEFRAGMENT",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=PageFragment",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "page-fragment",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-PAGEFRAGMENT-DESIGN",
+        "SCN-PAGEFRAGMENT-CONFIGURE",
+        "SCN-PAGEFRAGMENT-PREVIEW",
+        "SCN-PAGEFRAGMENT-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-PAGEFRAGMENT-DESIGN",
+        "SCN-PAGEFRAGMENT-CONFIGURE",
+        "SCN-PAGEFRAGMENT-PREVIEW",
+        "SCN-PAGEFRAGMENT-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "prototype_case_id": "component-business-template",
+      "variant_id": "VAR-COMP-BUSINESSTEMPLATE",
+      "prototype_unit_id": "PROTO-COMPONENT-STUDIO",
+      "stable_entry": "workspace:components?component=BusinessTemplate",
+      "reset_method": "select component and reset state to design",
+      "renderer_kind": "business-template",
+      "required_states": [
+        "design",
+        "configure",
+        "preview",
+        "runtime",
+        "failure",
+        "permission"
+      ],
+      "planned_scenario_ids": [
+        "SCN-BUSINESSTEMPLATE-DESIGN",
+        "SCN-BUSINESSTEMPLATE-CONFIGURE",
+        "SCN-BUSINESSTEMPLATE-PREVIEW",
+        "SCN-BUSINESSTEMPLATE-RUNTIME"
+      ],
+      "verified_scenario_ids": [
+        "SCN-BUSINESSTEMPLATE-DESIGN",
+        "SCN-BUSINESSTEMPLATE-CONFIGURE",
+        "SCN-BUSINESSTEMPLATE-PREVIEW",
+        "SCN-BUSINESSTEMPLATE-RUNTIME"
+      ],
+      "evidence_refs": [
+        "tests/component-runtime-renderer.test.mjs",
+        "tests/component-runtime-contracts.test.mjs"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "prototype_variant_gap": [],
+  "result": "PASS"
+}

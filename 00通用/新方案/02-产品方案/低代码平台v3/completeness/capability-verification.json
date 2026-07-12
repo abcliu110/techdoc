@@ -1,0 +1,1782 @@
+{
+  "execution_id": "COMPLETE-20260712-001",
+  "capability_id": "CAP-COMPONENT-FAMILY",
+  "target_maturity": "production-ready",
+  "counts": {
+    "declared_variants": 106,
+    "required_variants": 103,
+    "planned_variants": 3,
+    "prototype_verified_variants": 103,
+    "verified_variants": 0
+  },
+  "variants": [
+    {
+      "variant_id": "VAR-COMP-QUICKSECTION",
+      "component_type": "QuickSection",
+      "prototype_case_id": "component-quick-section",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-FIELDLAYOUT",
+      "component_type": "FieldLayout",
+      "prototype_case_id": "component-field-layout",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-FIELDGROUP",
+      "component_type": "FieldGroup",
+      "prototype_case_id": "component-field-group",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-SECTION",
+      "component_type": "Section",
+      "prototype_case_id": "component-section",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-COLUMNS",
+      "component_type": "Columns",
+      "prototype_case_id": "component-columns",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-FLEX",
+      "component_type": "Flex",
+      "prototype_case_id": "component-flex",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-ADVANCEDPANEL",
+      "component_type": "AdvancedPanel",
+      "prototype_case_id": "component-advanced-panel",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-TABS",
+      "component_type": "Tabs",
+      "prototype_case_id": "component-tabs",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-WIZARD",
+      "component_type": "Wizard",
+      "prototype_case_id": "component-wizard",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-SPLITPANE",
+      "component_type": "SplitPane",
+      "prototype_case_id": "component-split-pane",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-DASHBOARDGRID",
+      "component_type": "DashboardGrid",
+      "prototype_case_id": "component-dashboard-grid",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-CAROUSEL",
+      "component_type": "Carousel",
+      "prototype_case_id": "component-carousel",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-DRAWER",
+      "component_type": "Drawer",
+      "prototype_case_id": "component-drawer",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-TEXTFIELD",
+      "component_type": "TextField",
+      "prototype_case_id": "component-text-field",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-TEXTAREA",
+      "component_type": "Textarea",
+      "prototype_case_id": "component-textarea",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-MULTILINGUALTEXT",
+      "component_type": "MultilingualText",
+      "prototype_case_id": "component-multilingual-text",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-MASKEDTEXT",
+      "component_type": "MaskedText",
+      "prototype_case_id": "component-masked-text",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-PASSWORD",
+      "component_type": "Password",
+      "prototype_case_id": "component-password",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-INTEGER",
+      "component_type": "Integer",
+      "prototype_case_id": "component-integer",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-DECIMAL",
+      "component_type": "Decimal",
+      "prototype_case_id": "component-decimal",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-MONEYFIELD",
+      "component_type": "MoneyField",
+      "prototype_case_id": "component-money-field",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-PERCENT",
+      "component_type": "Percent",
+      "prototype_case_id": "component-percent",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-MEASUREMENT",
+      "component_type": "Measurement",
+      "prototype_case_id": "component-measurement",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-STEPPER",
+      "component_type": "Stepper",
+      "prototype_case_id": "component-stepper",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-DATE",
+      "component_type": "Date",
+      "prototype_case_id": "component-date",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-TIME",
+      "component_type": "Time",
+      "prototype_case_id": "component-time",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-DATETIME",
+      "component_type": "Datetime",
+      "prototype_case_id": "component-datetime",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-DATERANGE",
+      "component_type": "DateRange",
+      "prototype_case_id": "component-date-range",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-SELECT",
+      "component_type": "Select",
+      "prototype_case_id": "component-select",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-RADIOGROUP",
+      "component_type": "RadioGroup",
+      "prototype_case_id": "component-radio-group",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-CHECKBOXGROUP",
+      "component_type": "CheckboxGroup",
+      "prototype_case_id": "component-checkbox-group",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-SWITCH",
+      "component_type": "Switch",
+      "prototype_case_id": "component-switch",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-CASCADER",
+      "component_type": "Cascader",
+      "prototype_case_id": "component-cascader",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-TAGSELECT",
+      "component_type": "TagSelect",
+      "prototype_case_id": "component-tag-select",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-RICHTEXTINPUT",
+      "component_type": "RichTextInput",
+      "prototype_case_id": "component-rich-text-input",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-MARKDOWNINPUT",
+      "component_type": "MarkdownInput",
+      "prototype_case_id": "component-markdown-input",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-ATTACHMENT",
+      "component_type": "Attachment",
+      "prototype_case_id": "component-attachment",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-IMAGEUPLOAD",
+      "component_type": "ImageUpload",
+      "prototype_case_id": "component-image-upload",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-REFERENCEPICKER",
+      "component_type": "ReferencePicker",
+      "prototype_case_id": "component-reference-picker",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-TREEREFERENCEPICKER",
+      "component_type": "TreeReferencePicker",
+      "prototype_case_id": "component-tree-reference-picker",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-PARENTREFERENCE",
+      "component_type": "ParentReference",
+      "prototype_case_id": "component-parent-reference",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-GROUPPICKER",
+      "component_type": "GroupPicker",
+      "prototype_case_id": "component-group-picker",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-ORGANIZATIONPICKER",
+      "component_type": "OrganizationPicker",
+      "prototype_case_id": "component-organization-picker",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-PERSONPICKER",
+      "component_type": "PersonPicker",
+      "prototype_case_id": "component-person-picker",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-DEPARTMENTPICKER",
+      "component_type": "DepartmentPicker",
+      "prototype_case_id": "component-department-picker",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-ADDRESSPICKER",
+      "component_type": "AddressPicker",
+      "prototype_case_id": "component-address-picker",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-MASTERDATAID",
+      "component_type": "MasterDataId",
+      "prototype_case_id": "component-master-data-id",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-STATUSENUM",
+      "component_type": "StatusEnum",
+      "prototype_case_id": "component-status-enum",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-DATAGRID",
+      "component_type": "DataGrid",
+      "prototype_case_id": "component-data-grid",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-TREEGRID",
+      "component_type": "TreeGrid",
+      "prototype_case_id": "component-tree-grid",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-ENTRYGRID",
+      "component_type": "EntryGrid",
+      "prototype_case_id": "component-entry-grid",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-SUBENTRYGRID",
+      "component_type": "SubEntryGrid",
+      "prototype_case_id": "component-sub-entry-grid",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-TREEENTRYGRID",
+      "component_type": "TreeEntryGrid",
+      "prototype_case_id": "component-tree-entry-grid",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-TREESUBENTRYGRID",
+      "component_type": "TreeSubEntryGrid",
+      "prototype_case_id": "component-tree-sub-entry-grid",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-CARDENTRY",
+      "component_type": "CardEntry",
+      "prototype_case_id": "component-card-entry",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-SUBCARDENTRY",
+      "component_type": "SubCardEntry",
+      "prototype_case_id": "component-sub-card-entry",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-READONLYGRID",
+      "component_type": "ReadonlyGrid",
+      "prototype_case_id": "component-readonly-grid",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-SPREADSHEET",
+      "component_type": "Spreadsheet",
+      "prototype_case_id": "component-spreadsheet",
+      "claimed_maturity": "catalogued",
+      "verified_maturity": "catalogued",
+      "missing_evidence": [],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-QUERYFILTER",
+      "component_type": "QueryFilter",
+      "prototype_case_id": "component-query-filter",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-PAGINATION",
+      "component_type": "Pagination",
+      "prototype_case_id": "component-pagination",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-TREE",
+      "component_type": "Tree",
+      "prototype_case_id": "component-tree",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-TREEPICKER",
+      "component_type": "TreePicker",
+      "prototype_case_id": "component-tree-picker",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-TREEBROWSER",
+      "component_type": "TreeBrowser",
+      "prototype_case_id": "component-tree-browser",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-COLUMNBROWSER",
+      "component_type": "ColumnBrowser",
+      "prototype_case_id": "component-column-browser",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-HEADING",
+      "component_type": "Heading",
+      "prototype_case_id": "component-heading",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-TEXTDISPLAY",
+      "component_type": "TextDisplay",
+      "prototype_case_id": "component-text-display",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-DIVIDER",
+      "component_type": "Divider",
+      "prototype_case_id": "component-divider",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-BADGE",
+      "component_type": "Badge",
+      "prototype_case_id": "component-badge",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-ALERT",
+      "component_type": "Alert",
+      "prototype_case_id": "component-alert",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-EMPTYSTATE",
+      "component_type": "EmptyState",
+      "prototype_case_id": "component-empty-state",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-PROGRESS",
+      "component_type": "Progress",
+      "prototype_case_id": "component-progress",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-STATISTIC",
+      "component_type": "Statistic",
+      "prototype_case_id": "component-statistic",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-TIMELINE",
+      "component_type": "Timeline",
+      "prototype_case_id": "component-timeline",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-IMAGE",
+      "component_type": "Image",
+      "prototype_case_id": "component-image",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-AUDIO",
+      "component_type": "Audio",
+      "prototype_case_id": "component-audio",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-VIDEO",
+      "component_type": "Video",
+      "prototype_case_id": "component-video",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-MAP",
+      "component_type": "Map",
+      "prototype_case_id": "component-map",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-QRCODE",
+      "component_type": "Qrcode",
+      "prototype_case_id": "component-qrcode",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-RICHTEXTDISPLAY",
+      "component_type": "RichTextDisplay",
+      "prototype_case_id": "component-rich-text-display",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-MARKDOWNDISPLAY",
+      "component_type": "MarkdownDisplay",
+      "prototype_case_id": "component-markdown-display",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-WEBOFFICE",
+      "component_type": "WebOffice",
+      "prototype_case_id": "component-web-office",
+      "claimed_maturity": "catalogued",
+      "verified_maturity": "catalogued",
+      "missing_evidence": [],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-ACTIONBAR",
+      "component_type": "ActionBar",
+      "prototype_case_id": "component-action-bar",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-BUTTONGROUP",
+      "component_type": "ButtonGroup",
+      "prototype_case_id": "component-button-group",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-CONTEXTMENU",
+      "component_type": "ContextMenu",
+      "prototype_case_id": "component-context-menu",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-NAVIGATIONMENU",
+      "component_type": "NavigationMenu",
+      "prototype_case_id": "component-navigation-menu",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-TREEMENU",
+      "component_type": "TreeMenu",
+      "prototype_case_id": "component-tree-menu",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-BREADCRUMB",
+      "component_type": "Breadcrumb",
+      "prototype_case_id": "component-breadcrumb",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-STATUSBAR",
+      "component_type": "StatusBar",
+      "prototype_case_id": "component-status-bar",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-APPROVALRECORDS",
+      "component_type": "ApprovalRecords",
+      "prototype_case_id": "component-approval-records",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-PROCESSTRACE",
+      "component_type": "ProcessTrace",
+      "prototype_case_id": "component-process-trace",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-OPERATIONLOG",
+      "component_type": "OperationLog",
+      "prototype_case_id": "component-operation-log",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-COMMENTS",
+      "component_type": "Comments",
+      "prototype_case_id": "component-comments",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-METRICCARD",
+      "component_type": "MetricCard",
+      "prototype_case_id": "component-metric-card",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-CHART",
+      "component_type": "Chart",
+      "prototype_case_id": "component-chart",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-COMBOCHART",
+      "component_type": "ComboChart",
+      "prototype_case_id": "component-combo-chart",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-PIVOTTABLE",
+      "component_type": "PivotTable",
+      "prototype_case_id": "component-pivot-table",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-REPORTLIST",
+      "component_type": "ReportList",
+      "prototype_case_id": "component-report-list",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-REPORTTREE",
+      "component_type": "ReportTree",
+      "prototype_case_id": "component-report-tree",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-ANALYTICSFILTER",
+      "component_type": "AnalyticsFilter",
+      "prototype_case_id": "component-analytics-filter",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-ANALYTICSWORKSPACE",
+      "component_type": "AnalyticsWorkspace",
+      "prototype_case_id": "component-analytics-workspace",
+      "claimed_maturity": "catalogued",
+      "verified_maturity": "catalogued",
+      "missing_evidence": [],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-IFRAME",
+      "component_type": "Iframe",
+      "prototype_case_id": "component-iframe",
+      "claimed_maturity": "previewable",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-HTML",
+      "component_type": "Html",
+      "prototype_case_id": "component-html",
+      "claimed_maturity": "previewable",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-CUSTOMCOMPONENT",
+      "component_type": "CustomComponent",
+      "prototype_case_id": "component-custom-component",
+      "claimed_maturity": "previewable",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-COMPONENTCOMPOSITION",
+      "component_type": "ComponentComposition",
+      "prototype_case_id": "component-component-composition",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-PAGEFRAGMENT",
+      "component_type": "PageFragment",
+      "prototype_case_id": "component-page-fragment",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    },
+    {
+      "variant_id": "VAR-COMP-BUSINESSTEMPLATE",
+      "component_type": "BusinessTemplate",
+      "prototype_case_id": "component-business-template",
+      "claimed_maturity": "production-ready",
+      "verified_maturity": "designable",
+      "missing_evidence": [
+        "dedicatedRenderer",
+        "permissionContract",
+        "securityReview",
+        "accessibilityReview",
+        "performanceReview",
+        "serverContract"
+      ],
+      "result": "FAIL"
+    }
+  ],
+  "implementation_variant_gap": [
+    "VAR-COMP-QUICKSECTION",
+    "VAR-COMP-FIELDLAYOUT",
+    "VAR-COMP-FIELDGROUP",
+    "VAR-COMP-SECTION",
+    "VAR-COMP-COLUMNS",
+    "VAR-COMP-FLEX",
+    "VAR-COMP-ADVANCEDPANEL",
+    "VAR-COMP-TABS",
+    "VAR-COMP-WIZARD",
+    "VAR-COMP-SPLITPANE",
+    "VAR-COMP-DASHBOARDGRID",
+    "VAR-COMP-CAROUSEL",
+    "VAR-COMP-DRAWER",
+    "VAR-COMP-TEXTFIELD",
+    "VAR-COMP-TEXTAREA",
+    "VAR-COMP-MULTILINGUALTEXT",
+    "VAR-COMP-MASKEDTEXT",
+    "VAR-COMP-PASSWORD",
+    "VAR-COMP-INTEGER",
+    "VAR-COMP-DECIMAL",
+    "VAR-COMP-MONEYFIELD",
+    "VAR-COMP-PERCENT",
+    "VAR-COMP-MEASUREMENT",
+    "VAR-COMP-STEPPER",
+    "VAR-COMP-DATE",
+    "VAR-COMP-TIME",
+    "VAR-COMP-DATETIME",
+    "VAR-COMP-DATERANGE",
+    "VAR-COMP-SELECT",
+    "VAR-COMP-RADIOGROUP",
+    "VAR-COMP-CHECKBOXGROUP",
+    "VAR-COMP-SWITCH",
+    "VAR-COMP-CASCADER",
+    "VAR-COMP-TAGSELECT",
+    "VAR-COMP-RICHTEXTINPUT",
+    "VAR-COMP-MARKDOWNINPUT",
+    "VAR-COMP-ATTACHMENT",
+    "VAR-COMP-IMAGEUPLOAD",
+    "VAR-COMP-REFERENCEPICKER",
+    "VAR-COMP-TREEREFERENCEPICKER",
+    "VAR-COMP-PARENTREFERENCE",
+    "VAR-COMP-GROUPPICKER",
+    "VAR-COMP-ORGANIZATIONPICKER",
+    "VAR-COMP-PERSONPICKER",
+    "VAR-COMP-DEPARTMENTPICKER",
+    "VAR-COMP-ADDRESSPICKER",
+    "VAR-COMP-MASTERDATAID",
+    "VAR-COMP-STATUSENUM",
+    "VAR-COMP-DATAGRID",
+    "VAR-COMP-TREEGRID",
+    "VAR-COMP-ENTRYGRID",
+    "VAR-COMP-SUBENTRYGRID",
+    "VAR-COMP-TREEENTRYGRID",
+    "VAR-COMP-TREESUBENTRYGRID",
+    "VAR-COMP-CARDENTRY",
+    "VAR-COMP-SUBCARDENTRY",
+    "VAR-COMP-READONLYGRID",
+    "VAR-COMP-QUERYFILTER",
+    "VAR-COMP-PAGINATION",
+    "VAR-COMP-TREE",
+    "VAR-COMP-TREEPICKER",
+    "VAR-COMP-TREEBROWSER",
+    "VAR-COMP-COLUMNBROWSER",
+    "VAR-COMP-HEADING",
+    "VAR-COMP-TEXTDISPLAY",
+    "VAR-COMP-DIVIDER",
+    "VAR-COMP-BADGE",
+    "VAR-COMP-ALERT",
+    "VAR-COMP-EMPTYSTATE",
+    "VAR-COMP-PROGRESS",
+    "VAR-COMP-STATISTIC",
+    "VAR-COMP-TIMELINE",
+    "VAR-COMP-IMAGE",
+    "VAR-COMP-AUDIO",
+    "VAR-COMP-VIDEO",
+    "VAR-COMP-MAP",
+    "VAR-COMP-QRCODE",
+    "VAR-COMP-RICHTEXTDISPLAY",
+    "VAR-COMP-MARKDOWNDISPLAY",
+    "VAR-COMP-ACTIONBAR",
+    "VAR-COMP-BUTTONGROUP",
+    "VAR-COMP-CONTEXTMENU",
+    "VAR-COMP-NAVIGATIONMENU",
+    "VAR-COMP-TREEMENU",
+    "VAR-COMP-BREADCRUMB",
+    "VAR-COMP-STATUSBAR",
+    "VAR-COMP-APPROVALRECORDS",
+    "VAR-COMP-PROCESSTRACE",
+    "VAR-COMP-OPERATIONLOG",
+    "VAR-COMP-COMMENTS",
+    "VAR-COMP-METRICCARD",
+    "VAR-COMP-CHART",
+    "VAR-COMP-COMBOCHART",
+    "VAR-COMP-PIVOTTABLE",
+    "VAR-COMP-REPORTLIST",
+    "VAR-COMP-REPORTTREE",
+    "VAR-COMP-ANALYTICSFILTER",
+    "VAR-COMP-IFRAME",
+    "VAR-COMP-HTML",
+    "VAR-COMP-CUSTOMCOMPONENT",
+    "VAR-COMP-COMPONENTCOMPOSITION",
+    "VAR-COMP-PAGEFRAGMENT",
+    "VAR-COMP-BUSINESSTEMPLATE"
+  ],
+  "prototype_delivery_result": "PASS",
+  "production_readiness_result": "FAIL",
+  "result": "FAIL"
+}

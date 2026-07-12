@@ -1,0 +1,54 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: product_charter
+  artifact_id: CHARTER-LOWCODE-V2-001
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  updated_at: 2026-07-11T00:00:00+08:00
+  created_by: codex
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+  status: FROZEN
+product:
+  name: 低代码平台 V2 设计器
+  category: 企业级低代码应用设计工作台
+  primary_benchmark: 金蝶云·苍穹开发服务云设计器
+  core_benchmarks:
+    - Mendix Studio Pro
+    - OutSystems Service Studio
+    - Microsoft Power Apps Studio
+    - Retool
+    - Appian Designer
+users:
+  primary:
+    - 应用设计者
+    - 业务建模者
+  secondary:
+    - 租户管理员
+    - 插件开发者
+    - 运维与审计人员
+core_job: 从销售订单业务对象出发，完成字段建模、页面与分录搭建、规则权限配置、预览、发布校验和候选版本生成。
+scope:
+  in:
+    - 业务对象与字段视图
+    - 企业单据页面设计
+    - 强表格与分录设计表达
+    - 界面规则和业务规则
+    - 字段与操作权限模拟
+    - 运行预览和发布前分析
+  out:
+    - 生产数据库与正式数据写入
+    - 真实租户权限中心
+    - 正式发布审批和生产部署
+    - 报表设计、套打和移动端优先设计
+constraints:
+  - 必须是桌面优先的专业工具，不做营销页面
+  - 设计态与运行态主体结构必须可解释地一致
+  - 页面权限只能收紧服务端权限
+  - 发布阻断问题不能被评分或主观意见覆盖
+  - 原型不引入新依赖，不修改现有低代码平台生产代码
+success_criteria:
+  - 核心任务全部可由真实点击操作完成
+  - 1440x900、1920x1080、1280x800 无意外横向溢出和控件遮挡
+  - 页面、对象、规则、权限、预览和发布准备均有可观察状态
+  - 发布阻断和关闭阻断后的状态均可复现
+  - 控制台无未解释 error

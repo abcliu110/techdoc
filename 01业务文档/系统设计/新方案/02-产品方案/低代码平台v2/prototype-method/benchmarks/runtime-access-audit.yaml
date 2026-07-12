@@ -1,0 +1,33 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: runtime_access_audit
+  artifact_id: RUNTIME-AUDIT-LOWCODE-V2-001
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  updated_at: 2026-07-11T23:59:00+08:00
+  created_by: codex
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+  status: EXECUTED
+audit:
+  local_installation_scan: NONE_FOUND
+  products:
+    - {product: 金蝶云·苍穹, entry: "https://dev.kingdee.com/home", observed: 登录和注册入口, authenticated: false, same_task_result: BLOCKED, blocker: ACCOUNT_LICENSE_AND_TEAM_REQUIRED}
+    - {product: Mendix Studio Pro, entry: "https://sprintr.home.mendix.com/", observed: 重定向到Log In Mendix Portal, authenticated: false, same_task_result: BLOCKED, blocker: ACCOUNT_AND_STUDIO_PRO_REQUIRED}
+    - {product: OutSystems Service Studio, entry: "https://www.outsystems.com/Portal/", observed: login_required重定向, authenticated: false, same_task_result: BLOCKED, blocker: ACCOUNT_ENVIRONMENT_AND_SERVICE_STUDIO_REQUIRED}
+    - {product: Microsoft Power Apps Studio, entry: "https://make.powerapps.com/", observed: Microsoft组织账户登录页, authenticated: false, same_task_result: BLOCKED, blocker: ORGANIZATION_ACCOUNT_LICENSE_AND_ENVIRONMENT_REQUIRED}
+    - {product: Retool, entry: "https://login.retool.com/auth/login", observed: Login Retool, authenticated: false, same_task_result: BLOCKED, blocker: ACCOUNT_AND_ORGANIZATION_REQUIRED}
+    - {product: Appian Designer, entry: "https://community.appian.com/", observed: Imperva iframe且无设计环境, authenticated: false, same_task_result: BLOCKED, blocker: COMMUNITY_ACCOUNT_AND_APPIAN_ENVIRONMENT_REQUIRED}
+  specialist:
+    - {product: DevExtreme, entry: "https://js.devexpress.com/Demos/WidgetsGallery/", observed: DevExtreme v26.1 Widget Gallery可访问, authenticated: false, result: PUBLIC_COMPONENT_DEMOS_AVAILABLE, limitation: 不含XAF业务对象权限与发布闭环}
+    - {product: DevExpress XAF, observed: 本机未安装且无授权项目, result: BLOCKED, blocker: INSTALLATION_LICENSE_AND_SAMPLE_PROJECT_REQUIRED}
+evidence:
+  browser_sessions: [kingdee-runtime, mendix-runtime, outsystems-runtime, powerapps-runtime, retool-runtime, appian-runtime, devexpress-demo]
+  screenshot: reports/screenshots/devexpress-widgets-gallery.png
+  external_registration_performed: false
+  credentials_used: false
+canonical_result:
+  result: BLOCKED
+  failure_code: MISSING_AUTHORIZED_COMPETITOR_ENVIRONMENTS
+  retryable: true
+  blocker_id: BLK-COMPETITOR-ACCOUNTS-LICENSES
+

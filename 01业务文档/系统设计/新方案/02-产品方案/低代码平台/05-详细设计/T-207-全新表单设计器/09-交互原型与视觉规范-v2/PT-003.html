@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>T-207 表单设计器 V2 - PT-003</title>
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.js"></script>
+  <style>
+    :root {
+      --bg: #e8edf3;
+      --panel: #ffffff;
+      --subtle: #f7f9fb;
+      --muted-panel: #f0f3f7;
+      --rail: #263241;
+      --rail-hover: #344154;
+      --rail-active: #3a4b61;
+      --text: #1f2937;
+      --text-2: #475467;
+      --muted: #667085;
+      --line: #d7dee8;
+      --line-strong: #b6c0cd;
+      --accent: #2468c9;
+      --accent-soft: #edf4ff;
+      --accent-line: #8db3ee;
+      --success: #19733f;
+      --success-soft: #edf8f1;
+      --warning: #8a5a00;
+      --warning-soft: #fff8e6;
+      --shadow: 0 4px 16px rgba(30, 41, 59, 0.12);
+      --radius: 4px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Microsoft YaHei UI", "Segoe UI", sans-serif;
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
+    button,
+    input { font: inherit; letter-spacing: 0; }
+    button { cursor: pointer; }
+    button:focus-visible,
+    input:focus-visible,
+    [tabindex]:focus-visible { outline: 2px solid #4c8fe8; outline-offset: 1px; }
+    [hidden] { display: none !important; }
+
+    .app {
+      width: 100vw;
+      height: 100vh;
+      min-width: 1120px;
+      display: grid;
+      grid-template-rows: 48px minmax(0, 1fr) 30px;
+      background: var(--bg);
+    }
+
+    .command-bar {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: 310px minmax(410px, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      padding: 0 10px;
+      border-bottom: 1px solid var(--line-strong);
+      background: var(--panel);
+    }
+
+    .brand,
+    .command-group,
+    .command-status,
+    .status-main,
+    .status-metrics {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .brand { gap: 8px; font-weight: 700; }
+    .brand-mark {
+      width: 26px;
+      height: 26px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border-radius: var(--radius);
+      background: var(--rail);
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .brand-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .command-group { gap: 4px; }
+    .command-status { justify-content: flex-end; gap: 6px; }
+
+    .chip {
+      height: 22px;
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0 7px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--subtle);
+      color: var(--text-2);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .chip.active { border-color: #a9c4ee; background: var(--accent-soft); color: var(--accent); }
+    .chip.success { border-color: #9fd0ad; background: var(--success-soft); color: var(--success); }
+    .chip.warning { border-color: #e5c96f; background: var(--warning-soft); color: var(--warning); }
+
+    .icon-button,
+    .command-button,
+    .small-button {
+      height: 30px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--text-2);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .icon-button { width: 32px; padding: 0; }
+    .command-button { padding: 0 9px; }
+    .small-button { height: 26px; padding: 0 8px; border-color: var(--line); background: #fff; }
+    .icon-button:hover,
+    .command-button:hover,
+    .small-button:hover { background: var(--muted-panel); color: var(--text); }
+    .command-button.on { border-color: #acc7ef; background: var(--accent-soft); color: var(--accent); }
+    .command-button.primary,
+    .small-button.primary { border-color: #1f61bc; background: var(--accent); color: #fff; }
+    .icon-button[disabled] { opacity: 0.38; cursor: default; }
+
+    svg { width: 15px; height: 15px; stroke-width: 1.8; }
+    .separator { width: 1px; height: 14px; background: var(--line); }
+
+    .studio {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 52px 264px minmax(0, 1fr) 292px;
+    }
+
+    .activity-bar {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 7px 4px;
+      border-right: 1px solid #18212c;
+      background: var(--rail);
+    }
+
+    .activity-button {
+      width: 44px;
+      height: 46px;
+      flex: 0 0 46px;
+      border: 0;
+      border-radius: var(--radius);
+      background: transparent;
+      color: #c9d3df;
+      display: grid;
+      grid-template-rows: 23px 12px;
+      place-items: center;
+      gap: 2px;
+      padding: 4px 2px 3px;
+      overflow: hidden;
+    }
+
+    .activity-button:hover { background: var(--rail-hover); color: #fff; }
+    .activity-button[aria-selected="true"] { background: var(--rail-active); color: #fff; box-shadow: inset 3px 0 0 #71a8ff; }
+    .activity-icon {
+      width: 24px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+    }
+    .activity-label { width: 100%; line-height: 12px; overflow: hidden; white-space: nowrap; text-align: center; font-size: 10px; font-weight: 600; }
+    .activity-spacer { flex: 1 1 auto; }
+
+    .field-panel,
+    .inspector {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 38px minmax(0, 1fr);
+      overflow: hidden;
+      background: var(--panel);
+    }
+
+    .field-panel { border-right: 1px solid var(--line); }
+    .inspector { border-left: 1px solid var(--line); }
+    .panel-header {
+      height: 38px;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 9px 0 10px;
+      border-bottom: 1px solid var(--line);
+      background: var(--subtle);
+    }
+    .panel-title { min-width: 0; flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
+    .panel-body { min-height: 0; overflow: auto; padding: 9px; }
+
+    .search-wrap { position: relative; margin-bottom: 9px; }
+    .search-wrap svg { position: absolute; left: 8px; top: 7px; color: var(--muted); pointer-events: none; }
+    .search-input { width: 100%; height: 28px; border: 1px solid var(--line); border-radius: var(--radius); padding: 0 8px 0 28px; color: var(--text); background: #fff; }
+    .object-card { margin-bottom: 8px; padding: 8px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--subtle); }
+    .object-title { display: flex; align-items: center; gap: 7px; font-weight: 700; }
+    .object-code { margin: 3px 0 0 27px; color: var(--muted); font-size: 11px; }
+    .object-icon,
+    .field-icon { display: grid; place-items: center; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; color: var(--text-2); }
+    .object-icon { width: 20px; height: 20px; }
+    .field-icon { width: 25px; height: 25px; }
+
+    .tree-label { height: 28px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e8edf3; color: var(--text-2); font-weight: 700; }
+    .field-list { display: grid; gap: 5px; padding-top: 6px; }
+    .field-row {
+      min-width: 0;
+      min-height: 42px;
+      display: grid;
+      grid-template-columns: 25px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 6px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--text-2);
+    }
+    .field-row:hover { border-color: #9dbbe7; background: var(--accent-soft); color: var(--accent); }
+    .field-row[data-drag-source="true"] { border-color: #77a2e2; background: var(--accent-soft); color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+    .field-main { min-width: 0; }
+    .field-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+    .field-code { margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-size: 11px; }
+    .drag-grip { width: 22px; display: grid; place-items: center; color: #7890ad; }
+
+    .canvas-shell {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 34px minmax(0, 1fr);
+      background: #e9eef4;
+    }
+
+    .canvas-toolbar {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 8px 0 10px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+    .breadcrumbs { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-size: 12px; }
+    .canvas-tools { display: flex; align-items: center; gap: 4px; }
+    .canvas-viewport {
+      min-width: 0;
+      min-height: 0;
+      overflow: auto;
+      padding: 14px;
+      background:
+        linear-gradient(#dfe6ee 1px, transparent 1px),
+        linear-gradient(90deg, #dfe6ee 1px, transparent 1px),
+        #edf1f5;
+      background-size: 24px 24px;
+    }
+
+    .artboard {
+      width: min(790px, 100%);
+      min-width: 650px;
+      min-height: 610px;
+      margin: 0 auto;
+      border: 1px solid #bdc7d3;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+    .page-command { height: 46px; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 0 14px; border-bottom: 1px solid var(--line); background: #fbfcfe; }
+    .page-title { font-size: 16px; font-weight: 700; }
+    .page-actions { display: flex; gap: 5px; }
+    .form-body { padding: 14px; }
+    .design-section { border: 1px solid var(--accent-line); border-radius: var(--radius); background: #fff; box-shadow: 0 0 0 2px rgba(54, 112, 202, 0.10); }
+    .section-header { height: 34px; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; border-bottom: 1px solid var(--line); background: var(--subtle); font-weight: 700; }
+    .section-meta { display: flex; align-items: center; gap: 6px; color: var(--accent); font-size: 11px; font-weight: 500; }
+    .field-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 12px; padding: 12px; }
+
+    .form-field,
+    .drop-target {
+      min-width: 0;
+      min-height: 68px;
+      border-radius: var(--radius);
+      position: relative;
+    }
+    .form-field { padding: 7px 8px; border: 1px solid #d8dee7; background: #fff; }
+    .field-label { display: flex; align-items: center; gap: 4px; margin-bottom: 6px; color: var(--text-2); font-size: 12px; }
+    .required { color: #b42318; }
+    .field-value { height: 28px; display: flex; align-items: center; padding: 0 7px; border: 1px solid #cfd8e3; border-radius: 3px; background: #fafbfc; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .drop-target {
+      border: 1px dashed #4a83d6;
+      background: #f3f7fe;
+      display: grid;
+      place-items: center;
+      padding: 5px;
+      transition: background 120ms ease, border-color 120ms ease;
+    }
+    .drop-target::before { content: ""; position: absolute; top: -2px; left: -5px; right: -5px; height: 3px; border-radius: 2px; background: var(--accent); }
+    .drop-preview { width: 100%; min-width: 0; display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; align-items: center; gap: 7px; padding: 6px; border: 1px solid #77a2e2; border-radius: 3px; background: #fff; color: var(--accent); box-shadow: 0 5px 14px rgba(36, 104, 201, 0.16); }
+    .preview-icon { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 3px; background: var(--accent-soft); }
+    .preview-copy { min-width: 0; }
+    .preview-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
+    .preview-subtitle { margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-size: 10px; }
+    .drop-action { height: 27px; padding: 0 7px; border: 1px solid #1f61bc; border-radius: 3px; background: var(--accent); color: #fff; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+    .drop-action:hover { background: #1e5db3; }
+
+    .placed-field { display: none; width: 100%; height: 100%; padding: 7px 8px; border: 1px solid #3273d1; border-radius: var(--radius); background: #fff; box-shadow: 0 0 0 2px rgba(50, 115, 209, 0.16); }
+    .placed-badge { position: absolute; top: -9px; right: 6px; height: 18px; display: inline-flex; align-items: center; padding: 0 5px; border-radius: 3px; background: var(--accent); color: #fff; font-size: 10px; }
+    .app[data-drop-state="placed"] .drop-preview { display: none; }
+    .app[data-drop-state="placed"] .drop-target { padding: 0; border-color: transparent; background: transparent; }
+    .app[data-drop-state="placed"] .drop-target::before { display: none; }
+    .app[data-drop-state="placed"] .placed-field { display: block; }
+    .app[data-drop-state="placed"] .field-row[data-drag-source="true"] { border-color: var(--line); background: #fff; color: var(--text-2); box-shadow: none; }
+
+    .drop-guide { margin: 12px 0; height: 40px; display: flex; align-items: center; gap: 8px; padding: 0 10px; border: 1px solid #bbd0ee; border-radius: var(--radius); background: var(--accent-soft); color: var(--text-2); }
+    .drop-guide strong { color: var(--accent); }
+    .guide-spacer { flex: 1 1 auto; }
+    .mini-grid { display: grid; grid-template-columns: repeat(3, 12px); gap: 3px; }
+    .mini-grid span { width: 12px; height: 8px; border: 1px solid #9db7db; border-radius: 1px; background: #fff; }
+    .mini-grid span:first-child { background: #7ba5e3; border-color: #4e80c8; }
+
+    .inspector-content { min-height: 0; overflow: auto; }
+    .context-block { padding: 10px; border-bottom: 1px solid var(--line); background: #fff; }
+    .context-top { display: flex; align-items: center; gap: 8px; }
+    .context-icon { width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid #b8ccef; border-radius: var(--radius); background: var(--accent-soft); color: var(--accent); }
+    .context-main { min-width: 0; flex: 1 1 auto; }
+    .context-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
+    .context-path { margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-size: 11px; }
+    .validation-banner { margin: 9px 10px 0; padding: 8px; border: 1px solid #9fd0ad; border-radius: var(--radius); background: var(--success-soft); color: var(--success); display: flex; align-items: flex-start; gap: 7px; }
+    .validation-copy { min-width: 0; }
+    .validation-title { font-weight: 700; }
+    .validation-note { margin-top: 2px; color: #3d654d; font-size: 11px; line-height: 1.5; }
+    .property-list { padding: 6px 10px 14px; }
+    .property-group-title { height: 28px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #edf1f5; color: var(--text-2); font-weight: 700; }
+    .property-row { min-height: 34px; display: grid; grid-template-columns: 84px minmax(0, 1fr); align-items: center; gap: 7px; border-bottom: 1px solid #eef2f6; }
+    .property-label { color: var(--muted); }
+    .property-value { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text); }
+    .property-value.code { font-family: Consolas, monospace; font-size: 11px; color: var(--accent); }
+    .schema-diff { margin-top: 8px; padding: 8px; border: 1px solid var(--line); border-radius: var(--radius); background: #f8fafc; color: var(--text-2); font-family: Consolas, monospace; font-size: 11px; line-height: 1.6; }
+    .schema-diff .added { color: var(--success); }
+
+    .status-bar { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 0 10px; border-top: 1px solid var(--line-strong); background: #fff; color: var(--text-2); font-size: 12px; }
+    .status-main { gap: 8px; }
+    .status-main span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .status-metrics { justify-content: flex-end; gap: 8px; white-space: nowrap; }
+    .status-dot { width: 7px; height: 7px; flex: 0 0 auto; border-radius: 50%; background: var(--accent); }
+    .app[data-drop-state="placed"] .status-dot { background: var(--warning); }
+
+    @media (max-width: 1500px) {
+      .command-bar { grid-template-columns: 280px minmax(380px, 1fr) auto; }
+      .studio { grid-template-columns: 52px 250px minmax(0, 1fr) 278px; }
+      .canvas-viewport { padding: 12px; }
+      .artboard { min-width: 0; }
+      .field-grid { gap: 8px; }
+      .command-status .chip:nth-child(2) { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="pt-003" data-testid="pt003-v2-root" data-version="v2" data-drop-state="preview" data-schema-state="clean" data-breakpoint="desktop-1440">
+    <header class="command-bar" data-testid="workbench-region-top">
+      <div class="brand">
+        <span class="brand-mark">T</span>
+        <span class="brand-name">销售订单表单设计器</span>
+        <span class="chip warning" data-testid="pt003-save-state">未保存</span>
+      </div>
+      <div class="command-group" aria-label="设计器命令栏">
+        <button class="icon-button" id="undoDrop" title="撤销投放" aria-label="撤销投放" disabled><i data-lucide="undo-2"></i></button>
+        <button class="icon-button" title="重做" aria-label="重做" disabled><i data-lucide="redo-2"></i></button>
+        <span class="separator"></span>
+        <button class="command-button on" data-testid="top-command-save"><i data-lucide="save"></i>保存</button>
+        <button class="command-button"><i data-lucide="play"></i>预览</button>
+        <button class="command-button primary"><i data-lucide="rocket"></i>发布</button>
+      </div>
+      <div class="command-status">
+        <span class="chip active">V2 · PT-003 · 拖入布局态</span>
+        <span class="chip">Schema 312 KB</span>
+        <span class="chip success"><i data-lucide="circle-check"></i>投放合法</span>
+      </div>
+    </header>
+
+    <main class="studio">
+      <nav class="activity-bar" aria-label="设计器资源模式">
+        <button class="activity-button" aria-selected="false" title="组件库"><span class="activity-icon"><i data-lucide="blocks"></i></span><span class="activity-label">组件</span></button>
+        <button class="activity-button" aria-selected="true" title="字段与业务对象"><span class="activity-icon"><i data-lucide="database"></i></span><span class="activity-label">字段</span></button>
+        <button class="activity-button" aria-selected="false" title="页面大纲"><span class="activity-icon"><i data-lucide="list-tree"></i></span><span class="activity-label">大纲</span></button>
+        <button class="activity-button" aria-selected="false" title="问题与校验"><span class="activity-icon"><i data-lucide="circle-alert"></i></span><span class="activity-label">问题</span></button>
+        <button class="activity-button" aria-selected="false" title="版本历史"><span class="activity-icon"><i data-lucide="history"></i></span><span class="activity-label">版本</span></button>
+        <span class="activity-spacer"></span>
+        <button class="activity-button" aria-selected="false" title="设计器设置"><span class="activity-icon"><i data-lucide="settings"></i></span><span class="activity-label">设置</span></button>
+      </nav>
+
+      <aside class="field-panel" data-testid="workbench-region-left">
+        <div class="panel-header">
+          <span class="panel-title">业务字段</span>
+          <span class="chip active">拖入画布</span>
+          <button class="icon-button" title="收起字段区" aria-label="收起字段区"><i data-lucide="panel-left-close"></i></button>
+        </div>
+        <div class="panel-body">
+          <div class="search-wrap"><i data-lucide="search"></i><input class="search-input" placeholder="搜索业务字段" aria-label="搜索业务字段" /></div>
+          <div class="object-card">
+            <div class="object-title"><span class="object-icon"><i data-lucide="boxes"></i></span>销售订单 <span class="chip success">主对象</span></div>
+            <div class="object-code">SalesOrder · 18 个字段</div>
+          </div>
+          <div class="tree-label"><span>单据头字段</span><span class="chip">6</span></div>
+          <div class="field-list">
+            <div class="field-row" data-testid="pt003-field-customer" data-drag-source="true" tabindex="0">
+              <span class="field-icon"><i data-lucide="book-user"></i></span>
+              <div class="field-main"><div class="field-name">客户</div><div class="field-code">customerId · 基础资料</div></div>
+              <span class="drag-grip" title="正在拖动"><i data-lucide="grip-vertical"></i></span>
+            </div>
+            <div class="field-row"><span class="field-icon"><i data-lucide="calendar-days"></i></span><div class="field-main"><div class="field-name">订单日期</div><div class="field-code">orderDate · 日期</div></div><span class="drag-grip"><i data-lucide="grip-vertical"></i></span></div>
+            <div class="field-row"><span class="field-icon"><i data-lucide="coins"></i></span><div class="field-main"><div class="field-name">币别</div><div class="field-code">currencyId · 基础资料</div></div><span class="drag-grip"><i data-lucide="grip-vertical"></i></span></div>
+            <div class="field-row"><span class="field-icon"><i data-lucide="building-2"></i></span><div class="field-main"><div class="field-name">销售组织</div><div class="field-code">saleOrgId · 组织</div></div><span class="drag-grip"><i data-lucide="grip-vertical"></i></span></div>
+            <div class="field-row"><span class="field-icon"><i data-lucide="user-round"></i></span><div class="field-main"><div class="field-name">销售员</div><div class="field-code">ownerId · 人员</div></div><span class="drag-grip"><i data-lucide="grip-vertical"></i></span></div>
+          </div>
+        </div>
+      </aside>
+
+      <section class="canvas-shell" data-testid="workbench-region-center">
+        <div class="canvas-toolbar">
+          <div class="breadcrumbs">销售订单 / 单据头 / 基础信息网格 / 第 1 行第 1 列</div>
+          <div class="canvas-tools">
+            <span class="chip success"><i data-lucide="mouse-pointer-2"></i>合法投放区</span>
+            <button class="icon-button" title="显示网格" aria-label="显示网格"><i data-lucide="grid-2x2"></i></button>
+            <button class="small-button"><i data-lucide="search"></i>100%</button>
+          </div>
+        </div>
+        <div class="canvas-viewport">
+          <article class="artboard">
+            <header class="page-command">
+              <div class="page-title">销售订单</div>
+              <div class="page-actions"><button class="small-button">保存</button><button class="small-button">提交</button><button class="small-button">更多</button></div>
+            </header>
+            <div class="form-body">
+              <section class="design-section">
+                <div class="section-header">
+                  <span>单据头</span>
+                  <span class="section-meta"><i data-lucide="grid-3x3"></i>三列网格 · gap 12</span>
+                </div>
+                <div class="field-grid">
+                  <div class="drop-target" data-testid="pt003-drop-target" data-drop-legal="true">
+                    <div class="drop-preview">
+                      <span class="preview-icon"><i data-lucide="book-user"></i></span>
+                      <div class="preview-copy"><div class="preview-title">客户</div><div class="preview-subtitle">ReferencePicker · span 1</div></div>
+                      <button class="drop-action" id="commitDrop" data-testid="pt003-drop-commit"><i data-lucide="mouse-pointer-click"></i>放置到此处</button>
+                    </div>
+                    <div class="placed-field" data-testid="pt003-node-field-customer">
+                      <span class="placed-badge">已生成</span>
+                      <div class="field-label"><span class="required">*</span>客户</div>
+                      <div class="field-value">请选择客户</div>
+                    </div>
+                  </div>
+                  <div class="form-field"><div class="field-label"><span class="required">*</span>订单日期</div><div class="field-value">2026-07-10</div></div>
+                  <div class="form-field"><div class="field-label">币别</div><div class="field-value">CNY 人民币</div></div>
+                  <div class="form-field"><div class="field-label"><span class="required">*</span>销售组织</div><div class="field-value">华东销售中心</div></div>
+                  <div class="form-field"><div class="field-label">销售员</div><div class="field-value">王晓明</div></div>
+                  <div class="form-field"><div class="field-label">单据状态</div><div class="field-value">草稿</div></div>
+                </div>
+              </section>
+
+              <div class="drop-guide">
+                <i data-lucide="move-down"></i>
+                <span><strong>投放指示器</strong>　将生成 FieldNode 并绑定 SalesOrder.customerId</span>
+                <span class="guide-spacer"></span>
+                <span class="mini-grid" aria-hidden="true"><span></span><span></span><span></span></span>
+              </div>
+
+              <section class="design-section">
+                <div class="section-header"><span>交付信息</span><span class="section-meta">三列网格</span></div>
+                <div class="field-grid">
+                  <div class="form-field"><div class="field-label">交付日期</div><div class="field-value">2026-07-20</div></div>
+                  <div class="form-field"><div class="field-label">交付方式</div><div class="field-value">送货上门</div></div>
+                  <div class="form-field"><div class="field-label">收货地址</div><div class="field-value">江苏省南京市建邺区</div></div>
+                </div>
+              </section>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <aside class="inspector" data-testid="workbench-region-right">
+        <div class="panel-header"><span class="panel-title">投放预检</span><span class="chip success" data-testid="pt003-inspector-state">Drop legal</span><button class="icon-button" title="收起属性面板" aria-label="收起属性面板"><i data-lucide="panel-right-close"></i></button></div>
+        <div class="inspector-content">
+          <div class="context-block">
+            <div class="context-top">
+              <span class="context-icon"><i data-lucide="book-user"></i></span>
+              <div class="context-main"><div class="context-title" data-testid="pt003-inspector-title">客户 · GhostPreview</div><div class="context-path">SalesOrder.customerId</div></div>
+            </div>
+          </div>
+          <div class="validation-banner">
+            <i data-lucide="circle-check"></i>
+            <div class="validation-copy"><div class="validation-title" data-testid="pt003-validation-title">可放置到当前网格单元</div><div class="validation-note" data-testid="pt003-validation-note">字段类型与容器能力匹配，未发现跨度或绑定冲突。</div></div>
+          </div>
+          <div class="property-list">
+            <div class="property-group-title"><span>投放位置</span><span class="chip active">实时</span></div>
+            <div class="property-row"><span class="property-label">dropTarget</span><span class="property-value code">grid-header-1-1</span></div>
+            <div class="property-row"><span class="property-label">容器</span><span class="property-value">HeaderSection.GridLayout</span></div>
+            <div class="property-row"><span class="property-label">网格位置</span><span class="property-value">row 1 · column 1</span></div>
+            <div class="property-row"><span class="property-label">跨度</span><span class="property-value">1 / 3</span></div>
+            <div class="property-group-title"><span>字段映射</span><span class="chip success">有效</span></div>
+            <div class="property-row"><span class="property-label">字段编码</span><span class="property-value code">customerId</span></div>
+            <div class="property-row"><span class="property-label">编辑器</span><span class="property-value">ReferencePicker</span></div>
+            <div class="property-row"><span class="property-label">必填</span><span class="property-value">是</span></div>
+            <div class="property-row"><span class="property-label">Schema</span><span class="property-value" id="schemaLabel">等待投放</span></div>
+            <div class="schema-diff" aria-label="Schema 变更预览">
+              <div>{</div>
+              <div class="added">+ type: "FieldNode"</div>
+              <div class="added">+ binding: "customerId"</div>
+              <div class="added">+ editor: "ReferencePicker"</div>
+              <div>}</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="status-bar">
+      <div class="status-main"><span class="status-dot"></span><span id="statusText" data-testid="pt003-status-text">正在拖入 customerId · 释放后生成 FieldNode</span></div>
+      <div class="status-metrics"><span>Grid 3 列</span><span class="separator"></span><span>DropIndicator: active</span><span class="separator"></span><span id="schemaMetric">Schema clean</span></div>
+    </footer>
+  </div>
+
+  <script>
+    const root = document.getElementById("pt-003");
+    const commitDrop = document.getElementById("commitDrop");
+    const undoDrop = document.getElementById("undoDrop");
+    const statusText = document.getElementById("statusText");
+    const schemaMetric = document.getElementById("schemaMetric");
+    const schemaLabel = document.getElementById("schemaLabel");
+    const inspectorTitle = document.querySelector('[data-testid="pt003-inspector-title"]');
+    const validationTitle = document.querySelector('[data-testid="pt003-validation-title"]');
+    const validationNote = document.querySelector('[data-testid="pt003-validation-note"]');
+
+    function setDropState(state) {
+      const placed = state === "placed";
+      root.dataset.dropState = state;
+      root.dataset.schemaState = placed ? "dirty" : "clean";
+      undoDrop.disabled = !placed;
+      statusText.textContent = placed ? "已生成 field_customer · Schema 标记为未保存" : "正在拖入 customerId · 释放后生成 FieldNode";
+      schemaMetric.textContent = placed ? "Schema dirty" : "Schema clean";
+      schemaLabel.textContent = placed ? "已新增 · dirty" : "等待投放";
+      inspectorTitle.textContent = placed ? "客户 · FieldNode" : "客户 · GhostPreview";
+      validationTitle.textContent = placed ? "字段已放置并完成绑定" : "可放置到当前网格单元";
+      validationNote.textContent = placed ? "designer-node-field-customer 已生成，可通过撤销恢复投放预览。" : "字段类型与容器能力匹配，未发现跨度或绑定冲突。";
+    }
+
+    commitDrop.addEventListener("click", () => setDropState("placed"));
+    undoDrop.addEventListener("click", () => setDropState("preview"));
+    if (window.lucide) window.lucide.createIcons();
+  </script>
+</body>
+</html>

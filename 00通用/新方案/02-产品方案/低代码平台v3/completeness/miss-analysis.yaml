@@ -1,0 +1,15 @@
+{
+  "execution_id": "COMPLETE-20260712-001",
+  "findings": [
+    {
+      "finding_id": "MISS-C8-EVIDENCE",
+      "code": "EVIDENCE_GAP",
+      "severity": "P1",
+      "fact": "103 required component variants lack production-readiness evidence",
+      "cause": "Prototype renderer execution is available, but permission, security, accessibility, performance or server contracts remain unproven.",
+      "corrective_action": "Attach named per-variant evidence; do not promote renderer execution to production proof.",
+      "status": "OPEN"
+    }
+  ],
+  "result": "FAIL"
+}

@@ -1,0 +1,36 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: coverage_reconciliation
+  artifact_id: COVERAGE-LOWCODE-V2-20260711-001
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T23:59:00+08:00
+  updated_at: 2026-07-11T23:59:00+08:00
+  created_by: CoverageReconciler
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+  status: FAILED
+inputs:
+  specification_tasks: prototype-method/tasks/tasks.yaml
+  independent_tasks: prototype-method/tests/independent-task-derivation.yaml
+reconciliation:
+  intersections:
+    - {spec: TASK-001, derived: [DERIVED-001, DERIVED-002], status: COVERED}
+    - {spec: TASK-002, derived: [DERIVED-005], status: PARTIAL, gap: 规格只验证角色切换和服务端边界，未覆盖显隐、只读和影响说明矩阵}
+    - {spec: TASK-003, derived: [DERIVED-003], status: PARTIAL, gap: 规格成功证据未明确四区同步和反向选择}
+  independent_only:
+    - {derived: DERIVED-004, disposition: GAP, return_stage: 5, reason: 分录滚动末端可达和表头同步未成为正式任务}
+    - {derived: DERIVED-006, disposition: GAP, return_stage: 2, reason: 规则执行、影响分析和循环检测未成为独立验收任务}
+    - {derived: DERIVED-007, disposition: GAP, return_stage: 5, reason: 三视口检查存在机械报告但未成为独立任务清单}
+  specification_only: []
+findings:
+  - {id: COV-P1-001, severity: P1, statement: 规则配置与循环检测核心任务缺失, return_stage: 2, status: OPEN}
+  - {id: COV-P1-002, severity: P1, statement: 分录滚动末端与表头同步任务缺失, return_stage: 5, status: OPEN}
+  - {id: COV-P1-003, severity: P1, statement: 角色权限矩阵任务覆盖不完整, return_stage: 5, status: OPEN}
+  - {id: COV-P1-004, severity: P1, statement: 三视口完整区域任务未进入正式任务表, return_stage: 5, status: OPEN}
+canonical_result:
+  result: FAIL
+  failure_code: TASK_COVERAGE_DISPUTE
+  retryable: true
+  return_plan:
+    - {stage: 2, finding_ids: [COV-P1-001]}
+    - {stage: 5, finding_ids: [COV-P1-002, COV-P1-003, COV-P1-004]}
+

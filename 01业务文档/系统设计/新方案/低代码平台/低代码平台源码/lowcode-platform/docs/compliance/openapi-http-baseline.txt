@@ -1,0 +1,42 @@
+# OpenAPI transition baseline
+# Generated from lowcode-app controller routes.
+# Update with scripts/export-release-baselines.ps1 when routes change.
+GET /api/packages
+GET /api/packages/audit
+GET /api/workflow/{tenantId}/instances/{instanceLid}/compatibility
+GET /api/workflow/{tenantId}/instances/{instanceLid}/timeline
+POST /api/data/{appCode}/{objectCode}/action
+POST /api/data/{appCode}/{objectCode}/add
+POST /api/data/{appCode}/{objectCode}/del
+POST /api/data/{appCode}/{objectCode}/export
+POST /api/data/{appCode}/{objectCode}/get
+POST /api/data/{appCode}/{objectCode}/importCommit
+POST /api/data/{appCode}/{objectCode}/importPreview
+POST /api/data/{appCode}/{objectCode}/list
+POST /api/data/{appCode}/{objectCode}/meta
+POST /api/data/{appCode}/{objectCode}/suggest
+POST /api/data/{appCode}/{objectCode}/transition
+POST /api/data/{appCode}/{objectCode}/update
+POST /api/designer/object/add
+POST /api/designer/object/del
+POST /api/designer/object/get
+POST /api/designer/object/list
+POST /api/designer/object/preview
+POST /api/designer/object/publish
+POST /api/designer/object/update
+POST /api/designer/object/validate
+POST /api/packages/{packageCode}/disable
+POST /api/packages/{packageCode}/enable
+POST /api/packages/{packageCode}/rollback
+POST /api/packages/{packageCode}/uninstall
+POST /api/packages/{packageCode}/uninstall-dry-run
+POST /api/packages/{packageCode}/upgrade
+POST /api/packages/install
+POST /api/packages/precheck
+POST /api/permission/explain
+POST /api/workflow/{tenantId}/instances/{instanceLid}/nodes/{nodeCode}/manual-intervention
+POST /api/workflow/{tenantId}/instances/{instanceLid}/nodes/{nodeCode}/timeout
+POST /api/workflow/{tenantId}/instances/{instanceLid}/tasks
+POST /api/workflow/{tenantId}/tasks/{taskLid}/claim
+POST /api/workflow/{tenantId}/tasks/{taskLid}/complete
+POST /api/workflow/{workflowCode}/start

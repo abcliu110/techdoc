@@ -1,0 +1,27 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: stage_gate
+  artifact_id: GATE-LOWCODE-V2-STAGE-10
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  updated_at: 2026-07-11T00:00:00+08:00
+  created_by: codex
+  status: FINAL
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+gate:
+  gate_id: GATE-LOWCODE-V2-STAGE-10
+  run_id: RUN-LOWCODE-V2-20260711-001
+  stage: 10
+  evaluated_at: 2026-07-11T00:00:00+08:00
+  predicates:
+    - {id: G10-001, description: 五席委员会和异模型席位有效, result: BLOCKED, measured_value: 0/5, threshold: 4/5且含异模型, evidence_refs: [reports/reviews/final-review.md], failure_code: INSUFFICIENT_INDEPENDENCE}
+    - {id: G10-002, description: 独立签名attestation和终态派生器有效, result: BLOCKED, measured_value: NOT_PERFORMED, threshold: PASS, evidence_refs: [reports/reviews/final-review.md], failure_code: MISSING_ATTESTATION}
+  p0_count: 0
+  p1_count: 0
+  canonical_result:
+    result: BLOCKED
+    failure_code: INSUFFICIENT_INDEPENDENCE
+    retryable: true
+    return_plan: []
+    blocker_id: BLK-STAGE10-INDEPENDENT-COUNCIL
+

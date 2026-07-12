@@ -1,0 +1,37 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: same_task_protocol
+  artifact_id: SAME-TASK-LOWCODE-V2-001
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  updated_at: 2026-07-11T23:59:00+08:00
+  created_by: codex
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+  status: FROZEN
+protocol:
+  task: 从销售订单业务对象完成字段建模、单据头与分录页面、客户变化规则、字段导出权限、财务审核员预览、发布前校验和候选版本生成
+  products: [金蝶云·苍穹, Mendix Studio Pro, OutSystems Service Studio, Microsoft Power Apps Studio, Retool, Appian Designer]
+  specialist_reference: [DevExpress XAF, DevExtreme, DevExpress WinForms/WPF Designer]
+  dataset:
+    header_fields: [订单编码, 客户, 订单日期, 销售组织, 含税金额]
+    entry_fields: [物料编码, 物料名称, 数量, 单位, 含税单价, 价税合计, 交货日期]
+    rows: 3
+    roles: [销售主管, 财务审核员]
+    blocking_finding: 客户信用额度字段缺少导出权限策略
+  environment:
+    locale: zh-CN
+    viewport: 1440x900
+    input: pointer_and_keyboard
+    training: 只允许官方入门资料，测量前统一 30 分钟
+  metrics:
+    - end_to_end_completion
+    - elapsed_seconds
+    - recovery_errors
+    - workspace_context_switches
+    - publish_blocker_enforced
+  pass_condition: 六个平台均在合法认证环境按同一数据和步骤执行，原始轨迹可复算
+  prohibited_substitutions:
+    - 官网或文档浏览不能替代运行任务
+    - 厂商演示视频不能替代真实输入
+    - DevExtreme Widget Demo 不能替代完整低代码平台闭环
+

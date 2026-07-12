@@ -1,0 +1,60 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: independent_browser_replay
+  artifact_id: BROWSER-REPLAY-LOWCODE-V2-20260711-002
+  project_id: LOWCODE-DESIGNER-V2
+  created_at: 2026-07-11T00:00:00+08:00
+  created_by: codex-test-deriver-coordinator
+  status: EXECUTED
+  source_run_id: RUN-LOWCODE-V2-20260711-001
+execution:
+  runtime_url: http://127.0.0.1:4173/
+  browser_tool: agent-browser
+  session: testderiver-v2
+  browser_title: 低代码设计中心 - 销售订单
+  input_mode: real_click_and_select
+  real_user_validation: NOT_PERFORMED
+traces:
+  - id: REPLAY-001
+    purpose: 字段选择与属性联动
+    actions:
+      - 点击含税金额字段
+    assertions:
+      - {target: designer-root.data-selected, expected: amount, observed: amount, result: PASS}
+      - {target: inspector-title, expected: 含税金额, observed: 含税金额, result: PASS}
+    result: PASS
+  - id: REPLAY-002
+    purpose: 发布阻断与恢复路径
+    actions:
+      - 打开发布准备
+      - 确认候选版本按钮禁用
+      - 关闭对话框并进入权限工作区
+      - 在问题面板点击配置策略
+      - 重新打开发布准备
+      - 生成候选版本
+    assertions:
+      - {target: initial_publish_result, expected: blocked, observed: blocked, result: PASS}
+      - {target: initial_summary, expected: "1 个阻断问题，1 个建议", observed: "1 个阻断问题，1 个建议", result: PASS}
+      - {target: resolved_summary, expected: "0 个阻断问题，1 个建议", observed: "P2 建议仅剩 F-RULE-002", result: PASS}
+      - {target: second_publish_result, expected: ready, observed: ready, result: PASS}
+      - {target: release_toast, expected: 候选版本已生成, observed: 候选版本已生成, result: PASS}
+      - {target: release_version, expected: v19, observed: v19, result: PASS}
+    result: PASS
+  - id: REPLAY-003
+    purpose: 财务审核员角色预览
+    actions:
+      - 打开运行预览
+      - 使用下拉框选择财务审核员
+    assertions:
+      - {target: designer-root.data-state, expected: preview-财务审核员, observed: preview-财务审核员, result: PASS}
+      - {target: preview.customer.class, expected_contains: readonly, observed: "field-control reference readonly", result: PASS}
+    result: PASS
+error_channels:
+  console_errors: 0
+  page_errors: 0
+canonical_result:
+  result: PASS
+  scope: project_browser_replay_only
+  does_not_satisfy:
+    - independent_test_list_double_source_derivation
+    - real_user_validation

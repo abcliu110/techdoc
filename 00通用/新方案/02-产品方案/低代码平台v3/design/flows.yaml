@@ -1,0 +1,30 @@
+meta:
+  schema_version: "1.0"
+  artifact_type: interaction_flows
+  artifact_id: FLOW-LOWCODE-V2-001
+  status: FROZEN
+flows:
+  - id: FLOW-001
+    name: 销售订单页面设计
+    steps:
+      - 打开销售订单表单文档
+      - 在资源面板切换组件、字段或大纲
+      - 在画布选择客户字段
+      - 在属性面板修改业务和布局属性
+      - 切换规则工作区检查客户联动
+      - 切换权限工作区检查角色覆盖
+      - 打开预览并切换模拟角色
+      - 打开发布准备
+    expected_result: 字段、规则、权限和预览保持同一业务上下文
+  - id: FLOW-002
+    name: 发布阻断恢复
+    steps:
+      - 打开发布准备
+      - 观察权限覆盖失败和禁用的候选版本按钮
+      - 关闭发布对话框
+      - 在问题面板选择配置策略
+      - 再次打开发布准备
+      - 观察校验通过和可用的候选版本按钮
+      - 生成候选版本
+    expected_result: 没有绕过阻断的路径，候选版本生成后回到设计态
+
