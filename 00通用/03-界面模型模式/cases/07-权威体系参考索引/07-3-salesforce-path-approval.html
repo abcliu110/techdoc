@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Salesforce Path 阶段引导概念映射</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body data-theme="salesforce">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark" aria-hidden="true">SF</span>加盟门店审批</div><div class="app-context">申请 AP-2026-0712-16</div></header>
+    <section class="page-header">
+      <div><p class="eyebrow">Salesforce Path 阶段引导概念映射</p><h1>杭州西湖文三路加盟店</h1><p class="subtitle">Path 用于显示阶段、当前重点字段和阶段指导；审批约束、职责分离和执行状态仍由业务流程模型承担。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互示例</span><span class="badge warning" data-approval-status>区域复核中</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <section class="notice"><strong>示例边界</strong>这是对 Path 阶段引导思想的本地概念映射，不是 Salesforce 官方页面或完整审批引擎。</section>
+        <ol class="path" style="--step-count: 5" data-approval-path aria-label="审批阶段">
+          <li class="is-done" data-stage="submitted">已提交</li><li class="is-done" data-stage="qualification">资料核验</li><li aria-current="step" data-stage="regional">区域复核</li><li data-stage="approved">总部批准</li><li data-stage="rejected">退回修改</li>
+        </ol>
+        <div class="layout-2">
+          <section class="surface" aria-labelledby="guidance-title">
+            <div class="surface-header"><h2 id="guidance-title">当前阶段指导</h2><span class="tag info">区域复核</span></div>
+            <div class="surface-body content-stack">
+              <div class="callout"><strong>本阶段目标</strong>确认商圈保护、投资预算和区域运营承接能力，不重复核验营业执照。</div>
+              <div><h3 class="section-title">关键字段</h3><dl class="key-values" style="margin-top: 10px"><div><dt>商圈距离</dt><dd>2.8 km</dd></div><div><dt>投资预算</dt><dd>¥ 860,000</dd></div><div><dt>预计开业</dt><dd>2026-09-01</dd></div><div><dt>区域经理</dt><dd>李洁</dd></div><div><dt>风险等级</dt><dd>中</dd></div><div><dt>资料完整度</dt><dd>100%</dd></div></dl></div>
+              <div class="notice warning"><strong>复核提示</strong>最近直营网点相距 2.8 km，低于 3 km 指引；批准时必须记录例外理由。</div>
+            </div>
+          </section>
+          <section class="surface" aria-labelledby="commit-title">
+            <div class="surface-header"><h2 id="commit-title">审批承诺与留痕</h2></div>
+            <div class="surface-body content-stack">
+              <div class="field"><label class="required" for="approval-note">复核意见</label><textarea id="approval-note">商圈重叠风险可接受；新店主打办公午餐，与现有社区店客群不同。</textarea><span class="hint">该意见会成为审批承诺记录的一部分。</span></div>
+              <div class="field"><label for="next-owner">下一责任人</label><select id="next-owner"><option>总部招商主管 / 赵宁</option></select></div>
+              <div class="actions"><button class="btn primary" type="button" data-action="approve-path">批准并提交总部</button><button class="btn danger" type="button" data-action="reject-path">退回申请人</button></div>
+              <p class="help">示例只演示阶段反馈；正式流程必须校验申请人不可自批、审批版本固定、重复提交幂等。</p>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

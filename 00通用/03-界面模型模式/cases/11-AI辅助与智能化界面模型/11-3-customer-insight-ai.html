@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>客户画像 AI 总结 - 证据与最小披露</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark" aria-hidden="true">CX</span>客户服务台</div><div class="app-context">会员 M-018882 / 当前角色：一线客服</div></header>
+    <section class="page-header">
+      <div><p class="eyebrow">AI Customer Summary</p><h1>陈女士的服务摘要</h1><p class="subtitle">摘要只使用当前客服有权查看且在同意范围内的数据；每个判断可追到来源并支持纠错。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互示例</span><span class="badge success">同意范围有效</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <section class="notice"><strong>可见范围</strong>门店与小程序交易、客服工单、积分权益；已隐藏支付凭证、精确地址和营销敏感分群。来源截至 2026-07-12 10:30。</section>
+        <div class="evidence-grid">
+          <section class="surface" aria-labelledby="summary-title"><div class="surface-header"><h2 id="summary-title">AI 摘要</h2><span class="tag info">summary-v3.1</span></div><div class="surface-body content-stack">
+            <div class="evidence"><strong>已确认事实</strong>近 90 天完成 8 笔订单，最近一次购买为 7 月 9 日；当前有 1 张 7 月 20 日到期的 ¥20 券。<div class="item-meta">证据：订单 O-771 至 O-778、权益账户 W-1882</div></div>
+            <div class="callout warning"><strong>行为推断</strong>对咖啡类组合购买频率较高，但样本仅 5 笔，不足以推断长期偏好。<div class="item-meta">证据：5 笔商品明细；置信度中</div></div>
+            <div class="decision"><strong>服务建议</strong>若客户询问优惠，可先提醒即将到期的 ¥20 券；不要主动披露系统分群或根据推断做高压营销。</div>
+            <div class="actions"><button class="btn primary" type="button" data-action="toast" data-message="服务建议已加入本次工单草稿，尚未发送给客户">加入工单</button><button class="btn" type="button" data-action="toast" data-message="纠错反馈已记录，摘要将进入人工复核">纠正摘要</button></div>
+          </div></section>
+          <aside class="surface" aria-labelledby="consent-title"><div class="surface-header"><h2 id="consent-title">同意与来源</h2></div><div class="surface-body content-stack"><div><strong>服务用途</strong><p>允许使用交易和工单数据提供售后服务，至会员关系终止。</p></div><div><strong>营销用途</strong><p>仅允许站内优惠提醒；不允许外呼营销。</p></div><div><strong>来源健康</strong><p><span class="badge success">订单服务 10:30</span> <span class="badge success">权益 10:29</span> <span class="badge warning">门店 POS 09:58</span></p></div><button class="btn" type="button" data-action="toast" data-message="已打开 AI 参与审计：模型、输入范围、输出和纠错记录">查看 AI 审计</button></div></aside>
+        </div>
+        <section class="table-shell responsive-table" aria-labelledby="citation-title"><div class="surface-header"><h2 id="citation-title">引用证据</h2><span class="help">按当前角色脱敏</span></div><table><thead><tr><th>来源</th><th>时间</th><th>证据</th><th>可见性</th></tr></thead><tbody><tr><td data-label="来源">订单 O-778</td><td data-label="时间">2026-07-09</td><td data-label="证据">冷萃咖啡组合 × 2，已完成</td><td data-label="可见性"><span class="badge success">服务用途</span></td></tr><tr><td data-label="来源">权益 W-1882</td><td data-label="时间">2026-07-12</td><td data-label="证据">¥20 券，7 月 20 日到期</td><td data-label="可见性"><span class="badge success">服务用途</span></td></tr><tr><td data-label="来源">营销分群</td><td data-label="时间">—</td><td data-label="证据">当前角色不可见</td><td data-label="可见性"><span class="badge danger">最小披露</span></td></tr></tbody></table></section>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

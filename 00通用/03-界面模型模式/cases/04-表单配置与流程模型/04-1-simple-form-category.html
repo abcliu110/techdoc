@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>案例：零售门店新增分类表单</title><link rel="stylesheet" href="../shared/case.css"></head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a><div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark">SF</span>商品分类</div><div class="app-context">人民广场店 · 分类维护</div></header>
+    <section class="page-header" aria-labelledby="page-title"><div><p class="eyebrow">Simple Form · 简单表单</p><h1 id="page-title">新增商品分类</h1><p class="subtitle">单一任务、字段语义明确、校验就近呈现；复杂度由业务决策而不是固定字段数决定。</p></div><div class="header-meta"><span class="demo-mode" data-kind="interactive">交互案例</span><span class="tag info">草稿</span></div></section>
+    <main id="main" class="page-body" data-demo="interactive"><div class="layout-2">
+      <form class="surface" aria-labelledby="category-form-title" onsubmit="return false"><div class="surface-header"><h2 id="category-form-title">分类信息</h2><span class="help">带 * 为必填</span></div><div class="surface-body content-stack">
+        <div class="notice danger" role="alert"><strong>请修正 2 个问题</strong><a href="#category-name">分类名称已存在</a>；<a href="#category-code">分类编码格式不正确</a>。</div>
+        <div class="field"><label class="required" for="category-name">分类名称</label><input id="category-name" type="text" value="气泡水" aria-invalid="true" aria-describedby="category-name-error" required><span id="category-name-error" class="help" style="color:var(--danger)">当前门店已存在同名分类。</span></div>
+        <div class="field"><label for="category-parent">上级分类</label><select id="category-parent"><option selected>饮料</option><option>零食</option><option>日用品</option></select></div>
+        <div class="field"><label class="required" for="category-code">分类编码</label><input id="category-code" type="text" value="sparkling-water" aria-invalid="true" aria-describedby="category-code-error" required><span id="category-code-error" class="help" style="color:var(--danger)">仅允许大写字母、数字和下划线，例如 DRINK_WATER。</span></div>
+        <div class="field"><label for="category-order">显示顺序</label><input id="category-order" type="number" min="1" value="20"><span class="hint">数值越小越靠前。</span></div>
+        <div class="field"><label for="category-note">备注</label><textarea id="category-note" placeholder="说明适用范围或维护约束"></textarea></div>
+      </div><div class="modal-footer"><button class="btn" type="reset">取消</button><button class="btn primary" type="button" data-action="toast" data-message="请先修正名称和编码后再保存">保存分类</button></div></form>
+      <aside class="surface"><div class="surface-header"><h2>创建影响</h2></div><div class="surface-body content-stack"><dl class="key-values" style="grid-template-columns:1fr"><div><dt>生效范围</dt><dd>仅人民广场店商品目录</dd></div><div><dt>权限</dt><dd>商品管理员可编辑，收银员只读</dd></div><div><dt>创建后状态</dt><dd>立即可用于新商品，已有商品不自动迁移</dd></div></dl><div class="notice warning"><strong>重名规则</strong>分类名称在同一门店、同一上级分类下唯一；编码在租户内唯一。</div></div></aside>
+    </div></main>
+  </div><div class="sr-only" role="status" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div><script src="../shared/case.js"></script>
+</body></html>

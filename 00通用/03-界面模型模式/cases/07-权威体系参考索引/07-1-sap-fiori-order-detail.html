@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SAP Fiori Object Page 概念映射 - 零售订单</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body data-theme="fiori">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">FI</span>零售订单管理</div>
+      <div class="app-context">主页 / 订单 / SO-260712-045</div>
+    </header>
+    <section class="page-header">
+      <div>
+        <p class="eyebrow">SAP Fiori Object Page 概念映射</p>
+        <h1>销售订单 SO-260712-045</h1>
+        <p class="subtitle">对象头稳定表达身份、主状态、关键金额和主动作；分区负责解释行项目、履约和变更历史。</p>
+      </div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互示例</span><span class="badge warning">待发货</span><button class="btn primary" type="button" data-action="toast" data-message="发货影响预览已打开：将锁定 3 件库存">创建发货</button></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <section class="notice"><strong>示例边界</strong>这是对 Object Page 信息架构的本地概念映射，不是 SAP 官方页面复刻、组件实现或合规认证。</section>
+        <dl class="key-values">
+          <div><dt>客户</dt><dd>杭州嘉禾商贸有限公司</dd></div><div><dt>净金额</dt><dd>¥ 1,280.00</dd></div><div><dt>销售组织</dt><dd>华东零售</dd></div>
+          <div><dt>创建时间</dt><dd>2026-07-12 09:18</dd></div><div><dt>承诺发货</dt><dd>今日 12:00 前</dd></div><div><dt>信用状态</dt><dd>已通过</dd></div>
+        </dl>
+        <div class="tabs" role="tablist" aria-label="订单详情分区">
+          <button type="button" role="tab" aria-selected="true" aria-controls="fiori-items" data-action="tab">行项目</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="fiori-flow" tabindex="-1" data-action="tab">流程与履约</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="fiori-history" tabindex="-1" data-action="tab">变更历史</button>
+        </div>
+        <section id="fiori-items" role="tabpanel" class="table-shell responsive-table" aria-labelledby="items-title">
+          <div class="surface-header"><h2 id="items-title">订单行项目</h2><span class="help">3 个 SKU · 3 件</span></div>
+          <table><thead><tr><th>物料</th><th>描述</th><th>数量</th><th>可用库存</th><th>净额</th><th>履约状态</th></tr></thead><tbody>
+            <tr><td data-label="物料">SKU-10028</td><td data-label="描述">进口坚果礼盒</td><td data-label="数量">1 盒</td><td data-label="可用库存">8 盒</td><td data-label="净额">¥ 680.00</td><td data-label="履约状态"><span class="badge success">已确认</span></td></tr>
+            <tr><td data-label="物料">SKU-20416</td><td data-label="描述">冷萃咖啡组合</td><td data-label="数量">2 组</td><td data-label="可用库存">3 组</td><td data-label="净额">¥ 600.00</td><td data-label="履约状态"><span class="badge warning">临界库存</span></td></tr>
+          </tbody></table>
+        </section>
+        <section id="fiori-flow" role="tabpanel" class="surface" hidden>
+          <div class="surface-header"><h2>流程与履约</h2></div><div class="surface-body"><ul class="timeline"><li class="timeline-item"><span class="timeline-marker done">1</span><div><div class="item-title">订单已确认</div><div class="item-meta">09:19 · 价格与信用校验通过</div></div><span class="badge success">完成</span></li><li class="timeline-item"><span class="timeline-marker current">2</span><div><div class="item-title">等待仓库拣货</div><div class="item-meta">负责人：中山路店仓库 · 剩余 2 小时 04 分</div></div><span class="badge warning">进行中</span></li><li class="timeline-item"><span class="timeline-marker">3</span><div><div class="item-title">配送与签收</div><div class="item-meta">前置条件：拣货完成并生成配送单</div></div><span class="badge info">未开始</span></li></ul></div>
+        </section>
+        <section id="fiori-history" role="tabpanel" class="surface" hidden>
+          <div class="surface-header"><h2>变更历史</h2></div><div class="surface-body"><ul class="history"><li class="history-item"><span class="timeline-marker done">A</span><div><div class="item-title">交付日期由 07-13 调整为 07-12</div><div class="item-meta">09:22 · 王琳 · 原因：客户加急且门店库存可满足</div></div><span class="tag info">人工</span></li><li class="history-item"><span class="timeline-marker done">S</span><div><div class="item-title">信用校验通过</div><div class="item-meta">09:19 · 信用服务 · 规则版本 CR-18</div></div><span class="tag">系统</span></li></ul></div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

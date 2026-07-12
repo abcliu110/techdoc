@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>订单异常 AI 解释 - 人工决策工作台</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark" aria-hidden="true">AI</span>订单异常中心</div><div class="app-context">工单 EX-20260712-118 / 订单 SO-260712-082</div></header>
+    <section class="page-header">
+      <div><p class="eyebrow">AI-assisted Decision Workbench</p><h1>支付成功，但订单仍显示待付款</h1><p class="subtitle">AI 只整理证据和候选解释；是否重放回调由有权限的人工确认。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互示例</span><span class="badge warning" data-ai-status>等待人工决策</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <section class="notice warning"><strong>数据截止 2026-07-12 10:42:16</strong>支付平台状态为实时查询结果；订单事件流延迟约 3 分钟。低于完整数据条件，不执行自动修复。</section>
+        <div class="evidence-grid">
+          <section class="surface" aria-labelledby="analysis-title">
+            <div class="surface-header"><h2 id="analysis-title">AI 分析</h2><span class="tag info">模型 ops-explain-v4.2</span></div>
+            <div class="surface-body content-stack">
+              <div class="evidence"><strong>已确认事实</strong><ul><li>支付平台交易 P202607120882 在 10:38:09 成功，金额 ¥ 96.00。</li><li>订单服务最后事件为 10:37:44 “等待支付”。</li><li>回调网关在 10:38:10 返回 504，未发现业务 ACK。</li></ul></div>
+              <div class="callout warning"><strong>候选解释，不是事实</strong>最符合证据的是回调已到网关但订单服务超时；备选原因是事件消费延迟或支付单关联键错误。</div>
+              <div class="decision"><strong>建议动作</strong>先按幂等键查询订单服务处理记录；未处理时重放原回调。不要直接修改订单状态。</div>
+              <div class="confidence"><strong>证据覆盖 78%</strong><div class="confidence-meter" aria-label="证据覆盖百分之七十八"><span style="--confidence: 78%"></span></div></div>
+              <div class="actions"><button class="btn primary" type="button" data-action="approve-ai">批准受控重放</button><button class="btn danger" type="button" data-action="reject-ai">驳回建议</button><button class="btn" type="button" data-action="toast" data-message="已记录误报反馈，工单保持待处理">标记误报</button></div>
+            </div>
+          </section>
+          <aside class="surface" aria-labelledby="source-title">
+            <div class="surface-header"><h2 id="source-title">证据片段</h2></div>
+            <div class="surface-body content-stack">
+              <div><span class="tag success">支付平台</span><p>交易状态 SUCCESS · 查询于 10:42:13</p><code class="code-value">txn=P202607120882</code></div>
+              <div><span class="tag warning">回调网关</span><p>POST /pay/callback · HTTP 504</p><code class="code-value">trace=9f2a7c</code></div>
+              <div><span class="tag info">订单服务</span><p>未检索到相同幂等键的完成事件</p><code class="code-value">key=PAY-082-01</code></div>
+              <button class="btn" type="button" data-action="toast" data-message="已转交二线支持，当前控制权属于人工">申诉并转二线</button>
+            </div>
+          </aside>
+        </div>
+        <section class="notice success" data-ai-audit hidden><strong>审计记录已生成</strong>批准人：客服主管 王琳；动作：受控重放；模型、证据快照、理由和幂等键已固化。</section>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

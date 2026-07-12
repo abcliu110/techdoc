@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>案例：待发货订单处理台 - Worklist</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark">WL</span>门店履约台</div><div class="app-context">当前班次：李敏 · 14:00-22:00</div></header>
+    <section class="page-header" aria-labelledby="page-title">
+      <div><p class="eyebrow">Worklist · 工作清单</p><h1 id="page-title">待我处理</h1><p class="subtitle">按责任人、截止时间和风险排序，将“查看记录”转换为“完成任务”。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互案例</span><span class="badge danger">2 项已超时</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <section class="metrics" aria-label="任务概览">
+          <div class="metric danger"><span class="metric-label">已超时</span><strong class="metric-value">2</strong><span class="metric-note">需要立即处置</span></div>
+          <div class="metric warning"><span class="metric-label">30 分钟内到期</span><strong class="metric-value">5</strong><span class="metric-note">优先完成拣货</span></div>
+          <div class="metric"><span class="metric-label">待发货总量</span><strong class="metric-value">25</strong><span class="metric-note">当前责任人 18 笔</span></div>
+          <div class="metric success"><span class="metric-label">本班次完成</span><strong class="metric-value">41</strong><span class="metric-note">一次通过率 97.6%</span></div>
+        </section>
+
+        <section class="surface" aria-labelledby="urgent-title">
+          <div class="surface-header"><div><h2 id="urgent-title">优先任务队列</h2><span class="help">系统优先级只提供排序，操作员仍需核对事实</span></div><div class="segmented" aria-label="任务范围"><button type="button" aria-pressed="true" data-action="segment" data-view-label="我的任务">我的任务</button><button type="button" aria-pressed="false" data-action="segment" data-view-label="全店任务">全店任务</button></div></div>
+          <div class="surface-body">
+            <p class="help">当前视图：<strong data-current-view>我的任务</strong></p>
+            <ol class="task-list">
+              <li class="task-item"><span class="risk-label" style="color:var(--danger)">P0</span><div><div class="item-title">订单 SO202607120044 · 核对缺货替代方案</div><div class="item-meta">已超时 35 分钟 · 会员已等待 · 负责人：李敏</div><div class="notice danger"><strong>阻塞事实</strong>酸奶 200g 库存为 0，需联系客户确认替代品后才能发货。</div></div><button class="btn primary" type="button" data-action="toast" data-message="任务 SO202607120044 已进入处理状态">开始处理</button></li>
+              <li class="task-item"><span class="risk-label" style="color:var(--warning)">P1</span><div><div class="item-title">订单 SO202607120045 · 完成拣货复核</div><div class="item-meta">剩余 18 分钟 · 6 件商品 · 负责人：李敏</div></div><button class="btn" type="button" data-action="toast" data-message="已打开拣货复核清单">复核</button></li>
+              <li class="task-item"><span class="risk-label">P2</span><div><div class="item-title">订单 SO202607120043 · 打印配送标签</div><div class="item-meta">剩余 1 小时 10 分 · 顺丰同城 · 负责人：王强</div></div><button class="btn" type="button" data-action="toast" data-message="配送标签已加入打印队列">打印标签</button></li>
+            </ol>
+          </div>
+        </section>
+        <div class="notice warning"><strong>工作清单原则</strong>队列展示“为什么现在处理”，但不替代库存核对、客户确认与责任转交。</div>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" role="status" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

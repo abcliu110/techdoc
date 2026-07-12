@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>案例：零售订单保存视图</title><link rel="stylesheet" href="../shared/case.css"></head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a><div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark">SV</span>订单视图</div><div class="app-context">个人工作集</div></header>
+    <section class="page-header" aria-labelledby="page-title"><div><p class="eyebrow">Saved View · 保存视图</p><h1 id="page-title">我的订单视图</h1><p class="subtitle">保存的是查询意图、列布局和排序，不是某一时刻的数据快照。</p></div><div class="header-meta"><span class="demo-mode" data-kind="interactive">交互案例</span><span class="tag info">个人视图</span></div></section>
+    <main id="main" class="page-body" data-demo="interactive"><div class="content-stack">
+      <div class="segmented" aria-label="保存视图"><button type="button" aria-pressed="true" data-action="segment" data-view-label="我的高风险订单">我的高风险订单</button><button type="button" aria-pressed="false" data-action="segment" data-view-label="今日待发货">今日待发货</button><button type="button" aria-pressed="false" data-action="segment" data-view-label="退款待核对">退款待核对</button></div>
+      <section class="surface"><div class="surface-header"><div><h2 data-current-view>我的高风险订单</h2><span class="help">所有者：李敏 · 最后修改 2026-07-11 18:20</span></div><div class="actions"><button class="btn" type="button" data-action="toast" data-message="视图副本已创建，不影响原视图">另存副本</button><button class="btn primary" type="button" data-action="toast" data-message="当前条件、列和排序已保存">保存变更</button></div></div><div class="surface-body content-stack">
+        <div class="chip-row"><span class="chip">负责人 = 我</span><span class="chip">风险 = 已超时或 30 分钟内</span><span class="chip">排序 = 到期时间升序</span></div>
+        <dl class="key-values"><div><dt>可见列</dt><dd>订单、风险、门店、金额、到期时间</dd></div><div><dt>数据范围</dt><dd>华东直营店内本人有权查看的订单</dd></div><div><dt>共享范围</dt><dd>仅自己</dd></div></dl>
+      </div></section>
+      <section class="table-shell" aria-labelledby="saved-results"><div class="surface-header"><h2 id="saved-results">动态结果</h2><span class="count">8 笔</span></div><div class="table-scroll responsive-table"><table><thead><tr><th scope="col">订单</th><th scope="col">风险</th><th scope="col">门店</th><th scope="col" class="numeric">金额</th><th scope="col">到期时间</th></tr></thead><tbody><tr><td data-label="订单">SO-044</td><td data-label="风险"><span class="badge danger">超时 35 分钟</span></td><td data-label="门店">人民广场店</td><td data-label="金额" class="numeric">¥156.00</td><td data-label="到期时间">14:30</td></tr><tr><td data-label="订单">SO-039</td><td data-label="风险"><span class="badge warning">剩余 18 分钟</span></td><td data-label="门店">淮海路店</td><td data-label="金额" class="numeric">¥688.00</td><td data-label="到期时间">15:28</td></tr></tbody></table></div></section>
+      <div class="notice warning"><strong>权限与演进</strong>打开保存视图时重新执行权限校验；字段失效时提示迁移，不静默扩大数据范围。</div>
+    </div></main>
+  </div><div class="sr-only" role="status" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div><script src="../shared/case.js"></script>
+</body></html>

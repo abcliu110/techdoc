@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>案例：订单状态与金额展示</title><link rel="stylesheet" href="../shared/case.css"></head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a><div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark">SD</span>订单状态语义</div><div class="app-context">一致性与可解释性</div></header>
+    <section class="page-header" aria-labelledby="page-title"><div><p class="eyebrow">Status Display · 状态展示</p><h1 id="page-title">订单状态不是一个颜色</h1><p class="subtitle">将当前状态、原因、下一动作和金额口径一起呈现，避免颜色成为唯一线索。</p></div><div class="header-meta"><span class="demo-mode" data-kind="static">静态案例</span><span class="tag info">语义规范</span></div></section>
+    <main id="main" class="page-body" data-demo="static"><div class="content-stack">
+      <section class="table-shell" aria-labelledby="status-title"><div class="surface-header"><h2 id="status-title">订单状态样例</h2><span class="help">金额右对齐，负向金额同时使用符号和文字</span></div><div class="table-scroll responsive-table"><table><thead><tr><th scope="col">订单</th><th scope="col">业务状态</th><th scope="col">状态依据</th><th scope="col" class="numeric">订单金额</th><th scope="col" class="numeric">已收 / 应退</th><th scope="col">下一动作</th></tr></thead><tbody>
+        <tr><td data-label="订单">SO-045</td><td data-label="业务状态"><span class="badge warning">待发货</span></td><td data-label="状态依据">支付已确认，库存已锁定</td><td data-label="订单金额" class="numeric">¥328.50</td><td data-label="已收 / 应退" class="numeric">已收 ¥328.50</td><td data-label="下一动作">门店发货</td></tr>
+        <tr><td data-label="订单">SO-044</td><td data-label="业务状态"><span class="badge danger">履约异常</span></td><td data-label="状态依据">缺货且已超过承诺时间</td><td data-label="订单金额" class="numeric">¥156.00</td><td data-label="已收 / 应退" class="numeric">已收 ¥156.00</td><td data-label="下一动作">确认替代品</td></tr>
+        <tr><td data-label="订单">SO-042</td><td data-label="业务状态"><span class="badge info">已取消</span></td><td data-label="状态依据">客户取消，退款处理中</td><td data-label="订单金额" class="numeric">¥45.00</td><td data-label="已收 / 应退" class="numeric">应退 -¥45.00</td><td data-label="下一动作">核对退款结果</td></tr>
+        <tr><td data-label="订单">SO-041</td><td data-label="业务状态"><span class="badge success">已完成</span></td><td data-label="状态依据">签收且售后期已结束</td><td data-label="订单金额" class="numeric">¥228.00</td><td data-label="已收 / 应退" class="numeric">净收 ¥228.00</td><td data-label="下一动作">无需处理</td></tr>
+      </tbody></table></div></section>
+      <section class="layout-3" aria-label="状态表达规则"><div class="notice"><strong>文本标签</strong>颜色之外始终显示可读状态名称。</div><div class="notice warning"><strong>事实依据</strong>解释为何进入此状态，而不是只显示编码。</div><div class="notice danger"><strong>动作边界</strong>指出责任人下一步，但不承诺后台一定成功。</div></section>
+    </div></main>
+  </div>
+  <div class="sr-only" role="status" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div><script src="../shared/case.js"></script>
+</body></html>

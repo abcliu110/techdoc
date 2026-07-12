@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>只读历史版本 - As-of View 与修订差异</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark" aria-hidden="true">VH</span>结算历史</div><div class="app-context">订单 SO-20260331-018 / 2026-03 月结</div></header>
+    <section class="page-header">
+      <div><p class="eyebrow">As-of View + Revision Diff</p><h1>订单在 2026-03-31 23:59 的已知状态</h1><p class="subtitle">历史视图固定展示当时系统所知事实；后续更正单独提示，不改写已结算版本。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互示例</span><span class="badge info" data-version-status>只读历史版本 v18</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <section class="notice warning"><strong>你正在查看历史快照</strong>业务有效时间截至 2026-03-31 23:59:59；系统记录截止时间 2026-04-01 02:00:00。当前版本已有后续更正。</section>
+        <dl class="key-values"><div><dt>订单状态</dt><dd>已完成</dd></div><div><dt>结算金额</dt><dd>¥ 1,248.00</dd></div><div><dt>门店</dt><dd>中山路店</dd></div><div><dt>业务有效时间</dt><dd>2026-03-31 21:18</dd></div><div><dt>系统记录时间</dt><dd>2026-03-31 21:19</dd></div><div><dt>快照版本</dt><dd>v18 / 月结锁定</dd></div></dl>
+        <div class="layout-2">
+          <section class="surface" aria-labelledby="revision-title"><div class="surface-header"><h2 id="revision-title">后续修订提示</h2><span class="badge warning">2026-04-03 记录</span></div><div class="surface-body content-stack"><p>4 月 3 日收到支付渠道追溯更正：手续费由 ¥12.00 调整为 ¥10.80，业务有效时间仍为 3 月 31 日。</p><div class="diff"><div><strong>历史快照 v18</strong><p>渠道手续费：¥12.00</p><p>结算净额：¥1,236.00</p></div><div><strong>修订 v19</strong><p>渠道手续费：¥10.80</p><p>结算净额：¥1,237.20</p></div></div><p class="help">修订新增一条更正事实，不覆盖 v18；3 月月结通过 4 月调整凭证处理。</p></div></section>
+          <section class="surface" aria-labelledby="history-title"><div class="surface-header"><h2 id="history-title">版本链</h2></div><div class="surface-body"><ul class="history"><li class="history-item"><span class="timeline-marker done">19</span><div><div class="item-title">v19 渠道手续费追溯更正</div><div class="item-meta">记录时间 04-03 11:42 · 有效时间 03-31 21:18</div></div><button class="btn" type="button" data-action="restore-version" data-version="v19">基于此版创建更正</button></li><li class="history-item"><span class="timeline-marker current">18</span><div><div class="item-title">v18 月结快照</div><div class="item-meta">记录时间 04-01 02:00 · 不可修改</div></div><span class="badge info">当前查看</span></li><li class="history-item"><span class="timeline-marker done">17</span><div><div class="item-title">v17 订单完成</div><div class="item-meta">记录时间 03-31 21:19</div></div><button class="btn" type="button" data-action="restore-version" data-version="v17">基于此版创建更正</button></li></ul></div></section>
+        </div>
+        <section class="notice"><strong>只读原因</strong>该版本已进入财务月结和审计证据链。需要修正时创建新修订及调整凭证，不能原地编辑历史。</section>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>案例：零售订单详情页 - Object Page</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark">OP</span>零售订单中心</div><div class="app-context">订单 / SO202607120045</div></header>
+    <section class="page-header" aria-labelledby="page-title">
+      <div><p class="eyebrow">Object Page · 对象页</p><h1 id="page-title">订单 SO202607120045</h1><p class="subtitle">围绕一个业务对象组织身份、状态、关键事实、关联对象与可执行动作。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互案例</span><span class="badge warning">待发货</span><span class="badge success">已支付</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <div class="actions" aria-label="订单操作"><button class="btn primary" type="button" data-action="toast" data-message="发货前置核对已启动">发货</button><button class="btn" type="button" data-action="toast" data-message="订单备注已打开">添加备注</button><button class="btn danger" type="button" data-action="toast" data-message="取消订单需要二次确认并记录原因">取消订单</button></div>
+        <dl class="key-values">
+          <div><dt>实付金额</dt><dd>¥328.50</dd></div><div><dt>商品数量</dt><dd>6 件</dd></div><div><dt>归属门店</dt><dd>人民广场店</dd></div>
+          <div><dt>会员</dt><dd>张三 · 138****1234</dd></div><div><dt>履约承诺</dt><dd>今日 18:00 前送达</dd></div><div><dt>库存事实</dt><dd>6 件已锁定</dd></div>
+        </dl>
+        <div class="notice warning"><strong>当前状态依据</strong>支付已确认、库存已锁定、配送地址通过校验，因此订单进入待发货；剩余履约时间 2 小时 12 分。</div>
+
+        <section class="surface" aria-labelledby="order-info-title">
+          <div class="tabs" role="tablist" aria-label="订单详情视图">
+            <button id="tab-items" type="button" role="tab" aria-selected="true" aria-controls="panel-items" data-action="tab">商品明细</button>
+            <button id="tab-payment" type="button" role="tab" aria-selected="false" aria-controls="panel-payment" data-action="tab" tabindex="-1">支付与配送</button>
+            <button id="tab-history" type="button" role="tab" aria-selected="false" aria-controls="panel-history" data-action="tab" tabindex="-1">状态轨迹</button>
+          </div>
+          <div id="panel-items" class="surface-body" role="tabpanel" aria-labelledby="tab-items">
+            <h2 id="order-info-title" class="section-title">商品明细</h2>
+            <div class="table-scroll responsive-table"><table><thead><tr><th scope="col">商品</th><th scope="col">规格</th><th scope="col" class="numeric">单价</th><th scope="col" class="numeric">数量</th><th scope="col" class="numeric">小计</th></tr></thead><tbody>
+              <tr><td data-label="商品">精品咖啡豆</td><td data-label="规格">500g / 袋</td><td data-label="单价" class="numeric">¥128.00</td><td data-label="数量" class="numeric">2</td><td data-label="小计" class="numeric">¥256.00</td></tr>
+              <tr><td data-label="商品">冷萃咖啡液</td><td data-label="规格">6 包 / 盒</td><td data-label="单价" class="numeric">¥39.00</td><td data-label="数量" class="numeric">2</td><td data-label="小计" class="numeric">¥78.00</td></tr>
+              <tr><td data-label="商品">燕麦奶</td><td data-label="规格">1L / 盒</td><td data-label="单价" class="numeric">¥12.00</td><td data-label="数量" class="numeric">2</td><td data-label="小计" class="numeric">¥24.00</td></tr>
+            </tbody></table></div>
+            <p class="help">商品金额 ¥358.00 - 优惠 ¥29.50 = 实付 ¥328.50</p>
+          </div>
+          <div id="panel-payment" class="surface-body" role="tabpanel" aria-labelledby="tab-payment" hidden>
+            <h2 class="section-title">支付与配送</h2>
+            <dl class="key-values"><div><dt>支付方式</dt><dd>微信支付</dd></div><div><dt>交易流水</dt><dd>WX2026071200001234</dd></div><div><dt>支付时间</dt><dd>2026-07-12 14:32:15</dd></div><div><dt>配送方式</dt><dd>顺丰同城</dd></div><div><dt>收货人</dt><dd>张三 · 138****1234</dd></div><div><dt>地址</dt><dd>上海市黄浦区人民广场街道 188 号</dd></div></dl>
+          </div>
+          <div id="panel-history" class="surface-body" role="tabpanel" aria-labelledby="tab-history" hidden>
+            <h2 class="section-title">状态轨迹</h2>
+            <ol class="timeline"><li class="timeline-item"><span class="timeline-marker done">1</span><div><div class="item-title">订单已创建</div><div class="item-meta">14:30:00 · 小程序商城 · 系统</div></div><span class="badge success">完成</span></li><li class="timeline-item"><span class="timeline-marker done">2</span><div><div class="item-title">支付成功并锁定库存</div><div class="item-meta">14:32:16 · 支付与库存服务</div></div><span class="badge success">完成</span></li><li class="timeline-item"><span class="timeline-marker current">3</span><div><div class="item-title">等待门店发货</div><div class="item-meta">当前责任人：李敏</div></div><span class="badge warning">进行中</span></li></ol>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" role="status" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

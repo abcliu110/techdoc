@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>案例：零售商品批量导入</title><link rel="stylesheet" href="../shared/case.css"></head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a><div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark">IM</span>商品数据中心</div><div class="app-context">批量导入</div></header>
+    <section class="page-header" aria-labelledby="page-title"><div><p class="eyebrow">Import Flow · 导入流程</p><h1 id="page-title">商品批量导入</h1><p class="subtitle">上传、映射、校验、执行、回执分阶段呈现，失败记录可定位并单独重试。</p></div><div class="header-meta"><span class="demo-mode" data-kind="interactive">交互案例</span><span class="badge info" data-import-status>待执行</span></div></section>
+    <main id="main" class="page-body" data-demo="interactive"><div class="content-stack">
+      <ol class="steps" style="--step-count:4"><li class="is-done">1. 文件与映射</li><li aria-current="step">2. 数据校验</li><li>3. 执行导入</li><li>4. 结果回执</li></ol>
+      <section class="surface" aria-labelledby="import-title"><div class="surface-header"><div><h2 id="import-title">导入任务 IMP-20260712-018</h2><span class="help">products-20260712.xlsx · 100 条数据 · 商户范围已锁定</span></div><button class="btn primary" type="button" data-action="run-import">执行导入</button></div><div class="surface-body content-stack">
+        <div class="progress-track" aria-label="导入进度"><div class="progress-bar" data-import-bar style="--progress:0%"></div></div><p class="help">进度：<strong data-import-progress>0%</strong>。执行使用文件摘要作为幂等键，重复点击不会重复创建商品。</p>
+        <section class="metrics" aria-label="导入结果"><div class="metric"><span class="metric-label">总记录</span><strong class="metric-value">100</strong><span class="metric-note">文件行 2-101</span></div><div class="metric success"><span class="metric-label">成功</span><strong class="metric-value" data-import-success>0</strong><span class="metric-note">已写入或更新</span></div><div class="metric danger"><span class="metric-label">失败</span><strong class="metric-value" data-import-failed>0</strong><span class="metric-note">需要修复后重试</span></div><div class="metric warning"><span class="metric-label">跳过</span><strong class="metric-value" data-import-skipped>0</strong><span class="metric-note">内容未变化</span></div></section>
+      </div></section>
+      <section class="table-shell" aria-labelledby="failures-title"><div class="surface-header"><h2 id="failures-title">失败与跳过明细</h2><button class="btn" type="button" data-action="toast" data-message="失败明细 CSV 已生成">下载明细</button></div><div class="table-scroll responsive-table"><table><thead><tr><th scope="col">文件行</th><th scope="col">商品编码</th><th scope="col">结果</th><th scope="col">原因</th><th scope="col">处理</th></tr></thead><tbody>
+        <tr><td data-label="文件行">18</td><td data-label="商品编码">SKU-018</td><td data-label="结果"><span class="badge danger" data-job-status>失败</span></td><td data-label="原因">分类编码 FOOD_X 不存在</td><td data-label="处理"><button class="btn" type="button" data-action="retry-import">重试</button></td></tr>
+        <tr><td data-label="文件行">42</td><td data-label="商品编码">SKU-042</td><td data-label="结果"><span class="badge danger" data-job-status>失败</span></td><td data-label="原因">零售价必须大于 0</td><td data-label="处理"><button class="btn" type="button" data-action="retry-import">重试</button></td></tr>
+        <tr><td data-label="文件行">77</td><td data-label="商品编码">SKU-077</td><td data-label="结果"><span class="badge danger" data-job-status>失败</span></td><td data-label="原因">条码与已有商品冲突</td><td data-label="处理"><button class="btn" type="button" data-action="retry-import">重试</button></td></tr>
+        <tr><td data-label="文件行">95</td><td data-label="商品编码">SKU-095</td><td data-label="结果"><span class="badge warning">跳过</span></td><td data-label="原因">数据与当前版本一致</td><td data-label="处理">无需处理</td></tr>
+      </tbody></table></div></section>
+    </div></main>
+  </div><div class="sr-only" role="status" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div><script src="../shared/case.js"></script>
+</body></html>

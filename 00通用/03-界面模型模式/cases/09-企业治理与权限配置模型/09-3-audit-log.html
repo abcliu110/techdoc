@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>零售系统审计日志 - 双时态与完整证据</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark" aria-hidden="true">AL</span>审计与追踪中心</div><div class="app-context">华东租户 / 高风险变更 / 保留策略 7 年</div></header>
+    <section class="page-header">
+      <div><p class="eyebrow">Bitemporal Audit Trail</p><h1>零售系统审计日志</h1><p class="subtitle">同时记录业务事实何时有效、系统何时得知，以及操作者、代理、来源、前后值和端到端追踪标识。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互示例</span><span class="badge success">不可变存储已验证</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <section class="filter-bar" aria-label="审计日志筛选">
+          <div class="field"><label for="audit-object">对象或追踪标识</label><input id="audit-object" type="search" value="PERM-20260712-018"></div>
+          <div class="field"><label for="audit-action">动作</label><select id="audit-action"><option>全部高风险动作</option><option>权限变更</option></select></div>
+          <div class="field"><label for="audit-from">系统记录起始</label><input id="audit-from" type="datetime-local" value="2026-07-12T00:00"></div>
+          <div class="field"><label for="audit-source">来源系统</label><select id="audit-source"><option>全部来源</option><option>访问治理中心</option><option>POS 网关</option></select></div>
+          <div class="actions"><button class="btn primary" type="button" data-action="toast" data-message="审计筛选已应用，命中 3 条不可变记录">查询</button><button class="btn" type="button" data-action="toast" data-message="导出申请已创建，字段按当前审计角色脱敏">申请导出</button></div>
+        </section>
+        <section class="table-shell responsive-table" aria-labelledby="audit-title">
+          <div class="surface-header"><h2 id="audit-title">审计事件</h2><span class="help">业务有效时间 ≠ 系统记录时间</span></div>
+          <table><thead><tr><th>事件 / 对象</th><th>业务有效时间</th><th>系统记录时间</th><th>主体 / 代理</th><th>来源 / 追踪</th><th>结果</th><th>动作</th></tr></thead><tbody>
+            <tr class="row-selected"><td data-label="事件 / 对象"><strong>权限策略发布</strong><br><span class="help">PERM-20260712-018</span></td><td data-label="业务有效时间">2026-07-13 00:00:00 +08</td><td data-label="系统记录时间">2026-07-12 10:26:41 +08</td><td data-label="主体 / 代理">Maker 王琳<br>Checker 李娜</td><td data-label="来源 / 追踪">访问治理中心<br><code class="code-value">trace-71a9</code></td><td data-label="结果"><span class="badge success">已批准</span></td><td data-label="动作"><button class="btn" type="button" data-action="toast" data-message="已打开权限策略发布的完整前后值">查看证据</button></td></tr>
+            <tr><td data-label="事件 / 对象"><strong>离线订单补录</strong><br><span class="help">ORDER-O1882</span></td><td data-label="业务有效时间">2026-07-12 10:14:22 +08</td><td data-label="系统记录时间">2026-07-12 10:21:08 +08</td><td data-label="主体 / 代理">收银员 陈凯<br>代理 POS-02-0188</td><td data-label="来源 / 追踪">POS 网关<br><code class="code-value">trace-c83e</code></td><td data-label="结果"><span class="badge warning">离线补录</span></td><td data-label="动作"><button class="btn" type="button" data-action="toast" data-message="已打开离线发生、重连上传和云端确认的事件链">事件链</button></td></tr>
+            <tr><td data-label="事件 / 对象"><strong>规则回滚</strong><br><span class="help">POINT-RULE-v8 → v7</span></td><td data-label="业务有效时间">2026-07-12 09:50:00 +08</td><td data-label="系统记录时间">2026-07-12 09:52:13 +08</td><td data-label="主体 / 代理">运营 李娜<br>自动化 DEPLOY-BOT</td><td data-label="来源 / 追踪">规则中心<br><code class="code-value">trace-f219</code></td><td data-label="结果"><span class="badge info">新修订 v9</span></td><td data-label="动作"><button class="btn" type="button" data-action="toast" data-message="回滚没有覆盖历史版本，已创建修订 v9">版本链</button></td></tr>
+          </tbody></table>
+        </section>
+        <div class="layout-2">
+          <section class="surface"><div class="surface-header"><h2>前后值与原因</h2><span class="badge info">PERM-20260712-018</span></div><div class="surface-body"><div class="diff"><div><strong>变更前</strong><p>退款审批上限：1,000 元</p><p>策略版本：P-183</p></div><div><strong>变更后</strong><p>退款审批上限：2,000 元</p><p>策略版本：P-184</p></div></div><p><strong>业务原因：</strong>华东区门店主管职责调整，经财务与风控共同复核。</p></div></section>
+          <section class="surface"><div class="surface-header"><h2>证据完整性</h2></div><div class="surface-body"><dl class="key-values"><div><dt>事件哈希</dt><dd>9b1c…aa72</dd></div><div><dt>前序哈希</dt><dd>17fe…08c1</dd></div><div><dt>策略版本</dt><dd>P-184</dd></div><div><dt>请求 IP</dt><dd>10.32.*.*</dd></div><div><dt>会话</dt><dd>sess-***-91</dd></div><div><dt>保留至</dt><dd>2033-07-12</dd></div></dl><div class="notice success"><strong>校验通过</strong>内容哈希、前序链和不可变存储签名一致。</div></div></section>
+        </div>
+        <section class="notice"><strong>最小披露</strong>当前审计角色可查看操作结果和责任链，但手机号、完整 IP、会话令牌和无权获知的资源名称已脱敏；导出需二次审批并记录用途。</section>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

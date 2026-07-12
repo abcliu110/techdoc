@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>零售订单保存视图 - 视图变体模型</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark" aria-hidden="true">VM</span>订单运营中心</div><div class="app-context">华东区 / 全渠道订单 / 视图管理</div></header>
+    <section class="page-header">
+      <div><p class="eyebrow">Variant Management</p><h1>零售订单保存视图</h1><p class="subtitle">把筛选、排序、列和分组作为有所有者、范围与回退策略的工作视图，而不是一串不透明的个人偏好。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互示例</span><span class="badge info">当前：<span data-current-view>我的待处理</span></span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <section class="notice"><strong>生效边界</strong>系统视图由订单管理员维护；共享视图变更会影响 18 位门店主管，失效时回退到“全部订单”，个人视图仅对创建者生效。</section>
+        <section class="surface" aria-labelledby="switch-title">
+          <div class="surface-header"><h2 id="switch-title">快速切换</h2><span class="help">选择视图可观察当前状态变化</span></div>
+          <div class="surface-body">
+            <div class="segmented" role="group" aria-label="订单保存视图">
+              <button type="button" aria-pressed="true" data-action="segment" data-view-label="我的待处理">我的待处理</button>
+              <button type="button" aria-pressed="false" data-action="segment" data-view-label="门店超时订单">门店超时订单</button>
+              <button type="button" aria-pressed="false" data-action="segment" data-view-label="全部订单">全部订单</button>
+            </div>
+          </div>
+        </section>
+        <section class="filter-bar" aria-label="当前视图包含的筛选条件">
+          <div class="field"><label for="owner">负责人</label><select id="owner"><option>我负责的</option><option>本门店全部</option></select></div>
+          <div class="field"><label for="status">订单状态</label><select id="status"><option>待审核、待发货</option><option>全部状态</option></select></div>
+          <div class="field"><label for="age">停留时长</label><select id="age"><option>超过 2 小时</option><option>不限</option></select></div>
+          <div class="field"><label for="sort">排序</label><select id="sort"><option>承诺时间升序</option><option>创建时间降序</option></select></div>
+          <div class="actions"><button class="btn primary" type="button" data-action="toast" data-message="当前视图条件已应用，共命中 12 笔订单">应用</button><button class="btn" type="button" data-action="toast" data-message="已保存为个人视图新版本，不影响共享视图">另存为</button></div>
+        </section>
+        <section class="table-shell responsive-table" aria-labelledby="view-list-title">
+          <div class="surface-header"><h2 id="view-list-title">已保存视图</h2><button class="btn primary" type="button" data-action="toast" data-message="新建视图面板已打开">新建视图</button></div>
+          <table><thead><tr><th>名称</th><th>类型 / 所有者</th><th>保存内容</th><th>使用情况</th><th>默认与回退</th><th>动作</th></tr></thead><tbody>
+            <tr class="row-selected"><td data-label="名称"><strong>我的待处理</strong></td><td data-label="类型 / 所有者">个人 · 王琳</td><td data-label="保存内容">筛选、排序、6 列</td><td data-label="使用情况">今天 08:42</td><td data-label="默认与回退"><span class="badge info">我的默认</span></td><td data-label="动作"><button class="btn" type="button" data-action="toast" data-message="个人视图可直接编辑">编辑</button></td></tr>
+            <tr><td data-label="名称"><strong>门店超时订单</strong></td><td data-label="类型 / 所有者">共享 · 订单管理员</td><td data-label="保存内容">筛选、排序、分组、8 列</td><td data-label="使用情况">18 人订阅</td><td data-label="默认与回退">共享默认 → 全部订单</td><td data-label="动作"><button class="btn" type="button" data-action="toast" data-message="编辑共享视图前需确认 18 位受影响用户">影响预览</button></td></tr>
+            <tr><td data-label="名称"><strong>全部订单</strong></td><td data-label="类型 / 所有者">系统 · 平台</td><td data-label="保存内容">标准列、创建时间排序</td><td data-label="使用情况">系统回退</td><td data-label="默认与回退"><span class="badge success">不可删除</span></td><td data-label="动作"><button class="btn" type="button" data-action="toast" data-message="系统视图只允许管理员复制">复制</button></td></tr>
+          </tbody></table>
+        </section>
+        <div class="layout-2">
+          <section class="surface"><div class="surface-header"><h2>视图定义</h2></div><div class="surface-body"><dl class="key-values"><div><dt>范围</dt><dd>仅王琳</dd></div><div><dt>列</dt><dd>6 / 24</dd></div><div><dt>排序</dt><dd>承诺时间 ↑</dd></div><div><dt>分组</dt><dd>门店</dd></div><div><dt>密度</dt><dd>紧凑</dd></div><div><dt>版本</dt><dd>v7</dd></div></dl></div></section>
+          <section class="notice warning"><strong>共享变更保护</strong>发布共享视图新版本前展示差异、影响人数和回退视图；删除或撤销共享范围不会删除订阅者的个人副本。</section>
+        </div>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

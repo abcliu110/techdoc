@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>智能补货推荐 - 情景与敏感性分析</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark" aria-hidden="true">SC</span>供应链计划</div><div class="app-context">中山路店 / SKU-20416 / 冷萃咖啡组合</div></header>
+    <section class="page-header">
+      <div><p class="eyebrow">Forecast-assisted Replenishment</p><h1>补货建议：96 组</h1><p class="subtitle">推荐范围 72–118 组；人工可调整输入并评估缺货与滞销风险，不把点估计当成确定事实。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互示例</span><span class="badge info">预测版本 demand-v7.3</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <section class="notice warning"><strong>关键假设</strong>未来 7 天活动按计划执行、到货周期 2 天、无临时团购。数据覆盖最近 180 天，7 月 8 日有 4 小时 POS 缺口已插补。</section>
+        <section class="metrics" aria-label="补货判断指标">
+          <article class="metric"><span class="metric-label">建议补货</span><strong class="metric-value">96 组</strong><div class="metric-note">合理区间 72–118</div></article>
+          <article class="metric warning"><span class="metric-label">不补货缺货概率</span><strong class="metric-value">68%</strong><div class="metric-note">周五晚高峰最高</div></article>
+          <article class="metric success"><span class="metric-label">建议后服务水平</span><strong class="metric-value">96.4%</strong><div class="metric-note">护栏目标 ≥ 95%</div></article>
+          <article class="metric"><span class="metric-label">预计剩余库存</span><strong class="metric-value">14 组</strong><div class="metric-note">保质期风险低</div></article>
+        </section>
+        <div class="layout-2">
+          <section class="surface" aria-labelledby="scenario-title">
+            <div class="surface-header"><h2 id="scenario-title">情景对比</h2><span class="help">单位：组 / 未来 7 天</span></div>
+            <div class="surface-body"><table><thead><tr><th>情景</th><th>需求中位数</th><th>缺货概率</th><th>期末库存</th></tr></thead><tbody><tr><td>保守：活动转化 -15%</td><td>118</td><td>8%</td><td>31</td></tr><tr class="row-selected"><td>基准：按当前计划</td><td>142</td><td>3.6%</td><td>14</td></tr><tr><td>高峰：天气升温 + 活动放量</td><td>176</td><td>22%</td><td>0</td></tr></tbody></table></div>
+          </section>
+          <section class="surface" aria-labelledby="sensitivity-title">
+            <div class="surface-header"><h2 id="sensitivity-title">敏感性与护栏</h2></div>
+            <div class="surface-body content-stack"><div class="callout warning"><strong>结论翻转条件</strong>若供应提前期从 2 天升到 4 天，96 组不足；若活动取消，补 96 组会将滞销风险升至 28%。</div><ul><li>仓容上限：140 组，当前建议未超限。</li><li>单批保质期：18 天，建议批次可在 11 天内消化。</li><li>预算护栏：¥ 12,000，本次预计 ¥ 8,640。</li></ul></div>
+          </section>
+        </div>
+        <section class="surface" aria-labelledby="adjust-title"><div class="surface-header"><h2 id="adjust-title">人工调整与影响</h2></div><div class="surface-body form-grid"><div class="field"><label for="restock-qty">最终补货数量</label><input id="restock-qty" type="number" value="96" min="0" max="140"></div><div class="field"><label for="restock-reason">调整原因</label><select id="restock-reason"><option>接受模型建议</option><option>已知临时活动</option><option>仓容限制</option><option>供应风险</option></select></div><div class="span-2 actions"><button class="btn primary" type="button" data-action="toast" data-message="补货草案已由人工确认，尚未提交采购审批">确认补货草案</button><button class="btn" type="button" data-action="toast" data-message="已保存情景参数，不影响当前库存">保存情景</button></div></div></section>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

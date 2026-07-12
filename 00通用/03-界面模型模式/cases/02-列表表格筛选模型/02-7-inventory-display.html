@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>案例：库存字段设计</title><link rel="stylesheet" href="../shared/case.css"></head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a><div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark">IV</span>库存可用性</div><div class="app-context">人民广场店 · 实时库存</div></header>
+    <section class="page-header" aria-labelledby="page-title"><div><p class="eyebrow">Inventory Display · 库存表征</p><h1 id="page-title">商品库存查询</h1><p class="subtitle">区分账面、锁定、可售、在途和安全库存，避免用一个“库存数”承载多种事实。</p></div><div class="header-meta"><span class="demo-mode" data-kind="static">静态案例</span><span class="tag info">15:08:32 同步</span></div></section>
+    <main id="main" class="page-body" data-demo="static"><div class="content-stack">
+      <div class="notice"><strong>口径</strong>可售库存 = 账面库存 - 已锁定 - 质检冻结；在途库存不计入当前可售。</div>
+      <section class="table-shell" aria-labelledby="inventory-title"><div class="surface-header"><h2 id="inventory-title">库存事实</h2><span class="help">按可售天数升序</span></div><div class="table-scroll responsive-table"><table><thead><tr><th scope="col">商品</th><th scope="col">库存状态</th><th scope="col" class="numeric">账面</th><th scope="col" class="numeric">锁定</th><th scope="col" class="numeric">可售</th><th scope="col" class="numeric">在途</th><th scope="col" class="numeric">安全库存</th><th scope="col">可售天数</th></tr></thead><tbody>
+        <tr><td data-label="商品">精品咖啡豆 500g</td><td data-label="库存状态"><span class="badge danger">缺货风险</span></td><td data-label="账面" class="numeric">8</td><td data-label="锁定" class="numeric">6</td><td data-label="可售" class="numeric"><strong>2</strong></td><td data-label="在途" class="numeric">20</td><td data-label="安全库存" class="numeric">12</td><td data-label="可售天数">0.6 天</td></tr>
+        <tr><td data-label="商品">冷萃咖啡液 6 包</td><td data-label="库存状态"><span class="badge warning">低于安全库存</span></td><td data-label="账面" class="numeric">21</td><td data-label="锁定" class="numeric">5</td><td data-label="可售" class="numeric"><strong>16</strong></td><td data-label="在途" class="numeric">0</td><td data-label="安全库存" class="numeric">20</td><td data-label="可售天数">2.1 天</td></tr>
+        <tr><td data-label="商品">燕麦奶 1L</td><td data-label="库存状态"><span class="badge success">充足</span></td><td data-label="账面" class="numeric">56</td><td data-label="锁定" class="numeric">8</td><td data-label="可售" class="numeric"><strong>48</strong></td><td data-label="在途" class="numeric">24</td><td data-label="安全库存" class="numeric">18</td><td data-label="可售天数">7.4 天</td></tr>
+        <tr><td data-label="商品">进口糖浆 750ml</td><td data-label="库存状态"><span class="badge info">冻结中</span></td><td data-label="账面" class="numeric">12</td><td data-label="锁定" class="numeric">0</td><td data-label="可售" class="numeric"><strong>0</strong></td><td data-label="在途" class="numeric">0</td><td data-label="安全库存" class="numeric">6</td><td data-label="可售天数">质检冻结 12</td></tr>
+      </tbody></table></div></section>
+      <section class="layout-3"><div class="notice danger"><strong>缺货风险</strong>文本、图标语义和数值同时表达，不依赖红色。</div><div class="notice warning"><strong>时间维度</strong>库存事实必须显示数据时间，避免把延迟快照当实时值。</div><div class="notice"><strong>范围维度</strong>门店、仓库、批次必须显式，不能跨范围聚合后误导操作。</div></section>
+    </div></main>
+  </div>
+  <div class="sr-only" role="status" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div><script src="../shared/case.js"></script>
+</body></html>

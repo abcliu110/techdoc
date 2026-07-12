@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>案例：店长经营看板 - Dashboard</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark">DB</span>门店经营驾驶舱</div><div class="app-context">人民广场店 · 2026-07-12</div></header>
+    <section class="page-header" aria-labelledby="page-title">
+      <div><p class="eyebrow">Dashboard · 经营看板</p><h1 id="page-title">今日经营概览</h1><p class="subtitle">用少量指标、趋势与异常回答“现在发生什么、需要关注什么”。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互案例</span><span class="tag warning">17:00 更新</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <div class="segmented" aria-label="分析视图"><button type="button" aria-pressed="true" data-action="segment" data-view-label="经营概览">经营概览</button><button type="button" aria-pressed="false" data-action="segment" data-view-label="商品表现">商品表现</button><button type="button" aria-pressed="false" data-action="segment" data-view-label="库存风险">库存风险</button></div>
+        <p class="help">当前视图：<strong data-current-view>经营概览</strong>；指标口径为本门店、自然日、已支付订单。</p>
+        <section class="metrics" aria-label="核心经营指标">
+          <div class="metric"><span class="metric-label">净销售额</span><strong class="metric-value">¥28,450</strong><span class="metric-note">较上周同日 +12.3%</span></div>
+          <div class="metric success"><span class="metric-label">已支付订单</span><strong class="metric-value">156</strong><span class="metric-note">转化率 31.2%</span></div>
+          <div class="metric warning"><span class="metric-label">待履约订单</span><strong class="metric-value">25</strong><span class="metric-note">其中 2 笔超时</span></div>
+          <div class="metric danger"><span class="metric-label">缺货影响销售</span><strong class="metric-value">¥1,260</strong><span class="metric-note">5 个 SKU 低于安全库存</span></div>
+        </section>
+        <section class="layout-2">
+          <div class="surface">
+            <div class="surface-header"><h2>近 7 日净销售额</h2><span class="tag info">单位：万元</span></div>
+            <div class="surface-body"><div class="bar-chart" role="img" aria-label="近七日净销售额从 2.1 万元增长到 2.8 万元"><div class="bar" style="--height:54%"><span>周一</span></div><div class="bar" style="--height:62%"><span>周二</span></div><div class="bar" style="--height:58%"><span>周三</span></div><div class="bar" style="--height:70%"><span>周四</span></div><div class="bar" style="--height:76%"><span>周五</span></div><div class="bar warning" style="--height:65%"><span>周六</span></div><div class="bar" style="--height:82%"><span>今日</span></div></div><p class="help">今日较昨日同期增长 8.4%，主要由咖啡豆礼盒拉动。</p></div>
+          </div>
+          <div class="surface">
+            <div class="surface-header"><h2>需要关注</h2><button class="btn quiet" type="button" data-action="toast" data-message="异常已按经营影响排序">刷新</button></div>
+            <div class="surface-body"><ol class="task-list"><li class="task-item"><span class="risk-label" style="color:var(--danger)">高</span><div><div class="item-title">2 笔订单履约超时</div><div class="item-meta">影响 2 位会员，涉及金额 ¥484.50</div></div><button class="btn" type="button" data-action="toast" data-message="已进入超时订单工作清单">处理</button></li><li class="task-item"><span class="risk-label" style="color:var(--warning)">中</span><div><div class="item-title">5 个商品低于安全库存</div><div class="item-meta">按预测可售天数排序，最低仅 0.6 天</div></div><button class="btn" type="button" data-action="toast" data-message="已打开补货建议">查看</button></li><li class="task-item"><span class="risk-label">提示</span><div><div class="item-title">午间客流高于预测 14%</div><div class="item-meta">建议 18:00 前增加 1 名收银员</div></div><button class="btn" type="button" data-action="toast" data-message="排班建议已标记待确认">标记</button></li></ol></div>
+          </div>
+        </section>
+        <div class="notice"><strong>指标解释</strong>看板用于发现与导航，不直接替代订单处理、补货审批或排班承诺。</div>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" role="status" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

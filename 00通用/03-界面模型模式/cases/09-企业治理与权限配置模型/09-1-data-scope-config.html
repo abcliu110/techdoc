@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>零售门店数据权限配置 - 有效范围与解释</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark" aria-hidden="true">DS</span>访问治理中心</div><div class="app-context">角色：区域运营经理 / 华东租户 / 草稿 v4</div></header>
+    <section class="page-header">
+      <div><p class="eyebrow">Data Scope + Effective Permission</p><h1>零售门店数据权限配置</h1><p class="subtitle">规则配置回答“写了什么”；有效权限解释回答“谁在何时、何范围内实际能做什么，以及结果由哪些来源合成”。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互示例</span><span class="badge warning">待复核</span><span class="badge info">变更单 DS-0712-014</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <section class="notice warning"><strong>租户边界不可放宽</strong>所有范围均限定在华东租户 PID-310；显式拒绝优先于角色并集，临时授权到期后自动回退到组织层级范围。</section>
+        <div class="master-detail surface">
+          <nav class="master-list" aria-label="数据范围规则列表">
+            <button class="master-item" type="button" aria-selected="true"><strong>区域运营经理</strong><br><span class="help">组织 + 指定门店 + 字段限制</span></button>
+            <button class="master-item" type="button" aria-selected="false"><strong>门店店长</strong><br><span class="help">所属门店</span></button>
+            <button class="master-item" type="button" aria-selected="false"><strong>审计专员</strong><br><span class="help">只读 + 脱敏</span></button>
+          </nav>
+          <section class="surface-body" aria-labelledby="scope-editor-title">
+            <div class="surface-header"><h2 id="scope-editor-title">范围规则编辑</h2><span class="badge">草稿 v4</span></div>
+            <div class="form-grid">
+              <div class="field"><label for="subject">主体</label><input id="subject" type="text" value="角色 / 区域运营经理" readonly></div>
+              <div class="field"><label for="merge">合并策略</label><select id="merge"><option>允许取并集，显式拒绝优先</option><option>最小权限优先</option></select></div>
+              <div class="field span-2"><span class="label">组织与门店范围</span><ul class="tree"><li><label><input type="checkbox" checked data-permission-toggle aria-label="华东大区数据范围">华东大区（36 店）</label><ul><li><label><input type="checkbox" checked data-permission-toggle aria-label="上海区域数据范围">上海区域（12 店）</label></li><li><label><input type="checkbox" checked data-permission-toggle aria-label="杭州区域数据范围">杭州区域（9 店）</label></li><li><label><input type="checkbox" data-permission-toggle aria-label="南京区域数据范围">南京区域（8 店）</label></li></ul></li></ul></div>
+              <div class="field"><label for="row-rule">行级条件</label><select id="row-rule"><option>门店状态 = 营业中</option><option>不限门店状态</option></select></div>
+              <div class="field"><label for="field-rule">字段范围</label><select id="field-rule"><option>隐藏手机号、证件号</option><option>全部字段</option></select></div>
+            </div>
+            <div class="actions"><button class="btn" type="button" data-action="toast" data-message="已保存数据范围草稿，线上权限未变化">保存草稿</button><button class="btn primary" type="button" data-action="toast" data-message="授权模拟完成：允许 21 店，拒绝 1 店，2 个字段脱敏">模拟有效权限</button></div>
+          </section>
+        </div>
+        <section class="surface" aria-labelledby="effective-title">
+          <div class="surface-header"><h2 id="effective-title">有效权限解释：王琳</h2><span class="help">模拟时间 2026-07-12 10:30 · 策略版本 P-184</span></div>
+          <div class="surface-body">
+            <dl class="key-values"><div><dt>租户</dt><dd>PID-310 华东</dd></div><div><dt>资源 / 动作</dt><dd>订单 / 查看</dd></div><div><dt>最终结果</dt><dd><span class="badge success">允许</span></dd></div><div><dt>门店范围</dt><dd>21 店</dd></div><div><dt>字段范围</dt><dd>手机号、证件号脱敏</dd></div><div><dt>到期时间</dt><dd>长期</dd></div></dl>
+            <ul class="timeline"><li class="timeline-item"><span class="timeline-marker done">1</span><div><div class="item-title">组织规则：华东大区</div><div class="item-meta">允许 29 家营业门店</div></div><span class="badge success">允许来源</span></li><li class="timeline-item"><span class="timeline-marker done">2</span><div><div class="item-title">角色规则：区域运营经理</div><div class="item-meta">排除非营业门店并隐藏敏感字段</div></div><span class="badge info">限制来源</span></li><li class="timeline-item"><span class="timeline-marker current">3</span><div><div class="item-title">显式拒绝：加盟试点店</div><div class="item-meta">拒绝优先，移除 1 家门店</div></div><span class="badge danger">拒绝来源</span></li></ul>
+          </div>
+        </section>
+        <div class="layout-2"><section class="notice"><strong>影响预览</strong>发布后 18 位直接用户和 64 位继承用户重新计算；新增 2 店、撤销 1 店，不改变租户边界。</section><section class="surface"><div class="surface-header"><h2>治理流程</h2></div><div class="surface-body"><ol class="path" style="--step-count: 4"><li class="is-done">草稿</li><li aria-current="step">复核中</li><li>批准</li><li>生效与审计</li></ol><div class="actions"><button class="btn primary" type="button" data-action="toast" data-message="变更已提交给访问治理负责人复核">提交复核</button></div></div></section></div>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

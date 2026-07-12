@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>案例：订单追踪链路 - Flexible Column Layout</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark">FC</span>订单追踪中心</div><div class="app-context">异常订单调查</div></header>
+    <section class="page-header" aria-labelledby="page-title">
+      <div><p class="eyebrow">Flexible Column Layout · 弹性分栏</p><h1 id="page-title">订单履约链路</h1><p class="subtitle">在不丢失上文的情况下并列查看任务、主对象与关联事实。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互案例</span><span class="badge danger">1 个阻塞点</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="fcl" aria-label="订单追踪三栏视图">
+        <section class="fcl-column" aria-labelledby="queue-title">
+          <div class="tool-header"><h2 id="queue-title">异常队列</h2><span class="count">3</span></div>
+          <div class="master-list" role="listbox" aria-label="异常订单">
+            <button class="master-item" type="button" role="option" aria-selected="true" data-action="toast" data-message="已选择订单 SO202607120044"><strong>SO202607120044</strong><span class="item-meta">缺货阻塞 · 超时 35 分钟</span></button>
+            <button class="master-item" type="button" role="option" aria-selected="false" data-action="toast" data-message="已选择订单 SO202607120039"><strong>SO202607120039</strong><span class="item-meta">地址待确认 · 剩余 20 分钟</span></button>
+            <button class="master-item" type="button" role="option" aria-selected="false" data-action="toast" data-message="已选择订单 SO202607120031"><strong>SO202607120031</strong><span class="item-meta">骑手未接单 · 剩余 42 分钟</span></button>
+          </div>
+        </section>
+        <section class="fcl-column" aria-labelledby="object-title">
+          <div class="tool-header"><h2 id="object-title">订单 SO202607120044</h2><span class="badge danger">履约阻塞</span></div>
+          <div class="tool-body content-stack">
+            <dl class="key-values"><div><dt>会员</dt><dd>李四</dd></div><div><dt>实付</dt><dd>¥156.00</dd></div><div><dt>承诺时间</dt><dd>14:30</dd></div><div><dt>负责人</dt><dd>李敏</dd></div><div><dt>配送</dt><dd>顺丰同城</dd></div><div><dt>支付</dt><dd>已确认</dd></div></dl>
+            <div class="notice danger"><strong>阻塞原因</strong>酸奶 200g 库存为 0，替代商品尚未获得客户确认。</div>
+            <ol class="timeline"><li class="timeline-item"><span class="timeline-marker done">1</span><div><div class="item-title">支付与锁库完成</div><div class="item-meta">13:25 · 系统</div></div><span class="badge success">完成</span></li><li class="timeline-item"><span class="timeline-marker current">2</span><div><div class="item-title">拣货发现缺货</div><div class="item-meta">13:42 · 李敏</div></div><span class="badge danger">阻塞</span></li><li class="timeline-item"><span class="timeline-marker">3</span><div><div class="item-title">等待客户确认替代品</div><div class="item-meta">联系 2 次，尚未接通</div></div><span class="badge warning">等待</span></li></ol>
+          </div>
+        </section>
+        <aside class="fcl-column tertiary" aria-labelledby="context-title">
+          <div class="tool-header"><h2 id="context-title">关联上下文</h2><span class="tag info">客户与库存</span></div>
+          <div class="tool-body content-stack">
+            <div><h3 class="section-title">会员偏好</h3><p>李四 · 金卡会员 · 允许同价替换，含乳制品需人工确认。</p><button class="btn" type="button" data-action="toast" data-message="已记录一次客户联系尝试">记录联系</button></div>
+            <div><h3 class="section-title">可替代库存</h3><ol class="task-list"><li class="task-item"><span class="badge success">有货</span><div><div class="item-title">低脂酸奶 200g</div><div class="item-meta">价差 +¥1.50 · 库存 12</div></div><button class="btn" type="button" data-action="toast" data-message="替代方案已加入待确认清单">选择</button></li><li class="task-item"><span class="badge success">有货</span><div><div class="item-title">原味酸奶 180g</div><div class="item-meta">价差 -¥0.50 · 库存 8</div></div><button class="btn" type="button" data-action="toast" data-message="替代方案已加入待确认清单">选择</button></li></ol></div>
+          </div>
+        </aside>
+      </div>
+      <p class="notice warning"><strong>分栏边界</strong>窄屏按异常队列、订单对象、关联上下文顺序纵向展开；任何替代都需客户明确确认。</p>
+    </main>
+  </div>
+  <div class="sr-only" role="status" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

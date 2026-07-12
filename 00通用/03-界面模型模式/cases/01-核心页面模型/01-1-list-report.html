@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>案例：零售订单列表页 - List Report</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar">
+      <div class="brand"><span class="brand-mark">RO</span>零售运营中心</div>
+      <div class="app-context">人民广场店 · 订单履约</div>
+    </header>
+    <section class="page-header" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">List Report · 列表报告</p>
+        <h1 id="page-title">订单列表</h1>
+        <p class="subtitle">以稳定筛选、可比较字段和批量动作支持高频订单查询。</p>
+      </div>
+      <div class="header-meta">
+        <span class="demo-mode" data-kind="interactive">交互案例</span>
+        <span class="tag info">数据截至 15:10</span>
+      </div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <form class="filter-bar" aria-label="订单筛选" onsubmit="return false">
+          <div class="field">
+            <label for="order-query">订单号或会员</label>
+            <input id="order-query" type="search" placeholder="输入订单号或手机号">
+          </div>
+          <div class="field">
+            <label for="order-status">履约状态</label>
+            <select id="order-status">
+              <option>全部状态</option><option selected>待发货</option><option>已发货</option><option>已完成</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="order-date">下单日期</label>
+            <input id="order-date" type="date" value="2026-07-12">
+          </div>
+          <div class="field">
+            <label for="order-store">门店范围</label>
+            <select id="order-store"><option selected>人民广场店</option><option>淮海路店</option><option>南京路店</option></select>
+          </div>
+          <div class="actions">
+            <button class="btn primary" type="button" data-action="toast" data-message="筛选已应用，共找到 25 笔待发货订单">查询</button>
+            <button class="btn" type="reset">重置</button>
+          </div>
+        </form>
+
+        <section class="table-shell" aria-labelledby="orders-title">
+          <div class="surface-header">
+            <div>
+              <h2 id="orders-title">待发货订单</h2>
+              <span class="help">共 25 笔，按履约时限升序</span>
+            </div>
+            <div class="actions">
+              <button class="btn" type="button" data-action="toast" data-message="导出任务已提交，文件将保留当前筛选条件">导出</button>
+              <button class="btn primary" type="button" data-action="toast" data-message="已打开新增订单流程">新增订单</button>
+            </div>
+          </div>
+          <div class="bulk-bar" data-bulk-bar hidden>
+            <strong>已选择 <span data-selected-count>0</span> 笔订单</strong>
+            <button class="btn primary" type="button" data-action="bulk-complete">提交批量发货</button>
+          </div>
+          <div class="table-scroll responsive-table">
+            <table>
+              <thead><tr><th scope="col"><span class="sr-only">选择</span><input type="checkbox" data-select-all aria-label="选择全部订单"></th><th scope="col">订单编号</th><th scope="col">会员</th><th scope="col">履约状态</th><th scope="col">支付状态</th><th scope="col" class="numeric">实付金额</th><th scope="col">履约时限</th></tr></thead>
+              <tbody>
+                <tr><td data-label="选择"><input type="checkbox" data-row-select aria-label="选择订单 SO202607120045"></td><td data-label="订单编号"><a href="#">SO202607120045</a></td><td data-label="会员">张三<br><span class="help">138****1234</span></td><td data-label="履约状态"><span class="badge warning">待发货</span></td><td data-label="支付状态"><span class="badge success">已支付</span></td><td data-label="实付金额" class="numeric">¥328.50</td><td data-label="履约时限"><strong>剩余 2 小时</strong></td></tr>
+                <tr><td data-label="选择"><input type="checkbox" data-row-select aria-label="选择订单 SO202607120044"></td><td data-label="订单编号"><a href="#">SO202607120044</a></td><td data-label="会员">李四<br><span class="help">139****5678</span></td><td data-label="履约状态"><span class="badge danger">已超时</span></td><td data-label="支付状态"><span class="badge success">已支付</span></td><td data-label="实付金额" class="numeric">¥156.00</td><td data-label="履约时限"><strong>超时 35 分钟</strong></td></tr>
+                <tr><td data-label="选择"><input type="checkbox" data-row-select aria-label="选择订单 SO202607120043"></td><td data-label="订单编号"><a href="#">SO202607120043</a></td><td data-label="会员">王五<br><span class="help">137****9012</span></td><td data-label="履约状态"><span class="badge warning">待发货</span></td><td data-label="支付状态"><span class="badge success">已支付</span></td><td data-label="实付金额" class="numeric">¥89.00</td><td data-label="履约时限">剩余 3 小时 20 分</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <div class="notice"><strong>列表报告边界</strong>行内只保留比较所需事实；完整审计轨迹与关联对象进入订单详情页。</div>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" role="status" aria-live="polite" data-live-region></div>
+  <div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

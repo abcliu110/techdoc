@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>金蝶云苍穹 UI 模式可视化分析</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f6f8;color:#20242a;font:14px/1.65 "Microsoft YaHei",Arial,sans-serif;letter-spacing:0}header{background:#fff;border-bottom:1px solid #dfe3e8;padding:24px max(24px,calc((100% - 1240px)/2))}h1{margin:0 0 6px;font-size:28px}h2{font-size:21px;margin:0}h3{font-size:16px;margin:0 0 8px}.sub,.muted{color:#69727d}.wrap{max-width:1240px;margin:auto;padding:24px}.summary{width:100%;border-collapse:collapse;background:#fff;margin-bottom:24px}.summary th,.summary td{border:1px solid #dfe3e8;padding:10px;text-align:left;vertical-align:top}.summary th{background:#eef2f6}.page{background:#fff;border:1px solid #dfe3e8;border-radius:6px;margin:0 0 26px;overflow:hidden}.page-head{padding:18px 20px;border-bottom:1px solid #e3e6ea;display:flex;gap:16px;justify-content:space-between;align-items:flex-start}.badge{white-space:nowrap;background:#e8efff;color:#315fc4;padding:4px 9px;border-radius:4px}.visuals{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:20px;background:#f8f9fb}.figure h3{margin-bottom:8px}.shot{position:relative;width:100%;aspect-ratio:813/731;background:#e7ebf0;overflow:hidden;border:1px solid #cbd2da}.shot img{display:block;width:100%;height:100%;object-fit:contain}.box{position:absolute;border:2px solid #e64646;background:rgba(230,70,70,.06);pointer-events:none}.box.blue{border-color:#246bd7;background:rgba(36,107,215,.06)}.box.green{border-color:#16855b;background:rgba(22,133,91,.06)}.box.amber{border-color:#c77900;background:rgba(199,121,0,.07)}.label{position:absolute;left:-2px;top:-27px;background:#e64646;color:#fff;padding:3px 7px;font-size:12px;white-space:nowrap;border-radius:3px 3px 0 0}.blue .label{background:#246bd7}.green .label{background:#16855b}.amber .label{background:#c77900}.label.inside{top:0;border-radius:0 0 3px 0}.analysis{padding:0 20px 20px;display:grid;grid-template-columns:1fr 1fr;gap:18px}.panel{border-top:1px solid #e2e5e9;padding-top:14px}.panel ul{margin:6px 0 0;padding-left:20px}.parts{width:100%;border-collapse:collapse;margin-top:8px}.parts th,.parts td{border:1px solid #dfe3e8;padding:8px;vertical-align:top;text-align:left}.parts th{background:#f0f3f6}.note{margin:18px 0 0;padding:12px 14px;border-left:4px solid #c77900;background:#fff8e8}@media(max-width:900px){.visuals,.analysis{grid-template-columns:1fr}.page-head{display:block}.badge{display:inline-block;margin-top:8px}}
+</style>
+</head>
+<body>
+<header><h1>金蝶云苍穹 UI 模式可视化分析</h1><div class="sub">基于 2026-07-12 实机截图 · 原图追溯 · 中文模式标注 · 抽样观察</div></header>
+<main class="wrap">
+<table class="summary"><thead><tr><th>页面</th><th>整体 UI 模式</th><th>核心特点</th><th>结构性优点</th></tr></thead><tbody>
+<tr><td>办公用品领用工作台</td><td>可配置工作台 + 行动条</td><td>业务页签、行动入口、布局控制、内容画布</td><td>围绕单一业务上下文聚合处理与个性化入口</td></tr>
+<tr><td>开发平台应用管理</td><td>卡片式对象管理 + 分面筛选</td><td>分类、对象卡片、状态版本、对象级动作</td><td>保持应用上下文并集中管理动作</td></tr>
+<tr><td>页面资产管理</td><td>分面资产浏览器 + 分类导航 + 双视图</td><td>左侧分类、多维筛选、元数据卡片</td><td>从多个维度缩小资产范围并保留治理上下文</td></tr>
+</tbody></table>
+
+<section class="page"><div class="page-head"><div><h2>01 办公用品领用工作台</h2><div class="muted">整体模式：可配置工作台（Configurable Workspace）+ 行动条（Action Strip）</div></div><span class="badge">SCREEN-01</span></div>
+<div class="visuals"><div class="figure"><h3>原始图片</h3><div class="shot"><img src="assets/01-办公用品领用工作台.png" alt="办公用品领用工作台原始截图"></div></div>
+<div class="figure"><h3>原图模式标注</h3><div class="shot"><img src="assets/01-办公用品领用工作台.png" alt="办公用品领用工作台标注截图">
+<div class="box blue" style="left:0;top:0;width:100%;height:6.7%"><span class="label inside">全局导航模式</span></div>
+<div class="box green" style="left:0;top:6.7%;width:100%;height:5.2%"><span class="label inside">业务页签导航</span></div>
+<div class="box amber" style="left:0;top:11.8%;width:100%;height:5%"><span class="label inside">行动条模式：标签 / 立即查看 / 忽略</span></div>
+<div class="box" style="left:94.7%;top:13%;width:5.3%;height:6%"><span class="label" style="right:0;left:auto">布局控制</span></div>
+<div class="box blue" style="left:0;top:16.8%;width:100%;height:83.2%"><span class="label inside">可配置内容画布（当前为空态）</span></div>
+</div></div></div>
+<div class="analysis"><div class="panel"><h3>模式特点</h3><ul><li>顶部保留全局产品导航，下一层锁定当前业务页签。</li><li>行动条提供查看、忽略等即时分流动作。</li><li>内容画布与布局控制分离，具备个性化工作区结构。</li></ul></div><div class="panel"><h3>这种模式的优点</h3><ul><li>业务主题与处理动作位于同一上下文。</li><li>行动入口前置，减少在多级菜单中寻找当前事项。</li><li>布局控制允许工作区适应不同使用者，但实际效果尚未测试。</li></ul></div></div>
+<table class="parts"><tr><th>标注区域</th><th>中文模式名称</th><th>作用</th></tr><tr><td>顶部</td><td>全局导航模式</td><td>跨产品与跨模块定位</td></tr><tr><td>业务名称</td><td>业务页签导航</td><td>保持当前业务上下文</td></tr><tr><td>标签行</td><td>行动条模式</td><td>提供查看、忽略等快速处理</td></tr><tr><td>主体</td><td>可配置内容画布</td><td>承载组件和个性化布局；当前截图为空态</td></tr></table></section>
+
+<section class="page"><div class="page-head"><div><h2>02 开发平台应用管理</h2><div class="muted">整体模式：卡片式对象管理（Card-based Object Management）+ 分面筛选（Faceted Filter）</div></div><span class="badge">SCREEN-02</span></div>
+<div class="visuals"><div class="figure"><h3>原始图片</h3><div class="shot"><img src="assets/02-开发平台应用管理.png" alt="开发平台应用管理原始截图"></div></div>
+<div class="figure"><h3>原图模式标注</h3><div class="shot"><img src="assets/02-开发平台应用管理.png" alt="开发平台应用管理标注截图">
+<div class="box blue" style="left:0;top:0;width:100%;height:7.3%"><span class="label inside">全局导航 + 当前模块页签</span></div>
+<div class="box green" style="left:0;top:7.3%;width:86%;height:8%"><span class="label inside">上下文选择器：业务云</span></div>
+<div class="box amber" style="left:0;top:16.7%;width:82%;height:7%"><span class="label inside">分面筛选：全部 / 金蝶 / 自建 / 第三方</span></div>
+<div class="box" style="left:0;top:26%;width:27%;height:26%"><span class="label inside">创建入口卡片</span></div>
+<div class="box blue" style="left:29%;top:26%;width:38%;height:27%"><span class="label inside">对象卡片模式</span></div>
+<div class="box green" style="left:29%;top:47%;width:38%;height:6%"><span class="label">对象级快捷操作</span></div>
+<div class="box blue" style="left:29%;top:56%;width:38%;height:27%"><span class="label inside">重复对象卡片</span></div>
+</div></div></div>
+<div class="analysis"><div class="panel"><h3>模式特点</h3><ul><li>先选业务云，再按来源分面筛选应用集合。</li><li>每张卡片聚合名称、编码、状态、版本和动作。</li><li>新建应用使用独立入口卡片，与已有对象并列。</li></ul></div><div class="panel"><h3>这种模式的优点</h3><ul><li>对象身份和生命周期信息同屏，便于快速比较。</li><li>管理动作保留在应用上下文内，减少对象切换。</li><li>分面筛选可逐步缩小候选范围；大规模效率尚未验证。</li></ul></div></div>
+<table class="parts"><tr><th>标注区域</th><th>中文模式名称</th><th>作用</th></tr><tr><td>业务云栏</td><td>上下文选择器</td><td>先确定资产所属范围</td></tr><tr><td>来源页签</td><td>分面筛选模式</td><td>按来源缩小应用集合</td></tr><tr><td>新建应用</td><td>创建入口卡片</td><td>把新增动作放入对象集合入口</td></tr><tr><td>应用块</td><td>对象卡片模式</td><td>聚合身份、状态、版本和操作</td></tr><tr><td>卡片底部</td><td>对象级快捷操作</td><td>在当前对象上下文执行管理动作</td></tr></table></section>
+
+<section class="page"><div class="page-head"><div><h2>03 示例应用页面资产管理</h2><div class="muted">整体模式：分面资产浏览器 + 分类导航 + 卡片/列表双视图</div></div><span class="badge">SCREEN-03</span></div>
+<div class="visuals"><div class="figure"><h3>原始图片</h3><div class="shot"><img src="assets/03-页面资产管理.png" alt="页面资产管理原始截图"></div></div>
+<div class="figure"><h3>原图模式标注</h3><div class="shot"><img src="assets/03-页面资产管理.png" alt="页面资产管理标注截图">
+<div class="box blue" style="left:0;top:0;width:100%;height:8%"><span class="label inside">面包屑导航模式</span></div>
+<div class="box green" style="left:0;top:8%;width:27%;height:92%"><span class="label inside">分类导航模式</span></div>
+<div class="box amber" style="left:29%;top:10%;width:71%;height:18%"><span class="label inside">分面筛选 + 排序模式</span></div>
+<div class="box blue" style="left:29%;top:34%;width:38%;height:27%"><span class="label inside">资产卡片模式</span></div>
+<div class="box green" style="left:29%;top:50%;width:38%;height:11%"><span class="label">治理元数据 + 对象操作</span></div>
+</div></div></div>
+<div class="analysis"><div class="panel"><h3>模式特点</h3><ul><li>左侧用业务资产类型进行稳定分类导航。</li><li>顶部按设备、页面类型和排序条件进行分面过滤。</li><li>主体卡片展示编码、类型、源页面、修改人和修改时间。</li></ul></div><div class="panel"><h3>这种模式的优点</h3><ul><li>分类与分面组合，适合异构页面资产集合。</li><li>卡片保留较完整对象上下文，列表视图可提供更高密度。</li><li>来源与修改信息支持资产识别和变更追踪。</li></ul></div></div>
+<table class="parts"><tr><th>标注区域</th><th>中文模式名称</th><th>作用</th></tr><tr><td>顶部路径</td><td>面包屑导航模式</td><td>显示应用与当前页面层级</td></tr><tr><td>左侧栏</td><td>分类导航模式</td><td>按资产类型建立稳定入口</td></tr><tr><td>筛选区</td><td>分面筛选 + 排序模式</td><td>按终端、类型和顺序缩小范围</td></tr><tr><td>主体</td><td>资产卡片模式</td><td>展示页面身份和治理上下文</td></tr><tr><td>卡片信息</td><td>治理元数据模式</td><td>追溯来源、修改人和修改时间</td></tr></table></section>
+
+<div class="note"><strong>证据边界：</strong>模式名称和特点来自截图中可见结构；“优点”表示该模式的结构性价值，不代表已经通过日志或用户测试证明效率提升。当前未覆盖设计器、最终运行态、异常态和权限差异，因此不输出改版优先级。</div>
+</main>
+</body></html>

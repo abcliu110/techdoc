@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>案例：门店开通向导 - Wizard</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark">WZ</span>门店开通中心</div><div class="app-context">草稿 SETUP-20260712-08</div></header>
+    <section class="page-header" aria-labelledby="page-title">
+      <div><p class="eyebrow">Wizard · 分步向导</p><h1 id="page-title">开通新门店</h1><p class="subtitle">将存在依赖关系的复杂配置拆成可检查、可返回、可恢复的步骤。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互案例</span><span class="badge warning">草稿未提交</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <section class="surface" data-wizard data-current-step="1" aria-labelledby="wizard-title">
+        <div class="surface-body">
+          <h2 id="wizard-title" class="sr-only">门店开通步骤</h2>
+          <ol class="steps" style="--step-count:4"><li data-step aria-current="step">1. 基本信息</li><li data-step>2. 营业配置</li><li data-step>3. 结算账户</li><li data-step>4. 核对提交</li></ol>
+          <p class="help" data-step-status>第 1 步，共 4 步</p>
+          <div class="progress-track" aria-hidden="true"><div class="progress-bar" style="--progress:25%"></div></div>
+        </div>
+        <div class="surface-body wizard-panel" data-step-panel>
+          <h2 class="section-title">基本信息</h2>
+          <div class="form-grid">
+            <div class="field"><label class="required" for="store-name">门店名称</label><input id="store-name" type="text" value="南京西路店" required></div>
+            <div class="field"><label class="required" for="store-code">门店编码</label><input id="store-code" type="text" value="SH-NJL-08" required></div>
+            <div class="field span-2"><label class="required" for="store-address">营业地址</label><input id="store-address" type="text" value="上海市静安区南京西路 1688 号" required></div>
+          </div>
+        </div>
+        <div class="surface-body wizard-panel" data-step-panel hidden>
+          <h2 class="section-title">营业配置</h2><div class="form-grid"><div class="field"><label for="store-hours">营业时段</label><select id="store-hours"><option>08:00-22:00</option><option>10:00-22:00</option></select></div><div class="field"><label for="warehouse">履约仓</label><select id="warehouse"><option>华东中心仓</option><option>门店自提仓</option></select></div><div class="field span-2"><span class="label">履约能力</span><label class="inline"><input type="checkbox" checked> 门店自提</label><label class="inline"><input type="checkbox" checked> 同城配送</label></div></div>
+        </div>
+        <div class="surface-body wizard-panel" data-step-panel hidden>
+          <h2 class="section-title">结算账户</h2><div class="notice warning"><strong>权限边界</strong>账户信息仅用于收款结算，提交后由财务人员复核。</div><div class="form-grid"><div class="field"><label class="required" for="account-name">账户名称</label><input id="account-name" type="text" value="上海示例零售有限公司" required></div><div class="field"><label class="required" for="bank-tail">银行账号后四位</label><input id="bank-tail" type="text" value="6208" inputmode="numeric" maxlength="4" required></div></div>
+        </div>
+        <div class="surface-body wizard-panel" data-step-panel hidden>
+          <h2 class="section-title">核对提交</h2><dl class="key-values"><div><dt>门店</dt><dd>南京西路店</dd></div><div><dt>营业时段</dt><dd>08:00-22:00</dd></div><div><dt>履约能力</dt><dd>自提、同城配送</dd></div><div><dt>结算账户</dt><dd>尾号 6208</dd></div><div><dt>复核责任人</dt><dd>华东区财务</dd></div><div><dt>提交后状态</dt><dd>待复核</dd></div></dl><p class="notice"><strong>提交承诺</strong>系统会创建开通申请，不会立即启用门店或开放收款。</p>
+        </div>
+        <div class="modal-footer"><button class="btn" type="button" data-action="previous-step" disabled>上一步</button><button class="btn primary" type="button" data-action="next-step">下一步</button></div>
+      </section>
+    </main>
+  </div>
+  <div class="sr-only" role="status" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

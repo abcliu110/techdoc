@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>案例：零售批量发货操作</title><link rel="stylesheet" href="../shared/case.css"></head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a><div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark">BO</span>批量履约</div><div class="app-context">订单发货</div></header>
+    <section class="page-header" aria-labelledby="page-title"><div><p class="eyebrow">Bulk Operation · 批量操作</p><h1 id="page-title">批量发货</h1><p class="subtitle">选择集合、校验资格、确认影响，再异步提交；单条失败不掩盖其他结果。</p></div><div class="header-meta"><span class="demo-mode" data-kind="interactive">交互案例</span><span class="tag warning">高影响动作</span></div></section>
+    <main id="main" class="page-body" data-demo="interactive"><div class="content-stack">
+      <div class="notice warning"><strong>提交前校验</strong>只有“已支付、库存锁定、地址有效”的订单可进入批量发货；异常行会被保留并给出原因。</div>
+      <section class="table-shell" aria-labelledby="bulk-title"><div class="surface-header"><div><h2 id="bulk-title">待发货订单</h2><span class="help">当前页 4 笔</span></div><button class="btn" type="button" data-action="toast" data-message="已重新校验订单资格">重新校验</button></div><div class="bulk-bar" data-bulk-bar hidden><strong>已选择 <span data-selected-count>0</span> 笔</strong><div class="actions"><button class="btn" type="button" data-action="toast" data-message="选中订单的发货单预览已生成">预览发货单</button><button class="btn primary" type="button" data-action="bulk-complete">提交批量发货</button></div></div><div class="table-scroll responsive-table"><table><thead><tr><th scope="col"><span class="sr-only">选择</span><input type="checkbox" data-select-all aria-label="选择全部可发货订单"></th><th scope="col">订单号</th><th scope="col">资格校验</th><th scope="col">配送方式</th><th scope="col" class="numeric">商品数</th><th scope="col">承诺时间</th></tr></thead><tbody>
+        <tr><td data-label="选择"><input type="checkbox" data-row-select aria-label="选择订单 SO-045"></td><td data-label="订单号">SO-045</td><td data-label="资格校验"><span class="badge success">可发货</span></td><td data-label="配送方式">顺丰同城</td><td data-label="商品数" class="numeric">6</td><td data-label="承诺时间">18:00</td></tr>
+        <tr><td data-label="选择"><input type="checkbox" data-row-select aria-label="选择订单 SO-043"></td><td data-label="订单号">SO-043</td><td data-label="资格校验"><span class="badge success">可发货</span></td><td data-label="配送方式">门店自提</td><td data-label="商品数" class="numeric">2</td><td data-label="承诺时间">17:30</td></tr>
+        <tr><td data-label="选择"><input type="checkbox" data-row-select aria-label="选择订单 SO-039"></td><td data-label="订单号">SO-039</td><td data-label="资格校验"><span class="badge success">可发货</span></td><td data-label="配送方式">达达配送</td><td data-label="商品数" class="numeric">4</td><td data-label="承诺时间">18:20</td></tr>
+        <tr><td data-label="选择"><input type="checkbox" aria-label="订单 SO-044 不可选择" disabled></td><td data-label="订单号">SO-044</td><td data-label="资格校验"><span class="badge danger">不可发货</span><br><span class="help">酸奶缺货</span></td><td data-label="配送方式">顺丰同城</td><td data-label="商品数" class="numeric">3</td><td data-label="承诺时间">已超时</td></tr>
+      </tbody></table></div></section>
+      <div class="notice"><strong>结果契约</strong>批量动作提交为任务，不等同于全部完成；结果需记录成功、失败、跳过和幂等键。</div>
+    </div></main>
+  </div><div class="sr-only" role="status" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div><script src="../shared/case.js"></script>
+</body></html>

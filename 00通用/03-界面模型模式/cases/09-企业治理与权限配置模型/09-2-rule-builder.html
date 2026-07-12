@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>零售会员积分规则配置 - 规则构建与模拟</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark" aria-hidden="true">RB</span>会员规则中心</div><div class="app-context">规则集：消费积分 / 华东租户 / 草稿 v8</div></header>
+    <section class="page-header">
+      <div><p class="eyebrow">Rule Builder + Boundary Simulation</p><h1>零售会员积分规则配置</h1><p class="subtitle">显式展示条件、动作、依赖、执行顺序与覆盖关系，并用边界样本和命中证据证明发布结果。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互示例</span><span class="badge warning">2 个发布阻塞</span><span class="badge">草稿 v8</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <section class="notice danger"><strong>冲突检测</strong>规则 R-30“黄金会员 3 倍积分”与活动规则 CAM-88 同优先级且覆盖同一订单；缺少短路顺序。另有 1 个时区边界样本未验证。</section>
+        <section class="surface" aria-labelledby="builder-title">
+          <div class="surface-header"><h2 id="builder-title">规则：黄金会员消费积分</h2><div class="header-meta"><span class="badge info">优先级 30</span><button class="btn" type="button" data-action="toast" data-message="规则草稿已保存，正式版本 v7 保持生效">保存草稿</button></div></div>
+          <div class="surface-body">
+            <div class="rule-list">
+              <div class="rule-row"><span class="badge">如果</span><div class="field"><label for="field-1">字段</label><select id="field-1"><option>会员等级</option></select></div><div class="field"><label for="operator-1">关系</label><select id="operator-1"><option>等于</option></select></div><div class="field"><label for="value-1">值</label><select id="value-1"><option>黄金会员</option></select></div><button class="btn icon" type="button" aria-label="删除会员等级条件">×</button></div>
+              <div class="rule-row"><span class="badge">并且</span><div class="field"><label for="field-2">字段</label><select id="field-2"><option>实付金额</option></select></div><div class="field"><label for="operator-2">关系</label><select id="operator-2"><option>大于等于</option></select></div><div class="field"><label for="value-2">值</label><input id="value-2" type="number" value="100" min="0"></div><button class="btn icon" type="button" aria-label="删除实付金额条件">×</button></div>
+              <div class="rule-row"><span class="badge success">那么</span><div class="field"><label for="action">动作</label><select id="action"><option>发放消费积分</option></select></div><div class="field"><label for="formula">计算</label><select id="formula"><option>实付金额 × 倍率</option></select></div><div class="field"><label for="multiplier">倍率</label><input id="multiplier" type="number" value="3" min="1" max="10"></div><button class="btn icon" type="button" aria-label="删除积分动作">×</button></div>
+            </div>
+            <div class="actions"><button class="btn" type="button" data-action="toast" data-message="已添加新条件行">添加条件</button><button class="btn primary" type="button" data-action="test-rule" data-result-title="命中积分规则" data-result-text="黄金会员在上海店实付 128.00 元，规则命中并计算 384 积分；活动规则冲突仍阻止发布。" data-result-message="规则测试完成：命中 1 条，积分 384，发现 1 个优先级冲突">运行样本测试</button></div>
+            <div class="notice success" data-rule-result hidden><strong>测试结果</strong></div>
+          </div>
+        </section>
+        <div class="layout-2">
+          <section class="table-shell responsive-table" aria-labelledby="samples-title"><div class="surface-header"><h2 id="samples-title">边界样本</h2><span class="help">发布前必须全部通过</span></div><table><thead><tr><th>样本</th><th>输入</th><th>期望</th><th>结果</th></tr></thead><tbody><tr><td data-label="样本">金额下界</td><td data-label="输入">99.99 元</td><td data-label="期望">不命中</td><td data-label="结果"><span class="badge success">通过</span></td></tr><tr><td data-label="样本">金额边界</td><td data-label="输入">100.00 元</td><td data-label="期望">300 积分</td><td data-label="结果"><span class="badge success">通过</span></td></tr><tr><td data-label="样本">缺失等级</td><td data-label="输入">等级为空</td><td data-label="期望">不命中 + 记录</td><td data-label="结果"><span class="badge success">通过</span></td></tr><tr><td data-label="样本">结算日边界</td><td data-label="输入">23:59:59 +08:00</td><td data-label="期望">归属 07-12</td><td data-label="结果"><span class="badge danger">未运行</span></td></tr></tbody></table></section>
+          <section class="surface"><div class="surface-header"><h2>依赖与执行证据</h2></div><div class="surface-body"><ul class="timeline"><li class="timeline-item"><span class="timeline-marker done">1</span><div><div class="item-title">订单金额口径</div><div class="item-meta">依赖 PRICE-v12：实付金额，退款后冲销</div></div><span class="badge success">已解析</span></li><li class="timeline-item"><span class="timeline-marker current">2</span><div><div class="item-title">活动叠加规则 CAM-88</div><div class="item-meta">同优先级，未声明互斥或短路</div></div><span class="badge danger">冲突</span></li><li class="timeline-item"><span class="timeline-marker">3</span><div><div class="item-title">积分封顶规则 CAP-v3</div><div class="item-meta">在消费积分后执行，单日上限 5,000</div></div><span class="badge info">后置依赖</span></li></ul></div></section>
+        </div>
+        <section class="surface"><div class="surface-header"><h2>版本发布与回滚</h2><span class="badge success">正式 v7 生效中</span></div><div class="surface-body"><div class="diff"><div><strong>正式 v7</strong><p>黄金会员：2 倍积分</p><p>优先级：40</p></div><div><strong>草稿 v8</strong><p>黄金会员：3 倍积分</p><p>优先级：30</p></div></div><div class="actions"><button class="btn" type="button" data-action="toast" data-message="已生成 v7 到 v8 的影响预览：预计日增积分 18.4%">影响预览</button><button class="btn primary" type="button" disabled>发布 v8</button><button class="btn" type="button" data-action="toast" data-message="回滚会创建新版本 v9，并保留 v8 的发布事实">回滚入口</button></div></div></section>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

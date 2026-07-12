@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>促销规则模拟器 - 发布前验证</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark" aria-hidden="true">PR</span>促销规则中心</div><div class="app-context">规则 PR-2026-SUMMER / 草稿 v6</div></header>
+    <section class="page-header">
+      <div><p class="eyebrow">Simulation + Impact Preview</p><h1>满 300 减 50 规则模拟</h1><p class="subtitle">在发布前用边界样本和历史回放验证命中、互斥、预算与毛利护栏；模拟结果不是生产承诺。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互示例</span><span class="badge warning">草稿 v6 · 未发布</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <section class="notice"><strong>样本范围</strong>2026-06-01 至 06-30 已完成订单 18,420 笔，去除员工单和异常退款；币种 CNY，金额精度 0.01。</section>
+        <div class="layout-2">
+          <section class="surface" aria-labelledby="params-title">
+            <div class="surface-header"><h2 id="params-title">方案参数</h2><span class="tag info">基于已发布 v5</span></div>
+            <div class="surface-body form-grid">
+              <div class="field"><label for="threshold">订单门槛</label><input id="threshold" type="number" value="300"></div>
+              <div class="field"><label for="discount">优惠金额</label><input id="discount" type="number" value="50"></div>
+              <div class="field"><label for="rule-scope">适用范围</label><select id="rule-scope"><option>华东直营店</option><option>全部直营店</option></select></div>
+              <div class="field"><label for="coupon-stack">优惠券叠加</label><select id="coupon-stack"><option>不可叠加会员券</option><option>可叠加</option></select></div>
+              <div class="span-2 actions"><button class="btn primary" type="button" data-action="run-simulation">运行模拟</button><button class="btn" type="button" data-action="toast" data-message="已保存参数草稿 v6，未改变线上 v5">保存草稿</button></div>
+            </div>
+          </section>
+          <section class="surface" aria-labelledby="gate-title">
+            <div class="surface-header"><h2 id="gate-title">发布门禁</h2></div>
+            <div class="surface-body content-stack"><div class="callout success"><strong>结构检查通过</strong>无循环依赖，无不可达条件，会员券互斥顺序明确。</div><div class="callout warning"><strong>等待模拟证据</strong>需确认边界金额、退款回放和毛利护栏后才能提交审批。</div><div class="callout danger"><strong>未覆盖约束</strong>未包含跨币种订单与加盟店结算，发布范围必须继续排除。</div></div>
+          </section>
+        </div>
+        <section class="surface" data-simulation-result hidden aria-labelledby="sim-result-title">
+          <div class="surface-header"><h2 id="sim-result-title">模拟结果：方案与基准对比</h2><span class="badge success">2 项规则命中 · 无互斥冲突</span></div>
+          <div class="surface-body content-stack">
+            <section class="metrics"><article class="metric"><span class="metric-label">样本订单</span><strong class="metric-value">18,420</strong><div class="metric-note">命中 2,684 笔</div></article><article class="metric warning"><span class="metric-label">优惠成本增量</span><strong class="metric-value">¥ 42,610</strong><div class="metric-note">较 v5 +12.8%</div></article><article class="metric success"><span class="metric-label">预计客单提升</span><strong class="metric-value">+6.4%</strong><div class="metric-note">相关估计，非因果承诺</div></article><article class="metric"><span class="metric-label">毛利率护栏</span><strong class="metric-value">29.8%</strong><div class="metric-note">最低允许 28%</div></article></section>
+            <div class="diff"><div><strong>基准 v5</strong><p>示例订单原价 ¥350.00</p><p>会员券 -¥20.00</p><p>实付 ¥330.00</p></div><div><strong>方案 v6</strong><p>示例订单原价 ¥350.00</p><p>满减 -¥50.00</p><p>实付 <span data-simulation-total>¥ 300.00</span></p><p class="help">优惠差异 <span data-simulation-discount>- ¥30.00</span></p></div></div>
+            <div class="table-shell responsive-table"><table><thead><tr><th>边界样本</th><th>预期</th><th>实际</th><th>证据</th></tr></thead><tbody><tr><td data-label="边界样本">订单 ¥299.99</td><td data-label="预期">不命中</td><td data-label="实际"><span class="badge success">不命中</span></td><td data-label="证据">门槛比较使用折前应付金额</td></tr><tr><td data-label="边界样本">订单 ¥300.00</td><td data-label="预期">命中</td><td data-label="实际"><span class="badge success">命中</span></td><td data-label="证据">优惠后实付 ¥250.00</td></tr><tr><td data-label="边界样本">部分退款至 ¥280</td><td data-label="预期">回收优惠</td><td data-label="实际"><span class="badge warning">需审批</span></td><td data-label="证据">退款补收 ¥50，需客户提示</td></tr></tbody></table></div>
+            <div class="actions"><button class="btn primary" type="button" data-action="toast" data-message="已提交 Maker-Checker 审批，线上仍运行 v5">提交发布审批</button><button class="btn" type="button">下载模拟证据</button></div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

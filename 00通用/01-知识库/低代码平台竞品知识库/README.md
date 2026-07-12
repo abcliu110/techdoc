@@ -29,20 +29,21 @@
 00-domain/            领域定义、研究范围、术语表
 01-evidence/          原始证据卡片
 02-competitors/       竞品清单与分级
-02-business-design/   业务设计抽象
-03-ui-design/         UI 与交互模式
-04-process/           应用构建流程
-05-data-model/        低代码元模型
-06-state-machine/     应用生命周期状态机
-07-business-rule/     平台治理规则
-08-permission/        权限模型
-09-pain-point/        痛点与机会
-10-decision/          ADR 产品决策
-11-metrics/           指标体系
-12-non-functional/    非功能性要求
-13-license-pricing/   License、商业化与定价边界
+03-business-design/  业务设计抽象
+04-ui-design/         UI 与交互模式
+05-data-model/        数据模型 / 元模型
+06-state-machine/     状态机
+07-business-rule/    业务规则
+08-process/          流程
+09-permission/        权限模型
+10-pain-point/       痛点与机会
+11-decision/         ADR 产品决策
+12-metrics/          指标体系
+13-non-functional/    非功能性要求
+14-license-pricing/  License、商业化与定价边界
 matrices/             横向能力矩阵
 gaps/                 补证计划与本轮增量记录
+assets/               文档图片
 ```
 
 ## 证据边界

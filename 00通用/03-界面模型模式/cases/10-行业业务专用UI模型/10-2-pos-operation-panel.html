@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>零售门店 POS 操作台 - 离线边界与恢复对账</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark" aria-hidden="true">PO</span>门店运行控制台</div><div class="app-context">人民广场店 / 营业中 / 值班经理 王琳</div></header>
+    <section class="page-header">
+      <div><p class="eyebrow">POS Operation Console + Recovery Handoff</p><h1>零售门店 POS 操作台</h1><p class="subtitle">把设备、依赖、离线能力、数据时间和待同步事实放在同一操作面；网络恢复不等于业务已经恢复。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互示例</span><span class="badge warning">受限营业</span><span class="badge danger">库存服务降级</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <section class="notice warning"><strong>离线能力边界</strong>本地可继续收款、打印小票和查询截至 10:12 的商品快照；禁止退款、跨店库存承诺、会员余额调整。网络 10:18 恢复，恢复对账尚未完成。</section>
+        <section class="metrics"><article class="metric success"><span class="metric-label">营业状态</span><strong class="metric-value">受限在线</strong><div class="metric-note">人工接管：王琳</div></article><article class="metric"><span class="metric-label">POS 设备</span><strong class="metric-value">5 / 6</strong><div class="metric-note">POS-03 离线</div></article><article class="metric warning"><span class="metric-label">待同步</span><strong class="metric-value">4 / 500</strong><div class="metric-note">最早 10:14:22</div></article><article class="metric danger"><span class="metric-label">结果未知</span><strong class="metric-value">1</strong><div class="metric-note">先查询，禁止盲重试</div></article></section>
+        <div class="layout-2">
+          <section class="surface"><div class="surface-header"><h2>设备与依赖健康</h2><span class="help">探测于 10:20:11</span></div><div class="surface-body"><ul class="task-list"><li class="task-item"><span class="timeline-marker done">✓</span><div><div class="item-title">订单服务</div><div class="item-meta">云端可用 · 86ms</div></div><span class="badge success">健康</span></li><li class="task-item"><span class="timeline-marker current">!</span><div><div class="item-title">库存服务</div><div class="item-meta">读取可用，扣减响应超时</div></div><span class="badge danger">降级</span></li><li class="task-item"><span class="timeline-marker done">✓</span><div><div class="item-title">支付网关</div><div class="item-meta">可用 · 上次回执 10:19:48</div></div><span class="badge success">健康</span></li><li class="task-item"><span class="timeline-marker">3</span><div><div class="item-title">POS-03</div><div class="item-meta">离线 18 分钟 · 本地队列 2</div></div><span class="badge warning">离线</span></li></ul></div></section>
+          <section class="surface"><div class="surface-header"><h2>可用操作</h2><span class="help">按当前降级策略裁剪</span></div><div class="surface-body"><div class="touch-grid"><button type="button" class="primary" data-action="toast" data-message="已进入收银，本地订单将使用唯一幂等键排队上传">开始收银</button><button type="button" data-action="toast" data-message="已打开本地订单查询，数据快照截至 10:12">查本地订单</button><button type="button" data-action="toast" data-message="已打开待同步队列，按业务发生时间排序">同步队列</button><button type="button" disabled>退款</button><button type="button" disabled>会员余额</button><button type="button" disabled>跨店库存</button></div><p class="help">禁用动作同时给出原因，不只依赖灰色：库存服务未恢复且对账未完成。</p></div></section>
+        </div>
+        <section class="table-shell responsive-table" aria-labelledby="sync-title"><div class="surface-header"><h2 id="sync-title">待同步与结果未知</h2><span class="help">安全重试沿用原幂等键</span></div><table><thead><tr><th>任务</th><th>业务时间</th><th>幂等键</th><th>依赖 / 失败</th><th>状态</th><th>动作</th></tr></thead><tbody>
+          <tr><td data-label="任务">上传订单 O-1882</td><td data-label="业务时间">10:14:22</td><td data-label="幂等键"><code class="code-value">POS188-O1882</code></td><td data-label="依赖 / 失败">网络中断 · 订单服务已恢复</td><td data-label="状态"><span class="badge warning" data-queue-status>待重试</span></td><td data-label="动作"><button class="btn primary" type="button" data-action="retry-job">立即重试</button></td></tr>
+          <tr><td data-label="任务">库存扣减 SKU-20416</td><td data-label="业务时间">10:15:03</td><td data-label="幂等键"><code class="code-value">POS188-S20416</code></td><td data-label="依赖 / 失败">HTTP 超时 · 库存仍降级</td><td data-label="状态"><span class="badge danger" data-queue-status>结果未知</span></td><td data-label="动作"><button class="btn" type="button" data-action="toast" data-message="已按幂等键查询云端结果，未直接重复扣减">查询结果</button></td></tr>
+          <tr><td data-label="任务">上传会员积分 L-7721</td><td data-label="业务时间">10:16:41</td><td data-label="幂等键"><code class="code-value">POS188-L7721</code></td><td data-label="依赖 / 失败">令牌过期 · 会员服务已恢复</td><td data-label="状态"><span class="badge warning" data-queue-status>待重试</span></td><td data-label="动作"><button class="btn primary" type="button" data-action="retry-job">立即重试</button></td></tr>
+        </tbody></table></section>
+        <div class="layout-2"><section class="surface"><div class="surface-header"><h2>人工接管与交接</h2></div><div class="surface-body"><dl class="key-values"><div><dt>控制者</dt><dd>值班经理 王琳</dd></div><div><dt>接管时间</dt><dd>10:16:08</dd></div><div><dt>范围</dt><dd>结果未知 / 恢复确认</dd></div><div><dt>自动队列</dt><dd>仍处理安全项</dd></div><div><dt>下一班</dt><dd>李娜 14:00</dd></div><div><dt>回执</dt><dd>待接收</dd></div></dl><button class="btn" type="button" data-action="toast" data-message="交接单已生成，接收方确认后才转移未决任务所有权">生成交接单</button></div></section><section class="notice warning"><strong>恢复对账门禁</strong>逐项比较本地订单、支付、库存与云端结果。只有队列归零、结果未知清零、依赖恢复且 Checker 确认后，才重新开放退款和库存高风险动作。</section></div>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

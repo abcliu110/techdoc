@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>零售会员批量导入 - 长任务中心</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark" aria-hidden="true">IM</span>数据任务中心</div><div class="app-context">会员主数据 / 批量导入 / 华东区</div></header>
+    <section class="page-header">
+      <div><p class="eyebrow">Long-running Import Task</p><h1>零售会员批量导入</h1><p class="subtitle">上传只创建可追踪任务；校验、写入、失败下载和安全重试都保留任务标识、输入快照与审计链。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互示例</span><span class="badge info">并发 2 / 5</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <section class="surface" aria-labelledby="new-import-title">
+          <div class="surface-header"><h2 id="new-import-title">新建导入任务</h2><span class="badge" data-import-status>待启动</span></div>
+          <div class="surface-body">
+            <div class="form-grid">
+              <div class="field"><label for="source-file">会员文件</label><input id="source-file" type="file" accept=".csv,.xlsx"><span class="hint">演示数据：100 条，模板版本 MEMBER-v4</span></div>
+              <div class="field"><label for="duplicate-policy">重复会员处理</label><select id="duplicate-policy"><option>按手机号跳过并记录</option><option>仅补充空字段</option></select></div>
+            </div>
+            <div class="actions"><button class="btn primary" type="button" data-action="run-import">启动后台校验</button><span class="help">进度 <strong data-import-progress>0%</strong></span></div>
+            <div class="progress-track" aria-label="当前导入进度"><div class="progress-bar" data-import-bar style="--progress: 0%"></div></div>
+          </div>
+        </section>
+        <section class="metrics"><article class="metric success"><span class="metric-label">成功</span><strong class="metric-value" data-import-success>0</strong><div class="metric-note">通过校验并写入</div></article><article class="metric danger"><span class="metric-label">失败</span><strong class="metric-value" data-import-failed>0</strong><div class="metric-note">可修复后重试</div></article><article class="metric warning"><span class="metric-label">跳过</span><strong class="metric-value" data-import-skipped>0</strong><div class="metric-note">重复手机号</div></article><article class="metric"><span class="metric-label">任务保留</span><strong class="metric-value">30 天</strong><div class="metric-note">含输入摘要与错误文件</div></article></section>
+        <section class="table-shell responsive-table" aria-labelledby="task-center-title">
+          <div class="surface-header"><h2 id="task-center-title">导入任务中心</h2><span class="help">任务关闭前可下载原始错误行</span></div>
+          <table><thead><tr><th>任务 / 模板</th><th>创建人</th><th>进度</th><th>结果</th><th>状态</th><th>动作</th></tr></thead><tbody>
+            <tr><td data-label="任务 / 模板"><strong>IMP-0712-008</strong><br><span class="help">MEMBER-v4 · SHA 9c2a…</span></td><td data-label="创建人">王琳 · 10:08</td><td data-label="进度">100 / 100</td><td data-label="结果">96 成功 · 3 失败 · 1 跳过</td><td data-label="状态"><span class="badge danger" data-job-status>部分失败</span></td><td data-label="动作"><div class="actions"><button class="btn primary" type="button" data-action="retry-import">重试失败 3 条</button><button class="btn" type="button" data-action="toast" data-message="错误文件已生成，包含行号、字段和修复建议">下载错误</button></div></td></tr>
+            <tr><td data-label="任务 / 模板"><strong>IMP-0712-007</strong><br><span class="help">MEMBER-v4 · SHA 7a31…</span></td><td data-label="创建人">李娜 · 09:41</td><td data-label="进度">820 / 820</td><td data-label="结果">820 成功</td><td data-label="状态"><span class="badge success" data-job-status>已完成</span></td><td data-label="动作"><button class="btn" type="button" data-action="toast" data-message="任务日志包含校验、写入和通知三个阶段">查看日志</button></td></tr>
+            <tr><td data-label="任务 / 模板"><strong>IMP-0712-006</strong><br><span class="help">MEMBER-v3 · SHA b118…</span></td><td data-label="创建人">陈凯 · 09:12</td><td data-label="进度">0 / 260</td><td data-label="结果">未写入</td><td data-label="状态"><span class="badge warning" data-job-status>等待资源</span></td><td data-label="动作"><button class="btn" type="button" data-action="toast" data-message="任务仍在队列中，取消不会删除其他任务">取消任务</button></td></tr>
+          </tbody></table>
+        </section>
+        <div class="layout-2"><section class="notice"><strong>安全重试</strong>只重放失败行，并沿用任务 IMP-0712-008 的幂等分组键；已成功的 96 条不会再次写入。</section><section class="notice warning"><strong>覆盖保护</strong>导入默认不覆盖现有非空字段。需要覆盖时必须预览差异、确认范围并进入复核。</section></div>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

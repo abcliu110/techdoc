@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>零售客户 360 全景 - 身份证据与用途裁剪</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark" aria-hidden="true">C3</span>客服客户工作台</div><div class="app-context">会话 CS-8821 / 用途：售后服务 / 角色：客服专员</div></header>
+    <section class="page-header">
+      <div><p class="eyebrow">Customer 360 + Identity Evidence</p><h1>零售客户 360 全景</h1><p class="subtitle">围绕当前服务任务裁剪客户事实；身份合并、数据来源、同意范围和推荐依据都可解释、可撤回、可修订。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互示例</span><span class="badge success">售后用途授权有效</span><span class="badge warning">1 个身份冲突</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <section class="surface"><div class="surface-header"><h2>客户身份</h2><div class="header-meta"><span class="badge info">统一客户 C-008817</span><button class="btn" type="button" data-action="toast" data-message="已打开身份合并证据与修订历史">合并证据</button></div></div><div class="surface-body"><dl class="key-values"><div><dt>姓名</dt><dd>周明</dd></div><div><dt>手机号</dt><dd>138****8821</dd></div><div><dt>会员等级</dt><dd>黄金会员</dd></div><div><dt>会员卡</dt><dd>M-328817</dd></div><div><dt>微信 OpenID</dt><dd>oWX***91</dd></div><div><dt>最近核验</dt><dd>07-12 10:06 · 短信</dd></div></dl></div></section>
+        <section class="notice warning"><strong>身份冲突</strong>电商账户 E-7721 使用相同手机号，但姓名为“周敏”。该账户未并入当前客户；客服只能查看冲突摘要，拆分或合并需身份治理专员复核。</section>
+        <div class="evidence-grid">
+          <section class="surface"><div class="surface-header"><h2>身份合并依据</h2><span class="badge success">置信度 92%</span></div><div class="surface-body"><div class="confidence"><span>可信度</span><div class="confidence-meter" aria-label="身份合并置信度 92%"><span style="--confidence: 92%"></span></div><strong>92%</strong></div><ul class="timeline"><li class="timeline-item"><span class="timeline-marker done">1</span><div><div class="item-title">手机号核验一致</div><div class="item-meta">会员中心 · 07-12 10:06 · 强证据</div></div><span class="badge success">+55</span></li><li class="timeline-item"><span class="timeline-marker done">2</span><div><div class="item-title">会员卡与线下订单一致</div><div class="item-meta">POS 订单 · 07-11 18:21 · 强证据</div></div><span class="badge success">+32</span></li><li class="timeline-item"><span class="timeline-marker current">3</span><div><div class="item-title">姓名近似冲突</div><div class="item-meta">电商账户 · 07-10 14:08 · 待人工确认</div></div><span class="badge danger">-8</span></li></ul><div class="actions"><button class="btn" type="button" data-action="toast" data-message="拆分申请已创建；原合并事实和下游传播记录继续保留">申请拆分</button><button class="btn" type="button" data-action="toast" data-message="已打开历次身份合并、拆分与下游传播记录">修订历史</button></div></div></section>
+          <section class="surface"><div class="surface-header"><h2>用途与同意</h2></div><div class="surface-body"><ul class="task-list"><li class="task-item"><span class="timeline-marker done">✓</span><div><div class="item-title">售后服务</div><div class="item-meta">合同履行 · 至订单关闭 + 3 年</div></div><span class="badge success">可用</span></li><li class="task-item"><span class="timeline-marker done">✓</span><div><div class="item-title">会员权益通知</div><div class="item-meta">客户同意 · 2026-12-31 到期</div></div><span class="badge success">可用</span></li><li class="task-item"><span class="timeline-marker current">!</span><div><div class="item-title">个性化营销</div><div class="item-meta">客户于 07-01 撤回</div></div><span class="badge danger">禁止</span></li></ul><p class="help">撤回已传播至推荐服务；营销画像和联系方式不会在当前任务中展示。</p></div></section>
+        </div>
+        <section class="surface" aria-labelledby="customer-tabs-title"><div class="surface-header"><h2 id="customer-tabs-title">客户事实</h2><span class="help">按客服角色和售后用途裁剪</span></div><div class="tabs" role="tablist" aria-label="客户事实视图"><button type="button" role="tab" aria-selected="true" aria-controls="panel-orders" data-action="tab">交易与权益</button><button type="button" role="tab" aria-selected="false" aria-controls="panel-touch" tabindex="-1" data-action="tab">互动时间线</button><button type="button" role="tab" aria-selected="false" aria-controls="panel-risk" tabindex="-1" data-action="tab">投诉与风险</button></div>
+          <div id="panel-orders" role="tabpanel" class="surface-body"><div class="layout-3"><article class="metric"><span class="metric-label">近 12 月消费</span><strong class="metric-value">¥ 8,420.00</strong><div class="metric-note">订单服务 · 10:05 更新</div></article><article class="metric"><span class="metric-label">可用积分</span><strong class="metric-value">3,860</strong><div class="metric-note">会员中心 · 10:07 更新</div></article><article class="metric warning"><span class="metric-label">待处理售后</span><strong class="metric-value">1</strong><div class="metric-note">工单 CS-8821</div></article></div><div class="table-shell responsive-table"><table><thead><tr><th>订单</th><th>来源 / 时间</th><th>金额</th><th>状态</th><th>相关售后</th></tr></thead><tbody><tr><td data-label="订单">SO-20418</td><td data-label="来源 / 时间">POS 人民广场店 · 07-11</td><td data-label="金额">¥1,280.00</td><td data-label="状态"><span class="badge success">已完成</span></td><td data-label="相关售后">CS-8821 · 配送破损</td></tr><tr><td data-label="订单">SO-19882</td><td data-label="来源 / 时间">小程序 · 06-28</td><td data-label="金额">¥456.00</td><td data-label="状态"><span class="badge success">已完成</span></td><td data-label="相关售后">无</td></tr></tbody></table></div></div>
+          <div id="panel-touch" role="tabpanel" class="surface-body" hidden><ul class="timeline"><li class="timeline-item"><span class="timeline-marker current">1</span><div><div class="item-title">售后工单创建</div><div class="item-meta">客服中心 · 07-12 09:58 · 配送破损</div></div><span class="badge warning">处理中</span></li><li class="timeline-item"><span class="timeline-marker done">2</span><div><div class="item-title">短信身份核验</div><div class="item-meta">身份服务 · 07-12 10:06</div></div><span class="badge success">通过</span></li><li class="timeline-item"><span class="timeline-marker done">3</span><div><div class="item-title">权益补偿说明</div><div class="item-meta">客服 王琳 · 07-12 10:08</div></div><span class="badge info">已沟通</span></li></ul></div>
+          <div id="panel-risk" role="tabpanel" class="surface-body" hidden><div class="notice"><strong>最小披露</strong>客服可查看与当前售后有关的投诉事实；风控评分、敏感标签和其他客户的关联关系仅显示“需转交风控”，不披露内部策略细节。</div></div>
+        </section>
+        <div class="layout-2"><section class="notice success"><strong>建议动作：补发并赠送 200 积分</strong>依据：订单 SO-20418 已完成、配送破损证据完整、客户近 12 月无同类补偿。建议不使用已撤回授权的营销画像。</section><section class="surface"><div class="surface-header"><h2>角色裁剪</h2></div><div class="surface-body"><div class="segmented" role="group" aria-label="角色视图演示"><button type="button" aria-pressed="true" data-action="segment" data-view-label="客服视图">客服</button><button type="button" aria-pressed="false" data-action="segment" data-view-label="运营视图">运营</button><button type="button" aria-pressed="false" data-action="segment" data-view-label="财务视图">财务</button></div><p class="help">当前：<strong data-current-view>客服视图</strong>。切换只演示角色视图概念，真实授权必须由服务端校验。</p></div></section></div>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

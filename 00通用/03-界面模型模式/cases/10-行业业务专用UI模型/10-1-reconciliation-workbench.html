@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>零售支付对账工作台 - 证据与修订批次</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark" aria-hidden="true">RC</span>资金对账中心</div><div class="app-context">微信支付 / 华东直营网点 / 2026-07-11</div></header>
+    <section class="page-header">
+      <div><p class="eyebrow">Reconciliation Workbench</p><h1>零售支付对账工作台</h1><p class="subtitle">先固定期间、币种、时区、金额精度和双方权威来源，再区分真实差异与仍在容忍窗口内的时间差。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互示例</span><span class="badge warning">批次 RC-0711-v2 · 复核中</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <section class="surface" aria-labelledby="batch-title"><div class="surface-header"><h2 id="batch-title">批次口径</h2><button class="btn" type="button" data-action="toast" data-message="已打开 v1 与 v2 的修订差异，v1 结论未被覆盖">查看修订历史</button></div><div class="surface-body"><dl class="key-values"><div><dt>对账期间</dt><dd>07-11 00:00–23:59:59 +08</dd></div><div><dt>结算日</dt><dd>2026-07-12</dd></div><div><dt>币种 / 精度</dt><dd>CNY / 0.01</dd></div><div><dt>支付权威来源</dt><dd>微信支付结算流水</dd></div><div><dt>业务权威来源</dt><dd>订单收款单</dd></div><div><dt>时间差窗口</dt><dd>T+1 11:00 前暂挂</dd></div></dl></div></section>
+        <section class="metrics"><article class="metric"><span class="metric-label">渠道结算</span><strong class="metric-value">¥ 1,286,420.50</strong><div class="metric-note">8,412 笔</div></article><article class="metric"><span class="metric-label">内部收款</span><strong class="metric-value">¥ 1,285,140.50</strong><div class="metric-note">8,411 笔</div></article><article class="metric warning"><span class="metric-label">暂时性时间差</span><strong class="metric-value">2</strong><div class="metric-note">仍在 T+1 窗口</div></article><article class="metric danger"><span class="metric-label">真实差异</span><strong class="metric-value">3</strong><div class="metric-note">净差额 ¥1,280.00</div></article></section>
+        <section class="table-shell responsive-table" aria-labelledby="diff-title"><div class="surface-header"><h2 id="diff-title">差异明细与匹配证据</h2><div class="header-meta"><span class="badge">5 条</span><button class="btn" type="button" data-action="toast" data-message="系统按交易号、金额、主体和时间窗口重新计算匹配建议">重新匹配</button></div></div><table><thead><tr><th>差异 / 交易</th><th>渠道事实</th><th>内部事实</th><th>分类与证据</th><th>复核</th><th>动作</th></tr></thead><tbody>
+          <tr><td data-label="差异 / 交易"><strong>WX-8812046</strong><br><span class="help">订单 SO-20418</span></td><td data-label="渠道事实">¥1,280.00 · 成功<br>07-11 23:58:41</td><td data-label="内部事实">未到达</td><td data-label="分类与证据"><span class="badge warning">时间差</span><br><span class="help">网关队列显示待入账，窗口至 11:00</span></td><td data-label="复核">无需</td><td data-label="动作"><button class="btn" type="button" data-action="toast" data-message="已暂挂至时间差窗口结束，不提前判定缺单">暂挂</button></td></tr>
+          <tr class="row-selected"><td data-label="差异 / 交易"><strong>WX-8812072</strong><br><span class="help">订单 SO-20472</span></td><td data-label="渠道事实">¥456.00 · 成功<br>07-11 18:22:05</td><td data-label="内部事实">¥450.00 · 已收款</td><td data-label="分类与证据"><span class="badge danger">金额不一致</span><br><span class="help">优惠分摊版本不一致，建议补记 6.00</span></td><td data-label="复核"><span class="badge warning">待 Checker</span></td><td data-label="动作"><button class="btn primary" type="button" data-action="toast" data-message="调账建议已由 Maker 王琳提交，等待财务复核">提交调账</button></td></tr>
+          <tr><td data-label="差异 / 交易"><strong>WX-8812118</strong><br><span class="help">无内部订单</span></td><td data-label="渠道事实">¥89.00 · 已退款<br>07-11 16:10:32</td><td data-label="内部事实">原收款仍成功</td><td data-label="分类与证据"><span class="badge danger">状态不一致</span><br><span class="help">渠道退款单 RF-882 有签名回执</span></td><td data-label="复核"><span class="badge info">Maker 已确认</span></td><td data-label="动作"><button class="btn" type="button" data-action="toast" data-message="已打开退款签名回执、内部状态机和操作日志">证据包</button></td></tr>
+        </tbody></table></section>
+        <div class="split-workbench"><section class="surface"><div class="surface-header"><h2>渠道流水</h2><span class="badge success">权威</span></div><div class="surface-body"><p><strong>WX-8812072</strong></p><p>支付金额：¥456.00</p><p>手续费：¥2.73</p><p>渠道签名：已验证</p></div></section><div class="match-rail" aria-hidden="true">↔</div><section class="surface"><div class="surface-header"><h2>内部收款单</h2><span class="badge warning">待修订</span></div><div class="surface-body"><p><strong>RCPT-20472</strong></p><p>收款金额：¥450.00</p><p>优惠分摊：v3</p><p>账务状态：已记账</p></div></section></div>
+        <div class="layout-2"><section class="notice"><strong>Maker-Checker</strong>Maker 只能提出匹配、忽略或调账建议；Checker 复核证据后批准。本人不能复核本人提交的金额差异。</section><section class="notice success"><strong>重新对账</strong>处理完成后生成 RC-0711-v3；v1、v2 的原始来源、分类和人工结论继续保留，可重放比较。</section></div>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

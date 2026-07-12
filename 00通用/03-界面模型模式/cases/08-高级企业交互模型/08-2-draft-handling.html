@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>零售商品资料草稿 - 草稿与冲突恢复</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark" aria-hidden="true">DR</span>商品资料中心</div><div class="app-context">SKU-20416 / 山茶冷萃 450ml / 编辑草稿</div></header>
+    <section class="page-header">
+      <div><p class="eyebrow">Draft Handling + Conflict Recovery</p><h1>零售商品资料草稿</h1><p class="subtitle">草稿与正式版本明确分离；恢复时先比较保存基线，避免用旧草稿静默覆盖他人的正式修改。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互示例</span><span class="badge warning" data-draft-status>有未保存修改</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <section class="notice warning"><strong>发现基线变化</strong>草稿保存于 09:18；正式版本在 09:42 被李娜更新了“保质期”。先处理差异，再提交正式版本。</section>
+        <div class="diff" aria-label="正式版本和草稿差异">
+          <div><strong>当前正式版本 v12</strong><p>保质期：270 天</p><p class="help">李娜 · 09:42 · 质检复核通过</p></div>
+          <div><strong>待恢复草稿，基于 v11</strong><p>保质期：180 天</p><p class="help">王琳 · 09:18 · 尚未提交</p></div>
+        </div>
+        <section class="surface" aria-labelledby="draft-form-title">
+          <div class="surface-header"><h2 id="draft-form-title">草稿内容</h2><div class="header-meta"><span class="help">上次保存：<span data-draft-time>09:18:06</span></span><button class="btn primary" type="button" data-action="save-draft">保存草稿</button></div></div>
+          <div class="surface-body">
+            <div class="form-grid">
+              <div class="field"><label class="required" for="name">商品名称</label><input id="name" type="text" value="山茶冷萃 450ml" data-draft-field data-dirty></div>
+              <div class="field"><label class="required" for="category">商品分类</label><select id="category" data-draft-field><option>饮料 / 即饮茶</option><option>饮料 / 咖啡</option></select></div>
+              <div class="field"><label class="required" for="shelf-life">保质期（天）</label><input id="shelf-life" type="number" value="180" min="1" data-draft-field aria-describedby="conflict-help"><span id="conflict-help" class="hint">与正式版本 v12 的 270 天冲突</span></div>
+              <div class="field"><label for="barcode">国际条码</label><input id="barcode" type="text" value="6901234204168" data-draft-field></div>
+              <div class="field span-2"><label for="description">商品卖点</label><textarea id="description" data-draft-field>低温萃取，清爽少糖；冷藏后饮用。</textarea></div>
+            </div>
+          </div>
+        </section>
+        <div class="layout-2">
+          <section class="surface"><div class="surface-header"><h2>恢复上下文</h2></div><div class="surface-body"><ul class="task-list"><li class="task-item"><span class="timeline-marker done">1</span><div><div class="item-title">目标</div><div class="item-meta">补齐新品合规资料并提交质检</div></div><span class="badge success">已恢复</span></li><li class="task-item"><span class="timeline-marker current">2</span><div><div class="item-title">待处理异常</div><div class="item-meta">保质期基线冲突，需选择正式值或草稿值</div></div><span class="badge warning">1 项</span></li><li class="task-item"><span class="timeline-marker">3</span><div><div class="item-title">下一动作</div><div class="item-meta">解决冲突后提交质检复核</div></div><button class="btn" type="button" data-action="toast" data-message="已保留正式版本的保质期 270 天">采用正式值</button></li></ul></div></section>
+          <section class="surface"><div class="surface-header"><h2>状态与权限</h2></div><div class="surface-body"><dl class="key-values"><div><dt>草稿所有者</dt><dd>王琳</dd></div><div><dt>正式版本</dt><dd>v12</dd></div><div><dt>草稿基线</dt><dd>v11</dd></div><div><dt>可见范围</dt><dd>本人 + 商品主管</dd></div><div><dt>自动保存</dt><dd>30 秒</dd></div><div><dt>到期策略</dt><dd>30 天后归档</dd></div></dl></div></section>
+        </div>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

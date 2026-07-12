@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>店长经营决策看板 - Dashboard 案例</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">RM</span>零售运营中心</div>
+      <div class="app-context">华东区域 / 中山路店 / 数据截至 09:30</div>
+    </header>
+    <section class="page-header">
+      <div>
+        <p class="eyebrow">Role Dashboard</p>
+        <h1>店长经营决策看板</h1>
+        <p class="subtitle">先暴露需处理的偏差，再提供指标口径、责任人和钻取入口；本页不承担逐单操作。</p>
+      </div>
+      <div class="header-meta">
+        <span class="demo-mode" data-kind="static">静态结构示例</span>
+        <span class="badge info">数据延迟 6 分钟</span>
+      </div>
+    </section>
+    <main id="main" class="page-body" data-demo="static">
+      <div class="content-stack">
+        <section class="notice warning" aria-labelledby="priority-title">
+          <strong id="priority-title">今日优先事项：午市履约可能失速</strong>
+          即时配送平均出单 18.4 分钟，超过 15 分钟目标。影响 27 单，责任人：当班值班经理。
+        </section>
+
+        <section class="metrics" aria-label="门店核心指标">
+          <article class="metric"><span class="metric-label">净销售额</span><strong class="metric-value">¥ 86,420</strong><div class="metric-note">同店同比 +7.8% · 含税、扣除退款</div></article>
+          <article class="metric warning"><span class="metric-label">履约及时率</span><strong class="metric-value">91.2%</strong><div class="metric-note">目标 95% · 27 单超时风险</div></article>
+          <article class="metric success"><span class="metric-label">毛利率</span><strong class="metric-value">31.6%</strong><div class="metric-note">预算 30.8% · 口径版本 v3</div></article>
+          <article class="metric danger"><span class="metric-label">缺货 SKU</span><strong class="metric-value">12</strong><div class="metric-note">4 个 A 类商品 · 库存快照 09:24</div></article>
+        </section>
+
+        <div class="layout-2">
+          <section class="surface" aria-labelledby="trend-title">
+            <div class="surface-header"><h2 id="trend-title">近 7 日销售与目标</h2><span class="tag info">可钻取到门店日明细</span></div>
+            <div class="surface-body">
+              <div class="bar-chart" role="img" aria-label="近七日销售柱状图，周五最高，周三低于目标">
+                <div class="bar" style="--height: 58%"><span>周一</span></div>
+                <div class="bar" style="--height: 67%"><span>周二</span></div>
+                <div class="bar warning" style="--height: 43%"><span>周三</span></div>
+                <div class="bar" style="--height: 72%"><span>周四</span></div>
+                <div class="bar" style="--height: 91%"><span>周五</span></div>
+                <div class="bar" style="--height: 83%"><span>周六</span></div>
+                <div class="bar" style="--height: 76%"><span>周日</span></div>
+              </div>
+              <p class="help">指标：净销售额；时区：Asia/Shanghai；目标来自 2026-Q3 门店预算。</p>
+            </div>
+          </section>
+
+          <section class="surface" aria-labelledby="exception-title">
+            <div class="surface-header"><h2 id="exception-title">需要闭环的异常</h2><span class="count">3 项</span></div>
+            <div class="surface-body">
+              <ul class="task-list">
+                <li class="task-item"><span class="timeline-marker current">1</span><div><div class="item-title">即时配送出单超时</div><div class="item-meta">影响 27 单 · 预计损失 ¥ 620 · 值班经理</div></div><span class="badge warning">处理中</span></li>
+                <li class="task-item"><span class="timeline-marker">2</span><div><div class="item-title">鲜食 A 类商品缺货</div><div class="item-meta">4 个 SKU · 补货车预计 10:20 到店</div></div><span class="badge danger">高优先级</span></li>
+                <li class="task-item"><span class="timeline-marker done">3</span><div><div class="item-title">夜班现金差异</div><div class="item-meta">差异 ¥ 38 · 已由财务复核并留痕</div></div><span class="badge success">已闭环</span></li>
+              </ul>
+            </div>
+          </section>
+        </div>
+
+        <section class="table-shell responsive-table" aria-labelledby="store-title">
+          <div class="surface-header"><h2 id="store-title">班次对比：从偏差钻取到责任范围</h2><span class="help">排序：超时订单降序</span></div>
+          <table>
+            <thead><tr><th>班次</th><th>净销售额</th><th>履约及时率</th><th>缺货次数</th><th>负责人</th><th>判断</th></tr></thead>
+            <tbody>
+              <tr><td data-label="班次">早班 06:00–10:00</td><td data-label="净销售额">¥ 21,380</td><td data-label="履约及时率">96.8%</td><td data-label="缺货次数">2</td><td data-label="负责人">张敏</td><td data-label="判断"><span class="badge success">稳定</span></td></tr>
+              <tr><td data-label="班次">午班 10:00–14:00</td><td data-label="净销售额">¥ 38,760</td><td data-label="履约及时率">86.4%</td><td data-label="缺货次数">9</td><td data-label="负责人">李航</td><td data-label="判断"><span class="badge warning">需干预</span></td></tr>
+              <tr><td data-label="班次">晚班 14:00–22:00</td><td data-label="净销售额">¥ 26,280</td><td data-label="履约及时率">93.7%</td><td data-label="缺货次数">1</td><td data-label="负责人">王琳</td><td data-label="判断"><span class="badge info">观察</span></td></tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" aria-live="polite" data-live-region></div>
+  <div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

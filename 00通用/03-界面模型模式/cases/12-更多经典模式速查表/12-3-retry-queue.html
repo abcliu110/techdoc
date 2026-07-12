@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>门店设备离线重试队列 - 恢复与补偿</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark" aria-hidden="true">RQ</span>门店同步控制台</div><div class="app-context">中山路店 / POS-02-0188 / 离线恢复</div></header>
+    <section class="page-header">
+      <div><p class="eyebrow">Offline Queue + Retry + Compensation</p><h1>设备同步重试队列</h1><p class="subtitle">区分可安全重试、结果未知和需要补偿的任务；每次重试沿用原幂等键并保留完整执行链。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互示例</span><span class="badge warning">队列 4 / 500</span><span class="badge danger">库存依赖降级</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <section class="notice warning"><strong>离线能力边界</strong>本地可继续收款并打印小票；不可做跨店库存承诺、退款审批或会员余额调整。数据快照截至 10:12，网络于 10:18 恢复。</section>
+        <section class="metrics"><article class="metric"><span class="metric-label">待同步</span><strong class="metric-value">2</strong><div class="metric-note">按业务发生时间排序</div></article><article class="metric warning"><span class="metric-label">结果未知</span><strong class="metric-value">1</strong><div class="metric-note">必须先查询再决定</div></article><article class="metric danger"><span class="metric-label">需人工补偿</span><strong class="metric-value">1</strong><div class="metric-note">不能自动重复执行</div></article><article class="metric success"><span class="metric-label">依赖健康</span><strong class="metric-value">3 / 4</strong><div class="metric-note">库存服务仍降级</div></article></section>
+        <section class="table-shell responsive-table" aria-labelledby="queue-title">
+          <div class="surface-header"><h2 id="queue-title">恢复队列</h2><span class="help">自动并发 1 · 指数退避上限 15 分钟</span></div>
+          <table><thead><tr><th>任务</th><th>业务时间</th><th>幂等键</th><th>失败与依赖</th><th>重试</th><th>状态</th><th>动作</th></tr></thead><tbody>
+            <tr><td data-label="任务">上传订单 O-1882</td><td data-label="业务时间">10:14:22</td><td data-label="幂等键"><code class="code-value">POS188-O1882</code></td><td data-label="失败与依赖">网络断开 · 订单服务已恢复</td><td data-label="重试">1 / 5</td><td data-label="状态"><span class="badge warning" data-queue-status>待重试</span></td><td data-label="动作"><button class="btn primary" type="button" data-action="retry-job">立即重试</button></td></tr>
+            <tr><td data-label="任务">扣减库存 SKU-20416</td><td data-label="业务时间">10:15:03</td><td data-label="幂等键"><code class="code-value">POS188-S20416</code></td><td data-label="失败与依赖">HTTP 超时 · 库存服务降级</td><td data-label="重试">2 / 5</td><td data-label="状态"><span class="badge danger" data-queue-status>结果未知</span></td><td data-label="动作"><button class="btn" type="button" data-action="toast" data-message="已发起幂等键状态查询，未直接重试">先查询结果</button></td></tr>
+            <tr><td data-label="任务">上传会员积分</td><td data-label="业务时间">10:16:41</td><td data-label="幂等键"><code class="code-value">POS188-L7721</code></td><td data-label="失败与依赖">令牌过期 · 会员服务已恢复</td><td data-label="重试">0 / 5</td><td data-label="状态"><span class="badge warning" data-queue-status>待重试</span></td><td data-label="动作"><button class="btn primary" type="button" data-action="retry-job">立即重试</button></td></tr>
+            <tr><td data-label="任务">撤销离线退款 R-018</td><td data-label="业务时间">10:17:05</td><td data-label="幂等键"><code class="code-value">POS188-R018</code></td><td data-label="失败与依赖">上游已记账，本地未确认</td><td data-label="重试">禁止</td><td data-label="状态"><span class="badge danger" data-queue-status>需人工补偿</span></td><td data-label="动作"><button class="btn danger" type="button" data-action="compensate-job">登记补偿</button></td></tr>
+          </tbody></table>
+        </section>
+        <div class="layout-2"><section class="notice"><strong>人工接管</strong>当前控制者：值班经理 王琳；接管范围仅限结果未知和补偿任务。自动队列仍处理可安全重试项。</section><section class="notice success"><strong>恢复对账</strong>队列清空后，对比本地订单/支付/库存流水与云端结果；差异归零前不宣布恢复完成。</section></div>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>零售门店权限矩阵 - 复杂矩阵演示</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark" aria-hidden="true">PM</span>门店权限配置</div><div class="app-context">角色：门店主管 / 华东直营网点 / 草稿 v6</div></header>
+    <section class="page-header">
+      <div><p class="eyebrow">Permission Matrix + Impact Preview</p><h1>零售门店权限矩阵</h1><p class="subtitle">复杂矩阵用于批量比较和调整；最终有效权限仍需结合角色继承、数据范围、显式拒绝与职责分离计算。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互示例</span><span class="badge warning">未发布草稿</span><span class="badge danger">1 个职责冲突</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <section class="notice warning"><strong>冲突保护</strong>“退款审批”和“退款执行”不能授予同一角色。当前勾选仅修改草稿；发布前仍需复核有效用户、数据范围和冲突来源。</section>
+        <section class="filter-bar" aria-label="权限矩阵范围">
+          <div class="field"><label for="role">角色</label><select id="role"><option>门店主管</option><option>收银员</option></select></div>
+          <div class="field"><label for="org">组织范围</label><select id="org"><option>华东直营网点（36）</option><option>上海区域（12）</option></select></div>
+          <div class="field"><label for="module">模块</label><select id="module"><option>全部业务模块</option><option>订单与退款</option></select></div>
+          <div class="field"><label for="permission-search">查找权限</label><input id="permission-search" type="search" placeholder="资源或动作"></div>
+          <div class="actions"><button class="btn" type="button" data-action="toast" data-message="已按当前角色和组织范围刷新矩阵">刷新</button></div>
+        </section>
+        <section class="table-shell" aria-labelledby="matrix-title">
+          <div class="surface-header"><h2 id="matrix-title">资源 × 动作</h2><span class="help">勾选后会播报授予或撤销；横向滚动可查看完整矩阵</span></div>
+          <div class="matrix-scroll">
+            <table class="matrix"><thead><tr><th>业务资源</th><th>查看</th><th>新增</th><th>编辑</th><th>删除</th><th>审批</th><th>执行</th><th>来源</th></tr></thead><tbody>
+              <tr><td><strong>销售订单</strong><br><span class="help">本门店数据</span></td><td><input type="checkbox" checked data-permission-toggle aria-label="销售订单查看权限"></td><td><input type="checkbox" checked data-permission-toggle aria-label="销售订单新增权限"></td><td><input type="checkbox" checked data-permission-toggle aria-label="销售订单编辑权限"></td><td><input type="checkbox" data-permission-toggle aria-label="销售订单删除权限"></td><td><span class="help">不适用</span></td><td><input type="checkbox" checked data-permission-toggle aria-label="销售订单执行权限"></td><td><span class="badge info">角色直属</span></td></tr>
+              <tr><td><strong>退款申请</strong><br><span class="help">金额 ≤ 2,000 元</span></td><td><input type="checkbox" checked data-permission-toggle aria-label="退款申请查看权限"></td><td><input type="checkbox" checked data-permission-toggle aria-label="退款申请新增权限"></td><td><input type="checkbox" data-permission-toggle aria-label="退款申请编辑权限"></td><td><input type="checkbox" data-permission-toggle aria-label="退款申请删除权限"></td><td><input type="checkbox" checked data-permission-toggle aria-label="退款审批权限"></td><td><input type="checkbox" checked data-permission-toggle aria-label="退款执行权限"></td><td><span class="badge danger">职责冲突</span></td></tr>
+              <tr><td><strong>商品价格</strong><br><span class="help">所属门店</span></td><td><input type="checkbox" checked data-permission-toggle aria-label="商品价格查看权限"></td><td><span class="help">不适用</span></td><td><input type="checkbox" checked data-permission-toggle aria-label="商品价格编辑权限"></td><td><span class="help">不适用</span></td><td><input type="checkbox" data-permission-toggle aria-label="商品价格审批权限"></td><td><span class="help">不适用</span></td><td><span class="badge">继承：运营角色</span></td></tr>
+              <tr><td><strong>财务结算</strong><br><span class="help">区域聚合数据</span></td><td><input type="checkbox" checked disabled aria-label="财务结算查看权限，由上级角色继承"></td><td><input type="checkbox" disabled aria-label="财务结算新增权限不可授予"></td><td><input type="checkbox" disabled aria-label="财务结算编辑权限不可授予"></td><td><input type="checkbox" disabled aria-label="财务结算删除权限不可授予"></td><td><input type="checkbox" disabled aria-label="财务结算审批权限不可授予"></td><td><input type="checkbox" disabled aria-label="财务结算执行权限不可授予"></td><td><span class="badge warning">上级锁定</span></td></tr>
+            </tbody></table>
+          </div>
+        </section>
+        <div class="layout-3">
+          <section class="surface"><div class="surface-header"><h2>影响预览</h2></div><div class="surface-body"><dl class="key-values"><div><dt>直接用户</dt><dd>42</dd></div><div><dt>继承用户</dt><dd>116</dd></div><div><dt>门店</dt><dd>36</dd></div><div><dt>新增授权</dt><dd>3</dd></div><div><dt>撤销授权</dt><dd>1</dd></div><div><dt>高风险用户</dt><dd>42</dd></div></dl></div></section>
+          <section class="notice danger"><strong>职责分离</strong>退款申请的审批与执行同时命中 42 位用户。发布被阻止；可撤销其中一个动作或拆分角色。</section>
+          <section class="surface"><div class="surface-header"><h2>发布控制</h2></div><div class="surface-body"><p>变更单：PERM-20260712-018</p><p class="help">Maker：王琳 · Checker：待指定</p><div class="actions"><button class="btn" type="button" data-action="toast" data-message="有效权限模拟已生成，包含每条授权来源">模拟有效权限</button><button class="btn primary" type="button" disabled>提交复核</button></div></div></section>
+        </div>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>门店开通 Wizard - 模式选择示例</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark" aria-hidden="true">ST</span>门店管理</div><div class="app-context">新门店开通 / 草稿 ST-20260712-08</div></header>
+    <section class="page-header">
+      <div><p class="eyebrow">Wizard</p><h1>开通中山路二店</h1><p class="subtitle">步骤存在前置依赖：主体核验通过后才能配置结算，结算账户通过后才能启用终端。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互示例</span><span class="badge warning">草稿未提交</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <section class="tool-frame" data-wizard data-current-step="1" aria-labelledby="wizard-title">
+        <div class="tool-header"><h2 id="wizard-title">门店开通向导</h2><span class="help" data-step-status>第 1 步，共 4 步</span></div>
+        <div class="tool-body content-stack">
+          <ol class="steps" style="--step-count: 4">
+            <li data-step aria-current="step">1. 主体资料</li><li data-step>2. 结算配置</li><li data-step>3. 终端与权限</li><li data-step>4. 复核提交</li>
+          </ol>
+          <section class="wizard-panel" data-step-panel>
+            <h2 class="section-title">主体资料与经营范围</h2>
+            <div class="form-grid">
+              <div class="field"><label class="required" for="store-name">门店名称</label><input id="store-name" type="text" value="中山路二店"></div>
+              <div class="field"><label class="required" for="store-code">门店编码</label><input id="store-code" type="text" value="HZ-ZSL-002"></div>
+              <div class="field span-2"><label class="required" for="store-address">营业地址</label><input id="store-address" type="text" value="杭州市上城区中山中路 188 号"></div>
+            </div>
+            <p class="notice success"><strong>主体校验通过</strong>营业执照名称、统一社会信用代码与签约主体一致。</p>
+          </section>
+          <section class="wizard-panel" data-step-panel hidden>
+            <h2 class="section-title">结算账户</h2>
+            <div class="form-grid"><div class="field"><label for="settle-cycle">结算周期</label><select id="settle-cycle"><option>T+1</option><option>T+7</option></select></div><div class="field"><label for="bank-tail">对公账户尾号</label><input id="bank-tail" type="text" value="4821"></div></div>
+            <p class="notice warning"><strong>高风险配置</strong>账户生效前需要财务复核，提交后不能由门店自行修改。</p>
+          </section>
+          <section class="wizard-panel" data-step-panel hidden>
+            <h2 class="section-title">终端与最小权限</h2>
+            <div class="layout-2"><div class="surface-body"><strong>POS-02-0188</strong><p class="help">设备证书有效 · 最近在线 2 分钟前</p></div><div class="surface-body"><strong>默认角色：门店收银员</strong><p class="help">收款、退货申请；不含退款审批和调价。</p></div></div>
+          </section>
+          <section class="wizard-panel" data-step-panel hidden>
+            <h2 class="section-title">复核并提交</h2>
+            <dl class="key-values"><div><dt>门店</dt><dd>中山路二店</dd></div><div><dt>结算</dt><dd>T+1 / 尾号 4821</dd></div><div><dt>终端</dt><dd>1 台已绑定</dd></div><div><dt>待复核</dt><dd>财务账户</dd></div><div><dt>计划启用</dt><dd>2026-07-15</dd></div><div><dt>提交人</dt><dd>区域运营 李洁</dd></div></dl>
+            <p class="notice"><strong>提交后的下一步</strong>财务复核通过后进入终端联调；任一步失败均回到对应步骤，不丢失已确认资料。</p>
+          </section>
+          <div class="actions"><button class="btn" type="button" data-action="previous-step" disabled>上一步</button><button class="btn primary" type="button" data-action="next-step">下一步</button></div>
+        </div>
+      </section>
+      <section class="notice" style="margin-top: 18px"><strong>为什么使用 Wizard</strong>四步存在顺序依赖并由不同角色复核；若只是可自由比较的一组字段，应改用分区表单。</section>
+    </main>
+  </div>
+  <div class="sr-only" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

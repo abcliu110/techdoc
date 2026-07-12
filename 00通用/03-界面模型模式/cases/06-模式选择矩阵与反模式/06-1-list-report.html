@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>模式选择示例 - 订单 List Report</title>
+  <link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="app-shell">
+    <header class="app-bar"><div class="brand"><span class="brand-mark" aria-hidden="true">OP</span>订单运营</div><div class="app-context">模型选择验证 / 查找多个业务对象</div></header>
+    <section class="page-header">
+      <div><p class="eyebrow">Pattern Selection</p><h1>今日订单列表</h1><p class="subtitle">任务是“从大量订单中定位目标并处理”，因此选择筛选 + 结果表 + 批量动作，而不是 Dashboard。</p></div>
+      <div class="header-meta"><span class="demo-mode" data-kind="interactive">交互示例</span><span class="tag info">List Report</span></div>
+    </section>
+    <main id="main" class="page-body" data-demo="interactive">
+      <div class="content-stack">
+        <section class="notice"><strong>选择依据</strong>对象数量大、条件多、需比较与批量处理；若只显示几个 KPI，用户仍无法找到具体订单。</section>
+        <form class="filter-bar" aria-label="订单筛选" onsubmit="return false">
+          <div class="field"><label for="order-keyword">订单或会员</label><input id="order-keyword" type="search" value="陈女士"></div>
+          <div class="field"><label for="order-status">状态</label><select id="order-status"><option>全部状态</option><option selected>待发货</option><option>异常</option></select></div>
+          <div class="field"><label for="order-store">门店</label><select id="order-store"><option>全部门店</option><option selected>中山路店</option></select></div>
+          <div class="field"><label for="order-date">下单日期</label><input id="order-date" type="date" value="2026-07-12"></div>
+          <div class="actions"><button class="btn primary" type="submit" data-action="toast" data-message="已按当前条件刷新 3 条结果">查询</button><button class="btn" type="reset">重置</button></div>
+        </form>
+        <section class="table-shell responsive-table" aria-labelledby="result-title">
+          <div class="surface-header"><h2 id="result-title">查询结果</h2><div class="toolbar"><span class="help">共 3 条 · 下单时间倒序</span><button class="btn primary" type="button">新建订单</button></div></div>
+          <div class="bulk-bar" data-bulk-bar hidden><strong>已选择 <span data-selected-count>0</span> 条</strong><button class="btn primary" type="button" data-action="bulk-complete">批量提交发货</button></div>
+          <table>
+            <thead><tr><th><input type="checkbox" data-select-all aria-label="选择全部订单"></th><th>订单号</th><th>会员</th><th>状态</th><th>金额</th><th>下单时间</th><th>操作</th></tr></thead>
+            <tbody>
+              <tr><td data-label="选择"><input type="checkbox" data-row-select aria-label="选择订单 SO-260712-045"></td><td data-label="订单号"><a href="#">SO-260712-045</a></td><td data-label="会员">陈女士</td><td data-label="状态"><span class="badge warning">待发货</span></td><td data-label="金额">¥ 368.00</td><td data-label="下单时间">09:28</td><td data-label="操作"><button class="btn quiet" type="button">查看</button></td></tr>
+              <tr><td data-label="选择"><input type="checkbox" data-row-select aria-label="选择订单 SO-260712-041"></td><td data-label="订单号"><a href="#">SO-260712-041</a></td><td data-label="会员">陈女士</td><td data-label="状态"><span class="badge danger">地址异常</span></td><td data-label="金额">¥ 128.00</td><td data-label="下单时间">09:16</td><td data-label="操作"><button class="btn quiet" type="button">处理</button></td></tr>
+              <tr><td data-label="选择"><input type="checkbox" data-row-select aria-label="选择订单 SO-260712-033"></td><td data-label="订单号"><a href="#">SO-260712-033</a></td><td data-label="会员">陈女士</td><td data-label="状态"><span class="badge success">已完成</span></td><td data-label="金额">¥ 86.00</td><td data-label="下单时间">08:42</td><td data-label="操作"><button class="btn quiet" type="button">查看</button></td></tr>
+            </tbody>
+          </table>
+        </section>
+        <section class="surface"><div class="surface-header"><h2>为什么不用其他模型</h2></div><div class="surface-body layout-3"><div class="callout warning"><strong>不用 Dashboard</strong>它回答整体状态，不能精确定位订单。</div><div class="callout warning"><strong>不用 Wizard</strong>查询没有强顺序步骤，不应强迫逐步填写。</div><div class="callout success"><strong>保留 Object Page 出口</strong>列表负责找对象，详情页负责理解对象。</div></div></section>
+      </div>
+    </main>
+  </div>
+  <div class="sr-only" aria-live="polite" data-live-region></div><div class="toast" role="status" data-toast hidden></div>
+  <script src="../shared/case.js"></script>
+</body>
+</html>

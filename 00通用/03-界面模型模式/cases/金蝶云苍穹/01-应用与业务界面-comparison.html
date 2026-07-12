@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>金蝶云苍穹 - UI 分析对比展示</title>
+  <style>
+    :root {
+      --ink: #20242c;
+      --muted: #6d7480;
+      --line: #d9dde4;
+      --surface: #ffffff;
+      --canvas: #f2f4f7;
+      --brand: #3267d6;
+      --danger: #c73b42;
+      --danger-bg: #fff3f3;
+      --good: #18794e;
+      --good-bg: #effaf4;
+      --warn: #a45f06;
+      --warn-bg: #fff7e8;
+      --radius: 6px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      letter-spacing: 0;
+    }
+    .report-header {
+      background: #161c28;
+      color: #fff;
+      border-bottom: 4px solid var(--brand);
+      padding: 28px clamp(20px, 5vw, 72px);
+    }
+    .report-header h1 { margin: 0 0 10px; font-size: 28px; font-weight: 700; }
+    .obsolete { background: #fff1f1; color: #991b1b; border: 2px solid #c73b42; padding: 14px 18px; font-weight: 700; }
+    .meta { display: flex; flex-wrap: wrap; gap: 10px; }
+    .meta span { border: 1px solid #4b5568; padding: 4px 10px; border-radius: 3px; }
+    main { max-width: 1440px; margin: 0 auto; padding: 28px 24px 56px; }
+    h2 { margin: 0 0 16px; font-size: 20px; }
+    h3 { margin: 0 0 12px; font-size: 16px; }
+    .findings, .conclusion { background: var(--surface); border: 1px solid var(--line); padding: 22px; margin-bottom: 24px; }
+    .finding-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .finding { border-left: 4px solid var(--brand); background: #f8faff; padding: 14px; }
+    .finding strong { display: block; margin-bottom: 4px; }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 24px; }
+    .panel { background: var(--surface); border: 1px solid var(--line); min-width: 0; }
+    .panel-head { display: flex; justify-content: space-between; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+    .verdict { font-weight: 700; }
+    .current .verdict { color: var(--danger); }
+    .improved .verdict { color: var(--good); }
+    .ui { padding: 16px; }
+    .toolbar { display: flex; align-items: center; gap: 8px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+    .crumb { font-weight: 600; margin-right: auto; }
+    button { border: 1px solid #c9ced7; background: white; padding: 7px 12px; border-radius: 3px; color: var(--ink); }
+    button.primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+    button.danger { color: var(--danger); border-color: #e2a4a7; }
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 0; }
+    .filter { border: 1px solid #cfd5df; background: #fff; padding: 5px 9px; border-radius: 3px; }
+    .filter.active { border-color: var(--brand); color: var(--brand); background: #f1f6ff; }
+    .result-summary { margin-left: auto; color: var(--muted); padding: 5px 0; }
+    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .asset-card { border: 1px solid var(--line); background: #fff; padding: 14px; min-height: 146px; position: relative; }
+    .asset-card h4 { margin: 0 0 10px; font-size: 15px; }
+    .asset-card dl { display: grid; grid-template-columns: 68px 1fr; margin: 0; color: var(--muted); font-size: 12px; }
+    .asset-card dt, .asset-card dd { margin: 2px 0; }
+    .card-actions { display: flex; justify-content: flex-end; gap: 6px; margin-top: 12px; }
+    .icon-action { width: 28px; height: 28px; padding: 0; }
+    .problem { outline: 2px dashed var(--danger); outline-offset: 3px; }
+    .improvement { outline: 2px solid var(--good); outline-offset: 3px; }
+    .note { margin-top: 8px; padding: 8px 10px; font-size: 12px; }
+    .problem-note { background: var(--danger-bg); color: var(--danger); }
+    .good-note { background: var(--good-bg); color: var(--good); }
+    .status-box { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 14px 0; }
+    .status-item { background: #f7f8fa; border: 1px solid var(--line); padding: 10px; }
+    .status-item b { display: block; font-size: 12px; color: var(--muted); }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; }
+    label { display: block; color: var(--muted); font-size: 12px; }
+    .field { border-bottom: 1px solid #aeb5c0; padding: 5px 0; min-height: 31px; }
+    .entry { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    .entry th, .entry td { border: 1px solid var(--line); padding: 8px; text-align: left; font-size: 12px; }
+    .deleted-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .deleted { min-height: 118px; display: grid; place-items: center; border: 1px solid var(--line); color: var(--muted); background: #fbfbfc; text-align: center; }
+    .health-banner { background: var(--warn-bg); border: 1px solid #e6b86d; color: var(--warn); padding: 12px; margin-bottom: 12px; }
+    .improvements { background: var(--surface); border: 1px solid var(--line); padding: 22px; }
+    .improvements ol { margin: 0; padding-left: 22px; columns: 2; column-gap: 32px; }
+    .improvements li { margin-bottom: 10px; break-inside: avoid; }
+    .tag { display: inline-block; font-size: 11px; padding: 1px 6px; border-radius: 2px; background: #e8edf6; color: #40506c; }
+    @media (max-width: 900px) {
+      .comparison, .finding-grid { grid-template-columns: 1fr; }
+      .cards, .form-grid, .status-box { grid-template-columns: 1fr; }
+      .improvements ol { columns: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="obsolete">已作废：此页面按旧版 SOP 生成，包含未经证据确认的概念数据和业务规则，仅保留为失败样本，不得作为产品事实或改版依据。</div>
+  <header class="report-header">
+    <h1>金蝶云苍穹 UI 设计分析</h1>
+    <div class="meta">
+      <span>结论：勉强合理</span>
+      <span>模式：资产库 / Dashboard / 单据表单</span>
+      <span>证据：社区版登录态实测</span>
+    </div>
+  </header>
+  <main>
+    <section class="findings">
+      <h2>核心发现</h2>
+      <div class="finding-grid">
+        <div class="finding"><strong>资产模型正确</strong>业务云、应用、功能分组、页面构成清晰的企业资产层级。</div>
+        <div class="finding"><strong>交互解释不足</strong>卡片选中与进入、保存与提交、设计态拖放结果缺少明确反馈。</div>
+        <div class="finding"><strong>异常闭环断裂</strong>已删除卡片和方案仍占据看板，不能聚合、修复或追溯影响。</div>
+      </div>
+    </section>
+
+    <section class="comparison ui-display">
+      <article class="panel current">
+        <div class="panel-head"><h3>当前：应用与页面资产</h3><span class="verdict">勉强合理</span></div>
+        <div class="ui">
+          <div class="toolbar"><span class="crumb">开发服务云 / tst / 首页</span><button>卡片视图</button><button>列表视图</button></div>
+          <div class="filters"><span class="filter active">全部</span><span class="filter">单据</span><span class="filter">基础资料</span><span class="filter">动态表单</span><span class="filter">报表</span></div>
+          <div class="cards">
+            <div class="asset-card problem">
+              <h4>研究样本－单据</h4>
+              <dl><dt>页面编码</dt><dd>comt_research_bill</dd><dt>页面类型</dt><dd>单据</dd><dt>源页面</dt><dd>bos_billorgtpl</dd></dl>
+              <div class="card-actions"><button class="icon-action" title="预览">◉</button><button class="icon-action" title="视图">⌘</button><button class="icon-action" title="更多">•••</button><button class="icon-action danger" title="启停">◈</button></div>
+            </div>
+            <div class="asset-card"><h4>研究样本－动态表单</h4><dl><dt>页面编码</dt><dd>comt_research_dynamic</dd><dt>页面类型</dt><dd>动态表单</dd><dt>修改人</dt><dd>198****4563</dd></dl></div>
+          </div>
+          <div class="note problem-note">问题 1：选中与进入动作不清楚。问题 2：高风险启停与低风险预览处于同一图标层。问题 3：筛选后没有结果数量和条件摘要。</div>
+        </div>
+      </article>
+
+      <article class="panel improved">
+        <div class="panel-head"><h3>改进：任务清晰的资产库</h3><span class="verdict">建议方案</span></div>
+        <div class="ui">
+          <div class="toolbar"><span class="crumb">开发服务云 / tst / 首页</span><button>最近修改</button><button class="primary">创建页面</button></div>
+          <div class="filters improvement"><span class="filter active">类型：单据</span><span class="filter">设备：PC</span><span class="filter">排序：修改时间</span><button>清除</button><span class="result-summary">1 个页面</span></div>
+          <div class="cards">
+            <div class="asset-card improvement">
+              <h4><a href="#" style="color:#2459bf">研究样本－单据</a> <span class="tag">已启用</span></h4>
+              <dl><dt>页面编码</dt><dd>comt_research_bill</dd><dt>页面类型</dt><dd>单据</dd><dt>源页面</dt><dd>bos_billorgtpl</dd></dl>
+              <div class="card-actions"><button>预览</button><button class="primary">进入设计器</button><button>更多 ▾</button></div>
+            </div>
+            <div class="asset-card"><h4>依赖与影响</h4><dl><dt>菜单引用</dt><dd>2</dd><dt>流程引用</dt><dd>1</dd><dt>移动布局</dt><dd>1</dd></dl><div class="note good-note">启停与删除进入“更多”，执行前展示影响对象。</div></div>
+          </div>
+          <div class="note good-note">改进 1：标题单击直接进入。改进 2：主操作使用文字按钮。改进 3：风险操作收敛并提供影响预览。</div>
+        </div>
+      </article>
+    </section>
+
+    <section class="comparison">
+      <article class="panel current">
+        <div class="panel-head"><h3>当前：领用申请状态表达</h3><span class="verdict">状态解释不足</span></div>
+        <div class="ui">
+          <div class="toolbar"><span class="crumb">办公用品领用申请单</span><button>保存</button><button class="primary">提交</button><button>提交并新增</button><button>退出</button></div>
+          <div class="form-grid">
+            <div><label>申请单号 *</label><div class="field">Apply-260712-1001</div></div>
+            <div class="problem"><label>单据状态 *</label><div class="field">暂存</div></div>
+            <div><label>申请人</label><div class="field">198****4563</div></div>
+            <div><label>申请日期</label><div class="field">2026-07-12</div></div>
+          </div>
+          <table class="entry"><thead><tr><th>物品分类</th><th>物品 *</th><th>计量单位</th><th>申请数量 *</th></tr></thead><tbody><tr><td></td><td></td><td></td><td></td></tr></tbody></table>
+          <div class="note problem-note">只回答“当前是暂存”，未回答原因、下一节点、责任人和提交影响。</div>
+        </div>
+      </article>
+
+      <article class="panel improved">
+        <div class="panel-head"><h3>改进：状态四问完整表达</h3><span class="verdict">建议方案</span></div>
+        <div class="ui">
+          <div class="toolbar"><span class="crumb">办公用品领用申请单</span><button>保存草稿</button><button class="primary">提交审批</button><button>更多 ▾</button></div>
+          <div class="status-box improvement">
+            <div class="status-item"><b>是什么</b>草稿，尚未提交</div>
+            <div class="status-item"><b>为什么</b>物品明细待填写</div>
+            <div class="status-item"><b>接下来</b>提交后由部门负责人审批</div>
+            <div class="status-item"><b>怎么办</b>补齐明细并提交；提交前不占库存</div>
+          </div>
+          <div class="form-grid"><div><label>申请单号</label><div class="field">Apply-260712-1001</div></div><div><label>申请人</label><div class="field">198****4563</div></div></div>
+          <table class="entry"><thead><tr><th>物品分类</th><th>物品 *</th><th>可用库存</th><th>申请数量 *</th></tr></thead><tbody><tr><td>办公耗材</td><td>签字笔</td><td>126</td><td>10</td></tr></tbody></table>
+          <div class="note good-note">提交前预览：将发起 1 条审批，不预占库存；审批通过后扣减 10 件。</div>
+        </div>
+      </article>
+    </section>
+
+    <section class="comparison">
+      <article class="panel current">
+        <div class="panel-head"><h3>当前：业务看板失效卡片</h3><span class="verdict">设计不足</span></div>
+        <div class="ui">
+          <div class="deleted-grid problem"><div class="deleted">用品分类分布<br>该卡片已被删除</div><div class="deleted">库存余量百分比<br>该卡片已被删除</div><div class="deleted">申请热度分析<br>该卡片已被删除</div><div class="deleted">重点关注看板<br>方案已删除</div></div>
+          <div class="note problem-note">异常被逐卡暴露但没有分类、影响范围、处理动作、留痕和聚合。</div>
+        </div>
+      </article>
+
+      <article class="panel improved">
+        <div class="panel-head"><h3>改进：失效引用治理</h3><span class="verdict">建议方案</span></div>
+        <div class="ui">
+          <div class="health-banner"><strong>4 个看板引用需要处理</strong><br>影响“办公用品领用”首页，普通业务用户暂不显示失效卡片。</div>
+          <div class="cards">
+            <div class="asset-card improvement"><h4>用品分类分布</h4><p>来源页面已删除 · 影响 1 个布局</p><div class="card-actions"><button>选择替代页面</button><button>移除卡片</button></div></div>
+            <div class="asset-card"><h4>库存余量百分比</h4><p>最后正常：2026-07-10 18:22</p><div class="card-actions"><button>查看影响</button><button class="primary">恢复引用</button></div></div>
+          </div>
+          <div class="note good-note">异常按原因聚合，绑定影响范围，提供修复动作，并记录处理人和处理结果。</div>
+        </div>
+      </article>
+    </section>
+
+    <section class="improvements">
+      <h2>改进点说明</h2>
+      <ol>
+        <li><strong>P0：</strong>删除页面、卡片或方案前检查引用；删除后自动降级并生成治理任务。</li>
+        <li><strong>P1：</strong>卡片标题单击直接进入，选中态仅服务批量管理。</li>
+        <li><strong>P1：</strong>预览、进入设计器外露；启停、扩展和删除收进风险菜单。</li>
+        <li><strong>P1：</strong>单据状态区同时回答状态、来源、下一步和可执行动作。</li>
+        <li><strong>P1：</strong>返回页面资产库时恢复应用、分组、筛选、排序和滚动位置。</li>
+        <li><strong>P2：</strong>筛选栏显示条件标签、结果数量、清除和保存视图。</li>
+        <li><strong>P2：</strong>设计器显示合法落点，非法拖放解释父子约束。</li>
+        <li><strong>P2：</strong>业务用户与管理员采用不同默认首页，分离任务与治理信息。</li>
+      </ol>
+    </section>
+
+    <section class="conclusion">
+      <h2>分析结论</h2>
+      <p>金蝶云苍穹的业务元模型、页面类型和企业治理骨架选择合理。主要缺口集中在复杂能力的交互解释：入口动作不够明确、状态后果缺少说明、上下文恢复不足、失效配置没有闭环。改进重点不是减少业务能力，而是让能力按角色、风险和任务阶段逐层显露。</p>
+    </section>
+  </main>
+</body>
+</html>
