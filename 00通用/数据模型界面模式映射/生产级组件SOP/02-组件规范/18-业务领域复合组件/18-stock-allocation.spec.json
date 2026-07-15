@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "specificationVersion": "0.1.0",
+  "lifecycle": "ReviewReady",
+  "identity": {
+    "componentKey": "18:stock-allocation",
+    "legacyId": "stock-allocation",
+    "name": "库存分配器",
+    "englishName": "Stock Allocation",
+    "category": "18",
+    "exportName": "StockAllocation",
+    "packageSubpath": "@company/ui/stock-allocation"
+  },
+  "purpose": {
+    "job": "把一个需求数量分配到同租户的可用库存批次，并以版本化、幂等的提交请求交给库存服务最终校验。",
+    "success": "本地分配总量不超过需求和批次可用量；版本冲突或部分失败不会制造超分、重复占用或虚假成功。"
+  },
+  "boundaries": {
+    "inScope": ["需求与批次展示", "分配草稿", "本地守恒校验", "版本冲突", "提交请求", "部分结果和补偿提示"],
+    "outOfScope": ["真实库存锁定", "跨仓调拨", "库存事务", "订单状态推进", "服务端补偿执行"]
+  },
+  "dataContract": {
+    "demand": "{ tenantId: string; demandId: string; skuId: string; requiredQuantity: DecimalString; unit: string; version: string }",
+    "lot": "{ tenantId: string; warehouseId: string; lotId: string; skuId: string; availableQuantity: DecimalString; version: string; expiresAt?: string }",
+    "allocation": "{ warehouseId: string; lotId: string; quantity: DecimalString; expectedLotVersion: string }",
+    "commit": "{ tenantId: string; demandId: string; expectedDemandVersion: string; idempotencyKey: string; allocations: readonly AllocationLine[] }",
+    "identity": "tenantId、demandId、warehouseId、lotId、SKU、单位和各自版本进入提交契约；禁止按可见行索引标识批次。",
+    "constraints": ["所有数量使用十进制定点字符串，禁止二进制浮点", "sum(allocation.quantity) <= demand.requiredQuantity", "每批次 allocation.quantity <= availableQuantity", "租户、SKU 或单位不一致的批次不可分配"]
+  },
+  "publicApi": {
+    "status": "proposed",
+    "props": [
+      { "name": "tenantId", "type": "string", "required": true },
+      { "name": "demand", "type": "StockDemand", "required": true },
+      { "name": "lots", "type": "readonly StockLot[]", "required": true },
+      { "name": "allocations", "type": "readonly AllocationLine[]", "required": true },
+      { "name": "commitState", "type": "idle | submitting | conflict | partial | rejected | succeeded", "required": false, "default": "idle" },
+      { "name": "serverResult", "type": "StockAllocationResult | null", "required": false, "default": null },
+      { "name": "readOnly", "type": "boolean", "required": false, "default": false }
+    ],
+    "events": [
+      { "name": "onAllocationsChange", "payload": "readonly AllocationLine[]" },
+      { "name": "onCommitRequested", "payload": "StockAllocationCommit" },
+      { "name": "onReloadRequested", "payload": "{ tenantId: string; demandId: string; lotIds: readonly string[] }" },
+      { "name": "onCompensationRequested", "payload": "{ operationId: string; succeededReservationIds: readonly string[] }" }
+    ],
+    "refMethods": ["focusLot(lotId: string): void", "focusFirstInvalid(): void"],
+    "controlledState": {
+      "rule": "allocations、commitState 和 serverResult 由消费方控制；组件在收到服务端成功结果前不得把分配草稿显示为已占用库存。"
+    }
+  },
+  "stateMachine": {
+    "states": ["ready", "dirtyValid", "dirtyInvalid", "submitting", "conflict", "partial", "rejected", "succeeded", "tenantMismatch"],
+    "initialState": "tenant mismatch ? tenantMismatch : allocations valid ? ready|dirtyValid : dirtyInvalid",
+    "transitions": [
+      { "from": "ready|dirtyValid|dirtyInvalid", "event": "ALLOCATION_CHANGE_VALID", "to": "dirtyValid" },
+      { "from": "ready|dirtyValid|dirtyInvalid", "event": "ALLOCATION_CHANGE_INVALID", "to": "dirtyInvalid" },
+      { "from": "dirtyValid", "event": "COMMIT", "to": "submitting" },
+      { "from": "submitting", "event": "VERSION_CONFLICT", "to": "conflict" },
+      { "from": "submitting", "event": "PARTIAL_SUCCESS", "to": "partial" },
+      { "from": "submitting", "event": "SUCCESS", "to": "succeeded" },
+      { "from": "conflict|partial|rejected", "event": "RELOAD_OR_COMPENSATE", "to": "ready|dirtyValid|dirtyInvalid" }
+    ]
+  },
+  "primaryFlow": {
+    "id": "allocate-two-lots-and-request-commit",
+    "steps": [
+      {
+        "actor": "仓库主管",
+        "precondition": "T-100 的需求 D-18 需要 10 EA；LOT-A 可用 6、版本 la3，LOT-B 可用 8、版本 lb5；当前分配为空。",
+        "control": "LOT-A 分配数量输入框和 LOT-B 分配数量输入框",
+        "action": "分别输入 6 和 4。",
+        "stateTransition": "ready -> dirtyValid。",
+        "observable": "onAllocationsChange 按最后一次输入发出包含 LOT-A=6、LOT-B=4 的完整数组；剩余需求显示 0。",
+        "oracle": "总分配=10，不超过需求；单批次不超过可用量；数量、SKU、单位和租户均一致。"
+      },
+      {
+        "actor": "仓库主管",
+        "precondition": "分配守恒校验通过，需求版本 d7，批次版本 la3/lb5。",
+        "control": "确认分配按钮",
+        "action": "按 Enter 请求提交。",
+        "stateTransition": "dirtyValid -> submitting。",
+        "observable": "onCommitRequested 仅触发一次，包含 tenantId=T-100、demandId=D-18、expectedDemandVersion=d7、la3/lb5 和非空 idempotencyKey。",
+        "oracle": "提交期间重复激活不产生第二个操作；组件等待服务端最终守恒和锁定结果，不预先推进订单或库存状态。"
+      }
+    ]
+  },
+  "exceptionFlows": [
+    {
+      "id": "lot-version-conflict",
+      "trigger": "提交前 LOT-A 已被其他订单占用，服务端以 LOT_VERSION_CONFLICT 返回当前版本 la4、可用量 2。",
+      "blockedEffect": "不得显示分配成功，不得保留 LOT-A=6 为可提交有效值，不得自动把缺口转移到其他批次。",
+      "retainedState": "原草稿、需求 d7、LOT-B=4 和冲突前版本保留为比较依据。",
+      "recovery": "用户激活“刷新库存”，触发 onReloadRequested；新批次快照到达后显式重新分配缺口。",
+      "focusResult": "焦点进入 LOT-A 冲突说明和数量输入框；错误摘要链接可返回该批次。",
+      "oracle": "刷新前提交被阻止；新提交使用 la4 和新 idempotencyKey，且不会静默改写其他批次。"
+    },
+    {
+      "id": "partial-reservation-result",
+      "trigger": "服务端返回 PARTIAL_SUCCESS：LOT-A 预留成功 reservation RA1，LOT-B 失败；operationId=OP9。",
+      "blockedEffect": "不得把整个需求显示为已分配，不得自动重复提交成功的 LOT-A，也不得自行假定补偿完成。",
+      "retainedState": "操作 OP9、RA1、失败批次、原提交快照和需求缺口保留并只读展示。",
+      "recovery": "用户按业务策略激活“请求撤销已成功预留”，触发 onCompensationRequested(OP9,[RA1])；消费方等待服务端补偿结果后刷新。",
+      "focusResult": "焦点进入部分成功摘要；补偿完成后返回未满足需求或批次列表。",
+      "oracle": "成功和失败逐项可见；同一 reservation 不被重复提交；补偿未确认前状态保持 partial。"
+    },
+    {
+      "id": "cross-tenant-lot",
+      "trigger": "tenantId=T-100 的需求收到 tenantId=T-200 的库存批次。",
+      "blockedEffect": "不得显示该批次业务明细、不得允许分配、不得把它加入任何事件载荷。",
+      "retainedState": "T-100 的需求和合法批次草稿保留。",
+      "recovery": "消费方移除错误批次并重新加载 T-100 库存。",
+      "focusResult": "焦点进入不泄露 T-200 明细的数据边界错误摘要。",
+      "oracle": "DOM、可访问树、日志和提交载荷均不包含 T-200 批次标识或数量。"
+    }
+  ],
+  "keyboardAndFocus": {
+    "model": "需求摘要后按批次行和数量输入顺序移动，错误摘要可返回具体批次。",
+    "keys": "Tab 按批次行与数量输入顺序移动；Enter 仅在守恒校验通过时确认；Escape 不清空草稿。",
+    "focusRecovery": "冲突后进入对应批次数量输入；部分成功后进入结果摘要；补偿完成后返回未满足需求。",
+    "order": "Tab 按批次行与数量输入顺序移动；Enter 只在守恒校验通过时激活确认；Escape 不清空分配草稿。",
+    "errors": "确认被阻止时聚焦首个超量、单位、租户或版本错误；摘要链接返回对应批次。",
+    "busy": "submitting 只阻止编辑和重复提交，仍允许读取操作 ID、取消或进入服务端支持的恢复入口。"
+  },
+  "accessibility": {
+    "semantics": "批次使用语义表格或 grid；数量输入名称包含仓库、批次、可用量和单位。",
+    "pattern": "批次可使用语义表格或 grid；每个数量输入的名称包含仓库、批次、可用量和单位。",
+    "announcements": "剩余需求、超量、冲突、部分成功和补偿状态使用 polite live region；库存状态不只用颜色表示。"
+  },
+  "visualAndResponsive": {
+    "desktop": "需求摘要、可用量、分配量和剩余量对齐；冲突与部分成功保持稳定行高或展开区域。",
+    "mobile": "390px 以逐批次列表展示，需求总量和剩余量固定可见但不遮挡输入；所有数量仍显示单位。",
+    "states": ["ready", "dirtyValid", "dirtyInvalid", "submitting", "conflict", "partial", "rejected", "succeeded", "tenantMismatch"],
+    "themes": ["default", "dark", "compact", "reduced-motion"]
+  },
+  "performance": {
+    "fixture": "1 个需求、10,000 个批次、500 个仓库，虚拟窗口 50 行；分配草稿 100 行。",
+    "budget": "数量输入和守恒汇总反馈 p95 <= 100ms；虚拟滚动不得持续产生 >50ms 长任务；子路径 gzip 增量建议 <= 30KB。"
+  },
+  "security": {
+    "rules": ["服务端最终校验租户、SKU、单位、可用量、需求/批次版本、幂等键并在事务中锁定或乐观更新", "客户端守恒检查不是库存保证", "跨租户批次 fail closed 且不泄露", "日志和错误不展示其他订单占用明细"]
+  },
+  "compatibility": {
+    "legacy": "legacyId=stock-allocation；旧 data-action 只作迁移定位。",
+    "breakingSurfaces": ["十进制数量表示", "需求和批次身份", "版本与幂等载荷", "部分成功和补偿事件", "服务端责任边界"]
+  },
+  "acceptanceOracles": [
+    { "id": "SA-01", "given": "需求 10、LOT-A 可用 6、LOT-B 可用 8", "when": "分配 A=6、B=4", "then": "总量=10、剩余=0、每批次不过量且一次事件携带完整稳定身份" },
+    { "id": "SA-02", "given": "LOT-A 从 la3 变为 la4 且可用量降到 2", "when": "旧版本提交返回冲突", "then": "0 个成功状态、草稿保留、焦点到 LOT-A、刷新前禁止再提交" },
+    { "id": "SA-03", "given": "LOT-A 成功而 LOT-B 失败", "when": "服务端返回 PARTIAL_SUCCESS", "then": "状态保持 partial、RA1 不被重复提交、只有明确动作触发补偿请求" },
+    { "id": "SA-04", "given": "输入包含 T-200 批次", "when": "T-100 组件渲染和提交", "then": "T-200 明细不进入 DOM/可访问树/日志/事件，提交被阻断或排除并报告边界错误" }
+  ],
+  "risk": {
+    "level": "R3",
+    "signals": ["inventory", "order", "multi-tenant", "cross-system"],
+    "rationale": "库存超分、重复预留、跨租户批次或错误补偿会造成关键业务中断和实际库存损失。",
+    "triggers": ["库存、订单关联、跨系统补偿和多租户全部命中 R3，禁止降级或偏差发布。"],
+    "invariants": ["分配总量不超过需求", "批次数量不超过可用量", "租户/SKU/单位一致", "定点十进制精确", "需求和批次版本受检", "提交幂等", "部分成功逐项可追踪", "补偿由服务端确认"]
+  },
+  "sourceTrace": {
+    "catalog": "prototype-suite/catalog.browser.json#18:stock-allocation",
+    "preserved": ["Demand x StockLot -> Allocation", "quantity/warehouse"],
+    "correctedFacts": ["旧规范把库存分配暂定为 R2，且未定义守恒、并发版本、幂等、部分成功或补偿，因此不能作为实现契约。"]
+  },
+  "openDecisions": [
+    { "id": "SA-D1", "question": "首版是否允许部分分配提交，还是必须 sum(allocations)=requiredQuantity 才能提交？" },
+    { "id": "SA-D2", "question": "部分成功后的默认业务策略是补偿成功项还是保留成功项并继续满足缺口？该策略必须由哪个服务契约返回？" },
+    { "id": "SA-D3", "question": "DecimalString 的最大精度、小数位和单位换算边界由哪个领域规范冻结？" }
+  ],
+  "approval": {
+    "status": "pending",
+    "authors": ["Codex"],
+    "requiredRoles": ["component-maintainer", "domain-security-reviewer", "ux-a11y-reviewer", "test-reviewer"],
+    "records": []
+  }
+}

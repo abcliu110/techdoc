@@ -1,0 +1,11 @@
+{
+  "auditDate": "2026-07-15",
+  "classification": "migration-input-not-component-specification",
+  "componentDocuments": 309,
+  "apiNotFrozen": 309,
+  "allSevenGatesUnstarted": 309,
+  "genericCompositeCoreActions": 90,
+  "genericStructuredCoreActions": 84,
+  "legacyMiddleRendererTest": "FAIL",
+  "authoritative": false
+}

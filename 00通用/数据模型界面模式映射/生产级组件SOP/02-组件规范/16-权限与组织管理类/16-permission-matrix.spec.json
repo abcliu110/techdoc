@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "specificationVersion": "0.1.0",
+  "lifecycle": "ReviewReady",
+  "identity": {
+    "componentKey": "16:permission-matrix",
+    "legacyId": "permission-matrix",
+    "name": "权限矩阵",
+    "englishName": "Permission Matrix",
+    "category": "16",
+    "exportName": "PermissionMatrix",
+    "packageSubpath": "@company/ui/permission-matrix"
+  },
+  "purpose": {
+    "job": "在一个已授权租户范围内审阅并编辑角色、资源和动作的权限决策，同时明确继承、显式允许、显式拒绝和冲突。",
+    "success": "矩阵展示与提交快照属于同一租户和策略版本；显式拒绝不被继承允许覆盖；服务端拒绝不会泄露越权资源。"
+  },
+  "boundaries": {
+    "inScope": ["角色与资源动作矩阵", "显式/继承决策", "变更集", "冲突说明", "提交请求与服务端拒绝恢复"],
+    "outOfScope": ["身份认证", "最终授权裁决", "租户成员管理", "服务端策略求值器", "审计存储"]
+  },
+  "dataContract": {
+    "snapshot": "{ tenantId: string; policyVersion: string; roles: readonly Role[]; resources: readonly Resource[]; actions: readonly Action[]; decisions: readonly PermissionDecision[] }",
+    "decision": "{ roleId: string; resourceId: string; actionId: string; effect: 'allow' | 'deny' | 'inherit'; source?: PermissionSource }",
+    "change": "{ roleId: string; resourceId: string; actionId: string; previousEffect: PermissionEffect; nextEffect: PermissionEffect }",
+    "identity": "tenantId、roleId、resourceId、actionId 和 policyVersion 必须稳定且进入提交载荷。",
+    "constraints": ["同一三元组只能有一个有效决策", "显式 deny 优先于继承 allow", "快照 tenantId 与组件 tenantId 不一致时禁止渲染可操作矩阵"]
+  },
+  "publicApi": {
+    "status": "proposed",
+    "props": [
+      { "name": "tenantId", "type": "string", "required": true },
+      { "name": "snapshot", "type": "PermissionMatrixSnapshot", "required": true },
+      { "name": "changes", "type": "readonly PermissionChange[]", "required": true },
+      { "name": "readOnly", "type": "boolean", "required": false, "default": false },
+      { "name": "canEdit", "type": "(cell: PermissionCell) => boolean", "required": true },
+      { "name": "commitState", "type": "idle | submitting | rejected | conflict", "required": false, "default": "idle" }
+    ],
+    "events": [
+      { "name": "onChangesChange", "payload": "readonly PermissionChange[]" },
+      { "name": "onCommitRequested", "payload": "{ tenantId: string; expectedPolicyVersion: string; idempotencyKey: string; changes: readonly PermissionChange[] }" },
+      { "name": "onReloadRequested", "payload": "{ tenantId: string; rejectedPolicyVersion: string }" }
+    ],
+    "refMethods": ["focusCell(roleId: string, resourceId: string, actionId: string): void", "focusFirstConflict(): void"],
+    "controlledState": {
+      "rule": "snapshot、changes 和 commitState 均由消费方控制；组件不得在未收到新 policyVersion 时假定提交成功。"
+    }
+  },
+  "stateMachine": {
+    "states": ["ready", "dirty", "submitting", "conflict", "rejected", "tenantMismatch", "readOnly"],
+    "initialState": "snapshot.tenantId !== tenantId ? tenantMismatch : readOnly ? readOnly : changes.length ? dirty : ready",
+    "transitions": [
+      { "from": "ready|dirty", "event": "CELL_DECISION_CHANGE", "to": "dirty" },
+      { "from": "dirty", "event": "COMMIT", "to": "submitting" },
+      { "from": "submitting", "event": "VERSION_CONFLICT", "to": "conflict" },
+      { "from": "submitting", "event": "FORBIDDEN", "to": "rejected" },
+      { "from": "conflict|rejected", "event": "RELOAD_SNAPSHOT", "to": "ready|dirty" },
+      { "from": "ready|dirty|submitting", "event": "TENANT_MISMATCH", "to": "tenantMismatch" }
+    ]
+  },
+  "primaryFlow": {
+    "id": "deny-export-and-request-commit",
+    "steps": [
+      {
+        "actor": "租户安全管理员",
+        "precondition": "tenantId=T-100，policyVersion=p12；角色 SALES 对资源 ORDER 的 EXPORT 继承 allow，且 canEdit=true。",
+        "control": "SALES / ORDER / EXPORT 权限单元格",
+        "action": "按 Space 打开决策菜单，选择“显式拒绝”。",
+        "stateTransition": "ready -> dirty。",
+        "observable": "onChangesChange 触发一次，nextEffect=deny；单元格同时显示“拒绝”和来源“本角色显式设置”。",
+        "oracle": "有效预览为 deny；继承 allow 不覆盖显式 deny；未影响同资源的 READ 动作。"
+      },
+      {
+        "actor": "租户安全管理员",
+        "precondition": "changes 仅含上述三元组且 policyVersion 仍为 p12。",
+        "control": "提交权限变更按钮",
+        "action": "按 Enter 请求提交。",
+        "stateTransition": "dirty -> submitting。",
+        "observable": "onCommitRequested 仅触发一次，含 tenantId=T-100、expectedPolicyVersion=p12、非空 idempotencyKey 和精确 changes。",
+        "oracle": "组件在服务端返回新快照前不清除变更；最终授权仍由服务端按租户、操作者和策略版本裁决。"
+      }
+    ]
+  },
+  "exceptionFlows": [
+    {
+      "id": "tenant-snapshot-mismatch",
+      "trigger": "组件 tenantId=T-100，但传入 snapshot.tenantId=T-200。",
+      "blockedEffect": "不得渲染资源名称、权限决策或可编辑单元格，不得触发任何提交事件。",
+      "retainedState": "仅保留不含 T-200 业务数据的错误标识和当前组件边界。",
+      "recovery": "消费方丢弃错误快照并为 T-100 重新加载；组件收到匹配快照后恢复。",
+      "focusResult": "焦点进入租户不匹配错误摘要；恢复后进入矩阵标题。",
+      "oracle": "DOM、可访问树、事件和日志均不包含 T-200 的角色、资源或决策明细。"
+    },
+    {
+      "id": "policy-version-conflict",
+      "trigger": "以 expectedPolicyVersion=p12 提交时，服务端返回 VERSION_CONFLICT 并指出当前版本 p13。",
+      "blockedEffect": "不得把本地 changes 标记为已保存，不得用本地快照静默覆盖 p13。",
+      "retainedState": "本地 changes、原 p12 基线和活动单元格保留用于逐项比较。",
+      "recovery": "用户激活“重新加载并比较”，触发 onReloadRequested；消费方提供 p13 后按三元组显示冲突并重新确认。",
+      "focusResult": "焦点进入首个冲突单元格；无冲突时返回提交按钮。",
+      "oracle": "冲突前不产生成功提示或清空 changes；重新提交必须使用 p13 和新的 idempotencyKey。"
+    },
+    {
+      "id": "server-forbidden",
+      "trigger": "服务端对提交返回 FORBIDDEN，因为当前操作者无权编辑目标资源范围。",
+      "blockedEffect": "不得仅因 canEdit 曾返回 true 而重试写入，不得展示服务端敏感授权上下文。",
+      "retainedState": "本地 changes 保留为只读比较，不视为已保存。",
+      "recovery": "消费方重新获取当前操作者能力和权限快照；只有新 canEdit 允许后才能再次编辑。",
+      "focusResult": "焦点进入安全错误摘要；摘要提供返回矩阵只读视图入口。",
+      "oracle": "前端禁用不是授权依据；失败消息不暴露策略表达式、其他租户或隐藏资源。"
+    }
+  ],
+  "keyboardAndFocus": {
+    "model": "ARIA Grid，单一活动单元格使用 roving tabindex。",
+    "pattern": "ARIA Grid；一个活动单元格使用 roving tabindex。",
+    "keys": "方向键移动单元格；Home/End 移动行边界；Ctrl+Home/End 移动矩阵边界；Space/Enter 打开可编辑决策菜单；Escape 关闭并返回单元格。",
+    "focusRecovery": "版本冲突后进入首个冲突单元格；服务端拒绝后进入安全错误摘要。",
+    "virtualization": "虚拟化不得使活动单元格或冲突摘要引用不存在的节点。"
+  },
+  "accessibility": {
+    "semantics": "grid/row/columnheader/rowheader/gridcell；单元格名称包含角色、资源、动作、有效决策和来源。",
+    "roles": "grid/row/columnheader/rowheader/gridcell；单元格可访问名称包含角色、资源、动作、有效决策和来源。",
+    "announcements": "变更、冲突和服务端拒绝使用 polite live region；显式拒绝不能只用颜色表达。"
+  },
+  "visualAndResponsive": {
+    "desktop": "冻结角色与资源标识列；横向滚动保持表头对齐；显式、继承和冲突状态有文字或图标+文字。",
+    "mobile": "390px 使用可访问的单角色资源分组视图，但保持相同三元组身份和提交载荷，不把矩阵降为无来源开关列表。",
+    "states": ["ready", "dirty", "submitting", "conflict", "rejected", "tenantMismatch", "readOnly"],
+    "themes": ["default", "dark", "compact", "reduced-motion"]
+  },
+  "performance": {
+    "fixture": "100 个角色、1,000 个资源、8 个动作，逻辑 800,000 单元格；可视窗口不超过 200 单元格。",
+    "budget": "键盘移动和单元格决策反馈 p95 <= 100ms；滚动不得持续产生 >50ms 长任务；子路径 gzip 增量建议 <= 30KB。"
+  },
+  "security": {
+    "rules": ["服务端最终校验操作者、tenantId、资源范围、expectedPolicyVersion 和 idempotencyKey", "快照租户不匹配时 fail closed", "客户端 canEdit 只控制交互展示，不构成授权", "错误、DOM、事件和观测不得泄露越权资源"]
+  },
+  "compatibility": {
+    "legacy": "legacyId=permission-matrix；旧 data-action 只作迁移定位。",
+    "breakingSurfaces": ["决策优先级", "三元组身份", "tenantId 传播", "版本和幂等载荷", "键盘矩阵模型"]
+  },
+  "acceptanceOracles": [
+    { "id": "PM-01", "given": "继承 allow 且用户设置显式 deny", "when": "预览有效决策", "then": "结果为 deny，来源可读，其他动作不改变" },
+    { "id": "PM-02", "given": "tenantId 与 snapshot.tenantId 不一致", "when": "渲染", "then": "0 个资源明细进入 DOM/可访问树且 0 次提交事件可触发" },
+    { "id": "PM-03", "given": "p12 变更提交遇到当前 p13", "when": "服务端返回 VERSION_CONFLICT", "then": "变更保留、无成功提示、焦点进入首冲突且下一次提交使用 p13" },
+    { "id": "PM-04", "given": "前端 canEdit=true 但服务端返回 FORBIDDEN", "when": "处理拒绝", "then": "不自动重试、不标记成功、不泄露隐藏策略或资源" }
+  ],
+  "risk": {
+    "level": "R3",
+    "signals": ["permission", "multi-tenant", "sensitive-data"],
+    "rationale": "错误决策、跨租户快照或前端授权误判可造成越权和敏感数据泄露。",
+    "triggers": ["权限、多租户和敏感资源命中 R3，禁止降级或偏差发布。"],
+    "invariants": ["tenantId 端到端一致", "显式 deny 优先", "三元组身份唯一", "版本冲突不静默覆盖", "服务端最终裁决", "拒绝不泄露", "提交幂等"]
+  },
+  "sourceTrace": {
+    "catalog": "prototype-suite/catalog.browser.json#16:permission-matrix",
+    "preserved": ["Role x Resource x Action", "checks/inherited"],
+    "correctedFacts": ["旧摘要和主路径是复合组件模板，未定义租户、拒绝优先级、版本或服务端边界。"]
+  },
+  "openDecisions": [
+    { "id": "PM-D1", "question": "有效决策预览由服务端随快照提供，还是由共享策略求值 SDK 计算；若是 SDK，其版本绑定规则是什么？" },
+    { "id": "PM-D2", "question": "移动端单角色分组视图是否纳入首版，还是首版明确仅支持 >=1024px 的管理工作区？" }
+  ],
+  "approval": {
+    "status": "pending",
+    "authors": ["Codex"],
+    "requiredRoles": ["component-maintainer", "domain-security-reviewer", "ux-a11y-reviewer", "test-reviewer"],
+    "records": []
+  }
+}

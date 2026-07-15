@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "specificationVersion": "0.1.0",
+  "lifecycle": "ReviewReady",
+  "identity": {
+    "componentKey": "04:async-validation-form",
+    "legacyId": "async-validation-form",
+    "name": "异步校验表单",
+    "englishName": "Async Validation Form",
+    "category": "04",
+    "exportName": "AsyncValidationForm",
+    "packageSubpath": "@company/ui/async-validation-form"
+  },
+  "purpose": {
+    "job": "在不丢失输入的前提下完成字段级异步校验，并只提交与最新字段值和记录版本一致的表单快照。",
+    "success": "旧校验响应不能覆盖新值；未完成或失败的必需校验阻止提交；用户可定位错误并保留草稿恢复。"
+  },
+  "boundaries": {
+    "inScope": ["字段值与脏状态", "同步和异步校验", "乱序响应隔离", "提交准入", "错误定位与恢复"],
+    "outOfScope": ["服务端业务规则实现", "持久化事务", "权限裁决", "跨页面草稿仓库"]
+  },
+  "dataContract": {
+    "field": "{ id: string; label: string; required?: boolean; validateOn?: 'blur' | 'change' | 'submit' }",
+    "validationRequest": "{ formId: string; fieldId: string; value: unknown; valueRevision: number; signal: AbortSignal }",
+    "validationResult": "{ fieldId: string; valueRevision: number; status: 'valid' | 'invalid'; message?: string; code?: string }",
+    "identity": "formId、field.id 和 recordVersion 稳定；每次字段值变化递增 valueRevision。",
+    "constraints": ["校验结果只可应用到相同 fieldId 和 valueRevision", "提交快照包含 recordVersion", "字段错误不得以数组索引关联"]
+  },
+  "publicApi": {
+    "status": "proposed",
+    "props": [
+      { "name": "formId", "type": "string", "required": true },
+      { "name": "fields", "type": "readonly AsyncFormField[]", "required": true },
+      { "name": "value", "type": "Readonly<Record<string, unknown>>", "required": true },
+      { "name": "recordVersion", "type": "string", "required": true },
+      { "name": "validateField", "type": "(request: FieldValidationRequest) => Promise<FieldValidationResult>", "required": true },
+      { "name": "disabled", "type": "boolean", "required": false, "default": false },
+      { "name": "submitLabel", "type": "string", "required": false, "default": "提交" }
+    ],
+    "events": [
+      { "name": "onValueChange", "payload": "{ fieldId: string; value: unknown; nextValue: Readonly<Record<string, unknown>> }" },
+      { "name": "onSubmitRequested", "payload": "{ formId: string; value: Readonly<Record<string, unknown>>; recordVersion: string }" },
+      { "name": "onValidationStateChange", "payload": "{ fieldId: string; status: ValidationStatus; valueRevision: number }" }
+    ],
+    "refMethods": ["focusField(fieldId: string): void", "focusFirstInvalid(): void", "validateAll(): Promise<ValidationSummary>"],
+    "controlledState": {
+      "rule": "value 和 recordVersion 始终由消费方控制；组件只维护与当前 valueRevision 绑定的短期校验状态，不复制持久草稿。"
+    }
+  },
+  "stateMachine": {
+    "states": ["pristine", "dirty", "validating", "invalid", "valid", "submitting", "submitRejected"],
+    "initialState": "pristine",
+    "transitions": [
+      { "from": "pristine|dirty|invalid|valid", "event": "FIELD_CHANGE", "to": "dirty" },
+      { "from": "dirty", "event": "VALIDATION_START", "to": "validating" },
+      { "from": "validating", "event": "LATEST_VALIDATION_VALID", "to": "valid" },
+      { "from": "validating", "event": "LATEST_VALIDATION_INVALID", "to": "invalid" },
+      { "from": "valid", "event": "SUBMIT", "to": "submitting" },
+      { "from": "submitting", "event": "SERVER_REJECT", "to": "submitRejected" },
+      { "from": "submitRejected", "event": "FIELD_CHANGE_OR_RELOAD", "to": "dirty" }
+    ]
+  },
+  "primaryFlow": {
+    "id": "validate-latest-value-and-submit",
+    "steps": [
+      {
+        "actor": "销售代表",
+        "precondition": "客户编码字段值为 XH-01，valueRevision=3，字段配置 validateOn=blur。",
+        "control": "客户编码输入框",
+        "action": "按 Tab 移出输入框触发异步校验。",
+        "stateTransition": "dirty -> validating -> valid。",
+        "observable": "validateField 收到 fieldId=customerCode、value=XH-01、valueRevision=3；成功后错误关联被清除。",
+        "oracle": "只有返回 valueRevision=3 的结果可改变该字段状态，焦点保持在下一个业务字段。"
+      },
+      {
+        "actor": "销售代表",
+        "precondition": "所有必需字段的最新 revision 均已 valid，recordVersion=v7。",
+        "control": "提交按钮",
+        "action": "按 Enter 请求提交。",
+        "stateTransition": "valid -> submitting。",
+        "observable": "onSubmitRequested 仅触发一次，payload 含完整 value 快照和 recordVersion=v7；提交按钮进入忙碌态。",
+        "oracle": "不存在 pending/invalid 校验时才发出提交事件；组件不自行持久化数据。"
+      }
+    ]
+  },
+  "exceptionFlows": [
+    {
+      "id": "stale-validation-response",
+      "trigger": "revision=3 的请求尚未返回时用户把值改为 XH-02 产生 revision=4，随后 revision=3 后返回 invalid。",
+      "blockedEffect": "不得把 revision=3 的错误显示在 XH-02 上，不得把 revision=4 标记为 valid 或 invalid。",
+      "retainedState": "最新值 XH-02、脏状态、其他字段值和焦点位置保留。",
+      "recovery": "中止旧请求；等待或重试 revision=4 的校验。",
+      "focusResult": "焦点不因过期响应被抢走；若 revision=4 最终无效，提交时才聚焦该字段。",
+      "oracle": "过期结果被丢弃且不触发可见错误；onValidationStateChange 不把 revision=3 报为当前结果。"
+    },
+    {
+      "id": "validation-service-unavailable",
+      "trigger": "最新 revision 的 validateField 以可重试 NETWORK_ERROR 拒绝。",
+      "blockedEffect": "不得把服务不可用解释为字段有效，不得发出 onSubmitRequested。",
+      "retainedState": "全部输入、recordVersion、脏状态和已完成校验结果保留。",
+      "recovery": "用户在字段错误说明中的“重试校验”按钮上按 Enter，以相同最新值和新请求重新校验。",
+      "focusResult": "失败后焦点到达字段关联的重试按钮；重试成功后返回原字段或下一个业务字段。",
+      "oracle": "错误明确区分业务无效与服务不可用；重试不重复变更 value。"
+    }
+  ],
+  "keyboardAndFocus": {
+    "model": "原生表单 Tab 顺序，错误摘要和字段错误形成可返回的焦点路径。",
+    "keys": "Tab 按业务顺序移动；Enter 在准入满足时提交；Esc 不清空输入。",
+    "focusRecovery": "提交被阻止时进入首个无效字段；服务重试成功后返回原字段或下一个业务字段。",
+    "order": "Tab 按 DOM 与业务顺序移动；Enter 仅在非多行字段且准入满足时提交；Esc 不清空输入。",
+    "errors": "提交被阻止时聚焦首个 invalid 或 validation-error 字段；错误摘要提供返回字段链接。",
+    "busy": "校验期间字段仍可编辑；提交期间只阻止重复提交，不锁死读取和取消入口。"
+  },
+  "accessibility": {
+    "semantics": "原生 form、label 与控件；错误通过 aria-describedby 关联；无效字段使用 aria-invalid=true。",
+    "pattern": "原生 form、label 与控件；错误通过 aria-describedby 关联；invalid 使用 aria-invalid=true。",
+    "announcements": "校验中不逐键播报；最新校验失败和服务错误使用 polite live region；提交阻止摘要聚焦后可读。"
+  },
+  "visualAndResponsive": {
+    "desktop": "错误文本不遮挡相邻字段；校验图标占用稳定宽度，状态变化不移动输入框。",
+    "mobile": "390px 单列排列，错误和重试入口紧随字段；底部提交栏不得遮挡最后一个字段。",
+    "states": ["pristine", "dirty", "validating", "invalid", "valid", "submitting", "submitRejected"],
+    "themes": ["default", "dark", "compact", "reduced-motion"]
+  },
+  "performance": {
+    "fixture": "200 字段、10 个异步校验字段；每个校验延迟 50-1500ms 并包含乱序返回。",
+    "budget": "单字段输入到可见值 p95 <= 100ms；一次字段变化不得无界重渲染全部 200 字段；子路径 gzip 增量建议 <= 18KB。"
+  },
+  "security": {
+    "rules": ["错误消息不得原样展示服务端堆栈或敏感响应", "组件不把客户端校验声明为服务端业务校验", "中止信号不能替代服务端幂等和版本校验"]
+  },
+  "compatibility": {
+    "legacy": "legacyId=async-validation-form；旧 data-async-check 只作迁移定位，不是公开 API。",
+    "breakingSurfaces": ["字段身份", "revision 语义", "校验触发时机", "提交事件载荷", "错误与焦点顺序"]
+  },
+  "acceptanceOracles": [
+    { "id": "AVF-01", "given": "revision=3 和 revision=4 并发校验", "when": "revision=3 最后返回 invalid", "then": "当前值和错误不变，只有 revision=4 可决定最终状态" },
+    { "id": "AVF-02", "given": "最新必需校验返回 NETWORK_ERROR", "when": "激活提交", "then": "提交事件为 0 次，输入保留且首个阻断字段存在可聚焦重试入口" },
+    { "id": "AVF-03", "given": "全部最新校验 valid 且 recordVersion=v7", "when": "连续两次激活提交", "then": "忙碌态期间 onSubmitRequested 只触发一次且 payload 版本为 v7" }
+  ],
+  "risk": {
+    "level": "R2",
+    "signals": ["data-integrity", "async-state", "persistent-business-state"],
+    "rationale": "异步乱序、重复提交或错误恢复失败会造成工作丢失或错误业务提交，但最终持久化和版本裁决由服务端负责。",
+    "triggers": ["若字段包含金额、订单、审批签名、权限或其他关键业务写入，按消费场景升级 R3。"],
+    "invariants": ["最新 revision 胜出", "未知校验状态不得视为有效", "提交快照与 recordVersion 一致", "失败和重试不丢输入", "忙碌态阻止重复提交"]
+  },
+  "sourceTrace": {
+    "catalog": "prototype-suite/catalog.browser.json#04:async-validation-form",
+    "preserved": ["FieldValue -> Async<Result>", "validating/errors", "脏数据不得静默丢失"],
+    "correctedFacts": ["旧主路径以统一 readiness 动作为首步，不能证明异步校验乱序和提交准入。"]
+  },
+  "openDecisions": [
+    { "id": "AVF-D1", "question": "首版是否允许 validateOn=change，若允许，默认防抖时长和输入法组合事件语义是什么？" },
+    { "id": "AVF-D2", "question": "提交成功和服务端字段错误由本组件 API 接收，还是由上层表单控制器统一映射？" }
+  ],
+  "approval": {
+    "status": "pending",
+    "authors": ["Codex"],
+    "requiredRoles": ["component-maintainer", "domain-security-reviewer", "ux-a11y-reviewer", "test-reviewer"],
+    "records": []
+  }
+}

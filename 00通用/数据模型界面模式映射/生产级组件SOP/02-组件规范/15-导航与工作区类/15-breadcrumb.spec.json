@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "specificationVersion": "0.1.0",
+  "lifecycle": "ReviewReady",
+  "identity": {
+    "componentKey": "15:breadcrumb",
+    "legacyId": "breadcrumb",
+    "name": "面包屑导航",
+    "englishName": "Breadcrumb",
+    "category": "15",
+    "exportName": "Breadcrumb",
+    "packageSubpath": "@company/ui/breadcrumb"
+  },
+  "purpose": {
+    "job": "展示当前页面在信息层级中的位置，并允许用户返回可访问的祖先层级。",
+    "success": "当前位置唯一且不可点击；可访问祖先可导航；溢出收起不改变层级顺序。"
+  },
+  "boundaries": {
+    "inScope": ["层级位置", "祖先导航", "中间项溢出", "当前项语义"],
+    "outOfScope": ["浏览器历史记录", "步骤流程", "标签页切换", "权限计算"]
+  },
+  "dataContract": {
+    "item": "{ id: string; label: ReactNode; href?: string; disabled?: boolean; current?: boolean }",
+    "identity": "id 在一次渲染及更新间稳定；不得以 label 作为身份。",
+    "constraints": ["恰有一个 current=true", "current 项必须是最后一个逻辑层级", "disabled 项不得导航"]
+  },
+  "publicApi": {
+    "status": "proposed",
+    "props": [
+      { "name": "items", "type": "readonly BreadcrumbItem[]", "required": true },
+      { "name": "maxVisibleItems", "type": "number", "required": false, "default": 4 },
+      { "name": "separator", "type": "ReactNode", "required": false },
+      { "name": "ariaLabel", "type": "string", "required": false, "default": "Breadcrumb" }
+    ],
+    "events": [
+      { "name": "onNavigate", "payload": "{ id: string; href?: string; originalEvent: MouseEvent | KeyboardEvent }", "cancelable": true }
+    ],
+    "refMethods": ["focusCurrent(): void"],
+    "controlledState": { "mode": "stateless", "source": "items" }
+  },
+  "stateMachine": {
+    "states": ["expanded", "collapsed", "overflowOpen", "navigationBlocked"],
+    "initialState": "items.length > maxVisibleItems ? collapsed : expanded",
+    "transitions": [
+      { "from": "collapsed", "event": "OPEN_OVERFLOW", "to": "overflowOpen" },
+      { "from": "overflowOpen", "event": "ESCAPE_OR_OUTSIDE", "to": "collapsed" },
+      { "from": "expanded|collapsed|overflowOpen", "event": "NAVIGATE_CANCELED", "to": "navigationBlocked" },
+      { "from": "navigationBlocked", "event": "FOCUS_OR_CHANGE", "to": "expanded|collapsed" }
+    ]
+  },
+  "primaryFlow": {
+    "id": "return-to-orders",
+    "steps": [
+      {
+        "actor": "销售代表",
+        "precondition": "items 为 工作台 > 订单 > SO-20260714-018，订单项 current=true。",
+        "control": "名称为“订单”的祖先链接",
+        "action": "使用 Tab 聚焦“订单”，按 Enter。",
+        "stateTransition": "expanded -> expanded；组件发出 NAVIGATE_REQUEST。",
+        "observable": "onNavigate 仅触发一次，payload.id=orders，payload.href=/orders。",
+        "oracle": "当前项仍带 aria-current=page；若事件未被取消，浏览器导航交给消费方。"
+      },
+      {
+        "actor": "销售代表",
+        "precondition": "消费方完成 /orders 导航并传入新 items。",
+        "control": "面包屑导航区域",
+        "action": "读取更新后的层级。",
+        "stateTransition": "items source update -> expanded。",
+        "observable": "“订单”成为最后一项且不可点击。",
+        "oracle": "nav 的 aria-label 为配置值；“订单”元素具有 aria-current=page 且没有 href。"
+      }
+    ]
+  },
+  "exceptionFlows": [
+    {
+      "id": "navigation-canceled",
+      "trigger": "消费方在 onNavigate 中 preventDefault，因为当前订单存在未保存修改。",
+      "blockedEffect": "不得改变 URL，不得修改 current 项，不得关闭或清除业务草稿。",
+      "retainedState": "items、当前项和触发链接焦点保持不变。",
+      "recovery": "用户处理未保存修改后再次激活同一祖先链接。",
+      "focusResult": "焦点留在被取消的祖先链接；取消原因由消费方关联提示。",
+      "oracle": "一次取消只产生一次 onNavigate；组件不自行执行 window.location。"
+    },
+    {
+      "id": "disabled-ancestor",
+      "trigger": "祖先项 disabled=true。",
+      "blockedEffect": "不得触发 onNavigate，也不得暴露可执行 href。",
+      "retainedState": "层级和 current 项不变。",
+      "recovery": "消费方更新 items 解除 disabled 后可再次导航。",
+      "focusResult": "禁用项不进入 Tab 顺序，但仍以文本展示层级。",
+      "oracle": "鼠标与键盘均不能触发导航事件。"
+    }
+  ],
+  "keyboardAndFocus": {
+    "model": "只有可导航祖先和溢出按钮进入顺序焦点；当前位置只读。",
+    "keys": "Tab 定位链接和溢出按钮；Enter 激活链接；Enter/Space 打开溢出；Escape 关闭。",
+    "focusRecovery": "关闭溢出后返回溢出按钮；导航被取消时保留触发链接焦点。",
+    "tab": "只有可导航祖先和溢出按钮进入 Tab 顺序；current 与 disabled 项不进入。",
+    "enterSpace": "Enter 激活链接；溢出按钮支持 Enter/Space。",
+    "escape": "关闭溢出菜单并将焦点返回溢出按钮。"
+  },
+  "accessibility": {
+    "semantics": "nav[aria-label] > ol；当前位置使用 aria-current=page。",
+    "pattern": "nav[aria-label] > ol；当前项 aria-current=page。",
+    "announcements": "导航层级变化依赖路由页面标题，不使用 assertive live region。"
+  },
+  "visualAndResponsive": {
+    "desktop": "按逻辑顺序展示；超过 maxVisibleItems 时只折叠中间项。",
+    "mobile": "390px 下保留第一项、最后一项和溢出按钮；label 单行省略但完整名称可访问。",
+    "stableDimensions": "分隔符和溢出按钮不因 hover/focus 改变布局。",
+    "states": ["expanded", "collapsed", "overflowOpen", "navigationBlocked"],
+    "themes": ["default", "dark", "compact", "reduced-motion"]
+  },
+  "performance": {
+    "fixture": "100 个层级项，maxVisibleItems=4。",
+    "budget": "items 更新到可见结果 p95 <= 100ms；子路径 gzip 增量 <= 4KB。"
+  },
+  "security": {
+    "rules": ["不执行 label 中的不受信 HTML", "href 由消费方路由层校验", "组件不推断权限"]
+  },
+  "compatibility": {
+    "legacy": "保留 legacyId breadcrumb；旧 HTML hash 仅用于迁移映射。",
+    "breakingSurfaces": ["item identity", "current semantics", "keyboard order", "onNavigate payload"]
+  },
+  "acceptanceOracles": [
+    { "id": "BC-01", "given": "3 项且末项 current=true", "when": "渲染", "then": "只有末项 aria-current=page，前两项为可导航链接" },
+    { "id": "BC-02", "given": "6 项且 maxVisibleItems=4", "when": "打开溢出", "then": "中间隐藏项按原顺序显示，Escape 后焦点返回溢出按钮" },
+    { "id": "BC-03", "given": "onNavigate 取消事件", "when": "激活祖先链接", "then": "URL、current、草稿和焦点均不变化" }
+  ],
+  "risk": {
+    "level": "R1",
+    "signals": ["local-view", "navigation-context"],
+    "rationale": "默认只表达位置并请求导航，不持久化业务状态。",
+    "triggers": ["若组件自行保存工作区、执行命令或包含权限过滤，升级 R2/R3。"],
+    "invariants": ["逻辑层级顺序不变", "恰有一个 current", "取消导航无副作用"]
+  },
+  "sourceTrace": {
+    "catalog": "prototype-suite/catalog.browser.json#15:breadcrumb",
+    "correctedFacts": ["旧摘要、边界和主路径为通用模板，本规范不继承其组件语义。"]
+  },
+  "openDecisions": [
+    { "id": "BC-D1", "question": "公共包是否允许 ReactNode label，还是只接受 string 以增强序列化能力？" }
+  ],
+  "approval": {
+    "status": "pending",
+    "authors": ["Codex"],
+    "requiredRoles": ["component-maintainer", "ux-a11y-reviewer"],
+    "records": []
+  }
+}

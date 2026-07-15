@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "component-spec.schema.json",
+  "title": "React Production Component Specification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "specificationVersion",
+    "lifecycle",
+    "identity",
+    "purpose",
+    "boundaries",
+    "dataContract",
+    "publicApi",
+    "stateMachine",
+    "primaryFlow",
+    "exceptionFlows",
+    "keyboardAndFocus",
+    "accessibility",
+    "visualAndResponsive",
+    "performance",
+    "security",
+    "compatibility",
+    "acceptanceOracles",
+    "risk",
+    "sourceTrace",
+    "openDecisions",
+    "approval"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "specificationVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "lifecycle": { "enum": ["Draft", "ReviewReady", "ImplementationReady"] },
+    "identity": {
+      "type": "object",
+      "required": ["componentKey", "legacyId", "name", "englishName", "category", "exportName", "packageSubpath"],
+      "properties": {
+        "componentKey": { "type": "string", "pattern": "^(0[1-9]|1[5-8]):[a-z0-9-]+$" },
+        "legacyId": { "type": "string" },
+        "name": { "type": "string", "minLength": 1 },
+        "englishName": { "type": "string", "minLength": 1 },
+        "category": { "type": "string", "pattern": "^(0[1-9]|1[5-8])$" },
+        "exportName": { "type": "string", "minLength": 1 },
+        "packageSubpath": { "type": "string", "pattern": "^@company/ui/[a-z0-9-]+$" }
+      }
+    },
+    "purpose": { "type": "object" },
+    "boundaries": { "type": "object" },
+    "dataContract": { "type": "object" },
+    "publicApi": {
+      "type": "object",
+      "required": ["status", "props", "events", "refMethods", "controlledState"],
+      "properties": {
+        "status": { "enum": ["proposed", "frozen"] },
+        "props": { "type": "array", "minItems": 1 },
+        "events": { "type": "array" },
+        "refMethods": { "type": "array" },
+        "controlledState": { "type": "object" }
+      }
+    },
+    "stateMachine": {
+      "type": "object",
+      "required": ["states", "initialState", "transitions"],
+      "properties": {
+        "states": { "type": "array", "minItems": 2, "items": { "type": "string" } },
+        "initialState": { "type": "string" },
+        "transitions": { "type": "array", "minItems": 1 }
+      }
+    },
+    "primaryFlow": {
+      "type": "object",
+      "required": ["id", "steps"],
+      "properties": {
+        "id": { "type": "string" },
+        "steps": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["actor", "precondition", "control", "action", "stateTransition", "observable", "oracle"]
+          }
+        }
+      }
+    },
+    "exceptionFlows": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "trigger", "blockedEffect", "retainedState", "recovery", "focusResult", "oracle"]
+      }
+    },
+    "keyboardAndFocus": {
+      "type": "object",
+      "required": ["model", "keys", "focusRecovery"],
+      "properties": {
+        "model": { "type": "string", "minLength": 1 },
+        "keys": { "type": "string", "minLength": 1 },
+        "focusRecovery": { "type": "string", "minLength": 1 }
+      }
+    },
+    "accessibility": {
+      "type": "object",
+      "required": ["semantics", "announcements"],
+      "properties": {
+        "semantics": { "type": "string", "minLength": 1 },
+        "announcements": { "type": "string", "minLength": 1 }
+      }
+    },
+    "visualAndResponsive": {
+      "type": "object",
+      "required": ["desktop", "mobile", "states", "themes"],
+      "properties": {
+        "desktop": { "type": "string", "minLength": 1 },
+        "mobile": { "type": "string", "minLength": 1 },
+        "states": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "themes": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "performance": {
+      "type": "object",
+      "required": ["fixture", "budget"],
+      "properties": {
+        "fixture": { "type": "string", "minLength": 1 },
+        "budget": { "type": "string", "minLength": 1 }
+      }
+    },
+    "security": {
+      "type": "object",
+      "required": ["rules"],
+      "properties": { "rules": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } } }
+    },
+    "compatibility": {
+      "type": "object",
+      "required": ["legacy", "breakingSurfaces"],
+      "properties": {
+        "legacy": { "type": "string", "minLength": 1 },
+        "breakingSurfaces": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "acceptanceOracles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "given", "when", "then"]
+      }
+    },
+    "risk": {
+      "type": "object",
+      "required": ["level", "signals", "rationale", "triggers", "invariants"],
+      "properties": {
+        "level": { "enum": ["R1", "R2", "R3"] },
+        "signals": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["local-view", "navigation-context", "data-integrity", "async-state", "persistent-business-state", "large-data", "permission", "identity", "multi-tenant", "sensitive-data", "money", "inventory", "order", "payment", "invoice", "settlement", "irreversible", "cross-system"]
+          }
+        },
+        "rationale": { "type": "string", "minLength": 1 },
+        "triggers": { "type": "array", "minItems": 1 },
+        "invariants": { "type": "array", "minItems": 1 }
+      }
+    },
+    "sourceTrace": {
+      "type": "object",
+      "required": ["catalog", "correctedFacts"],
+      "properties": {
+        "catalog": { "type": "string", "minLength": 1 },
+        "correctedFacts": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "openDecisions": { "type": "array" },
+    "approval": {
+      "type": "object",
+      "required": ["status", "authors", "requiredRoles", "records"],
+      "properties": {
+        "status": { "enum": ["pending", "approved", "rejected"] },
+        "authors": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "requiredRoles": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["component-maintainer", "ux-a11y-reviewer", "test-reviewer", "domain-security-reviewer"] } },
+        "records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["role", "reviewer", "status", "approvedAt", "specificationRevision"],
+            "properties": {
+              "role": { "enum": ["component-maintainer", "ux-a11y-reviewer", "test-reviewer", "domain-security-reviewer"] },
+              "reviewer": { "type": "string", "minLength": 1 },
+              "status": { "const": "approved" },
+              "approvedAt": { "type": "string", "format": "date-time" },
+              "specificationRevision": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    }
+  }
+}
