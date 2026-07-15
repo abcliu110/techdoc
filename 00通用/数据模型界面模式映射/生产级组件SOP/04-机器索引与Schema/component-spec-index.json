@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "generatedFrom": "prototype-suite/catalog.browser.json + reviewed component specifications",
   "catalogComponents": 309,
   "components": [
@@ -307,13 +307,14 @@
       "componentKey": "02:data-grid",
       "name": "数据表格",
       "category": "02",
-      "specificationVersion": "0.1.0",
+      "specificationVersion": "0.2.0",
       "specificationStatus": "ReviewReady",
       "implementationAllowed": false,
       "specPath": "02-组件规范/02-表格类/02-data-grid.spec.json",
+      "implementationSopPath": "03-生产SOP/组件实施SOP/02-data-grid.implementation-sop.md",
       "blockers": [
-        "DG-D1: 首版是否同时支持 client/server/virtual 三种模式，还是先拆为 DataGrid 与 VirtualDataGrid？",
-        "DG-D2: gzip 增量 35KB 是否符合私有包整体预算？"
+        "公开 API 尚未冻结",
+        "规定角色审批尚未完成"
       ]
     },
     {
@@ -1140,9 +1141,13 @@
       "specificationStatus": "ReviewReady",
       "implementationAllowed": false,
       "specPath": "02-组件规范/04-表单与数据录入类/04-async-validation-form.spec.json",
+      "implementationSopPath": null,
       "blockers": [
         "AVF-D1: 首版是否允许 validateOn=change，若允许，默认防抖时长和输入法组合事件语义是什么？",
-        "AVF-D2: 提交成功和服务端字段错误由本组件 API 接收，还是由上层表单控制器统一映射？"
+        "AVF-D2: 提交成功和服务端字段错误由本组件 API 接收，还是由上层表单控制器统一映射？",
+        "公开 API 尚未冻结",
+        "规定角色审批尚未完成",
+        "缺少与组件 key 对应的组件实施 SOP"
       ]
     },
     {
@@ -2689,8 +2694,12 @@
       "specificationStatus": "ReviewReady",
       "implementationAllowed": false,
       "specPath": "02-组件规范/15-导航与工作区类/15-breadcrumb.spec.json",
+      "implementationSopPath": null,
       "blockers": [
-        "BC-D1: 公共包是否允许 ReactNode label，还是只接受 string 以增强序列化能力？"
+        "BC-D1: 公共包是否允许 ReactNode label，还是只接受 string 以增强序列化能力？",
+        "公开 API 尚未冻结",
+        "规定角色审批尚未完成",
+        "缺少与组件 key 对应的组件实施 SOP"
       ]
     },
     {
@@ -2881,9 +2890,13 @@
       "specificationStatus": "ReviewReady",
       "implementationAllowed": false,
       "specPath": "02-组件规范/16-权限与组织管理类/16-permission-matrix.spec.json",
+      "implementationSopPath": null,
       "blockers": [
         "PM-D1: 有效决策预览由服务端随快照提供，还是由共享策略求值 SDK 计算；若是 SDK，其版本绑定规则是什么？",
-        "PM-D2: 移动端单角色分组视图是否纳入首版，还是首版明确仅支持 >=1024px 的管理工作区？"
+        "PM-D2: 移动端单角色分组视图是否纳入首版，还是首版明确仅支持 >=1024px 的管理工作区？",
+        "公开 API 尚未冻结",
+        "规定角色审批尚未完成",
+        "缺少与组件 key 对应的组件实施 SOP"
       ]
     },
     {
@@ -3410,10 +3423,14 @@
       "specificationStatus": "ReviewReady",
       "implementationAllowed": false,
       "specPath": "02-组件规范/18-业务领域复合组件/18-stock-allocation.spec.json",
+      "implementationSopPath": null,
       "blockers": [
         "SA-D1: 首版是否允许部分分配提交，还是必须 sum(allocations)=requiredQuantity 才能提交？",
         "SA-D2: 部分成功后的默认业务策略是补偿成功项还是保留成功项并继续满足缺口？该策略必须由哪个服务契约返回？",
-        "SA-D3: DecimalString 的最大精度、小数位和单位换算边界由哪个领域规范冻结？"
+        "SA-D3: DecimalString 的最大精度、小数位和单位换算边界由哪个领域规范冻结？",
+        "公开 API 尚未冻结",
+        "规定角色审批尚未完成",
+        "缺少与组件 key 对应的组件实施 SOP"
       ]
     },
     {

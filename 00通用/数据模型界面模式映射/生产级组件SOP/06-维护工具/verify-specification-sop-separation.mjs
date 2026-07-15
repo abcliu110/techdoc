@@ -44,6 +44,49 @@ export function writesComponentSpecifications(source) {
   return /(?:writeFileSync|appendFileSync|renameSync|copyFileSync)\s*\([\s\S]{0,500}?02-组件规范/u.test(source);
 }
 
+export function classifyProductionSops(paths, catalogKeys) {
+  const general = [];
+  const component = [];
+  const mappedComponents = new Set();
+
+  for (const path of paths.map((value) => value.replaceAll("\\", "/"))) {
+    if (path === "03-生产SOP/README.md") continue;
+
+    const match = path.match(/^03-生产SOP\/组件实施SOP\/((0[1-9]|1[5-8])-([a-z0-9-]+))\.implementation-sop\.md$/);
+    if (match) {
+      const componentKey = `${match[2]}:${match[3]}`;
+      assert.ok(catalogKeys.has(componentKey), `Component implementation SOP does not map to a catalog component: ${path}`);
+      assert.ok(!mappedComponents.has(componentKey), `Duplicate component implementation SOP: ${componentKey}`);
+      mappedComponents.add(componentKey);
+      component.push(path);
+      continue;
+    }
+
+    assert.ok(!path.startsWith("03-生产SOP/组件实施SOP/"), `Invalid component implementation SOP name: ${path}`);
+    general.push(path);
+  }
+
+  assert.equal(general.length, 1, "There must be exactly one general production SOP");
+  return { general, component };
+}
+
+export function findMissingImplementationSops(indexEntries, mappedComponentKeys) {
+  return indexEntries
+    .filter((entry) => entry.specificationStatus === "ImplementationReady" && !mappedComponentKeys.has(entry.componentKey))
+    .map((entry) => entry.componentKey);
+}
+
+export function validateComponentImplementationSop(markdown, componentKey) {
+  const specificationId = componentKey.replace(":", "-");
+  assert.match(markdown, /> SOP 版本：\s*[0-9]+\.[0-9]+\.[0-9]+/, `${componentKey} implementation SOP requires an SOP version`);
+  assert.ok(markdown.includes(`对应组件：\`${componentKey}\``), `${componentKey} implementation SOP must declare its component key`);
+  assert.match(markdown, new RegExp(`对应规范：\\[[^\\]]+\\]\\([^)]+${specificationId}\\.spec\\.json\\)`), `${componentKey} implementation SOP must link its own component specification`);
+  assert.match(markdown, /上位总流程：\[[^\]]+\]\([^)]+React组件生产交付SOP\.md\)/, `${componentKey} implementation SOP must link the general SOP`);
+  for (const section of ["执行输入", "不变量", "RED", "GREEN", "停止条件", "执行记录"]) {
+    assert.match(markdown, new RegExp(`^#{1,6} .*${section}.*$`, "m"), `${componentKey} implementation SOP requires section: ${section}`);
+  }
+}
+
 export function verifySeparation() {
   for (const directory of expectedDirectories) {
     assert.ok(existsSync(join(root, directory)), `Missing separated responsibility directory: ${directory}`);
@@ -55,7 +98,7 @@ export function verifySeparation() {
   assert.ok(existsSync(indexPath), `Missing component specification index: ${indexPath}`);
   const index = JSON.parse(readFileSync(indexPath, "utf8"));
 
-  assert.equal(index.schemaVersion, 2);
+  assert.equal(index.schemaVersion, 3);
   assert.equal(index.catalogComponents, 309);
   assert.equal(index.components.length, 309);
   assert.deepEqual(index.components.map((entry) => entry.componentKey).sort(), catalogKeys.sort(), "Specification index must exactly cover the catalog");
@@ -65,6 +108,7 @@ export function verifySeparation() {
   for (const entry of index.components) {
     assert.ok(allowedStatuses.has(entry.specificationStatus), `${entry.componentKey} has invalid status`);
     assert.equal(typeof entry.implementationAllowed, "boolean");
+    assert.ok(entry.implementationSopPath === undefined || entry.implementationSopPath === null || typeof entry.implementationSopPath === "string", `${entry.componentKey} has invalid implementation SOP path`);
     assert.equal(entry.implementationAllowed, entry.specificationStatus === "ImplementationReady");
     if (entry.specificationStatus === "Backlog") {
       assert.equal(entry.specPath, null, `${entry.componentKey} backlog must not pretend to have a specification`);
@@ -75,6 +119,9 @@ export function verifySeparation() {
     assert.ok(!paths.has(entry.specPath), `Duplicate specification path: ${entry.specPath}`);
     paths.add(entry.specPath);
     assert.ok(existsSync(join(root, ...entry.specPath.split("/"))), `Missing specification: ${entry.specPath}`);
+    if (entry.implementationSopPath) {
+      assert.ok(existsSync(join(root, ...entry.implementationSopPath.split("/"))), `Missing implementation SOP: ${entry.implementationSopPath}`);
+    }
   }
 
   const actualSpecPaths = new Set(
@@ -83,9 +130,20 @@ export function verifySeparation() {
   );
   assert.deepEqual([...actualSpecPaths].sort(), [...paths].sort(), "Every component specification must be indexed exactly once");
 
-  const productionSops = readdirSync(join(root, "03-生产SOP"), { withFileTypes: true })
-    .filter((entry) => entry.isFile() && entry.name.endsWith(".md"));
-  assert.equal(productionSops.length, 1, "There must be exactly one production SOP");
+  const productionSopPaths = findFiles(join(root, "03-生产SOP"), (path) => path.endsWith(".md"))
+    .map((path) => relative(root, path).replaceAll("\\", "/"));
+  const productionSops = classifyProductionSops(productionSopPaths, new Set(catalogKeys));
+  const implementationSopKeys = new Set(productionSops.component.map((path) => {
+    const match = path.match(/\/((0[1-9]|1[5-8])-([a-z0-9-]+))\.implementation-sop\.md$/);
+    const componentKey = `${match[2]}:${match[3]}`;
+    validateComponentImplementationSop(readFileSync(join(root, ...path.split("/")), "utf8"), componentKey);
+    return componentKey;
+  }));
+  assert.deepEqual(
+    findMissingImplementationSops(index.components, implementationSopKeys),
+    [],
+    "Every ImplementationReady component requires a component implementation SOP",
+  );
 
   const categorySpecifications = readdirSync(join(root, "01-类别规范"), { withFileTypes: true })
     .filter((entry) => entry.isFile() && entry.name.endsWith(".md"));
@@ -120,7 +178,8 @@ export function verifySeparation() {
     brokenLinks: brokenLinks.length,
     destructiveGenerators: destructiveGenerators.length,
     categorySpecifications: categorySpecifications.length,
-    productionSops: productionSops.length,
+    generalProductionSops: productionSops.general.length,
+    componentImplementationSops: productionSops.component.length,
   };
 }
 

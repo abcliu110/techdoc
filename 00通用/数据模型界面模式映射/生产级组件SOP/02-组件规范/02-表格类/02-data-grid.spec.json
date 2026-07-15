@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "specificationVersion": "0.1.0",
+  "specificationVersion": "0.2.0",
   "lifecycle": "ReviewReady",
   "identity": {
     "componentKey": "02:data-grid",
@@ -16,46 +16,52 @@
     "success": "用户可定位行列、排序、筛选和选择；任何数据变化都不造成选择错位或编辑静默丢失。"
   },
   "boundaries": {
-    "inScope": ["展示", "排序", "筛选", "选择", "分页/虚拟窗口", "加载/空/错误"],
-    "outOfScope": ["单元格编辑事务", "公式计算", "透视聚合", "服务端查询实现"]
+    "inScope": ["展示", "排序", "筛选", "行选择", "本地/远程分页", "固定表头与列", "列宽调整", "加载/空/错误"],
+    "outOfScope": ["单元格编辑事务", "批量编辑", "区域复制粘贴", "虚拟滚动", "无限加载", "树形层级", "公式计算", "透视/OLAP", "服务端查询实现"]
   },
   "dataContract": {
     "row": "泛型 TRow；必须由 getRowId(row) 返回稳定 string。",
-    "column": "{ id; header; accessor; cell; sortable?; width?; minWidth?; maxWidth? }",
+    "column": "自有 DataGridColumn<TRow, TValue>；显式稳定 id，包含 header、accessor、cell、sortable、filter、width、minWidth、maxWidth 和 pinning 能力；不得暴露 TanStack ColumnDef。",
+    "dataSource": "自有 DataGridDataSource<TRow> 判别联合：{kind:'local'; rows} 或 {kind:'remote-page'; rows; rowCount; resultQueryId; loading; error; onQueryChange; onRetry}。每次远程查询意图携带唯一 queryId，只有匹配当前查询的 resultQueryId 才可替换成功数据。",
     "selection": "ReadonlySet<RowId>，按行 ID 而非索引。",
-    "query": "{ sorting; filters; page | virtualRange }，服务端模式通过事件交给消费方。"
+    "query": "DataGridQuery={sorting; filters; pagination}；远程分页通过 DataGridQueryRequest={query; queryId} 交给消费方，组件不直接请求网络。",
+    "capabilities": "排序、筛选、行选择、分页、固定列和列宽均使用自有具名配置对象；value 为受控状态，defaultValue 为非受控初始值。"
   },
   "publicApi": {
     "status": "proposed",
     "props": [
-      { "name": "rows", "type": "readonly TRow[]", "required": true },
-      { "name": "columns", "type": "readonly DataGridColumn<TRow>[]", "required": true },
+      { "name": "data", "type": "DataGridDataSource<TRow>", "required": true },
+      { "name": "columns", "type": "readonly DataGridColumn<TRow, unknown>[]", "required": true },
       { "name": "getRowId", "type": "(row: TRow) => string", "required": true },
-      { "name": "sorting", "type": "readonly SortRule[]", "required": false },
-      { "name": "filters", "type": "readonly FilterRule[]", "required": false },
-      { "name": "selection", "type": "ReadonlySet<string>", "required": false },
-      { "name": "loading", "type": "boolean", "required": false, "default": false },
-      { "name": "error", "type": "DataGridError | null", "required": false, "default": null },
-      { "name": "mode", "type": "client | server | virtual", "required": false, "default": "client" }
+      { "name": "sorting", "type": "DataGridSorting | undefined", "required": false },
+      { "name": "filtering", "type": "DataGridFiltering | undefined", "required": false },
+      { "name": "rowSelection", "type": "DataGridRowSelection | undefined", "required": false },
+      { "name": "pagination", "type": "DataGridPagination | undefined", "required": false },
+      { "name": "columnPinning", "type": "DataGridColumnPinning | undefined", "required": false },
+      { "name": "columnSizing", "type": "DataGridColumnSizing | undefined", "required": false },
+      { "name": "ariaLabel", "type": "string", "required": true }
     ],
     "events": [
-      { "name": "onSortingChange", "payload": "readonly SortRule[]" },
-      { "name": "onFiltersChange", "payload": "readonly FilterRule[]" },
-      { "name": "onSelectionChange", "payload": "ReadonlySet<RowId>" },
-      { "name": "onRetry", "payload": "{ querySnapshot: DataGridQuery }" }
+      { "name": "sorting.onChange", "payload": "readonly DataGridSortRule[]" },
+      { "name": "filtering.onChange", "payload": "readonly DataGridFilterRule[]" },
+      { "name": "rowSelection.onChange", "payload": "ReadonlySet<RowId>" },
+      { "name": "pagination.onChange", "payload": "DataGridPage" },
+      { "name": "data.onQueryChange", "payload": "DataGridQueryRequest" },
+      { "name": "data.onRetry", "payload": "DataGridQueryRequest" }
     ],
     "refMethods": ["focusCell(rowId, columnId): void", "scrollToRow(rowId): void"],
     "controlledState": {
-      "rule": "提供值 prop 时由消费方控制；未提供时使用 default*；运行期不允许在受控与非受控间切换。"
+      "rule": "每个能力配置提供 value 时由消费方控制；只提供 defaultValue 时由组件控制；运行期不允许在受控与非受控间切换。远程分页的 rows、rowCount、loading、error 和 resultQueryId 始终由消费方提供。"
     }
   },
   "stateMachine": {
     "states": ["idle", "loadingInitial", "ready", "empty", "refreshing", "errorInitial", "errorRefresh"],
-    "initialState": "loading ? loadingInitial : rows.length ? ready : empty",
+    "initialState": "local 根据 rows 进入 ready/empty；remote-page 在无成功结果且 loading 时为 loadingInitial，有成功 rows 且 loading 时为 refreshing，否则按 rows/error 进入 ready/empty/errorInitial/errorRefresh。",
     "transitions": [
-      { "from": "ready|empty", "event": "QUERY_CHANGE", "to": "refreshing" },
+      { "from": "ready|empty", "event": "REMOTE_QUERY_INTENT", "to": "refreshing" },
       { "from": "refreshing", "event": "RESOLVE_NONEMPTY", "to": "ready" },
       { "from": "refreshing", "event": "RESOLVE_EMPTY", "to": "empty" },
+      { "from": "refreshing", "event": "RESOLVE_STALE_QUERY", "to": "refreshing" },
       { "from": "refreshing", "event": "REJECT", "to": "errorRefresh" },
       { "from": "errorInitial|errorRefresh", "event": "RETRY", "to": "loadingInitial|refreshing" }
     ]
@@ -68,8 +74,8 @@
         "precondition": "rows 含 rowId LOT-01/LOT-02/LOT-03；金额列可排序。",
         "control": "金额列表头排序按钮",
         "action": "按 Enter 将金额按降序排序。",
-        "stateTransition": "ready -> refreshing -> ready（server）或 ready -> ready（client）。",
-        "observable": "onSortingChange([{id:'amount',desc:true}]) 触发一次；活动表头 aria-sort=descending。",
+        "stateTransition": "ready -> refreshing -> ready（remote-page）或 ready -> ready（local）。",
+        "observable": "sorting.onChange([{id:'amount',desc:true}]) 触发一次；remote-page 同时产生一次携带 queryId 的 data.onQueryChange；活动表头 aria-sort=descending。",
         "oracle": "排序后每行仍通过 getRowId 关联原业务对象，选择集不按索引漂移。"
       },
       {
@@ -78,7 +84,7 @@
         "control": "LOT-02 行选择框",
         "action": "按 Space 选择 LOT-02。",
         "stateTransition": "selection {} -> {LOT-02}。",
-        "observable": "onSelectionChange(new Set(['LOT-02'])) 触发一次；该行 aria-selected=true。",
+        "observable": "rowSelection.onChange(new Set(['LOT-02'])) 触发一次；该行 aria-selected=true。",
         "oracle": "再次排序或刷新同一 rowId 后，LOT-02 仍保持选中；不存在重复 ID 时才允许提交状态。"
       }
     ]
@@ -89,7 +95,7 @@
       "trigger": "已有 rows 时，排序请求返回 NETWORK_ERROR。",
       "blockedEffect": "不得清空旧 rows、选择集、查询条件或活动单元格。",
       "retainedState": "旧 rows 与选择集保留，状态进入 errorRefresh。",
-      "recovery": "用户激活“重试”，组件以同一 querySnapshot 发出 onRetry。",
+      "recovery": "用户激活“重试”，组件以同一 DataGridQuery 和新 queryId 发出 data.onRetry。",
       "focusResult": "焦点留在错误区域的重试按钮；成功后返回原活动表头。",
       "oracle": "失败期间旧数据可读但明确标记可能过期；重试不重复追加行。"
     },
@@ -101,6 +107,15 @@
       "recovery": "消费方修正 rows/getRowId 后重新渲染。",
       "focusResult": "焦点进入表格级错误摘要。",
       "oracle": "开发与测试环境抛出明确契约错误；生产环境显示不可操作错误态并记录观测事件。"
+    },
+    {
+      "id": "stale-remote-result",
+      "trigger": "remote-page 连续发出查询 A、B，A 的结果在 B 之后返回且 resultQueryId 不等于当前 queryId。",
+      "blockedEffect": "不得用 A 的 rows、rowCount 或错误覆盖当前查询 B，也不得改变选择和活动单元格。",
+      "retainedState": "保留最近一次匹配查询的成功数据、查询 B、选择集和焦点上下文。",
+      "recovery": "继续等待与 B 的 queryId 匹配的结果；消费方可取消 A，但组件正确性不得依赖取消成功。",
+      "focusResult": "焦点保持在触发 B 的表头、筛选器或分页控件。",
+      "oracle": "A 的迟到结果不进入可见数据、事件副作用或结果播报；B 的匹配结果只应用一次。"
     }
   ],
   "keyboardAndFocus": {
@@ -108,7 +123,7 @@
     "pattern": "ARIA Grid；单一 roving tabindex 活动单元格。",
     "keys": "方向键移动；Home/End 行内边界；Ctrl+Home/End 表格边界；Space 选择行；Enter 激活单元格主操作。",
     "focusRecovery": "刷新失败后焦点进入重试按钮；成功后返回原活动表头或单元格。",
-    "virtualization": "活动行移出窗口时 aria-activedescendant 不指向不存在节点；滚动完成后恢复。"
+    "virtualization": "首批不实现虚拟滚动；后续接入时必须重新规范活动节点卸载和 aria-activedescendant 行为。"
   },
   "accessibility": {
     "semantics": "grid/row/columnheader/gridcell；aria-rowcount/colcount 反映逻辑规模。",
@@ -122,8 +137,8 @@
     "themes": ["default", "dark", "compact", "reduced-motion"]
   },
   "performance": {
-    "fixture": "client 1,000 行 x 20 列；virtual 100,000 逻辑行 x 20 列，60 行可视。",
-    "budget": "选择和键盘移动 p95 <= 100ms；滚动不得持续产生 >50ms 长任务；子路径 gzip 增量建议 <= 35KB。"
+    "fixture": "local 1,000 行 x 20 列；remote-page 100,000 逻辑行、当前页 100 行 x 20 列。",
+    "budget": "选择、键盘移动、排序意图和列宽反馈 p95 <= 100ms；连续交互不得持续产生 >50ms 长任务；@company/ui/data-grid 运行时 gzip 增量 <= 35KB，排除 React/React DOM peer dependency。"
   },
   "security": {
     "rules": ["cell renderer 不执行不受信 HTML", "组件不绕过服务端数据范围", "错误对象不得直接展示敏感响应体"]
@@ -134,8 +149,11 @@
   },
   "acceptanceOracles": [
     { "id": "DG-01", "given": "3 个唯一 rowId 且 LOT-02 已选中", "when": "降序排序 rows", "then": "LOT-02 仍选中且 onSelectionChange 不因排序额外触发" },
-    { "id": "DG-02", "given": "已有数据的 server 模式", "when": "刷新失败", "then": "旧数据、查询、选择和活动单元格保留并出现可键盘到达的重试" },
-    { "id": "DG-03", "given": "两个重复 rowId", "when": "渲染", "then": "行级交互被阻断且出现明确契约错误，不静默合并" }
+    { "id": "DG-02", "given": "已有成功数据的 remote-page 数据源", "when": "刷新失败", "then": "旧数据、查询、选择和活动单元格保留并出现可键盘到达的重试" },
+    { "id": "DG-03", "given": "两个重复 rowId", "when": "渲染", "then": "行级交互被阻断且出现明确契约错误，不静默合并" },
+    { "id": "DG-04", "given": "查询 A 后发出查询 B", "when": "A 的 resultQueryId 在 B 之后返回", "then": "A 不覆盖当前数据、选择或焦点，只有 B 的匹配结果应用一次" },
+    { "id": "DG-05", "given": "remote-page 数据源", "when": "改变排序、筛选或分页", "then": "只产生一次携带 queryId 的查询意图且不执行客户端二次变换" },
+    { "id": "DG-06", "given": "固定列与可调整列宽同时启用", "when": "调整列宽并横向滚动", "then": "固定区和滚动区表头、单元格边界与焦点环保持对齐且可达" }
   ],
   "risk": {
     "level": "R2",
@@ -146,13 +164,15 @@
   },
   "sourceTrace": {
     "catalog": "prototype-suite/catalog.browser.json#02:data-grid",
+    "implementationSop": "03-生产SOP/组件实施SOP/02-data-grid.implementation-sop.md",
     "preserved": ["Row[] × Column[]", "行身份稳定", "加载/空/冲突恢复"],
-    "correctedFacts": ["旧主路径只有通用开始和新增行，不足以定义 DataGrid 核心语义。"]
+    "correctedFacts": [
+      "旧主路径只有通用开始和新增行，不足以定义 DataGrid 核心语义。",
+      "0.1.0 把 client/server/virtual 合并为公开 mode，未隔离数据策略和内核；0.2.0 改为自有 local/remote-page 数据源，虚拟滚动移出首批。",
+      "TanStack Table 仅为内部适配内核，不属于公开兼容面。"
+    ]
   },
-  "openDecisions": [
-    { "id": "DG-D1", "question": "首版是否同时支持 client/server/virtual 三种模式，还是先拆为 DataGrid 与 VirtualDataGrid？" },
-    { "id": "DG-D2", "question": "gzip 增量 35KB 是否符合私有包整体预算？" }
-  ],
+  "openDecisions": [],
   "approval": {
     "status": "pending",
     "authors": ["Codex"],

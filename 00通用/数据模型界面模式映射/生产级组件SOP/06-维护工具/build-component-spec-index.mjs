@@ -30,6 +30,14 @@ for (const path of findSpecs(specsRoot)) {
   specs.set(spec.identity.componentKey, { spec, path });
 }
 
+function blockersFor(spec, hasImplementationSop) {
+  const blockers = spec.openDecisions.map((decision) => `${decision.id}: ${decision.question}`);
+  if (spec.publicApi.status !== "frozen") blockers.push("公开 API 尚未冻结");
+  if (spec.approval.status !== "approved") blockers.push("规定角色审批尚未完成");
+  if (!hasImplementationSop) blockers.push("缺少与组件 key 对应的组件实施 SOP");
+  return blockers;
+}
+
 const components = catalog.flatMap((category) => category.components.map((component) => {
   const found = specs.get(component.key);
   if (!found) {
@@ -47,7 +55,9 @@ const components = catalog.flatMap((category) => category.components.map((compon
     };
   }
   const { spec, path } = found;
-  const implementationAllowed = isImplementationAllowed(spec);
+  const implementationSopRelativePath = `03-生产SOP/组件实施SOP/${component.key.replace(":", "-")}.implementation-sop.md`;
+  const hasImplementationSop = existsSync(join(root, ...implementationSopRelativePath.split("/")));
+  const implementationAllowed = isImplementationAllowed(spec, hasImplementationSop);
   if (spec.lifecycle === "ImplementationReady" && !implementationAllowed) {
     throw new Error(`ImplementationReady specification does not satisfy implementation admission: ${component.key}`);
   }
@@ -59,7 +69,8 @@ const components = catalog.flatMap((category) => category.components.map((compon
     specificationStatus: spec.lifecycle,
     implementationAllowed,
     specPath: relative(root, path).replaceAll("\\", "/"),
-    blockers: spec.openDecisions.map((decision) => `${decision.id}: ${decision.question}`)
+    implementationSopPath: hasImplementationSop ? implementationSopRelativePath : null,
+    blockers: blockersFor(spec, hasImplementationSop)
   };
 }));
 
@@ -69,7 +80,7 @@ for (const componentKey of specs.keys()) {
 }
 
 const index = {
-  schemaVersion: 2,
+  schemaVersion: 3,
   generatedFrom: "prototype-suite/catalog.browser.json + reviewed component specifications",
   catalogComponents: components.length,
   components

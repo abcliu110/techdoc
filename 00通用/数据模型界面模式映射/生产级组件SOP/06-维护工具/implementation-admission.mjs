@@ -32,8 +32,9 @@ export function hasRequiredApprovals(spec) {
     && spec.approval.requiredRoles.every((role) => allowedApprovalRoles.has(role) && approvedRoles.has(role));
 }
 
-export function isImplementationAllowed(spec) {
-  return spec.lifecycle === "ImplementationReady"
+export function isImplementationAllowed(spec, hasImplementationSop = false) {
+  return hasImplementationSop
+    && spec.lifecycle === "ImplementationReady"
     && spec.publicApi?.status === "frozen"
     && spec.openDecisions?.length === 0
     && spec.approval?.status === "approved"

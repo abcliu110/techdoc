@@ -1,11 +1,11 @@
 # 组件规范与实现证据
 
-规范定义正确答案，SOP 定义执行过程，证据证明实现确实符合答案。
+规范定义正确答案，生产交付总 SOP 定义公共关口，组件实施 SOP 定义具体作业，证据证明这次实现确实按两层过程达到答案。
 
 实际证据按版本存放：
 
 ```text
-quality/evidence/<component-key>/<component-version>/
+quality/evidence/<category>-<id>/<component-version>/
 ├─ manifest.json
 ├─ specification.json
 ├─ test-results/
@@ -19,7 +19,8 @@ quality/evidence/<component-key>/<component-version>/
 
 硬规则：
 
-- `manifest.json` 绑定 `specificationVersion`、源码修订、候选产物哈希和 SOP 版本；规范版本变化后旧审批和实现证据失效。
+- catalog key 使用 `<category>:<id>`，但证据目录必须规范化为 `<category>-<id>`，不得把 Windows 非法字符 `:` 写入路径。
+- `manifest.json` 绑定 `specificationVersion`、源码修订、候选产物哈希、生产交付总 SOP 版本和组件实施 SOP 版本；规范版本变化后旧审批和实现证据失效，SOP 变化后必须先完成证据影响分析。
 - RED 原始输出必须保留，不能被 GREEN 覆盖。
 - 每条 `acceptanceOracles[].id` 必须映射到自动测试或明确的人工复核记录。
 - 截图不能替代事件、焦点、读屏、性能或错误恢复断言。
