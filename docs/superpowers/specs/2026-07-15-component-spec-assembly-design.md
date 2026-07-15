@@ -146,7 +146,9 @@ Profile 不得生成：
 ```json
 {
   "schemaVersion": 2,
+  "specificationVersion": "0.3.0",
   "component": {},
+  "lifecycle": {},
   "scope": {},
   "api": {},
   "behavior": {},
@@ -306,7 +308,7 @@ minLength, minimum, allOf, $ref
   "sopVersion": "0.2.0",
   "componentKey": "02:data-grid",
   "specification": {
-    "path": "../../../02-组件规范/v2-candidates/02-表格类/02-data-grid.spec.json",
+    "path": "../../02-组件规范/v2-candidates/02-表格类/02-data-grid.spec.json",
     "version": "0.3.0",
     "digest": "sha256:<generated>"
   },
