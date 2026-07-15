@@ -1,0 +1,413 @@
+{
+  "schemaVersion": 2,
+  "specificationVersion": "0.3.0",
+  "component": {
+    "key": "02:data-grid",
+    "legacyId": "data-grid",
+    "name": "数据表格",
+    "englishName": "Data Grid",
+    "category": "02",
+    "exportName": "DataGrid",
+    "packageSubpath": "@company/ui/data-grid"
+  },
+  "lifecycle": {
+    "specificationStatus": "Draft",
+    "implementationAllowed": false,
+    "referenceStatus": "NotRun",
+    "planStatus": "Unbound"
+  },
+  "scope": {
+    "purpose": "以稳定行身份展示和操作二维业务数据，并在排序、筛选、选择和异步刷新时保持状态一致。",
+    "in": [
+      "二维数据展示",
+      "本地与远程分页",
+      "排序与筛选",
+      "行选择",
+      "固定表头与列",
+      "列宽调整",
+      "加载、空、刷新和错误恢复"
+    ],
+    "out": [
+      "单元格编辑事务",
+      "批量编辑",
+      "区域复制粘贴",
+      "虚拟滚动",
+      "无限加载",
+      "树形层级",
+      "公式计算",
+      "透视与 OLAP",
+      "服务端查询实现"
+    ]
+  },
+  "api": {
+    "status": "proposed",
+    "props": {
+      "data": {
+        "type": "DataGridDataSource<TRow>",
+        "required": true,
+        "contract": "local 提供 rows；remote-page 提供 rows、rowCount、resultQueryId、loading、error 和查询回调。"
+      },
+      "columns": {
+        "type": "readonly DataGridColumn<TRow, unknown>[]",
+        "required": true,
+        "contract": "每列必须有稳定 id；不得暴露 TanStack ColumnDef。"
+      },
+      "getRowId": {
+        "type": "(row: TRow) => string",
+        "required": true,
+        "contract": "必须返回当前数据集内唯一且跨排序、筛选、分页和刷新稳定的业务行 ID。"
+      },
+      "ariaLabel": {
+        "type": "string",
+        "required": true,
+        "contract": "为无可见标题的 grid 提供可访问名称。"
+      }
+    },
+    "events": {
+      "sortingChange": {
+        "name": "sorting.onChange",
+        "payload": "readonly DataGridSortRule[]"
+      },
+      "filteringChange": {
+        "name": "filtering.onChange",
+        "payload": "readonly DataGridFilterRule[]"
+      },
+      "rowSelectionChange": {
+        "name": "rowSelection.onChange",
+        "payload": "ReadonlySet<RowId>"
+      },
+      "paginationChange": {
+        "name": "pagination.onChange",
+        "payload": "DataGridPage"
+      },
+      "queryChange": {
+        "name": "data.onQueryChange",
+        "payload": "DataGridQueryRequest"
+      },
+      "retry": {
+        "name": "data.onRetry",
+        "payload": "DataGridQueryRequest"
+      }
+    },
+    "actions": {
+      "retryQuery": {
+        "event": "/api/events/retry",
+        "contract": "重用失败时的 DataGridQuery 并生成新的 queryId；组件不直接请求网络。"
+      },
+      "focusCell": {
+        "signature": "focusCell(rowId, columnId): void"
+      },
+      "scrollToRow": {
+        "signature": "scrollToRow(rowId): void"
+      }
+    },
+    "features": {
+      "sorting": {
+        "state": "DataGridSorting",
+        "event": "/api/events/sortingChange",
+        "remoteBehavior": "只产生一次查询意图，不在客户端重排服务端结果。"
+      },
+      "filtering": {
+        "state": "DataGridFiltering",
+        "event": "/api/events/filteringChange",
+        "remoteBehavior": "只产生一次查询意图，不在客户端二次过滤。"
+      },
+      "rowSelection": {
+        "state": "ReadonlySet<RowId>",
+        "event": "/api/events/rowSelectionChange",
+        "identitySource": "/behavior/identity/row/keyContract"
+      },
+      "pagination": {
+        "state": "DataGridPage",
+        "event": "/api/events/paginationChange",
+        "remoteBehavior": "当前页由匹配 queryId 的消费方结果决定。"
+      },
+      "columnPinning": {
+        "state": "DataGridColumnPinning",
+        "identitySource": "/behavior/identity/column/keyContract"
+      },
+      "columnSizing": {
+        "state": "DataGridColumnSizing",
+        "identitySource": "/behavior/identity/column/keyContract"
+      }
+    },
+    "controlledState": {
+      "rule": "能力配置提供 value 时受控，只提供 defaultValue 时非受控；挂载后不得切换模式。"
+    }
+  },
+  "behavior": {
+    "identity": {
+      "row": {
+        "keyContract": "/api/props/getRowId",
+        "duplicatePolicy": "阻断选择和行级操作，显示表格级契约错误并记录脱敏观测事件。"
+      },
+      "column": {
+        "keyContract": "/api/props/columns",
+        "stability": "重排、隐藏、固定和调整列宽不得改变列 id。"
+      }
+    },
+    "states": {
+      "idle": { "userVisible": false },
+      "loadingInitial": { "userVisible": true },
+      "ready": { "userVisible": true },
+      "empty": { "userVisible": true },
+      "refreshing": { "userVisible": true },
+      "errorInitial": { "userVisible": true },
+      "errorRefresh": { "userVisible": true }
+    },
+    "transitions": [
+      { "id": "query", "from": ["ready", "empty"], "event": "/api/events/queryChange", "to": ["refreshing"] },
+      { "id": "resolve-data", "from": ["loadingInitial", "refreshing"], "event": "matching-nonempty-result", "to": ["ready"] },
+      { "id": "resolve-empty", "from": ["loadingInitial", "refreshing"], "event": "matching-empty-result", "to": ["empty"] },
+      { "id": "ignore-stale", "from": ["refreshing"], "event": "stale-resultQueryId", "to": ["refreshing"] },
+      { "id": "reject-initial", "from": ["loadingInitial"], "event": "query-failed", "to": ["errorInitial"] },
+      { "id": "reject-refresh", "from": ["refreshing"], "event": "query-failed", "to": ["errorRefresh"] },
+      { "id": "retry", "from": ["errorInitial", "errorRefresh"], "event": "/api/events/retry", "to": ["loadingInitial", "refreshing"] }
+    ],
+    "exceptionFlows": [
+      {
+        "id": "refreshFailed",
+        "states": ["errorRefresh"],
+        "regions": ["status", "body"],
+        "recoveryAction": "retryQuery",
+        "oracle": "refreshFailureRetainsContext"
+      },
+      {
+        "id": "duplicateRowId",
+        "states": ["errorInitial"],
+        "regions": ["status", "body"],
+        "recoveryAction": "focusCell",
+        "oracle": "duplicateRowIdBlocksInteraction"
+      },
+      {
+        "id": "staleRemoteResult",
+        "states": ["refreshing"],
+        "regions": ["status", "body"],
+        "recoveryAction": "retryQuery",
+        "oracle": "staleResultDoesNotOverwrite"
+      }
+    ]
+  },
+  "view": {
+    "regions": {
+      "toolbar": {
+        "purpose": "承载筛选摘要、已选数量和可选的表格级命令。",
+        "required": false
+      },
+      "header": {
+        "purpose": "显示列标题、排序状态、筛选入口和调整列宽手柄。",
+        "required": true
+      },
+      "body": {
+        "purpose": "显示行、单元格、空态、初始加载或不可操作契约错误。",
+        "required": true
+      },
+      "status": {
+        "purpose": "显示刷新、错误和 polite live region；不遮挡已有数据。",
+        "required": true
+      },
+      "pagination": {
+        "purpose": "显示页码、总量、每页数量和上一页/下一页命令。",
+        "required": false
+      }
+    },
+    "layout": {
+      "regionOrder": ["toolbar", "header", "body", "status", "pagination"],
+      "scrollOwner": "body",
+      "stickyRegions": ["header"],
+      "columnSizing": {
+        "defaultPx": 160,
+        "minimumPx": 80,
+        "maximumPx": 640,
+        "handleHitTargetPx": 24
+      },
+      "rowHeight": {
+        "compactPx": 32,
+        "defaultPx": 40,
+        "comfortablePx": 48
+      },
+      "headerHeightPx": 40,
+      "scrollbarReachability": "横向滚动条、键盘滚动和触控平移均可到达所有非固定列。"
+    },
+    "statePresentation": {
+      "loadingInitial": {
+        "regions": ["header", "body", "status"],
+        "presentation": "保留列结构，body 显示不引发布局跳动的骨架行，status 播报加载中。",
+        "focus": "grid 容器可聚焦，骨架不进入 tab 序列。"
+      },
+      "ready": {
+        "regions": ["toolbar", "header", "body", "status", "pagination"],
+        "presentation": "数据与全部已启用控制可操作；status 仅承载非干扰播报。",
+        "focus": "单一活动单元格使用 roving tabindex。"
+      },
+      "empty": {
+        "regions": ["header", "body", "status", "pagination"],
+        "presentation": "保留表头和查询上下文，body 显示空结果，不伪装错误。",
+        "focus": "焦点保留在触发空结果的筛选或表头，否则进入空结果摘要。"
+      },
+      "refreshing": {
+        "regions": ["header", "body", "status", "pagination"],
+        "presentation": "旧数据保持可读，状态区显示非模态进度；不清空选择。",
+        "focus": "保持活动表头或单元格。"
+      },
+      "errorInitial": {
+        "regions": ["body", "status"],
+        "presentation": "没有成功数据时显示表格级错误摘要和重试命令。",
+        "focus": "进入错误摘要中的重试按钮。"
+      },
+      "errorRefresh": {
+        "regions": ["header", "body", "status", "pagination"],
+        "presentation": "旧数据、选择和查询保留，status 标明数据可能过期并提供重试。",
+        "focus": "进入重试按钮；成功后返回触发查询的控制。"
+      }
+    },
+    "tokens": {
+      "surface": { "default": "surface.canvas", "header": "surface.subtle", "selected": "surface.selected" },
+      "border": { "default": "border.muted", "fixedBoundary": "border.strong" },
+      "text": { "primary": "text.primary", "muted": "text.muted", "danger": "text.danger" },
+      "focusRing": { "color": "focus.ring", "widthPx": 2, "offsetPx": -2 },
+      "spacing": { "cellInlinePx": 12, "cellBlockPx": 8, "toolbarGapPx": 8 },
+      "density": ["compact", "default", "comfortable"],
+      "motion": { "progressMs": 160, "reducedMotionMs": 0 }
+    },
+    "responsive": {
+      "viewports": {
+        "390": "保持二维 grid 与横向滚动；命令允许换行但不得覆盖表头。",
+        "768": "工具栏可分两行，分页保持完整可达。",
+        "1280": "默认单行工具栏，固定列和滚动区同时可见。",
+        "1440": "不拉伸超过列最大宽度，多余空间归 scroll owner。"
+      },
+      "adjacentWidthChecksPx": [389, 391, 767, 769, 1279, 1281, 1439, 1441],
+      "contentFixtures": ["最长列标题", "无空格长值", "200% 缩放", "暗色", "紧凑密度"]
+    }
+  },
+  "accessibility": {
+    "keyboardModel": {
+      "pattern": "ARIA Grid with roving tabindex",
+      "keys": ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End", "Ctrl+Home", "Ctrl+End", "Space", "Enter"],
+      "focusRecovery": "异步结果后优先恢复到仍存在的稳定 rowId/columnId；不存在时移动到最近可用单元格。"
+    },
+    "semantics": {
+      "roles": ["grid", "row", "columnheader", "gridcell"],
+      "counts": ["aria-rowcount", "aria-colcount"],
+      "selection": "选中行使用 aria-selected；复选框有可访问名称。"
+    },
+    "announcements": {
+      "politeness": "polite",
+      "events": ["排序变化", "筛选结果数", "刷新失败", "重试成功"]
+    }
+  },
+  "quality": {
+    "scaleFixtures": {
+      "local": { "rows": 1000, "columns": 20 },
+      "remotePage": { "logicalRows": 100000, "pageRows": 100, "columns": 20 }
+    },
+    "performanceBudgets": {
+      "interaction": { "operator": "<=", "value": 100, "unit": "ms-p95", "fixture": "local-and-remote-page" },
+      "longTask": { "operator": "<=", "value": 50, "unit": "ms", "fixture": "continuous-keyboard-and-resize" },
+      "runtimeBundle": { "operator": "<=", "value": 35, "unit": "gzip-kb", "fixture": "data-grid-subpath-excluding-react-peers" }
+    },
+    "visualOracles": {
+      "headerBodyAlignment": {
+        "given": "固定列和可调整列宽均启用",
+        "when": "调整列宽并横向滚动",
+        "then": "表头与对应单元格边界保持在同一像素列，行高不跳变。"
+      },
+      "scrollReachability": {
+        "given": "390px 视口且列总宽超过视口",
+        "when": "分别使用键盘、鼠标和触控导航到末列",
+        "then": "末列及其操作完整可见，滚动条和固定列不遮挡内容。"
+      },
+      "noClipping": {
+        "given": "最长标题、无空格长值和 200% 缩放",
+        "when": "遍历断点及相邻宽度",
+        "then": "文本按列策略截断或换行，焦点环、命令和状态区不被裁切。"
+      },
+      "stateRetention": {
+        "given": "已有成功数据、选择和活动单元格",
+        "when": "刷新失败",
+        "then": "旧数据、选择和活动上下文保持，错误状态不遮挡数据。"
+      },
+      "fixedColumnBoundary": {
+        "given": "左固定列和横向滚动列同时存在",
+        "when": "滚动到中部和末端",
+        "then": "固定区边界清晰且不产生双边框、透明穿透或内容重叠。"
+      },
+      "focusVisibility": {
+        "given": "默认、暗色、紧凑和减少动态效果主题",
+        "when": "键盘遍历表头、单元格、重试和分页",
+        "then": "任何活动控件均有连续可见的 2px 焦点环且不被 sticky 区域裁切。"
+      }
+    },
+    "oracles": {
+      "selectionStableAfterSort": {
+        "given": "3 个唯一 rowId 且 LOT-02 已选中",
+        "when": "对数据降序排序",
+        "then": "LOT-02 仍选中且 rowSelection.onChange 不因排序额外触发。",
+        "references": { "api": ["/api/events/rowSelectionChange"], "states": ["ready"], "regions": ["header", "body"] }
+      },
+      "sortProducesSingleIntent": {
+        "given": "remote-page 数据源",
+        "when": "改变排序",
+        "then": "产生一次携带新 queryId 的查询意图且不执行客户端重排。",
+        "references": { "api": ["/api/events/sortingChange", "/api/events/queryChange"], "states": ["refreshing"], "regions": ["header", "status"] }
+      },
+      "filterPreservesSelection": {
+        "given": "已选择当前将被隐藏的业务行",
+        "when": "应用筛选",
+        "then": "隐藏不删除选择，已选总数与可见已选数分开表达。",
+        "references": { "api": ["/api/events/filteringChange"], "states": ["ready"], "regions": ["toolbar", "body"] }
+      },
+      "remoteQueryIsNotAppliedLocally": {
+        "given": "remote-page 数据源",
+        "when": "改变排序、筛选或分页",
+        "then": "只产生一次查询意图且不执行客户端二次变换。",
+        "references": { "api": ["/api/events/queryChange"], "states": ["refreshing"], "regions": ["status"] }
+      },
+      "refreshFailureRetainsContext": {
+        "given": "已有成功数据、查询、选择和活动单元格",
+        "when": "刷新失败",
+        "then": "上下文保留并出现可键盘到达的重试；重试使用同一 DataGridQuery 和新 queryId。",
+        "references": { "api": ["/api/actions/retryQuery", "/api/events/retry"], "states": ["errorRefresh"], "regions": ["status", "body"] }
+      },
+      "duplicateRowIdBlocksInteraction": {
+        "given": "两行由 getRowId 返回相同值",
+        "when": "渲染表格",
+        "then": "选择和行操作被阻断，错误不展示敏感行对象。",
+        "references": { "api": ["/api/props/getRowId"], "states": ["errorInitial"], "regions": ["status", "body"] }
+      },
+      "staleResultDoesNotOverwrite": {
+        "given": "查询 A 后发出查询 B",
+        "when": "A 的 resultQueryId 在 B 之后返回",
+        "then": "A 不覆盖数据、选择或焦点，只有 B 的匹配结果应用一次。",
+        "references": { "api": ["/api/props/data"], "states": ["refreshing"], "regions": ["body", "status"] }
+      }
+    }
+  },
+  "security": {
+    "rules": [
+      "cell renderer 不执行不受信 HTML",
+      "前端隐藏、禁用和选择不构成服务端权限或租户隔离",
+      "错误区域和观测事件不得包含完整行对象、令牌或敏感响应体"
+    ]
+  },
+  "compatibility": {
+    "legacyId": "data-grid",
+    "breakingSurfaces": ["row identity", "controlled state", "event payload", "keyboard model", "DOM roles"],
+    "forbiddenSopAliases": ["rows", "onSelectionChange", "querySnapshot"],
+    "v1Authority": "02-组件规范/02-表格类/02-data-grid.spec.json"
+  },
+  "risk": {
+    "level": "R2",
+    "signals": ["data-integrity", "async-state", "large-data"],
+    "invariants": ["行身份稳定", "选择按 ID", "刷新失败保留上下文", "乱序响应不覆盖新查询"],
+    "upgradeTriggers": ["编辑提交", "不可逆批量操作", "金额、库存或订单写入"]
+  },
+  "decisions": [],
+  "approval": {
+    "status": "pending",
+    "authors": ["Codex"],
+    "requiredRoles": ["component-maintainer", "ux-a11y-reviewer", "test-reviewer"],
+    "records": []
+  }
+}
