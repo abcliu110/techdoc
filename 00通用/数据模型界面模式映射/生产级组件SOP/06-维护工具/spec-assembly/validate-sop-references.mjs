@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
-import { dirname, relative, resolve } from "node:path";
+import { dirname, isAbsolute, relative, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { getPointer, readJson, stableJson } from "./shared.mjs";
 
@@ -12,9 +12,22 @@ export function canonicalDigest(document) {
   return `sha256:${createHash("sha256").update(stableJson(document), "utf8").digest("hex")}`;
 }
 
+export function canonicalSopDigest(sop) {
+  return canonicalDigest({
+    sopVersion: sop.sopVersion,
+    componentKey: sop.componentKey,
+    specification: sop.specification,
+    approvalPolicy: {
+      authors: sop.approval?.authors || [],
+      requiredRoles: sop.approval?.requiredRoles || [],
+    },
+    steps: sop.steps,
+  });
+}
+
 function isInside(root, path) {
   const relation = relative(resolve(root), resolve(path));
-  return relation === "" || (!relation.startsWith("..") && !resolve(relation).startsWith(".."));
+  return relation === "" || (!isAbsolute(relation) && !relation.startsWith(".."));
 }
 
 function collectRequiredOracles(spec) {
@@ -25,6 +38,12 @@ function collectRequiredOracles(spec) {
 }
 
 function scanDuplicatedAnswers(sop, spec, issues) {
+  const apiNames = [...new Set(Object.values(spec.api?.events || {}).map((event) => event.name).filter(Boolean))];
+  const typeNames = [...new Set([
+    ...Object.values(spec.api?.props || {}).map((prop) => prop.type),
+    ...Object.values(spec.api?.events || {}).map((event) => event.payload),
+    ...Object.values(spec.api?.features || {}).map((feature) => feature.state),
+  ].flatMap((value) => String(value || "").match(/\b[A-Z][A-Za-z0-9]*\b/g) || []))];
   for (const [index, step] of (sop.steps || []).entries()) {
     const text = `${step.action || ""} ${step.method || ""}`;
     for (const alias of spec.compatibility?.forbiddenSopAliases || []) {
@@ -41,23 +60,60 @@ function scanDuplicatedAnswers(sop, spec, issues) {
     if (/\b(?:given|when|then)\b\s*:/iu.test(text)) {
       issues.push(issue("SOP_DUPLICATED_ORACLE", `/steps/${index}/method`, "SOP must not repeat Given/When/Then conclusions"));
     }
+    if (apiNames.some((name) => text.includes(name))) {
+      issues.push(issue("SOP_DUPLICATED_API_NAME", `/steps/${index}/method`, "SOP must reference public API names through specification pointers"));
+    }
+    if (typeNames.some((name) => new RegExp(`\\b${name}\\b`, "u").test(text))) {
+      issues.push(issue("SOP_DUPLICATED_TYPE_NAME", `/steps/${index}/method`, "SOP must reference public type names through specification pointers"));
+    }
   }
 }
 
-export function validateSopReferences(sop, { sopPath, specificationsRoot, effectiveSchema }) {
+function validateApproval(sop, issues) {
+  const approval = sop.approval || {};
+  if (sop.status !== "Approved") {
+    if (approval.status === "approved" || (approval.records || []).length > 0) {
+      issues.push(issue("SOP_STATUS_APPROVAL", "/approval", `${sop.status} SOP cannot carry approved records`));
+    }
+    return;
+  }
+  const authors = new Set(approval.authors || []);
+  const records = approval.records || [];
+  const sopDigest = canonicalSopDigest(sop);
+  if (approval.status !== "approved" || records.length === 0) {
+    issues.push(issue("SOP_APPROVAL_MISSING", "/approval", "Approved SOP requires digest-bound approval records"));
+    return;
+  }
+  const covered = new Set();
+  for (const [index, record] of records.entries()) {
+    const pointer = `/approval/records/${index}`;
+    if (authors.has(record.reviewer)) issues.push(issue("SOP_APPROVAL_AUTHOR", pointer, "SOP author cannot approve the same SOP"));
+    if (!Number.isFinite(Date.parse(record.approvedAt || ""))) issues.push(issue("SOP_APPROVAL_RECORD", pointer, "Approval time is invalid"));
+    if (record.sopVersion !== sop.sopVersion || record.sopDigest !== sopDigest || record.specificationVersion !== sop.specification?.version || record.specificationDigest !== sop.specification?.digest) {
+      issues.push(issue("SOP_APPROVAL_BINDING", pointer, "Approval record is not bound to the current SOP and specification digest"));
+    }
+    covered.add(record.role);
+  }
+  for (const role of approval.requiredRoles || []) {
+    if (!covered.has(role)) issues.push(issue("SOP_APPROVAL_ROLE", "/approval/records", `Missing required SOP approval role: ${role}`));
+  }
+}
+
+export function validateSopReferences(sop, { sopPath, specificationsRoot, effectiveSchema, specificationDocument }) {
   const issues = [];
   const specPath = resolve(dirname(resolve(sopPath)), sop.specification?.path || "");
   let spec;
 
   if (!sop.specification?.path || !isInside(specificationsRoot, specPath) || !existsSync(specPath)) {
     issues.push(issue("SOP_SPEC_PATH", "/specification/path", "Specification path must resolve below the v2 candidate specification root"));
-  } else spec = readJson(specPath);
+  } else spec = specificationDocument || readJson(specPath);
 
   if (spec) {
     if (sop.componentKey !== spec.component?.key) issues.push(issue("SOP_COMPONENT_KEY", "/componentKey", "SOP component key does not match specification"));
     if (sop.specification.version !== spec.specificationVersion) issues.push(issue("SOP_SPEC_VERSION", "/specification/version", "SOP specification version does not match"));
 
     const covered = new Set();
+    const implemented = new Set();
     for (const [index, step] of (sop.steps || []).entries()) {
       for (const [field, pointers] of [["implements", step.implements], ["verifies", step.verifies]]) {
         for (const [pointerIndex, pointer] of (pointers || []).entries()) {
@@ -73,6 +129,7 @@ export function validateSopReferences(sop, { sopPath, specificationsRoot, effect
           if (field === "implements") {
             const allowed = ["/api/", "/behavior/", "/view/", "/accessibility/", "/security/", "/compatibility/", "/risk/", "/quality/scaleFixtures", "/quality/performanceBudgets"];
             if (!allowed.some((prefix) => pointer.startsWith(prefix))) issues.push(issue("SOP_IMPLEMENT_PARTITION", issuePointer, `Pointer is not an implementable specification partition: ${pointer}`));
+            else implemented.add(pointer);
           } else {
             if (!pointer.startsWith("/quality/oracles/") && !pointer.startsWith("/quality/visualOracles/")) issues.push(issue("SOP_VERIFY_PARTITION", issuePointer, `Verification must point to an oracle: ${pointer}`));
             else covered.add(pointer);
@@ -83,7 +140,11 @@ export function validateSopReferences(sop, { sopPath, specificationsRoot, effect
     for (const pointer of collectRequiredOracles(spec)) {
       if (!covered.has(pointer)) issues.push(issue("SOP_ORACLE_UNCOVERED", pointer, "Required oracle is not covered by an SOP step"));
     }
+    for (const pointer of effectiveSchema?.["x-required-implementation-pointers"] || []) {
+      if (!implemented.has(pointer)) issues.push(issue("SOP_IMPLEMENTATION_UNCOVERED", pointer, "Required implementation contract is not covered by an SOP step"));
+    }
     scanDuplicatedAnswers(sop, spec, issues);
+    validateApproval(sop, issues);
 
     const expectedDigest = canonicalDigest(spec);
     if (sop.specification.digest !== expectedDigest) {

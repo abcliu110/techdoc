@@ -26,6 +26,22 @@
     "test-reviewer",
     "ux-a11y-reviewer"
   ],
+  "x-required-implementation-pointers": [
+    "/api/features/columnPinning",
+    "/api/features/columnSizing",
+    "/api/features/filtering",
+    "/api/features/pagination",
+    "/api/features/rowSelection",
+    "/api/features/sorting",
+    "/api/props/ariaLabel",
+    "/api/props/columns",
+    "/api/props/data",
+    "/api/props/getRowId",
+    "/behavior/identity/column",
+    "/behavior/identity/row",
+    "/view/regions/body",
+    "/view/regions/header"
+  ],
   "x-required-pointers": [
     "/accessibility/keyboardModel",
     "/api/features/columnPinning",

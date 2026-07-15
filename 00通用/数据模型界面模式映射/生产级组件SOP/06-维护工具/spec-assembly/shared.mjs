@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
-import { relative, resolve } from "node:path";
+import { isAbsolute, relative, resolve } from "node:path";
 
 export function readJson(path) {
   return JSON.parse(readFileSync(path, "utf8"));
@@ -18,7 +18,7 @@ export function stableJson(value) {
 export function resolveInside(root, base, target, label) {
   const path = resolve(base, target);
   const relation = relative(resolve(root), path);
-  if (relation.startsWith("..") || relation === "" && path !== resolve(root)) {
+  if (isAbsolute(relation) || relation.startsWith("..")) {
     throw new Error(`${label} is outside v2 root: ${target}`);
   }
   return path;

@@ -5,6 +5,7 @@
   "constraints": {
     "requiredPointers": ["/api/features/columnPinning", "/quality/visualOracles/fixedColumnBoundary"],
     "requiredSemanticChecks": ["column-pinning-contract"],
+    "requiredImplementationPointers": ["/api/features/columnPinning"],
     "minimumRisk": "R1",
     "requiredApprovalRoles": ["ux-a11y-reviewer"],
     "requiredTypes": { "/api/features/columnPinning": "object" },

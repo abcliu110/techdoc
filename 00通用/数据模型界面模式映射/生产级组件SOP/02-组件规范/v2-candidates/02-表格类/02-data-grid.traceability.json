@@ -1,0 +1,3139 @@
+{
+  "componentKey": "02:data-grid",
+  "digest": "sha256:12f5c61fdd777648af75b60ef8dc9f926976952725000fc7ae0ce55df1c358ea",
+  "links": [
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/api/actions/retryQuery",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/api/actions/retryQuery",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/actions/retryQuery",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/actions/retryQuery",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/api/actions/retryQuery",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/api/actions/retryQuery",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/api/actions/retryQuery",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/actions/retryQuery",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/actions/retryQuery",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/api/actions/retryQuery",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/api/actions/retryQuery",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/api/actions/retryQuery",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/actions/retryQuery",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/actions/retryQuery",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/api/actions/retryQuery",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/api/events/queryChange",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/api/events/queryChange",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/events/queryChange",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/events/queryChange",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/api/events/queryChange",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/api/events/queryChange",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/api/events/queryChange",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/events/queryChange",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/events/queryChange",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/api/events/queryChange",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/api/events/queryChange",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/api/events/queryChange",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/events/queryChange",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/events/queryChange",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/api/events/queryChange",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/api/events/retry",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/api/events/retry",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/events/retry",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/events/retry",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/api/events/retry",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/api/events/retry",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/api/events/retry",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/events/retry",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/events/retry",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/api/events/retry",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/api/events/retry",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/api/events/retry",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/events/retry",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/events/retry",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/api/events/retry",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "combination-test",
+      "implementationPointer": "/api/events/rowSelectionChange",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/events/rowSelectionChange",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "interaction-test",
+      "implementationPointer": "/api/events/rowSelectionChange",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/events/rowSelectionChange",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "combination-test",
+      "implementationPointer": "/api/events/rowSelectionChange",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/events/rowSelectionChange",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "interaction-test",
+      "implementationPointer": "/api/events/rowSelectionChange",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/events/rowSelectionChange",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/api/features/columnPinning",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/columnPinning",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/columnPinning",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/api/features/columnPinning",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/api/features/columnPinning",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/api/features/columnPinning",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/columnPinning",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/columnPinning",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/api/features/columnPinning",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/api/features/columnPinning",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/api/features/columnPinning",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/columnPinning",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/columnPinning",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/api/features/columnPinning",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/api/features/columnPinning",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/api/features/columnSizing",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/columnSizing",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/columnSizing",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/api/features/columnSizing",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/api/features/columnSizing",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/api/features/columnSizing",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/columnSizing",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/columnSizing",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/api/features/columnSizing",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/api/features/columnSizing",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/api/features/columnSizing",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/columnSizing",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/columnSizing",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/api/features/columnSizing",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/api/features/columnSizing",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "combination-test",
+      "implementationPointer": "/api/features/filtering",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "event-count-test",
+      "implementationPointer": "/api/features/filtering",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/filtering",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "interaction-test",
+      "implementationPointer": "/api/features/filtering",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/filtering",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "combination-test",
+      "implementationPointer": "/api/features/filtering",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "event-count-test",
+      "implementationPointer": "/api/features/filtering",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/filtering",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "interaction-test",
+      "implementationPointer": "/api/features/filtering",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/filtering",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "combination-test",
+      "implementationPointer": "/api/features/filtering",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "event-count-test",
+      "implementationPointer": "/api/features/filtering",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/filtering",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "interaction-test",
+      "implementationPointer": "/api/features/filtering",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/filtering",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "combination-test",
+      "implementationPointer": "/api/features/pagination",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "event-count-test",
+      "implementationPointer": "/api/features/pagination",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/pagination",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "interaction-test",
+      "implementationPointer": "/api/features/pagination",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/pagination",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "combination-test",
+      "implementationPointer": "/api/features/pagination",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "event-count-test",
+      "implementationPointer": "/api/features/pagination",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/pagination",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "interaction-test",
+      "implementationPointer": "/api/features/pagination",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/pagination",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "combination-test",
+      "implementationPointer": "/api/features/pagination",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "event-count-test",
+      "implementationPointer": "/api/features/pagination",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/pagination",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "interaction-test",
+      "implementationPointer": "/api/features/pagination",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/pagination",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "combination-test",
+      "implementationPointer": "/api/features/rowSelection",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/rowSelection",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "interaction-test",
+      "implementationPointer": "/api/features/rowSelection",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/rowSelection",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "combination-test",
+      "implementationPointer": "/api/features/rowSelection",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/rowSelection",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "interaction-test",
+      "implementationPointer": "/api/features/rowSelection",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/rowSelection",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "combination-test",
+      "implementationPointer": "/api/features/sorting",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "event-count-test",
+      "implementationPointer": "/api/features/sorting",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/sorting",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "interaction-test",
+      "implementationPointer": "/api/features/sorting",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/sorting",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "combination-test",
+      "implementationPointer": "/api/features/sorting",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "event-count-test",
+      "implementationPointer": "/api/features/sorting",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/sorting",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "interaction-test",
+      "implementationPointer": "/api/features/sorting",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/sorting",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "combination-test",
+      "implementationPointer": "/api/features/sorting",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "event-count-test",
+      "implementationPointer": "/api/features/sorting",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/sorting",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "interaction-test",
+      "implementationPointer": "/api/features/sorting",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/sorting",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "contract-error-test",
+      "implementationPointer": "/api/props/columns",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/props/columns",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/props/columns",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "unit-test",
+      "implementationPointer": "/api/props/columns",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "contract-error-test",
+      "implementationPointer": "/api/props/columns",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/props/columns",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/props/columns",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "unit-test",
+      "implementationPointer": "/api/props/columns",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/api/props/data",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/api/props/data",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/props/data",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/props/data",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/api/props/data",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/api/props/data",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/api/props/data",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/props/data",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/props/data",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/api/props/data",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/api/props/data",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/api/props/data",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/props/data",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/props/data",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/api/props/data",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "contract-error-test",
+      "implementationPointer": "/api/props/getRowId",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/props/getRowId",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/props/getRowId",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "unit-test",
+      "implementationPointer": "/api/props/getRowId",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "contract-error-test",
+      "implementationPointer": "/api/props/getRowId",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/props/getRowId",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/props/getRowId",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "unit-test",
+      "implementationPointer": "/api/props/getRowId",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/behavior/exceptionFlows",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/behavior/exceptionFlows",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/behavior/exceptionFlows",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/behavior/exceptionFlows",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/behavior/exceptionFlows",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/behavior/exceptionFlows",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/behavior/exceptionFlows",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/behavior/exceptionFlows",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/behavior/exceptionFlows",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/behavior/exceptionFlows",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/behavior/exceptionFlows",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/behavior/exceptionFlows",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/behavior/exceptionFlows",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/behavior/exceptionFlows",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/behavior/exceptionFlows",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "contract-error-test",
+      "implementationPointer": "/behavior/identity/column",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/behavior/identity/column",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/behavior/identity/column",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "unit-test",
+      "implementationPointer": "/behavior/identity/column",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "contract-error-test",
+      "implementationPointer": "/behavior/identity/column",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/behavior/identity/column",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/behavior/identity/column",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "unit-test",
+      "implementationPointer": "/behavior/identity/column",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "contract-error-test",
+      "implementationPointer": "/behavior/identity/row",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/behavior/identity/row",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/behavior/identity/row",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "unit-test",
+      "implementationPointer": "/behavior/identity/row",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "contract-error-test",
+      "implementationPointer": "/behavior/identity/row",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/behavior/identity/row",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/behavior/identity/row",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "unit-test",
+      "implementationPointer": "/behavior/identity/row",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/behavior/recoveryActions",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/behavior/recoveryActions",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/behavior/recoveryActions",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/behavior/recoveryActions",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/behavior/recoveryActions",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/behavior/recoveryActions",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/behavior/recoveryActions",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/behavior/recoveryActions",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/behavior/recoveryActions",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/behavior/recoveryActions",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/behavior/recoveryActions",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/behavior/recoveryActions",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/behavior/recoveryActions",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/behavior/recoveryActions",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/behavior/recoveryActions",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/behavior/states",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/behavior/states",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/behavior/states",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/behavior/states",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/behavior/states",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/behavior/states",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/behavior/states",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/behavior/states",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/behavior/states",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/behavior/states",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/behavior/states",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/behavior/states",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/behavior/states",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/behavior/states",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/behavior/states",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/behavior/transitions",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/behavior/transitions",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/behavior/transitions",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/behavior/transitions",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/behavior/transitions",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/behavior/transitions",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/behavior/transitions",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/behavior/transitions",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/behavior/transitions",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/behavior/transitions",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "failure-injection",
+      "implementationPointer": "/behavior/transitions",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "focus-test",
+      "implementationPointer": "/behavior/transitions",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/behavior/transitions",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/behavior/transitions",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "state-transition-test",
+      "implementationPointer": "/behavior/transitions",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "asyncRecovery"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/noClipping",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/noClipping",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/noClipping",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/noClipping",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/noClipping",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/noClipping",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/noClipping",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/noClipping",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/view/layout",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/layout",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/layout",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/view/layout",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/view/layout",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/view/layout",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/layout",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/layout",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/view/layout",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/view/layout",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/view/layout",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/layout",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/layout",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/view/layout",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/view/layout",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/view/regions",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/regions",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/regions",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/view/regions",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/view/regions",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/view/regions",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/regions",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/regions",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/view/regions",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/view/regions",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/view/regions",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/regions",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/regions",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/view/regions",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/view/regions",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/view/regions/body",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/regions/body",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/regions/body",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/view/regions/body",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/view/regions/body",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/view/regions/body",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/regions/body",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/regions/body",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/view/regions/body",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/view/regions/body",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/view/regions/body",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/regions/body",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/regions/body",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/view/regions/body",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/view/regions/body",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/view/regions/header",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/regions/header",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/regions/header",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/view/regions/header",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/view/regions/header",
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/view/regions/header",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/regions/header",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/regions/header",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/view/regions/header",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/view/regions/header",
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/view/regions/header",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/regions/header",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/regions/header",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/view/regions/header",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/view/regions/header",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "clipping-scan",
+      "implementationPointer": "/view/responsive",
+      "oracle": "/quality/visualOracles/noClipping",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "state-matrix",
+      "implementationPointer": "/view/responsive",
+      "oracle": "/quality/visualOracles/noClipping",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "theme-screenshot",
+      "implementationPointer": "/view/responsive",
+      "oracle": "/quality/visualOracles/noClipping",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "viewport-matrix",
+      "implementationPointer": "/view/responsive",
+      "oracle": "/quality/visualOracles/noClipping",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "clipping-scan",
+      "implementationPointer": "/view/responsive",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "state-matrix",
+      "implementationPointer": "/view/responsive",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "theme-screenshot",
+      "implementationPointer": "/view/responsive",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "viewport-matrix",
+      "implementationPointer": "/view/responsive",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "clipping-scan",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/noClipping",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "state-matrix",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/noClipping",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "theme-screenshot",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/noClipping",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "viewport-matrix",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/noClipping",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "clipping-scan",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "state-matrix",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "theme-screenshot",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "viewport-matrix",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "clipping-scan",
+      "implementationPointer": "/view/tokens",
+      "oracle": "/quality/visualOracles/noClipping",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "state-matrix",
+      "implementationPointer": "/view/tokens",
+      "oracle": "/quality/visualOracles/noClipping",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "theme-screenshot",
+      "implementationPointer": "/view/tokens",
+      "oracle": "/quality/visualOracles/noClipping",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "viewport-matrix",
+      "implementationPointer": "/view/tokens",
+      "oracle": "/quality/visualOracles/noClipping",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "clipping-scan",
+      "implementationPointer": "/view/tokens",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "state-matrix",
+      "implementationPointer": "/view/tokens",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "theme-screenshot",
+      "implementationPointer": "/view/tokens",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "responsiveStates"
+    },
+    {
+      "evidenceKind": "viewport-matrix",
+      "implementationPointer": "/view/tokens",
+      "oracle": "/quality/visualOracles/stateRetention",
+      "step": "responsiveStates"
+    }
+  ],
+  "rows": [
+    {
+      "evidenceKinds": [
+        "contract-error-test",
+        "green-output",
+        "independent-review",
+        "open-item-register",
+        "red-output",
+        "risk-review",
+        "traceability-matrix",
+        "unit-test"
+      ],
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "steps": [
+        "identityCore",
+        "reviewCandidate"
+      ]
+    },
+    {
+      "evidenceKinds": [
+        "combination-test",
+        "event-count-test",
+        "green-output",
+        "independent-review",
+        "interaction-test",
+        "open-item-register",
+        "red-output",
+        "risk-review",
+        "traceability-matrix"
+      ],
+      "oracle": "/quality/oracles/filterPreservesSelection",
+      "steps": [
+        "queryCapabilities",
+        "reviewCandidate",
+        "selectionCapability"
+      ]
+    },
+    {
+      "evidenceKinds": [
+        "failure-injection",
+        "focus-test",
+        "green-output",
+        "independent-review",
+        "open-item-register",
+        "red-output",
+        "risk-review",
+        "state-transition-test",
+        "traceability-matrix"
+      ],
+      "oracle": "/quality/oracles/refreshFailureRetainsContext",
+      "steps": [
+        "asyncRecovery",
+        "reviewCandidate"
+      ]
+    },
+    {
+      "evidenceKinds": [
+        "combination-test",
+        "event-count-test",
+        "green-output",
+        "independent-review",
+        "interaction-test",
+        "open-item-register",
+        "red-output",
+        "risk-review",
+        "traceability-matrix"
+      ],
+      "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "steps": [
+        "queryCapabilities",
+        "reviewCandidate"
+      ]
+    },
+    {
+      "evidenceKinds": [
+        "combination-test",
+        "contract-error-test",
+        "green-output",
+        "independent-review",
+        "interaction-test",
+        "open-item-register",
+        "red-output",
+        "risk-review",
+        "traceability-matrix",
+        "unit-test"
+      ],
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "steps": [
+        "identityCore",
+        "reviewCandidate",
+        "selectionCapability"
+      ]
+    },
+    {
+      "evidenceKinds": [
+        "combination-test",
+        "event-count-test",
+        "green-output",
+        "independent-review",
+        "interaction-test",
+        "open-item-register",
+        "red-output",
+        "risk-review",
+        "traceability-matrix"
+      ],
+      "oracle": "/quality/oracles/sortProducesSingleIntent",
+      "steps": [
+        "queryCapabilities",
+        "reviewCandidate"
+      ]
+    },
+    {
+      "evidenceKinds": [
+        "failure-injection",
+        "focus-test",
+        "green-output",
+        "independent-review",
+        "open-item-register",
+        "red-output",
+        "risk-review",
+        "state-transition-test",
+        "traceability-matrix"
+      ],
+      "oracle": "/quality/oracles/staleResultDoesNotOverwrite",
+      "steps": [
+        "asyncRecovery",
+        "reviewCandidate"
+      ]
+    },
+    {
+      "evidenceKinds": [
+        "geometry-assertion",
+        "green-output",
+        "independent-review",
+        "open-item-register",
+        "red-output",
+        "risk-review",
+        "scroll-test",
+        "traceability-matrix",
+        "viewport-screenshot"
+      ],
+      "oracle": "/quality/visualOracles/fixedColumnBoundary",
+      "steps": [
+        "geometryCapabilities",
+        "reviewCandidate"
+      ]
+    },
+    {
+      "evidenceKinds": [
+        "accessibility-scan",
+        "green-output",
+        "independent-review",
+        "keyboard-test",
+        "manual-review",
+        "open-item-register",
+        "red-output",
+        "risk-review",
+        "traceability-matrix"
+      ],
+      "oracle": "/quality/visualOracles/focusVisibility",
+      "steps": [
+        "keyboardAccessibility",
+        "reviewCandidate"
+      ]
+    },
+    {
+      "evidenceKinds": [
+        "geometry-assertion",
+        "green-output",
+        "independent-review",
+        "open-item-register",
+        "red-output",
+        "risk-review",
+        "scroll-test",
+        "traceability-matrix",
+        "viewport-screenshot"
+      ],
+      "oracle": "/quality/visualOracles/headerBodyAlignment",
+      "steps": [
+        "geometryCapabilities",
+        "reviewCandidate"
+      ]
+    },
+    {
+      "evidenceKinds": [
+        "clipping-scan",
+        "independent-review",
+        "open-item-register",
+        "risk-review",
+        "state-matrix",
+        "theme-screenshot",
+        "traceability-matrix",
+        "viewport-matrix"
+      ],
+      "oracle": "/quality/visualOracles/noClipping",
+      "steps": [
+        "responsiveStates",
+        "reviewCandidate"
+      ]
+    },
+    {
+      "evidenceKinds": [
+        "accessibility-scan",
+        "geometry-assertion",
+        "green-output",
+        "independent-review",
+        "keyboard-test",
+        "manual-review",
+        "open-item-register",
+        "red-output",
+        "risk-review",
+        "scroll-test",
+        "traceability-matrix",
+        "viewport-screenshot"
+      ],
+      "oracle": "/quality/visualOracles/scrollReachability",
+      "steps": [
+        "geometryCapabilities",
+        "keyboardAccessibility",
+        "reviewCandidate"
+      ]
+    },
+    {
+      "evidenceKinds": [
+        "clipping-scan",
+        "failure-injection",
+        "focus-test",
+        "green-output",
+        "independent-review",
+        "open-item-register",
+        "red-output",
+        "risk-review",
+        "state-matrix",
+        "state-transition-test",
+        "theme-screenshot",
+        "traceability-matrix",
+        "viewport-matrix"
+      ],
+      "oracle": "/quality/visualOracles/stateRetention",
+      "steps": [
+        "asyncRecovery",
+        "responsiveStates",
+        "reviewCandidate"
+      ]
+    }
+  ],
+  "specificationVersion": "0.3.0"
+}

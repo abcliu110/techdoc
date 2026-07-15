@@ -68,7 +68,27 @@ node .\生产级组件SOP\06-维护工具\build-component-spec-index.mjs
 ```powershell
 node .\生产级组件SOP\06-维护工具\validate-component-specifications.test.mjs
 node .\生产级组件SOP\06-维护工具\validate-component-specifications.mjs
+node .\生产级组件SOP\06-维护工具\verify-specification-sop-separation.test.mjs
 node .\生产级组件SOP\06-维护工具\verify-specification-sop-separation.mjs
+```
+
+其中规范测试报告的 `38` 是 38 项变异与准入判断，不等于 38 个纯负向用例；分层 SOP 测试报告 `14` 项合同断言。两个测试脚本和两个全量验证器缺一不可。
+
+## DataGrid v2 Shadow 试点
+
+DataGrid 正在独立的 `v2/` 与 `v2-candidates/` 路径验证“公共元 Schema + 类别 Profile + 能力 Profile + 组件装配清单”的规范装配方法。v1 仍是权威入口，v2 即使校验通过也保持 `Draft`、`implementationAllowed=false`，不能据此开始 React 编码。
+
+重建派生产物：
+
+```powershell
+node .\生产级组件SOP\06-维护工具\spec-assembly\assemble-effective-schema.mjs .\生产级组件SOP\04-机器索引与Schema\v2\assemblies\02-data-grid.assembly.json .\生产级组件SOP\04-机器索引与Schema\v2\effective-schemas\02-data-grid.schema.json
+node .\生产级组件SOP\06-维护工具\spec-assembly\generate-artifacts.mjs .\生产级组件SOP\02-组件规范\v2-candidates\02-表格类\02-data-grid.spec.json .\生产级组件SOP\03-生产SOP\组件实施SOP-v2-candidates\02-data-grid.implementation-sop.json .\生产级组件SOP\02-组件规范\v2-candidates\02-表格类\02-data-grid.generated.md .\生产级组件SOP\03-生产SOP\组件实施SOP-v2-candidates\02-data-grid.generated.md .\生产级组件SOP\04-机器索引与Schema\v2\reference-catalogs\02-data-grid.references.json .\生产级组件SOP\02-组件规范\v2-candidates\02-表格类\02-data-grid.traceability.json
+```
+
+只读验证所有输入、引用、摘要和派生产物：
+
+```powershell
+node .\生产级组件SOP\06-维护工具\spec-assembly\verify-datagrid-v2.mjs
 ```
 
 历史审计见[迁移记录](07-历史迁移记录/README.md)。旧生成器已随旧文档归档，不是维护入口。

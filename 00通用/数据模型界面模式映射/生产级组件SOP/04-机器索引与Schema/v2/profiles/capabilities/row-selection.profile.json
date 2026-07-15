@@ -9,6 +9,7 @@
       "/quality/oracles/selectionStableAfterSort"
     ],
     "requiredSemanticChecks": ["selection-is-bound-to-row-identity"],
+    "requiredImplementationPointers": ["/api/features/rowSelection"],
     "minimumRisk": "R2",
     "requiredApprovalRoles": ["component-maintainer", "test-reviewer"],
     "requiredTypes": { "/api/features/rowSelection": "object" },

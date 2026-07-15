@@ -5,6 +5,7 @@
   "constraints": {
     "requiredPointers": ["/api/features/columnSizing", "/quality/visualOracles/headerBodyAlignment"],
     "requiredSemanticChecks": ["column-sizing-contract"],
+    "requiredImplementationPointers": ["/api/features/columnSizing"],
     "minimumRisk": "R1",
     "requiredApprovalRoles": ["ux-a11y-reviewer"],
     "requiredTypes": { "/api/features/columnSizing": "object" },

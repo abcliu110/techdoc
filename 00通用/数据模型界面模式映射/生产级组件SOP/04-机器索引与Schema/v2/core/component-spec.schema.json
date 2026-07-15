@@ -38,19 +38,462 @@
   "properties": {
     "schemaVersion": { "const": 2 },
     "specificationVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
-    "component": { "type": "object" },
-    "lifecycle": { "type": "object" },
-    "scope": { "type": "object" },
-    "api": { "type": "object" },
-    "behavior": { "type": "object" },
-    "view": { "type": "object" },
-    "accessibility": { "type": "object" },
-    "quality": { "type": "object" },
-    "security": { "type": "object" },
-    "compatibility": { "type": "object" },
-    "risk": { "type": "object" },
-    "decisions": { "type": "array", "items": { "type": "object" } },
-    "approval": { "type": "object" }
+    "component": {
+      "type": "object",
+      "required": ["key", "legacyId", "name", "englishName", "category", "exportName", "packageSubpath"],
+      "properties": {
+        "key": { "type": "string", "pattern": "^[0-9]{2}:[a-z0-9-]+$" },
+        "legacyId": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "englishName": { "type": "string", "minLength": 1 },
+        "category": { "type": "string", "pattern": "^[0-9]{2}$" },
+        "exportName": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9]+$" },
+        "packageSubpath": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "lifecycle": {
+      "type": "object",
+      "required": ["specificationStatus", "implementationAllowed", "referenceStatus", "planStatus"],
+      "properties": {
+        "specificationStatus": { "enum": ["Draft", "ReviewReady", "Frozen"] },
+        "implementationAllowed": { "type": "boolean" },
+        "referenceStatus": { "enum": ["NotRun", "Passed", "Failed"] },
+        "planStatus": { "enum": ["Unbound", "Bound"] }
+      },
+      "additionalProperties": false
+    },
+    "scope": {
+      "type": "object",
+      "required": ["purpose", "in", "out"],
+      "properties": {
+        "purpose": { "type": "string", "minLength": 1 },
+        "in": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "out": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+      },
+      "additionalProperties": false
+    },
+    "api": {
+      "type": "object",
+      "required": ["status", "props", "events", "actions", "features", "controlledState"],
+      "properties": {
+        "status": { "enum": ["proposed", "frozen"] },
+        "props": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["type", "required", "contract"],
+            "properties": {
+              "type": { "type": "string", "minLength": 1 },
+              "required": { "type": "boolean" },
+              "contract": { "type": "string", "minLength": 1 },
+              "semantic": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "events": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["name", "payload", "capability"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "payload": { "type": "string", "minLength": 1 },
+              "capability": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "actions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "event": { "type": "string", "pattern": "^/" },
+              "contract": { "type": "string", "minLength": 1 },
+              "signature": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "features": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["state"],
+            "properties": {
+              "state": { "type": "string", "minLength": 1 },
+              "event": { "type": "string", "pattern": "^/" },
+              "remoteBehavior": { "type": "string", "minLength": 1 },
+              "identitySource": { "type": "string", "pattern": "^/" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "controlledState": {
+          "type": "object",
+          "required": ["rule"],
+          "properties": { "rule": { "type": "string", "minLength": 1 } },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "behavior": {
+      "type": "object",
+      "required": ["identity", "states", "transitions", "recoveryActions", "exceptionFlows"],
+      "properties": {
+        "identity": {
+          "type": "object",
+          "required": ["row", "column"],
+          "properties": {
+            "row": {
+              "type": "object",
+              "required": ["keyContract", "duplicatePolicy", "semantic"],
+              "properties": {
+                "keyContract": { "type": "string", "pattern": "^/" },
+                "duplicatePolicy": { "type": "string", "minLength": 1 },
+                "semantic": { "type": "string", "minLength": 1 }
+              },
+              "additionalProperties": false
+            },
+            "column": {
+              "type": "object",
+              "required": ["keyContract", "stability", "semantic"],
+              "properties": {
+                "keyContract": { "type": "string", "pattern": "^/" },
+                "stability": { "type": "string", "minLength": 1 },
+                "semantic": { "type": "string", "minLength": 1 }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "states": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["userVisible"],
+            "properties": { "userVisible": { "type": "boolean" } },
+            "additionalProperties": false
+          }
+        },
+        "transitions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "from", "event", "to"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "from": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+              "event": { "type": "string", "minLength": 1 },
+              "to": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+            },
+            "additionalProperties": false
+          }
+        },
+        "recoveryActions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["kind", "responsibility"],
+            "properties": {
+              "kind": { "enum": ["api-command", "consumer-correction", "internal-policy"] },
+              "api": { "type": "string", "pattern": "^/" },
+              "responsibility": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "exceptionFlows": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "states", "regions", "recoveryAction", "oracle"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "states": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+              "regions": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+              "recoveryAction": { "type": "string", "minLength": 1 },
+              "oracle": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "view": {
+      "type": "object",
+      "required": ["regions", "layout", "statePresentation", "tokens", "responsive"],
+      "properties": {
+        "regions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["purpose", "required"],
+            "properties": {
+              "purpose": { "type": "string", "minLength": 1 },
+              "required": { "type": "boolean" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "layout": {
+          "type": "object",
+          "required": ["regionOrder", "scrollOwner", "stickyRegions", "columnSizing", "rowHeight", "headerHeightPx", "scrollbarReachability"],
+          "properties": {
+            "regionOrder": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+            "scrollOwner": { "type": "string", "minLength": 1 },
+            "stickyRegions": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+            "columnSizing": {
+              "type": "object",
+              "required": ["defaultPx", "minimumPx", "maximumPx", "handleHitTargetPx"],
+              "properties": {
+                "defaultPx": { "type": "number", "minimum": 1 },
+                "minimumPx": { "type": "number", "minimum": 1 },
+                "maximumPx": { "type": "number", "minimum": 1 },
+                "handleHitTargetPx": { "type": "number", "minimum": 1 }
+              },
+              "additionalProperties": false
+            },
+            "rowHeight": {
+              "type": "object",
+              "required": ["compactPx", "defaultPx", "comfortablePx"],
+              "properties": {
+                "compactPx": { "type": "number", "minimum": 1 },
+                "defaultPx": { "type": "number", "minimum": 1 },
+                "comfortablePx": { "type": "number", "minimum": 1 }
+              },
+              "additionalProperties": false
+            },
+            "headerHeightPx": { "type": "number", "minimum": 1 },
+            "scrollbarReachability": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        "statePresentation": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["regions", "presentation", "focus"],
+            "properties": {
+              "regions": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+              "presentation": { "type": "string", "minLength": 1 },
+              "focus": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "tokens": {
+          "type": "object",
+          "required": ["surface", "border", "text", "focusRing", "spacing", "density", "motion"],
+          "properties": {
+            "surface": { "type": "object", "additionalProperties": { "type": "string", "minLength": 1 } },
+            "border": { "type": "object", "additionalProperties": { "type": "string", "minLength": 1 } },
+            "text": { "type": "object", "additionalProperties": { "type": "string", "minLength": 1 } },
+            "focusRing": {
+              "type": "object",
+              "required": ["color", "widthPx", "offsetPx"],
+              "properties": {
+                "color": { "type": "string", "minLength": 1 },
+                "widthPx": { "type": "number", "minimum": 1 },
+                "offsetPx": { "type": "number" }
+              },
+              "additionalProperties": false
+            },
+            "spacing": { "type": "object", "additionalProperties": { "type": "number", "minimum": 0 } },
+            "density": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+            "motion": { "type": "object", "additionalProperties": { "type": "number", "minimum": 0 } }
+          },
+          "additionalProperties": false
+        },
+        "responsive": {
+          "type": "object",
+          "required": ["viewports", "adjacentWidthChecksPx", "contentFixtures"],
+          "properties": {
+            "viewports": { "type": "object", "additionalProperties": { "type": "string", "minLength": 1 } },
+            "adjacentWidthChecksPx": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "number", "minimum": 1 } },
+            "contentFixtures": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "accessibility": {
+      "type": "object",
+      "required": ["keyboardModel", "semantics", "announcements"],
+      "properties": {
+        "keyboardModel": {
+          "type": "object",
+          "required": ["pattern", "keys", "focusRecovery"],
+          "properties": {
+            "pattern": { "type": "string", "minLength": 1 },
+            "keys": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+            "focusRecovery": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        "semantics": {
+          "type": "object",
+          "required": ["roles", "counts", "selection"],
+          "properties": {
+            "roles": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+            "counts": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+            "selection": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        "announcements": {
+          "type": "object",
+          "required": ["politeness", "events"],
+          "properties": {
+            "politeness": { "enum": ["polite", "assertive", "off"] },
+            "events": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "quality": {
+      "type": "object",
+      "required": ["scaleFixtures", "performanceBudgets", "visualOracles", "oracles"],
+      "properties": {
+        "scaleFixtures": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { "type": "number", "minimum": 0 }
+          }
+        },
+        "performanceBudgets": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["operator", "value", "unit", "fixture"],
+            "properties": {
+              "operator": { "enum": ["<", "<=", "=", ">=", ">"] },
+              "value": { "type": "number", "minimum": 0 },
+              "unit": { "type": "string", "minLength": 1 },
+              "fixture": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "visualOracles": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["given", "when", "then"],
+            "properties": {
+              "given": { "type": "string", "minLength": 1 },
+              "when": { "type": "string", "minLength": 1 },
+              "then": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "oracles": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["given", "when", "then", "references"],
+            "properties": {
+              "given": { "type": "string", "minLength": 1 },
+              "when": { "type": "string", "minLength": 1 },
+              "then": { "type": "string", "minLength": 1 },
+              "references": {
+                "type": "object",
+                "required": ["api", "states", "regions"],
+                "properties": {
+                  "api": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^/" } },
+                  "states": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+                  "regions": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "security": {
+      "type": "object",
+      "required": ["rules"],
+      "properties": { "rules": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } } },
+      "additionalProperties": false
+    },
+    "compatibility": {
+      "type": "object",
+      "required": ["legacyId", "breakingSurfaces", "forbiddenSopAliases", "v1Authority"],
+      "properties": {
+        "legacyId": { "type": "string", "minLength": 1 },
+        "breakingSurfaces": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "forbiddenSopAliases": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "v1Authority": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "risk": {
+      "type": "object",
+      "required": ["level", "signals", "invariants", "upgradeTriggers"],
+      "properties": {
+        "level": { "enum": ["R1", "R2", "R3"] },
+        "signals": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "invariants": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "upgradeTriggers": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+      },
+      "additionalProperties": false
+    },
+    "decisions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": ["key", "question", "owner", "status"],
+        "properties": {
+          "key": { "type": "string", "minLength": 1 },
+          "question": { "type": "string", "minLength": 1 },
+          "owner": { "type": "string", "minLength": 1 },
+          "status": { "enum": ["open", "resolved"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "approval": {
+      "type": "object",
+      "required": ["status", "authors", "requiredRoles", "records"],
+      "properties": {
+        "status": { "enum": ["pending", "approved"] },
+        "authors": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "requiredRoles": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "records": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "required": ["role", "reviewer", "approvedAt", "specificationVersion", "specificationDigest"],
+            "properties": {
+              "role": { "type": "string", "minLength": 1 },
+              "reviewer": { "type": "string", "minLength": 1 },
+              "approvedAt": { "type": "string", "minLength": 1 },
+              "specificationVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+              "specificationDigest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
   },
   "additionalProperties": false
 }

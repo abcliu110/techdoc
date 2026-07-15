@@ -23,6 +23,9 @@ function expectIssue(change, code) {
 expectIssue((spec) => { spec.behavior.transitions[0].to = ["missingState"]; }, "SEM_TRANSITION_STATE");
 expectIssue((spec) => { spec.behavior.exceptionFlows[0].regions = ["missingRegion"]; }, "SEM_EXCEPTION_REGION");
 expectIssue((spec) => { spec.behavior.exceptionFlows[0].recoveryAction = "missingAction"; }, "SEM_EXCEPTION_ACTION");
+expectIssue((spec) => {
+  spec.behavior.recoveryActions = { retryFailedQuery: { kind: "api-command", api: "/api/actions/missing" } };
+}, "SEM_RECOVERY_API");
 expectIssue((spec) => { spec.behavior.exceptionFlows[0].oracle = "missingOracle"; }, "SEM_EXCEPTION_ORACLE");
 expectIssue((spec) => { spec.quality.oracles.selectionStableAfterSort.references.api = ["/api/events/missing"]; }, "SEM_ORACLE_API");
 expectIssue((spec) => { delete spec.view.statePresentation.refreshing; }, "SEM_STATE_PRESENTATION");
@@ -30,8 +33,14 @@ expectIssue((spec) => { spec.view.statePresentation.ready.regions = ["missingReg
 expectIssue((spec) => { effectiveSchema["x-required-semantic-checks"].push("unregistered-check"); }, "SEM_CHECK_UNREGISTERED");
 effectiveSchema["x-required-semantic-checks"].pop();
 expectIssue((spec) => { spec.api.features.rowSelection.identitySource = "/behavior/identity/row/index"; }, "SEM_SELECTION_IDENTITY");
+expectIssue((spec) => { spec.api.features.sorting.event = "/api/events/filteringChange"; }, "SEM_SORTING_CONTRACT");
+expectIssue((spec) => { spec.api.features.filtering.event = "/api/events/sortingChange"; }, "SEM_FILTERING_CONTRACT");
+expectIssue((spec) => { spec.api.features.pagination.event = "/api/events/sortingChange"; }, "SEM_PAGINATION_CONTRACT");
+expectIssue((spec) => { spec.api.features.columnPinning.identitySource = "/behavior/identity/row/keyContract"; }, "SEM_COLUMN_PINNING_CONTRACT");
+expectIssue((spec) => { spec.api.features.columnSizing.identitySource = "/behavior/identity/row/keyContract"; }, "SEM_COLUMN_SIZING_CONTRACT");
+expectIssue((spec) => { spec.behavior.identity.row.keyContract = "/api/props/data"; }, "SEM_TABLE_IDENTITY_CONTRACT");
 expectIssue((spec) => { delete spec.quality.oracles.remoteQueryIsNotAppliedLocally; }, "SEM_CAPABILITY_ORACLE");
 expectIssue((spec) => { spec.approval.requiredRoles = ["ux-a11y-reviewer"]; }, "SEM_APPROVAL_ROLE");
 expectIssue((spec) => { spec.lifecycle.implementationAllowed = true; }, "SEM_SHADOW_ADMISSION");
 
-console.log(JSON.stringify({ status: "PASS", cases: 13 }, null, 2));
+console.log(JSON.stringify({ status: "PASS", cases: 19 }, null, 2));

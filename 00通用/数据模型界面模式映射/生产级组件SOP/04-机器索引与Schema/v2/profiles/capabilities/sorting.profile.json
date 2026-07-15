@@ -5,6 +5,7 @@
   "constraints": {
     "requiredPointers": ["/api/features/sorting", "/quality/oracles/sortProducesSingleIntent"],
     "requiredSemanticChecks": ["sorting-contract"],
+    "requiredImplementationPointers": ["/api/features/sorting"],
     "minimumRisk": "R1",
     "requiredApprovalRoles": [],
     "requiredTypes": { "/api/features/sorting": "object" },

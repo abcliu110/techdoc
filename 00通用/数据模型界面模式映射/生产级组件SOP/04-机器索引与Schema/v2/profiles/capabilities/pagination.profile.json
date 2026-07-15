@@ -5,6 +5,7 @@
   "constraints": {
     "requiredPointers": ["/api/features/pagination", "/quality/oracles/remoteQueryIsNotAppliedLocally"],
     "requiredSemanticChecks": ["pagination-contract"],
+    "requiredImplementationPointers": ["/api/features/pagination"],
     "minimumRisk": "R2",
     "requiredApprovalRoles": ["component-maintainer"],
     "requiredTypes": { "/api/features/pagination": "object" },

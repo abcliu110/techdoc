@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { validateSpecInstance } from "./validate-spec-instance.mjs";
 
 function fixture(schema, instance) {
@@ -45,8 +47,39 @@ assert.deepEqual(
   ],
 );
 
+{
+  const scriptRoot = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
+  const v2Root = join(scriptRoot, "04-机器索引与Schema", "v2");
+  const schemaPath = join(v2Root, "effective-schemas", "02-data-grid.schema.json");
+  const spec = JSON.parse(readFileSync(join(scriptRoot, "02-组件规范", "v2-candidates", "02-表格类", "02-data-grid.spec.json"), "utf8"));
+  delete spec.api.events.sortingChange.capability;
+  spec.view.statePresentation.ready.presentatoin = spec.view.statePresentation.ready.presentation;
+  delete spec.view.statePresentation.ready.presentation;
+  const issues = validateSpecInstance(spec, schemaPath, { v2Root });
+  assert.ok(issues.some((item) => item.code === "SCHEMA_REQUIRED" && item.pointer === "/api/events/sortingChange/capability"));
+  assert.ok(issues.some((item) => item.code === "SCHEMA_REQUIRED" && item.pointer === "/view/statePresentation/ready/presentation"));
+  assert.ok(issues.some((item) => item.code === "SCHEMA_ADDITIONAL_PROPERTY" && item.pointer === "/view/statePresentation/ready/presentatoin"));
+}
+
 const typed = fixture({ type: "object", properties: { enabled: { type: "boolean" } }, additionalProperties: false }, { enabled: "yes" });
 assert.equal(validateSpecInstance(typed.instance, typed.schemaPath, { v2Root: typed.v2Root })[0].code, "SCHEMA_TYPE");
+
+const map = fixture({
+  type: "object",
+  additionalProperties: {
+    type: "object",
+    required: ["name"],
+    properties: { name: { type: "string" } },
+    additionalProperties: false,
+  },
+}, { item: { nmae: "wrong" } });
+assert.deepEqual(
+  validateSpecInstance(map.instance, map.schemaPath, { v2Root: map.v2Root }).map(({ code, pointer }) => ({ code, pointer })),
+  [
+    { code: "SCHEMA_ADDITIONAL_PROPERTY", pointer: "/item/nmae" },
+    { code: "SCHEMA_REQUIRED", pointer: "/item/name" },
+  ],
+);
 
 const required = fixture({ type: "object", required: ["name"], properties: { name: { type: "string" } } }, {});
 assert.deepEqual(validateSpecInstance(required.instance, required.schemaPath, { v2Root: required.v2Root })[0], {
@@ -63,6 +96,8 @@ assert.throws(() => validateSpecInstance(missingRef.instance, missingRef.schemaP
 
 const outsideRef = fixture({ $ref: "../../outside.schema.json" }, {});
 assert.throws(() => validateSpecInstance(outsideRef.instance, outsideRef.schemaPath, { v2Root: outsideRef.v2Root }), /outside v2 root/i);
+const otherDriveRef = fixture({ $ref: "D:/outside.schema.json" }, {});
+assert.throws(() => validateSpecInstance(otherDriveRef.instance, otherDriveRef.schemaPath, { v2Root: otherDriveRef.v2Root }), /outside v2 root/i);
 
 const pointers = fixture({
   type: "object",
@@ -78,4 +113,4 @@ assert.deepEqual(
   ],
 );
 
-console.log(JSON.stringify({ status: "PASS", cases: 8 }, null, 2));
+console.log(JSON.stringify({ status: "PASS", cases: 11 }, null, 2));

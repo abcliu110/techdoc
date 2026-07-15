@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { dirname, relative, resolve } from "node:path";
+import { dirname, isAbsolute, relative, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { escapePointerToken, getPointer, readJson, stableJson } from "./shared.mjs";
 
@@ -29,6 +29,7 @@ function assertSupportedSchema(schema) {
     throw new Error(`Unsupported schema keyword: ${key}`);
   }
   for (const child of Object.values(schema.properties || {})) assertSupportedSchema(child);
+  if (schema.additionalProperties && typeof schema.additionalProperties === "object") assertSupportedSchema(schema.additionalProperties);
   if (schema.items && typeof schema.items === "object") assertSupportedSchema(schema.items);
   for (const child of schema.allOf || []) assertSupportedSchema(child);
 }
@@ -37,7 +38,7 @@ function resolveRef(schemaPath, ref, v2Root) {
   if (typeof ref !== "string" || !ref || ref.includes("#")) throw new Error(`Only local file refs are supported: ${ref}`);
   const target = resolve(dirname(schemaPath), ref);
   const relation = relative(resolve(v2Root), target);
-  if (relation.startsWith("..") || resolve(relation) === target && relation.startsWith("..")) {
+  if (isAbsolute(relation) || relation.startsWith("..")) {
     throw new Error(`Schema ref is outside v2 root: ${ref}`);
   }
   if (!existsSync(target)) throw new Error(`Missing schema ref: ${ref}`);
@@ -85,6 +86,12 @@ function validateNode(value, schema, pointer, schemaPath, v2Root, issues) {
     if (schema.additionalProperties === false) {
       for (const key of Object.keys(value)) {
         if (!Object.prototype.hasOwnProperty.call(schema.properties || {}, key)) issues.push(issue("SCHEMA_ADDITIONAL_PROPERTY", `${pointer}/${escapePointerToken(key)}`, "Additional property is not allowed"));
+      }
+    } else if (schema.additionalProperties && typeof schema.additionalProperties === "object") {
+      for (const [key, childValue] of Object.entries(value)) {
+        if (!Object.prototype.hasOwnProperty.call(schema.properties || {}, key)) {
+          validateNode(childValue, schema.additionalProperties, `${pointer}/${escapePointerToken(key)}`, schemaPath, v2Root, issues);
+        }
       }
     }
   }

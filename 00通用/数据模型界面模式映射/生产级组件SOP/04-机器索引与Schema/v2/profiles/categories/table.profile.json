@@ -12,6 +12,16 @@
       "/quality/scaleFixtures"
     ],
     "requiredSemanticChecks": ["table-identity-contract"],
+    "requiredImplementationPointers": [
+      "/api/props/ariaLabel",
+      "/api/props/columns",
+      "/api/props/data",
+      "/api/props/getRowId",
+      "/behavior/identity/column",
+      "/behavior/identity/row",
+      "/view/regions/body",
+      "/view/regions/header"
+    ],
     "minimumRisk": "R1",
     "requiredApprovalRoles": ["ux-a11y-reviewer"],
     "requiredTypes": {

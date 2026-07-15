@@ -2,10 +2,16 @@
   "sopVersion": "0.2.0",
   "componentKey": "02:data-grid",
   "status": "Draft",
+  "approval": {
+    "status": "pending",
+    "authors": ["Codex"],
+    "requiredRoles": ["component-maintainer", "test-reviewer"],
+    "records": []
+  },
   "specification": {
     "path": "../../02-组件规范/v2-candidates/02-表格类/02-data-grid.spec.json",
     "version": "0.3.0",
-    "digest": "sha256:dd5b071ed5e6517493a587b1066243a8ac1f2532848c75f9f6411e4cafe1e336"
+    "digest": "sha256:12f5c61fdd777648af75b60ef8dc9f926976952725000fc7ae0ce55df1c358ea"
   },
   "steps": [
     {
@@ -45,6 +51,7 @@
         "/api/events/retry",
         "/api/props/data",
         "/behavior/exceptionFlows",
+        "/behavior/recoveryActions",
         "/behavior/states",
         "/behavior/transitions"
       ],
@@ -93,7 +100,9 @@
         "/api/features/columnPinning",
         "/api/features/columnSizing",
         "/view/layout",
-        "/view/regions"
+        "/view/regions",
+        "/view/regions/body",
+        "/view/regions/header"
       ],
       "verifies": [
         "/quality/visualOracles/fixedColumnBoundary",
@@ -125,6 +134,7 @@
         "/accessibility/announcements",
         "/accessibility/keyboardModel",
         "/accessibility/semantics",
+        "/api/props/ariaLabel",
         "/view/statePresentation"
       ],
       "verifies": [

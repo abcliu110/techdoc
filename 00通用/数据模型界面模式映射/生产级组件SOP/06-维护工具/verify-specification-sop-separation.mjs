@@ -126,12 +126,14 @@ export function verifySeparation() {
 
   const actualSpecPaths = new Set(
     findFiles(join(root, "02-组件规范"), (path) => path.endsWith(".spec.json"))
+      .filter((path) => !path.includes(`${join("02-组件规范", "v2-candidates")}`))
       .map((path) => relative(root, path).replaceAll("\\", "/")),
   );
   assert.deepEqual([...actualSpecPaths].sort(), [...paths].sort(), "Every component specification must be indexed exactly once");
 
   const productionSopPaths = findFiles(join(root, "03-生产SOP"), (path) => path.endsWith(".md"))
-    .map((path) => relative(root, path).replaceAll("\\", "/"));
+    .map((path) => relative(root, path).replaceAll("\\", "/"))
+    .filter((path) => !path.startsWith("03-生产SOP/组件实施SOP-v2-candidates/"));
   const productionSops = classifyProductionSops(productionSopPaths, new Set(catalogKeys));
   const implementationSopKeys = new Set(productionSops.component.map((path) => {
     const match = path.match(/\/((0[1-9]|1[5-8])-([a-z0-9-]+))\.implementation-sop\.md$/);
@@ -156,7 +158,7 @@ export function verifySeparation() {
     join(root, "README.md"),
     ...findFiles(join(root, "00-统一生产规范"), (path) => path.endsWith(".md")),
     ...findFiles(join(root, "01-类别规范"), (path) => path.endsWith(".md")),
-    ...findFiles(join(root, "03-生产SOP"), (path) => path.endsWith(".md")),
+    ...findFiles(join(root, "03-生产SOP"), (path) => path.endsWith(".md") && !path.includes(`${join("03-生产SOP", "组件实施SOP-v2-candidates")}`)),
     ...findFiles(join(root, "05-证据规范"), (path) => path.endsWith(".md")),
   ];
   const brokenLinks = authoritativeMarkdown.flatMap((path) =>

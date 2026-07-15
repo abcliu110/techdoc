@@ -34,9 +34,12 @@ function fixture({ profileKey = "capability:sorting", fileName = "sorting.profil
     appliesTo: "component-spec-v2",
     constraints: {
       requiredPointers: ["/api/features/sorting"],
+      requiredImplementationPointers: ["/api/features/sorting"],
       requiredSemanticChecks: ["sorting-contract"],
       minimumRisk: "R1",
       requiredApprovalRoles: [],
+      requiredTypes: { "/api/features/sorting": "object" },
+      incompatibleProfiles: [],
       ...constraints,
     },
   }));
@@ -55,8 +58,59 @@ assert.throws(
   () => assembleEffectiveSchema(fixture({ profiles: ["../profiles/capabilities/sorting.profile.json", "../profiles/capabilities/sorting.profile.json"] })),
   /duplicate profile/i,
 );
+assert.throws(() => {
+  const assembly = fixture();
+  const value = JSON.parse(readFileSync(assembly, "utf8"));
+  value.assemblyVersion = 2;
+  writeFileSync(assembly, JSON.stringify(value));
+  assembleEffectiveSchema(assembly);
+}, /assemblyVersion/i);
+assert.throws(() => {
+  const assembly = fixture();
+  const v2 = join(dirname(assembly), "..");
+  const profile = join(v2, "profiles", "capabilities", "sorting.profile.json");
+  const value = JSON.parse(readFileSync(profile, "utf8"));
+  value.profileVersion = 2;
+  writeFileSync(profile, JSON.stringify(value));
+  assembleEffectiveSchema(assembly);
+}, /profileVersion/i);
+assert.throws(() => {
+  const assembly = fixture();
+  const v2 = join(dirname(assembly), "..");
+  const profile = join(v2, "profiles", "capabilities", "sorting.profile.json");
+  const value = JSON.parse(readFileSync(profile, "utf8"));
+  value.appliesTo = "other";
+  writeFileSync(profile, JSON.stringify(value));
+  assembleEffectiveSchema(assembly);
+}, /appliesTo/i);
+assert.throws(() => {
+  const assembly = fixture({ constraints: { requiredPointers: ["not-a-pointer"] } });
+  assembleEffectiveSchema(assembly);
+}, /requiredPointers/i);
+assert.throws(() => {
+  const assembly = fixture({ constraints: { requiredSematicChecks: ["typo"] } });
+  assembleEffectiveSchema(assembly);
+}, /unknown constraint/i);
+assert.throws(() => {
+  const assembly = fixture();
+  const value = JSON.parse(readFileSync(assembly, "utf8"));
+  value.profile = value.profiles;
+  writeFileSync(assembly, JSON.stringify(value));
+  assembleEffectiveSchema(assembly);
+}, /unknown assembly field/i);
+
+{
+  const assembly = fixture();
+  const v2 = join(dirname(assembly), "..");
+  writeFileSync(join(v2, "core", "alternate.schema.json"), JSON.stringify({ $schema: "https://json-schema.org/draft/2020-12/schema" }));
+  const value = JSON.parse(readFileSync(assembly, "utf8"));
+  value.coreSchema = "../core/alternate.schema.json";
+  writeFileSync(assembly, JSON.stringify(value));
+  assert.deepEqual(assembleEffectiveSchema(assembly).allOf, [{ $ref: "../core/alternate.schema.json" }]);
+}
 assert.throws(() => assembleEffectiveSchema(fixture({ profileKey: "capability:filtering" })), /profile key.*file/i);
 assert.throws(() => assembleEffectiveSchema(fixture({ profiles: ["../../../outside.profile.json"] })), /outside v2 root/i);
+assert.throws(() => assembleEffectiveSchema(fixture({ profiles: ["D:/outside.profile.json"] })), /outside v2 root/i);
 assert.throws(
   () => assembleEffectiveSchema(fixture({ constraints: { incompatibleProfiles: ["capability:sorting"] } })),
   /incompatible profile/i,
@@ -72,10 +126,12 @@ writeFileSync(join(conflictV2, "profiles", "capabilities", "filtering.profile.js
   appliesTo: "component-spec-v2",
   constraints: {
     requiredPointers: ["/api/features/filtering"],
+    requiredImplementationPointers: ["/api/features/filtering"],
     requiredSemanticChecks: ["filtering-contract"],
     minimumRisk: "R1",
     requiredApprovalRoles: [],
     requiredTypes: { "/api/features/sorting": "string" },
+    incompatibleProfiles: [],
   },
 }));
 const conflict = JSON.parse(readFileSync(conflictAssembly, "utf8"));
@@ -83,4 +139,4 @@ conflict.profiles.push("../profiles/capabilities/filtering.profile.json");
 writeFileSync(conflictAssembly, JSON.stringify(conflict));
 assert.throws(() => assembleEffectiveSchema(conflictAssembly), /conflicting required type/i);
 
-console.log(JSON.stringify({ status: "PASS", cases: 9 }, null, 2));
+console.log(JSON.stringify({ status: "PASS", cases: 17 }, null, 2));

@@ -12,10 +12,11 @@ const catalog = JSON.parse(readFileSync(join(suiteRoot, "prototype-suite", "cata
 const specsRoot = join(root, "02-组件规范");
 const outputPath = join(root, "04-机器索引与Schema", "component-spec-index.json");
 
-function findSpecs(directory) {
+export function findSpecs(directory) {
   const results = [];
   if (!existsSync(directory)) return results;
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    if (entry.isDirectory() && entry.name === "v2-candidates") continue;
     const path = join(directory, entry.name);
     if (entry.isDirectory()) results.push(...findSpecs(path));
     else if (entry.isFile() && entry.name.endsWith(".spec.json")) results.push(path);

@@ -45,17 +45,20 @@
       "data": {
         "type": "DataGridDataSource<TRow>",
         "required": true,
-        "contract": "local 提供 rows；remote-page 提供 rows、rowCount、resultQueryId、loading、error 和查询回调。"
+        "contract": "local 提供 rows；remote-page 提供 rows、rowCount、resultQueryId、loading、error 和查询回调。",
+        "semantic": "data-source"
       },
       "columns": {
         "type": "readonly DataGridColumn<TRow, unknown>[]",
         "required": true,
-        "contract": "每列必须有稳定 id；不得暴露 TanStack ColumnDef。"
+        "contract": "每列必须有稳定 id；不得暴露 TanStack ColumnDef。",
+        "semantic": "column-identity-source"
       },
       "getRowId": {
         "type": "(row: TRow) => string",
         "required": true,
-        "contract": "必须返回当前数据集内唯一且跨排序、筛选、分页和刷新稳定的业务行 ID。"
+        "contract": "必须返回当前数据集内唯一且跨排序、筛选、分页和刷新稳定的业务行 ID。",
+        "semantic": "row-identity-source"
       },
       "ariaLabel": {
         "type": "string",
@@ -66,27 +69,33 @@
     "events": {
       "sortingChange": {
         "name": "sorting.onChange",
-        "payload": "readonly DataGridSortRule[]"
+        "payload": "readonly DataGridSortRule[]",
+        "capability": "sorting"
       },
       "filteringChange": {
         "name": "filtering.onChange",
-        "payload": "readonly DataGridFilterRule[]"
+        "payload": "readonly DataGridFilterRule[]",
+        "capability": "filtering"
       },
       "rowSelectionChange": {
         "name": "rowSelection.onChange",
-        "payload": "ReadonlySet<RowId>"
+        "payload": "ReadonlySet<RowId>",
+        "capability": "row-selection"
       },
       "paginationChange": {
         "name": "pagination.onChange",
-        "payload": "DataGridPage"
+        "payload": "DataGridPage",
+        "capability": "pagination"
       },
       "queryChange": {
         "name": "data.onQueryChange",
-        "payload": "DataGridQueryRequest"
+        "payload": "DataGridQueryRequest",
+        "capability": "query"
       },
       "retry": {
         "name": "data.onRetry",
-        "payload": "DataGridQueryRequest"
+        "payload": "DataGridQueryRequest",
+        "capability": "retry"
       }
     },
     "actions": {
@@ -139,11 +148,13 @@
     "identity": {
       "row": {
         "keyContract": "/api/props/getRowId",
-        "duplicatePolicy": "阻断选择和行级操作，显示表格级契约错误并记录脱敏观测事件。"
+        "duplicatePolicy": "阻断选择和行级操作，显示表格级契约错误并记录脱敏观测事件。",
+        "semantic": "stable-row-identity"
       },
       "column": {
         "keyContract": "/api/props/columns",
-        "stability": "重排、隐藏、固定和调整列宽不得改变列 id。"
+        "stability": "重排、隐藏、固定和调整列宽不得改变列 id。",
+        "semantic": "stable-column-identity"
       }
     },
     "states": {
@@ -164,26 +175,41 @@
       { "id": "reject-refresh", "from": ["refreshing"], "event": "query-failed", "to": ["errorRefresh"] },
       { "id": "retry", "from": ["errorInitial", "errorRefresh"], "event": "/api/events/retry", "to": ["loadingInitial", "refreshing"] }
     ],
+    "recoveryActions": {
+      "retryFailedQuery": {
+        "kind": "api-command",
+        "api": "/api/actions/retryQuery",
+        "responsibility": "用户触发组件重试命令。"
+      },
+      "correctRowIdentity": {
+        "kind": "consumer-correction",
+        "responsibility": "消费方修正数据或 getRowId 后重新渲染。"
+      },
+      "awaitCurrentQuery": {
+        "kind": "internal-policy",
+        "responsibility": "忽略迟到结果并继续等待当前 queryId 的匹配结果。"
+      }
+    },
     "exceptionFlows": [
       {
         "id": "refreshFailed",
         "states": ["errorRefresh"],
         "regions": ["status", "body"],
-        "recoveryAction": "retryQuery",
+        "recoveryAction": "retryFailedQuery",
         "oracle": "refreshFailureRetainsContext"
       },
       {
         "id": "duplicateRowId",
         "states": ["errorInitial"],
         "regions": ["status", "body"],
-        "recoveryAction": "focusCell",
+        "recoveryAction": "correctRowIdentity",
         "oracle": "duplicateRowIdBlocksInteraction"
       },
       {
         "id": "staleRemoteResult",
         "states": ["refreshing"],
         "regions": ["status", "body"],
-        "recoveryAction": "retryQuery",
+        "recoveryAction": "awaitCurrentQuery",
         "oracle": "staleResultDoesNotOverwrite"
       }
     ]

@@ -5,6 +5,7 @@
   "constraints": {
     "requiredPointers": ["/api/features/filtering", "/quality/oracles/filterPreservesSelection"],
     "requiredSemanticChecks": ["filtering-contract"],
+    "requiredImplementationPointers": ["/api/features/filtering"],
     "minimumRisk": "R1",
     "requiredApprovalRoles": [],
     "requiredTypes": { "/api/features/filtering": "object" },

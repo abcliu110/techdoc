@@ -182,6 +182,7 @@ Profile 不得生成：
   "appliesTo": "component-spec-v2",
   "constraints": {
     "requiredPointers": [],
+    "requiredImplementationPointers": [],
     "requiredSemanticChecks": [],
     "minimumRisk": "R2",
     "requiredApprovalRoles": []
@@ -210,6 +211,8 @@ semantic check: selection-is-bound-to-row-identity
 ```
 
 Profile 的 `requiredPointers` 只说明槽位必须存在，不复制槽位的具体内容。
+
+Profile 的 `requiredImplementationPointers` 只列出必须由 SOP `implements` 覆盖的规范路径；它不复制实现步骤，也不替代 oracle 的 `verifies` 覆盖。
 
 ## 6. 装配清单
 
@@ -255,6 +258,7 @@ DataGrid 装配清单只表达采用哪些 Profile：
   "x-component-key": "02:data-grid",
   "x-applied-profiles": [],
   "x-required-pointers": [],
+  "x-required-implementation-pointers": [],
   "x-required-semantic-checks": [],
   "x-minimum-risk": "R2",
   "x-required-approval-roles": []
@@ -345,7 +349,9 @@ SOP 的自由文本只描述操作方法和顺序。以下内容禁止出现在 
 4. 每个 `implements` 和 `verifies` 必须是有效 JSON Pointer。
 5. `implements` 只能指向允许的规范分区。
 6. 每个强制 oracle 必须被至少一个 SOP step 覆盖。
-7. 规范 digest 变化后 SOP 状态为 `Stale`，不得批准或实施。
+7. 每个 Profile 强制实施路径必须被至少一个 SOP step 的 `implements` 覆盖。
+8. 规范 digest 变化后 SOP 状态为 `Stale`，不得批准或实施。
+9. SOP 批准记录必须绑定 SOP 内容 digest、SOP 版本、规范版本和规范 digest；作者不得批准自己的 SOP。
 
 必须包含以下防复发夹具：
 
@@ -447,7 +453,7 @@ DataGrid v2 试点完成前，现有索引仍保持 `implementationAllowed=false
 
 1. 先建立最小失败夹具并确认因目标能力缺失而失败。
 2. 实现使该夹具通过的最小代码。
-3. 运行当前 38 个规范负向用例和 14 个分层 SOP 用例，保证 v1 不回归。
+3. 运行当前 38 项规范变异/准入判断、12 项基线合同断言和 14 项分层 SOP 合同断言，保证 v1 不回归。
 4. 每种错误至少有一个问题代码断言。
 5. 生成器执行两次并比较字节，证明确定性。
 6. 修改一项规范输入，确认只重建预期派生产物。
