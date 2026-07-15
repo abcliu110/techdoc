@@ -1,0 +1,13 @@
+{
+  "profileVersion": 1,
+  "profileKey": "capability:filtering",
+  "appliesTo": "component-spec-v2",
+  "constraints": {
+    "requiredPointers": ["/api/features/filtering", "/quality/oracles/filterPreservesSelection"],
+    "requiredSemanticChecks": ["filtering-contract"],
+    "minimumRisk": "R1",
+    "requiredApprovalRoles": [],
+    "requiredTypes": { "/api/features/filtering": "object" },
+    "incompatibleProfiles": []
+  }
+}

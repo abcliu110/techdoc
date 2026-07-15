@@ -1,0 +1,13 @@
+{
+  "profileVersion": 1,
+  "profileKey": "capability:column-pinning",
+  "appliesTo": "component-spec-v2",
+  "constraints": {
+    "requiredPointers": ["/api/features/columnPinning", "/quality/visualOracles/fixedColumnBoundary"],
+    "requiredSemanticChecks": ["column-pinning-contract"],
+    "minimumRisk": "R1",
+    "requiredApprovalRoles": ["ux-a11y-reviewer"],
+    "requiredTypes": { "/api/features/columnPinning": "object" },
+    "incompatibleProfiles": []
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "profileVersion": 1,
+  "profileKey": "capability:column-sizing",
+  "appliesTo": "component-spec-v2",
+  "constraints": {
+    "requiredPointers": ["/api/features/columnSizing", "/quality/visualOracles/headerBodyAlignment"],
+    "requiredSemanticChecks": ["column-sizing-contract"],
+    "minimumRisk": "R1",
+    "requiredApprovalRoles": ["ux-a11y-reviewer"],
+    "requiredTypes": { "/api/features/columnSizing": "object" },
+    "incompatibleProfiles": []
+  }
+}

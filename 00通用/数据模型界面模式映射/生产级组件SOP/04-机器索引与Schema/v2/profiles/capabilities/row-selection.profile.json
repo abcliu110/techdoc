@@ -1,0 +1,17 @@
+{
+  "profileVersion": 1,
+  "profileKey": "capability:row-selection",
+  "appliesTo": "component-spec-v2",
+  "constraints": {
+    "requiredPointers": [
+      "/api/features/rowSelection",
+      "/view/statePresentation/ready",
+      "/quality/oracles/selectionStableAfterSort"
+    ],
+    "requiredSemanticChecks": ["selection-is-bound-to-row-identity"],
+    "minimumRisk": "R2",
+    "requiredApprovalRoles": ["component-maintainer", "test-reviewer"],
+    "requiredTypes": { "/api/features/rowSelection": "object" },
+    "incompatibleProfiles": []
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "profileVersion": 1,
+  "profileKey": "capability:sorting",
+  "appliesTo": "component-spec-v2",
+  "constraints": {
+    "requiredPointers": ["/api/features/sorting", "/quality/oracles/sortProducesSingleIntent"],
+    "requiredSemanticChecks": ["sorting-contract"],
+    "minimumRisk": "R1",
+    "requiredApprovalRoles": [],
+    "requiredTypes": { "/api/features/sorting": "object" },
+    "incompatibleProfiles": []
+  }
+}

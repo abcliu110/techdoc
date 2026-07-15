@@ -1,0 +1,13 @@
+{
+  "profileVersion": 1,
+  "profileKey": "capability:pagination",
+  "appliesTo": "component-spec-v2",
+  "constraints": {
+    "requiredPointers": ["/api/features/pagination", "/quality/oracles/remoteQueryIsNotAppliedLocally"],
+    "requiredSemanticChecks": ["pagination-contract"],
+    "minimumRisk": "R2",
+    "requiredApprovalRoles": ["component-maintainer"],
+    "requiredTypes": { "/api/features/pagination": "object" },
+    "incompatibleProfiles": []
+  }
+}

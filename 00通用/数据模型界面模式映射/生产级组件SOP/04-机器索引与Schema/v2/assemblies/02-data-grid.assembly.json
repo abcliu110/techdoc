@@ -1,0 +1,15 @@
+{
+  "assemblyVersion": 1,
+  "componentKey": "02:data-grid",
+  "coreSchema": "../core/component-spec.schema.json",
+  "profiles": [
+    "../profiles/categories/table.profile.json",
+    "../profiles/capabilities/sorting.profile.json",
+    "../profiles/capabilities/filtering.profile.json",
+    "../profiles/capabilities/row-selection.profile.json",
+    "../profiles/capabilities/pagination.profile.json",
+    "../profiles/capabilities/column-pinning.profile.json",
+    "../profiles/capabilities/column-sizing.profile.json"
+  ],
+  "dataModes": ["local", "remote-page"]
+}

@@ -1,0 +1,71 @@
+{
+  "$id": "effective/02-data-grid.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [
+    {
+      "$ref": "../core/component-spec.schema.json"
+    }
+  ],
+  "x-applied-profiles": [
+    "capability:column-pinning",
+    "capability:column-sizing",
+    "capability:filtering",
+    "capability:pagination",
+    "capability:row-selection",
+    "capability:sorting",
+    "category:table"
+  ],
+  "x-component-key": "02:data-grid",
+  "x-data-modes": [
+    "local",
+    "remote-page"
+  ],
+  "x-minimum-risk": "R2",
+  "x-required-approval-roles": [
+    "component-maintainer",
+    "test-reviewer",
+    "ux-a11y-reviewer"
+  ],
+  "x-required-pointers": [
+    "/accessibility/keyboardModel",
+    "/api/features/columnPinning",
+    "/api/features/columnSizing",
+    "/api/features/filtering",
+    "/api/features/pagination",
+    "/api/features/rowSelection",
+    "/api/features/sorting",
+    "/behavior/identity/column",
+    "/behavior/identity/row",
+    "/quality/oracles/filterPreservesSelection",
+    "/quality/oracles/remoteQueryIsNotAppliedLocally",
+    "/quality/oracles/selectionStableAfterSort",
+    "/quality/oracles/sortProducesSingleIntent",
+    "/quality/scaleFixtures",
+    "/quality/visualOracles/fixedColumnBoundary",
+    "/quality/visualOracles/headerBodyAlignment",
+    "/view/regions/body",
+    "/view/regions/header",
+    "/view/statePresentation/ready"
+  ],
+  "x-required-semantic-checks": [
+    "column-pinning-contract",
+    "column-sizing-contract",
+    "filtering-contract",
+    "pagination-contract",
+    "selection-is-bound-to-row-identity",
+    "sorting-contract",
+    "table-identity-contract"
+  ],
+  "x-required-types": {
+    "/api/features/columnPinning": "object",
+    "/api/features/columnSizing": "object",
+    "/api/features/filtering": "object",
+    "/api/features/pagination": "object",
+    "/api/features/rowSelection": "object",
+    "/api/features/sorting": "object",
+    "/behavior/identity/column": "object",
+    "/behavior/identity/row": "object",
+    "/view/regions/body": "object",
+    "/view/regions/header": "object"
+  }
+}

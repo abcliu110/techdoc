@@ -1,0 +1,25 @@
+{
+  "profileVersion": 1,
+  "profileKey": "category:table",
+  "appliesTo": "component-spec-v2",
+  "constraints": {
+    "requiredPointers": [
+      "/behavior/identity/column",
+      "/behavior/identity/row",
+      "/view/regions/body",
+      "/view/regions/header",
+      "/accessibility/keyboardModel",
+      "/quality/scaleFixtures"
+    ],
+    "requiredSemanticChecks": ["table-identity-contract"],
+    "minimumRisk": "R1",
+    "requiredApprovalRoles": ["ux-a11y-reviewer"],
+    "requiredTypes": {
+      "/behavior/identity/column": "object",
+      "/behavior/identity/row": "object",
+      "/view/regions/body": "object",
+      "/view/regions/header": "object"
+    },
+    "incompatibleProfiles": []
+  }
+}
