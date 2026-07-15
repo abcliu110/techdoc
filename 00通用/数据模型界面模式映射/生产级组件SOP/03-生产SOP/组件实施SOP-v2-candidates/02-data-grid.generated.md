@@ -3,9 +3,9 @@
 # DataGrid v2 候选实施 SOP
 
 - 源：`02-data-grid.implementation-sop.json`
-- SOP 版本：`0.2.0`
-- 规范版本：`0.3.0`
-- Digest：`sha256:12f5c61fdd777648af75b60ef8dc9f926976952725000fc7ae0ce55df1c358ea`
+- SOP 版本：`0.2.1`
+- 规范版本：`0.3.1`
+- Digest：`sha256:60f3d24e656ea072affeb82c12a8a1824b545219a4749a81984bb03a3c5235da`
 - 状态：`Draft`
 
 ## 执行步骤
@@ -28,9 +28,9 @@
 
 先建立行列身份和重复身份的失败夹具，确认失败原因后实现最小核心，再运行相关回归。
 
-实施引用：`/api/props/columns`、`/api/props/getRowId`、`/behavior/identity/column`、`/behavior/identity/row`
+实施引用：`/api/controlledState`、`/api/props/columns`、`/api/props/getRowId`、`/behavior/identity/column`、`/behavior/identity/row`
 
-验证引用：`/quality/oracles/duplicateRowIdBlocksInteraction`、`/quality/oracles/selectionStableAfterSort`
+验证引用：`/quality/oracles/controlledCapabilitiesDoNotSpeculate`、`/quality/oracles/duplicateRowIdBlocksInteraction`、`/quality/oracles/selectionStableAfterSort`
 
 证据：`red-output`、`green-output`、`unit-test`、`contract-error-test`
 
@@ -54,7 +54,7 @@
 
 实施引用：`/api/features/filtering`、`/api/features/pagination`、`/api/features/sorting`
 
-验证引用：`/quality/oracles/filterPreservesSelection`、`/quality/oracles/remoteQueryIsNotAppliedLocally`、`/quality/oracles/sortProducesSingleIntent`
+验证引用：`/quality/oracles/filterPreservesSelection`、`/quality/oracles/remoteQueryIsNotAppliedLocally`、`/quality/oracles/sortFilterResetPageAtomically`、`/quality/oracles/sortProducesSingleIntent`
 
 证据：`red-output`、`green-output`、`interaction-test`、`event-count-test`、`combination-test`
 
@@ -66,7 +66,7 @@
 
 实施引用：`/api/events/rowSelectionChange`、`/api/features/rowSelection`
 
-验证引用：`/quality/oracles/filterPreservesSelection`、`/quality/oracles/selectionStableAfterSort`
+验证引用：`/quality/oracles/filterPreservesSelection`、`/quality/oracles/selectionStableAfterSort`、`/quality/oracles/visiblePageBulkSelection`
 
 证据：`red-output`、`green-output`、`interaction-test`、`combination-test`
 
@@ -78,7 +78,7 @@
 
 实施引用：`/api/features/columnPinning`、`/api/features/columnSizing`、`/view/layout`、`/view/regions`、`/view/regions/body`、`/view/regions/header`
 
-验证引用：`/quality/visualOracles/fixedColumnBoundary`、`/quality/visualOracles/headerBodyAlignment`、`/quality/visualOracles/scrollReachability`
+验证引用：`/quality/visualOracles/fixedColumnBoundary`、`/quality/visualOracles/headerBodyAlignment`、`/quality/visualOracles/scrollReachability`、`/quality/oracles/keyboardResizeIsEquivalent`
 
 证据：`red-output`、`green-output`、`geometry-assertion`、`viewport-screenshot`、`scroll-test`
 
@@ -102,7 +102,7 @@
 
 实施引用：`/accessibility/announcements`、`/accessibility/keyboardModel`、`/accessibility/semantics`、`/api/props/ariaLabel`、`/view/statePresentation`
 
-验证引用：`/quality/visualOracles/focusVisibility`、`/quality/visualOracles/scrollReachability`
+验证引用：`/quality/oracles/localeTextCoversStructuralLabels`、`/quality/oracles/nestedControlsHaveSingleEffect`、`/quality/oracles/pagedGridExposesAbsolutePosition`、`/quality/oracles/refreshErrorPreservesFocus`、`/quality/visualOracles/focusVisibility`、`/quality/visualOracles/forcedColorsVisibility`、`/quality/visualOracles/scrollReachability`
 
 证据：`red-output`、`green-output`、`keyboard-test`、`accessibility-scan`、`manual-review`
 
@@ -126,7 +126,7 @@
 
 实施引用：`/risk/invariants`、`/security/rules`
 
-验证引用：`/quality/oracles/duplicateRowIdBlocksInteraction`、`/quality/oracles/filterPreservesSelection`、`/quality/oracles/refreshFailureRetainsContext`、`/quality/oracles/remoteQueryIsNotAppliedLocally`、`/quality/oracles/selectionStableAfterSort`、`/quality/oracles/sortProducesSingleIntent`、`/quality/oracles/staleResultDoesNotOverwrite`、`/quality/visualOracles/fixedColumnBoundary`、`/quality/visualOracles/focusVisibility`、`/quality/visualOracles/headerBodyAlignment`、`/quality/visualOracles/noClipping`、`/quality/visualOracles/scrollReachability`、`/quality/visualOracles/stateRetention`
+验证引用：`/quality/oracles/duplicateRowIdBlocksInteraction`、`/quality/oracles/controlledCapabilitiesDoNotSpeculate`、`/quality/oracles/filterPreservesSelection`、`/quality/oracles/keyboardResizeIsEquivalent`、`/quality/oracles/localeTextCoversStructuralLabels`、`/quality/oracles/nestedControlsHaveSingleEffect`、`/quality/oracles/pagedGridExposesAbsolutePosition`、`/quality/oracles/refreshFailureRetainsContext`、`/quality/oracles/refreshErrorPreservesFocus`、`/quality/oracles/remoteQueryIsNotAppliedLocally`、`/quality/oracles/selectionStableAfterSort`、`/quality/oracles/sortFilterResetPageAtomically`、`/quality/oracles/sortProducesSingleIntent`、`/quality/oracles/staleResultDoesNotOverwrite`、`/quality/oracles/visiblePageBulkSelection`、`/quality/visualOracles/fixedColumnBoundary`、`/quality/visualOracles/focusVisibility`、`/quality/visualOracles/forcedColorsVisibility`、`/quality/visualOracles/headerBodyAlignment`、`/quality/visualOracles/noClipping`、`/quality/visualOracles/scrollReachability`、`/quality/visualOracles/stateRetention`
 
 证据：`traceability-matrix`、`independent-review`、`risk-review`、`open-item-register`
 

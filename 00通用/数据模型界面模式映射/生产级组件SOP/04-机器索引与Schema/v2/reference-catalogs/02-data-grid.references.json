@@ -1,11 +1,12 @@
 {
   "componentKey": "02:data-grid",
-  "digest": "sha256:12f5c61fdd777648af75b60ef8dc9f926976952725000fc7ae0ce55df1c358ea",
+  "digest": "sha256:60f3d24e656ea072affeb82c12a8a1824b545219a4749a81984bb03a3c5235da",
   "pointers": [
     "/accessibility/announcements",
     "/accessibility/keyboardModel",
     "/accessibility/semantics",
     "/api/actions/retryQuery",
+    "/api/controlledState",
     "/api/events/queryChange",
     "/api/events/retry",
     "/api/events/rowSelectionChange",
@@ -28,17 +29,26 @@
     "/behavior/transitions",
     "/compatibility/breakingSurfaces",
     "/compatibility/v1Authority",
+    "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
     "/quality/oracles/duplicateRowIdBlocksInteraction",
     "/quality/oracles/filterPreservesSelection",
+    "/quality/oracles/keyboardResizeIsEquivalent",
+    "/quality/oracles/localeTextCoversStructuralLabels",
+    "/quality/oracles/nestedControlsHaveSingleEffect",
+    "/quality/oracles/pagedGridExposesAbsolutePosition",
+    "/quality/oracles/refreshErrorPreservesFocus",
     "/quality/oracles/refreshFailureRetainsContext",
     "/quality/oracles/remoteQueryIsNotAppliedLocally",
     "/quality/oracles/selectionStableAfterSort",
+    "/quality/oracles/sortFilterResetPageAtomically",
     "/quality/oracles/sortProducesSingleIntent",
     "/quality/oracles/staleResultDoesNotOverwrite",
+    "/quality/oracles/visiblePageBulkSelection",
     "/quality/performanceBudgets",
     "/quality/scaleFixtures",
     "/quality/visualOracles/fixedColumnBoundary",
     "/quality/visualOracles/focusVisibility",
+    "/quality/visualOracles/forcedColorsVisibility",
     "/quality/visualOracles/headerBodyAlignment",
     "/quality/visualOracles/noClipping",
     "/quality/visualOracles/scrollReachability",
@@ -54,5 +64,5 @@
     "/view/statePresentation",
     "/view/tokens"
   ],
-  "specificationVersion": "0.3.0"
+  "specificationVersion": "0.3.1"
 }

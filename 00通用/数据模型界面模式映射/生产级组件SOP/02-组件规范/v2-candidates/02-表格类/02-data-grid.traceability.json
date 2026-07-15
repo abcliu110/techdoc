@@ -1,10 +1,130 @@
 {
   "componentKey": "02:data-grid",
-  "digest": "sha256:12f5c61fdd777648af75b60ef8dc9f926976952725000fc7ae0ce55df1c358ea",
+  "digest": "sha256:60f3d24e656ea072affeb82c12a8a1824b545219a4749a81984bb03a3c5235da",
   "links": [
     {
       "evidenceKind": "accessibility-scan",
       "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/accessibility/announcements",
       "oracle": "/quality/visualOracles/focusVisibility",
       "step": "keyboardAccessibility"
     },
@@ -30,6 +150,36 @@
       "evidenceKind": "red-output",
       "implementationPointer": "/accessibility/announcements",
       "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/accessibility/announcements",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
       "step": "keyboardAccessibility"
     },
     {
@@ -65,6 +215,126 @@
     {
       "evidenceKind": "accessibility-scan",
       "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/accessibility/keyboardModel",
       "oracle": "/quality/visualOracles/focusVisibility",
       "step": "keyboardAccessibility"
     },
@@ -90,6 +360,36 @@
       "evidenceKind": "red-output",
       "implementationPointer": "/accessibility/keyboardModel",
       "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/accessibility/keyboardModel",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
       "step": "keyboardAccessibility"
     },
     {
@@ -125,6 +425,126 @@
     {
       "evidenceKind": "accessibility-scan",
       "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/accessibility/semantics",
       "oracle": "/quality/visualOracles/focusVisibility",
       "step": "keyboardAccessibility"
     },
@@ -150,6 +570,36 @@
       "evidenceKind": "red-output",
       "implementationPointer": "/accessibility/semantics",
       "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/accessibility/semantics",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
       "step": "keyboardAccessibility"
     },
     {
@@ -273,6 +723,78 @@
       "step": "asyncRecovery"
     },
     {
+      "evidenceKind": "contract-error-test",
+      "implementationPointer": "/api/controlledState",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/controlledState",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/controlledState",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "unit-test",
+      "implementationPointer": "/api/controlledState",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "contract-error-test",
+      "implementationPointer": "/api/controlledState",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/controlledState",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/controlledState",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "unit-test",
+      "implementationPointer": "/api/controlledState",
+      "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "contract-error-test",
+      "implementationPointer": "/api/controlledState",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/controlledState",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/controlledState",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "unit-test",
+      "implementationPointer": "/api/controlledState",
+      "oracle": "/quality/oracles/selectionStableAfterSort",
+      "step": "identityCore"
+    },
+    {
       "evidenceKind": "failure-injection",
       "implementationPointer": "/api/events/queryChange",
       "oracle": "/quality/oracles/refreshFailureRetainsContext",
@@ -501,6 +1023,60 @@
       "step": "selectionCapability"
     },
     {
+      "evidenceKind": "combination-test",
+      "implementationPointer": "/api/events/rowSelectionChange",
+      "oracle": "/quality/oracles/visiblePageBulkSelection",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/events/rowSelectionChange",
+      "oracle": "/quality/oracles/visiblePageBulkSelection",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "interaction-test",
+      "implementationPointer": "/api/events/rowSelectionChange",
+      "oracle": "/quality/oracles/visiblePageBulkSelection",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/events/rowSelectionChange",
+      "oracle": "/quality/oracles/visiblePageBulkSelection",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/api/features/columnPinning",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/columnPinning",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/columnPinning",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/api/features/columnPinning",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/api/features/columnPinning",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
       "evidenceKind": "geometry-assertion",
       "implementationPointer": "/api/features/columnPinning",
       "oracle": "/quality/visualOracles/fixedColumnBoundary",
@@ -588,6 +1164,36 @@
       "evidenceKind": "viewport-screenshot",
       "implementationPointer": "/api/features/columnPinning",
       "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/api/features/columnSizing",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/columnSizing",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/columnSizing",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/api/features/columnSizing",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/api/features/columnSizing",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
       "step": "geometryCapabilities"
     },
     {
@@ -743,6 +1349,36 @@
     {
       "evidenceKind": "combination-test",
       "implementationPointer": "/api/features/filtering",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "event-count-test",
+      "implementationPointer": "/api/features/filtering",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/filtering",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "interaction-test",
+      "implementationPointer": "/api/features/filtering",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/filtering",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "combination-test",
+      "implementationPointer": "/api/features/filtering",
       "oracle": "/quality/oracles/sortProducesSingleIntent",
       "step": "queryCapabilities"
     },
@@ -828,6 +1464,36 @@
       "evidenceKind": "red-output",
       "implementationPointer": "/api/features/pagination",
       "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "combination-test",
+      "implementationPointer": "/api/features/pagination",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "event-count-test",
+      "implementationPointer": "/api/features/pagination",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/pagination",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "interaction-test",
+      "implementationPointer": "/api/features/pagination",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/pagination",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
       "step": "queryCapabilities"
     },
     {
@@ -910,6 +1576,30 @@
     },
     {
       "evidenceKind": "combination-test",
+      "implementationPointer": "/api/features/rowSelection",
+      "oracle": "/quality/oracles/visiblePageBulkSelection",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/rowSelection",
+      "oracle": "/quality/oracles/visiblePageBulkSelection",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "interaction-test",
+      "implementationPointer": "/api/features/rowSelection",
+      "oracle": "/quality/oracles/visiblePageBulkSelection",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/rowSelection",
+      "oracle": "/quality/oracles/visiblePageBulkSelection",
+      "step": "selectionCapability"
+    },
+    {
+      "evidenceKind": "combination-test",
       "implementationPointer": "/api/features/sorting",
       "oracle": "/quality/oracles/filterPreservesSelection",
       "step": "queryCapabilities"
@@ -966,6 +1656,36 @@
       "evidenceKind": "red-output",
       "implementationPointer": "/api/features/sorting",
       "oracle": "/quality/oracles/remoteQueryIsNotAppliedLocally",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "combination-test",
+      "implementationPointer": "/api/features/sorting",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "event-count-test",
+      "implementationPointer": "/api/features/sorting",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/features/sorting",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "interaction-test",
+      "implementationPointer": "/api/features/sorting",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "step": "queryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/features/sorting",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
       "step": "queryCapabilities"
     },
     {
@@ -1001,6 +1721,126 @@
     {
       "evidenceKind": "accessibility-scan",
       "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/api/props/ariaLabel",
       "oracle": "/quality/visualOracles/focusVisibility",
       "step": "keyboardAccessibility"
     },
@@ -1026,6 +1866,36 @@
       "evidenceKind": "red-output",
       "implementationPointer": "/api/props/ariaLabel",
       "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/props/ariaLabel",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
       "step": "keyboardAccessibility"
     },
     {
@@ -1061,6 +1931,30 @@
     {
       "evidenceKind": "contract-error-test",
       "implementationPointer": "/api/props/columns",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/props/columns",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/props/columns",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "unit-test",
+      "implementationPointer": "/api/props/columns",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "contract-error-test",
+      "implementationPointer": "/api/props/columns",
       "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
       "step": "identityCore"
     },
@@ -1199,6 +2093,30 @@
     {
       "evidenceKind": "contract-error-test",
       "implementationPointer": "/api/props/getRowId",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/api/props/getRowId",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/api/props/getRowId",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "unit-test",
+      "implementationPointer": "/api/props/getRowId",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "contract-error-test",
+      "implementationPointer": "/api/props/getRowId",
       "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
       "step": "identityCore"
     },
@@ -1337,6 +2255,30 @@
     {
       "evidenceKind": "contract-error-test",
       "implementationPointer": "/behavior/identity/column",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/behavior/identity/column",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/behavior/identity/column",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "unit-test",
+      "implementationPointer": "/behavior/identity/column",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "contract-error-test",
+      "implementationPointer": "/behavior/identity/column",
       "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
       "step": "identityCore"
     },
@@ -1385,6 +2327,30 @@
     {
       "evidenceKind": "contract-error-test",
       "implementationPointer": "/behavior/identity/row",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/behavior/identity/row",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/behavior/identity/row",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "unit-test",
+      "implementationPointer": "/behavior/identity/row",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "identityCore"
+    },
+    {
+      "evidenceKind": "contract-error-test",
+      "implementationPointer": "/behavior/identity/row",
       "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
       "step": "identityCore"
     },
@@ -1703,6 +2669,30 @@
     {
       "evidenceKind": "independent-review",
       "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
       "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
       "step": "reviewCandidate"
     },
@@ -1746,6 +2736,126 @@
       "evidenceKind": "traceability-matrix",
       "implementationPointer": "/risk/invariants",
       "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
       "step": "reviewCandidate"
     },
     {
@@ -1823,6 +2933,30 @@
     {
       "evidenceKind": "independent-review",
       "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
       "oracle": "/quality/oracles/sortProducesSingleIntent",
       "step": "reviewCandidate"
     },
@@ -1871,6 +3005,30 @@
     {
       "evidenceKind": "independent-review",
       "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/visiblePageBulkSelection",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/visiblePageBulkSelection",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/visiblePageBulkSelection",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/oracles/visiblePageBulkSelection",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
       "oracle": "/quality/visualOracles/fixedColumnBoundary",
       "step": "reviewCandidate"
     },
@@ -1914,6 +3072,30 @@
       "evidenceKind": "traceability-matrix",
       "implementationPointer": "/risk/invariants",
       "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/risk/invariants",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
       "step": "reviewCandidate"
     },
     {
@@ -2015,6 +3197,30 @@
     {
       "evidenceKind": "independent-review",
       "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
       "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
       "step": "reviewCandidate"
     },
@@ -2058,6 +3264,126 @@
       "evidenceKind": "traceability-matrix",
       "implementationPointer": "/security/rules",
       "oracle": "/quality/oracles/filterPreservesSelection",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
       "step": "reviewCandidate"
     },
     {
@@ -2135,6 +3461,30 @@
     {
       "evidenceKind": "independent-review",
       "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
       "oracle": "/quality/oracles/sortProducesSingleIntent",
       "step": "reviewCandidate"
     },
@@ -2183,6 +3533,30 @@
     {
       "evidenceKind": "independent-review",
       "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/visiblePageBulkSelection",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/visiblePageBulkSelection",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/visiblePageBulkSelection",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/oracles/visiblePageBulkSelection",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
       "oracle": "/quality/visualOracles/fixedColumnBoundary",
       "step": "reviewCandidate"
     },
@@ -2226,6 +3600,30 @@
       "evidenceKind": "traceability-matrix",
       "implementationPointer": "/security/rules",
       "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "independent-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "open-item-register",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "risk-review",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "reviewCandidate"
+    },
+    {
+      "evidenceKind": "traceability-matrix",
+      "implementationPointer": "/security/rules",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
       "step": "reviewCandidate"
     },
     {
@@ -2327,6 +3725,36 @@
     {
       "evidenceKind": "geometry-assertion",
       "implementationPointer": "/view/layout",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/layout",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/layout",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/view/layout",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/view/layout",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/view/layout",
       "oracle": "/quality/visualOracles/fixedColumnBoundary",
       "step": "geometryCapabilities"
     },
@@ -2417,6 +3845,36 @@
     {
       "evidenceKind": "geometry-assertion",
       "implementationPointer": "/view/regions",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/regions",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/regions",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/view/regions",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/view/regions",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/view/regions",
       "oracle": "/quality/visualOracles/fixedColumnBoundary",
       "step": "geometryCapabilities"
     },
@@ -2507,6 +3965,36 @@
     {
       "evidenceKind": "geometry-assertion",
       "implementationPointer": "/view/regions/body",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/regions/body",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/regions/body",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/view/regions/body",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/view/regions/body",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/view/regions/body",
       "oracle": "/quality/visualOracles/fixedColumnBoundary",
       "step": "geometryCapabilities"
     },
@@ -2592,6 +4080,36 @@
       "evidenceKind": "viewport-screenshot",
       "implementationPointer": "/view/regions/body",
       "oracle": "/quality/visualOracles/scrollReachability",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "geometry-assertion",
+      "implementationPointer": "/view/regions/header",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/regions/header",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/regions/header",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "scroll-test",
+      "implementationPointer": "/view/regions/header",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "step": "geometryCapabilities"
+    },
+    {
+      "evidenceKind": "viewport-screenshot",
+      "implementationPointer": "/view/regions/header",
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
       "step": "geometryCapabilities"
     },
     {
@@ -2735,6 +4253,126 @@
     {
       "evidenceKind": "accessibility-scan",
       "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/view/statePresentation",
       "oracle": "/quality/visualOracles/focusVisibility",
       "step": "keyboardAccessibility"
     },
@@ -2760,6 +4398,36 @@
       "evidenceKind": "red-output",
       "implementationPointer": "/view/statePresentation",
       "oracle": "/quality/visualOracles/focusVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "accessibility-scan",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "green-output",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "keyboard-test",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "manual-review",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
+      "step": "keyboardAccessibility"
+    },
+    {
+      "evidenceKind": "red-output",
+      "implementationPointer": "/view/statePresentation",
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
       "step": "keyboardAccessibility"
     },
     {
@@ -2901,6 +4569,23 @@
         "traceability-matrix",
         "unit-test"
       ],
+      "oracle": "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
+      "steps": [
+        "identityCore",
+        "reviewCandidate"
+      ]
+    },
+    {
+      "evidenceKinds": [
+        "contract-error-test",
+        "green-output",
+        "independent-review",
+        "open-item-register",
+        "red-output",
+        "risk-review",
+        "traceability-matrix",
+        "unit-test"
+      ],
       "oracle": "/quality/oracles/duplicateRowIdBlocksInteraction",
       "steps": [
         "identityCore",
@@ -2924,6 +4609,96 @@
         "queryCapabilities",
         "reviewCandidate",
         "selectionCapability"
+      ]
+    },
+    {
+      "evidenceKinds": [
+        "geometry-assertion",
+        "green-output",
+        "independent-review",
+        "open-item-register",
+        "red-output",
+        "risk-review",
+        "scroll-test",
+        "traceability-matrix",
+        "viewport-screenshot"
+      ],
+      "oracle": "/quality/oracles/keyboardResizeIsEquivalent",
+      "steps": [
+        "geometryCapabilities",
+        "reviewCandidate"
+      ]
+    },
+    {
+      "evidenceKinds": [
+        "accessibility-scan",
+        "green-output",
+        "independent-review",
+        "keyboard-test",
+        "manual-review",
+        "open-item-register",
+        "red-output",
+        "risk-review",
+        "traceability-matrix"
+      ],
+      "oracle": "/quality/oracles/localeTextCoversStructuralLabels",
+      "steps": [
+        "keyboardAccessibility",
+        "reviewCandidate"
+      ]
+    },
+    {
+      "evidenceKinds": [
+        "accessibility-scan",
+        "green-output",
+        "independent-review",
+        "keyboard-test",
+        "manual-review",
+        "open-item-register",
+        "red-output",
+        "risk-review",
+        "traceability-matrix"
+      ],
+      "oracle": "/quality/oracles/nestedControlsHaveSingleEffect",
+      "steps": [
+        "keyboardAccessibility",
+        "reviewCandidate"
+      ]
+    },
+    {
+      "evidenceKinds": [
+        "accessibility-scan",
+        "green-output",
+        "independent-review",
+        "keyboard-test",
+        "manual-review",
+        "open-item-register",
+        "red-output",
+        "risk-review",
+        "traceability-matrix"
+      ],
+      "oracle": "/quality/oracles/pagedGridExposesAbsolutePosition",
+      "steps": [
+        "keyboardAccessibility",
+        "reviewCandidate"
+      ]
+    },
+    {
+      "evidenceKinds": [
+        "accessibility-scan",
+        "green-output",
+        "independent-review",
+        "keyboard-test",
+        "manual-review",
+        "open-item-register",
+        "red-output",
+        "risk-review",
+        "traceability-matrix"
+      ],
+      "oracle": "/quality/oracles/refreshErrorPreservesFocus",
+      "steps": [
+        "keyboardAccessibility",
+        "reviewCandidate"
       ]
     },
     {
@@ -2994,6 +4769,24 @@
         "risk-review",
         "traceability-matrix"
       ],
+      "oracle": "/quality/oracles/sortFilterResetPageAtomically",
+      "steps": [
+        "queryCapabilities",
+        "reviewCandidate"
+      ]
+    },
+    {
+      "evidenceKinds": [
+        "combination-test",
+        "event-count-test",
+        "green-output",
+        "independent-review",
+        "interaction-test",
+        "open-item-register",
+        "red-output",
+        "risk-review",
+        "traceability-matrix"
+      ],
       "oracle": "/quality/oracles/sortProducesSingleIntent",
       "steps": [
         "queryCapabilities",
@@ -3016,6 +4809,23 @@
       "steps": [
         "asyncRecovery",
         "reviewCandidate"
+      ]
+    },
+    {
+      "evidenceKinds": [
+        "combination-test",
+        "green-output",
+        "independent-review",
+        "interaction-test",
+        "open-item-register",
+        "red-output",
+        "risk-review",
+        "traceability-matrix"
+      ],
+      "oracle": "/quality/oracles/visiblePageBulkSelection",
+      "steps": [
+        "reviewCandidate",
+        "selectionCapability"
       ]
     },
     {
@@ -3049,6 +4859,24 @@
         "traceability-matrix"
       ],
       "oracle": "/quality/visualOracles/focusVisibility",
+      "steps": [
+        "keyboardAccessibility",
+        "reviewCandidate"
+      ]
+    },
+    {
+      "evidenceKinds": [
+        "accessibility-scan",
+        "green-output",
+        "independent-review",
+        "keyboard-test",
+        "manual-review",
+        "open-item-register",
+        "red-output",
+        "risk-review",
+        "traceability-matrix"
+      ],
+      "oracle": "/quality/visualOracles/forcedColorsVisibility",
       "steps": [
         "keyboardAccessibility",
         "reviewCandidate"
@@ -3135,5 +4963,5 @@
       ]
     }
   ],
-  "specificationVersion": "0.3.0"
+  "specificationVersion": "0.3.1"
 }

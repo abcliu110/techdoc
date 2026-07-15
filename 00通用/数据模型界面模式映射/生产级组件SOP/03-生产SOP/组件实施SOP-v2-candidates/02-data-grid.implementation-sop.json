@@ -1,17 +1,17 @@
 {
-  "sopVersion": "0.2.0",
+  "sopVersion": "0.2.1",
   "componentKey": "02:data-grid",
   "status": "Draft",
   "approval": {
     "status": "pending",
     "authors": ["Codex"],
-    "requiredRoles": ["component-maintainer", "test-reviewer"],
+    "requiredRoles": ["component-maintainer", "ux-a11y-reviewer", "test-reviewer"],
     "records": []
   },
   "specification": {
     "path": "../../02-组件规范/v2-candidates/02-表格类/02-data-grid.spec.json",
-    "version": "0.3.0",
-    "digest": "sha256:12f5c61fdd777648af75b60ef8dc9f926976952725000fc7ae0ce55df1c358ea"
+    "version": "0.3.1",
+    "digest": "sha256:60f3d24e656ea072affeb82c12a8a1824b545219a4749a81984bb03a3c5235da"
   },
   "steps": [
     {
@@ -30,12 +30,14 @@
       "action": "implement-and-verify",
       "method": "先建立行列身份和重复身份的失败夹具，确认失败原因后实现最小核心，再运行相关回归。",
       "implements": [
+        "/api/controlledState",
         "/api/props/columns",
         "/api/props/getRowId",
         "/behavior/identity/column",
         "/behavior/identity/row"
       ],
       "verifies": [
+        "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
         "/quality/oracles/duplicateRowIdBlocksInteraction",
         "/quality/oracles/selectionStableAfterSort"
       ],
@@ -74,6 +76,7 @@
       "verifies": [
         "/quality/oracles/filterPreservesSelection",
         "/quality/oracles/remoteQueryIsNotAppliedLocally",
+        "/quality/oracles/sortFilterResetPageAtomically",
         "/quality/oracles/sortProducesSingleIntent"
       ],
       "evidenceKinds": ["red-output", "green-output", "interaction-test", "event-count-test", "combination-test"]
@@ -88,7 +91,8 @@
       ],
       "verifies": [
         "/quality/oracles/filterPreservesSelection",
-        "/quality/oracles/selectionStableAfterSort"
+        "/quality/oracles/selectionStableAfterSort",
+        "/quality/oracles/visiblePageBulkSelection"
       ],
       "evidenceKinds": ["red-output", "green-output", "interaction-test", "combination-test"]
     },
@@ -107,7 +111,8 @@
       "verifies": [
         "/quality/visualOracles/fixedColumnBoundary",
         "/quality/visualOracles/headerBodyAlignment",
-        "/quality/visualOracles/scrollReachability"
+        "/quality/visualOracles/scrollReachability",
+        "/quality/oracles/keyboardResizeIsEquivalent"
       ],
       "evidenceKinds": ["red-output", "green-output", "geometry-assertion", "viewport-screenshot", "scroll-test"]
     },
@@ -138,7 +143,12 @@
         "/view/statePresentation"
       ],
       "verifies": [
+        "/quality/oracles/localeTextCoversStructuralLabels",
+        "/quality/oracles/nestedControlsHaveSingleEffect",
+        "/quality/oracles/pagedGridExposesAbsolutePosition",
+        "/quality/oracles/refreshErrorPreservesFocus",
         "/quality/visualOracles/focusVisibility",
+        "/quality/visualOracles/forcedColorsVisibility",
         "/quality/visualOracles/scrollReachability"
       ],
       "evidenceKinds": ["red-output", "green-output", "keyboard-test", "accessibility-scan", "manual-review"]
@@ -164,14 +174,23 @@
       ],
       "verifies": [
         "/quality/oracles/duplicateRowIdBlocksInteraction",
+        "/quality/oracles/controlledCapabilitiesDoNotSpeculate",
         "/quality/oracles/filterPreservesSelection",
+        "/quality/oracles/keyboardResizeIsEquivalent",
+        "/quality/oracles/localeTextCoversStructuralLabels",
+        "/quality/oracles/nestedControlsHaveSingleEffect",
+        "/quality/oracles/pagedGridExposesAbsolutePosition",
         "/quality/oracles/refreshFailureRetainsContext",
+        "/quality/oracles/refreshErrorPreservesFocus",
         "/quality/oracles/remoteQueryIsNotAppliedLocally",
         "/quality/oracles/selectionStableAfterSort",
+        "/quality/oracles/sortFilterResetPageAtomically",
         "/quality/oracles/sortProducesSingleIntent",
         "/quality/oracles/staleResultDoesNotOverwrite",
+        "/quality/oracles/visiblePageBulkSelection",
         "/quality/visualOracles/fixedColumnBoundary",
         "/quality/visualOracles/focusVisibility",
+        "/quality/visualOracles/forcedColorsVisibility",
         "/quality/visualOracles/headerBodyAlignment",
         "/quality/visualOracles/noClipping",
         "/quality/visualOracles/scrollReachability",

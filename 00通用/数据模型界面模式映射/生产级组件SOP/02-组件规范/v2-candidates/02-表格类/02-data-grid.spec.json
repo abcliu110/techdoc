@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "specificationVersion": "0.3.0",
+  "specificationVersion": "0.3.1",
   "component": {
     "key": "02:data-grid",
     "legacyId": "data-grid",
@@ -8,7 +8,7 @@
     "englishName": "Data Grid",
     "category": "02",
     "exportName": "DataGrid",
-    "packageSubpath": "@company/ui/data-grid"
+    "packageSubpath": "@nms/ui/data-grid"
   },
   "lifecycle": {
     "specificationStatus": "Draft",
@@ -45,13 +45,13 @@
       "data": {
         "type": "DataGridDataSource<TRow>",
         "required": true,
-        "contract": "local 提供 rows；remote-page 提供 rows、rowCount、resultQueryId、loading、error 和查询回调。",
+        "contract": "local 提供 rows。remote-page 使用判别联合：loading=true 时 error 必须缺省；loading=false 时为成功或携带 DataGridError 的失败。首次消费方自有结果允许省略 resultQueryId；组件发出查询后，rows、rowCount 和 error 只有在 resultQueryId 匹配当前 queryId 时才可改变已接受快照或状态，缺失或迟到 ID 一律忽略。",
         "semantic": "data-source"
       },
       "columns": {
-        "type": "readonly DataGridColumn<TRow, unknown>[]",
+        "type": "readonly DataGridColumn<TRow>[]",
         "required": true,
-        "contract": "每列必须有稳定 id；不得暴露 TanStack ColumnDef。",
+        "contract": "每列必须有稳定 id；消费方通过 defineDataGridColumn<TRow>() 返回的泛型构造器分别推断 TValue，再擦除为 DataGridColumn<TRow> 进入异构只读数组；擦除只发生在包边界且不得要求消费方使用 any、双重断言或 TanStack ColumnDef。",
         "semantic": "column-identity-source"
       },
       "getRowId": {
@@ -64,6 +64,12 @@
         "type": "string",
         "required": true,
         "contract": "为无可见标题的 grid 提供可访问名称。"
+      },
+      "localeText": {
+        "type": "Partial<DataGridLocaleText>",
+        "required": false,
+        "contract": "覆盖加载、空、错误、重试、选择计数、分页、排序、筛选、列宽和无障碍标签；动态文案使用类型化格式化函数，缺省键回退到内置简体中文。",
+        "semantic": "localized-structural-messages"
       }
     },
     "events": {
@@ -124,7 +130,8 @@
       "rowSelection": {
         "state": "ReadonlySet<RowId>",
         "event": "/api/events/rowSelectionChange",
-        "identitySource": "/behavior/identity/row/keyContract"
+        "identitySource": "/behavior/identity/row/keyContract",
+        "remoteBehavior": "批量选择只作用于当前可见页；表头复选框按当前可见页计算未选、全选和 mixed，隐藏或其他页已选 ID 保留但不得宣称已选择全部逻辑结果。"
       },
       "pagination": {
         "state": "DataGridPage",
@@ -137,11 +144,12 @@
       },
       "columnSizing": {
         "state": "DataGridColumnSizing",
-        "identitySource": "/behavior/identity/column/keyContract"
+        "identitySource": "/behavior/identity/column/keyContract",
+        "remoteBehavior": "调整手柄使用 vertical separator 语义；方向键每次调整 8px，Home/End 到最小/最大值，键盘和指针共享同一受控或非受控状态更新路径。"
       }
     },
     "controlledState": {
-      "rule": "能力配置提供 value 时受控，只提供 defaultValue 时非受控；挂载后不得切换模式。"
+      "rule": "sorting、filtering、rowSelection、pagination、columnPinning 和 columnSizing 均使用 value/defaultValue 互斥联合与 onChange。受控切片对用户命令同步发出一次新的不可变 payload，但在 value prop 更新前不得推测渲染下一值；非受控切片先持久化再发出一次 onChange。挂载后模式固定，切换时开发环境诊断且继续使用初始模式。切片按稳定 ID/结构值比较并抑制无变化事件。排序或筛选变化与 pageIndex=0 原子合成：先按 sorting/filtering -> pagination 的顺序发能力回调，再仅发一次包含相同完整下一状态的远程 query intent；分页自身变化保留目标 pageIndex。"
     }
   },
   "behavior": {
@@ -284,7 +292,7 @@
       "errorRefresh": {
         "regions": ["header", "body", "status", "pagination"],
         "presentation": "旧数据、选择和查询保留，status 标明数据可能过期并提供重试。",
-        "focus": "进入重试按钮；成功后返回触发查询的控制。"
+        "focus": "保留活动单元格或触发查询的控制且只用 polite 状态播报；重试留在正常导航中可达。仅当原焦点节点消失时移动到最近可用单元格，成功后恢复保存的触发控制或稳定单元格。"
       }
     },
     "tokens": {
@@ -304,23 +312,23 @@
         "1440": "不拉伸超过列最大宽度，多余空间归 scroll owner。"
       },
       "adjacentWidthChecksPx": [389, 391, 767, 769, 1279, 1281, 1439, 1441],
-      "contentFixtures": ["最长列标题", "无空格长值", "200% 缩放", "暗色", "紧凑密度"]
+      "contentFixtures": ["最长列标题", "无空格长值", "200% 缩放", "暗色", "紧凑密度", "forced-colors", "右下边缘筛选浮层"]
     }
   },
   "accessibility": {
     "keyboardModel": {
       "pattern": "ARIA Grid with roving tabindex",
-      "keys": ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End", "Ctrl+Home", "Ctrl+End", "Space", "Enter"],
-      "focusRecovery": "异步结果后优先恢复到仍存在的稳定 rowId/columnId；不存在时移动到最近可用单元格。"
+      "keys": ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End", "Ctrl+Home", "Ctrl+End", "Space", "Enter", "F2", "Escape", "Tab"],
+      "focusRecovery": "导航模式只有一个表头或正文单元格进入 tab 序列；Enter/F2 进入当前单元格或表头的交互后代，Escape 返回所属单元格，交互模式内 Tab 在后代间移动并从末项离开 Grid。嵌套按钮、复选框、筛选器和 separator 的键盘事件不得冒泡触发行选择或激活。异步结果后优先恢复仍存在的稳定 rowId/columnId；不存在时移动到最近可用单元格。"
     },
     "semantics": {
       "roles": ["grid", "row", "columnheader", "gridcell"],
-      "counts": ["aria-rowcount", "aria-colcount"],
-      "selection": "选中行使用 aria-selected；复选框有可访问名称。"
+      "counts": ["aria-rowcount", "aria-colcount", "aria-rowindex", "aria-colindex"],
+      "selection": "表头占 aria-rowindex=1；remote-page 数据行使用 pageIndex*pageSize+页面内索引+2 的绝对 aria-rowindex。选择列计入 aria-colcount/aria-colindex。已知总量使用 aria-rowcount=rowCount+1；未知总量省略 aria-rowcount；空结果仍保留表头且 aria-rowcount=1。排序头使用 aria-sort，加载/刷新使用 aria-busy，启用多选时 Grid 使用 aria-multiselectable。选中行使用 aria-selected；表头复选框标签明确当前可见页范围并按可见行计算 checked/mixed。"
     },
     "announcements": {
       "politeness": "polite",
-      "events": ["排序变化", "筛选结果数", "刷新失败", "重试成功"]
+      "events": ["初始加载", "刷新中", "排序变化", "筛选结果数", "刷新失败", "重试成功", "当前页选择变化" ]
     }
   },
   "quality": {
@@ -363,6 +371,11 @@
         "given": "默认、暗色、紧凑和减少动态效果主题",
         "when": "键盘遍历表头、单元格、重试和分页",
         "then": "任何活动控件均有连续可见的 2px 焦点环且不被 sticky 区域裁切。"
+      },
+      "forcedColorsVisibility": {
+        "given": "forced-colors 模式且存在选择、错误、固定列、排序筛选状态和列宽手柄",
+        "when": "键盘遍历并滚动到固定区边界",
+        "then": "焦点、选择、错误、固定边界和手柄均使用系统颜色可辨，不依赖背景色或阴影单独表达。"
       }
     },
     "oracles": {
@@ -407,6 +420,54 @@
         "when": "A 的 resultQueryId 在 B 之后返回",
         "then": "A 不覆盖数据、选择或焦点，只有 B 的匹配结果应用一次。",
         "references": { "api": ["/api/props/data"], "states": ["refreshing"], "regions": ["body", "status"] }
+      },
+      "refreshErrorPreservesFocus": {
+        "given": "活动正文单元格仍存在且后台刷新失败",
+        "when": "进入 errorRefresh 并出现重试命令",
+        "then": "焦点仍在原活动单元格或查询触发控件，失败只播报一次，重试可由正常导航到达。",
+        "references": { "api": ["/api/actions/retryQuery"], "states": ["errorRefresh"], "regions": ["body", "status"] }
+      },
+      "pagedGridExposesAbsolutePosition": {
+        "given": "remote-page 第 3 页、pageSize=100、rowCount=100000 且包含选择列",
+        "when": "渲染表头、当前页首行并进入 refreshing",
+        "then": "表头和单元格具有一致绝对 row/column index，逻辑 counts、busy、sort 和 multiselectable 与状态一致。",
+        "references": { "api": ["/api/props/data", "/api/features/pagination"], "states": ["refreshing"], "regions": ["header", "body"] }
+      },
+      "nestedControlsHaveSingleEffect": {
+        "given": "可排序筛选表头、选择单元格和行激活均启用",
+        "when": "使用 Enter/F2 进入后代、操作后按 Escape 返回导航模式",
+        "then": "每个按键只触发所属控件一次，嵌套事件不触发行选择或行激活，导航模式始终只有一个 tab stop。",
+        "references": { "api": ["/api/events/sortingChange", "/api/events/filteringChange", "/api/events/rowSelectionChange"], "states": ["ready"], "regions": ["header", "body"] }
+      },
+      "keyboardResizeIsEquivalent": {
+        "given": "列宽调整已启用且当前列允许 80 至 640px",
+        "when": "在 separator 上使用方向键、Home 和 End",
+        "then": "aria-valuemin/max/now 正确，每次命令只更新一次并与指针路径使用同一状态合同。",
+        "references": { "api": ["/api/features/columnSizing"], "states": ["ready"], "regions": ["header"] }
+      },
+      "visiblePageBulkSelection": {
+        "given": "remote-page 当前页部分行已选且其他页存在已选 ID",
+        "when": "激活表头当前页选择复选框",
+        "then": "只切换当前可见页 ID，mixed/checked 只按可见页计算，同时总选择数与可见选择数分开表达。",
+        "references": { "api": ["/api/events/rowSelectionChange", "/api/features/rowSelection"], "states": ["ready"], "regions": ["toolbar", "header", "body"] }
+      },
+      "localeTextCoversStructuralLabels": {
+        "given": "消费方覆盖全部 localeText 静态键与动态计数格式化函数",
+        "when": "遍历加载、空、错误、选择、分页、排序、筛选、列宽和重试状态",
+        "then": "所有可见文案和无障碍标签使用覆盖值，错误数据结构不承载本地化展示文本。",
+        "references": { "api": ["/api/props/localeText"], "states": ["loadingInitial", "empty", "errorInitial", "errorRefresh"], "regions": ["toolbar", "header", "body", "status", "pagination"] }
+      },
+      "controlledCapabilitiesDoNotSpeculate": {
+        "given": "六类能力分别以受控和非受控模式挂载",
+        "when": "执行会改变切片的用户命令、重复无变化命令和运行期模式切换",
+        "then": "受控切片只发一次新不可变 payload 且等待 prop 更新后渲染；非受控切片持久化一次；无变化不发事件；模式切换被诊断且不改变初始模式。",
+        "references": { "api": ["/api/controlledState"], "states": ["ready"], "regions": ["header", "body", "pagination"] }
+      },
+      "sortFilterResetPageAtomically": {
+        "given": "remote-page 当前 pageIndex 大于 0",
+        "when": "排序或筛选发生实际变化",
+        "then": "能力回调看到同一完整下一状态且 pageIndex=0，只产生一次对应 queryId 的完整 query intent，不出现中间页查询。",
+        "references": { "api": ["/api/events/sortingChange", "/api/events/filteringChange", "/api/events/paginationChange", "/api/events/queryChange"], "states": ["refreshing"], "regions": ["header", "status", "pagination"] }
       }
     }
   },
