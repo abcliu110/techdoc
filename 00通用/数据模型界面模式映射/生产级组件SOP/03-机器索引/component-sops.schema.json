@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "component-sops.schema.json",
+  "title": "Component SOP Index",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "generatedFrom",
+    "certificationPolicy",
+    "categoryCounts",
+    "components"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "generatedFrom": {
+      "type": "string"
+    },
+    "certificationPolicy": {
+      "const": "draft-is-not-certified"
+    },
+    "categoryCounts": {
+      "type": "object"
+    },
+    "components": {
+      "type": "array",
+      "minItems": 309,
+      "maxItems": 309,
+      "items": {
+        "type": "object",
+        "required": [
+          "componentKey",
+          "legacyId",
+          "name",
+          "category",
+          "prototypeComplexity",
+          "provisionalRisk",
+          "lifecycle",
+          "certification",
+          "sopPath",
+          "source",
+          "evidenceRoot",
+          "frozenDecisions"
+        ],
+        "properties": {
+          "componentKey": {
+            "type": "string",
+            "pattern": "^(0[1-9]|1[5-8]):[a-z0-9-]+$"
+          },
+          "prototypeComplexity": {
+            "enum": [
+              "B",
+              "C"
+            ]
+          },
+          "provisionalRisk": {
+            "enum": [
+              "R1",
+              "R2",
+              "R3"
+            ]
+          },
+          "lifecycle": {
+            "const": "Draft"
+          },
+          "certification": {
+            "const": "not-certified"
+          },
+          "sopPath": {
+            "type": "string"
+          },
+          "frozenDecisions": {
+            "type": "array"
+          }
+        }
+      }
+    }
+  }
+}
