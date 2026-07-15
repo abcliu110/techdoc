@@ -1,0 +1,70 @@
+import assert from "node:assert/strict";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { canonicalDigest, validateSopReferences } from "./validate-sop-references.mjs";
+import { readJson } from "./shared.mjs";
+
+const scriptDir = dirname(fileURLToPath(import.meta.url));
+const root = join(scriptDir, "..", "..");
+const specRoot = join(root, "02-组件规范", "v2-candidates");
+const specPath = join(specRoot, "02-表格类", "02-data-grid.spec.json");
+const sopPath = join(root, "03-生产SOP", "组件实施SOP-v2-candidates", "02-data-grid.implementation-sop.json");
+const effectiveSchema = readJson(join(root, "04-机器索引与Schema", "v2", "effective-schemas", "02-data-grid.schema.json"));
+const spec = readJson(specPath);
+const allOracles = [
+  ...Object.keys(spec.quality.oracles).map((key) => `/quality/oracles/${key}`),
+  ...Object.keys(spec.quality.visualOracles).map((key) => `/quality/visualOracles/${key}`),
+];
+
+function validSop() {
+  return {
+    sopVersion: "0.2.0",
+    componentKey: "02:data-grid",
+    status: "Draft",
+    specification: {
+      path: "../../02-组件规范/v2-candidates/02-表格类/02-data-grid.spec.json",
+      version: spec.specificationVersion,
+      digest: canonicalDigest(spec),
+    },
+    steps: [{
+      key: "allContracts",
+      action: "implement-and-verify",
+      method: "先建立失败测试，再实现规范引用，并保存通过证据。",
+      implements: ["/api/props/data"],
+      verifies: allOracles,
+      evidenceKinds: ["red-output", "green-output", "interaction-test"],
+    }],
+  };
+}
+
+function validate(sop) {
+  return validateSopReferences(sop, { sopPath, specificationsRoot: specRoot, effectiveSchema });
+}
+
+assert.equal(validate(validSop()).status, "Passed");
+
+function expectIssue(change, code, status = "Failed") {
+  const sop = validSop();
+  change(sop);
+  const result = validate(sop);
+  assert.equal(result.status, status);
+  assert.ok(result.issues.some((item) => item.code === code), `Expected ${code}, received ${JSON.stringify(result)}`);
+}
+
+expectIssue((sop) => { sop.specification.path = "../../../04-机器索引与Schema/component-spec.schema.json"; }, "SOP_SPEC_PATH");
+expectIssue((sop) => { sop.componentKey = "02:tree-grid"; }, "SOP_COMPONENT_KEY");
+expectIssue((sop) => { sop.specification.version = "9.9.9"; }, "SOP_SPEC_VERSION");
+expectIssue((sop) => { sop.steps[0].implements = ["not-a-pointer"]; }, "SOP_POINTER_FORMAT");
+expectIssue((sop) => { sop.steps[0].implements = ["/api/props/missing"]; }, "SOP_POINTER_MISSING");
+expectIssue((sop) => { sop.steps[0].implements = ["/approval/status"]; }, "SOP_IMPLEMENT_PARTITION");
+expectIssue((sop) => { sop.steps[0].verifies = ["/api/props/data", ...allOracles]; }, "SOP_VERIFY_PARTITION");
+expectIssue((sop) => { sop.steps[0].verifies = allOracles.slice(1); }, "SOP_ORACLE_UNCOVERED");
+expectIssue((sop) => { sop.specification.digest = "sha256:deadbeef"; }, "SOP_DIGEST_STALE", "Stale");
+expectIssue((sop) => { sop.status = "Approved"; sop.specification.digest = "sha256:deadbeef"; }, "SOP_APPROVED_STALE", "Stale");
+expectIssue((sop) => { sop.steps[0].method = "Infer the public type from rows."; }, "SOP_DUPLICATED_ALIAS");
+expectIssue((sop) => { sop.steps[0].method = "Call onSelectionChange after sorting."; }, "SOP_DUPLICATED_ALIAS");
+expectIssue((sop) => { sop.steps[0].method = "Reuse querySnapshot for retry."; }, "SOP_DUPLICATED_ALIAS");
+expectIssue((sop) => { sop.steps[0].method = "Use value: string as the callback contract."; }, "SOP_DUPLICATED_TYPE");
+expectIssue((sop) => { sop.steps[0].method = "Require p95 <= 100ms before passing."; }, "SOP_DUPLICATED_THRESHOLD");
+
+console.log(JSON.stringify({ status: "PASS", cases: 16 }, null, 2));

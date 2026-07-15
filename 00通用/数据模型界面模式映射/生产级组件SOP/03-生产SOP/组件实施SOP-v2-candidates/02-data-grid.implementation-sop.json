@@ -1,0 +1,184 @@
+{
+  "sopVersion": "0.2.0",
+  "componentKey": "02:data-grid",
+  "status": "Draft",
+  "specification": {
+    "path": "../../02-组件规范/v2-candidates/02-表格类/02-data-grid.spec.json",
+    "version": "0.3.0",
+    "digest": "sha256:dd5b071ed5e6517493a587b1066243a8ac1f2532848c75f9f6411e4cafe1e336"
+  },
+  "steps": [
+    {
+      "key": "bindExecution",
+      "action": "bind",
+      "method": "读取目标仓库规则和真实命令，将源码修订、规范版本、两层 SOP 版本与证据目录绑定到同一执行记录；任一输入未绑定即停止。",
+      "implements": [
+        "/compatibility/v1Authority",
+        "/risk/upgradeTriggers"
+      ],
+      "verifies": [],
+      "evidenceKinds": ["repository-binding", "source-revision", "command-manifest"]
+    },
+    {
+      "key": "identityCore",
+      "action": "implement-and-verify",
+      "method": "先建立行列身份和重复身份的失败夹具，确认失败原因后实现最小核心，再运行相关回归。",
+      "implements": [
+        "/api/props/columns",
+        "/api/props/getRowId",
+        "/behavior/identity/column",
+        "/behavior/identity/row"
+      ],
+      "verifies": [
+        "/quality/oracles/duplicateRowIdBlocksInteraction",
+        "/quality/oracles/selectionStableAfterSort"
+      ],
+      "evidenceKinds": ["red-output", "green-output", "unit-test", "contract-error-test"]
+    },
+    {
+      "key": "asyncRecovery",
+      "action": "implement-and-verify",
+      "method": "依次为状态转换、迟到结果、失败保留和重试建立失败注入；每个切片通过后才进入下一个切片。",
+      "implements": [
+        "/api/actions/retryQuery",
+        "/api/events/queryChange",
+        "/api/events/retry",
+        "/api/props/data",
+        "/behavior/exceptionFlows",
+        "/behavior/states",
+        "/behavior/transitions"
+      ],
+      "verifies": [
+        "/quality/oracles/refreshFailureRetainsContext",
+        "/quality/oracles/staleResultDoesNotOverwrite",
+        "/quality/visualOracles/stateRetention"
+      ],
+      "evidenceKinds": ["red-output", "green-output", "state-transition-test", "failure-injection", "focus-test"]
+    },
+    {
+      "key": "queryCapabilities",
+      "action": "implement-and-verify",
+      "method": "按排序、筛选、分页的顺序逐项完成失败测试、最小实现和组合回归，不并行冻结多个能力。",
+      "implements": [
+        "/api/features/filtering",
+        "/api/features/pagination",
+        "/api/features/sorting"
+      ],
+      "verifies": [
+        "/quality/oracles/filterPreservesSelection",
+        "/quality/oracles/remoteQueryIsNotAppliedLocally",
+        "/quality/oracles/sortProducesSingleIntent"
+      ],
+      "evidenceKinds": ["red-output", "green-output", "interaction-test", "event-count-test", "combination-test"]
+    },
+    {
+      "key": "selectionCapability",
+      "action": "implement-and-verify",
+      "method": "在查询能力回归保持通过的前提下增加选择失败夹具，覆盖排序、筛选和翻页后的身份保持，再实现最小选择切片。",
+      "implements": [
+        "/api/events/rowSelectionChange",
+        "/api/features/rowSelection"
+      ],
+      "verifies": [
+        "/quality/oracles/filterPreservesSelection",
+        "/quality/oracles/selectionStableAfterSort"
+      ],
+      "evidenceKinds": ["red-output", "green-output", "interaction-test", "combination-test"]
+    },
+    {
+      "key": "geometryCapabilities",
+      "action": "implement-and-verify",
+      "method": "先固定几何夹具和像素比较方法，再分别接入固定列与列宽能力，并在每次改变后重跑滚动组合测试。",
+      "implements": [
+        "/api/features/columnPinning",
+        "/api/features/columnSizing",
+        "/view/layout",
+        "/view/regions"
+      ],
+      "verifies": [
+        "/quality/visualOracles/fixedColumnBoundary",
+        "/quality/visualOracles/headerBodyAlignment",
+        "/quality/visualOracles/scrollReachability"
+      ],
+      "evidenceKinds": ["red-output", "green-output", "geometry-assertion", "viewport-screenshot", "scroll-test"]
+    },
+    {
+      "key": "responsiveStates",
+      "action": "implement-and-verify",
+      "method": "以规范声明的视口、相邻宽度、内容和主题夹具形成状态矩阵；逐格验证后保存截图和可达性记录。",
+      "implements": [
+        "/view/responsive",
+        "/view/statePresentation",
+        "/view/tokens"
+      ],
+      "verifies": [
+        "/quality/visualOracles/noClipping",
+        "/quality/visualOracles/stateRetention"
+      ],
+      "evidenceKinds": ["viewport-matrix", "state-matrix", "theme-screenshot", "clipping-scan"]
+    },
+    {
+      "key": "keyboardAccessibility",
+      "action": "implement-and-verify",
+      "method": "先建立主路径、错误路径和恢复路径的键盘失败测试，再实现单一活动目标、语义和播报；自动扫描后执行人工键盘复核。",
+      "implements": [
+        "/accessibility/announcements",
+        "/accessibility/keyboardModel",
+        "/accessibility/semantics",
+        "/view/statePresentation"
+      ],
+      "verifies": [
+        "/quality/visualOracles/focusVisibility",
+        "/quality/visualOracles/scrollReachability"
+      ],
+      "evidenceKinds": ["red-output", "green-output", "keyboard-test", "accessibility-scan", "manual-review"]
+    },
+    {
+      "key": "measureQuality",
+      "action": "measure",
+      "method": "使用规范引用的固定夹具重复采样，保存原始数据、环境和统计脚本；任何预算失败都回到对应能力切片修复后重测。",
+      "implements": [
+        "/quality/performanceBudgets",
+        "/quality/scaleFixtures"
+      ],
+      "verifies": [],
+      "evidenceKinds": ["benchmark-raw-data", "environment-manifest", "bundle-report"]
+    },
+    {
+      "key": "reviewCandidate",
+      "action": "review",
+      "method": "汇总规范覆盖、测试输出、交互证据、风险复核与未决项，由独立角色逐项检查；作者不得替代批准人。",
+      "implements": [
+        "/risk/invariants",
+        "/security/rules"
+      ],
+      "verifies": [
+        "/quality/oracles/duplicateRowIdBlocksInteraction",
+        "/quality/oracles/filterPreservesSelection",
+        "/quality/oracles/refreshFailureRetainsContext",
+        "/quality/oracles/remoteQueryIsNotAppliedLocally",
+        "/quality/oracles/selectionStableAfterSort",
+        "/quality/oracles/sortProducesSingleIntent",
+        "/quality/oracles/staleResultDoesNotOverwrite",
+        "/quality/visualOracles/fixedColumnBoundary",
+        "/quality/visualOracles/focusVisibility",
+        "/quality/visualOracles/headerBodyAlignment",
+        "/quality/visualOracles/noClipping",
+        "/quality/visualOracles/scrollReachability",
+        "/quality/visualOracles/stateRetention"
+      ],
+      "evidenceKinds": ["traceability-matrix", "independent-review", "risk-review", "open-item-register"]
+    },
+    {
+      "key": "packageCandidate",
+      "action": "package",
+      "method": "只从已验证的源码修订构建候选，使用打包产物运行隔离消费、回滚和完整回归，并把产物摘要写入同一证据包。",
+      "implements": [
+        "/api/status",
+        "/compatibility/breakingSurfaces"
+      ],
+      "verifies": [],
+      "evidenceKinds": ["artifact-digest", "isolated-consumer-test", "rollback-test", "regression-output"]
+    }
+  ]
+}
