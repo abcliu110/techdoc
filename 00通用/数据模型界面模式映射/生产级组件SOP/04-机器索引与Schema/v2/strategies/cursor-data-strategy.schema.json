@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "nms://component-strategy/cursor-data-strategy/v1",
+  "type": "object",
+  "required": ["schemaVersion", "specificationVersion", "strategy", "lifecycle", "scope", "api", "behavior", "accessibility", "quality", "approval"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "specificationVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "strategy": {
+      "type": "object",
+      "required": ["key", "name", "englishName", "ownerComponent", "dataSourceType"],
+      "properties": {
+        "key": { "const": "02:cursor-data-strategy" },
+        "name": { "type": "string", "minLength": 1 },
+        "englishName": { "type": "string", "minLength": 1 },
+        "ownerComponent": { "const": "02:data-grid" },
+        "dataSourceType": { "const": "remote-cursor" }
+      },
+      "additionalProperties": false
+    },
+    "lifecycle": {
+      "type": "object",
+      "required": ["specificationStatus", "implementationAllowed", "apiStatus", "approvalStatus"],
+      "properties": {
+        "specificationStatus": { "enum": ["Draft", "ReviewReady", "Approved", "Stale"] },
+        "implementationAllowed": { "type": "boolean" },
+        "apiStatus": { "enum": ["proposed", "stable", "deprecated"] },
+        "approvalStatus": { "enum": ["pending", "approved"] }
+      },
+      "additionalProperties": false
+    },
+    "scope": {
+      "type": "object",
+      "required": ["purpose", "in", "out"],
+      "properties": {
+        "purpose": { "type": "string", "minLength": 1 },
+        "in": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "out": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+      },
+      "additionalProperties": false
+    },
+    "api": { "type": "object", "required": ["dataSourceType", "request", "result", "commands", "defaultBehavior"] },
+    "behavior": { "type": "object", "required": ["append", "stale", "failure", "retry", "terminal", "concurrency"] },
+    "accessibility": { "type": "object", "required": ["loadCommand", "loading", "failure", "append"] },
+    "quality": { "type": "object", "required": ["oracles", "budgets"] },
+    "approval": { "type": "object", "required": ["status", "authors", "requiredRoles", "records"] }
+  },
+  "additionalProperties": false
+}

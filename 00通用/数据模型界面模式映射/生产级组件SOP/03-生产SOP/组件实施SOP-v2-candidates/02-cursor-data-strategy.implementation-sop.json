@@ -1,0 +1,121 @@
+{
+  "sopVersion": "0.1.0",
+  "strategyKey": "02:cursor-data-strategy",
+  "status": "ReviewReady",
+  "approval": {
+    "status": "pending",
+    "authors": [
+      "Codex"
+    ],
+    "requiredRoles": [
+      "component-maintainer",
+      "ux-a11y-reviewer",
+      "test-reviewer"
+    ],
+    "records": []
+  },
+  "specification": {
+    "path": "../../02-组件规范/v2-candidates/02-表格类/02-cursor-data-strategy.spec.json",
+    "version": "0.1.0",
+    "digest": "sha256:48097f466e7b212b0fa5b25114a0084ed391d6184f7669128493273b5e10d4aa"
+  },
+  "steps": [
+    {
+      "key": "bindExecution",
+      "action": "bind",
+      "method": "绑定仓库规则、DataGrid 基线、规范、验证命令和证据目录；任一输入缺失时停止。",
+      "implements": [
+        "/scope",
+        "/api"
+      ],
+      "verifies": [],
+      "evidenceKinds": [
+        "repository-binding",
+        "source-revision",
+        "command-manifest"
+      ]
+    },
+    {
+      "key": "identityRuntime",
+      "action": "implement-and-verify",
+      "method": "先为匹配追加、稳定身份去重、迟到结果和终止建立失败测试，再实现最小纯状态核心。",
+      "implements": [
+        "/behavior/append",
+        "/behavior/stale",
+        "/behavior/terminal"
+      ],
+      "verifies": [
+        "/quality/oracles/matchingPageAppendsOnce",
+        "/quality/oracles/duplicateRowKeepsFirstAccepted",
+        "/quality/oracles/stalePageDoesNotOverwrite",
+        "/quality/oracles/terminalCursorStopsRequests"
+      ],
+      "evidenceKinds": [
+        "red-output",
+        "green-output",
+        "state-test"
+      ]
+    },
+    {
+      "key": "failureAndRetry",
+      "action": "implement-and-verify",
+      "method": "注入匹配失败和重复命令，确认上下文保留后接入失败游标与新请求身份重试。",
+      "implements": [
+        "/behavior/failure",
+        "/behavior/retry",
+        "/behavior/concurrency"
+      ],
+      "verifies": [
+        "/quality/oracles/appendFailureRetainsRows",
+        "/quality/oracles/retryUsesFailedCursorWithNewId"
+      ],
+      "evidenceKinds": [
+        "red-output",
+        "green-output",
+        "failure-injection",
+        "event-count-test"
+      ]
+    },
+    {
+      "key": "componentPresentation",
+      "action": "implement-and-verify",
+      "method": "先建立加载、失败、重试、终止和窗口组合的组件失败测试，再接入公开命令与状态区并运行兼容回归。",
+      "implements": [
+        "/accessibility",
+        "/api/defaultBehavior"
+      ],
+      "verifies": [
+        "/quality/oracles/viewportCompositionIsIndependent",
+        "/quality/oracles/terminalCursorStopsRequests",
+        "/quality/oracles/appendFailureRetainsRows"
+      ],
+      "evidenceKinds": [
+        "red-output",
+        "green-output",
+        "interaction-test",
+        "accessibility-test",
+        "compatibility-test"
+      ]
+    },
+    {
+      "key": "measureAndReview",
+      "action": "measure-and-review",
+      "method": "运行完整表格族回归、包体、浏览器、几何、性能与证据清单，由独立角色复核开放边界。",
+      "implements": [
+        "/quality/budgets"
+      ],
+      "verifies": [
+        "/quality/oracles/matchingPageAppendsOnce",
+        "/quality/oracles/stalePageDoesNotOverwrite",
+        "/quality/oracles/viewportCompositionIsIndependent"
+      ],
+      "evidenceKinds": [
+        "regression-output",
+        "package-report",
+        "browser-report",
+        "performance-report",
+        "independent-review"
+      ]
+    }
+  ]
+}

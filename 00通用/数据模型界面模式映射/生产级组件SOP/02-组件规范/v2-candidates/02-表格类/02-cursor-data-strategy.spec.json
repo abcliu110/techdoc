@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "specificationVersion": "0.1.0",
+  "strategy": {
+    "key": "02:cursor-data-strategy",
+    "name": "前向游标数据策略",
+    "englishName": "Forward Cursor DataStrategy",
+    "ownerComponent": "02:data-grid",
+    "dataSourceType": "remote-cursor"
+  },
+  "lifecycle": {
+    "specificationStatus": "ReviewReady",
+    "implementationAllowed": false,
+    "apiStatus": "proposed",
+    "approvalStatus": "pending"
+  },
+  "scope": {
+    "purpose": "以 requestId 和 cursor 接受前向数据页，按稳定 rowId 追加去重，并在迟到、失败和重试时保留已接受上下文。",
+    "in": [
+      "显式加载更多命令",
+      "requestId 与 cursor 身份",
+      "前向追加",
+      "稳定 rowId 去重",
+      "迟到结果拒绝",
+      "追加失败保留与重试",
+      "nextCursor=null 终止",
+      "与固定视口策略组合"
+    ],
+    "out": [
+      "自动滚动阈值加载",
+      "前插或双向时间线",
+      "缓存淘汰",
+      "远程排序筛选重置",
+      "服务端实现",
+      "MasterDetailGrid 主表内部聚合"
+    ]
+  },
+  "api": {
+    "dataSourceType": "remote-cursor",
+    "request": { "requestId": "stable unique string", "cursor": "opaque non-empty string" },
+    "result": { "rows": "readonly rows", "nextCursor": "string or null", "resultRequestId": "matching request ID after first command" },
+    "commands": ["onLoadMore", "onRetry"],
+    "defaultBehavior": "其他 DataGrid 数据源判别值和分页行为不变。"
+  },
+  "behavior": {
+    "append": "匹配结果按到达请求追加；重复 rowId 保留首次接受行。",
+    "stale": "resultRequestId 不匹配当前请求时不改变已接受行、游标、错误或 pending。",
+    "failure": "匹配失败保留已接受行和失败 cursor，并提供重试。",
+    "retry": "重试同一失败 cursor，但生成新的 requestId。",
+    "terminal": "nextCursor=null 后不呈现加载命令，也不再发请求。",
+    "concurrency": "pending 时重复命令不产生第二个请求。"
+  },
+  "accessibility": {
+    "loadCommand": "加载更多按钮位于 Grid 后的状态区并可键盘到达。",
+    "loading": "加载状态使用 polite status，不抢夺活动单元格焦点。",
+    "failure": "失败状态保留 Grid，错误和重试位于正常导航顺序。",
+    "append": "追加结果不自动移动焦点；逻辑 aria-rowcount 按已接受行更新。"
+  },
+  "quality": {
+    "oracles": {
+      "matchingPageAppendsOnce": "一次命令只追加一次匹配页。",
+      "duplicateRowKeepsFirstAccepted": "重复稳定 rowId 不覆盖首次接受行。",
+      "stalePageDoesNotOverwrite": "迟到页不改变当前运行时。",
+      "appendFailureRetainsRows": "失败时已接受行、选择和焦点仍可用。",
+      "retryUsesFailedCursorWithNewId": "重试 cursor 相同且 requestId 不同。",
+      "terminalCursorStopsRequests": "null 游标不再呈现或发出加载命令。",
+      "viewportCompositionIsIndependent": "窗口物化范围不改变游标状态和请求身份。"
+    },
+    "budgets": {
+      "commandP95MaximumMs": 100,
+      "longTaskMaximumMs": 50,
+      "dataGridGzipMaximumBytes": 35840
+    }
+  },
+  "approval": {
+    "status": "pending",
+    "authors": ["Codex"],
+    "requiredRoles": ["component-maintainer", "ux-a11y-reviewer", "test-reviewer"],
+    "records": []
+  }
+}
