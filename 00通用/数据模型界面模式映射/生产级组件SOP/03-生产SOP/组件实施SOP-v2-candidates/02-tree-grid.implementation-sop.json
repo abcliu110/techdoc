@@ -11,7 +11,7 @@
   "specification": {
     "path": "../../02-组件规范/v2-candidates/02-表格类/02-tree-grid.spec.json",
     "version": "0.2.0",
-    "digest": "sha256:111ed9054c71c02062eaf18088235c7542eb6f826b223ef6bcd04e43ac5a687e"
+    "digest": "sha256:6ee2d0ad1d23a97c2dfd66ab667b1b8fa6c01b91eae02a32891caedcca57b92e"
   },
   "steps": [
     {

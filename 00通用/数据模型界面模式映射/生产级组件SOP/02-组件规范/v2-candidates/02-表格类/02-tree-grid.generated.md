@@ -4,7 +4,7 @@
 
 - 源：`02-tree-grid.spec.json`
 - 版本：`0.2.0`
-- Digest：`sha256:111ed9054c71c02062eaf18088235c7542eb6f826b223ef6bcd04e43ac5a687e`
+- Digest：`sha256:6ee2d0ad1d23a97c2dfd66ab667b1b8fa6c01b91eae02a32891caedcca57b92e`
 - 状态：`ReviewReady`，`implementationAllowed=false`
 
 ## 范围
@@ -74,7 +74,7 @@
 
 ## 无障碍
 
-ARIA treegrid：Up/Down 沿可见节点移动；树列 Right 展开或进入首子节点，Left 折叠或返回父节点；非树列 Left/Right 横向移动；Home/End 到首尾可见节点，Ctrl+Home/End 到首尾单元格；Space 选择。；折叠、过滤或刷新移除活动节点时按最近可见祖先、下一兄弟、前一兄弟、容器恢复；异步完成不抢焦点。
+ARIA treegrid：Up/Down 沿可见节点移动；树列 Right 展开或进入首子节点，Left 折叠或返回父节点；非树列 Left/Right 横向移动；Home/End 到当前行首尾单元格，Ctrl+Home/End 到整个 TreeGrid 首尾单元格；Space 选择。；折叠、过滤或刷新移除活动节点时按最近可见祖先、下一兄弟、前一兄弟、容器恢复；异步完成不抢焦点。
 
 ## 质量预算
 

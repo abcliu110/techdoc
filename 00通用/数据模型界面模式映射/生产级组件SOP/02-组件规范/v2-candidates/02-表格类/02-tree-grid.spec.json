@@ -139,7 +139,7 @@
   },
   "accessibility": {
     "keyboardModel": {
-      "pattern": "ARIA treegrid：Up/Down 沿可见节点移动；树列 Right 展开或进入首子节点，Left 折叠或返回父节点；非树列 Left/Right 横向移动；Home/End 到首尾可见节点，Ctrl+Home/End 到首尾单元格；Space 选择。",
+      "pattern": "ARIA treegrid：Up/Down 沿可见节点移动；树列 Right 展开或进入首子节点，Left 折叠或返回父节点；非树列 Left/Right 横向移动；Home/End 到当前行首尾单元格，Ctrl+Home/End 到整个 TreeGrid 首尾单元格；Space 选择。",
       "keys": ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End", "Ctrl+Home", "Ctrl+End", "Space", "Enter", "Escape"],
       "focusRecovery": "折叠、过滤或刷新移除活动节点时按最近可见祖先、下一兄弟、前一兄弟、容器恢复；异步完成不抢焦点。"
     },

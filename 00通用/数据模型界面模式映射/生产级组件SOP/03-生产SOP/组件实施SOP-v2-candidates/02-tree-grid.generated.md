@@ -5,7 +5,7 @@
 - 源：`02-tree-grid.implementation-sop.json`
 - SOP 版本：`0.2.0`
 - 规范版本：`0.2.0`
-- Digest：`sha256:111ed9054c71c02062eaf18088235c7542eb6f826b223ef6bcd04e43ac5a687e`
+- Digest：`sha256:6ee2d0ad1d23a97c2dfd66ab667b1b8fa6c01b91eae02a32891caedcca57b92e`
 - 状态：`ReviewReady`
 
 ## 执行步骤
