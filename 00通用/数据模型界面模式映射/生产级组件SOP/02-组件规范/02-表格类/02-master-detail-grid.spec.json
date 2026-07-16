@@ -1,0 +1,250 @@
+{
+  "schemaVersion": 1,
+  "specificationVersion": "0.1.0",
+  "lifecycle": "ReviewReady",
+  "identity": {
+    "componentKey": "02:master-detail-grid",
+    "legacyId": "master-detail-grid",
+    "name": "主从表格",
+    "englishName": "Master Detail Grid",
+    "category": "02",
+    "exportName": "MasterDetailGrid",
+    "packageSubpath": "@company/ui/master-detail-grid"
+  },
+  "purpose": {
+    "job": "以主表格中的稳定业务行作为当前上下文，加载并展示只属于该主记录的明细表格，在快速切换、乱序响应和局部失败时不串用数据或交互状态。",
+    "success": "用户始终能确认当前主记录与明细归属；主行激活、主行选择和明细行选择互不混淆；任何迟到响应都不得覆盖新主记录的明细。"
+  },
+  "boundaries": {
+    "inScope": [
+      "主表格展示及 DataGrid 已有能力组合",
+      "单一活动主记录上下文",
+      "受控与非受控主记录激活",
+      "按主记录隔离的明细查询、分页、排序和筛选",
+      "明细初始加载、刷新、空、错误和重试",
+      "可调整主从分割区及响应式堆叠",
+      "主从区域间的键盘导航和焦点恢复"
+    ],
+    "outOfScope": [
+      "树形层级",
+      "在同一行内展开明细",
+      "多主记录同时展示明细",
+      "明细编辑事务、草稿与离开阻断",
+      "跨主记录的联合批量操作",
+      "服务端权限、租户与数据范围实现",
+      "离线持久缓存",
+      "透视、OLAP、公式与电子表格内核"
+    ]
+  },
+  "dataContract": {
+    "master": "泛型 TMaster；主区使用自有 MasterDetailGridMaster<TRow> 配置并复用 DataGrid 的 data、columns、getRowId 和可选能力配置；主行身份只能来自 getRowId。",
+    "activeMaster": "MasterDetailGridActiveMaster 以 MasterRowId|string 表示单一导航上下文；它与 master.rowSelection 是两个独立状态，点击复选框不得隐式改变活动主记录。",
+    "detail": "泛型 TDetail；明细区使用自有 MasterDetailGridDetail<TMaster,TDetail> 配置，包含 columns、getRowId、load(request)、查询能力和行选择能力；不暴露 TanStack 类型。",
+    "detailRequest": "MasterDetailGridDetailRequest={master; masterId; query; queryId; signal}。每次主记录变更、明细查询变更或重试都使用新 queryId；AbortSignal 仅用于节省资源，正确性不得依赖取消成功。",
+    "detailResult": "MasterDetailGridDetailResult<TDetail>={masterId; queryId; rows; rowCount}。只有 masterId 等于当前活动主记录且 queryId 等于当前查询时才可进入可见状态。",
+    "detailIdentity": "明细业务身份是 (masterId, detailRowId) 复合键；detailRowId 只需在同一 masterId 内唯一。明细查询、选择和焦点状态均必须按 masterId 命名空间隔离。",
+    "retention": "首版只保留当前活动主记录的最后一份成功明细；切换主记录后不显示旧主记录明细，也不承诺跨主记录恢复非受控明细状态。"
+  },
+  "publicApi": {
+    "status": "proposed",
+    "props": [
+      { "name": "master", "type": "MasterDetailGridMaster<TMaster>", "required": true },
+      { "name": "detail", "type": "MasterDetailGridDetail<TMaster, TDetail>", "required": true },
+      { "name": "activeMaster", "type": "MasterDetailGridActiveMaster | undefined", "required": false },
+      { "name": "layout", "type": "MasterDetailGridLayout | undefined", "required": false },
+      { "name": "emptyDetail", "type": "ReactNode | ((context: MasterDetailEmptyContext) => ReactNode) | undefined", "required": false },
+      { "name": "ariaLabel", "type": "string", "required": true },
+      { "name": "localeText", "type": "Partial<MasterDetailGridLocaleText> | undefined", "required": false }
+    ],
+    "events": [
+      { "name": "activeMaster.onChange", "payload": "{masterId: MasterRowId | null; reason: 'pointer'|'keyboard'|'initial'|'master-removed'}" },
+      { "name": "activeMaster.onInvalid", "payload": "{masterId: MasterRowId; reason: 'missing'|'filtered-out'|'duplicate'}" },
+      { "name": "detail.onQueryChange", "payload": "MasterDetailGridDetailRequestMeta" },
+      { "name": "detail.onLoadError", "payload": "{masterId; queryId; errorCode}" },
+      { "name": "layout.onChange", "payload": "{masterSize: number; reason: 'pointer'|'keyboard'}" }
+    ],
+    "refMethods": [
+      "focusMaster(rowId?: MasterRowId): void",
+      "focusDetail(rowId?: DetailRowId, columnId?: string): void",
+      "retryDetail(): void"
+    ],
+    "controlledState": {
+      "rule": "activeMaster、layout 与 detail 的各能力配置都遵守 value/defaultValue 规则；运行期不允许在受控与非受控间切换。受控活动主 ID 失效时只发 onInvalid 并停止展示明细，不猜测新 ID；非受控状态按规范的就近可见行规则恢复。"
+    }
+  },
+  "stateMachine": {
+    "states": [
+      "noMaster",
+      "masterReadyDetailIdle",
+      "detailLoadingInitial",
+      "detailReady",
+      "detailEmpty",
+      "detailRefreshing",
+      "detailErrorInitial",
+      "detailErrorRefresh",
+      "invalidMaster"
+    ],
+    "initialState": "主区无可见行时为 noMaster；有可见行且非受控 activeMaster 未给定时激活第一可见行并进入 detailLoadingInitial；受控 ID 无效时进入 invalidMaster。",
+    "transitions": [
+      { "from": "noMaster", "event": "MASTER_ROWS_AVAILABLE", "to": "detailLoadingInitial" },
+      { "from": "detailReady|detailEmpty|detailErrorRefresh", "event": "ACTIVATE_DIFFERENT_MASTER", "to": "detailLoadingInitial" },
+      { "from": "detailLoadingInitial", "event": "RESOLVE_MATCHING_NONEMPTY", "to": "detailReady" },
+      { "from": "detailLoadingInitial", "event": "RESOLVE_MATCHING_EMPTY", "to": "detailEmpty" },
+      { "from": "detailLoadingInitial", "event": "REJECT_MATCHING", "to": "detailErrorInitial" },
+      { "from": "detailReady|detailEmpty", "event": "DETAIL_QUERY_CHANGE", "to": "detailRefreshing" },
+      { "from": "detailRefreshing", "event": "RESOLVE_MATCHING", "to": "detailReady|detailEmpty" },
+      { "from": "detailRefreshing", "event": "REJECT_MATCHING", "to": "detailErrorRefresh" },
+      { "from": "detailLoadingInitial|detailRefreshing", "event": "RESOLVE_STALE_MASTER_OR_QUERY", "to": "same" },
+      { "from": "detailReady|detailEmpty|detailErrorInitial|detailErrorRefresh", "event": "ACTIVE_MASTER_REMOVED", "to": "detailLoadingInitial|noMaster|invalidMaster" },
+      { "from": "detailErrorInitial|detailErrorRefresh", "event": "RETRY", "to": "detailLoadingInitial|detailRefreshing" }
+    ]
+  },
+  "primaryFlow": {
+    "id": "activate-master-inspect-detail",
+    "steps": [
+      {
+        "actor": "客户运营专员",
+        "precondition": "主表含 CUST-01 和 CUST-02，当前激活 CUST-01，两行均有唯一稳定 ID。",
+        "control": "CUST-02 主行的非交互单元格",
+        "action": "单击或将活动单元格移到该行后按 Enter。",
+        "stateTransition": "detailReady(CUST-01) -> detailLoadingInitial(CUST-02)。",
+        "observable": "activeMaster.onChange({masterId:'CUST-02', reason}) 只触发一次；主区明确标记 CUST-02 为当前上下文；明细区标题在加载前已显示 CUST-02 的可读摘要。",
+        "oracle": "主行 rowSelection 不因激活而改变；CUST-01 的旧明细不得暂时标成 CUST-02 的明细。"
+      },
+      {
+        "actor": "客户运营专员",
+        "precondition": "CUST-02 的当前 queryId 返回三条匹配明细。",
+        "control": "明细表格的最近交易日列表头",
+        "action": "按 Enter 降序排序。",
+        "stateTransition": "detailReady(CUST-02,q1) -> detailRefreshing(CUST-02,q2) -> detailReady(CUST-02,q2)。",
+        "observable": "detail.onQueryChange 只触发一次且 request 同时携带 masterId='CUST-02' 与新 queryId；刷新期间保留 CUST-02 上一份成功明细并标记可能过期。",
+        "oracle": "只应用 CUST-02/q2 的匹配结果；明细行选择和焦点不得串入 CUST-01 命名空间。"
+      }
+    ]
+  },
+  "exceptionFlows": [
+    {
+      "id": "stale-detail-after-master-switch",
+      "trigger": "先请求 CUST-01/q1，随后激活 CUST-02 发出 q2，CUST-01/q1 在 CUST-02/q2 之后返回。",
+      "blockedEffect": "不得显示、缓存为当前结果、播报或用 CUST-01/q1 改变 CUST-02 的选择与焦点。",
+      "retainedState": "保留当前活动主 ID CUST-02、q2 查询快照和 CUST-02 焦点上下文。",
+      "recovery": "继续等待 CUST-02/q2；取消 CUST-01/q1 只是资源优化。",
+      "focusResult": "焦点保持在 CUST-02 主行或用户已进入的 CUST-02 明细控件。",
+      "oracle": "CUST-01/q1 对可见 DOM、live region、选择回调和查询回调均为零副作用。"
+    },
+    {
+      "id": "detail-refresh-failed",
+      "trigger": "当前 CUST-02 已有成功明细，新的排序或分页请求失败。",
+      "blockedEffect": "不得清空 CUST-02 旧明细、主行激活、主从选择、查询快照或活动单元格。",
+      "retainedState": "保留 CUST-02 的最后成功明细并进入 detailErrorRefresh。",
+      "recovery": "用户激活重试，对同一 masterId 和 query 使用新 queryId 再请求。",
+      "focusResult": "焦点进入明细错误区的重试按钮；成功后回到原明细表头或单元格。",
+      "oracle": "旧数据可读但明确标记可能过期；重试不追加重复行。"
+    },
+    {
+      "id": "active-master-removed",
+      "trigger": "主数据刷新后当前活动 masterId 不再存在或被当前筛选隐藏。",
+      "blockedEffect": "不得继续把已移除主记录的明细表示为当前上下文，不得在受控模式内猜测替代 ID。",
+      "retainedState": "主表查询和两区布局保留；旧明细从可见上下文撤下。",
+      "recovery": "非受控模式激活原行位置的下一可见行，无下一行时激活上一行，无行时进入 noMaster；受控模式发 onInvalid 并等待消费方更新。",
+      "focusResult": "非受控模式焦点移到新活动主行；受控模式焦点移到主区可见错误摘要。",
+      "oracle": "不出现悬空 aria-controls、旧主记录标题或交叉主记录明细。"
+    },
+    {
+      "id": "duplicate-detail-row-id",
+      "trigger": "同一 masterId 的明细结果中两行 getRowId 相同。",
+      "blockedEffect": "不得启用明细行选择、行操作或静默合并行。",
+      "retainedState": "主记录激活、主表数据、明细查询和布局保留。",
+      "recovery": "消费方修正明细数据或 getRowId 后重试。",
+      "focusResult": "焦点进入明细区契约错误摘要。",
+      "oracle": "开发和测试环境给出明确契约错误；生产环境显示不可操作错误态且不暴露明细对象。"
+    }
+  ],
+  "keyboardAndFocus": {
+    "model": "主区和明细区是两个独立命名的 ARIA Grid，各自保持单一 roving tabindex；区域间不共享活动单元格。",
+    "keys": "两个 Grid 内部键与 DataGrid 一致；Enter 在主行非交互单元格上激活主记录；F6 在主区、分隔器和明细区间循环；分隔器聚焦时方向键按固定步长调整，Home/End 移到允许的最小/最大主区尺寸。",
+    "focusRecovery": "切换主记录时默认保留在新活动主行，不自动抢占到明细区；用户显式进入明细区后，加载失败进入重试，成功回到原明细目标；主记录移除按异常流程恢复。"
+  },
+  "accessibility": {
+    "semantics": "外层为带可读标题的 region；主表和明细表使用不同 aria-label；当前主行使用 aria-current='true' 表示导航上下文，aria-selected 仅表示行选择；分隔器使用 role='separator'、aria-orientation、aria-valuemin/max/now 和 aria-controls；明细标题包含当前主记录摘要。",
+    "announcements": "主记录变更、明细结果数、明细加载失败和上下文失效使用 polite live region；不播报每行明细，不把主行激活误报为选中。"
+  },
+  "visualAndResponsive": {
+    "desktop": "默认左主右从，分隔器可指针和键盘调整；两区均有独立可达滚动容器，标题、加载、错误和空态不改变分割边界。",
+    "mobile": "在 390px 和配置的紧凑断点下改为上主下从；主、从区依然同时可达，不隐式改为不可退出的抽屉，两个二维表格各自保留水平滚动。",
+    "states": ["noMaster", "detailLoadingInitial", "detailReady", "detailEmpty", "detailRefreshing", "detailErrorInitial", "detailErrorRefresh", "invalidMaster"],
+    "themes": ["default", "dark", "compact", "reduced-motion", "forced-colors"]
+  },
+  "performance": {
+    "fixture": "主表 local 1,000 行 x 20 列，当前明细 500 行 x 12 列；远程主表 100,000 逻辑行，明细当前页 100 行；使用 A/B/A 快速切换夹具和可控乱序响应。",
+    "budget": "主记录激活反馈、区域 F6 切换和分隔器键盘反馈 p95 <= 100ms；快速切换不持续产生 >50ms 长任务；@company/ui/master-detail-grid 相对已存在 DataGrid 的运行时 gzip 增量 <= 12KB，排除 React/React DOM peer dependency。"
+  },
+  "security": {
+    "rules": [
+      "loadDetail 只接收稳定 masterId 和受约束查询快照，不把整行序列化进 URL 或日志",
+      "组件不因主行可见就假设消费方有明细访问权；服务端必须重新校验租户、数据范围和 master-detail 归属",
+      "错误态不直接展示异常对象、响应体、token 或服务端堆栈",
+      "明细 cell renderer 不执行不受信 HTML，localeText 和主记录摘要作为纯文本处理",
+      "迟到结果即使通过服务端权限校验，也必须通过当前 masterId/queryId 匹配才能进入可见状态"
+    ]
+  },
+  "compatibility": {
+    "legacy": "legacyId=master-detail-grid；与 01:master-detail 布局组件不是同一契约。旧原型仅用于识别主从特征，不是 React 行为 oracle。",
+    "breakingSurfaces": [
+      "主行激活与行选择的独立性",
+      "masterId/detailRowId 复合身份",
+      "明细 load 请求与结果载荷",
+      "受控状态和无效 masterId 处理",
+      "分隔器键盘模型",
+      "两个 Grid 的 DOM roles、labels 与焦点恢复",
+      "明细状态命名空间隔离规则"
+    ]
+  },
+  "acceptanceOracles": [
+    { "id": "MDG-01", "given": "CUST-01 已激活且主行选择为 {CUST-01,CUST-03}", "when": "用户激活 CUST-02", "then": "当前上下文变为 CUST-02，主行选择仍为 {CUST-01,CUST-03}，旧明细不冒充 CUST-02 数据" },
+    { "id": "MDG-02", "given": "先请求 CUST-01/q1 后请求 CUST-02/q2", "when": "CUST-01/q1 在 CUST-02/q2 之后返回", "then": "q1 不改变可见明细、播报、选择或焦点，只有 CUST-02/q2 可应用" },
+    { "id": "MDG-03", "given": "CUST-02 已有成功明细和活动单元格", "when": "CUST-02 的明细刷新失败", "then": "旧明细、查询、主从选择和焦点上下文保留，重试使用新 queryId 且不重复追加" },
+    { "id": "MDG-04", "given": "当前活动主行在主数据刷新后被移除", "when": "组件协调活动上下文", "then": "非受控模式按就近可见行规则恢复，受控模式只报 onInvalid；两者都不展示悬空明细" },
+    { "id": "MDG-05", "given": "焦点在主从分隔器", "when": "用户使用方向键、Home 和 End", "then": "尺寸遵守 min/max，受控模式只发事件，aria-valuenow 和可见布局一致" },
+    { "id": "MDG-06", "given": "390px 视口和两个宽表格", "when": "用户仅使用键盘遍历主区、明细区和全部错误操作", "then": "两区上下堆叠、水平滚动可达，无裁切、遮挡、焦点陷阱或不可达重试" },
+    { "id": "MDG-07", "given": "主行包含复选框、链接和菜单按钮", "when": "用户分别激活这些嵌套控件", "then": "每次交互只产生控件本身效果，不隐式激活主记录或触发两次回调" },
+    { "id": "MDG-08", "given": "CUST-01 和 CUST-02 的 detailRowId 都包含 ROW-01", "when": "在两个主记录间切换并选择明细", "then": "身份按 (masterId,detailRowId) 隔离，CUST-01/ROW-01 的选择或焦点不会出现在 CUST-02/ROW-01" }
+  ],
+  "risk": {
+    "level": "R2",
+    "signals": ["navigation-context", "data-integrity", "async-state", "large-data"],
+    "rationale": "主从上下文或乱序明细串用会使用户阅读、选择或后续操作错误业务记录；首版不直接提交持久业务写操作。",
+    "triggers": [
+      "加入明细编辑、草稿、未保存离开阻断或批量提交时升级 R3",
+      "用于金额、库存、订单、支付、发票或结算写操作时升级 R3",
+      "组件自行持久跨主记录缓存或离线状态时重新评估一致性与隐私风险"
+    ],
+    "invariants": [
+      "活动主记录与主行选择独立",
+      "可见明细的 masterId 必须等于当前活动主 ID",
+      "只应用匹配当前 masterId 与 queryId 的结果",
+      "明细身份和交互状态按 masterId 命名空间隔离",
+      "刷新失败不清空同一主记录的上一份成功明细",
+      "切换主记录后不用旧主明细填充新主上下文"
+    ]
+  },
+  "sourceTrace": {
+    "catalog": "prototype-suite/catalog.browser.json#02:master-detail-grid",
+    "implementationSop": "03-生产SOP/组件实施SOP/02-master-detail-grid.implementation-sop.md",
+    "preserved": ["主列表 + 明细表格", "主记录上下文", "主从分区"],
+    "correctedFacts": [
+      "主从表格是独立的协调组件，不是 DataGrid 的 hierarchy、mode 或 row expansion 开关。",
+      "主行激活是导航上下文，不等于主行选择；两者的事件、ARIA 状态和业务用途必须分离。",
+      "仅有 AbortController 不能保证乱序响应正确；必须同时校验 masterId 与 queryId。",
+      "明细行 ID 的完整身份是主 ID 与明细 ID 复合键，不能用明细页内索引或全局假定唯一。",
+      "狭屏堆叠只改变布局，不将两个表格改成卡片或隐式抽屉。"
+    ]
+  },
+  "openDecisions": [],
+  "approval": {
+    "status": "pending",
+    "authors": ["Codex"],
+    "requiredRoles": ["component-maintainer", "ux-a11y-reviewer", "test-reviewer"],
+    "records": []
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "profileVersion": 1,
+  "profileKey": "capability:active-master",
+  "appliesTo": "component-spec-v2",
+  "constraints": {
+    "requiredPointers": [
+      "/api/features/activeMaster",
+      "/quality/oracles/activationIsIndependentFromSelection",
+      "/quality/oracles/staleDetailResultDoesNotOverwrite"
+    ],
+    "requiredImplementationPointers": ["/api/features/activeMaster"],
+    "requiredSemanticChecks": [],
+    "minimumRisk": "R2",
+    "requiredApprovalRoles": ["component-maintainer", "test-reviewer"],
+    "requiredTypes": { "/api/features/activeMaster": "object" },
+    "incompatibleProfiles": ["capability:hierarchy"]
+  }
+}

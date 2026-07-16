@@ -17,6 +17,6 @@ assert.equal(result.semanticIssues, 0);
 assert.equal(result.referenceStatus, "Passed");
 assert.equal(result.generatedArtifacts, 5);
 assert.equal(result.appliedProfiles, 7);
-assert.equal(findSpecs(join(root, "02-组件规范")).length, 5, "v1 discovery must ignore v2 Shadow candidates");
+assert.equal(findSpecs(join(root, "02-组件规范")).length, 7, "v1 discovery must ignore v2 Shadow candidates");
 
 console.log(JSON.stringify({ status: "PASS", cases: 10 }, null, 2));

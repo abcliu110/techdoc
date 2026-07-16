@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 2,
+  "specificationVersion": "0.2.0",
+  "component": {
+    "key": "02:tree-grid",
+    "legacyId": "tree-grid",
+    "name": "树形表格",
+    "englishName": "Tree Grid",
+    "category": "02",
+    "exportName": "TreeGrid",
+    "packageSubpath": "@nms/ui/tree-grid"
+  },
+  "lifecycle": {
+    "specificationStatus": "ReviewReady",
+    "implementationAllowed": false,
+    "referenceStatus": "NotRun",
+    "planStatus": "Unbound"
+  },
+  "scope": {
+    "purpose": "在二维列语义内浏览和选择单父层级节点，并在展开、异步分支加载、查询与刷新时保持节点身份、层级关系和焦点上下文准确。",
+    "in": ["本地树", "远程根查询", "异步直接子节点", "展开折叠", "同级排序", "祖先保留筛选", "独立与级联选择", "固定列与列宽", "Treegrid 键盘模型"],
+    "out": ["单元格编辑事务", "拖拽改父级", "分页", "虚拟滚动", "无限加载", "多父图", "透视与公式", "服务端权限实现"]
+  },
+  "api": {
+    "status": "proposed",
+    "props": {
+      "data": { "type": "TreeGridDataSource<TNode>", "required": true, "contract": "local-tree 提供 roots/getChildren；remote-tree 提供受控 roots、根状态、结果 queryId、分支状态和查询/子节点/重试意图。", "semantic": "tree-data-source" },
+      "columns": { "type": "readonly TreeGridColumn<TNode>[]", "required": true, "contract": "每列具有稳定 id，重排、固定和调整列宽不得改变列身份。", "semantic": "column-identity-source" },
+      "treeColumnId": { "type": "string", "required": true, "contract": "必须引用当前 columns 中唯一可见列；无效时阻断层级交互并呈现脱敏契约错误。", "semantic": "tree-column-identity-source" },
+      "getNodeId": { "type": "(node: TNode) => string", "required": true, "contract": "返回整棵树全局唯一且跨刷新稳定的节点 ID；每个 ID 只能有一个父节点。", "semantic": "node-identity-source" },
+      "hasChildren": { "type": "(node: TNode) => boolean", "required": true, "contract": "决定节点是否具有展开能力，不等价于当前是否已加载直接子节点。" },
+      "ariaLabel": { "type": "string", "required": true, "contract": "为 treegrid 提供可访问名称。" },
+      "localeText": { "type": "Partial<TreeGridLocaleText>", "required": false, "contract": "覆盖结构错误、根和分支加载、失败、重试、展开、折叠、选择与焦点恢复文案。" }
+    },
+    "events": {
+      "expansionChange": { "name": "expansion.onChange", "payload": "ReadonlySet<NodeId>", "capability": "expansion" },
+      "sortingChange": { "name": "sorting.onChange", "payload": "readonly TreeGridSortRule[]", "capability": "sorting" },
+      "filteringChange": { "name": "filtering.onChange", "payload": "readonly TreeGridFilterRule[]", "capability": "filtering" },
+      "nodeSelectionChange": { "name": "nodeSelection.onChange", "payload": "TreeGridSelectionExpression", "capability": "tree-selection" },
+      "queryChange": { "name": "data.onQueryChange", "payload": "TreeGridQueryRequest", "capability": "query" },
+      "childrenRequest": { "name": "data.onChildrenRequest", "payload": "TreeGridChildrenRequest", "capability": "children-request" },
+      "retry": { "name": "data.onRetry", "payload": "TreeGridRetryRequest", "capability": "retry" }
+    },
+    "actions": {
+      "retryRequest": { "event": "/api/events/retry", "contract": "重用失败的根查询或分支请求语义并生成新的请求身份。" },
+      "focusNode": { "signature": "focusNode(nodeId, columnId): void" },
+      "scrollToNode": { "signature": "scrollToNode(nodeId): void" },
+      "expandPath": { "signature": "expandPath(nodeIds): void" }
+    },
+    "features": {
+      "expansion": { "state": "ReadonlySet<NodeId>", "event": "/api/events/expansionChange", "identitySource": "/behavior/identity/row/keyContract", "remoteBehavior": "展开未加载节点只发一次匹配 parentId/queryId/requestId 的子节点意图；折叠不删除缓存或选择语义。" },
+      "sorting": { "state": "TreeGridSorting", "event": "/api/events/sortingChange", "remoteBehavior": "本地只排序同一父节点的兄弟；远程只发完整根查询意图。" },
+      "filtering": { "state": "TreeGridFiltering", "event": "/api/events/filteringChange", "remoteBehavior": "本地保留匹配节点的完整祖先路径；远程只发完整根查询意图。" },
+      "nodeSelection": { "state": "TreeGridSelectionExpression", "event": "/api/events/nodeSelectionChange", "identitySource": "/behavior/identity/row/keyContract", "remoteBehavior": "级联选择用 includedSubtreeIds 与 excludedNodeIds 表达未加载后代，不得枚举当前加载节点冒充完整范围。" },
+      "columnPinning": { "state": "TreeGridColumnPinning", "identitySource": "/behavior/identity/column/keyContract" },
+      "columnSizing": { "state": "TreeGridColumnSizing", "identitySource": "/behavior/identity/column/keyContract" }
+    },
+    "controlledState": { "rule": "expansion、sorting、filtering、nodeSelection、columnPinning 和 columnSizing 使用 value/defaultValue 互斥合同；受控模式只发不可变意图并等待消费方回传，非受控模式持久化后发事件；运行期模式固定。" }
+  },
+  "behavior": {
+    "identity": {
+      "row": { "keyContract": "/api/props/getNodeId", "duplicatePolicy": "重复 ID、多父或循环均阻断相关层级交互，不静默复制或合并。", "semantic": "stable-global-node-identity" },
+      "column": { "keyContract": "/api/props/columns", "stability": "treeColumnId、固定与列宽始终绑定稳定列 id。", "semantic": "stable-column-identity" }
+    },
+    "states": {
+      "idle": { "userVisible": false },
+      "loadingInitial": { "userVisible": true },
+      "ready": { "userVisible": true },
+      "empty": { "userVisible": true },
+      "refreshing": { "userVisible": true },
+      "errorInitial": { "userVisible": true },
+      "errorRefresh": { "userVisible": true },
+      "branchLoading": { "userVisible": true },
+      "branchError": { "userVisible": true },
+      "invalidHierarchy": { "userVisible": true }
+    },
+    "transitions": [
+      { "id": "query-root", "from": ["ready", "empty"], "event": "/api/events/queryChange", "to": ["refreshing"] },
+      { "id": "resolve-root", "from": ["loadingInitial", "refreshing"], "event": "matching-root-result", "to": ["ready", "empty"] },
+      { "id": "reject-root", "from": ["loadingInitial", "refreshing"], "event": "root-failed", "to": ["errorInitial", "errorRefresh"] },
+      { "id": "request-branch", "from": ["ready", "branchError"], "event": "/api/events/childrenRequest", "to": ["branchLoading"] },
+      { "id": "resolve-branch", "from": ["branchLoading"], "event": "matching-branch-result", "to": ["ready"] },
+      { "id": "reject-branch", "from": ["branchLoading"], "event": "branch-failed", "to": ["branchError"] },
+      { "id": "ignore-stale", "from": ["refreshing", "branchLoading", "branchError"], "event": "stale-result-identity", "to": ["refreshing", "branchLoading", "branchError"] },
+      { "id": "reject-hierarchy", "from": ["loadingInitial", "ready", "refreshing", "branchLoading"], "event": "invalid-hierarchy", "to": ["invalidHierarchy"] }
+    ],
+    "recoveryActions": {
+      "retryFailedRequest": { "kind": "api-command", "api": "/api/actions/retryRequest", "responsibility": "用户对根或分支错误触发一次新身份重试。" },
+      "correctHierarchy": { "kind": "consumer-correction", "responsibility": "消费方修正重复 ID、多父、循环或无效 treeColumnId 后重新渲染。" },
+      "awaitCurrentRequest": { "kind": "internal-policy", "responsibility": "忽略迟到结果并继续等待当前身份匹配的根或分支结果。" }
+    },
+    "exceptionFlows": [
+      { "id": "branchFailure", "states": ["branchError"], "regions": ["body", "status"], "recoveryAction": "retryFailedRequest", "oracle": "branchFailureRetainsOtherBranches" },
+      { "id": "invalidHierarchy", "states": ["invalidHierarchy"], "regions": ["body", "status"], "recoveryAction": "correctHierarchy", "oracle": "invalidHierarchyBlocksInteraction" },
+      { "id": "staleBranch", "states": ["branchLoading", "branchError"], "regions": ["body", "status"], "recoveryAction": "awaitCurrentRequest", "oracle": "staleBranchResultDoesNotOverwrite" }
+    ]
+  },
+  "view": {
+    "regions": {
+      "toolbar": { "purpose": "承载筛选和选择摘要。", "required": false },
+      "header": { "purpose": "承载稳定列头、排序、筛选和列宽控制。", "required": true },
+      "body": { "purpose": "承载可见节点、层级控件和局部分支状态行。", "required": true },
+      "status": { "purpose": "承载根状态、结构错误、分支错误和 live region。", "required": true }
+    },
+    "layout": {
+      "regionOrder": ["toolbar", "status", "header", "body"],
+      "scrollOwner": "body",
+      "stickyRegions": ["header"],
+      "columnSizing": { "defaultPx": 160, "minimumPx": 80, "maximumPx": 640, "handleHitTargetPx": 12 },
+      "rowHeight": { "compactPx": 32, "defaultPx": 40, "comfortablePx": 48 },
+      "headerHeightPx": 40,
+      "scrollbarReachability": "树列固定时仍能通过键盘、指针和触控到达末列；深层缩进不得覆盖展开、选择或文本。"
+    },
+    "statePresentation": {
+      "loadingInitial": { "regions": ["status", "body"], "presentation": "显示根级加载状态，保留表头。", "focus": "焦点留在触发控件或 treegrid 容器。" },
+      "ready": { "regions": ["header", "body"], "presentation": "显示可见扁平节点与准确层级语义。", "focus": "单一活动单元格 roving tabindex。" },
+      "empty": { "regions": ["status", "body"], "presentation": "保留表头并显示无匹配节点。", "focus": "焦点可留在查询触发控件。" },
+      "refreshing": { "regions": ["status", "body"], "presentation": "保留上一份成功树并标记刷新中。", "focus": "不抢占当前活动节点。" },
+      "errorInitial": { "regions": ["status", "body"], "presentation": "显示安全根错误与重试。", "focus": "重试可由正常导航到达。" },
+      "errorRefresh": { "regions": ["status", "body"], "presentation": "保留旧树并显示刷新失败。", "focus": "保留活动节点或查询触发控件。" },
+      "branchLoading": { "regions": ["body", "status"], "presentation": "在父节点后显示与其关联的分支加载状态。", "focus": "父节点保持活动。" },
+      "branchError": { "regions": ["body", "status"], "presentation": "在父节点后显示局部错误和重试。", "focus": "父节点或分支重试可达。" },
+      "invalidHierarchy": { "regions": ["status", "body"], "presentation": "显示脱敏结构错误并阻断冲突节点操作。", "focus": "聚焦错误摘要；修复后恢复到最近有效祖先。" }
+    },
+    "tokens": {
+      "surface": { "base": "surface.canvas", "sticky": "surface.elevated", "error": "surface.danger-subtle" },
+      "border": { "default": "border.default", "pinned": "border.strong" },
+      "text": { "default": "text.primary", "muted": "text.secondary", "danger": "text.danger" },
+      "focusRing": { "color": "focus.ring", "widthPx": 2, "offsetPx": -2 },
+      "spacing": { "indent": 20, "cellX": 12, "cellY": 8 },
+      "density": ["compact", "default", "comfortable"],
+      "motion": { "expandMs": 120, "reducedMs": 0 }
+    },
+    "responsive": {
+      "viewports": { "mobile": "390px horizontal treegrid", "tablet": "768px", "desktop": "1280px", "wide": "1440px" },
+      "adjacentWidthChecksPx": [389, 391, 767, 769, 1279, 1281],
+      "contentFixtures": ["depth-8", "long-unbroken-node-label", "branch-error", "200-percent-zoom", "forced-colors"]
+    }
+  },
+  "accessibility": {
+    "keyboardModel": {
+      "pattern": "ARIA treegrid：Up/Down 沿可见节点移动；树列 Right 展开或进入首子节点，Left 折叠或返回父节点；非树列 Left/Right 横向移动；Home/End 到首尾可见节点，Ctrl+Home/End 到首尾单元格；Space 选择。",
+      "keys": ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End", "Ctrl+Home", "Ctrl+End", "Space", "Enter", "Escape"],
+      "focusRecovery": "折叠、过滤或刷新移除活动节点时按最近可见祖先、下一兄弟、前一兄弟、容器恢复；异步完成不抢焦点。"
+    },
+    "semantics": {
+      "roles": ["treegrid", "row", "columnheader", "gridcell"],
+      "counts": ["aria-level", "aria-posinset", "aria-setsize", "aria-expanded", "aria-colcount", "aria-colindex"],
+      "selection": "aria-selected 表达节点结果；级联父节点的 checked/mixed 由选择表达式和已知直接子节点计算，不宣称未知后代已被枚举。"
+    },
+    "announcements": { "politeness": "polite", "events": ["展开", "折叠", "分支加载", "分支失败", "重试成功", "根刷新失败", "焦点恢复"] }
+  },
+  "quality": {
+    "scaleFixtures": {
+      "local": { "nodes": 2000, "visibleNodes": 300, "depth": 8, "columns": 20 },
+      "remote": { "logicalNodes": 100000, "loadedNodes": 1000, "visibleNodes": 300, "columns": 20 }
+    },
+    "performanceBudgets": {
+      "interaction": { "operator": "<=", "value": 100, "unit": "ms-p95", "fixture": "expand-keyboard-select" },
+      "longTask": { "operator": "<=", "value": 50, "unit": "ms", "fixture": "continuous-tree-navigation" },
+      "runtimeBundle": { "operator": "<=", "value": 45, "unit": "gzip-kb", "fixture": "tree-grid-subpath-excluding-react-peers" }
+    },
+    "visualOracles": {
+      "headerBodyAlignment": { "given": "树列固定且列宽可调", "when": "调整列宽并横向滚动", "then": "表头、树列、缩进、展开控件与正文边界逐像素对齐。" },
+      "fixedColumnBoundary": { "given": "树列固定且存在深层节点", "when": "滚动到中部和末端", "then": "固定边界不遮挡展开、选择、文本或焦点环。" },
+      "scrollReachability": { "given": "390px 视口且列总宽超出视口", "when": "分别使用键盘、鼠标和触控导航到末列", "then": "所有列和行内操作可达且层级上下文不丢失。" },
+      "noHierarchyClipping": { "given": "深度 8、长标签和 200% 缩放", "when": "遍历断点和主题", "then": "缩进、展开、选择、文本、状态行和焦点环不重叠或裁切。" },
+      "forcedColorsVisibility": { "given": "forced-colors 且存在展开、选择、错误和固定边界", "when": "键盘遍历并滚动", "then": "全部状态依靠系统颜色和结构可辨，不只依赖背景或阴影。" }
+    },
+    "oracles": {
+      "sortProducesSingleIntent": { "given": "remote-tree 根查询", "when": "改变排序", "then": "只发一次包含完整下一查询和新 queryId 的意图，不在客户端重排根或分支结果。", "references": { "api": ["/api/events/sortingChange", "/api/events/queryChange"], "states": ["refreshing"], "regions": ["header", "status"] } },
+      "filterPreservesSelection": { "given": "已选择将被筛选隐藏的节点", "when": "应用筛选", "then": "选择表达式保持；本地结果保留匹配节点祖先路径和真实 aria-level。", "references": { "api": ["/api/events/filteringChange", "/api/events/nodeSelectionChange"], "states": ["ready"], "regions": ["body"] } },
+      "hierarchyKeyboardNavigation": { "given": "折叠父节点及其可加载首子节点", "when": "依次使用 Right、Right、Left、Ctrl+End", "then": "按层级语义展开、进入子节点、返回父节点和到达末单元格，始终只有一个活动单元格。", "references": { "api": ["/api/features/expansion"], "states": ["ready"], "regions": ["body"] } },
+      "staleBranchResultDoesNotOverwrite": { "given": "同一父节点已有新 requestId 或查询已变化", "when": "旧 parentId/queryId/requestId 结果迟到", "then": "旧结果不改变 DOM、展开、选择、焦点或播报。", "references": { "api": ["/api/events/childrenRequest"], "states": ["branchLoading", "branchError"], "regions": ["body", "status"] } },
+      "branchFailureRetainsOtherBranches": { "given": "一个分支失败而其他分支已有成功节点", "when": "显示错误并重试", "then": "其他分支、根查询、选择与焦点保持，重试只作用于失败父节点并使用新 requestId。", "references": { "api": ["/api/actions/retryRequest"], "states": ["branchError"], "regions": ["body", "status"] } },
+      "invalidHierarchyBlocksInteraction": { "given": "重复节点 ID、多父、循环或无效 treeColumnId", "when": "渲染或加载冲突数据", "then": "冲突层级交互被阻断并显示脱敏错误，不复制、合并、无限递归或执行错误节点操作。", "references": { "api": ["/api/props/getNodeId", "/api/props/treeColumnId"], "states": ["invalidHierarchy"], "regions": ["body", "status"] } },
+      "subtreeSelectionPreservesMeaning": { "given": "父节点仍有未加载后代", "when": "选择完整子树并排除一个节点", "then": "事件返回 includedSubtreeIds 与 excludedNodeIds，未来加载后代继承相同语义且父节点呈现正确 mixed 状态。", "references": { "api": ["/api/events/nodeSelectionChange"], "states": ["ready"], "regions": ["body"] } },
+      "activeNodeRecoveryUsesHierarchy": { "given": "当前活动节点因折叠、过滤或刷新不可见", "when": "提交新可见树", "then": "焦点按最近可见祖先等规定后备关系恢复，不按数组索引跳到其他业务节点且不触发额外选择或展开。", "references": { "api": ["/api/actions/focusNode"], "states": ["ready", "refreshing"], "regions": ["body", "status"] } },
+      "remoteRootQueryUsesIdentity": { "given": "远程根查询 A 后发出 B", "when": "A 在 B 之后返回或失败", "then": "只有 resultQueryId 匹配 B 的根结果可改变可见树、错误、焦点和播报。", "references": { "api": ["/api/events/queryChange", "/api/props/data"], "states": ["refreshing"], "regions": ["body", "status"] } },
+      "controlledCapabilitiesDoNotSpeculate": { "given": "层级能力分别处于受控和非受控模式", "when": "执行会改变能力值的用户命令或重复命令", "then": "受控模式只发一次意图并等待 prop，非受控模式持久化一次，无变化不发事件，模式切换被诊断。", "references": { "api": ["/api/controlledState"], "states": ["ready"], "regions": ["header", "body"] } }
+    }
+  },
+  "security": { "rules": ["节点和单元格 renderer 不执行不受信 HTML", "前端层级、隐藏与选择不构成权限或租户隔离", "请求与错误不得默认序列化完整节点对象或敏感响应体"] },
+  "compatibility": {
+    "legacyId": "tree-grid",
+    "breakingSurfaces": ["global node identity", "single-parent hierarchy", "tree column semantics", "request identity", "selection expression", "keyboard model"],
+    "forbiddenSopAliases": ["expandedKeys", "activeRow", "selectedRows"],
+    "v1Authority": "02-组件规范/02-表格类/02-tree-grid.spec.json"
+  },
+  "risk": {
+    "level": "R2",
+    "signals": ["data-integrity", "async-state", "hierarchical-scope", "large-data"],
+    "invariants": ["节点 ID 全局稳定且单父", "展开与选择按 nodeId", "根结果匹配 queryId", "分支结果匹配 parentId/queryId/requestId", "子树选择覆盖未加载后代", "焦点按层级关系恢复"],
+    "upgradeTriggers": ["节点移动或编辑提交", "服务端执行子树批量操作", "金额库存订单写入", "跨租户树"]
+  },
+  "decisions": [],
+  "approval": { "status": "pending", "authors": ["Codex"], "requiredRoles": ["component-maintainer", "ux-a11y-reviewer", "test-reviewer"], "records": [] }
+}

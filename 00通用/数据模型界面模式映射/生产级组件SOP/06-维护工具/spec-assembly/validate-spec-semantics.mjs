@@ -17,6 +17,34 @@ const registeredChecks = new Map([
     if (!column.exists || column.value?.semantic !== "column-identity-source") issues.push(issue("SEM_TABLE_IDENTITY_CONTRACT", "/behavior/identity/column/keyContract", "Column identity must reference a column identity source"));
     return issues;
   }],
+  ["tree-table-identity-contract", (spec) => {
+    const issues = [];
+    const node = getPointer(spec, spec.behavior?.identity?.row?.keyContract || "");
+    const column = getPointer(spec, spec.behavior?.identity?.column?.keyContract || "");
+    const treeColumn = getPointer(spec, "/api/props/treeColumnId");
+    if (!node.exists || node.value?.semantic !== "node-identity-source") {
+      issues.push(issue("SEM_TREE_TABLE_IDENTITY_CONTRACT", "/behavior/identity/row/keyContract", "Tree row identity must reference a node identity source"));
+    }
+    if (!column.exists || column.value?.semantic !== "column-identity-source") {
+      issues.push(issue("SEM_TREE_TABLE_IDENTITY_CONTRACT", "/behavior/identity/column/keyContract", "Tree columns must reference a column identity source"));
+    }
+    if (!treeColumn.exists || treeColumn.value?.semantic !== "tree-column-identity-source") {
+      issues.push(issue("SEM_TREE_TABLE_IDENTITY_CONTRACT", "/api/props/treeColumnId", "TreeGrid must declare the hierarchy column identity source"));
+    }
+    return issues;
+  }],
+  ["master-detail-identity-contract", (spec) => {
+    const issues = [];
+    const detail = getPointer(spec, spec.behavior?.identity?.row?.keyContract || "");
+    const master = getPointer(spec, spec.behavior?.identity?.column?.keyContract || "");
+    if (!master.exists || master.value?.semantic !== "master-row-identity-source") {
+      issues.push(issue("SEM_MASTER_DETAIL_IDENTITY_CONTRACT", "/behavior/identity/column/keyContract", "Master identity must reference the master grid contract"));
+    }
+    if (!detail.exists || detail.value?.semantic !== "detail-row-identity-source") {
+      issues.push(issue("SEM_MASTER_DETAIL_IDENTITY_CONTRACT", "/behavior/identity/row/keyContract", "Detail identity must reference the detail grid contract"));
+    }
+    return issues;
+  }],
   ["sorting-contract", (spec) => getPointer(spec, spec.api?.features?.sorting?.event || "").value?.capability === "sorting" ? [] : [issue("SEM_SORTING_CONTRACT", "/api/features/sorting/event", "Sorting must reference an event with sorting capability")]],
   ["filtering-contract", (spec) => getPointer(spec, spec.api?.features?.filtering?.event || "").value?.capability === "filtering" ? [] : [issue("SEM_FILTERING_CONTRACT", "/api/features/filtering/event", "Filtering must reference an event with filtering capability")]],
   ["selection-is-bound-to-row-identity", (spec) => spec.api?.features?.rowSelection?.identitySource === "/behavior/identity/row/keyContract" ? [] : [issue("SEM_SELECTION_IDENTITY", "/api/features/rowSelection/identitySource", "Selection must bind to the row identity contract")]],
@@ -89,8 +117,9 @@ export function validateSpecSemantics(spec, effectiveSchema) {
   const roles = new Set(spec.approval?.requiredRoles || []);
   for (const role of effectiveSchema["x-required-approval-roles"] || []) if (!roles.has(role)) issues.push(issue("SEM_APPROVAL_ROLE", "/approval/requiredRoles", `Missing required approval role: ${role}`));
 
-  if (spec.lifecycle?.implementationAllowed !== false || spec.lifecycle?.specificationStatus !== "Draft") {
-    issues.push(issue("SEM_SHADOW_ADMISSION", "/lifecycle", "Shadow candidate must remain Draft with implementationAllowed=false"));
+  const reviewOnlyStatuses = new Set(["Draft", "ReviewReady"]);
+  if (spec.lifecycle?.implementationAllowed !== false || !reviewOnlyStatuses.has(spec.lifecycle?.specificationStatus)) {
+    issues.push(issue("SEM_SHADOW_ADMISSION", "/lifecycle", "Shadow candidate must remain review-only with implementationAllowed=false"));
   }
   if (spec.api?.status !== "proposed" || spec.approval?.status !== "pending" || (spec.approval?.records || []).length !== 0) {
     issues.push(issue("SEM_SHADOW_APPROVAL", "/approval", "Shadow candidate cannot claim frozen API or approval"));

@@ -1,0 +1,38 @@
+{
+  "profileVersion": 1,
+  "profileKey": "category:tree-table",
+  "appliesTo": "component-spec-v2",
+  "constraints": {
+    "requiredPointers": [
+      "/behavior/identity/column",
+      "/behavior/identity/row",
+      "/view/regions/body",
+      "/view/regions/header",
+      "/accessibility/keyboardModel",
+      "/quality/scaleFixtures",
+      "/api/props/treeColumnId"
+    ],
+    "requiredSemanticChecks": ["tree-table-identity-contract"],
+    "requiredImplementationPointers": [
+      "/api/props/ariaLabel",
+      "/api/props/columns",
+      "/api/props/data",
+      "/api/props/getNodeId",
+      "/api/props/treeColumnId",
+      "/behavior/identity/column",
+      "/behavior/identity/row",
+      "/view/regions/body",
+      "/view/regions/header"
+    ],
+    "minimumRisk": "R2",
+    "requiredApprovalRoles": ["component-maintainer", "ux-a11y-reviewer", "test-reviewer"],
+    "requiredTypes": {
+      "/behavior/identity/column": "object",
+      "/behavior/identity/row": "object",
+      "/view/regions/body": "object",
+      "/view/regions/header": "object",
+      "/api/props/treeColumnId": "object"
+    },
+    "incompatibleProfiles": ["category:table", "category:master-detail-table"]
+  }
+}

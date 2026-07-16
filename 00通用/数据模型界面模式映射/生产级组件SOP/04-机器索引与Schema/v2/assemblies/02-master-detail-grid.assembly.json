@@ -1,0 +1,10 @@
+{
+  "assemblyVersion": 1,
+  "componentKey": "02:master-detail-grid",
+  "coreSchema": "../core/component-spec.schema.json",
+  "profiles": [
+    "../profiles/categories/master-detail-table.profile.json",
+    "../profiles/capabilities/active-master.profile.json"
+  ],
+  "dataModes": ["composed-master-detail"]
+}

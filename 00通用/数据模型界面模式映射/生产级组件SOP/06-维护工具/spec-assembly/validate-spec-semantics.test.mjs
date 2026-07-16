@@ -43,4 +43,55 @@ expectIssue((spec) => { delete spec.quality.oracles.remoteQueryIsNotAppliedLocal
 expectIssue((spec) => { spec.approval.requiredRoles = ["ux-a11y-reviewer"]; }, "SEM_APPROVAL_ROLE");
 expectIssue((spec) => { spec.lifecycle.implementationAllowed = true; }, "SEM_SHADOW_ADMISSION");
 
-console.log(JSON.stringify({ status: "PASS", cases: 19 }, null, 2));
+{
+  const reviewReadySpec = structuredClone(original);
+  reviewReadySpec.lifecycle.specificationStatus = "ReviewReady";
+  assert.deepEqual(validateSpecSemantics(reviewReadySpec, effectiveSchema), []);
+}
+
+{
+  const treeSpec = structuredClone(original);
+  treeSpec.api.props.getNodeId = {
+    type: "(node: TNode) => string",
+    required: true,
+    contract: "stable node identity",
+    semantic: "node-identity-source",
+  };
+  treeSpec.api.props.treeColumnId = {
+    type: "string",
+    required: true,
+    contract: "visible hierarchy column",
+    semantic: "tree-column-identity-source",
+  };
+  treeSpec.behavior.identity.row.keyContract = "/api/props/getNodeId";
+  const treeSchema = structuredClone(effectiveSchema);
+  treeSchema["x-required-semantic-checks"] = ["tree-table-identity-contract"];
+  assert.deepEqual(validateSpecSemantics(treeSpec, treeSchema), []);
+  treeSpec.behavior.identity.row.keyContract = "/api/props/data";
+  assert.ok(validateSpecSemantics(treeSpec, treeSchema).some((item) => item.code === "SEM_TREE_TABLE_IDENTITY_CONTRACT"));
+}
+
+{
+  const masterDetailSpec = structuredClone(original);
+  masterDetailSpec.api.props.master = {
+    type: "MasterDetailGridMaster<TMaster>",
+    required: true,
+    contract: "master grid contract",
+    semantic: "master-row-identity-source",
+  };
+  masterDetailSpec.api.props.detail = {
+    type: "MasterDetailGridDetail<TMaster, TDetail>",
+    required: true,
+    contract: "detail grid contract",
+    semantic: "detail-row-identity-source",
+  };
+  masterDetailSpec.behavior.identity.row.keyContract = "/api/props/detail";
+  masterDetailSpec.behavior.identity.column.keyContract = "/api/props/master";
+  const masterDetailSchema = structuredClone(effectiveSchema);
+  masterDetailSchema["x-required-semantic-checks"] = ["master-detail-identity-contract"];
+  assert.deepEqual(validateSpecSemantics(masterDetailSpec, masterDetailSchema), []);
+  masterDetailSpec.behavior.identity.row.keyContract = "/api/props/data";
+  assert.ok(validateSpecSemantics(masterDetailSpec, masterDetailSchema).some((item) => item.code === "SEM_MASTER_DETAIL_IDENTITY_CONTRACT"));
+}
+
+console.log(JSON.stringify({ status: "PASS", cases: 23 }, null, 2));

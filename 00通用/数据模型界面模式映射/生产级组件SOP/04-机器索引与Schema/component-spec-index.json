@@ -312,6 +312,9 @@
       "implementationAllowed": false,
       "specPath": "02-组件规范/02-表格类/02-data-grid.spec.json",
       "implementationSopPath": "03-生产SOP/组件实施SOP/02-data-grid.implementation-sop.md",
+      "v2CandidateSpecPath": "02-组件规范/v2-candidates/02-表格类/02-data-grid.spec.json",
+      "v2CandidateSopPath": "03-生产SOP/组件实施SOP-v2-candidates/02-data-grid.implementation-sop.json",
+      "v2CandidateStatus": "ShadowDraft",
       "blockers": [
         "公开 API 尚未冻结",
         "规定角色审批尚未完成"
@@ -345,24 +348,34 @@
       "componentKey": "02:tree-grid",
       "name": "树形表格",
       "category": "02",
-      "specificationStatus": "Backlog",
+      "specificationVersion": "0.1.0",
+      "specificationStatus": "ReviewReady",
       "implementationAllowed": false,
-      "specPath": null,
+      "specPath": "02-组件规范/02-表格类/02-tree-grid.spec.json",
+      "implementationSopPath": "03-生产SOP/组件实施SOP/02-tree-grid.implementation-sop.md",
+      "v2CandidateSpecPath": "02-组件规范/v2-candidates/02-表格类/02-tree-grid.spec.json",
+      "v2CandidateSopPath": "03-生产SOP/组件实施SOP-v2-candidates/02-tree-grid.implementation-sop.json",
+      "v2CandidateStatus": "ShadowReviewReady",
       "blockers": [
-        "缺少逐组件公开 API、状态机、真实主路径、异常恢复和验收 oracle",
-        "必须经过 API、UX、无障碍和风险评审后才能实现"
+        "公开 API 尚未冻结",
+        "规定角色审批尚未完成"
       ]
     },
     {
       "componentKey": "02:master-detail-grid",
       "name": "主从表格",
       "category": "02",
-      "specificationStatus": "Backlog",
+      "specificationVersion": "0.1.0",
+      "specificationStatus": "ReviewReady",
       "implementationAllowed": false,
-      "specPath": null,
+      "specPath": "02-组件规范/02-表格类/02-master-detail-grid.spec.json",
+      "implementationSopPath": "03-生产SOP/组件实施SOP/02-master-detail-grid.implementation-sop.md",
+      "v2CandidateSpecPath": "02-组件规范/v2-candidates/02-表格类/02-master-detail-grid.spec.json",
+      "v2CandidateSopPath": "03-生产SOP/组件实施SOP-v2-candidates/02-master-detail-grid.implementation-sop.json",
+      "v2CandidateStatus": "ShadowReviewReady",
       "blockers": [
-        "缺少逐组件公开 API、状态机、真实主路径、异常恢复和验收 oracle",
-        "必须经过 API、UX、无障碍和风险评审后才能实现"
+        "公开 API 尚未冻结",
+        "规定角色审批尚未完成"
       ]
     },
     {

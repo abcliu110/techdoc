@@ -8,13 +8,18 @@ function rowsFromMap(map, render) {
   return Object.entries(map || {}).sort(([left], [right]) => left.localeCompare(right)).map(([key, value]) => render(key, value));
 }
 
+function componentStem(spec) {
+  return `${spec.component.category}-${spec.component.key.split(":")[1]}`;
+}
+
 function renderSpec(spec, digest) {
+  const stem = componentStem(spec);
   const lines = [
     "<!-- GENERATED FILE: 请勿手工编辑 -->",
     "",
     `# ${spec.component.englishName} v2 候选规范`,
     "",
-    `- 源：\`02-data-grid.spec.json\``,
+    `- 源：\`${stem}.spec.json\``,
     `- 版本：\`${spec.specificationVersion}\``,
     `- Digest：\`${digest}\``,
     `- 状态：\`${spec.lifecycle.specificationStatus}\`，\`implementationAllowed=${spec.lifecycle.implementationAllowed}\``,
@@ -81,12 +86,13 @@ function renderSpec(spec, digest) {
 }
 
 function renderSop(sop, spec) {
+  const stem = componentStem(spec);
   const lines = [
     "<!-- GENERATED FILE: 请勿手工编辑 -->",
     "",
-    "# DataGrid v2 候选实施 SOP",
+    `# ${spec.component.exportName} v2 候选实施 SOP`,
     "",
-    `- 源：\`02-data-grid.implementation-sop.json\``,
+    `- 源：\`${stem}.implementation-sop.json\``,
     `- SOP 版本：\`${sop.sopVersion}\``,
     `- 规范版本：\`${spec.specificationVersion}\``,
     `- Digest：\`${sop.specification.digest}\``,

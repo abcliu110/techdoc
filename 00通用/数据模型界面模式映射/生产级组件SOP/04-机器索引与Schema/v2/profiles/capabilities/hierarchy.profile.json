@@ -1,0 +1,18 @@
+{
+  "profileVersion": 1,
+  "profileKey": "capability:hierarchy",
+  "appliesTo": "component-spec-v2",
+  "constraints": {
+    "requiredPointers": [
+      "/api/features/expansion",
+      "/quality/oracles/hierarchyKeyboardNavigation",
+      "/quality/oracles/staleBranchResultDoesNotOverwrite"
+    ],
+    "requiredImplementationPointers": ["/api/features/expansion"],
+    "requiredSemanticChecks": [],
+    "minimumRisk": "R2",
+    "requiredApprovalRoles": ["ux-a11y-reviewer", "test-reviewer"],
+    "requiredTypes": { "/api/features/expansion": "object" },
+    "incompatibleProfiles": ["capability:pagination"]
+  }
+}

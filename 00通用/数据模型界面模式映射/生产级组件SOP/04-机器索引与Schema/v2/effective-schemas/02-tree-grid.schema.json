@@ -1,0 +1,83 @@
+{
+  "$id": "effective/02-tree-grid.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [
+    {
+      "$ref": "../core/component-spec.schema.json"
+    }
+  ],
+  "x-applied-profiles": [
+    "capability:column-pinning",
+    "capability:column-sizing",
+    "capability:filtering",
+    "capability:hierarchy",
+    "capability:sorting",
+    "category:tree-table"
+  ],
+  "x-component-key": "02:tree-grid",
+  "x-data-modes": [
+    "local-tree",
+    "remote-tree"
+  ],
+  "x-minimum-risk": "R2",
+  "x-required-approval-roles": [
+    "component-maintainer",
+    "test-reviewer",
+    "ux-a11y-reviewer"
+  ],
+  "x-required-implementation-pointers": [
+    "/api/features/columnPinning",
+    "/api/features/columnSizing",
+    "/api/features/expansion",
+    "/api/features/filtering",
+    "/api/features/sorting",
+    "/api/props/ariaLabel",
+    "/api/props/columns",
+    "/api/props/data",
+    "/api/props/getNodeId",
+    "/api/props/treeColumnId",
+    "/behavior/identity/column",
+    "/behavior/identity/row",
+    "/view/regions/body",
+    "/view/regions/header"
+  ],
+  "x-required-pointers": [
+    "/accessibility/keyboardModel",
+    "/api/features/columnPinning",
+    "/api/features/columnSizing",
+    "/api/features/expansion",
+    "/api/features/filtering",
+    "/api/features/sorting",
+    "/api/props/treeColumnId",
+    "/behavior/identity/column",
+    "/behavior/identity/row",
+    "/quality/oracles/filterPreservesSelection",
+    "/quality/oracles/hierarchyKeyboardNavigation",
+    "/quality/oracles/sortProducesSingleIntent",
+    "/quality/oracles/staleBranchResultDoesNotOverwrite",
+    "/quality/scaleFixtures",
+    "/quality/visualOracles/fixedColumnBoundary",
+    "/quality/visualOracles/headerBodyAlignment",
+    "/view/regions/body",
+    "/view/regions/header"
+  ],
+  "x-required-semantic-checks": [
+    "column-pinning-contract",
+    "column-sizing-contract",
+    "filtering-contract",
+    "sorting-contract",
+    "tree-table-identity-contract"
+  ],
+  "x-required-types": {
+    "/api/features/columnPinning": "object",
+    "/api/features/columnSizing": "object",
+    "/api/features/expansion": "object",
+    "/api/features/filtering": "object",
+    "/api/features/sorting": "object",
+    "/api/props/treeColumnId": "object",
+    "/behavior/identity/column": "object",
+    "/behavior/identity/row": "object",
+    "/view/regions/body": "object",
+    "/view/regions/header": "object"
+  }
+}

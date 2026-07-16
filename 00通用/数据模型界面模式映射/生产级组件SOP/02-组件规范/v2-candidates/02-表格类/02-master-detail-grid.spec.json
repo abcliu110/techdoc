@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 2,
+  "specificationVersion": "0.2.0",
+  "component": {
+    "key": "02:master-detail-grid",
+    "legacyId": "master-detail-grid",
+    "name": "主从表格",
+    "englishName": "Master Detail Grid",
+    "category": "02",
+    "exportName": "MasterDetailGrid",
+    "packageSubpath": "@nms/ui/master-detail-grid"
+  },
+  "lifecycle": {
+    "specificationStatus": "ReviewReady",
+    "implementationAllowed": false,
+    "referenceStatus": "NotRun",
+    "planStatus": "Unbound"
+  },
+  "scope": {
+    "purpose": "以两个独立命名的 DataGrid 呈现单一活动主记录及其明细，并在主记录切换、明细查询、失败恢复和双区域导航时保持归属、选择与焦点隔离。",
+    "in": ["两个独立 DataGrid", "单一活动主记录", "主选择与主激活分离", "异步明细查询", "主记录命名空间隔离", "刷新失败保留明细", "可调分隔器", "宽屏分栏与窄屏堆叠", "F6 区域导航"],
+    "out": ["行内展开详情", "多主明细同时展示", "树形层级", "明细编辑事务", "跨主批量操作", "未保存离开阻断", "离线缓存", "透视与电子表格内核"]
+  },
+  "api": {
+    "status": "proposed",
+    "props": {
+      "ariaLabel": { "type": "string", "required": true, "contract": "为主从组合 region 提供可访问名称。" },
+      "master": { "type": "MasterDetailGridMaster<TMaster>", "required": true, "contract": "完整复用 DataGridProps<TMaster> 并可提供主区标题；getRowId 是主记录唯一身份源。", "semantic": "master-row-identity-source" },
+      "detail": { "type": "MasterDetailGridDetail<TMaster, TDetail>", "required": true, "contract": "提供明细标题、列、getRowId、查询能力和 load；每个结果必须携带 masterId/queryId，明细完整身份为 masterId 与 detailRowId 的组合。", "semantic": "detail-row-identity-source" },
+      "activeMaster": { "type": "MasterDetailGridActiveMaster", "required": false, "contract": "使用 value/defaultValue 互斥合同；活动主记录是导航上下文而非行选择。" },
+      "layout": { "type": "MasterDetailGridLayout", "required": false, "contract": "支持 horizontal、vertical、responsive 与受控/非受控 masterSize；分隔器指针和键盘共享状态合同。" },
+      "localeText": { "type": "Partial<MasterDetailGridLocaleText>", "required": false, "contract": "覆盖无主记录、加载、空、错误、重试、主上下文失效和分隔器标签。" }
+    },
+    "events": {
+      "activeMasterChange": { "name": "activeMaster.onChange", "payload": "MasterDetailGridActiveMasterChange", "capability": "active-master" },
+      "activeMasterInvalid": { "name": "activeMaster.onInvalid", "payload": "MasterDetailGridInvalidMaster", "capability": "active-master-invalid" },
+      "detailRequest": { "name": "detail.load", "payload": "MasterDetailGridDetailRequest<TMaster>", "capability": "detail-query" },
+      "layoutChange": { "name": "layout.onChange", "payload": "MasterDetailGridLayoutChange", "capability": "layout" }
+    },
+    "actions": {
+      "focusMaster": { "signature": "focusMaster(rowId): void" },
+      "focusDetail": { "signature": "focusDetail(rowId, columnId): void" },
+      "retryDetail": { "contract": "重用当前 masterId 与完整明细查询，生成新 queryId 并只调用一次 detail.load。" }
+    },
+    "features": {
+      "activeMaster": { "state": "MasterRowId | null", "event": "/api/events/activeMasterChange", "identitySource": "/behavior/identity/column/keyContract", "remoteBehavior": "受控模式只发变更意图；消费方未回传新值时不得请求、展示或播报猜测明细。" },
+      "detailQuery": { "state": "DataGridQuery", "event": "/api/events/detailRequest", "identitySource": "/behavior/identity/row/keyContract", "remoteBehavior": "主切换、明细排序筛选分页和重试均从单一入口生成完整 query 与唯一 queryId；只接受 masterId/queryId 双重匹配结果。" },
+      "layout": { "state": "MasterDetailGridLayoutState", "event": "/api/events/layoutChange", "remoteBehavior": "受控尺寸只发意图，非受控尺寸才更新内部状态；监听器在结束、取消、失焦和卸载时清理。" }
+    },
+    "controlledState": { "rule": "activeMaster 和 layout 使用 value/defaultValue 互斥合同；主、明细 DataGrid 的能力继续遵守各自 DataGrid 合同。受控活动主记录未经消费方回传不得推测切换；非受控活动主记录按稳定主 ID 与可见邻接关系恢复。" }
+  },
+  "behavior": {
+    "identity": {
+      "row": { "keyContract": "/api/props/detail", "duplicatePolicy": "同一 masterId 内重复 detailRowId 阻断明细行交互；不同 masterId 可拥有相同 detailRowId。", "semantic": "master-scoped-detail-row-identity" },
+      "column": { "keyContract": "/api/props/master", "stability": "活动主记录、aria-current 与明细归属始终绑定 master.getRowId；主列和明细列身份分别由各自 DataGrid 管理。", "semantic": "stable-master-row-identity" }
+    },
+    "states": {
+      "idle": { "userVisible": false },
+      "noMaster": { "userVisible": true },
+      "detailLoadingInitial": { "userVisible": true },
+      "detailReady": { "userVisible": true },
+      "detailEmpty": { "userVisible": true },
+      "detailRefreshing": { "userVisible": true },
+      "detailErrorInitial": { "userVisible": true },
+      "detailErrorRefresh": { "userVisible": true },
+      "invalidMaster": { "userVisible": true },
+      "invalidDetailIdentity": { "userVisible": true }
+    },
+    "transitions": [
+      { "id": "activate-master", "from": ["noMaster", "detailReady", "detailEmpty", "detailErrorInitial", "detailErrorRefresh"], "event": "/api/events/activeMasterChange", "to": ["detailLoadingInitial"] },
+      { "id": "query-detail", "from": ["detailReady", "detailEmpty", "detailErrorRefresh"], "event": "/api/events/detailRequest", "to": ["detailRefreshing"] },
+      { "id": "resolve-detail", "from": ["detailLoadingInitial", "detailRefreshing"], "event": "matching-detail-result", "to": ["detailReady", "detailEmpty"] },
+      { "id": "ignore-stale-detail", "from": ["detailLoadingInitial", "detailRefreshing", "detailErrorRefresh"], "event": "stale-master-or-query", "to": ["detailLoadingInitial", "detailRefreshing", "detailErrorRefresh"] },
+      { "id": "reject-detail", "from": ["detailLoadingInitial", "detailRefreshing"], "event": "detail-failed", "to": ["detailErrorInitial", "detailErrorRefresh"] },
+      { "id": "remove-master", "from": ["detailLoadingInitial", "detailReady", "detailEmpty", "detailRefreshing", "detailErrorInitial", "detailErrorRefresh"], "event": "active-master-removed", "to": ["noMaster", "detailLoadingInitial", "invalidMaster"] },
+      { "id": "reject-detail-identity", "from": ["detailReady", "detailRefreshing"], "event": "duplicate-detail-row-id", "to": ["invalidDetailIdentity"] }
+    ],
+    "recoveryActions": {
+      "retryCurrentDetail": { "kind": "api-command", "api": "/api/actions/retryDetail", "responsibility": "用户重试当前主记录与当前查询的明细请求。" },
+      "correctMasterIdentity": { "kind": "consumer-correction", "responsibility": "消费方修正无效或重复主 ID，并在受控模式回传合法活动主 ID。" },
+      "correctDetailIdentity": { "kind": "consumer-correction", "responsibility": "消费方修正当前 masterId 内重复的 detailRowId。" },
+      "awaitCurrentDetail": { "kind": "internal-policy", "responsibility": "忽略 masterId 或 queryId 不匹配的结果和错误，不产生 DOM、焦点、播报或回调副作用。" }
+    },
+    "exceptionFlows": [
+      { "id": "detailRefreshFailure", "states": ["detailErrorRefresh"], "regions": ["detailStatus", "detailGrid"], "recoveryAction": "retryCurrentDetail", "oracle": "detailRefreshFailureRetainsContext" },
+      { "id": "invalidMaster", "states": ["invalidMaster"], "regions": ["masterGrid", "detailStatus"], "recoveryAction": "correctMasterIdentity", "oracle": "invalidActiveMasterDoesNotGuess" },
+      { "id": "duplicateDetail", "states": ["invalidDetailIdentity"], "regions": ["detailStatus", "detailGrid"], "recoveryAction": "correctDetailIdentity", "oracle": "detailIdentityIsMasterScoped" },
+      { "id": "staleDetail", "states": ["detailLoadingInitial", "detailRefreshing", "detailErrorRefresh"], "regions": ["detailStatus", "detailGrid"], "recoveryAction": "awaitCurrentDetail", "oracle": "staleDetailResultDoesNotOverwrite" }
+    ]
+  },
+  "view": {
+    "regions": {
+      "masterHeader": { "purpose": "承载主区标题。", "required": false },
+      "masterGrid": { "purpose": "承载独立命名的主 DataGrid 和活动主上下文。", "required": true },
+      "separator": { "purpose": "承载可指针与键盘调整的主从分隔器。", "required": true },
+      "detailHeader": { "purpose": "标识当前活动主记录对应的明细上下文。", "required": true },
+      "detailStatus": { "purpose": "承载明细加载、空、错误、重试和 live region。", "required": true },
+      "detailGrid": { "purpose": "承载独立命名的明细 DataGrid。", "required": true }
+    },
+    "layout": {
+      "regionOrder": ["masterHeader", "masterGrid", "separator", "detailHeader", "detailStatus", "detailGrid"],
+      "scrollOwner": "masterGrid-and-detailGrid-independent",
+      "stickyRegions": ["masterHeader", "detailHeader"],
+      "columnSizing": { "defaultPx": 320, "minimumPx": 240, "maximumPx": 720, "handleHitTargetPx": 12 },
+      "rowHeight": { "compactPx": 32, "defaultPx": 40, "comfortablePx": 48 },
+      "headerHeightPx": 40,
+      "scrollbarReachability": "主区和明细区分别拥有水平滚动容器；宽屏分栏与窄屏堆叠均可到达各自末列。"
+    },
+    "statePresentation": {
+      "noMaster": { "regions": ["masterGrid", "detailStatus"], "presentation": "没有可见主记录时隐藏旧明细并显示无主上下文。", "focus": "保留主区或组合容器焦点。" },
+      "detailLoadingInitial": { "regions": ["detailHeader", "detailStatus", "detailGrid"], "presentation": "显示目标主上下文和初始加载，不复用上一主的明细。", "focus": "主切换不抢焦点。" },
+      "detailReady": { "regions": ["masterGrid", "detailHeader", "detailGrid"], "presentation": "显示与当前 masterId/queryId 匹配的明细。", "focus": "主、分隔器、明细各自保留导航上下文。" },
+      "detailEmpty": { "regions": ["detailHeader", "detailStatus", "detailGrid"], "presentation": "保留明细表头并显示当前主记录无明细。", "focus": "不抢占主区。" },
+      "detailRefreshing": { "regions": ["detailStatus", "detailGrid"], "presentation": "保留同一主记录的已接受明细并标记刷新中。", "focus": "保留当前区域活动目标。" },
+      "detailErrorInitial": { "regions": ["detailStatus", "detailGrid"], "presentation": "显示安全初始错误与重试，不显示其他主记录旧明细。", "focus": "重试可正常导航到达。" },
+      "detailErrorRefresh": { "regions": ["detailStatus", "detailGrid"], "presentation": "保留旧明细并显示刷新失败和可能过期提示。", "focus": "保留活动明细单元格或查询触发控件。" },
+      "invalidMaster": { "regions": ["masterGrid", "detailStatus"], "presentation": "受控活动主 ID 无效时显示安全状态，不猜测替代主记录。", "focus": "保留主区并等待消费方修正。" },
+      "invalidDetailIdentity": { "regions": ["detailStatus", "detailGrid"], "presentation": "阻断当前主记录下重复明细行的交互。", "focus": "聚焦明细错误摘要，主区仍可操作。" }
+    },
+    "tokens": {
+      "surface": { "base": "surface.canvas", "header": "surface.elevated", "error": "surface.danger-subtle" },
+      "border": { "default": "border.default", "separator": "border.strong" },
+      "text": { "default": "text.primary", "muted": "text.secondary", "danger": "text.danger" },
+      "focusRing": { "color": "focus.ring", "widthPx": 2, "offsetPx": -2 },
+      "spacing": { "regionGap": 12, "headerX": 12, "headerY": 8 },
+      "density": ["compact", "default", "comfortable"],
+      "motion": { "resizeMs": 0, "stateMs": 120, "reducedMs": 0 }
+    },
+    "responsive": {
+      "viewports": { "mobile": "390px stacked", "tablet": "768px stacked-or-split", "desktop": "1280px split", "wide": "1440px split" },
+      "adjacentWidthChecksPx": [389, 391, 767, 769, 1279, 1281],
+      "contentFixtures": ["long-master-title", "long-detail-title", "dual-horizontal-scroll", "refresh-error", "200-percent-zoom", "forced-colors"]
+    }
+  },
+  "accessibility": {
+    "keyboardModel": {
+      "pattern": "主 Grid 与明细 Grid 各自保留 DataGrid 键盘模型和单一 roving tabindex；Enter 或指针仅激活主行非交互区域；F6 在主区、可见分隔器和明细区循环；separator 支持方向键与 Home/End。",
+      "keys": ["Enter", "F6", "Shift+F6", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "Escape"],
+      "focusRecovery": "主切换与加载完成不抢焦点；活动主被移除时非受控模式按可见邻接规则恢复，受控模式保留主区并发 invalid；明细刷新失败保留现有活动单元格。"
+    },
+    "semantics": {
+      "roles": ["region", "grid", "separator"],
+      "counts": ["aria-current", "aria-selected", "aria-valuemin", "aria-valuemax", "aria-valuenow", "aria-describedby"],
+      "selection": "主 Grid 的 aria-current 只表达活动主上下文，aria-selected 只表达 DataGrid 行选择；明细选择按 masterId 命名空间隔离。"
+    },
+    "announcements": { "politeness": "polite", "events": ["活动主上下文提交", "明细加载", "明细结果数", "明细失败", "重试成功", "活动主失效"] }
+  },
+  "quality": {
+    "scaleFixtures": {
+      "local": { "masterRows": 1000, "masterColumns": 20, "detailRows": 500, "detailColumns": 12 },
+      "remote": { "logicalMasterRows": 100000, "masterPageRows": 100, "detailPageRows": 100, "detailColumns": 12 }
+    },
+    "performanceBudgets": {
+      "interaction": { "operator": "<=", "value": 100, "unit": "ms-p95", "fixture": "activate-f6-resize" },
+      "longTask": { "operator": "<=", "value": 50, "unit": "ms", "fixture": "rapid-master-switching" },
+      "runtimeBundleIncrement": { "operator": "<=", "value": 12, "unit": "gzip-kb", "fixture": "increment-over-data-grid" }
+    },
+    "visualOracles": {
+      "splitAndStackReachability": { "given": "主从两表均有水平溢出", "when": "在 390px 堆叠和 1280px 分栏中遍历键盘、鼠标和触控", "then": "两表末列、标题、状态、重试和分隔器均可达且互不遮挡。" },
+      "separatorGeometry": { "given": "可调分隔器处于最小、中间和最大值", "when": "分别使用指针与键盘调整", "then": "视觉边界、命中区和 aria-valuenow 与同一状态一致，无残留监听器或跳动。" },
+      "detailStateRetention": { "given": "同一主记录已有成功明细和活动单元格", "when": "明细刷新失败", "then": "旧明细、选择、焦点和分割布局保持，错误状态不遮挡数据。" },
+      "focusVisibility": { "given": "默认、暗色、紧凑、减少动态和 forced-colors", "when": "使用 F6 和区域内键盘遍历", "then": "主 Grid、分隔器、明细 Grid 与重试的焦点持续可见且不被裁切。" }
+    },
+    "oracles": {
+      "activationIsIndependentFromSelection": { "given": "主表启用行选择且另一行是当前活动主", "when": "激活主行或操作主行复选框、按钮、链接和菜单", "then": "激活只改变 aria-current 和活动主意图；选择只改变 aria-selected，嵌套控件只执行自身效果。", "references": { "api": ["/api/events/activeMasterChange", "/api/props/master"], "states": ["detailReady"], "regions": ["masterGrid"] } },
+      "staleDetailResultDoesNotOverwrite": { "given": "A/q1 后切换到 B/q2，或同一主记录从 q1 变为 q2", "when": "旧 masterId/queryId 结果或错误迟到", "then": "迟到结果不改变 DOM、live region、选择、焦点、布局或回调计数，只有双重匹配结果应用一次。", "references": { "api": ["/api/events/detailRequest", "/api/props/detail"], "states": ["detailLoadingInitial", "detailRefreshing"], "regions": ["detailStatus", "detailGrid"] } },
+      "detailQueryProducesSingleRequest": { "given": "当前活动主记录和明细查询已接受", "when": "改变明细排序、筛选、分页或执行重试", "then": "每个命令只生成一个包含完整 masterId/query/queryId/signal 的请求；排序筛选与分页重置为原子意图。", "references": { "api": ["/api/events/detailRequest", "/api/actions/retryDetail"], "states": ["detailRefreshing", "detailErrorRefresh"], "regions": ["detailStatus", "detailGrid"] } },
+      "detailRefreshFailureRetainsContext": { "given": "同一主记录已有成功明细、查询、选择和焦点", "when": "刷新请求失败并重试", "then": "旧上下文保留并标记可能过期；重试使用同一 masterId/query 与新 queryId，只发一次请求。", "references": { "api": ["/api/actions/retryDetail"], "states": ["detailErrorRefresh"], "regions": ["detailStatus", "detailGrid"] } },
+      "detailIdentityIsMasterScoped": { "given": "主 A 与主 B 均有 detailRowId=ROW-01，或同一主内出现重复 ID", "when": "进行 A/B/A 切换和明细交互", "then": "不同主的行、选择和焦点互不串用；同一主内重复 ID 阻断明细交互但主区保持可操作。", "references": { "api": ["/api/props/detail"], "states": ["detailReady", "invalidDetailIdentity"], "regions": ["masterGrid", "detailStatus", "detailGrid"] } },
+      "invalidActiveMasterDoesNotGuess": { "given": "受控 activeMasterId 不存在、重复或被筛选隐藏", "when": "主表提交新可见结果", "then": "只发一次 invalid 意图并停止展示旧明细，不猜测替代主记录、不请求或播报猜测明细。", "references": { "api": ["/api/events/activeMasterInvalid", "/api/features/activeMaster"], "states": ["invalidMaster"], "regions": ["masterGrid", "detailStatus"] } },
+      "f6NavigationKeepsGridContextsSeparate": { "given": "主 Grid、分隔器和明细 Grid 均可见", "when": "连续使用 F6 和 Shift+F6", "then": "焦点只在可见区域循环；两个 Grid 各自保持一个活动单元格且不共享 row/column 身份。", "references": { "api": ["/api/actions/focusMaster", "/api/actions/focusDetail"], "states": ["detailReady"], "regions": ["masterGrid", "separator", "detailGrid"] } },
+      "separatorControlledStateDoesNotSpeculate": { "given": "分隔器分别以受控和非受控布局挂载", "when": "使用指针、方向键和 Home/End 调整", "then": "受控模式只发一次尺寸意图并等待 prop，非受控模式持久化一次；清理所有全局监听器。", "references": { "api": ["/api/events/layoutChange", "/api/features/layout"], "states": ["detailReady"], "regions": ["separator"] } },
+      "activeMasterControlledStateDoesNotSpeculate": { "given": "activeMaster 处于受控模式", "when": "用户激活另一主记录但消费方未回传新值", "then": "当前主上下文、明细 DOM、请求和播报均保持，组件只发一次不可变变更意图。", "references": { "api": ["/api/events/activeMasterChange", "/api/features/activeMaster"], "states": ["detailReady"], "regions": ["masterGrid", "detailStatus", "detailGrid"] } }
+    }
+  },
+  "security": { "rules": ["主明细 renderer 不执行不受信 HTML", "前端主从可见性不构成租户、归属或操作权限", "detail.load 请求和错误不得记录完整业务对象、令牌或敏感响应体"] },
+  "compatibility": {
+    "legacyId": "master-detail-grid",
+    "breakingSurfaces": ["active master identity", "master-detail result matching", "master-scoped detail identity", "controlled activation", "region keyboard model", "separator state"],
+    "forbiddenSopAliases": ["expandedRow", "selectedMaster", "detailRows"],
+    "v1Authority": "02-组件规范/02-表格类/02-master-detail-grid.spec.json"
+  },
+  "risk": {
+    "level": "R2",
+    "signals": ["data-integrity", "async-state", "composed-focus", "large-data"],
+    "invariants": ["活动主与主选择分离", "可见明细匹配 masterId/queryId", "明细身份按 masterId 命名空间", "刷新失败保留同主上下文", "受控主切换不推测", "两个 Grid 焦点独立"],
+    "upgradeTriggers": ["明细编辑或保存", "跨主批量操作", "未保存离开阻断", "金额库存订单写入", "服务端归属权限执行"]
+  },
+  "decisions": [],
+  "approval": { "status": "pending", "authors": ["Codex"], "requiredRoles": ["component-maintainer", "ux-a11y-reviewer", "test-reviewer"], "records": [] }
+}

@@ -1,0 +1,61 @@
+{
+  "$id": "effective/02-master-detail-grid.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [
+    {
+      "$ref": "../core/component-spec.schema.json"
+    }
+  ],
+  "x-applied-profiles": [
+    "capability:active-master",
+    "category:master-detail-table"
+  ],
+  "x-component-key": "02:master-detail-grid",
+  "x-data-modes": [
+    "composed-master-detail"
+  ],
+  "x-minimum-risk": "R2",
+  "x-required-approval-roles": [
+    "component-maintainer",
+    "test-reviewer",
+    "ux-a11y-reviewer"
+  ],
+  "x-required-implementation-pointers": [
+    "/api/features/activeMaster",
+    "/api/props/ariaLabel",
+    "/api/props/detail",
+    "/api/props/master",
+    "/behavior/identity/column",
+    "/behavior/identity/row",
+    "/view/regions/detailGrid",
+    "/view/regions/masterGrid",
+    "/view/regions/separator"
+  ],
+  "x-required-pointers": [
+    "/accessibility/keyboardModel",
+    "/api/features/activeMaster",
+    "/api/props/detail",
+    "/api/props/master",
+    "/behavior/identity/column",
+    "/behavior/identity/row",
+    "/quality/oracles/activationIsIndependentFromSelection",
+    "/quality/oracles/staleDetailResultDoesNotOverwrite",
+    "/quality/scaleFixtures",
+    "/view/regions/detailGrid",
+    "/view/regions/masterGrid",
+    "/view/regions/separator"
+  ],
+  "x-required-semantic-checks": [
+    "master-detail-identity-contract"
+  ],
+  "x-required-types": {
+    "/api/features/activeMaster": "object",
+    "/api/props/detail": "object",
+    "/api/props/master": "object",
+    "/behavior/identity/column": "object",
+    "/behavior/identity/row": "object",
+    "/view/regions/detailGrid": "object",
+    "/view/regions/masterGrid": "object",
+    "/view/regions/separator": "object"
+  }
+}

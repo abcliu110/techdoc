@@ -1,0 +1,41 @@
+{
+  "profileVersion": 1,
+  "profileKey": "category:master-detail-table",
+  "appliesTo": "component-spec-v2",
+  "constraints": {
+    "requiredPointers": [
+      "/behavior/identity/column",
+      "/behavior/identity/row",
+      "/view/regions/masterGrid",
+      "/view/regions/detailGrid",
+      "/view/regions/separator",
+      "/accessibility/keyboardModel",
+      "/quality/scaleFixtures",
+      "/api/props/master",
+      "/api/props/detail"
+    ],
+    "requiredSemanticChecks": ["master-detail-identity-contract"],
+    "requiredImplementationPointers": [
+      "/api/props/ariaLabel",
+      "/api/props/master",
+      "/api/props/detail",
+      "/behavior/identity/column",
+      "/behavior/identity/row",
+      "/view/regions/masterGrid",
+      "/view/regions/detailGrid",
+      "/view/regions/separator"
+    ],
+    "minimumRisk": "R2",
+    "requiredApprovalRoles": ["component-maintainer", "ux-a11y-reviewer", "test-reviewer"],
+    "requiredTypes": {
+      "/behavior/identity/column": "object",
+      "/behavior/identity/row": "object",
+      "/view/regions/masterGrid": "object",
+      "/view/regions/detailGrid": "object",
+      "/view/regions/separator": "object",
+      "/api/props/master": "object",
+      "/api/props/detail": "object"
+    },
+    "incompatibleProfiles": ["category:table", "category:tree-table"]
+  }
+}

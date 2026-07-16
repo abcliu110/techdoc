@@ -1,0 +1,255 @@
+{
+  "schemaVersion": 1,
+  "specificationVersion": "0.1.0",
+  "lifecycle": "ReviewReady",
+  "identity": {
+    "componentKey": "02:tree-grid",
+    "legacyId": "tree-grid",
+    "name": "树形表格",
+    "englishName": "Tree Grid",
+    "category": "02",
+    "exportName": "TreeGrid",
+    "packageSubpath": "@company/ui/tree-grid"
+  },
+  "purpose": {
+    "job": "在保留二维列语义的同时浏览和操作具有父子关系的业务节点，并在展开、异步加载、筛选和选择时保持层级身份与作用范围准确。",
+    "success": "用户可辨认节点层级、展开或折叠分支、键盘访问可见节点并安全选择单个节点或完整子树；迟到响应、局部失败和刷新不得把状态应用到错误节点。"
+  },
+  "boundaries": {
+    "inScope": [
+      "本地树与受控异步子节点树",
+      "稳定节点、父节点和列身份",
+      "展开/折叠与逐分支加载、错误和重试",
+      "同级排序与保留祖先路径的筛选",
+      "节点选择与可表达未加载后代的子树选择",
+      "固定列、列宽和横向滚动",
+      "ARIA Treegrid 键盘导航、焦点恢复和状态播报"
+    ],
+    "outOfScope": [
+      "单元格编辑事务",
+      "行拖拽改父级",
+      "服务端持久化移动节点",
+      "分页",
+      "虚拟滚动与无限加载",
+      "任意图或多父节点",
+      "透视、OLAP、公式与电子表格区域操作",
+      "服务端权限、租户或数据范围实现"
+    ]
+  },
+  "dataContract": {
+    "node": "泛型 TNode；getNodeId(node) 必须返回在整棵树内全局唯一且跨刷新稳定的 string。每个节点最多有一个父节点；重复 ID、循环引用或同一 ID 出现在多个父节点下均为契约错误。",
+    "column": "自有 TreeGridColumn<TNode, TValue>；显式稳定 id，包含 header、accessor、cell、sortable、filter、width、minWidth、maxWidth 和 pinning 能力；不得暴露 TanStack 类型。treeColumnId 必须指向一个可见列，层级缩进、展开按钮和节点名称均在该列呈现。",
+    "dataSource": "自有 TreeGridDataSource<TNode> 判别联合：{kind:'local-tree'; roots; getChildren} 或 {kind:'remote-tree'; roots; resultQueryId; loading; error; childrenByParentId; onQueryChange; onChildrenRequest; onRetry}。remote-tree 的每个子结果携带 parentId、queryId 和 requestId，只有三者同时匹配当前分支请求时才可替换该分支数据。",
+    "hierarchy": "local-tree 通过 getChildren(node) 返回直接子节点；remote-tree 通过 hasChildren(node) 判断是否显示展开能力，通过 childrenByParentId 读取受控直接子节点状态。组件只扁平化当前可见节点，不复制或修改消费方节点。",
+    "query": "TreeGridQuery={sorting; filters}。排序只重排同一父节点下的兄弟节点；本地筛选采用 include-ancestors 语义，匹配节点的祖先路径必须保留。remote-tree 只发查询意图，不对服务端结果做客户端二次排序或筛选。",
+    "expansion": "ReadonlySet<NodeId>；按节点 ID 保存。折叠只改变可见性，不删除已加载子节点、选择表达式或其他分支状态。",
+    "selection": "TreeGridSelectionExpression={includedNodeIds; includedSubtreeIds; excludedNodeIds}。includedSubtreeIds 表达包含当前与未来加载的全部后代；excludedNodeIds 表达子树中的显式排除。组件不得把已加载后代枚举结果冒充完整子树选择。"
+  },
+  "publicApi": {
+    "status": "proposed",
+    "props": [
+      { "name": "data", "type": "TreeGridDataSource<TNode>", "required": true },
+      { "name": "columns", "type": "readonly TreeGridColumn<TNode, unknown>[]", "required": true },
+      { "name": "treeColumnId", "type": "string", "required": true },
+      { "name": "getNodeId", "type": "(node: TNode) => string", "required": true },
+      { "name": "hasChildren", "type": "(node: TNode) => boolean", "required": true },
+      { "name": "expansion", "type": "TreeGridExpansion | undefined", "required": false },
+      { "name": "sorting", "type": "TreeGridSorting | undefined", "required": false },
+      { "name": "filtering", "type": "TreeGridFiltering | undefined", "required": false },
+      { "name": "nodeSelection", "type": "TreeGridNodeSelection | undefined", "required": false },
+      { "name": "columnPinning", "type": "TreeGridColumnPinning | undefined", "required": false },
+      { "name": "columnSizing", "type": "TreeGridColumnSizing | undefined", "required": false },
+      { "name": "ariaLabel", "type": "string", "required": true }
+    ],
+    "events": [
+      { "name": "expansion.onChange", "payload": "ReadonlySet<NodeId>" },
+      { "name": "sorting.onChange", "payload": "readonly TreeGridSortRule[]" },
+      { "name": "filtering.onChange", "payload": "readonly TreeGridFilterRule[]" },
+      { "name": "nodeSelection.onChange", "payload": "TreeGridSelectionExpression" },
+      { "name": "data.onQueryChange", "payload": "TreeGridQueryRequest" },
+      { "name": "data.onChildrenRequest", "payload": "TreeGridChildrenRequest" },
+      { "name": "data.onRetry", "payload": "TreeGridRetryRequest" }
+    ],
+    "refMethods": [
+      "focusNode(nodeId: string, columnId?: string): void",
+      "scrollToNode(nodeId: string): void",
+      "expandPath(nodeIds: readonly string[]): void"
+    ],
+    "controlledState": {
+      "rule": "每个能力配置提供 value 时由消费方控制；只提供 defaultValue 时由组件控制；运行期不允许在受控与非受控间切换。remote-tree 的 roots、childrenByParentId、loading、error、resultQueryId 和分支请求结果始终由消费方提供。组件可缓存可见扁平化结果，但不能缓存为新的公开事实源。"
+    }
+  },
+  "stateMachine": {
+    "states": [
+      "loadingInitial",
+      "readyCollapsed",
+      "readyExpanded",
+      "refreshing",
+      "empty",
+      "errorInitial",
+      "errorRefresh",
+      "branchLoading",
+      "branchError"
+    ],
+    "initialState": "local-tree 根据 roots 和 expansion 进入 empty、readyCollapsed 或 readyExpanded；remote-tree 在无匹配成功 roots 时按 loading/error 进入 loadingInitial 或 errorInitial，有成功 roots 后保留可见树并以 refreshing、branchLoading 或 branchError 叠加局部状态。",
+    "transitions": [
+      { "from": "readyCollapsed|readyExpanded", "event": "EXPAND_LOADED_BRANCH", "to": "readyExpanded" },
+      { "from": "readyCollapsed|readyExpanded", "event": "EXPAND_UNLOADED_BRANCH", "to": "branchLoading" },
+      { "from": "branchLoading", "event": "RESOLVE_MATCHING_CHILDREN", "to": "readyExpanded" },
+      { "from": "branchLoading", "event": "RESOLVE_STALE_CHILDREN", "to": "branchLoading" },
+      { "from": "branchLoading", "event": "REJECT_CHILDREN", "to": "branchError" },
+      { "from": "branchError", "event": "RETRY_BRANCH", "to": "branchLoading" },
+      { "from": "readyExpanded|branchLoading|branchError", "event": "COLLAPSE_BRANCH", "to": "readyCollapsed|readyExpanded" },
+      { "from": "readyCollapsed|readyExpanded|branchError", "event": "REMOTE_QUERY_INTENT", "to": "refreshing" },
+      { "from": "refreshing", "event": "RESOLVE_MATCHING_ROOTS", "to": "empty|readyCollapsed|readyExpanded" },
+      { "from": "refreshing", "event": "REJECT_ROOTS", "to": "errorRefresh" }
+    ]
+  },
+  "primaryFlow": {
+    "id": "expand-inspect-select-subtree",
+    "steps": [
+      {
+        "actor": "仓库主管",
+        "precondition": "根节点 WH-EAST 有未加载子节点，当前折叠且焦点位于 treeColumnId 对应单元格。",
+        "control": "WH-EAST 的展开按钮或树列上的 Right Arrow",
+        "action": "展开华东仓并请求其直接子节点。",
+        "stateTransition": "readyCollapsed -> branchLoading -> readyExpanded。",
+        "observable": "expansion.onChange 包含 WH-EAST；remote-tree 仅触发一次带 parentId=WH-EAST、queryId 和 requestId 的 data.onChildrenRequest；加载完成后行携带 aria-expanded=true。",
+        "oracle": "匹配请求只把返回节点挂到 WH-EAST 下；其他分支、选择表达式和活动列不变。"
+      },
+      {
+        "actor": "仓库主管",
+        "precondition": "WH-EAST 已展开，直接子节点 BIN-A 与 BIN-B 可见。",
+        "control": "树列上的 Down Arrow 与 Right Arrow",
+        "action": "移动到 BIN-A，再展开并进入其第一个可见子节点 LOT-01。",
+        "stateTransition": "active WH-EAST -> BIN-A -> LOT-01。",
+        "observable": "单一 roving tabindex 随可见行移动；BIN-A 行 aria-level=2，LOT-01 行 aria-level=3，父子位置关系可由辅助技术获得。",
+        "oracle": "键盘移动只经过可见节点；折叠分支的后代不进入 Tab 顺序或方向键序列。"
+      },
+      {
+        "actor": "仓库主管",
+        "precondition": "需要选择 WH-EAST 全部当前与未来加载的库位，但排除已知停用节点 BIN-B。",
+        "control": "WH-EAST 子树选择框和 BIN-B 排除选择框",
+        "action": "选择 WH-EAST 子树并显式排除 BIN-B。",
+        "stateTransition": "selection empty -> includedSubtreeIds={WH-EAST}, excludedNodeIds={BIN-B}。",
+        "observable": "nodeSelection.onChange 触发一次并返回语义选择表达式；WH-EAST 显示部分选择，BIN-B 显示未选，其余已加载后代显示选中。",
+        "oracle": "后续加载的 WH-EAST 后代自动继承子树选择，BIN-B 及其后代保持排除；组件不通过枚举当前已加载节点缩小业务作用范围。"
+      }
+    ]
+  },
+  "exceptionFlows": [
+    {
+      "id": "invalid-hierarchy",
+      "trigger": "同一 nodeId 出现在两个父节点下、节点形成循环，或 getNodeId 返回重复值。",
+      "blockedEffect": "不得继续展开、选择、定位或把冲突节点静默合并。",
+      "retainedState": "列配置、有效根节点查询和此前无冲突的选择表达式保留。",
+      "recovery": "消费方修正层级数据后重新渲染；开发与测试环境抛出含 nodeId 和父路径的契约错误。",
+      "focusResult": "焦点进入树形表格级错误摘要；恢复后返回最近有效祖先的树列单元格。",
+      "oracle": "生产错误信息不序列化完整节点对象；任何冲突节点都不产生可执行行级操作。"
+    },
+    {
+      "id": "branch-load-failed-or-stale",
+      "trigger": "WH-EAST 子节点请求失败，或旧 requestId 的结果在同一分支新请求之后返回。",
+      "blockedEffect": "失败或迟到结果不得覆盖当前子节点、折叠状态、选择表达式或焦点。",
+      "retainedState": "其他分支、已成功加载的 WH-EAST 子节点、当前查询和选择表达式保留。",
+      "recovery": "分支错误行提供可键盘到达的重试；重试使用相同 parentId/query 并生成新 requestId。",
+      "focusResult": "失败播报后焦点留在 WH-EAST 展开按钮；用户可再次 Enter 重试或 Tab 到分支重试按钮。",
+      "oracle": "每次用户重试只产生一次请求；旧 requestId 结果不改变可见节点和播报。"
+    },
+    {
+      "id": "active-node-removed",
+      "trigger": "受控刷新删除当前活动节点，或外部 expansion 折叠其祖先。",
+      "blockedEffect": "不得把焦点留在已卸载 DOM、跳到页面起点或激活另一业务分支的同索引节点。",
+      "retainedState": "仍存在节点的展开、选择和列状态保留。",
+      "recovery": "优先聚焦最近仍可见祖先的 treeColumnId 单元格；无祖先时聚焦下一可见兄弟，再无则前一兄弟或树形表格容器。",
+      "focusResult": "焦点恢复目标具有唯一 nodeId，并通过 polite live region 说明原节点已不可用。",
+      "oracle": "焦点恢复按节点关系而非数组索引计算，且不会额外触发选择或展开事件。"
+    }
+  ],
+  "keyboardAndFocus": {
+    "model": "ARIA Treegrid，单一活动单元格使用 roving tabindex；层级键仅在 treeColumnId 单元格接管，其他列保留网格横向移动。",
+    "keys": "Up/Down 移动上一/下一可见节点；在树列上 Right 展开折叠父节点，已展开时进入第一个子节点，Left 折叠已展开节点，否则回到父节点；在非树列上 Left/Right 移动相邻单元格；Home/End 到当前可见首尾节点，Ctrl+Home/End 到树形表格首尾单元格；Space 切换节点选择，Enter 激活单元格主操作或重试失败分支，Escape 关闭临时浮层但不折叠树。",
+    "focusRecovery": "折叠、过滤或刷新移除活动节点时按最近可见祖先、下一兄弟、前一兄弟、容器的顺序恢复；异步加载完成不主动抢焦点。",
+    "tabOrder": "Tab 只进入一个活动单元格以及活动行内显式交互控件；折叠后代和加载占位不进入方向键序列。"
+  },
+  "accessibility": {
+    "semantics": "根容器 role=treegrid；行使用 row 并设置 aria-level，已知兄弟规模时设置 aria-posinset/aria-setsize；可展开行设置 aria-expanded；单元格使用 columnheader/gridcell；局部分支加载和错误与对应父节点建立可感知关系。",
+    "announcements": "展开/折叠、子节点加载中/成功数量/失败、筛选结果和焦点恢复使用 polite live region；同一请求不得重复播报，刷新不逐节点播报。"
+  },
+  "visualAndResponsive": {
+    "desktop": "树列缩进、连接关系、展开按钮、选择框和文本不重叠；每级缩进使用令牌且深层级达到视觉上限后仍通过 aria-level 保留真实层级。固定树列与横向滚动列的行高、边界和焦点环必须对齐。",
+    "mobile": "390px 保留二维横向滚动并优先固定树列；不得把子节点静默改为脱离列上下文的卡片。展开按钮和选择控件命中目标不小于 24x24 CSS px，间距避免误触。",
+    "states": ["loadingInitial", "readyCollapsed", "readyExpanded", "refreshing", "empty", "errorInitial", "errorRefresh", "branchLoading", "branchError", "invalidHierarchy"],
+    "themes": ["default", "dark", "compact", "reduced-motion"]
+  },
+  "performance": {
+    "fixture": "local-tree 2,000 节点、最大深度 8、当前可见不超过 300 节点 x 20 列；remote-tree 100,000 逻辑节点、已加载不超过 1,000 节点、当前可见不超过 300 节点 x 20 列。",
+    "budget": "展开/折叠、可见节点键盘移动、选择反馈和已加载树重新扁平化 p95 <= 100ms；连续交互不得持续产生 >50ms 长任务；@company/ui/tree-grid 运行时 gzip 总增量 <= 45KB，且相对 @company/ui/data-grid 的层级能力增量 <= 15KB，排除 React/React DOM peer dependency。"
+  },
+  "security": {
+    "rules": [
+      "节点和单元格 renderer 不执行不受信 HTML",
+      "展开、隐藏、选择表达式和前端过滤不构成权限、租户或数据范围控制",
+      "remote-tree 请求只携带节点 ID、查询和请求身份，不默认序列化完整节点对象",
+      "契约错误与加载错误不得展示敏感响应体或完整业务对象"
+    ]
+  },
+  "compatibility": {
+    "legacy": "legacyId=tree-grid；历史 mixed SOP 和 #prototypeState 仅用于来源追溯，不是 React 行为 oracle。TreeGrid 是独立子路径，不向 DataGrid 增加 hierarchy 开关。",
+    "breakingSurfaces": [
+      "全局节点身份与单父关系",
+      "treeColumnId 与层级 DOM 语义",
+      "展开及异步请求身份",
+      "子树选择表达式",
+      "同级排序和祖先保留筛选语义",
+      "键盘与焦点恢复模型"
+    ]
+  },
+  "acceptanceOracles": [
+    { "id": "TG-01", "given": "WH-EAST 与 WH-WEST 各有稳定 nodeId 且 WH-EAST 已展开", "when": "根节点重排或刷新为新对象实例", "then": "展开、选择和活动节点仍关联 WH-EAST，不按索引迁移" },
+    { "id": "TG-02", "given": "焦点位于折叠父节点 WH-EAST 的树列", "when": "依次按 Right、Right、Left", "then": "先展开 WH-EAST，再进入第一个可见子节点，最后回到 WH-EAST；只存在一个 roving tabindex" },
+    { "id": "TG-03", "given": "remote-tree 的 WH-EAST 尚未加载子节点", "when": "连续触发展开且旧请求晚于新请求返回", "then": "同一有效意图不重复请求，只有匹配 parentId/queryId/requestId 的结果应用一次" },
+    { "id": "TG-04", "given": "WH-EAST 子节点正在加载", "when": "用户折叠 WH-EAST 后响应成功", "then": "结果可缓存但 WH-EAST 保持折叠，不抢焦点、不自动显示子节点" },
+    { "id": "TG-05", "given": "WH-EAST 加载失败而 WH-WEST 已成功展开", "when": "显示分支错误并重试", "then": "WH-WEST、查询、选择和焦点上下文保留，重试只作用于 WH-EAST" },
+    { "id": "TG-06", "given": "本地树中仅 LOT-01 匹配筛选", "when": "应用筛选", "then": "LOT-01 及其完整祖先路径可见，不匹配的旁支隐藏，节点真实 aria-level 不被压平" },
+    { "id": "TG-07", "given": "WH-EAST 尚有未加载后代", "when": "选择 WH-EAST 子树并排除 BIN-B", "then": "事件返回 includedSubtreeIds={WH-EAST} 和 excludedNodeIds={BIN-B}，未来加载后代继承该语义" },
+    { "id": "TG-08", "given": "同一 nodeId 位于两个父节点下或形成循环", "when": "渲染或加载该分支", "then": "层级交互被阻断并出现脱敏契约错误，不静默复制、合并或无限递归" },
+    { "id": "TG-09", "given": "活动节点 LOT-01 可见", "when": "外部状态折叠其祖先或刷新删除 LOT-01", "then": "焦点落到最近可见祖先或规定后备节点，不跳到同索引业务节点且不触发额外事件" },
+    { "id": "TG-10", "given": "树列固定、列宽可调且层级深度为 8", "when": "调整列宽并横向滚动", "then": "展开控件、缩进、文本、行边界和焦点环无裁切或错位，390px 下仍可到达全部列" }
+  ],
+  "risk": {
+    "level": "R2",
+    "signals": ["data-integrity", "async-state", "large-data"],
+    "rationale": "节点身份、层级关系、子树选择和异步分支结果错误会让用户作用于错误业务范围，但本规范不直接提交移动、编辑或不可逆业务写入。",
+    "triggers": [
+      "增加节点移动、编辑提交、库存/订单/金额写入、跨租户树或不可逆批量操作时升级 R3。",
+      "允许服务端直接执行 includedSubtreeIds 选择表达式时，消费方必须独立验证权限、租户范围和排除规则。"
+    ],
+    "invariants": [
+      "节点 ID 全局唯一且每节点最多一个父节点",
+      "展开和选择按 nodeId 而非可见索引",
+      "异步子结果必须匹配 parentId/queryId/requestId",
+      "折叠不删除选择或误报加载结果",
+      "子树选择不缩减为已加载节点枚举",
+      "移除活动节点后焦点按层级关系恢复"
+    ]
+  },
+  "sourceTrace": {
+    "catalog": "prototype-suite/catalog.browser.json#02:tree-grid",
+    "implementationSop": "03-生产SOP/组件实施SOP/02-tree-grid.implementation-sop.md",
+    "preserved": ["TreeNode[] × Column[]", "expandedKeys", "activeRow", "对象身份与层级路径稳定"],
+    "correctedFacts": [
+      "历史 mixed SOP 只有通用表格动作和占位式异常，不能定义 TreeGrid 的父子身份、异步分支或层级键盘语义。",
+      "TreeGrid 是独立公开组件并复用 DataGrid 基础设施；层级、异步子节点和子树选择不得作为 DataGrid 开关。",
+      "子树选择使用语义表达式覆盖未加载后代，不能用当前已加载节点集合冒充完整业务范围。",
+      "首版不包含节点拖拽改父级、编辑、分页、虚拟滚动或无限加载。"
+    ]
+  },
+  "openDecisions": [],
+  "approval": {
+    "status": "pending",
+    "authors": ["Codex"],
+    "requiredRoles": ["component-maintainer", "ux-a11y-reviewer", "test-reviewer"],
+    "records": []
+  }
+}

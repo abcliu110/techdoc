@@ -11,6 +11,8 @@ const suiteRoot = resolve(root, "..");
 const catalog = JSON.parse(readFileSync(join(suiteRoot, "prototype-suite", "catalog.browser.json"), "utf8"));
 const specsRoot = join(root, "02-组件规范");
 const outputPath = join(root, "04-机器索引与Schema", "component-spec-index.json");
+const v2CandidatesRoot = join(specsRoot, "v2-candidates");
+const v2SopsRoot = join(root, "03-生产SOP", "组件实施SOP-v2-candidates");
 
 export function findSpecs(directory) {
   const results = [];
@@ -31,6 +33,28 @@ for (const path of findSpecs(specsRoot)) {
   specs.set(spec.identity.componentKey, { spec, path });
 }
 
+const v2Candidates = new Map();
+for (const path of findSpecs(v2CandidatesRoot)) {
+  const spec = JSON.parse(readFileSync(path, "utf8"));
+  if (v2Candidates.has(spec.component.key)) throw new Error(`Duplicate v2 candidate specification: ${spec.component.key}`);
+  v2Candidates.set(spec.component.key, { spec, path });
+}
+
+function v2CandidateFields(componentKey) {
+  const found = v2Candidates.get(componentKey);
+  if (!found) return {};
+  const stem = componentKey.replace(":", "-");
+  const sopPath = join(v2SopsRoot, `${stem}.implementation-sop.json`);
+  return {
+    v2CandidateSpecPath: relative(root, found.path).replaceAll("\\", "/"),
+    v2CandidateSopPath: existsSync(sopPath) ? relative(root, sopPath).replaceAll("\\", "/") : null,
+    v2CandidateStatus: found.spec.lifecycle.implementationAllowed === false
+      && ["Draft", "ReviewReady"].includes(found.spec.lifecycle.specificationStatus)
+      ? `Shadow${found.spec.lifecycle.specificationStatus}`
+      : "InvalidShadowState",
+  };
+}
+
 function blockersFor(spec, hasImplementationSop) {
   const blockers = spec.openDecisions.map((decision) => `${decision.id}: ${decision.question}`);
   if (spec.publicApi.status !== "frozen") blockers.push("公开 API 尚未冻结");
@@ -49,6 +73,7 @@ const components = catalog.flatMap((category) => category.components.map((compon
       specificationStatus: "Backlog",
       implementationAllowed: false,
       specPath: null,
+      ...v2CandidateFields(component.key),
       blockers: [
         "缺少逐组件公开 API、状态机、真实主路径、异常恢复和验收 oracle",
         "必须经过 API、UX、无障碍和风险评审后才能实现"
@@ -71,6 +96,7 @@ const components = catalog.flatMap((category) => category.components.map((compon
     implementationAllowed,
     specPath: relative(root, path).replaceAll("\\", "/"),
     implementationSopPath: hasImplementationSop ? implementationSopRelativePath : null,
+    ...v2CandidateFields(component.key),
     blockers: blockersFor(spec, hasImplementationSop)
   };
 }));

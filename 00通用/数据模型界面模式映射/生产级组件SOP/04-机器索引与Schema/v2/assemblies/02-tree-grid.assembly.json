@@ -1,0 +1,14 @@
+{
+  "assemblyVersion": 1,
+  "componentKey": "02:tree-grid",
+  "coreSchema": "../core/component-spec.schema.json",
+  "profiles": [
+    "../profiles/categories/tree-table.profile.json",
+    "../profiles/capabilities/hierarchy.profile.json",
+    "../profiles/capabilities/sorting.profile.json",
+    "../profiles/capabilities/filtering.profile.json",
+    "../profiles/capabilities/column-pinning.profile.json",
+    "../profiles/capabilities/column-sizing.profile.json"
+  ],
+  "dataModes": ["local-tree", "remote-tree"]
+}
