@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "nms://component-strategy/viewport-strategy/v1",
+  "type": "object",
+  "required": ["schemaVersion", "specificationVersion", "strategy", "lifecycle", "scope", "api", "behavior", "accessibility", "quality", "approval"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "specificationVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "strategy": {
+      "type": "object",
+      "required": ["key", "name", "englishName", "ownerComponent", "publicType"],
+      "properties": {
+        "key": { "const": "02:viewport-strategy" },
+        "name": { "type": "string", "minLength": 1 },
+        "englishName": { "type": "string", "minLength": 1 },
+        "ownerComponent": { "const": "02:data-grid" },
+        "publicType": { "const": "DataGridFixedViewport" }
+      },
+      "additionalProperties": false
+    },
+    "lifecycle": { "type": "object" },
+    "scope": { "type": "object" },
+    "api": { "type": "object" },
+    "behavior": { "type": "object" },
+    "accessibility": { "type": "object" },
+    "quality": { "type": "object" },
+    "approval": { "type": "object" }
+  },
+  "additionalProperties": false
+}

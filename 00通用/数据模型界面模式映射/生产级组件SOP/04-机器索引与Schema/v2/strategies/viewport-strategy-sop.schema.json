@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "nms://component-strategy/viewport-strategy-sop/v1",
+  "type": "object",
+  "required": ["sopVersion", "strategyKey", "status", "approval", "specification", "steps"],
+  "properties": {
+    "sopVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "strategyKey": { "const": "02:viewport-strategy" },
+    "status": { "enum": ["Draft", "ReviewReady", "Approved"] },
+    "approval": { "type": "object" },
+    "specification": {
+      "type": "object",
+      "required": ["path", "version", "digest"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["key", "action", "method", "implements", "verifies", "evidenceKinds"],
+        "properties": {
+          "key": { "type": "string", "minLength": 1 },
+          "action": { "type": "string", "minLength": 1 },
+          "method": { "type": "string", "minLength": 1 },
+          "implements": { "type": "array", "items": { "type": "string", "pattern": "^/" } },
+          "verifies": { "type": "array", "items": { "type": "string", "pattern": "^/" } },
+          "evidenceKinds": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

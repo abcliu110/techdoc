@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "specificationVersion": "0.1.0",
+  "strategy": {
+    "key": "02:viewport-strategy",
+    "name": "固定行高视口策略",
+    "englishName": "Fixed Viewport Strategy",
+    "ownerComponent": "02:data-grid",
+    "publicType": "DataGridFixedViewport"
+  },
+  "lifecycle": {
+    "specificationStatus": "ReviewReady",
+    "implementationAllowed": false,
+    "apiStatus": "proposed",
+    "approvalStatus": "pending"
+  },
+  "scope": {
+    "purpose": "只物化 DataGrid 当前视口及 overscan 范围内的固定行高数据行，同时保持逻辑位置、稳定行身份和键盘焦点。",
+    "in": [
+      "固定行高纵向窗口",
+      "视口高度与 overscan",
+      "顶部和底部补偿空间",
+      "稳定 rowId 焦点锚点",
+      "scrollToRow 与 focusCell 跨窗口定位",
+      "绝对 aria-rowindex 与逻辑 aria-rowcount",
+      "100000 行逻辑数据性能证据"
+    ],
+    "out": [
+      "动态或测量行高",
+      "列虚拟化",
+      "无限加载或游标请求",
+      "远程窗口取数",
+      "TreeGrid 虚拟化",
+      "独立 VirtualGrid 内核"
+    ]
+  },
+  "api": {
+    "prop": "viewport",
+    "contract": {
+      "type": "fixed",
+      "heightPx": "positive finite number",
+      "rowHeightPx": "positive finite number",
+      "overscan": "optional non-negative integer"
+    },
+    "defaultBehavior": "viewport 缺省时继续使用 DataGrid 既有全量渲染路径。",
+    "ownership": "策略只决定已接受行快照的渲染范围；排序、筛选、选择、分页、远程查询和激活仍由 DataGrid 管理。"
+  },
+  "behavior": {
+    "window": "根据 scrollTop、heightPx、rowHeightPx 和 overscan 计算半开区间 [startIndex, endIndex)。",
+    "spacers": "未物化行由 aria-hidden、无 grid role、不可聚焦且不拦截指针的顶部和底部补偿元素表达。",
+    "identity": "活动目标使用 rowId + columnId；窗口索引不得成为持久身份。",
+    "focus": "目标位于窗口外时先滚动并物化，再将焦点放到真实单元格；未知 rowId 不改变滚动或焦点。",
+    "dataChange": "排序或筛选后按稳定 rowId 恢复；目标消失时沿用 DataGrid 最近可用行规则。",
+    "invalidInput": "非法高度或 overscan 必须抛出可诊断契约错误，不得静默回退为全量渲染大数据。"
+  },
+  "accessibility": {
+    "roles": ["grid", "row", "columnheader", "gridcell"],
+    "counts": "aria-rowcount 表达逻辑结果，物化行和单元格使用绝对 aria-rowindex。",
+    "keyboard": "沿用 DataGrid 方向键、Home/End 和 Ctrl+Home/End；跨窗口目标先物化后聚焦。",
+    "focusInvariant": "任意时刻最多一个网格导航 tab stop；补偿元素永不进入 tab 序列。"
+  },
+  "quality": {
+    "scaleFixture": {
+      "logicalRows": 100000,
+      "columns": 20,
+      "heightPx": 480,
+      "rowHeightPx": 32,
+      "overscan": 4
+    },
+    "budgets": {
+      "mountedRowsMaximum": 32,
+      "scrollP95MaximumMs": 100,
+      "keyboardP95MaximumMs": 100,
+      "longTaskMaximumMs": 50,
+      "dataGridGzipMaximumBytes": 35840
+    },
+    "oracles": {
+      "windowRemainsBounded": "逻辑行数增长时，物化行数只由视口与 overscan 决定。",
+      "spacerGeometryMatchesOmittedRows": "顶部、物化窗口和底部高度总和等于逻辑数据高度。",
+      "focusNavigationMaterializesTarget": "方向键或公开命令跨窗口时只产生一次滚动和一次真实单元格焦点。",
+      "logicalAriaPositionSurvivesWindowing": "中部和末部物化行仍暴露全局绝对位置。",
+      "legacyPathIsUnchanged": "不传 viewport 的 DataGrid DOM、事件和公共行为保持既有合同。"
+    }
+  },
+  "approval": {
+    "status": "pending",
+    "authors": ["Codex"],
+    "requiredRoles": ["component-maintainer", "ux-a11y-reviewer", "performance-reviewer", "test-reviewer"],
+    "records": []
+  }
+}

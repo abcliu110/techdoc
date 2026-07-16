@@ -1,0 +1,58 @@
+{
+  "sopVersion": "0.1.0",
+  "strategyKey": "02:viewport-strategy",
+  "status": "ReviewReady",
+  "approval": {
+    "status": "pending",
+    "authors": ["Codex"],
+    "requiredRoles": ["component-maintainer", "ux-a11y-reviewer", "performance-reviewer", "test-reviewer"],
+    "records": []
+  },
+  "specification": {
+    "path": "../../02-组件规范/v2-candidates/02-表格类/02-viewport-strategy.spec.json",
+    "version": "0.1.0",
+    "digest": "sha256:0639e5aa4c14f195a53896dcfba800d9c71b06838c4bfc9ac3cab6fa6f9cf7b3"
+  },
+  "steps": [
+    {
+      "key": "bindExecution",
+      "action": "bind",
+      "method": "绑定目标仓库规则、DataGrid 基线、规范版本、验证命令和证据目录；输入不完整时停止。",
+      "implements": ["/scope", "/api"],
+      "verifies": [],
+      "evidenceKinds": ["repository-binding", "source-revision", "command-manifest"]
+    },
+    {
+      "key": "rangeCore",
+      "action": "implement-and-verify",
+      "method": "先建立首部、中部、末部、overscan 和非法输入的失败测试，观察目标失败后实现最小纯窗口计算。",
+      "implements": ["/behavior/window", "/behavior/invalidInput"],
+      "verifies": ["/quality/oracles/windowRemainsBounded", "/quality/oracles/spacerGeometryMatchesOmittedRows"],
+      "evidenceKinds": ["red-output", "green-output", "unit-test"]
+    },
+    {
+      "key": "renderWindow",
+      "action": "implement-and-verify",
+      "method": "先证明当前实现物化全部行，再接入单一滚动容器、窗口切片和无语义补偿元素，并回归未配置策略路径。",
+      "implements": ["/behavior/spacers", "/api/defaultBehavior"],
+      "verifies": ["/quality/oracles/windowRemainsBounded", "/quality/oracles/spacerGeometryMatchesOmittedRows", "/quality/oracles/legacyPathIsUnchanged"],
+      "evidenceKinds": ["red-output", "green-output", "dom-count-test", "compatibility-test"]
+    },
+    {
+      "key": "focusAndAccessibility",
+      "action": "implement-and-verify",
+      "method": "为窗口外公开命令和方向导航建立失败夹具，再实现先滚动物化、后恢复真实单元格焦点，并验证绝对位置语义。",
+      "implements": ["/behavior/focus", "/behavior/identity", "/accessibility"],
+      "verifies": ["/quality/oracles/focusNavigationMaterializesTarget", "/quality/oracles/logicalAriaPositionSurvivesWindowing"],
+      "evidenceKinds": ["red-output", "green-output", "keyboard-test", "focus-test", "accessibility-scan"]
+    },
+    {
+      "key": "measureAndReview",
+      "action": "measure-and-review",
+      "method": "使用规范固定夹具采集物化行数、滚动、键盘、长任务和包体证据；预算失败回到所属切片，全部通过后交独立角色复核。",
+      "implements": ["/quality/scaleFixture", "/quality/budgets"],
+      "verifies": ["/quality/oracles/windowRemainsBounded", "/quality/oracles/focusNavigationMaterializesTarget", "/quality/oracles/legacyPathIsUnchanged"],
+      "evidenceKinds": ["performance-report", "package-report", "independent-review", "traceability-matrix"]
+    }
+  ]
+}
