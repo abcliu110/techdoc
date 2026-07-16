@@ -1,0 +1,166 @@
+{
+  "sopVersion": "0.1.1",
+  "componentKey": "02:editable-grid",
+  "status": "ReviewReady",
+  "approval": {
+    "status": "pending",
+    "authors": [
+      "Codex"
+    ],
+    "requiredRoles": [
+      "component-maintainer",
+      "ux-a11y-reviewer",
+      "test-reviewer"
+    ],
+    "records": []
+  },
+  "specification": {
+    "path": "../../02-组件规范/v2-candidates/02-表格类/02-editable-grid.spec.json",
+    "version": "0.1.1",
+    "digest": "sha256:0b23628d3f24d049ef6942bd8ad42b58c691ee0d9609ece0a2d73abbd622340d"
+  },
+  "steps": [
+    {
+      "key": "bindExecution",
+      "action": "bind",
+      "method": "绑定仓库规则、DataGrid 已验证基线、组件规范、验证命令和独立证据目录；输入不完整时停止。",
+      "implements": [
+        "/api/rows",
+        "/api/columns",
+        "/api/identity",
+        "/api/columnConstruction",
+        "/api/versionSemantics",
+        "/api/editing",
+        "/api/commit",
+        "/api/commitState",
+        "/api/commitOwnership",
+        "/api/defaultBehavior"
+      ],
+      "verifies": [],
+      "evidenceKinds": [
+        "repository-binding",
+        "source-revision",
+        "dependency-digest",
+        "command-manifest"
+      ]
+    },
+    {
+      "key": "draftRuntime",
+      "action": "implement-and-verify",
+      "method": "先建立稳定单元格身份、首草稿行版本冻结、解析、校验、单格取消、全部放弃和作用域对账的失败测试，再实现最小纯草稿状态核心。",
+      "implements": [
+        "/behavior/draft",
+        "/behavior/baseline",
+        "/behavior/validation",
+        "/behavior/cancelCell",
+        "/behavior/discardAll",
+        "/behavior/scopeReconciliation",
+        "/behavior/query"
+      ],
+      "verifies": [
+        "/quality/oracles/stableCellDraft",
+        "/quality/oracles/rowVersionFreezesAtFirstDraft",
+        "/quality/oracles/scopeExitDropsOrphanDraft",
+        "/quality/oracles/escapeCancelsOneCell",
+        "/quality/oracles/readOnlyColumnsStayReadOnly"
+      ],
+      "evidenceKinds": [
+        "red-output",
+        "green-output",
+        "state-test",
+        "identity-test"
+      ]
+    },
+    {
+      "key": "commitRuntime",
+      "action": "implement-and-verify",
+      "method": "注入无效草稿、重复提交、失败、冲突、重试、迟到和接受结果，确认新 commitId、冻结 expectedVersion 以及“值一致+版本不同”的接受边界后接入状态转换。",
+      "implements": [
+        "/behavior/commit",
+        "/behavior/failure",
+        "/behavior/retry",
+        "/behavior/accepted",
+        "/behavior/stale"
+      ],
+      "verifies": [
+        "/quality/oracles/invalidCommitBlocked",
+        "/quality/oracles/singleCommitWhileSubmitting",
+        "/quality/oracles/failureRetainsDraft",
+        "/quality/oracles/staleResultIgnored",
+        "/quality/oracles/acceptedRequiresNewSnapshot",
+        "/quality/oracles/retryCreatesNewCommitIdentity",
+        "/quality/oracles/rowVersionFreezesAtFirstDraft"
+      ],
+      "evidenceKinds": [
+        "red-output",
+        "green-output",
+        "failure-injection",
+        "event-count-test",
+        "version-test"
+      ]
+    },
+    {
+      "key": "componentPresentation",
+      "action": "implement-and-verify",
+      "method": "用公开 API 构建真实输入、错误关联、保存、放弃和冲突呈现，复用 DataGrid 焦点模型并运行组合回归。",
+      "implements": [
+        "/behavior/start",
+        "/accessibility/grid",
+        "/accessibility/input",
+        "/accessibility/commands",
+        "/accessibility/errors",
+        "/accessibility/announcements"
+      ],
+      "verifies": [
+        "/quality/oracles/invalidCommitBlocked",
+        "/quality/oracles/escapeCancelsOneCell",
+        "/quality/oracles/readOnlyColumnsStayReadOnly"
+      ],
+      "evidenceKinds": [
+        "interaction-test",
+        "accessibility-test",
+        "compatibility-test",
+        "demo-evidence"
+      ]
+    },
+    {
+      "key": "measureReleaseCandidate",
+      "action": "measure",
+      "method": "运行类型、单元、三浏览器、几何、性能、包体、隔离消费、回滚和证据清单；任一硬门禁失败时不得进入评审。",
+      "implements": [],
+      "verifies": [
+        "/quality/oracles/stableCellDraft",
+        "/quality/oracles/singleCommitWhileSubmitting",
+        "/quality/oracles/failureRetainsDraft",
+        "/quality/oracles/acceptedRequiresNewSnapshot",
+        "/quality/oracles/scopeExitDropsOrphanDraft"
+      ],
+      "evidenceKinds": [
+        "regression-output",
+        "browser-report",
+        "geometry-report",
+        "performance-report",
+        "package-report",
+        "rollback-report"
+      ]
+    },
+    {
+      "key": "independentReview",
+      "action": "review",
+      "method": "由未编写实现的独立角色复核公开写入边界、版本冲突、可访问性、证据完整性和回滚方案；只记录真实审批，私有预发布通过不得替代 Stable 批准。",
+      "implements": [],
+      "verifies": [
+        "/quality/oracles/invalidCommitBlocked",
+        "/quality/oracles/failureRetainsDraft",
+        "/quality/oracles/staleResultIgnored",
+        "/quality/oracles/acceptedRequiresNewSnapshot",
+        "/quality/oracles/retryCreatesNewCommitIdentity"
+      ],
+      "evidenceKinds": [
+        "independent-review",
+        "approval-record",
+        "residual-risk-record"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "specificationVersion": "0.1.1",
+  "component": {
+    "key": "02:editable-grid",
+    "name": "可编辑表格",
+    "englishName": "EditableGrid",
+    "packageSubpath": "@nms/ui/editable-grid",
+    "implementationType": "derived-component"
+  },
+  "lifecycle": {
+    "specificationStatus": "ReviewReady",
+    "implementationAllowed": false,
+    "apiStatus": "proposed",
+    "approvalStatus": "pending"
+  },
+  "scope": {
+    "purpose": "在稳定行身份和记录版本下维护单元格草稿，阻止无效提交，并把一次可审计提交意图交给消费方。",
+    "in": [
+      "本地受控行快照",
+      "稳定 rowId 与 recordVersion",
+      "首次编辑时冻结的行基线版本",
+      "文本输入适配与类型解析",
+      "同步单元格校验",
+      "草稿计数、全部提交与全部放弃",
+      "提交失败和版本冲突保留草稿",
+      "匹配提交成功后清理已提交草稿",
+      "行或可编辑列退出作用域时的草稿对账",
+      "DataGrid 键盘、焦点、列布局与本地查询复用"
+    ],
+    "out": [
+      "批量套值",
+      "区域选择与复制粘贴",
+      "撤销重做栈",
+      "异步字段校验",
+      "远程分页或游标编辑",
+      "自动保存",
+      "服务端权限、事务、幂等和版本写入实现"
+    ]
+  },
+  "api": {
+    "rows": "readonly controlled rows",
+    "columns": "branded EditableGrid columns with read, format, parse and optional validate",
+    "identity": "getRowId(row) provides stable business-row identity; getRecordVersion(row) provides a non-empty opaque concurrency token.",
+    "columnConstruction": "Columns are created with defineEditableGridColumn; a column without edit is read-only and column id is the persisted change-field key.",
+    "versionSemantics": "The first draft for a row freezes its expectedVersion for every draft in that row; version advancement means a different opaque token, not lexical or numeric ordering.",
+    "editing": "drafts are component-owned and keyed by rowId plus columnId",
+    "commit": "onCommitRequested receives commitId and row changes with expectedVersion",
+    "commitState": "Consumer-controlled idle, submitting, failed, conflict or accepted state; every non-idle state is bound to the exact commitId it describes.",
+    "commitOwnership": "EditableGrid emits intent only; the consumer persists changes, publishes accepted rows and record versions, and returns commitState.",
+    "defaultBehavior": "omitting editable columns leaves cells read-only; accepted rows remain consumer-owned"
+  },
+  "behavior": {
+    "start": "Pointer, Enter or F2 reaches the cell input without adding a second grid focus model.",
+    "draft": "A parsed value differing from the accepted value creates one draft per stable cell identity; returning to the accepted value removes it.",
+    "baseline": "The first draft in a row captures that row's opaque recordVersion; later edits in the same row retain the captured version until all row drafts are discarded or accepted.",
+    "validation": "Parse or validation errors remain attached to the stable cell and prevent commit.",
+    "cancelCell": "Escape discards only the active cell draft and returns focus to the gridcell.",
+    "discardAll": "Discard removes every draft and validation error but never mutates accepted rows.",
+    "commit": "One command emits one snapshot grouped by rowId with expectedVersion; submitting blocks duplicate commands and draft mutation.",
+    "failure": "Matching failed or conflict state retains drafts, values, errors and focus context.",
+    "retry": "After matching failed or conflict, another save snapshots the current drafts with a new commitId while retaining each row's originally captured expectedVersion.",
+    "accepted": "Matching accepted state clears only unchanged cells from the submitted snapshot after every submitted row reflects every committed value and exposes a recordVersion different from its expectedVersion.",
+    "stale": "A commit state whose commitId does not match the active request cannot clear or relabel drafts.",
+    "scopeReconciliation": "When not submitting, a draft is removed if its rowId leaves rows or its columnId is no longer editable; submitting freezes the active snapshot until a matching outcome arrives.",
+    "query": "Sorting and filtering use accepted row values during editing so a draft cannot move its own active cell."
+  },
+  "accessibility": {
+    "grid": "EditableGrid reuses DataGrid ARIA Grid navigation and one roving gridcell tab stop.",
+    "input": "Each editable input has a row-and-column accessible name, aria-invalid and an associated error description.",
+    "commands": "Save and discard commands are keyboard reachable and expose disabled state during submitting.",
+    "errors": "Commit blocking focuses the first invalid input and preserves its associated error description; failure and conflict use non-destructive status or alert presentation.",
+    "announcements": "Draft count and latest commit outcome use polite live status without per-keystroke announcements."
+  },
+  "quality": {
+    "oracles": {
+      "stableCellDraft": "Sorting or filtering never transfers a draft to another business row.",
+      "invalidCommitBlocked": "Any parse or validation error produces zero commit requests and focuses the first invalid cell.",
+      "singleCommitWhileSubmitting": "Repeated save activation during submitting emits no additional request.",
+      "failureRetainsDraft": "Matching failure or conflict retains every submitted draft and accepted row.",
+      "staleResultIgnored": "A non-matching commit result does not clear drafts or change the active request.",
+      "acceptedRequiresNewSnapshot": "Drafts clear only when matching accepted state accompanies consumer rows with the committed values and new record versions.",
+      "rowVersionFreezesAtFirstDraft": "Every changed cell in one row commits against the opaque version captured by that row's first surviving draft.",
+      "retryCreatesNewCommitIdentity": "A retry after failure or conflict uses a new commitId and retains the captured expectedVersion.",
+      "scopeExitDropsOrphanDraft": "Outside submitting, removing a row or its edit capability removes the corresponding orphan draft without mutating accepted rows.",
+      "escapeCancelsOneCell": "Escape removes only the active cell draft and restores gridcell focus.",
+      "readOnlyColumnsStayReadOnly": "Columns without edit configuration never render an input or enter editing."
+    },
+    "budgets": {
+      "commandP95MaximumMs": 100,
+      "longTaskMaximumMs": 50,
+      "packageGzipMaximumBytes": 43008
+    }
+  },
+  "approval": {
+    "status": "pending",
+    "authors": ["Codex"],
+    "requiredRoles": ["component-maintainer", "ux-a11y-reviewer", "test-reviewer"],
+    "records": []
+  }
+}
