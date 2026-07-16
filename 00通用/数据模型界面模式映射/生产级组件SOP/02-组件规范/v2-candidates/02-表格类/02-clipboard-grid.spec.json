@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "specificationVersion": "0.1.0",
+  "component": {
+    "key": "02:clipboard-grid",
+    "name": "区域复制粘贴表格",
+    "englishName": "ClipboardGrid",
+    "packageSubpath": "@nms/ui/clipboard-grid",
+    "implementationType": "derived-component"
+  },
+  "lifecycle": {
+    "specificationStatus": "ReviewReady",
+    "implementationAllowed": false,
+    "apiStatus": "proposed",
+    "approvalStatus": "pending"
+  },
+  "scope": {
+    "purpose": "在稳定的可见行列身份上选择一个矩形区域，以可审计的纯文本矩阵复制有效显示值，并在全部目标通过解析和同步校验后原子生成 EditableGrid 草稿。",
+    "in": [
+      "EditableGrid 本地受控行快照、草稿和版本化提交事务复用",
+      "单个可见矩形区域、活动单元格和锚点",
+      "指针拖拽、Shift 加方向键和 Shift 加点击扩展区域",
+      "可复制列格式化适配器与可编辑列粘贴适配器",
+      "text/plain 制表符分隔矩阵的复制和粘贴",
+      "引号、制表符、CRLF、LF 和双引号转义的确定性矩阵编解码",
+      "单值广播、同尺寸替换和从单活动单元格展开矩阵",
+      "粘贴大小上限、越界、只读目标、解析和同步校验的原子拒绝",
+      "草稿值优先的复制和目标草稿显式替换",
+      "查询或列顺序变化时的保守区域对账",
+      "浏览器 ClipboardEvent 和显式复制、粘贴命令的同一状态核心"
+    ],
+    "out": [
+      "剪切和源单元格清空",
+      "撤销重做栈",
+      "公式、相对引用、序列填充和拖拽填充柄",
+      "多区域或不连续区域选择",
+      "HTML、富文本、文件或图片剪贴板格式",
+      "异步系统剪贴板权限和后台剪贴板读取封装",
+      "跨分页、隐藏行或未加载行复制粘贴",
+      "异步字段校验和远程数据源编辑",
+      "服务端权限、事务、幂等和版本写入实现"
+    ]
+  },
+  "api": {
+    "foundation": "ClipboardGrid is derived directly from EditableGrid and preserves its accepted-row ownership, stable row identity, record-version baseline, validation and commit contracts.",
+    "columns": "Columns are created with defineClipboardGridColumn; editable columns inherit their edit adapter and may use its formatter for copy, while read-only copy requires an explicit clipboard formatter.",
+    "range": "The component owns one visible rectangular CellRange described by stable endpoint rowId and columnId identities plus one active cell; selection is reported without becoming accepted application data.",
+    "clipboardText": "Copy emits text/plain from effective cell values through a deterministic tabular encoder; paste accepts text/plain through the matching decoder and ignores rich clipboard formats.",
+    "pasteShape": "A one-cell matrix broadcasts to a multi-cell selected range, an equal-sized matrix replaces that range, and any matrix may expand from a one-cell active range; every other shape is rejected.",
+    "limits": "Consumer-configurable positive maximum source characters and matrix cells are enforced before draft mutation, with finite defaults suitable for synchronous browser interaction.",
+    "eventOwnership": "ClipboardEvent data is consumed only while the grid owns focus outside an active editor; native copy, cut and paste inside an editor or external control are never intercepted.",
+    "commit": "Paste creates or replaces stable EditableGrid drafts only; saving uses the inherited commitId, expectedVersion and consumer-owned persistence contract.",
+    "defaultBehavior": "Without one valid range and copyable cells copy is unavailable; without a valid active target and pasteable text paste produces no draft mutation."
+  },
+  "behavior": {
+    "selection": "Pointer click selects one cell, pointer drag selects the visible rectangle between anchor and current cell, Shift plus click or direction key extends from the anchor, and Escape collapses to the active cell.",
+    "editingPrecedence": "A single pointer action selects without entering edit; double click, Enter or F2 starts editable input, and editing temporarily delegates text selection and clipboard shortcuts to that input.",
+    "copyValues": "Copy snapshots the selected visible identities and serializes each effective value, preferring a surviving parsed draft over its accepted value, in current visible row and column order.",
+    "tabularCodec": "The encoder separates cells with tabs and rows with CRLF, quotes fields containing tabs, quotes or line breaks, doubles embedded quotes, and the decoder accepts CRLF or LF without creating a final empty row solely from a terminal line break.",
+    "copyFailure": "If any selected column lacks a copy formatter or formatting fails, no clipboard payload is written and the range remains selected with an associated error status.",
+    "pasteTarget": "Paste snapshots the target rowId and columnId matrix from the current visible order; hidden, filtered, paged, unloaded and out-of-bounds cells are never implicit targets.",
+    "pastePreflight": "Character and cell limits, matrix shape, bounds, duplicate target identities, editability, parsing and synchronous validation all complete before any draft mutation.",
+    "atomicPaste": "A failed preflight creates, replaces and removes zero drafts; a successful preflight applies the entire target matrix in one state transition.",
+    "draftMerge": "A pasted value differing from the accepted value creates or replaces that stable cell draft, equality removes that target draft, non-target drafts remain unchanged, and each row retains its first surviving expectedVersion baseline.",
+    "selectionAfterPaste": "Successful paste selects the exact target rectangle and makes its leading cell active; rejected paste preserves the previous selection and focuses or identifies the first invalid target.",
+    "queryReconciliation": "A visible row-order, filtered membership or visible column-order change collapses a multi-cell range to its surviving active cell, or clears it when that cell is absent, before another clipboard command can run.",
+    "submitting": "While the inherited commit is submitting, copy remains read-only and available but paste and range-changing draft actions cannot mutate data.",
+    "outcome": "Copy and paste announce concise success counts; limit, shape, bounds, read-only, parse and validation failures identify the reason without clearing accepted rows or existing drafts."
+  },
+  "accessibility": {
+    "grid": "ClipboardGrid retains one ARIA Grid roving gridcell focus model; the active range does not create a second tab sequence.",
+    "range": "The active cell and selected range are conveyed through gridcell selection state plus a concise live description containing row and column extent.",
+    "keyboard": "Range selection, copy, paste, edit entry, cancellation and navigation are operable without a pointer on Windows, Linux and macOS primary-modifier conventions.",
+    "commands": "Visible copy and paste commands expose text labels or accessible names, disabled state and the same state core as keyboard clipboard events.",
+    "errors": "Rejected paste associates its message with the grid status and identifies the first invalid target by accessible row and column labels without moving focus into a hidden cell.",
+    "announcements": "Selection extent, copied cell count, pasted cell count and the latest rejection use concise polite live status without per-cell announcements."
+  },
+  "quality": {
+    "oracles": {
+      "rangeUsesStableIdentity": "Sorting, filtering or column reordering cannot transfer a selected endpoint or pasted draft to another business row or column.",
+      "editorKeepsNativeClipboard": "Copy, cut and paste inside an active editor are not intercepted by range clipboard behavior.",
+      "copyUsesEffectiveValues": "Copied text reflects surviving drafts and accepted read-only values in visible matrix order without mutating any draft.",
+      "tabularCodecRoundTrips": "Tabs, CRLF, LF and double quotes inside formatted values survive encode and decode as the same rectangular text matrix.",
+      "unsupportedCopyIsNonDestructive": "A selected non-copyable cell or formatter failure writes no partial clipboard payload and preserves selection and drafts.",
+      "pasteShapeIsDeterministic": "Only single-value broadcast, exact-size replacement or expansion from a one-cell range produces a target matrix.",
+      "pasteLimitBlocksEarly": "Text or matrix over the configured limit produces zero parser-driven draft mutations and a bounded rejection result.",
+      "outOfBoundsPasteIsAtomic": "A matrix extending past visible target rows or columns produces zero target mutations.",
+      "readOnlyPasteIsAtomic": "Any read-only or otherwise non-editable target causes the complete paste to produce zero draft mutations.",
+      "invalidPasteIsAtomic": "Any decode, parse or synchronous validation error produces zero target draft mutations and identifies the first invalid coordinate.",
+      "pasteReplacesTargetsOnly": "Successful paste creates, replaces or removes only cells in the confirmed target rectangle and preserves all non-target drafts.",
+      "rowVersionBaselineSurvives": "A row's first surviving draft version remains its expectedVersion after paste replacement or later cell revision.",
+      "queryChangeReconcilesRange": "Visible order or membership changes collapse or clear the range before a later clipboard command can target it.",
+      "submittingBlocksPaste": "No paste path can mutate drafts while the matching inherited commit is submitting.",
+      "commitContractIsInherited": "Saving pasted drafts follows EditableGrid grouping, conflict, retry, stale-result and accepted-row reconciliation rules.",
+      "focusModelRemainsSingle": "Pointer selection, keyboard extension, successful paste, rejected paste and editor exit preserve exactly one reachable gridcell tab stop."
+    },
+    "budgets": {
+      "clipboardCommandP95MaximumMs": 100,
+      "longTaskMaximumMs": 50,
+      "defaultMaximumSourceCharacters": 1048576,
+      "defaultMaximumMatrixCells": 5000,
+      "packageGzipMaximumBytes": 51200
+    }
+  },
+  "approval": {
+    "status": "pending",
+    "authors": ["Codex"],
+    "requiredRoles": ["component-maintainer", "ux-a11y-reviewer", "test-reviewer"],
+    "records": []
+  }
+}

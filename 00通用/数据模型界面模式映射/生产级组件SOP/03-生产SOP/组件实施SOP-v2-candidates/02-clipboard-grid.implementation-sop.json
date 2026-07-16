@@ -1,0 +1,134 @@
+{
+  "sopVersion": "0.1.0",
+  "componentKey": "02:clipboard-grid",
+  "status": "ReviewReady",
+  "approval": {
+    "status": "pending",
+    "authors": ["Codex"],
+    "requiredRoles": ["component-maintainer", "ux-a11y-reviewer", "test-reviewer"],
+    "records": []
+  },
+  "specification": {
+    "path": "../../02-组件规范/v2-candidates/02-表格类/02-clipboard-grid.spec.json",
+    "version": "0.1.0",
+    "digest": "sha256:232b734186ea36d61dc7932c43881ffd12ea1c905d5fc6d66f04d941adc186a6"
+  },
+  "steps": [
+    {
+      "key": "bindExecution",
+      "action": "bind",
+      "method": "绑定仓库规则、已验证的 DataGrid 与 EditableGrid 基线、组件规范、验证命令和独立证据目录；任一输入缺失时停止。",
+      "implements": [
+        "/api/foundation",
+        "/api/columns",
+        "/api/range",
+        "/api/clipboardText",
+        "/api/pasteShape",
+        "/api/limits",
+        "/api/eventOwnership",
+        "/api/commit",
+        "/api/defaultBehavior"
+      ],
+      "verifies": [],
+      "evidenceKinds": ["repository-binding", "source-revision", "dependency-digest", "command-manifest"]
+    },
+    {
+      "key": "rangeAndCodecCore",
+      "action": "implement-and-verify",
+      "method": "先用失败测试固定稳定区域身份、编辑优先级、有效值读取、纯文本矩阵编解码、形状映射和限制，再实现最小纯状态核心。",
+      "implements": [
+        "/behavior/selection",
+        "/behavior/editingPrecedence",
+        "/behavior/copyValues",
+        "/behavior/tabularCodec",
+        "/behavior/copyFailure"
+      ],
+      "verifies": [
+        "/quality/oracles/rangeUsesStableIdentity",
+        "/quality/oracles/editorKeepsNativeClipboard",
+        "/quality/oracles/copyUsesEffectiveValues",
+        "/quality/oracles/tabularCodecRoundTrips",
+        "/quality/oracles/unsupportedCopyIsNonDestructive",
+        "/quality/oracles/pasteShapeIsDeterministic",
+        "/quality/oracles/pasteLimitBlocksEarly"
+      ],
+      "evidenceKinds": ["red-output", "green-output", "state-test", "codec-test", "identity-test"]
+    },
+    {
+      "key": "atomicPasteRuntime",
+      "action": "implement-and-verify",
+      "method": "用失败测试覆盖目标快照、边界、可编辑性、解析校验、草稿替换、版本基线、查询对账和提交中阻止，再把全量预检结果接入一次草稿状态转换。",
+      "implements": [
+        "/behavior/pasteTarget",
+        "/behavior/pastePreflight",
+        "/behavior/atomicPaste",
+        "/behavior/draftMerge",
+        "/behavior/selectionAfterPaste",
+        "/behavior/queryReconciliation",
+        "/behavior/submitting",
+        "/behavior/outcome"
+      ],
+      "verifies": [
+        "/quality/oracles/outOfBoundsPasteIsAtomic",
+        "/quality/oracles/readOnlyPasteIsAtomic",
+        "/quality/oracles/invalidPasteIsAtomic",
+        "/quality/oracles/pasteReplacesTargetsOnly",
+        "/quality/oracles/rowVersionBaselineSurvives",
+        "/quality/oracles/queryChangeReconcilesRange",
+        "/quality/oracles/submittingBlocksPaste",
+        "/quality/oracles/commitContractIsInherited"
+      ],
+      "evidenceKinds": ["red-output", "green-output", "atomicity-test", "failure-injection", "version-test"]
+    },
+    {
+      "key": "browserClipboardIntegration",
+      "action": "implement-and-verify",
+      "method": "把键盘、指针、浏览器剪贴板事件和显式命令接入同一状态核心，注入非编辑器、编辑器、外部控件、拒绝与成功路径，并验证事件消费边界。",
+      "implements": [
+        "/accessibility/grid",
+        "/accessibility/range",
+        "/accessibility/keyboard",
+        "/accessibility/commands",
+        "/accessibility/errors",
+        "/accessibility/announcements"
+      ],
+      "verifies": [
+        "/quality/oracles/editorKeepsNativeClipboard",
+        "/quality/oracles/copyUsesEffectiveValues",
+        "/quality/oracles/invalidPasteIsAtomic",
+        "/quality/oracles/focusModelRemainsSingle"
+      ],
+      "evidenceKinds": ["interaction-test", "accessibility-test", "event-boundary-test", "geometry-test", "demo-evidence"]
+    },
+    {
+      "key": "measureReleaseCandidate",
+      "action": "measure",
+      "method": "运行类型、单元、三浏览器、几何、性能、包体、隔离消费、基础组件回归、回滚和证据清单；任一硬门禁失败时不得进入评审。",
+      "implements": [],
+      "verifies": [
+        "/quality/oracles/pasteLimitBlocksEarly",
+        "/quality/oracles/rangeUsesStableIdentity",
+        "/quality/oracles/commitContractIsInherited",
+        "/quality/oracles/focusModelRemainsSingle"
+      ],
+      "evidenceKinds": ["regression-output", "browser-report", "geometry-report", "performance-report", "package-report", "rollback-report"]
+    },
+    {
+      "key": "independentReview",
+      "action": "review",
+      "method": "由未编写实现的独立角色复核事件所有权、矩阵编解码、目标身份、全量原子性、版本冲突、可访问性、证据完整性和回滚方案；只记录真实审批。",
+      "implements": [],
+      "verifies": [
+        "/quality/oracles/tabularCodecRoundTrips",
+        "/quality/oracles/outOfBoundsPasteIsAtomic",
+        "/quality/oracles/readOnlyPasteIsAtomic",
+        "/quality/oracles/invalidPasteIsAtomic",
+        "/quality/oracles/pasteReplacesTargetsOnly",
+        "/quality/oracles/rowVersionBaselineSurvives",
+        "/quality/oracles/queryChangeReconcilesRange",
+        "/quality/oracles/commitContractIsInherited"
+      ],
+      "evidenceKinds": ["independent-review", "approval-record", "residual-risk-record"]
+    }
+  ]
+}

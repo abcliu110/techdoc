@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "nms://component/clipboard-grid/v1",
+  "type": "object",
+  "required": ["schemaVersion", "specificationVersion", "component", "lifecycle", "scope", "api", "behavior", "accessibility", "quality", "approval"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "specificationVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "component": {
+      "type": "object",
+      "required": ["key", "name", "englishName", "packageSubpath", "implementationType"],
+      "properties": {
+        "key": { "const": "02:clipboard-grid" },
+        "name": { "type": "string", "minLength": 1 },
+        "englishName": { "const": "ClipboardGrid" },
+        "packageSubpath": { "const": "@nms/ui/clipboard-grid" },
+        "implementationType": { "const": "derived-component" }
+      },
+      "additionalProperties": false
+    },
+    "lifecycle": {
+      "type": "object",
+      "required": ["specificationStatus", "implementationAllowed", "apiStatus", "approvalStatus"],
+      "properties": {
+        "specificationStatus": { "enum": ["Draft", "ReviewReady", "Approved", "Stale"] },
+        "implementationAllowed": { "type": "boolean" },
+        "apiStatus": { "enum": ["proposed", "approved", "stable"] },
+        "approvalStatus": { "enum": ["pending", "approved"] }
+      },
+      "additionalProperties": false
+    },
+    "scope": {
+      "type": "object",
+      "required": ["purpose", "in", "out"],
+      "properties": {
+        "purpose": { "type": "string", "minLength": 1 },
+        "in": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "out": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+      },
+      "additionalProperties": false
+    },
+    "api": {
+      "type": "object",
+      "required": ["foundation", "columns", "range", "clipboardText", "pasteShape", "limits", "eventOwnership", "commit", "defaultBehavior"],
+      "properties": {
+        "foundation": { "type": "string", "minLength": 1 },
+        "columns": { "type": "string", "minLength": 1 },
+        "range": { "type": "string", "minLength": 1 },
+        "clipboardText": { "type": "string", "minLength": 1 },
+        "pasteShape": { "type": "string", "minLength": 1 },
+        "limits": { "type": "string", "minLength": 1 },
+        "eventOwnership": { "type": "string", "minLength": 1 },
+        "commit": { "type": "string", "minLength": 1 },
+        "defaultBehavior": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "behavior": {
+      "type": "object",
+      "required": ["selection", "editingPrecedence", "copyValues", "tabularCodec", "copyFailure", "pasteTarget", "pastePreflight", "atomicPaste", "draftMerge", "selectionAfterPaste", "queryReconciliation", "submitting", "outcome"],
+      "properties": {
+        "selection": { "type": "string", "minLength": 1 },
+        "editingPrecedence": { "type": "string", "minLength": 1 },
+        "copyValues": { "type": "string", "minLength": 1 },
+        "tabularCodec": { "type": "string", "minLength": 1 },
+        "copyFailure": { "type": "string", "minLength": 1 },
+        "pasteTarget": { "type": "string", "minLength": 1 },
+        "pastePreflight": { "type": "string", "minLength": 1 },
+        "atomicPaste": { "type": "string", "minLength": 1 },
+        "draftMerge": { "type": "string", "minLength": 1 },
+        "selectionAfterPaste": { "type": "string", "minLength": 1 },
+        "queryReconciliation": { "type": "string", "minLength": 1 },
+        "submitting": { "type": "string", "minLength": 1 },
+        "outcome": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "accessibility": {
+      "type": "object",
+      "required": ["grid", "range", "keyboard", "commands", "errors", "announcements"],
+      "properties": {
+        "grid": { "type": "string", "minLength": 1 },
+        "range": { "type": "string", "minLength": 1 },
+        "keyboard": { "type": "string", "minLength": 1 },
+        "commands": { "type": "string", "minLength": 1 },
+        "errors": { "type": "string", "minLength": 1 },
+        "announcements": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "quality": {
+      "type": "object",
+      "required": ["oracles", "budgets"],
+      "properties": {
+        "oracles": {
+          "type": "object",
+          "required": ["rangeUsesStableIdentity", "editorKeepsNativeClipboard", "copyUsesEffectiveValues", "tabularCodecRoundTrips", "unsupportedCopyIsNonDestructive", "pasteShapeIsDeterministic", "pasteLimitBlocksEarly", "outOfBoundsPasteIsAtomic", "readOnlyPasteIsAtomic", "invalidPasteIsAtomic", "pasteReplacesTargetsOnly", "rowVersionBaselineSurvives", "queryChangeReconcilesRange", "submittingBlocksPaste", "commitContractIsInherited", "focusModelRemainsSingle"],
+          "properties": {
+            "rangeUsesStableIdentity": { "type": "string", "minLength": 1 },
+            "editorKeepsNativeClipboard": { "type": "string", "minLength": 1 },
+            "copyUsesEffectiveValues": { "type": "string", "minLength": 1 },
+            "tabularCodecRoundTrips": { "type": "string", "minLength": 1 },
+            "unsupportedCopyIsNonDestructive": { "type": "string", "minLength": 1 },
+            "pasteShapeIsDeterministic": { "type": "string", "minLength": 1 },
+            "pasteLimitBlocksEarly": { "type": "string", "minLength": 1 },
+            "outOfBoundsPasteIsAtomic": { "type": "string", "minLength": 1 },
+            "readOnlyPasteIsAtomic": { "type": "string", "minLength": 1 },
+            "invalidPasteIsAtomic": { "type": "string", "minLength": 1 },
+            "pasteReplacesTargetsOnly": { "type": "string", "minLength": 1 },
+            "rowVersionBaselineSurvives": { "type": "string", "minLength": 1 },
+            "queryChangeReconcilesRange": { "type": "string", "minLength": 1 },
+            "submittingBlocksPaste": { "type": "string", "minLength": 1 },
+            "commitContractIsInherited": { "type": "string", "minLength": 1 },
+            "focusModelRemainsSingle": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        "budgets": {
+          "type": "object",
+          "required": ["clipboardCommandP95MaximumMs", "longTaskMaximumMs", "defaultMaximumSourceCharacters", "defaultMaximumMatrixCells", "packageGzipMaximumBytes"],
+          "properties": {
+            "clipboardCommandP95MaximumMs": { "type": "number", "minimum": 1 },
+            "longTaskMaximumMs": { "type": "number", "minimum": 1 },
+            "defaultMaximumSourceCharacters": { "type": "number", "minimum": 1 },
+            "defaultMaximumMatrixCells": { "type": "number", "minimum": 1 },
+            "packageGzipMaximumBytes": { "type": "number", "minimum": 1 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "approval": {
+      "type": "object",
+      "required": ["status", "authors", "requiredRoles", "records"],
+      "properties": {
+        "status": { "enum": ["pending", "approved"] },
+        "authors": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "requiredRoles": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "records": { "type": "array", "uniqueItems": true }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
