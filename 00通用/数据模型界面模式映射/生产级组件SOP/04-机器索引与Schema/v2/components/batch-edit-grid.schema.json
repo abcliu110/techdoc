@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "nms://component/batch-edit-grid/v1",
+  "type": "object",
+  "required": ["schemaVersion", "specificationVersion", "component", "lifecycle", "scope", "api", "behavior", "accessibility", "quality", "approval"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "specificationVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "component": {
+      "type": "object",
+      "required": ["key", "name", "englishName", "packageSubpath", "implementationType"],
+      "properties": {
+        "key": { "const": "02:batch-edit-grid" },
+        "name": { "type": "string", "minLength": 1 },
+        "englishName": { "const": "BatchEditGrid" },
+        "packageSubpath": { "const": "@nms/ui/batch-edit-grid" },
+        "implementationType": { "const": "derived-component" }
+      },
+      "additionalProperties": false
+    },
+    "lifecycle": {
+      "type": "object",
+      "required": ["specificationStatus", "implementationAllowed", "apiStatus", "approvalStatus"],
+      "properties": {
+        "specificationStatus": { "enum": ["Draft", "ReviewReady", "Approved", "Stale"] },
+        "implementationAllowed": { "type": "boolean" },
+        "apiStatus": { "enum": ["proposed", "approved", "stable"] },
+        "approvalStatus": { "enum": ["pending", "approved"] }
+      },
+      "additionalProperties": false
+    },
+    "scope": {
+      "type": "object",
+      "required": ["purpose", "in", "out"],
+      "properties": {
+        "purpose": { "type": "string", "minLength": 1 },
+        "in": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "out": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+      },
+      "additionalProperties": false
+    },
+    "api": {
+      "type": "object",
+      "required": ["foundation", "selection", "targeting", "columnEligibility", "valueAdapter", "draftOwnership", "commit", "defaultBehavior"],
+      "properties": {
+        "foundation": { "type": "string", "minLength": 1 },
+        "selection": { "type": "string", "minLength": 1 },
+        "targeting": { "type": "string", "minLength": 1 },
+        "columnEligibility": { "type": "string", "minLength": 1 },
+        "valueAdapter": { "type": "string", "minLength": 1 },
+        "draftOwnership": { "type": "string", "minLength": 1 },
+        "commit": { "type": "string", "minLength": 1 },
+        "defaultBehavior": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "behavior": {
+      "type": "object",
+      "required": ["open", "targetPreview", "hiddenTargets", "parseValidation", "atomicApply", "draftMerge", "baseline", "selectionAfterApply", "cellRevision", "submitting", "query", "outcome"],
+      "properties": {
+        "open": { "type": "string", "minLength": 1 },
+        "targetPreview": { "type": "string", "minLength": 1 },
+        "hiddenTargets": { "type": "string", "minLength": 1 },
+        "parseValidation": { "type": "string", "minLength": 1 },
+        "atomicApply": { "type": "string", "minLength": 1 },
+        "draftMerge": { "type": "string", "minLength": 1 },
+        "baseline": { "type": "string", "minLength": 1 },
+        "selectionAfterApply": { "type": "string", "minLength": 1 },
+        "cellRevision": { "type": "string", "minLength": 1 },
+        "submitting": { "type": "string", "minLength": 1 },
+        "query": { "type": "string", "minLength": 1 },
+        "outcome": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "accessibility": {
+      "type": "object",
+      "required": ["selection", "command", "panel", "controls", "errors", "announcements"],
+      "properties": {
+        "selection": { "type": "string", "minLength": 1 },
+        "command": { "type": "string", "minLength": 1 },
+        "panel": { "type": "string", "minLength": 1 },
+        "controls": { "type": "string", "minLength": 1 },
+        "errors": { "type": "string", "minLength": 1 },
+        "announcements": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "quality": {
+      "type": "object",
+      "required": ["oracles", "budgets"],
+      "properties": {
+        "oracles": {
+          "type": "object",
+          "required": ["noSelectionNoMutation", "readOnlyTargetExcluded", "invalidBatchIsAtomic", "confirmedSnapshotIsStable", "hiddenTargetsAreDisclosed", "targetDraftsReplaceOnly", "acceptedEqualityRemovesDraft", "batchApplyIsOneTransition", "rowVersionBaselineSurvives", "selectionDoesNotOwnDrafts", "submittingBlocksBatchMutation", "stableIdentityUnderQuery", "commitContractIsInherited", "panelFocusRestored"],
+          "properties": {
+            "noSelectionNoMutation": { "type": "string", "minLength": 1 },
+            "readOnlyTargetExcluded": { "type": "string", "minLength": 1 },
+            "invalidBatchIsAtomic": { "type": "string", "minLength": 1 },
+            "confirmedSnapshotIsStable": { "type": "string", "minLength": 1 },
+            "hiddenTargetsAreDisclosed": { "type": "string", "minLength": 1 },
+            "targetDraftsReplaceOnly": { "type": "string", "minLength": 1 },
+            "acceptedEqualityRemovesDraft": { "type": "string", "minLength": 1 },
+            "batchApplyIsOneTransition": { "type": "string", "minLength": 1 },
+            "rowVersionBaselineSurvives": { "type": "string", "minLength": 1 },
+            "selectionDoesNotOwnDrafts": { "type": "string", "minLength": 1 },
+            "submittingBlocksBatchMutation": { "type": "string", "minLength": 1 },
+            "stableIdentityUnderQuery": { "type": "string", "minLength": 1 },
+            "commitContractIsInherited": { "type": "string", "minLength": 1 },
+            "panelFocusRestored": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        "budgets": {
+          "type": "object",
+          "required": ["batchApplyP95MaximumMs", "longTaskMaximumMs", "packageGzipMaximumBytes"],
+          "properties": {
+            "batchApplyP95MaximumMs": { "type": "number", "minimum": 1 },
+            "longTaskMaximumMs": { "type": "number", "minimum": 1 },
+            "packageGzipMaximumBytes": { "type": "number", "minimum": 1 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "approval": {
+      "type": "object",
+      "required": ["status", "authors", "requiredRoles", "records"],
+      "properties": {
+        "status": { "enum": ["pending", "approved"] },
+        "authors": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "requiredRoles": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "records": { "type": "array", "uniqueItems": true }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

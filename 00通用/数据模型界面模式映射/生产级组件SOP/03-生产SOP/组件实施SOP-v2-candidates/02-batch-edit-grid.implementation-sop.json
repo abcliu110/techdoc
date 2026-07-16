@@ -1,0 +1,167 @@
+{
+  "sopVersion": "0.1.0",
+  "componentKey": "02:batch-edit-grid",
+  "status": "ReviewReady",
+  "approval": {
+    "status": "pending",
+    "authors": [
+      "Codex"
+    ],
+    "requiredRoles": [
+      "component-maintainer",
+      "ux-a11y-reviewer",
+      "test-reviewer"
+    ],
+    "records": []
+  },
+  "specification": {
+    "path": "../../02-组件规范/v2-candidates/02-表格类/02-batch-edit-grid.spec.json",
+    "version": "0.1.0",
+    "digest": "sha256:4ab9f1bb68b85267292ad7449e75351a079eebbe160789eb3527e9dc5f95b2c5"
+  },
+  "steps": [
+    {
+      "key": "bindExecution",
+      "action": "bind",
+      "method": "绑定仓库规则、已验证的 DataGrid 与 EditableGrid 基线、组件规范、验证命令和独立证据目录；任何输入缺失时停止。",
+      "implements": [
+        "/api/foundation",
+        "/api/selection",
+        "/api/targeting",
+        "/api/columnEligibility",
+        "/api/valueAdapter",
+        "/api/draftOwnership",
+        "/api/commit",
+        "/api/defaultBehavior"
+      ],
+      "verifies": [],
+      "evidenceKinds": [
+        "repository-binding",
+        "source-revision",
+        "dependency-digest",
+        "command-manifest"
+      ]
+    },
+    {
+      "key": "batchStateRuntime",
+      "action": "implement-and-verify",
+      "method": "先用失败测试固定选择目标快照、隐藏目标披露、只读列排除、解析校验、原子草稿合并和版本基线，再实现最小纯状态核心。",
+      "implements": [
+        "/behavior/open",
+        "/behavior/targetPreview",
+        "/behavior/hiddenTargets",
+        "/behavior/parseValidation",
+        "/behavior/atomicApply",
+        "/behavior/draftMerge",
+        "/behavior/baseline"
+      ],
+      "verifies": [
+        "/quality/oracles/noSelectionNoMutation",
+        "/quality/oracles/readOnlyTargetExcluded",
+        "/quality/oracles/invalidBatchIsAtomic",
+        "/quality/oracles/confirmedSnapshotIsStable",
+        "/quality/oracles/hiddenTargetsAreDisclosed",
+        "/quality/oracles/targetDraftsReplaceOnly",
+        "/quality/oracles/acceptedEqualityRemovesDraft",
+        "/quality/oracles/batchApplyIsOneTransition",
+        "/quality/oracles/rowVersionBaselineSurvives"
+      ],
+      "evidenceKinds": [
+        "red-output",
+        "green-output",
+        "state-test",
+        "identity-test",
+        "atomicity-test"
+      ]
+    },
+    {
+      "key": "editingIntegration",
+      "action": "implement-and-verify",
+      "method": "把批量生成的草稿接入既有逐格修订和版本化提交状态，注入提交中操作、失败、冲突、重试、迟到和接受结果并运行组合回归。",
+      "implements": [
+        "/behavior/selectionAfterApply",
+        "/behavior/cellRevision",
+        "/behavior/submitting",
+        "/behavior/query",
+        "/behavior/outcome"
+      ],
+      "verifies": [
+        "/quality/oracles/selectionDoesNotOwnDrafts",
+        "/quality/oracles/submittingBlocksBatchMutation",
+        "/quality/oracles/stableIdentityUnderQuery",
+        "/quality/oracles/commitContractIsInherited",
+        "/quality/oracles/rowVersionBaselineSurvives"
+      ],
+      "evidenceKinds": [
+        "red-output",
+        "green-output",
+        "integration-test",
+        "failure-injection",
+        "version-test"
+      ]
+    },
+    {
+      "key": "componentPresentation",
+      "action": "implement-and-verify",
+      "method": "用公开 API 构建批量命令、目标预览、隐藏目标确认、列和值控件及结果反馈，复用表格选择和焦点模型并验证键盘与辅助技术行为。",
+      "implements": [
+        "/accessibility/selection",
+        "/accessibility/command",
+        "/accessibility/panel",
+        "/accessibility/controls",
+        "/accessibility/errors",
+        "/accessibility/announcements"
+      ],
+      "verifies": [
+        "/quality/oracles/hiddenTargetsAreDisclosed",
+        "/quality/oracles/invalidBatchIsAtomic",
+        "/quality/oracles/panelFocusRestored",
+        "/quality/oracles/readOnlyTargetExcluded"
+      ],
+      "evidenceKinds": [
+        "interaction-test",
+        "accessibility-test",
+        "geometry-test",
+        "demo-evidence"
+      ]
+    },
+    {
+      "key": "measureReleaseCandidate",
+      "action": "measure",
+      "method": "运行类型、单元、三浏览器、几何、性能、包体、隔离消费、基础组件回归、回滚和证据清单；任一硬门禁失败时不得进入评审。",
+      "implements": [],
+      "verifies": [
+        "/quality/oracles/batchApplyIsOneTransition",
+        "/quality/oracles/stableIdentityUnderQuery",
+        "/quality/oracles/commitContractIsInherited",
+        "/quality/oracles/panelFocusRestored"
+      ],
+      "evidenceKinds": [
+        "regression-output",
+        "browser-report",
+        "geometry-report",
+        "performance-report",
+        "package-report",
+        "rollback-report"
+      ]
+    },
+    {
+      "key": "independentReview",
+      "action": "review",
+      "method": "由未编写实现的独立角色复核目标范围、原子性、版本冲突、隐藏行披露、可访问性、证据完整性和回滚方案；只记录真实审批。",
+      "implements": [],
+      "verifies": [
+        "/quality/oracles/confirmedSnapshotIsStable",
+        "/quality/oracles/hiddenTargetsAreDisclosed",
+        "/quality/oracles/targetDraftsReplaceOnly",
+        "/quality/oracles/rowVersionBaselineSurvives",
+        "/quality/oracles/commitContractIsInherited"
+      ],
+      "evidenceKinds": [
+        "independent-review",
+        "approval-record",
+        "residual-risk-record"
+      ]
+    }
+  ]
+}

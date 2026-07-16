@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "specificationVersion": "0.1.0",
+  "component": {
+    "key": "02:batch-edit-grid",
+    "name": "批量编辑表格",
+    "englishName": "BatchEditGrid",
+    "packageSubpath": "@nms/ui/batch-edit-grid",
+    "implementationType": "derived-component"
+  },
+  "lifecycle": {
+    "specificationStatus": "ReviewReady",
+    "implementationAllowed": false,
+    "apiStatus": "proposed",
+    "approvalStatus": "pending"
+  },
+  "scope": {
+    "purpose": "在明确的稳定行选择快照上，把一个已解析且有效的值原子地套用为多行同列草稿，并继续复用 EditableGrid 的版本化提交事务。",
+    "in": [
+      "EditableGrid 本地受控行快照、草稿和提交事务复用",
+      "稳定 rowId 多选与可见、隐藏目标计数",
+      "一次选择一个可编辑列和一个输入值",
+      "批量操作目标预览与显式确认",
+      "解析和同步列校验通过后原子生成草稿",
+      "目标单元格既有草稿的显式替换",
+      "每行 recordVersion 基线冻结与提交冲突保留",
+      "批量套值后的单元格继续允许逐格修订",
+      "排序和筛选变化下的行身份稳定"
+    ],
+    "out": [
+      "矩形区域选择",
+      "复制、剪切或粘贴",
+      "公式填充和序列填充",
+      "多列批量表单",
+      "撤销重做栈",
+      "异步字段校验",
+      "远程分页或游标编辑",
+      "服务端权限、事务、幂等和版本写入实现"
+    ]
+  },
+  "api": {
+    "foundation": "BatchEditGrid is derived from EditableGrid and preserves its rows, columns, identity, version, validation and commit contracts.",
+    "selection": "rowSelection is a controlled or uncontrolled stable RowId set; BatchEditGrid always presents multiple selection and reports total and currently visible target counts.",
+    "targeting": "A batch operation snapshots selected row IDs that still exist in the accepted local rows; later selection or filtering changes cannot add to or remove from that operation.",
+    "columnEligibility": "Only columns created for EditableGrid with edit configuration can be batch targets; read-only columns are absent from the target control.",
+    "valueAdapter": "The selected column's format, parse and synchronous validate contract is the sole value adapter for batch input.",
+    "draftOwnership": "BatchEditGrid owns batch-created drafts and merges them into the same stable rowId plus columnId draft store used by cell editing.",
+    "commit": "Saving uses the inherited commitId, row-grouped changes and expectedVersion contract; batch apply itself never persists accepted rows.",
+    "defaultBehavior": "The batch command is disabled without selected in-scope rows, an editable target column, a valid changed value, or while submitting."
+  },
+  "behavior": {
+    "open": "Opening batch edit snapshots no targets; the panel continuously previews the current selection until the user confirms apply.",
+    "targetPreview": "Before apply, the panel exposes total in-scope targets, currently visible targets, hidden targets and target cells that already have drafts.",
+    "hiddenTargets": "When any in-scope target is hidden by the current local query, confirmation explicitly includes those hidden rows; cancel produces no draft mutation.",
+    "parseValidation": "The chosen column parses and synchronously validates the raw input before target mutation; parse or validation failure applies zero drafts and keeps the panel open.",
+    "atomicApply": "Confirmation snapshots the selected in-scope row IDs and updates every target cell in one state transition; no partial draft batch is observable.",
+    "draftMerge": "For each target cell, a changed value creates or replaces that cell draft, a value equal to its accepted value removes that cell draft, and non-target drafts remain unchanged.",
+    "baseline": "A row with surviving drafts retains its originally captured expectedVersion; a newly drafted row captures the current accepted recordVersion exactly once.",
+    "selectionAfterApply": "Changing or clearing row selection after apply does not change the drafts produced by the confirmed target snapshot.",
+    "cellRevision": "After batch apply, ordinary cell editing can revise or discard each generated draft without creating a second draft identity.",
+    "submitting": "While a commit is submitting, batch controls cannot open, confirm, or mutate drafts.",
+    "query": "Sorting and filtering continue to use accepted values, preserve stable row selection, and cannot transfer a batch draft between business rows.",
+    "outcome": "The panel announces applied, unchanged and replaced-draft counts; persistence failure or conflict is handled by the inherited non-destructive commit outcome."
+  },
+  "accessibility": {
+    "selection": "BatchEditGrid retains the DataGrid ARIA Grid multiple-selection model and keyboard row selection.",
+    "command": "The batch edit command exposes its disabled state and has an accessible name that does not rely on an icon.",
+    "panel": "The batch panel has a programmatic name, initial focus, contained tab order, Escape cancellation and focus return to the invoking command.",
+    "controls": "Target column, batch value, target summary, cancel and apply are programmatically labelled and keyboard operable.",
+    "errors": "Invalid batch input is associated with its control, sets aria-invalid and receives focus after blocked confirmation.",
+    "announcements": "Target scope changes and the latest apply outcome use concise polite status; hidden-target confirmation is announced before mutation."
+  },
+  "quality": {
+    "oracles": {
+      "noSelectionNoMutation": "With no selected in-scope rows, batch apply is unavailable and draft state is unchanged.",
+      "readOnlyTargetExcluded": "A read-only column cannot be chosen or mutated through batch controls.",
+      "invalidBatchIsAtomic": "A parse or validation error produces zero target drafts and focuses the associated batch input.",
+      "confirmedSnapshotIsStable": "A confirmed batch affects exactly the selected in-scope row IDs captured at confirmation even if selection later changes.",
+      "hiddenTargetsAreDisclosed": "Hidden selected targets are counted and require explicit disclosed confirmation before any mutation.",
+      "targetDraftsReplaceOnly": "Batch apply replaces only targeted cell drafts and preserves every non-target draft.",
+      "acceptedEqualityRemovesDraft": "Applying a value equal to a target cell's accepted value leaves no draft for that cell.",
+      "batchApplyIsOneTransition": "Observers cannot see a partially applied target set.",
+      "rowVersionBaselineSurvives": "A row's first surviving draft version remains the expectedVersion after later batch replacement or cell revision.",
+      "selectionDoesNotOwnDrafts": "Clearing selection after apply leaves confirmed drafts intact.",
+      "submittingBlocksBatchMutation": "No batch control can mutate drafts while the matching commit is submitting.",
+      "stableIdentityUnderQuery": "Sorting or filtering cannot move a batch draft or selection to another business row.",
+      "commitContractIsInherited": "Saving batch-created drafts emits the same row-grouped versioned request and follows the same failure, conflict, retry, stale and accepted rules as EditableGrid.",
+      "panelFocusRestored": "Cancel or successful apply closes the panel and returns focus to the invoking batch command."
+    },
+    "budgets": {
+      "batchApplyP95MaximumMs": 100,
+      "longTaskMaximumMs": 50,
+      "packageGzipMaximumBytes": 46080
+    }
+  },
+  "approval": {
+    "status": "pending",
+    "authors": ["Codex"],
+    "requiredRoles": ["component-maintainer", "ux-a11y-reviewer", "test-reviewer"],
+    "records": []
+  }
+}
