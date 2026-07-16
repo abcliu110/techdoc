@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "specificationVersion": "0.1.0",
+  "specificationVersion": "0.1.1",
   "strategy": {
     "key": "02:cursor-data-strategy",
     "name": "前向游标数据策略",
@@ -19,12 +19,15 @@
     "in": [
       "显式加载更多命令",
       "requestId 与 cursor 身份",
+      "sourceId 数据集身份与显式重置",
       "前向追加",
       "稳定 rowId 去重",
       "迟到结果拒绝",
       "追加失败保留与重试",
       "nextCursor=null 终止",
       "与固定视口策略组合"
+      ,"首次加载与首次错误"
+      ,"游标模式排除分页控件"
     ],
     "out": [
       "自动滚动阈值加载",
@@ -37,6 +40,7 @@
   },
   "api": {
     "dataSourceType": "remote-cursor",
+    "sourceId": "stable logical dataset identity",
     "request": { "requestId": "stable unique string", "cursor": "opaque non-empty string" },
     "result": { "rows": "readonly rows", "nextCursor": "string or null", "resultRequestId": "matching request ID after first command" },
     "commands": ["onLoadMore", "onRetry"],
@@ -48,13 +52,17 @@
     "failure": "匹配失败保留已接受行和失败 cursor，并提供重试。",
     "retry": "重试同一失败 cursor，但生成新的 requestId。",
     "terminal": "nextCursor=null 后不呈现加载命令，也不再发请求。",
-    "concurrency": "pending 时重复命令不产生第二个请求。"
+    "concurrency": "pending 时重复命令不产生第二个请求。",
+    "sourceReset": "sourceId 改变时用新初始结果替换已接受快照，并清除旧请求、失败和错误状态。",
+    "initialState": "空初始结果遵守 loading 或 error；可重试首次错误从 nextCursor 生成新 requestId。",
+    "paginationExclusion": "remote-cursor 不呈现页码导航，即使调用方同时传入分页配置。"
   },
   "accessibility": {
     "loadCommand": "加载更多按钮位于 Grid 后的状态区并可键盘到达。",
     "loading": "加载状态使用 polite status，不抢夺活动单元格焦点。",
     "failure": "失败状态保留 Grid，错误和重试位于正常导航顺序。",
-    "append": "追加结果不自动移动焦点；逻辑 aria-rowcount 按已接受行更新。"
+    "append": "追加结果不自动移动焦点；逻辑 aria-rowcount 按已接受行更新。",
+    "singlePresentation": "空结果的首次加载或错误只呈现一套状态与一个重试入口。"
   },
   "quality": {
     "oracles": {
@@ -64,7 +72,10 @@
       "appendFailureRetainsRows": "失败时已接受行、选择和焦点仍可用。",
       "retryUsesFailedCursorWithNewId": "重试 cursor 相同且 requestId 不同。",
       "terminalCursorStopsRequests": "null 游标不再呈现或发出加载命令。",
-      "viewportCompositionIsIndependent": "窗口物化范围不改变游标状态和请求身份。"
+      "viewportCompositionIsIndependent": "窗口物化范围不改变游标状态和请求身份。",
+      "sourceIdentityResetsSnapshot": "sourceId 改变后不保留旧数据集行或请求状态。",
+      "initialStateHasSinglePresentation": "首次加载或错误不与追加状态重复呈现。",
+      "cursorPaginationIsExcluded": "游标数据源不呈现无效页码导航。"
     },
     "budgets": {
       "commandP95MaximumMs": 100,

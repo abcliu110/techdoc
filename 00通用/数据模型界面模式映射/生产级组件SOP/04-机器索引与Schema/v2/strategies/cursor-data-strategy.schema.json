@@ -39,9 +39,9 @@
       },
       "additionalProperties": false
     },
-    "api": { "type": "object", "required": ["dataSourceType", "request", "result", "commands", "defaultBehavior"] },
-    "behavior": { "type": "object", "required": ["append", "stale", "failure", "retry", "terminal", "concurrency"] },
-    "accessibility": { "type": "object", "required": ["loadCommand", "loading", "failure", "append"] },
+    "api": { "type": "object", "required": ["dataSourceType", "sourceId", "request", "result", "commands", "defaultBehavior"] },
+    "behavior": { "type": "object", "required": ["append", "stale", "failure", "retry", "terminal", "concurrency", "sourceReset", "initialState", "paginationExclusion"] },
+    "accessibility": { "type": "object", "required": ["loadCommand", "loading", "failure", "append", "singlePresentation"] },
     "quality": { "type": "object", "required": ["oracles", "budgets"] },
     "approval": { "type": "object", "required": ["status", "authors", "requiredRoles", "records"] }
   },

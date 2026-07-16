@@ -1,5 +1,5 @@
 {
-  "sopVersion": "0.1.0",
+  "sopVersion": "0.1.1",
   "strategyKey": "02:cursor-data-strategy",
   "status": "ReviewReady",
   "approval": {
@@ -16,8 +16,8 @@
   },
   "specification": {
     "path": "../../02-组件规范/v2-candidates/02-表格类/02-cursor-data-strategy.spec.json",
-    "version": "0.1.0",
-    "digest": "sha256:48097f466e7b212b0fa5b25114a0084ed391d6184f7669128493273b5e10d4aa"
+    "version": "0.1.1",
+    "digest": "sha256:c36c31bd7a11ebd26c4c8e56b699be5ad145db09edba807b3f986148f6b96ef4"
   },
   "steps": [
     {
@@ -25,8 +25,12 @@
       "action": "bind",
       "method": "绑定仓库规则、DataGrid 基线、规范、验证命令和证据目录；任一输入缺失时停止。",
       "implements": [
-        "/scope",
-        "/api"
+        "/api/dataSourceType",
+        "/api/sourceId",
+        "/api/request",
+        "/api/result",
+        "/api/commands",
+        "/api/defaultBehavior"
       ],
       "verifies": [],
       "evidenceKinds": [
@@ -42,13 +46,15 @@
       "implements": [
         "/behavior/append",
         "/behavior/stale",
-        "/behavior/terminal"
+        "/behavior/terminal",
+        "/behavior/sourceReset"
       ],
       "verifies": [
         "/quality/oracles/matchingPageAppendsOnce",
         "/quality/oracles/duplicateRowKeepsFirstAccepted",
         "/quality/oracles/stalePageDoesNotOverwrite",
-        "/quality/oracles/terminalCursorStopsRequests"
+        "/quality/oracles/terminalCursorStopsRequests",
+        "/quality/oracles/sourceIdentityResetsSnapshot"
       ],
       "evidenceKinds": [
         "red-output",
@@ -81,13 +87,21 @@
       "action": "implement-and-verify",
       "method": "先建立加载、失败、重试、终止和窗口组合的组件失败测试，再接入公开命令与状态区并运行兼容回归。",
       "implements": [
-        "/accessibility",
-        "/api/defaultBehavior"
+        "/accessibility/loadCommand",
+        "/accessibility/loading",
+        "/accessibility/failure",
+        "/accessibility/append",
+        "/accessibility/singlePresentation",
+        "/api/defaultBehavior",
+        "/behavior/initialState",
+        "/behavior/paginationExclusion"
       ],
       "verifies": [
         "/quality/oracles/viewportCompositionIsIndependent",
         "/quality/oracles/terminalCursorStopsRequests",
-        "/quality/oracles/appendFailureRetainsRows"
+        "/quality/oracles/appendFailureRetainsRows",
+        "/quality/oracles/initialStateHasSinglePresentation",
+        "/quality/oracles/cursorPaginationIsExcluded"
       ],
       "evidenceKinds": [
         "red-output",
@@ -101,9 +115,7 @@
       "key": "measureAndReview",
       "action": "measure-and-review",
       "method": "运行完整表格族回归、包体、浏览器、几何、性能与证据清单，由独立角色复核开放边界。",
-      "implements": [
-        "/quality/budgets"
-      ],
+      "implements": [],
       "verifies": [
         "/quality/oracles/matchingPageAppendsOnce",
         "/quality/oracles/stalePageDoesNotOverwrite",
