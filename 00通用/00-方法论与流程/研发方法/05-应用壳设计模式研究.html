@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>企业应用壳设计模式研究</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#0070d2;--purple:#5e6ad2;--green:#10b981;--dark:#1e1e1e;--orange:#f97316;
+  --text:#111827;--text2:#6b7280;--border:#e5e7eb;--bg:#f9fafb;--white:#fff;
+  --radius:8px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;font-size:14px;color:var(--text);background:#f0f2f5;line-height:1.5}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* Layout */
+.page{max-width:1200px;margin:0 auto;padding:32px 24px}
+.toc{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:32px}
+.toc h2{font-size:13px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.toc-list{display:flex;flex-wrap:wrap;gap:8px}
+.toc-item{padding:5px 14px;border-radius:20px;background:var(--bg);border:1px solid var(--border);font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;transition:all .15s}
+.toc-item:hover{background:var(--blue);color:white;border-color:var(--blue)}
+
+h1.page-title{font-size:28px;font-weight:800;color:var(--text);margin-bottom:8px;letter-spacing:-.5px}
+.page-subtitle{font-size:14px;color:var(--text2);margin-bottom:32px}
+
+.section{margin-bottom:48px}
+.section-title{font-size:20px;font-weight:800;color:var(--text);margin-bottom:6px;padding-top:8px;border-top:3px solid var(--blue);display:inline-block}
+.section-subtitle{font-size:13px;color:var(--text2);margin-bottom:20px}
+
+/* Cards */
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.card-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.card-title{font-size:15px;font-weight:700}
+.card-body{padding:20px}
+
+/* Grid */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px}
+
+/* Shell type cards */
+.shell-type-card{background:var(--white);border:2px solid var(--border);border-radius:var(--radius);padding:16px;transition:all .15s;cursor:default}
+.shell-type-card:hover{border-color:var(--blue);box-shadow:0 4px 16px rgba(0,112,210,.1)}
+.stc-icon{font-size:28px;margin-bottom:10px}
+.stc-name{font-size:14px;font-weight:800;color:var(--text);margin-bottom:4px}
+.stc-nav{font-size:11px;color:var(--blue);font-weight:600;margin-bottom:6px;font-family:monospace}
+.stc-desc{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px}
+.stc-refs{display:flex;flex-wrap:wrap;gap:4px}
+.ref-badge{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;background:var(--bg);color:var(--text2);border:1px solid var(--border)}
+
+/* Layout diagrams */
+.layout-diagram{background:#1a1a2e;border-radius:var(--radius);padding:16px;font-family:monospace;font-size:12px;color:#a8b4d0;line-height:1.8;overflow-x:auto}
+.layout-diagram .zone-label{color:#7dd3fc;font-weight:700}
+.layout-diagram .zone-content{color:#86efac}
+.layout-diagram .zone-size{color:#fbbf24}
+
+/* Pattern rows */
+.pattern-row{display:flex;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:12px}
+.pattern-preview{width:200px;min-width:200px;background:var(--bg);padding:12px;border-right:1px solid var(--border);display:flex;align-items:center;justify-content:center}
+.pattern-info{flex:1;padding:14px 16px}
+.pattern-name{font-size:13px;font-weight:700;margin-bottom:4px}
+.pattern-desc{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px}
+.pattern-pros-cons{display:flex;gap:16px}
+.pros-cons-col{flex:1}
+.pros-cons-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.pros-cons-label.pro{color:#10b981}
+.pros-cons-label.con{color:#ef4444}
+.pros-cons-item{font-size:11px;color:var(--text2);margin-bottom:2px;padding-left:12px;position:relative}
+.pros-cons-item::before{position:absolute;left:0;top:0}
+.pros-cons-item.pro::before{content:'✓';color:#10b981}
+.pros-cons-item.con::before{content:'✗';color:#ef4444}
+
+/* Mini shell diagrams */
+.mini-shell{border:1px solid var(--border);border-radius:4px;overflow:hidden;width:160px;background:white}
+.ms-topbar{height:18px;background:#374151;display:flex;align-items:center;padding:0 6px;gap:4px}
+.ms-topbar-dot{width:5px;height:5px;border-radius:50%}
+.ms-body{display:flex;height:80px}
+.ms-sidebar{background:#f3f4f6;border-right:1px solid var(--border)}
+.ms-sidebar.w20{width:20px}
+.ms-sidebar.w40{width:40px}
+.ms-sidebar.w8{width:8px}
+.ms-main{flex:1;padding:4px;display:flex;flex-direction:column;gap:3px}
+.ms-line{height:4px;border-radius:2px;background:#e5e7eb}
+.ms-line.blue{background:#bfdbfe}
+.ms-line.w70{width:70%}
+.ms-line.w50{width:50%}
+.ms-line.w90{width:90%}
+.ms-tabs{display:flex;height:14px;border-bottom:1px solid #e5e7eb}
+.ms-tab{width:28px;height:100%;border-right:1px solid #f3f4f6;background:#f9fafb}
+.ms-tab.active{background:white;border-bottom:2px solid #3b82f6}
+.ms-statusbar{height:8px;background:#0078d4}
+.ms-panel{height:22px;background:#252526;border-top:1px solid #161b27}
+.ms-actbar{width:12px;background:#333;border-right:1px solid #161b27}
+.ms-canvas{flex:1;background:#f3f4f6;display:flex;align-items:center;justify-content:center}
+.ms-canvas-inner{width:60%;height:60%;background:white;border-radius:2px;border:1px solid #e5e7eb}
+.ms-right{width:32px;background:#f9fafb;border-left:1px solid #e5e7eb}
+.ms-tile-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;padding:4px}
+.ms-tile{height:18px;border-radius:2px;background:#bfdbfe}
+
+/* Comparison table */
+.cmp-table{width:100%;border-collapse:collapse;font-size:12px}
+.cmp-table th{padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;background:var(--bg);border-bottom:2px solid var(--border);white-space:nowrap}
+.cmp-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+.cmp-table tr:hover td{background:#f9fafb}
+.cmp-table td:first-child{font-weight:700;color:var(--text);white-space:nowrap}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
+.badge::before{content:'●';font-size:7px}
+.badge.yes{background:#d1fae5;color:#065f46}
+.badge.no{background:#f3f4f6;color:#9ca3af}
+.badge.partial{background:#fef3c7;color:#92400e}
+
+/* Decision framework */
+.decision-tree{display:flex;flex-direction:column;gap:0}
+.dt-question{background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:var(--radius);padding:14px 18px;margin-bottom:0;position:relative}
+.dt-q-label{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.dt-q-text{font-size:13px;font-weight:700;color:var(--text)}
+.dt-branches{display:flex;gap:12px;margin:8px 0 0 16px}
+.dt-branch{flex:1;display:flex;flex-direction:column;gap:0}
+.dt-branch-label{font-size:11px;font-weight:600;color:var(--text2);padding:6px 0 4px;border-top:2px solid var(--border);display:flex;align-items:center;gap:6px}
+.dt-branch-label::before{content:'→';color:var(--text2)}
+.dt-result{background:var(--white);border:2px solid var(--blue);border-radius:6px;padding:10px 14px}
+.dt-result-name{font-size:13px;font-weight:800;color:var(--blue);margin-bottom:3px}
+.dt-result-desc{font-size:11px;color:var(--text2)}
+
+/* Feature analysis */
+.feature-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.feature-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.feature-icon{font-size:22px}
+.feature-name{font-size:14px;font-weight:700}
+.feature-adopted{font-size:11px;color:var(--text2);margin-left:auto;display:flex;align-items:center;gap:4px}
+.feature-body{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px}
+.feature-products{display:flex;flex-wrap:wrap;gap:6px}
+.product-badge{padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;background:var(--bg);border:1px solid var(--border);color:var(--text2)}
+
+/* Design principles */
+.principle-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.principle-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:16px;border-left:4px solid var(--blue)}
+.principle-num{font-size:11px;font-weight:700;color:var(--blue);margin-bottom:4px}
+.principle-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px}
+.principle-desc{font-size:12px;color:var(--text2);line-height:1.5}
+.principle-example{margin-top:8px;font-size:11px;color:var(--text2);background:var(--bg);border-radius:4px;padding:8px 10px;font-family:monospace}
+
+/* Highlight box */
+.highlight-box{background:#fffbeb;border:1.5px solid #fde68a;border-radius:var(--radius);padding:14px 16px;font-size:12px;color:#92400e;line-height:1.6;margin:12px 0}
+.highlight-box strong{color:#78350f}
+
+/* Tag */
+.tag{display:inline-block;padding:1px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.tag.blue{background:#dbeafe;color:#1e40af}
+.tag.green{background:#d1fae5;color:#065f46}
+.tag.purple{background:#ede9fe;color:#5b21b6}
+.tag.orange{background:#ffedd5;color:#9a3412}
+.tag.gray{background:#f3f4f6;color:#374151}
+
+/* Scrollspy & sticky toc */
+.sticky-toc{position:sticky;top:16px}
+
+/* Two col layout */
+.two-col-layout{display:grid;grid-template-columns:180px 1fr;gap:24px;align-items:start}
+
+@media(max-width:900px){
+  .grid-2,.grid-3,.grid-4,.two-col-layout{grid-template-columns:1fr}
+  .pattern-preview{display:none}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1 class="page-title">企业应用壳设计模式研究</h1>
+<p class="page-subtitle">基于 Salesforce、SAP Fiori、ServiceNow、Linear、Notion、Jira、Airtable、GitHub、VS Code、Retool、Vercel、NocoBase 等 14 款产品深度分析</p>
+
+<div class="toc">
+  <h2>快速导航</h2>
+  <div class="toc-list">
+    <a class="toc-item" href="#shell-types">壳类型分类</a>
+    <a class="toc-item" href="#nav-patterns">导航模式</a>
+    <a class="toc-item" href="#layout-zones">布局区域</a>
+    <a class="toc-item" href="#detail-modes">详情展开方式</a>
+    <a class="toc-item" href="#key-features">关键功能分析</a>
+    <a class="toc-item" href="#comparison">产品对比矩阵</a>
+    <a class="toc-item" href="#decisions">选型决策树</a>
+    <a class="toc-item" href="#principles">设计原则</a>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="shell-types">
+  <div class="section-title">一、应用壳类型分类</div>
+  <p class="section-subtitle">按核心导航模型和信息架构划分为 7 种，每种壳解决不同的业务场景和用户心智模型</p>
+
+  <div class="grid-2" style="gap:12px">
+
+    <div class="shell-type-card">
+      <div class="stc-icon">🏢</div>
+      <div class="stc-name">企业业务壳</div>
+      <div class="stc-nav">应用 → 对象/模块 → 列表 → 记录详情</div>
+      <div class="stc-desc">以业务实体为中心，支持多应用切换。角色首页聚合待办，详情抽屉保持上下文，底部固定工具栏存放高频工具。</div>
+      <div class="stc-refs">
+        <span class="ref-badge">Salesforce Lightning</span>
+        <span class="ref-badge">SAP Fiori</span>
+        <span class="ref-badge">ServiceNow</span>
+        <span class="ref-badge">Workday</span>
+      </div>
+    </div>
+
+    <div class="shell-type-card">
+      <div class="stc-icon">✅</div>
+      <div class="stc-name">任务协作壳</div>
+      <div class="stc-nav">工作区 → 团队 → 项目/视图 → 任务详情</div>
+      <div class="stc-desc">极度克制的左侧窄边栏，多视图切换（列表/看板/时间线），Split 面板保留列表上下文。命令面板是导航核心。</div>
+      <div class="stc-refs">
+        <span class="ref-badge">Linear</span>
+        <span class="ref-badge">Jira</span>
+        <span class="ref-badge">Plane</span>
+        <span class="ref-badge">Asana</span>
+      </div>
+    </div>
+
+    <div class="shell-type-card">
+      <div class="stc-icon">📊</div>
+      <div class="stc-name">数据应用壳</div>
+      <div class="stc-nav">空间 → Base → 表 → 视图 → 记录侧栏</div>
+      <div class="stc-desc">顶部 Table Tab + 左侧 View 列表 + 主数据网格三区结构。同一份数据可多视图展示。Record Side Panel 不离开当前视图展开详情。</div>
+      <div class="stc-refs">
+        <span class="ref-badge">Airtable</span>
+        <span class="ref-badge">Teable</span>
+        <span class="ref-badge">NocoDB</span>
+        <span class="ref-badge">Baserow</span>
+      </div>
+    </div>
+
+    <div class="shell-type-card">
+      <div class="stc-icon">📝</div>
+      <div class="stc-name">知识空间壳</div>
+      <div class="stc-nav">工作区 → Teamspace → 页面树 → 内容画布</div>
+      <div class="stc-desc">左侧树即导航结构，整理内容=整理导航。Hub-and-Spoke 最佳实践：5~8 个 Hub，三跳内可达任意内容。</div>
+      <div class="stc-refs">
+        <span class="ref-badge">Notion</span>
+        <span class="ref-badge">AFFiNE</span>
+        <span class="ref-badge">Outline</span>
+        <span class="ref-badge">Confluence</span>
+      </div>
+    </div>
+
+    <div class="shell-type-card">
+      <div class="stc-icon">⌨️</div>
+      <div class="stc-name">开发者工具壳</div>
+      <div class="stc-nav">Activity Bar → 侧边栏 → 编辑区 → 底部面板 → 状态栏</div>
+      <div class="stc-desc">多区域并列、可拖拽重组。不是层级导航，而是区域型布局。Tab 式多文件，分割窗格，状态栏实时信息。</div>
+      <div class="stc-refs">
+        <span class="ref-badge">VS Code</span>
+        <span class="ref-badge">GitHub</span>
+        <span class="ref-badge">Vercel</span>
+        <span class="ref-badge">GitLab</span>
+      </div>
+    </div>
+
+    <div class="shell-type-card">
+      <div class="stc-icon">🖥️</div>
+      <div class="stc-name">后台管理壳</div>
+      <div class="stc-nav">顶部导航 → 左侧菜单树 → 面包屑 → 主内容（表格/表单/图表）</div>
+      <div class="stc-desc">最通用的企业后台模式。RBAC 权限菜单驱动，统计卡片+数据表格为主视图，支持多标签页保留工作上下文。</div>
+      <div class="stc-refs">
+        <span class="ref-badge">Ant Design Pro</span>
+        <span class="ref-badge">Vue Vben Admin</span>
+        <span class="ref-badge">金蝶云星空</span>
+        <span class="ref-badge">用友 NC</span>
+      </div>
+    </div>
+
+    <div class="shell-type-card">
+      <div class="stc-icon">🔧</div>
+      <div class="stc-name">低代码设计壳</div>
+      <div class="stc-nav">页面列表 + 组件树 → 画布 → 属性面板 → 数据/查询面板</div>
+      <div class="stc-desc">IDE 式四区布局：左侧实体树、中央画布、右侧属性、底部数据。设计态/运行态双态切换是核心能力。</div>
+      <div class="stc-refs">
+        <span class="ref-badge">Retool</span>
+        <span class="ref-badge">Appsmith</span>
+        <span class="ref-badge">NocoBase</span>
+        <span class="ref-badge">ToolJet</span>
+      </div>
+    </div>
+
+    <div class="shell-type-card" style="border-color:#10b981">
+      <div class="stc-icon">📋</div>
+      <div class="stc-name">服务队列壳</div>
+      <div class="stc-nav">角色工作台 → 队列 → 工单 → 客户上下文面板</div>
+      <div class="stc-desc">三栏结构：左队列列表、中工单详情、右客户上下文。不离开当前工单可查看关联信息（SLA、知识库、历史记录）。</div>
+      <div class="stc-refs">
+        <span class="ref-badge">ServiceNow Workspace</span>
+        <span class="ref-badge">Zammad</span>
+        <span class="ref-badge">Chatwoot</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="nav-patterns">
+  <div class="section-title">二、导航模式详解</div>
+  <p class="section-subtitle">5 种核心导航模式，每种有明确的适用场景和设计权衡</p>
+
+  <!-- Pattern A: Top Bar -->
+  <div class="pattern-row">
+    <div class="pattern-preview">
+      <div class="mini-shell">
+        <div class="ms-topbar" style="background:#0070d2;justify-content:space-between">
+          <div style="display:flex;gap:3px">
+            <div class="ms-topbar-dot" style="background:#fff;opacity:.8;border-radius:1px;width:20px;height:8px"></div>
+            <div style="display:flex;gap:2px">
+              <div style="background:rgba(255,255,255,.5);width:16px;height:8px;border-radius:1px"></div>
+              <div style="background:rgba(255,255,255,.8);width:16px;height:8px;border-radius:1px;border-bottom:2px solid #fbbf24"></div>
+              <div style="background:rgba(255,255,255,.5);width:16px;height:8px;border-radius:1px"></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:3px">
+            <div style="background:rgba(255,255,255,.4);width:16px;height:8px;border-radius:4px"></div>
+            <div style="background:rgba(255,255,255,.6);width:8px;height:8px;border-radius:50%"></div>
+          </div>
+        </div>
+        <div class="ms-body">
+          <div class="ms-sidebar w40" style="background:#f8fafc">
+            <div style="padding:4px 3px;display:flex;flex-direction:column;gap:3px">
+              <div style="height:5px;background:#bfdbfe;border-radius:2px"></div>
+              <div style="height:5px;background:#e5e7eb;border-radius:2px"></div>
+              <div style="height:5px;background:#e5e7eb;border-radius:2px"></div>
+              <div style="height:5px;background:#e5e7eb;border-radius:2px"></div>
+            </div>
+          </div>
+          <div class="ms-main">
+            <div class="ms-line blue"></div>
+            <div style="display:flex;gap:2px;margin-top:2px">
+              <div style="flex:2;height:20px;background:#f3f4f6;border-radius:2px"></div>
+              <div style="flex:3;height:20px;background:#f3f4f6;border-radius:2px"></div>
+            </div>
+            <div class="ms-line w90"></div>
+            <div class="ms-line w70"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pattern-info">
+      <div class="pattern-name">模式 A：顶栏导航 + 左侧二级导航</div>
+      <div class="pattern-desc">顶栏承载全局操作（Logo、应用切换、搜索、通知、用户），左侧边栏承载当前应用内的模块导航。Salesforce、SAP Fiori、金蝶的核心布局。</div>
+      <div class="pattern-pros-cons">
+        <div class="pros-cons-col">
+          <div class="pros-cons-label pro">优点</div>
+          <div class="pros-cons-item pro">应用切换与模块导航职责分离</div>
+          <div class="pros-cons-item pro">顶栏固定，内容区空间最大</div>
+          <div class="pros-cons-item pro">跨应用一致的全局操作位置</div>
+        </div>
+        <div class="pros-cons-col">
+          <div class="pros-cons-label con">缺点</div>
+          <div class="pros-cons-item con">顶栏 Tab 超过 7 个需折叠</div>
+          <div class="pros-cons-item con">双层导航学习成本较高</div>
+          <div class="pros-cons-item con">移动端需二次设计</div>
+        </div>
+      </div>
+      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+        <span class="tag blue">Salesforce</span><span class="tag blue">SAP Fiori</span><span class="tag blue">ServiceNow</span><span class="tag blue">金蝶云星空</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pattern B: Sidebar Only -->
+  <div class="pattern-row">
+    <div class="pattern-preview">
+      <div class="mini-shell">
+        <div class="ms-topbar" style="background:#fff;border-bottom:1px solid #e5e7eb">
+          <div style="display:flex;align-items:center;gap:3px">
+            <div style="width:16px;height:16px;background:#5e6ad2;border-radius:3px"></div>
+            <div style="width:8px;height:8px;background:#e5e7eb;border-radius:50%"></div>
+          </div>
+          <div style="flex:1"></div>
+          <div style="width:40px;height:8px;background:#e5e7eb;border-radius:4px"></div>
+        </div>
+        <div class="ms-body">
+          <div class="ms-sidebar w40" style="background:#fff;border-right:1px solid #f3f4f6">
+            <div style="padding:3px">
+              <div style="height:6px;background:#ede9fe;border-radius:2px;margin-bottom:3px"></div>
+              <div style="height:5px;background:#f3f4f6;border-radius:2px;margin-bottom:3px"></div>
+              <div style="height:5px;background:#f3f4f6;border-radius:2px;margin-bottom:3px"></div>
+              <div style="height:4px;background:#e5e7eb;border-radius:2px;margin:4px 0 2px"></div>
+              <div style="height:5px;background:#f3f4f6;border-radius:2px;margin-bottom:3px"></div>
+              <div style="height:5px;background:#f3f4f6;border-radius:2px"></div>
+            </div>
+          </div>
+          <div class="ms-main">
+            <div class="ms-line blue w70"></div>
+            <div class="ms-line w90"></div>
+            <div class="ms-line w50"></div>
+            <div class="ms-line w90"></div>
+            <div class="ms-line w70"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pattern-info">
+      <div class="pattern-name">模式 B：左侧边栏主导（两栏）</div>
+      <div class="pattern-desc">侧边栏承载所有导航层级（工作区 → 模块 → 子视图），顶部仅保留搜索/用户等全局操作。Linear、Notion、Vercel 的选择。适合深层级快速切换。</div>
+      <div class="pattern-pros-cons">
+        <div class="pros-cons-col">
+          <div class="pros-cons-label pro">优点</div>
+          <div class="pros-cons-item pro">导航层级统一在一个位置</div>
+          <div class="pros-cons-item pro">支持无限纵向扩展</div>
+          <div class="pros-cons-item pro">可折叠释放内容区宽度</div>
+        </div>
+        <div class="pros-cons-col">
+          <div class="pros-cons-label con">缺点</div>
+          <div class="pros-cons-item con">占用 220-280px 宽度</div>
+          <div class="pros-cons-item con">深层嵌套时文字被截断</div>
+          <div class="pros-cons-item con">移动端体验差</div>
+        </div>
+      </div>
+      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+        <span class="tag purple">Linear</span><span class="tag purple">Notion</span><span class="tag purple">Vercel</span><span class="tag purple">Outline</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pattern C: VS Code Activity Bar -->
+  <div class="pattern-row">
+    <div class="pattern-preview">
+      <div class="mini-shell" style="background:#1e1e1e">
+        <div class="ms-topbar" style="background:#323233">
+          <div style="display:flex;gap:4px">
+            <div class="ms-topbar-dot" style="background:#ff5f57"></div>
+            <div class="ms-topbar-dot" style="background:#febc2e"></div>
+            <div class="ms-topbar-dot" style="background:#28c840"></div>
+          </div>
+        </div>
+        <div class="ms-body">
+          <div class="ms-actbar" style="display:flex;flex-direction:column;align-items:center;padding:3px 0;gap:4px">
+            <div style="width:8px;height:8px;background:#fff;border-radius:1px;opacity:.8"></div>
+            <div style="width:8px;height:8px;background:#858585;border-radius:1px"></div>
+            <div style="width:8px;height:8px;background:#858585;border-radius:1px"></div>
+          </div>
+          <div class="ms-sidebar w40" style="background:#252526">
+            <div style="padding:3px 2px;display:flex;flex-direction:column;gap:2px">
+              <div style="height:4px;background:#4ec9b0;border-radius:1px;width:80%"></div>
+              <div style="height:4px;background:#569cd6;border-radius:1px;width:60%;margin-left:6px"></div>
+              <div style="height:4px;background:#cccccc;border-radius:1px;width:70%;margin-left:6px"></div>
+              <div style="height:4px;background:#569cd6;border-radius:1px;width:60%;margin-left:6px"></div>
+            </div>
+          </div>
+          <div class="ms-main" style="background:#1e1e1e">
+            <div style="height:8px;background:#2d2d2d;margin-bottom:4px;display:flex">
+              <div style="width:35px;background:#1e1e1e;border-top:1px solid #0078d4"></div>
+              <div style="width:30px;background:#2d2d2d"></div>
+            </div>
+            <div style="padding:0 3px;display:flex;flex-direction:column;gap:2px">
+              <div style="height:3px;background:#569cd6;border-radius:1px;width:40%"></div>
+              <div style="height:3px;background:#ce9178;border-radius:1px;width:70%"></div>
+              <div style="height:3px;background:#4ec9b0;border-radius:1px;width:55%"></div>
+            </div>
+          </div>
+        </div>
+        <div style="height:8px;background:#0078d4"></div>
+      </div>
+    </div>
+    <div class="pattern-info">
+      <div class="pattern-name">模式 C：Activity Bar + 多区域并列（VS Code 式）</div>
+      <div class="pattern-desc">最左侧 48px Activity Bar（仅图标）切换 Primary Sidebar 内容；中央 Editor 区多 Tab；底部 Panel 区（Terminal/日志）；底部状态栏。所有区域可拖拽重组。</div>
+      <div class="pattern-pros-cons">
+        <div class="pros-cons-col">
+          <div class="pros-cons-label pro">优点</div>
+          <div class="pros-cons-item pro">多任务并行效率极高</div>
+          <div class="pros-cons-item pro">扩展可向所有区域注入内容</div>
+          <div class="pros-cons-item pro">区域可拖拽重组适配个人习惯</div>
+        </div>
+        <div class="pros-cons-col">
+          <div class="pros-cons-label con">缺点</div>
+          <div class="pros-cons-item con">新用户学习成本最高</div>
+          <div class="pros-cons-item con">不适合普通业务用户</div>
+          <div class="pros-cons-item con">移动端完全不适用</div>
+        </div>
+      </div>
+      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+        <span class="tag gray">VS Code</span><span class="tag gray">JetBrains</span><span class="tag gray">Zed</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pattern D: Low-code 4-zone -->
+  <div class="pattern-row">
+    <div class="pattern-preview">
+      <div class="mini-shell" style="background:#292f3d">
+        <div class="ms-topbar" style="background:#1e2330">
+          <div style="background:#3b82f6;width:10px;height:10px;border-radius:2px"></div>
+          <div style="background:#374151;flex:1;height:8px;border-radius:2px;margin:0 4px"></div>
+          <div style="background:#3b82f6;width:20px;height:8px;border-radius:2px"></div>
+        </div>
+        <div class="ms-body">
+          <div class="ms-sidebar w40" style="background:#1e2330">
+            <div style="padding:3px 2px;display:flex;flex-direction:column;gap:2px">
+              <div style="height:4px;background:#374151;border-radius:1px;width:90%"></div>
+              <div style="height:4px;background:#374151;border-radius:1px;width:70%;margin-left:4px"></div>
+              <div style="height:4px;background:#374151;border-radius:1px;width:70%;margin-left:4px"></div>
+            </div>
+          </div>
+          <div class="ms-canvas" style="background:#292f3d">
+            <div class="ms-canvas-inner" style="background:white;border-radius:3px;padding:3px">
+              <div style="height:8px;background:#3b82f6;border-radius:1px;margin-bottom:2px"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px">
+                <div style="height:14px;background:#eff6ff;border-radius:1px"></div>
+                <div style="height:14px;background:#eff6ff;border-radius:1px"></div>
+                <div style="height:14px;background:#eff6ff;border-radius:1px"></div>
+              </div>
+            </div>
+          </div>
+          <div class="ms-right" style="background:#1e2330;width:36px;border-left:1px solid #161b27">
+            <div style="padding:3px 2px;display:flex;flex-direction:column;gap:2px">
+              <div style="height:4px;background:#374151;border-radius:1px"></div>
+              <div style="height:4px;background:#374151;border-radius:1px"></div>
+              <div style="height:4px;background:#374151;border-radius:1px"></div>
+            </div>
+          </div>
+        </div>
+        <div style="height:20px;background:#1e2330;border-top:1px solid #161b27"></div>
+      </div>
+    </div>
+    <div class="pattern-info">
+      <div class="pattern-name">模式 D：IDE 四区布局（低代码设计壳）</div>
+      <div class="pattern-desc">顶部工具栏（应用名、设备切换、预览/发布）+ 左侧实体树（组件/页面/数据源）+ 中央画布 + 右侧属性面板 + 底部查询面板。设计态专属。</div>
+      <div class="pattern-pros-cons">
+        <div class="pros-cons-col">
+          <div class="pros-cons-label pro">优点</div>
+          <div class="pros-cons-item pro">所见即所得，信息密度高</div>
+          <div class="pros-cons-item pro">组件树与画布强联动</div>
+          <div class="pros-cons-item pro">设计/运行双态明确分离</div>
+        </div>
+        <div class="pros-cons-col">
+          <div class="pros-cons-label con">缺点</div>
+          <div class="pros-cons-item con">仅适用于构建者，非使用者</div>
+          <div class="pros-cons-item con">小屏幕体验极差</div>
+          <div class="pros-cons-item con">实现复杂度最高</div>
+        </div>
+      </div>
+      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+        <span class="tag orange">Retool</span><span class="tag orange">Appsmith</span><span class="tag orange">ToolJet</span><span class="tag orange">Budibase</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pattern E: Three column -->
+  <div class="pattern-row">
+    <div class="pattern-preview">
+      <div class="mini-shell">
+        <div class="ms-topbar" style="background:#001529">
+          <div style="background:#0070d2;width:14px;height:10px;border-radius:2px"></div>
+          <div style="flex:1"></div>
+          <div style="background:rgba(255,255,255,.3);width:8px;height:8px;border-radius:50%"></div>
+        </div>
+        <div class="ms-body">
+          <div style="width:30px;background:#f3f4f6;border-right:1px solid #e5e7eb;display:flex;flex-direction:column;gap:2px;padding:3px 2px">
+            <div style="height:4px;background:#dbeafe;border-radius:1px"></div>
+            <div style="height:4px;background:#e5e7eb;border-radius:1px"></div>
+            <div style="height:4px;background:#e5e7eb;border-radius:1px"></div>
+            <div style="height:4px;background:#e5e7eb;border-radius:1px"></div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column">
+            <div style="height:12px;border-bottom:1px solid #f3f4f6;background:white;display:flex;gap:3px;align-items:center;padding:0 4px">
+              <div style="height:4px;background:#bfdbfe;border-radius:1px;flex:1"></div>
+              <div style="height:4px;background:#e5e7eb;border-radius:1px;width:30px"></div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px;padding:3px">
+              <div style="height:6px;background:#f9fafb;border-radius:1px"></div>
+              <div style="height:6px;background:#f9fafb;border-radius:1px"></div>
+              <div style="height:6px;background:#eff6ff;border-radius:1px"></div>
+              <div style="height:6px;background:#f9fafb;border-radius:1px"></div>
+            </div>
+          </div>
+          <div style="width:44px;background:white;border-left:1px solid #e5e7eb;padding:3px 2px;display:flex;flex-direction:column;gap:2px">
+            <div style="height:4px;background:#e5e7eb;border-radius:1px"></div>
+            <div style="height:4px;background:#e5e7eb;border-radius:1px;width:70%"></div>
+            <div style="height:4px;background:#e5e7eb;border-radius:1px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pattern-info">
+      <div class="pattern-name">模式 E：三栏结构（服务队列 / 企业记录详情）</div>
+      <div class="pattern-desc">左栏：队列/列表（导航），中栏：工单/记录详情（主内容），右栏：上下文信息（客户资料、SLA、知识库推荐）。ServiceNow Agent Workspace 的核心模式。</div>
+      <div class="pattern-pros-cons">
+        <div class="pros-cons-col">
+          <div class="pros-cons-label pro">优点</div>
+          <div class="pros-cons-item pro">同时可见列表、内容、上下文</div>
+          <div class="pros-cons-item pro">客服、审批场景效率极高</div>
+          <div class="pros-cons-item pro">无需页面跳转</div>
+        </div>
+        <div class="pros-cons-col">
+          <div class="pros-cons-label con">缺点</div>
+          <div class="pros-cons-item con">需要至少 1280px 宽度</div>
+          <div class="pros-cons-item con">三栏宽度比例需精心设计</div>
+          <div class="pros-cons-item con">中栏内容密度难以控制</div>
+        </div>
+      </div>
+      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+        <span class="tag green">ServiceNow</span><span class="tag green">Zammad</span><span class="tag green">Salesforce Console</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="layout-zones">
+  <div class="section-title">三、布局区域定义</div>
+  <p class="section-subtitle">企业应用壳的标准区域划分，各区域有明确的职责和作用域</p>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="layout-diagram">
+<span class="zone-label">┌──────────────────────────────────────────────────────────────────┐</span>
+<span class="zone-label">│  GLOBAL SHELL BAR  </span><span class="zone-size">(48-56px)</span>  <span class="zone-content">← 全局作用域：跨所有应用持久化</span>
+<span class="zone-label">│  </span>Logo | App Launcher | Nav Tabs | Search | Notifications | User
+<span class="zone-label">├────────────┬─────────────────────────────────────────────────────┤</span>
+<span class="zone-label">│  APP NAV   │  BREADCRUMB / PAGE TITLE             </span><span class="zone-content">← 应用作用域</span>
+<span class="zone-label">│  SIDEBAR   │  ───────────────────────────────────────────────  │</span>
+<span class="zone-label">│  </span><span class="zone-size">(220px)</span>  <span class="zone-label">│  TOOLBAR: [New] [Import] [Filter]  🔍 Search      │</span>
+<span class="zone-label">│            │  ───────────────────────────────────────────────  │</span>
+<span class="zone-label">│  Module A  │                                                    │</span>
+<span class="zone-label">│  Module B● │           MAIN CONTENT AREA                       │</span>
+<span class="zone-label">│  Module C  │         (List / Dashboard / Form / Canvas)         │</span>
+<span class="zone-label">│  Module D  │                                          ┌─────────┤</span>
+<span class="zone-label">│  ────────  │                                          │ DETAIL  │</span>
+<span class="zone-label">│  Settings  │                                          │ DRAWER  │</span>
+<span class="zone-label">│            │                                          │</span><span class="zone-size">(380px)</span><span class="zone-label"> │</span>
+<span class="zone-label">├────────────┴──────────────────────────────────────────┴─────────┤</span>
+<span class="zone-label">│  UTILITY BAR  </span><span class="zone-size">(40px, 可选)</span>  <span class="zone-content">← Salesforce 模式：常驻工具托盘</span>
+<span class="zone-label">│  [📞 软电话]  [📝 笔记]  [⏱ 计时器]  [📋 最近访问]</span>
+<span class="zone-label">└──────────────────────────────────────────────────────────────────┘</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-4" style="margin-top:16px">
+    <div class="card">
+      <div class="card-header"><span style="font-size:18px">🌐</span><span class="card-title">全局层</span></div>
+      <div class="card-body" style="font-size:12px;color:var(--text2);line-height:1.6">
+        <b>跨所有应用持久化。</b>包含：品牌 Logo、App Launcher/应用切换器、全局搜索（跨 App）、通知中心、用户菜单、租户切换。<br><br>
+        <b>关键约束：</b>全局层内容不随 App 切换而改变。
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span style="font-size:18px">📱</span><span class="card-title">应用层</span></div>
+      <div class="card-body" style="font-size:12px;color:var(--text2);line-height:1.6">
+        <b>当前应用内持久化。</b>包含：应用内模块导航（侧边栏/顶部 Tab）、角色首页/工作台、待办聚合、应用级设置入口。<br><br>
+        <b>关键约束：</b>切换应用时，应用层内容重置。
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span style="font-size:18px">📄</span><span class="card-title">页面层</span></div>
+      <div class="card-body" style="font-size:12px;color:var(--text2);line-height:1.6">
+        <b>当前页面/视图专属。</b>包含：面包屑、页面工具栏（筛选/排序/新建）、视图切换（列表/看板/日历）、分页、列表/表格/图表。<br><br>
+        <b>关键约束：</b>跳转时状态可通过 URL 保留。
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span style="font-size:18px">🔍</span><span class="card-title">详情层</span></div>
+      <div class="card-body" style="font-size:12px;color:var(--text2);line-height:1.6">
+        <b>记录详情，3 种展开方式。</b>侧边抽屉（保留列表上下文）、Split 面板（列表+详情并排）、整页跳转（URL 稳定可书签）。<br><br>
+        <b>选择依据：</b>操作深度 vs 上下文保留需求。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="detail-modes">
+  <div class="section-title">四、记录详情展开方式</div>
+  <p class="section-subtitle">从列表到详情的过渡是应用壳最核心的交互决策之一</p>
+
+  <div class="grid-3">
+    <div class="card" style="border-top:3px solid #3b82f6">
+      <div class="card-header">
+        <div>
+          <div class="card-title">侧边抽屉（Side Drawer）</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:2px">列表不消失，右侧滑入详情</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div style="background:#f9fafb;border:1px solid var(--border);border-radius:6px;height:100px;display:flex;overflow:hidden;margin-bottom:12px">
+          <div style="flex:1;padding:8px;display:flex;flex-direction:column;gap:4px">
+            <div style="height:6px;background:#bfdbfe;border-radius:2px"></div>
+            <div style="height:6px;background:#e5e7eb;border-radius:2px"></div>
+            <div style="height:6px;background:#eff6ff;border-radius:2px;border-left:2px solid #3b82f6"></div>
+            <div style="height:6px;background:#e5e7eb;border-radius:2px"></div>
+          </div>
+          <div style="width:55%;background:white;border-left:1px solid #e5e7eb;padding:8px">
+            <div style="height:5px;background:#111;border-radius:2px;width:70%;margin-bottom:6px"></div>
+            <div style="height:4px;background:#e5e7eb;border-radius:2px;margin-bottom:3px"></div>
+            <div style="height:4px;background:#e5e7eb;border-radius:2px;width:80%;margin-bottom:3px"></div>
+            <div style="height:4px;background:#e5e7eb;border-radius:2px;width:60%"></div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.6">
+          <b>适用：</b>快速预览、轻量编辑<br>
+          <b>优点：</b>保留列表上下文，可返回<br>
+          <b>典型：</b>Airtable、Jira、Salesforce
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="border-top:3px solid #8b5cf6">
+      <div class="card-header">
+        <div>
+          <div class="card-title">分屏面板（Split View）</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:2px">列表左，详情右，同时可见</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div style="background:#f9fafb;border:1px solid var(--border);border-radius:6px;height:100px;display:flex;overflow:hidden;margin-bottom:12px">
+          <div style="width:45%;padding:8px;display:flex;flex-direction:column;gap:3px;border-right:1px solid #e5e7eb">
+            <div style="height:5px;background:#e5e7eb;border-radius:2px"></div>
+            <div style="height:5px;background:#ede9fe;border-radius:2px;border-left:2px solid #8b5cf6"></div>
+            <div style="height:5px;background:#e5e7eb;border-radius:2px"></div>
+            <div style="height:5px;background:#e5e7eb;border-radius:2px"></div>
+          </div>
+          <div style="flex:1;padding:8px">
+            <div style="height:6px;background:#1f2937;border-radius:2px;width:80%;margin-bottom:6px"></div>
+            <div style="height:4px;background:#e5e7eb;border-radius:2px;margin-bottom:3px"></div>
+            <div style="height:4px;background:#e5e7eb;border-radius:2px;width:70%"></div>
+            <div style="margin-top:8px;display:flex;gap:4px">
+              <div style="height:14px;background:#ede9fe;border-radius:3px;flex:1"></div>
+              <div style="height:14px;background:#e5e7eb;border-radius:3px;flex:1"></div>
+            </div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.6">
+          <b>适用：</b>高频切换、深度编辑<br>
+          <b>优点：</b>最高信息密度，无跳转损耗<br>
+          <b>典型：</b>Linear（Detail Level 1-3）、Outlook
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="border-top:3px solid #10b981">
+      <div class="card-header">
+        <div>
+          <div class="card-title">整页跳转（Full Page）</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:2px">独立 URL，面包屑标记来路</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div style="background:#f9fafb;border:1px solid var(--border);border-radius:6px;height:100px;overflow:hidden;margin-bottom:12px">
+          <div style="height:18px;background:#001529;display:flex;align-items:center;padding:0 6px;gap:4px">
+            <div style="height:4px;background:rgba(255,255,255,.4);border-radius:1px;width:50px"></div>
+            <div style="height:4px;background:rgba(255,255,255,.2);border-radius:1px;width:30px"></div>
+          </div>
+          <div style="padding:8px">
+            <div style="display:flex;align-items:center;gap:4px;margin-bottom:6px">
+              <div style="height:4px;background:#10b981;border-radius:1px;width:30px"></div>
+              <div style="color:#d1d5db;font-size:10px">/</div>
+              <div style="height:4px;background:#374151;border-radius:1px;width:40px"></div>
+            </div>
+            <div style="height:8px;background:#111;border-radius:2px;width:60%;margin-bottom:6px"></div>
+            <div style="display:flex;gap:6px">
+              <div style="height:5px;background:#e5e7eb;border-radius:1px;flex:1"></div>
+              <div style="height:5px;background:#e5e7eb;border-radius:1px;flex:2"></div>
+            </div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.6">
+          <b>适用：</b>深度编辑、可分享、SEO<br>
+          <b>优点：</b>URL 稳定、专注内容<br>
+          <b>典型：</b>GitHub、Metabase、Frappe
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="key-features">
+  <div class="section-title">五、关键功能模块分析</div>
+  <p class="section-subtitle">应用壳的可组合功能单元，每个功能有明确的采用产品和设计规范</p>
+
+  <div class="feature-card">
+    <div class="feature-header">
+      <span class="feature-icon">⌨️</span>
+      <span class="feature-name">命令面板（Command Palette）</span>
+      <div class="feature-adopted"><span class="badge yes">高价值功能</span></div>
+    </div>
+    <div class="feature-body">
+      <b>作为"第 5 层导航"：</b>绕过所有层级，直接键盘跳转到任意位置或执行任意操作。触发：<code>Cmd+K</code>（Linear、Notion）或 <code>Ctrl+Shift+P</code>（VS Code）。<br>
+      <b>核心设计要点：</b>① Fuzzy Search 容错匹配 ② 操作范围感知（当前上下文决定显示哪些命令）③ 子菜单式下钻 ④ 面板内显示快捷键提示 ⑤ 权限过滤（只显示有权限的命令）⑥ 最近使用优先排序。
+    </div>
+    <div class="feature-products">
+      <span class="product-badge">Linear ⌘K</span>
+      <span class="product-badge">VS Code ⇧⌘P</span>
+      <span class="product-badge">Notion ⌘P</span>
+      <span class="product-badge">GitHub (搜索代替)</span>
+    </div>
+  </div>
+
+  <div class="feature-card">
+    <div class="feature-header">
+      <span class="feature-icon">🚀</span>
+      <span class="feature-name">App Launcher / 应用切换器</span>
+      <div class="feature-adopted"><span class="badge yes">企业壳必备</span></div>
+    </div>
+    <div class="feature-body">
+      <b>解决多 App 平台的切换问题。</b>Salesforce 用九宫格图标网格 + 搜索框，点击左上角图标展开全屏覆盖层。SAP Fiori 用瓦片磁贴首页作为 App 入口（Launchpad）。Vercel 用左侧顶部 Team Switcher（类 Slack 工作区切换）。<br>
+      <b>关键数据：</b>App 数量 ≤ 7 用顶部 Tab；8-20 用下拉菜单或 Grid；＞20 必须加搜索。
+    </div>
+    <div class="feature-products">
+      <span class="product-badge">Salesforce App Grid</span>
+      <span class="product-badge">SAP Fiori Launchpad</span>
+      <span class="product-badge">Notion Workspace</span>
+      <span class="product-badge">Linear Workspace</span>
+    </div>
+  </div>
+
+  <div class="feature-card">
+    <div class="feature-header">
+      <span class="feature-icon">🔔</span>
+      <span class="feature-name">通知中心</span>
+      <div class="feature-adopted"><span class="badge partial">场景依赖</span></div>
+    </div>
+    <div class="feature-body">
+      <b>设计关键点：</b>① 铃铛图标 + 数字 badge（超过 99 显示 99+）② 点击展开下拉列表（不跳转页面）③ 通知分类（@我、任务、系统、审批）④ 支持单条/全部已读 ⑤ 点击跳转到通知来源记录（带上下文回跳）。<br>
+      SAP Fiori 通知支持按业务对象分组显示，Linear 的 Inbox 作为独立页面处理通知而非下拉。
+    </div>
+    <div class="feature-products">
+      <span class="product-badge">SAP Fiori 分组通知</span>
+      <span class="product-badge">Linear Inbox</span>
+      <span class="product-badge">Jira 通知下拉</span>
+      <span class="product-badge">GitHub 通知列表</span>
+    </div>
+  </div>
+
+  <div class="feature-card">
+    <div class="feature-header">
+      <span class="feature-icon">🏠</span>
+      <span class="feature-name">角色工作台首页（Role-Based Home）</span>
+      <div class="feature-adopted"><span class="badge yes">企业壳差异化</span></div>
+    </div>
+    <div class="feature-body">
+      <b>核心理念：</b>不同角色看到不同的首页内容（销售看机会、服务看工单、财务看审批）。SAP Fiori 用"磁贴即应用入口"，每个 Tile 内嵌实时 KPI 数值，既是导航又是摘要。Salesforce 的仪表盘组件支持基于角色的动态配置。<br>
+      <b>设计要点：</b>待办聚合、快捷操作、关键指标卡片、最近访问。
+    </div>
+    <div class="feature-products">
+      <span class="product-badge">SAP Fiori Launchpad</span>
+      <span class="product-badge">Salesforce Home Page</span>
+      <span class="product-badge">ServiceNow Workspace</span>
+      <span class="product-badge">Jira "For You"</span>
+    </div>
+  </div>
+
+  <div class="feature-card">
+    <div class="feature-header">
+      <span class="feature-icon">🏷️</span>
+      <span class="feature-name">多标签页（Multi-Tab / Workspace Tab）</span>
+      <div class="feature-adopted"><span class="badge partial">复杂场景适用</span></div>
+    </div>
+    <div class="feature-body">
+      <b>解决问题：</b>同时处理多条记录时避免反复跳转。Salesforce Console Navigation 把每条记录作为顶部 Sub-Tab，像浏览器标签管理工作上下文。用友 NC/金蝶 ERP 用 Tab 页签保留多个打开的功能页面。<br>
+      <b>注意：</b>Tab 数量超过 8 条时用户认知负担急剧增加，需要提供"关闭所有"、Tab 排序等管理功能。
+    </div>
+    <div class="feature-products">
+      <span class="product-badge">Salesforce Console</span>
+      <span class="product-badge">金蝶 Tab 页签</span>
+      <span class="product-badge">用友 NC</span>
+      <span class="product-badge">VS Code Editor Tabs</span>
+    </div>
+  </div>
+
+  <div class="feature-card">
+    <div class="feature-header">
+      <span class="feature-icon">🔗</span>
+      <span class="feature-name">底部工具栏（Utility Bar）</span>
+      <div class="feature-adopted"><span class="badge partial">Salesforce 独有模式</span></div>
+    </div>
+    <div class="feature-body">
+      <b>Salesforce 独创：</b>固定在页面最底部，宽度与视口同宽，类似 macOS Dock。存放高频辅助工具（软电话 CTI、快速笔记、计时器、最近访问）。点击按钮弹出向上的浮动面板（Docked Panel），不离开当前页面。<br>
+      <b>适用场景：</b>需要在不离开主内容的情况下访问工具，特别适合呼叫中心、销售场景。
+    </div>
+    <div class="feature-products">
+      <span class="product-badge">Salesforce Utility Bar</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="comparison">
+  <div class="section-title">六、产品对比矩阵</div>
+  <p class="section-subtitle">14 款产品的关键设计决策对比</p>
+
+  <div class="card">
+    <div style="overflow-x:auto">
+      <table class="cmp-table">
+        <thead>
+          <tr>
+            <th>产品</th>
+            <th>壳类型</th>
+            <th>主导航位置</th>
+            <th>详情展开</th>
+            <th>命令面板</th>
+            <th>多标签</th>
+            <th>角色首页</th>
+            <th>全局搜索</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Salesforce Lightning</td>
+            <td><span class="tag blue">企业业务</span></td>
+            <td>顶栏 Tab + 左侧</td>
+            <td>抽屉 / 整页</td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge yes">Console 模式</span></td>
+            <td><span class="badge yes">仪表盘</span></td>
+            <td><span class="badge yes">全局</span></td>
+          </tr>
+          <tr>
+            <td>SAP Fiori</td>
+            <td><span class="tag blue">企业业务</span></td>
+            <td>顶部 ShellBar</td>
+            <td>整页 Object Page</td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge yes">磁贴 Launchpad</span></td>
+            <td><span class="badge yes">Enterprise Search</span></td>
+          </tr>
+          <tr>
+            <td>ServiceNow Polaris</td>
+            <td><span class="tag green">服务队列</span></td>
+            <td>顶部 Unified Nav</td>
+            <td>三栏中列更新</td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge yes">记录 Tab</span></td>
+            <td><span class="badge yes">Workspace</span></td>
+            <td><span class="badge yes">范围感知</span></td>
+          </tr>
+          <tr>
+            <td>Linear</td>
+            <td><span class="tag purple">任务协作</span></td>
+            <td>左侧窄边栏</td>
+            <td>Split 面板</td>
+            <td><span class="badge yes">⌘K 全局</span></td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge yes">/ 过滤</span></td>
+          </tr>
+          <tr>
+            <td>Notion</td>
+            <td><span class="tag purple">知识空间</span></td>
+            <td>左侧页面树</td>
+            <td>原地内容更新</td>
+            <td><span class="badge yes">⌘P 搜索</span></td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge yes">全文搜索</span></td>
+          </tr>
+          <tr>
+            <td>Jira</td>
+            <td><span class="tag purple">任务协作</span></td>
+            <td>顶栏 + 左侧 + 项目 Tab</td>
+            <td>抽屉 / 整页</td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge partial">For You</span></td>
+            <td><span class="badge yes">全站搜索</span></td>
+          </tr>
+          <tr>
+            <td>Airtable</td>
+            <td><span class="tag blue">数据应用</span></td>
+            <td>顶部 Table Tab + 左 View</td>
+            <td>Record Side Panel</td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge partial">Base 内搜索</span></td>
+          </tr>
+          <tr>
+            <td>Retool</td>
+            <td><span class="tag orange">低代码设计</span></td>
+            <td>Header + Sidebar Frame</td>
+            <td>Modal / Drawer Frame</td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge no">无</span></td>
+          </tr>
+          <tr>
+            <td>GitHub</td>
+            <td><span class="tag gray">开发者工具</span></td>
+            <td>顶栏 + 仓库水平 Tab</td>
+            <td>整页跳转</td>
+            <td><span class="badge no">搜索代替</span></td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge yes">代码语义搜索</span></td>
+          </tr>
+          <tr>
+            <td>VS Code</td>
+            <td><span class="tag gray">开发者工具</span></td>
+            <td>Activity Bar</td>
+            <td>编辑区 Tab</td>
+            <td><span class="badge yes">⇧⌘P</span></td>
+            <td><span class="badge yes">编辑器 Tab</span></td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge yes">全局 Find</span></td>
+          </tr>
+          <tr>
+            <td>Vercel</td>
+            <td><span class="tag gray">开发者工具</span></td>
+            <td>左侧侧边栏</td>
+            <td>整页跳转</td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge partial">项目搜索</span></td>
+          </tr>
+          <tr>
+            <td>Metabase</td>
+            <td><span class="tag blue">数据应用</span></td>
+            <td>左侧 Collection 树</td>
+            <td>整页跳转</td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge partial">Dashboard 首页</span></td>
+            <td><span class="badge yes">全局搜索</span></td>
+          </tr>
+          <tr>
+            <td>NocoBase</td>
+            <td><span class="tag orange">低代码设计</span></td>
+            <td>顶部 Nav + 展开左侧子菜单</td>
+            <td>原地 Block 更新</td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge no">无</span></td>
+            <td><span class="badge no">无</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="decisions">
+  <div class="section-title">七、选型决策框架</div>
+  <p class="section-subtitle">根据业务场景快速定位应用壳类型和导航模式</p>
+
+  <div class="card">
+    <div class="card-body">
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:16px">问题 1：这个系统的核心用户任务是什么？</div>
+
+      <div class="grid-2" style="gap:12px">
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid var(--border)">→ 处理业务实体（客户/订单/合同/工单）</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:6px;padding:12px">
+              <div style="font-size:12px;font-weight:700;color:#1e40af;margin-bottom:4px">企业业务壳</div>
+              <div style="font-size:11px;color:var(--text2)">有多个业务对象（客户、订单、产品）且需要跨对象导航 → <b>顶栏 Tab + 侧边栏模块</b></div>
+            </div>
+            <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:6px;padding:12px">
+              <div style="font-size:12px;font-weight:700;color:#166534;margin-bottom:4px">服务队列壳</div>
+              <div style="font-size:11px;color:var(--text2)">以工单/队列为核心，需同时查看上下文 → <b>三栏结构</b></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid var(--border)">→ 管理任务/项目进度</div>
+          <div style="background:#fdf4ff;border:1.5px solid #e9d5ff;border-radius:6px;padding:12px">
+            <div style="font-size:12px;font-weight:700;color:#6d28d9;margin-bottom:4px">任务协作壳</div>
+            <div style="font-size:11px;color:var(--text2)">团队协作、Sprint 管理、路线图 → <b>左侧窄边栏 + 多视图切换</b><br>命令面板是否必需：高频用户强烈推荐</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid var(--border)">→ 管理/分析结构化数据</div>
+          <div style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:6px;padding:12px">
+            <div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:4px">数据应用壳</div>
+            <div style="font-size:11px;color:var(--text2)">多视图、多维表格 → <b>顶 Tab + 左 View 列表 + 数据网格</b><br>需要 Record Side Panel 保留视图上下文</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid var(--border)">→ 创作知识/文档内容</div>
+          <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:6px;padding:12px">
+            <div style="font-size:12px;font-weight:700;color:#166534;margin-bottom:4px">知识空间壳</div>
+            <div style="font-size:11px;color:var(--text2)">内容创作为主 → <b>左侧页面树 + 内容画布</b><br>Hub 数量控制在 5-8 个，树深度 ≤ 3</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="highlight-box" style="margin-top:16px">
+        <strong>通用后台管理壳</strong>（菜单 → 路由 → 页面）适用于以上所有场景的最低成本实现，是功能导向的权限系统的默认选择。当业务实体未被明确识别、或团队没有专属设计资源时，优先选择此壳 + 标准组件库（Ant Design Pro / Vue Vben Admin）。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<div class="section" id="principles">
+  <div class="section-title">八、核心设计原则</div>
+  <p class="section-subtitle">从 14 款产品中提炼的共同规律，可作为向导框架的评分标准</p>
+
+  <div class="principle-grid">
+    <div class="principle-card">
+      <div class="principle-num">原则 01</div>
+      <div class="principle-name">层级克制：3 跳原则</div>
+      <div class="principle-desc">用户到达任何内容不超过 3 次点击。一级导航 ≤ 7 项（7±2 法则）。层级每加一层，回退成本加一倍。</div>
+      <div class="principle-example">✓ 首页 → 客户列表 → 客户详情（2跳）<br>✗ 首页 → 模块 → 子模块 → 列表 → 详情（4跳）</div>
+    </div>
+
+    <div class="principle-card">
+      <div class="principle-num">原则 02</div>
+      <div class="principle-name">上下文保留：不让用户迷路</div>
+      <div class="principle-desc">跳转时保留来路（面包屑、返回按钮、列表状态）。列表筛选条件编码进 URL，刷新后可恢复。详情弹出时背景列表不消失。</div>
+      <div class="principle-example">✓ URL: /customers?status=active&page=2<br>✗ 点详情后返回，筛选和页码全丢了</div>
+    </div>
+
+    <div class="principle-card">
+      <div class="principle-num">原则 03</div>
+      <div class="principle-name">全局 vs 局部作用域明确分离</div>
+      <div class="principle-desc">全局层（跨所有 App 持久）与应用层（当前 App 内持久）必须有视觉和行为上的明确边界。Retool 的 Global Frame vs Page Frame 是范本。</div>
+      <div class="principle-example">全局：顶部 ShellBar、通知、用户头像<br>局部：侧边栏菜单、面包屑、工具栏</div>
+    </div>
+
+    <div class="principle-card">
+      <div class="principle-num">原则 04</div>
+      <div class="principle-name">导航即权限地图</div>
+      <div class="principle-desc">用户看到哪些菜单项 = 有哪些权限。不可访问的功能应直接隐藏，而非显示后报"无权限"。前端菜单过滤 + 后端路由鉴权双重保障。</div>
+      <div class="principle-example">✓ 销售只看到"客户""商机""活动"<br>✗ 显示所有菜单但点了报错</div>
+    </div>
+
+    <div class="principle-card">
+      <div class="principle-num">原则 05</div>
+      <div class="principle-name">渐进式暴露复杂度</div>
+      <div class="principle-desc">高频功能在一级，低频功能折叠，长尾功能进命令面板。随着用户熟练度提升，逐渐开放快捷键和高级功能，而非一开始就全部展示。</div>
+      <div class="principle-example">Level 1: 按钮点击 → Level 2: 右键菜单<br>Level 3: 键盘快捷键 → Level 4: 命令面板</div>
+    </div>
+
+    <div class="principle-card">
+      <div class="principle-num">原则 06</div>
+      <div class="principle-name">配置驱动，与代码分离</div>
+      <div class="principle-desc">导航结构从代码中抽离为配置（YAML/JSON/数据库），支持按角色动态渲染、运营配置、A/B 测试，不需要重新部署。SAP Fiori Launchpad 自定义是典型实现。</div>
+      <div class="principle-example">navigation.yaml → 角色过滤 → 动态菜单<br>而非 if(role==='admin') showMenu()</div>
+    </div>
+  </div>
+
+  <div class="highlight-box" style="margin-top:20px">
+    <strong>反模式警示：</strong><br>
+    ① <b>迷宫导航</b>：层级 ≥ 4，用户找不到回去的路 &nbsp;
+    ② <b>标签云导航</b>：顶栏 20 个项目，无分组无优先级 &nbsp;
+    ③ <b>双重地狱</b>：侧边栏 + 顶部 Tab + 面包屑 三套导航并存，用户需要三套心智模型 &nbsp;
+    ④ <b>权限误导</b>：显示无权限的菜单项，点击后报错 &nbsp;
+    ⑤ <b>上下文丢失</b>：跳转详情后返回，筛选和页码全丢
+  </div>
+</div>
+
+<div style="margin-top:40px;padding:20px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);font-size:12px;color:var(--text2);line-height:1.8">
+  <b>参考来源：</b>
+  Salesforce SLDS 设计系统 · SAP Fiori 设计指南 · ServiceNow Horizon 设计系统 · Linear 产品博客 · Notion 帮助文档 · Jira 导航指南 · Airtable Interface Designer 文档 · Retool 文档 · VS Code UX 指南 · GitHub 仓库重设计分析（tonsky.me） · Vercel 仪表盘重设计博客 · NocoBase 开发者文档 · Appsmith 文档<br>
+  <b>版本：</b>v1.0 · 整理日期：2026-07-20
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,8 @@
+# Local Obsidian runtime state and credentials.
+/.obsidian/api-config.json
+/.obsidian/workspace*.json
+/.obsidian/plugins/*/data.json
+/.obsidian/**/*.pem
+/.obsidian/**/*.key
+/.obsidian/**/*.crt
+__pycache__/

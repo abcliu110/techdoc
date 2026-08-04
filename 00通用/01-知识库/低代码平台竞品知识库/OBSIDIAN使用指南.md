@@ -1,8 +1,8 @@
 # 低代码平台竞品知识库
 
-> 版本：v1.2
+> 版本：v1.3
 > 日期：2026-07-12
-> 更新：API 配置（2026-07-12）
+> 更新：凭据止血与 API 端点校正（2026-07-19）
 
 ## 目录结构
 
@@ -37,7 +37,7 @@
 | API 地址 | https://127.0.0.1:27124 |
 | 端口 | 27124 |
 | 协议 | HTTPS |
-| 鉴权 | Bearer API Key |
+| 鉴权 | 环境变量 `OBSIDIAN_API_KEY` 提供 Bearer API Key |
 
 **重要**：Obsidian 必须保持运行状态，API 才能响应。
 
@@ -47,30 +47,30 @@
 |------|------|------|
 | Local REST API | 4.1.7 | HTTP 接口供 AI 调用 |
 
-## API 端点示例
+## API 端点
 
-```bash
-# 获取笔记列表
-curl -k -H "Authorization: Bearer YOUR_API_KEY" \
-  "https://127.0.0.1:27124/api/search?q=NocoBase"
-
-# 获取笔记内容
-curl -k -H "Authorization: Bearer YOUR_API_KEY" \
-  "https://127.0.0.1:27124/api/notes/README.md"
-
-# 获取文件夹内容
-curl -k -H "Authorization: Bearer YOUR_API_KEY" \
-  "https://127.0.0.1:27124/api/folders/"
+```text
+GET  /vault/
+GET  /vault/{文件路径}
+POST /search/
+POST /search/simple/
 ```
+
+```powershell
+$headers = @{ Authorization = "Bearer $env:OBSIDIAN_API_KEY" }
+Invoke-RestMethod -SkipCertificateCheck -Headers $headers -Uri 'https://127.0.0.1:27124/vault/'
+```
+
+`obsidian_query.py` 只从 `OBSIDIAN_API_KEY` 读取凭据，请求超时为 5 秒。搜索时若未配置凭据、连接失败或请求超时，脚本会降级为知识库目录内的只读 Markdown 搜索；认证失败等 HTTP 错误不会被静默隐藏。`--list` 和 `--read` 不做本地降级。
 
 ## AI 调用流程
 
 ```
 用户提问
     ↓
-Claude Code 调用 Obsidian API 搜索
+AI 调用 Obsidian API 搜索
     ↓
 获取相关笔记片段
     ↓
-Claude Code 基于结果回答
+AI 基于结果回答
 ```
