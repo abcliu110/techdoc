@@ -1,0 +1,80 @@
+<style>
+  .depth-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:22px}
+  .depth-card{border:1px solid #cbd5df;background:#fff;cursor:pointer;transition:.18s;overflow:hidden}
+  .depth-card:hover{border-color:#1d6d65;box-shadow:0 8px 22px #173b3518;transform:translateY(-2px)}
+  .depth-card.selected{border:2px solid #16796f;box-shadow:0 0 0 3px #16796f22}
+  .depth-title{display:flex;gap:10px;align-items:flex-start;padding:16px;border-bottom:1px solid #dce3e9;background:#f6f8fa}
+  .depth-letter{display:grid;place-items:center;flex:0 0 32px;height:32px;background:#172331;color:#fff;font-weight:800}
+  .depth-title h3{margin:0 0 3px;font-size:17px}.depth-title p{margin:0;color:#647182;font-size:12px}
+  .appshot{height:420px;padding:10px;background:#e9edf1;color:#263240;font:11px/1.35 system-ui,sans-serif}
+  .bar{display:flex;align-items:center;gap:7px;height:33px;padding:0 9px;background:#1d2935;color:#fff}.bar b{font-size:12px}.bar span{margin-left:auto;color:#c8d1da}
+  .work{display:grid;gap:8px;height:calc(100% - 41px);margin-top:8px}.work.a{grid-template-rows:auto 1fr auto}.work.b{grid-template-columns:1fr 112px;grid-template-rows:auto 1fr auto}.work.c{grid-template-columns:82px 1fr 105px;grid-template-rows:1fr}
+  .panel{min-width:0;border:1px solid #bdc7d1;background:#fff;padding:8px}.muted{color:#778494}.labelx{color:#647182;font-size:9px;text-transform:uppercase}.strong{font-weight:750}.alert{border-left:3px solid #be7a12;background:#fff3d7;padding:6px}.ok{border-left:3px solid #16806f;background:#e5f3ef;padding:6px}.danger{border-left:3px solid #aa4d4d;background:#f8e5e5;padding:6px}
+  .kv{display:grid;grid-template-columns:repeat(2,1fr);gap:5px;margin-top:6px}.fieldx{border:1px solid #d5dce3;padding:5px;background:#fbfcfd}.fieldx b{display:block;margin-top:2px}
+  .tablex{width:100%;margin-top:7px;border-collapse:collapse}.tablex td,.tablex th{padding:4px;border:1px solid #d7dee5;text-align:left}.tablex th{background:#edf2f5}.money{text-align:right!important;font-family:Consolas,monospace}.chips{display:flex;gap:4px;flex-wrap:wrap}.chip{padding:2px 5px;border:1px solid #bdc7d1;background:#f5f7f9}.btnx{display:inline-block;margin-right:4px;padding:5px 8px;border:1px solid #8997a5;background:#fff;font-weight:700}.btnx.primary{border-color:#a87906;background:#e9ab18}.timeline{display:grid;gap:7px}.step{border-left:2px solid #b8c3cd;padding-left:7px}.step.done{border-color:#16796f}.metric{font:700 16px/1.1 Consolas;color:#17374e}.sidebarx{display:grid;align-content:start;gap:4px;background:#22303d;color:#d7e0e8}.navx{padding:6px;border-left:3px solid transparent}.navx.on{border-color:#e9ab18;background:#344453;color:#fff}.tiny{font-size:9px}.footer-note{min-height:73px;padding:13px 15px;border-top:1px solid #dce3e9}.footer-note b{display:block;margin-bottom:4px}.footer-note p{margin:0;color:#5c6978;font-size:12px}
+  @media(max-width:1050px){.depth-grid{grid-template-columns:1fr}.appshot{height:390px}}
+</style>
+
+<h2>309 套原型应该做到哪一层业务真实性？</h2>
+<p class="subtitle">同一个场景：销售经理审批客户“星河科技”的订单 SO-20260714-018，含 12% 折扣、信用额度不足和华东仓缺货。</p>
+
+<div class="depth-grid">
+  <article class="depth-card option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="depth-title"><div class="depth-letter">A</div><div><h3>数据真实</h3><p>真实字段和示例值，但仍是单步演示</p></div></div>
+    <div class="appshot">
+      <div class="bar"><b>销售订单</b><span>草稿</span></div>
+      <div class="work a">
+        <div class="panel"><span class="labelx">订单号</span> <b>SO-20260714-018</b><span style="float:right">客户：星河科技</span></div>
+        <div class="panel">
+          <div class="kv"><div class="fieldx">销售组织<b>华东事业部</b></div><div class="fieldx">结算币种<b>CNY</b></div><div class="fieldx">交付日期<b>2026-07-22</b></div><div class="fieldx">付款条件<b>月结 30 天</b></div></div>
+          <table class="tablex"><tr><th>商品</th><th>数量</th><th>折扣</th><th>金额</th></tr><tr><td>工业网关 X2</td><td>20</td><td>12%</td><td class="money">176,000</td></tr><tr><td>实施服务</td><td>5</td><td>0%</td><td class="money">25,000</td></tr></table>
+        </div>
+        <div class="panel"><span class="btnx primary">提交审批</span><span class="muted">状态：待提交</span></div>
+      </div>
+    </div>
+    <div class="footer-note"><b>优点：比当前样例更像真实单据</b><p>不足：点击后仍只是改状态，没有决策依据、异常处理和下游影响。</p></div>
+  </article>
+
+  <article class="depth-card option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="depth-title"><div class="depth-letter">B</div><div><h3>任务真实</h3><p>角色、规则、异常、决策和结果形成闭环</p></div></div>
+    <div class="appshot">
+      <div class="bar"><b>待办 / 超折扣销售订单审批</b><span>销售经理 · 林晓</span></div>
+      <div class="work b">
+        <div class="panel" style="grid-column:1/3"><b>SO-20260714-018 · 星河科技</b><span class="chip" style="float:right">等待审批 3h 24m</span><div class="chips" style="margin-top:5px"><span class="chip">华东事业部</span><span class="chip">合同客户</span><span class="chip">金额 ¥201,000</span></div></div>
+        <div class="panel">
+          <div class="alert"><b>需要判断</b> 折扣 12% 超过销售员上限 8%；客户可用信用仅 ¥160,000。</div>
+          <table class="tablex"><tr><th>商品</th><th>可售</th><th>申请量</th><th>折后金额</th></tr><tr><td>工业网关 X2</td><td>华东 8 / 华南 35</td><td>20</td><td class="money">176,000</td></tr><tr><td>实施服务</td><td>排期可用</td><td>5 天</td><td class="money">25,000</td></tr></table>
+          <div class="kv"><div class="fieldx">历史毛利率<b>31.4%</b></div><div class="fieldx">本单毛利率<b style="color:#a34c32">19.8%</b></div><div class="fieldx">近 90 天回款<b>¥680,000</b></div><div class="fieldx">逾期应收<b style="color:#a34c32">¥42,000</b></div></div>
+          <div class="panel" style="margin-top:7px;background:#f7f9fb"><b>审批意见</b><div class="muted">建议改为分批交付；首批 8 台走华东仓，其余从华南调拨。</div><div style="margin-top:6px"><span class="btnx">退回修改</span><span class="btnx primary">附条件通过</span></div></div>
+        </div>
+        <aside class="panel">
+          <div class="labelx">影响预览</div><div class="metric">¥41,000</div><div class="muted">信用额度缺口</div>
+          <hr><div class="timeline"><div class="step done"><b>销售提交</b><div class="tiny muted">09:12 林晓</div></div><div class="step"><b>经理审批</b><div class="tiny muted">当前节点</div></div><div class="step"><b>财务复核</b><div class="tiny muted">信用例外触发</div></div><div class="step"><b>库存预占</b></div></div>
+        </aside>
+        <div class="ok" style="grid-column:1/3"><b>附条件通过后：</b>生成财务复核待办，锁定华东 8 台库存，订单仍不可发货。</div>
+      </div>
+    </div>
+    <div class="footer-note"><b>推荐：每个组件承载一个真实业务任务</b><p>每项 2–5 个关键动作，至少覆盖规则判断、一个异常分支、一个业务结果；仍保持组件边界清晰。</p></div>
+  </article>
+
+  <article class="depth-card option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="depth-title"><div class="depth-letter">C</div><div><h3>系统真实</h3><p>把订单、库存、信用、流程和审计串成小系统</p></div></div>
+    <div class="appshot">
+      <div class="bar"><b>订单履约控制塔</b><span>SO-20260714-018</span></div>
+      <div class="work c">
+        <aside class="panel sidebarx"><div class="navx on">订单</div><div class="navx">信用</div><div class="navx">库存</div><div class="navx">审批</div><div class="navx">物流</div><div class="navx">审计</div></aside>
+        <main class="panel">
+          <div class="danger"><b>履约阻断 2 项</b> 信用额度不足；华东仓缺货 12 台。</div>
+          <div class="kv"><div class="fieldx">订单状态<b>审批中</b></div><div class="fieldx">履约状态<b>部分可承诺</b></div><div class="fieldx">应收风险<b>中高</b></div><div class="fieldx">承诺日期<b>待重算</b></div></div>
+          <table class="tablex"><tr><th>供给方案</th><th>数量</th><th>到货</th><th>成本影响</th></tr><tr><td>华东现货</td><td>8</td><td>07-18</td><td class="money">0</td></tr><tr><td>华南调拨</td><td>12</td><td>07-21</td><td class="money">+2,400</td></tr></table>
+          <div class="panel" style="margin-top:7px"><b>方案模拟</b><div class="chips" style="margin:5px 0"><span class="chip">分批发货</span><span class="chip">华南调拨</span><span class="chip">信用临时额度</span></div><span class="btnx primary">执行组合方案</span></div>
+          <div class="timeline" style="margin-top:8px"><div class="step done">09:12 订单提交 · 规则命中超折扣</div><div class="step done">09:13 信用检查 · 缺口 ¥41,000</div><div class="step">等待经理与财务联合决策</div></div>
+        </main>
+        <aside class="panel"><div class="labelx">实时指标</div><div class="metric">19.8%</div><div class="muted">预计毛利</div><hr><div class="metric">72h</div><div class="muted">预计履约延迟</div><hr><div class="metric">2</div><div class="muted">待协同角色</div><hr><b>事件</b><div class="tiny muted">CreditChecked<br>StockReserved<br>ApprovalRequested</div></aside>
+      </div>
+    </div>
+    <div class="footer-note"><b>优点：最接近生产系统</b><p>不足：309 项都做到这一层会模糊组件差异、工作量极大；更适合第 18 类复合组件和少数端到端示范。</p></div>
+  </article>
+</div>
+
+<p class="subtitle" style="margin-top:18px">请点击你认为应该作为 309 项主标准的方案。也可以回复“B 为主，C 用于复合组件”之类的组合意见。</p>

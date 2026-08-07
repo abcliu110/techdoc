@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>生产组件交付流水线</title>
+  <style>
+    :root { font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif; background:#f3f5f7; color:#17202a; }
+    * { box-sizing:border-box; }
+    body { margin:0; padding:30px; }
+    main { max-width:1220px; margin:auto; }
+    h1 { margin:0 0 6px; font-size:27px; letter-spacing:0; }
+    .lead { margin:0 0 24px; color:#52606d; }
+    .pipeline { display:grid; grid-template-columns:repeat(7,minmax(120px,1fr)); gap:9px; }
+    .stage { position:relative; min-height:178px; padding:15px 13px; background:#fff; border:1px solid #cbd2d9; border-top:4px solid #2368a2; border-radius:5px; }
+    .stage::after { content:"→"; position:absolute; right:-17px; top:72px; z-index:2; color:#7b8794; font-size:20px; }
+    .stage:last-child::after { display:none; }
+    .num { display:block; color:#2368a2; font-weight:800; font-size:12px; margin-bottom:7px; }
+    .stage h2 { margin:0 0 8px; font-size:15px; }
+    .stage p { margin:0; color:#52606d; font-size:12px; line-height:1.45; }
+    .gate { display:block; margin-top:11px; padding-top:9px; border-top:1px solid #e4e7eb; font-size:11px; color:#334e68; font-weight:700; }
+    .red { border-top-color:#c53030; }
+    .green { border-top-color:#137752; }
+    .release { border-top-color:#7c3aed; }
+    .evidence { margin-top:20px; display:grid; grid-template-columns:1.3fr 1fr; gap:16px; }
+    .panel { background:#fff; border:1px solid #cbd2d9; border-radius:5px; padding:18px; }
+    .panel h2 { margin:0 0 12px; font-size:17px; }
+    .evidence-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .ev { padding:10px; background:#eef2f6; font-size:12px; line-height:1.4; border-left:3px solid #52606d; }
+    .boundary { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .owner { padding:13px; border-radius:4px; font-size:12px; line-height:1.5; }
+    .client { background:#eef7ff; border-left:4px solid #2368a2; }
+    .server { background:#f2fbf6; border-left:4px solid #137752; }
+    .owner strong { display:block; margin-bottom:5px; font-size:13px; }
+    .stop { margin-top:16px; padding:14px 17px; background:#fff5f5; border-left:4px solid #c53030; font-size:13px; line-height:1.5; }
+    @media(max-width:980px){ .pipeline{grid-template-columns:1fr 1fr}.stage::after{display:none}.evidence{grid-template-columns:1fr} }
+    @media(max-width:620px){ body{padding:16px}.pipeline,.evidence-grid,.boundary{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+<main>
+  <h1>单个组件：七道强制关口</h1>
+  <p class="lead">每个组件有唯一责任人、风险等级、契约卡和证据包；缺关口不得以“后补”方式进入发布分支。</p>
+
+  <section class="pipeline" aria-label="组件交付流程">
+    <article class="stage"><span class="num">01 INTAKE</span><h2>登记与定级</h2><p>关联旧 ID；标注 B/C、R1-R3、使用者、依赖、最坏失败后果与版本目标。</p><span class="gate">门禁：责任与范围明确</span></article>
+    <article class="stage"><span class="num">02 CONTRACT</span><h2>契约冻结</h2><p>Props、事件、受控状态、插槽、键盘、焦点、异步与异常恢复写成可验证契约。</p><span class="gate">门禁：API / UX / A11y 评审</span></article>
+    <article class="stage red"><span class="num">03 RED</span><h2>先证明缺失</h2><p>先写最小失败测试，确认因目标行为尚未实现而失败；记录 RED 证据。</p><span class="gate">门禁：失败原因准确</span></article>
+    <article class="stage green"><span class="num">04 GREEN</span><h2>最小生产实现</h2><p>复用令牌与基础设施；覆盖加载、空、错误、只读、禁用及恢复，不加入未立项能力。</p><span class="gate">门禁：契约测试通过</span></article>
+    <article class="stage"><span class="num">05 HARDEN</span><h2>风险加固</h2><p>按 R 等级验证竞态、重复操作、虚拟化、失败注入、草稿恢复、安全边界与性能预算。</p><span class="gate">门禁：风险证据齐全</span></article>
+    <article class="stage"><span class="num">06 DOCS</span><h2>规范与迁移</h2><p>文档站提供真实业务场景、状态矩阵、错误示例、API、迁移关系和限制。</p><span class="gate">门禁：只消费公开 API</span></article>
+    <article class="stage release"><span class="num">07 RELEASE</span><h2>准入与发布</h2><p>运行全量质量门禁，生成变更集、版本、产物清单、安装验证、回滚和弃用说明。</p><span class="gate">门禁：批准角色签署</span></article>
+  </section>
+
+  <section class="evidence">
+    <article class="panel">
+      <h2>每个组件的证据包</h2>
+      <div class="evidence-grid">
+        <div class="ev">契约卡<br>旧 ID、导出名、风险与责任人</div>
+        <div class="ev">测试证据<br>RED、GREEN、回归与失败注入</div>
+        <div class="ev">交互证据<br>键盘、焦点、恢复与响应式</div>
+        <div class="ev">视觉证据<br>主题、密度、暗色与状态矩阵</div>
+        <div class="ev">包证据<br>类型、Tree Shaking、安装与导出</div>
+        <div class="ev">发布证据<br>变更、兼容、回滚与未覆盖风险</div>
+      </div>
+    </article>
+    <article class="panel">
+      <h2>责任边界</h2>
+      <div class="boundary">
+        <div class="owner client"><strong>React 组件负责</strong>防重复触发、交互状态、输入约束、恢复入口、焦点管理、确认语义、事件与观测钩子。</div>
+        <div class="owner server"><strong>业务服务负责</strong>权限与租户最终校验、幂等、并发控制、金额/库存/订单约束、事务、审计与跨系统一致性。</div>
+      </div>
+    </article>
+  </section>
+
+  <div class="stop"><strong>停止线：</strong>契约未冻结、RED 未观察到、R2/R3 证据缺失、存在未解释的回归、回滚不可执行或文档站绕过公开 API，任一命中都禁止发布。</div>
+</main>
+</body>
+</html>

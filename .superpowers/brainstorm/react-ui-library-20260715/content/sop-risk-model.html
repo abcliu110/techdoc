@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>生产组件 SOP 风险模型</title>
+  <style>
+    :root { font-family: Inter,"Segoe UI","Microsoft YaHei",sans-serif; background:#f4f6f8; color:#17202a; }
+    * { box-sizing:border-box; }
+    body { margin:0; padding:30px; }
+    main { max-width:1160px; margin:0 auto; }
+    h1 { margin:0 0 7px; font-size:27px; letter-spacing:0; }
+    .lead { margin:0 0 24px; color:#52606d; line-height:1.55; }
+    .baseline { background:#17202a; color:white; padding:18px 20px; border-radius:6px; }
+    .baseline h2 { margin:0 0 12px; font-size:17px; }
+    .chips { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+    .chip { padding:10px; background:#2d3a46; border-left:3px solid #55d6a7; font-size:12px; line-height:1.4; }
+    .axis { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:18px 0; }
+    .panel { background:#fff; border:1px solid #cbd2d9; border-radius:6px; padding:17px; }
+    .panel h2 { margin:0 0 7px; font-size:16px; }
+    .panel p { margin:0; color:#52606d; line-height:1.5; font-size:13px; }
+    .matrix { width:100%; border-collapse:separate; border-spacing:0; background:#fff; border:1px solid #cbd2d9; border-radius:6px; overflow:hidden; }
+    .matrix th,.matrix td { padding:14px; text-align:left; vertical-align:top; border-right:1px solid #d9e2ec; border-bottom:1px solid #d9e2ec; }
+    .matrix th:last-child,.matrix td:last-child { border-right:0; }
+    .matrix tr:last-child td { border-bottom:0; }
+    .matrix thead th { background:#e8edf2; font-size:13px; }
+    .matrix tbody th { width:110px; background:#f7f9fb; font-size:15px; }
+    .matrix td { font-size:12px; color:#364152; line-height:1.45; }
+    .r1 { border-top:4px solid #137752; }
+    .r2 { border-top:4px solid #b7791f; }
+    .r3 { border-top:4px solid #c53030; }
+    .tag { display:inline-block; padding:2px 6px; margin-bottom:6px; border-radius:3px; font-weight:700; background:#eef2f6; color:#17202a; }
+    .note { margin-top:16px; padding:14px 17px; border-left:4px solid #2368a2; background:#eef7ff; font-size:13px; line-height:1.5; }
+    @media(max-width:760px){ body{padding:16px}.chips,.axis{grid-template-columns:1fr}.matrix{display:block;overflow-x:auto}.matrix th,.matrix td{min-width:220px} }
+  </style>
+</head>
+<body>
+<main>
+  <h1>统一底线 + 双轴分层</h1>
+  <p class="lead">先判断“实现有多复杂”，再判断“失败会造成多大损害”。两者互不替代。</p>
+
+  <section class="baseline">
+    <h2>统一底线：309 个组件无条件满足</h2>
+    <div class="chips">
+      <div class="chip">严格 TypeScript<br>公开类型与子路径导出稳定</div>
+      <div class="chip">完整状态<br>空、加载、失败、禁用、只读</div>
+      <div class="chip">无障碍<br>键盘、焦点、语义、对比度</div>
+      <div class="chip">可恢复<br>异常不吞操作，焦点与草稿可恢复</div>
+      <div class="chip">可验证<br>文档、测试、响应式与发布证据</div>
+    </div>
+  </section>
+
+  <section class="axis">
+    <article class="panel"><h2>B / C：原型复杂度</h2><p>决定拆分粒度、演示场景数量、测试组合和实施批次。B 是任务真实组件；C 是跨模块或跨系统复合交互。</p></article>
+    <article class="panel"><h2>R1 / R2 / R3：生产风险</h2><p>依据最坏失败后果分级，决定评审角色、证据深度、灰度策略与回滚要求。发布门禁看这一轴。</p></article>
+  </section>
+
+  <table class="matrix" aria-label="生产风险门禁矩阵">
+    <thead>
+      <tr><th>等级</th><th class="r1">R1 局部可逆</th><th class="r2">R2 业务状态</th><th class="r3">R3 关键业务</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>判定</th>
+        <td><span class="tag">R1</span><br>失败只影响当前视图或本地临时状态，可立即撤销，不触达敏感数据。</td>
+        <td><span class="tag">R2</span><br>涉及异步提交、持久化编辑、批量选择或并发刷新；错误会导致工作丢失或业务状态不一致，但可补偿。</td>
+        <td><span class="tag">R3</span><br>涉及权限、多租户、金额、库存、订单、支付、不可逆批量操作或跨系统一致性。</td>
+      </tr>
+      <tr>
+        <th>附加门禁</th>
+        <td>组件契约评审、交互/A11y/视觉回归、包安装验证。</td>
+        <td>R1 全部 + 集成测试、竞态/重复提交、草稿恢复、失败注入、性能预算。</td>
+        <td>R2 全部 + 领域评审、权限与租户验证、幂等并发、审计、灰度/回滚演练、跨系统契约测试。</td>
+      </tr>
+      <tr>
+        <th>发布权限</th>
+        <td>组件责任人完成证据后合入。</td>
+        <td>组件责任人 + 组件库维护者双审。</td>
+        <td>组件库维护者 + 业务领域责任人批准；缺任一项不得发布。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note"><strong>分级规则：</strong>按最高命中项定级；无法证明是低风险时向上取级。C 不自动等于 R3，B 也可能是 R3，例如外观简单的“确认扣款”按钮。</div>
+</main>
+</body>
+</html>

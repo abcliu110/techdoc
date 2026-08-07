@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>React 组件库生产架构</title>
+  <style>
+    :root { color-scheme: light; font-family: Inter, "Segoe UI", "Microsoft YaHei", sans-serif; background:#f4f6f8; color:#17202a; }
+    * { box-sizing:border-box; }
+    body { margin:0; padding:32px; }
+    main { max-width:1180px; margin:0 auto; }
+    h1 { margin:0 0 8px; font-size:28px; letter-spacing:0; }
+    .lead { margin:0 0 28px; color:#52606d; }
+    .flow { display:grid; grid-template-columns:1fr 52px 1.35fr 52px 1fr; align-items:center; gap:10px; }
+    .stack { display:grid; gap:12px; }
+    .box { min-height:112px; border:1px solid #cbd2d9; border-left:4px solid #2368a2; background:#fff; border-radius:6px; padding:18px; box-shadow:0 1px 2px rgba(16,24,40,.05); }
+    .box.primary { border-left-color:#137752; background:#f6fffb; }
+    .box.reference { border-left-color:#b7791f; background:#fffdf5; }
+    .box h2 { margin:0 0 8px; font-size:17px; }
+    .box p { margin:4px 0; font-size:14px; color:#52606d; line-height:1.5; }
+    .arrow { text-align:center; font-size:28px; color:#7b8794; }
+    .rule { margin-top:24px; padding:18px 20px; background:#17202a; color:#fff; border-radius:6px; display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+    .rule strong { display:block; margin-bottom:5px; font-size:14px; }
+    .rule span { color:#d9e2ec; font-size:13px; line-height:1.45; }
+    .release { margin-top:18px; background:#fff; border:1px solid #cbd2d9; padding:18px 20px; border-radius:6px; }
+    .release h2 { margin:0 0 12px; font-size:17px; }
+    .steps { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+    .step { background:#eef2f6; border-top:3px solid #52606d; padding:12px; min-height:86px; }
+    .step b { display:block; font-size:13px; margin-bottom:5px; }
+    .step span { font-size:12px; color:#52606d; line-height:1.4; }
+    @media (max-width:850px) {
+      body { padding:18px; }
+      .flow { grid-template-columns:1fr; }
+      .arrow { transform:rotate(90deg); }
+      .rule, .steps { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <h1>生产级 React 组件库：边界与发布链路</h1>
+  <p class="lead">一个仓库，两类可发布资产，一个演示入口；旧 HTML 套件继续作为行为验收基线。</p>
+
+  <section class="flow" aria-label="架构依赖关系">
+    <div class="stack">
+      <article class="box reference">
+        <h2>309 项 HTML 交互规范</h2>
+        <p>保留组件 ID、状态、主流程、异常恢复、键盘与响应式契约。</p>
+        <p>角色：需求与回归基线，不进入 npm 运行时。</p>
+      </article>
+      <article class="box">
+        <h2>契约清单与迁移映射</h2>
+        <p>旧 ID → React 导出名 → Story → 自动化用例 → 发布批次。</p>
+      </article>
+    </div>
+    <div class="arrow" aria-hidden="true">→</div>
+    <div class="stack">
+      <article class="box primary">
+        <h2>@company/ui</h2>
+        <p>唯一面向业务项目的组件包，支持根导出与子路径导出。</p>
+        <p>包含 React 组件、样式、类型、受控状态 API 与无障碍语义。</p>
+      </article>
+      <article class="box primary">
+        <h2>@company/tokens</h2>
+        <p>颜色、排版、间距、密度、动效、层级与暗色主题变量。</p>
+        <p>只被 UI 包和消费方依赖，不反向依赖任何组件。</p>
+      </article>
+    </div>
+    <div class="arrow" aria-hidden="true">→</div>
+    <div class="stack">
+      <article class="box">
+        <h2>apps/docs 规范演示站</h2>
+        <p>真实业务场景、Props、状态矩阵、异常恢复、无障碍与迁移说明。</p>
+        <p>只消费发布包公开 API，不允许走源码后门。</p>
+      </article>
+      <article class="box">
+        <h2>质量与发布设施</h2>
+        <p>单元、交互、无障碍、视觉回归、响应式、包产物与类型测试。</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="rule">
+    <div><strong>依赖单向</strong><span>tokens → ui → docs / consumer，禁止反向引用。</span></div>
+    <div><strong>契约可追溯</strong><span>每个旧组件 ID 必须映射到 React API、Story 和测试证据。</span></div>
+    <div><strong>发布即质量门禁</strong><span>任何批次只有在类型、交互、A11y、视觉与包安装验证通过后才可发布。</span></div>
+  </section>
+
+  <section class="release">
+    <h2>分批路线</h2>
+    <div class="steps">
+      <div class="step"><b>0.1 基线 + 业务切片</b><span>令牌、基础控件、弹层、表单、表格、树与代表性复合组件。</span></div>
+      <div class="step"><b>0.2 数据与选择</b><span>高级表格、树表、选择器、虚拟化与异步数据状态。</span></div>
+      <div class="step"><b>0.3 编辑器与流程</b><span>规则、查询、流程、布局及其他复杂设计器。</span></div>
+      <div class="step"><b>0.x 全量覆盖</b><span>30 个 C 级跨系统组件、309 项契约覆盖与稳定版准入。</span></div>
+    </div>
+  </section>
+</main>
+</body>
+</html>

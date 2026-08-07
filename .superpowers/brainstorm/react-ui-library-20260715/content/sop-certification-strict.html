@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>生产组件认证制</title>
+  <style>
+    :root{font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif;background:#f2f4f6;color:#17202a}*{box-sizing:border-box}body{margin:0;padding:28px}main{max-width:1220px;margin:auto}h1{margin:0 0 7px;font-size:27px;letter-spacing:0}.lead{margin:0 0 20px;color:#52606d;line-height:1.5}.banner{background:#7f1d1d;color:#fff;padding:15px 18px;border-radius:5px;margin-bottom:16px;font-size:13px;line-height:1.5}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.panel{background:#fff;border:1px solid #cbd2d9;border-radius:5px;padding:17px}.panel h2{margin:0 0 10px;font-size:16px}.checks{display:grid;gap:7px}.check{display:grid;grid-template-columns:25px 1fr;gap:7px;padding:8px 9px;background:#f7f9fb;font-size:12px;line-height:1.45}.check b{color:#137752}.matrix{margin-top:14px;width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:1px solid #cbd2d9;border-radius:5px;overflow:hidden}.matrix th,.matrix td{padding:12px 13px;text-align:left;vertical-align:top;border-bottom:1px solid #d9e2ec;border-right:1px solid #d9e2ec;font-size:12px;line-height:1.45}.matrix th{background:#e8edf2}.matrix th:last-child,.matrix td:last-child{border-right:0}.matrix tr:last-child td{border-bottom:0}.no{color:#a61b1b;font-weight:800}.conditional{color:#8a5a00;font-weight:800}.yes{color:#137752;font-weight:800}.release{margin-top:14px;display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.gate{background:#17202a;color:#fff;padding:13px;border-top:4px solid #55d6a7;min-height:112px}.gate strong{display:block;margin-bottom:6px;font-size:13px}.gate span{font-size:11px;color:#d9e2ec;line-height:1.45}.exception{margin-top:14px;background:#fff8e6;border-left:4px solid #b7791f;padding:14px 17px;font-size:12px;line-height:1.55}.redline{margin-top:10px;background:#fff5f5;border-left:4px solid #c53030;padding:14px 17px;font-size:12px;line-height:1.55}@media(max-width:800px){body{padding:15px}.grid,.release{grid-template-columns:1fr}.matrix{display:block;overflow:auto}.matrix th,.matrix td{min-width:190px}}
+  </style>
+</head>
+<body><main>
+  <h1>从“流程合规”升级为“组件认证”</h1>
+  <p class="lead">组件只有通过可复核认证才进入发布清单。无证据等同未完成，口头确认和截图描述不能代替自动化结果。</p>
+  <div class="banner"><strong>默认拒绝：</strong>任一强制检查缺失、失败、超预算或证据不可追溯，流水线直接阻断；不得先发版后补票。</div>
+
+  <section class="grid">
+    <article class="panel"><h2>机器强制门禁</h2><div class="checks">
+      <div class="check"><b>01</b><span>严格类型、公开 API 类型测试、循环依赖、重复导出、包边界与 Tree Shaking 检查。</span></div>
+      <div class="check"><b>02</b><span>单元、契约、交互、键盘、焦点、异常恢复、响应式、暗色与视觉回归全部通过。</span></div>
+      <div class="check"><b>03</b><span>A11y 自动扫描零严重/高危；关键流程必须人工键盘与读屏复核并留证。</span></div>
+      <div class="check"><b>04</b><span>运行时无未处理异常、无控制台错误、无 React 警告；性能与包体积不得超预算。</span></div>
+      <div class="check"><b>05</b><span>从打包产物创建隔离消费项目，验证 ESM、类型、CSS、SSR/浏览器边界和子路径导入。</span></div>
+      <div class="check"><b>06</b><span>变更必须声明兼容级别；破坏性修改只能经弃用周期与主版本发布进入。</span></div>
+    </div></article>
+    <article class="panel"><h2>治理与可追溯</h2><div class="checks">
+      <div class="check"><b>01</b><span>每个组件指定 Owner、备份 Owner、风险等级、评审人和支持期限；无人负责不得发布。</span></div>
+      <div class="check"><b>02</b><span>需求、契约、代码、测试、Story、旧 ID、变更集和发布产物使用同一追踪标识关联。</span></div>
+      <div class="check"><b>03</b><span>依赖固定版本并经过许可证、安全与维护状态审查；高危漏洞阻断发布。</span></div>
+      <div class="check"><b>04</b><span>发布采用不可变产物、来源证明、完整性校验；测试对象与实际发布对象必须是同一产物。</span></div>
+      <div class="check"><b>05</b><span>每次发布生成兼容报告、风险清单、回滚步骤和消费方升级说明；证据按版本归档。</span></div>
+      <div class="check"><b>06</b><span>发布后有问题分级、响应时限、撤回/降级规则；R3 需演练而非只写文档。</span></div>
+    </div></article>
+  </section>
+
+  <table class="matrix" aria-label="风险等级认证要求">
+    <thead><tr><th>认证项</th><th>R1</th><th>R2</th><th>R3</th></tr></thead>
+    <tbody>
+      <tr><td>独立评审</td><td>Owner 之外 1 人</td><td>维护者 + 测试评审</td><td>维护者 + 测试 + 领域/安全责任人</td></tr>
+      <tr><td>失败与并发验证</td><td>关键错误态</td><td>竞态、重试、重复操作、恢复</td><td>R2 + 幂等/权限/租户/跨系统契约</td></tr>
+      <tr><td>发布方式</td><td>正常批次</td><td>预发布通道 + 代表性消费方验证</td><td>隔离环境演练 + 灰度 + 可观测回滚</td></tr>
+      <tr><td>偏差许可</td><td class="conditional">仅非红线，可限期</td><td class="conditional">仅非红线，双人批准</td><td class="no">禁止</td></tr>
+    </tbody>
+  </table>
+
+  <section class="release">
+    <div class="gate"><strong>Commit Gate</strong><span>格式、类型、单元、契约、边界与变更集。</span></div>
+    <div class="gate"><strong>PR Gate</strong><span>全交互、A11y、视觉、响应式、性能、依赖与独立评审。</span></div>
+    <div class="gate"><strong>Publish Gate</strong><span>打包产物隔离安装、签名/校验、兼容报告和回滚验证。</span></div>
+    <div class="gate"><strong>Promote Gate</strong><span>预发布验证、消费方证据；R2/R3 达到灰度与观测条件才升稳定。</span></div>
+  </section>
+
+  <div class="exception"><strong>偏差机制：</strong>只适用于不影响功能、安全、无障碍、数据正确性和兼容性的非红线项；必须记录原因、影响、责任人、补偿措施、到期时间（最长一个小版本），到期自动阻断。R3 不接受偏差。</div>
+  <div class="redline"><strong>绝对红线：</strong>跨租户/越权、敏感信息泄露、金额/库存/订单错误、不可恢复数据丢失、未处理异常、关键键盘路径不可达、发布产物未验证、已知高危漏洞、破坏性变更未走主版本。任何等级均不得豁免。</div>
+</main></body></html>

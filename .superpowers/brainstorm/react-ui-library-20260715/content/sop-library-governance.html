@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>组件库发布治理</title>
+  <style>
+    :root{font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif;background:#f3f5f7;color:#17202a}*{box-sizing:border-box}body{margin:0;padding:28px}main{max-width:1200px;margin:auto}h1{margin:0 0 7px;font-size:27px;letter-spacing:0}.lead{margin:0 0 22px;color:#52606d;line-height:1.5}.lifecycle{display:grid;grid-template-columns:repeat(6,1fr);gap:9px}.state{position:relative;background:#fff;border:1px solid #cbd2d9;border-top:4px solid #2368a2;border-radius:5px;padding:14px 12px;min-height:133px}.state:after{content:"→";position:absolute;right:-16px;top:52px;z-index:2;color:#7b8794;font-size:19px}.state:last-child:after{display:none}.state b{display:block;font-size:13px;margin-bottom:7px}.state span{display:block;color:#52606d;font-size:11px;line-height:1.5}.state.stable{border-top-color:#137752}.state.deprecated{border-top-color:#b7791f}.state.retired{border-top-color:#7b8794}.grid{display:grid;grid-template-columns:1.1fr 1fr;gap:14px;margin-top:16px}.panel{background:#fff;border:1px solid #cbd2d9;border-radius:5px;padding:17px}.panel h2{font-size:16px;margin:0 0 11px}.rows{display:grid;gap:7px}.row{display:grid;grid-template-columns:100px 1fr;gap:10px;padding:9px;background:#f7f9fb;font-size:12px;line-height:1.45}.row strong{color:#334e68}.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.tick{background:#eef2f6;border-left:3px solid #52606d;padding:10px;font-size:11px;line-height:1.45}.tick b{display:block;margin-bottom:5px;font-size:12px}.freeze{margin-top:14px;background:#fff5f5;border-left:4px solid #c53030;padding:14px 17px;font-size:12px;line-height:1.55}.rollback{margin-top:10px;background:#eef7ff;border-left:4px solid #2368a2;padding:14px 17px;font-size:12px;line-height:1.55}.metrics{margin-top:16px;width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:1px solid #cbd2d9;border-radius:5px;overflow:hidden}.metrics th,.metrics td{text-align:left;vertical-align:top;padding:11px 13px;border-bottom:1px solid #d9e2ec;border-right:1px solid #d9e2ec;font-size:12px;line-height:1.45}.metrics th{background:#e8edf2}.metrics th:last-child,.metrics td:last-child{border-right:0}.metrics tr:last-child td{border-bottom:0}@media(max-width:850px){body{padding:15px}.lifecycle{grid-template-columns:1fr 1fr}.state:after{display:none}.grid{grid-template-columns:1fr}.timeline{grid-template-columns:1fr 1fr}}@media(max-width:520px){.lifecycle,.timeline{grid-template-columns:1fr}.row{grid-template-columns:1fr}}
+  </style>
+</head>
+<body><main>
+  <h1>组件库级治理：从实验到退役</h1>
+  <p class="lead">“通过测试”只获得候选资格；稳定发布还必须经过真实消费验证、可回滚验证和版本兼容审查。</p>
+
+  <section class="lifecycle" aria-label="组件生命周期">
+    <article class="state"><b>Experimental</b><span>API 可变；不得进入关键生产流程；必须显式导入实验入口。</span></article>
+    <article class="state"><b>Alpha</b><span>契约成形；内部演示与失败注入完成；不承诺升级兼容。</span></article>
+    <article class="state"><b>Beta</b><span>代表性项目试用；兼容策略启用；收集运行证据和迁移成本。</span></article>
+    <article class="state stable"><b>Stable</b><span>认证通过、责任人明确、支持矩阵与回滚完成；遵守语义化版本。</span></article>
+    <article class="state deprecated"><b>Deprecated</b><span>保留运行能力；提供替代 API、迁移文档、开发期告警和截止版本。</span></article>
+    <article class="state retired"><b>Retired</b><span>只能在已公告的主版本删除；提供 codemod 或可执行迁移清单。</span></article>
+  </section>
+
+  <section class="grid">
+    <article class="panel"><h2>版本与兼容规则</h2><div class="rows">
+      <div class="row"><strong>Patch</strong><span>缺陷修复，不改变公开类型、DOM 语义、焦点顺序、默认行为或视觉尺寸契约。</span></div>
+      <div class="row"><strong>Minor</strong><span>向后兼容的新能力；默认关闭或不改变旧用法；必须附迁移影响报告。</span></div>
+      <div class="row"><strong>Major</strong><span>允许破坏性修改，但必须完成弃用周期、消费方扫描、迁移工具和回滚方案。</span></div>
+      <div class="row"><strong>0.x 阶段</strong><span>每次发布仍按破坏性变更显式标记；不得用“未到 1.0”规避兼容说明。</span></div>
+      <div class="row"><strong>双包联动</strong><span>`tokens` 与 `ui` 独立发布但记录兼容矩阵；不允许隐式要求未声明的令牌版本。</span></div>
+    </div></article>
+    <article class="panel"><h2>稳定版晋级时钟</h2><div class="timeline">
+      <div class="tick"><b>候选产物</b>锁定源码、依赖、证据和产物哈希。</div>
+      <div class="tick"><b>预发布</b>安装到隔离样例与代表性消费项目。</div>
+      <div class="tick"><b>观察窗</b>R1 可短窗；R2 至少一个真实迭代；R3 完成灰度及回滚演练。</div>
+      <div class="tick"><b>晋级</b>只提升同一不可变产物，不重新构建。</div>
+    </div></article>
+  </section>
+
+  <table class="metrics" aria-label="发布质量目标">
+    <thead><tr><th>维度</th><th>稳定发布硬条件</th><th>违反后的动作</th></tr></thead>
+    <tbody>
+      <tr><td>正确性</td><td>强制测试与契约映射全部通过；无未解释回归。</td><td>阻断或撤回版本。</td></tr>
+      <tr><td>无障碍</td><td>WCAG 2.2 AA 范围内零严重/高危；关键路径人工复核通过。</td><td>阻断晋级；已发布则按严重度热修或撤回。</td></tr>
+      <tr><td>兼容性</td><td>公开 API、类型、DOM/焦点及令牌兼容报告无未声明破坏。</td><td>重分类版本；错误发布必须撤回并重发。</td></tr>
+      <tr><td>性能</td><td>包体积、交互延迟、长任务与大数据场景符合已登记预算。</td><td>禁止用全局豁免；优化或拆分入口。</td></tr>
+      <tr><td>供应链</td><td>无已知高危漏洞；许可证合规；产物具完整性和来源记录。</td><td>冻结发布，替换/升级依赖并重新认证。</td></tr>
+    </tbody>
+  </table>
+
+  <div class="freeze"><strong>全库发布冻结：</strong>发现跨租户/越权、敏感信息泄露、错误版本破坏兼容、产物来源不可信、关键业务数据风险、同类缺陷可能波及多个组件，立即冻结全部晋级，完成影响扫描后才能解冻。</div>
+  <div class="rollback"><strong>撤回优先级：</strong>先阻止新安装与晋级，再发布已验证的回退/修复版本，随后通知已知消费方；禁止直接删除仍被项目锁定的版本，也禁止在事故中临时重新构建未经验证的产物。</div>
+</main></body></html>

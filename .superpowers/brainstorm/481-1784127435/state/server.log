@@ -1,0 +1,6 @@
+{"type":"owner-pid-invalid","pid":1,"reason":"dead at startup"}
+{"type":"server-started","port":56050,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:56050","screen_dir":"D:\\mywork\\techdoc\\.superpowers\\brainstorm\\481-1784127435\\content","state_dir":"D:\\mywork\\techdoc\\.superpowers\\brainstorm\\481-1784127435\\state"}
+{"type":"screen-added","file":"D:\\mywork\\techdoc\\.superpowers\\brainstorm\\481-1784127435\\content\\datagrid-layout-contract.html"}
+{"source":"user-event","type":"click","text":"确认此生产布局方向\n        确认后，代码会以这一空间结构实现全部状态；视觉令牌仍允许主题覆盖。\n      \n      选择此方向","choice":"approve-layout","id":null,"timestamp":1784127711601}
+{"source":"user-event","type":"click","text":"确认此生产布局方向\n        确认后，代码会以这一空间结构实现全部状态；视觉令牌仍允许主题覆盖。\n      \n      选择此方向","choice":"approve-layout","id":null,"timestamp":1784127712640}
+{"type":"server-stopped","reason":"idle timeout"}

@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DataGrid 生产布局契约</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --canvas: #f4f6f8;
+      --surface: #ffffff;
+      --subtle: #f7f8fa;
+      --ink: #172126;
+      --muted: #66757c;
+      --line: #d9e0e3;
+      --line-strong: #aebbc0;
+      --teal: #087e75;
+      --teal-soft: #e7f5f2;
+      --amber: #a45b00;
+      --amber-soft: #fff4db;
+      --danger: #b3261e;
+      --focus: #155eef;
+      --shadow: 0 10px 30px rgba(23, 33, 38, .08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+      letter-spacing: 0;
+    }
+
+    button, input { font: inherit; }
+
+    .page {
+      width: min(1500px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 28px 0 48px;
+    }
+
+    .intro {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 18px;
+    }
+
+    h1 { margin: 0 0 6px; font-size: 24px; line-height: 1.25; font-weight: 700; }
+    h2 { margin: 0; font-size: 15px; line-height: 1.4; }
+    p { margin: 0; }
+    .intro p, .caption { color: var(--muted); font-size: 13px; line-height: 1.6; }
+
+    .legend { display: flex; flex-wrap: wrap; gap: 8px 16px; justify-content: flex-end; }
+    .legend span { color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .dot { display: inline-block; width: 7px; height: 7px; margin-right: 6px; border-radius: 50%; background: var(--teal); }
+    .dot.amber { background: #d27a00; }
+    .dot.blue { background: var(--focus); }
+
+    .workspace {
+      border: 1px solid var(--line-strong);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .workspace-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 48px;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfc;
+    }
+
+    .workspace-title { display: flex; align-items: center; gap: 10px; }
+    .count { color: var(--muted); font-size: 12px; font-weight: 400; }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 52px;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .toolbar-group { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+
+    .search {
+      width: 260px;
+      height: 34px;
+      padding: 0 10px;
+      border: 1px solid var(--line-strong);
+      background: white;
+      color: var(--ink);
+    }
+
+    .button, .icon-button {
+      height: 34px;
+      border: 1px solid var(--line-strong);
+      background: white;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .button { padding: 0 12px; }
+    .icon-button { width: 34px; padding: 0; font-size: 17px; }
+    .button.primary { border-color: var(--teal); background: var(--teal); color: white; }
+    .button:focus-visible, .icon-button:focus-visible, .search:focus-visible, .cell.active {
+      outline: 2px solid var(--focus);
+      outline-offset: -2px;
+    }
+
+    .selection-summary {
+      display: inline-flex;
+      align-items: center;
+      height: 30px;
+      padding: 0 9px;
+      color: #075f59;
+      background: var(--teal-soft);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .grid-scroll { position: relative; overflow: auto; scrollbar-gutter: stable; }
+    .grid { min-width: 1010px; }
+    .row { display: grid; grid-template-columns: 42px 150px 180px 160px 140px 120px 160px 58px; min-height: 40px; }
+    .row.header { position: sticky; top: 0; z-index: 4; min-height: 40px; background: var(--subtle); border-bottom: 1px solid var(--line-strong); }
+
+    .cell {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      padding: 7px 12px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+      font-size: 13px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .header .cell { font-size: 12px; font-weight: 700; color: #43535a; }
+    .cell.checkbox { justify-content: center; padding: 0; position: sticky; left: 0; z-index: 3; background: white; }
+    .header .cell.checkbox { z-index: 6; background: var(--subtle); }
+    .cell.identifier { position: sticky; left: 42px; z-index: 2; background: white; border-right: 2px solid var(--line-strong); font-variant-numeric: tabular-nums; }
+    .header .cell.identifier { z-index: 5; background: var(--subtle); }
+    .row.selected .cell { background: #f2faf8; }
+    .row.selected .cell.checkbox, .row.selected .cell.identifier { background: #e9f7f4; }
+    .cell.amount { justify-content: flex-end; font-variant-numeric: tabular-nums; }
+
+    .sort { margin-left: auto; color: var(--teal); font-size: 11px; }
+    .status-pill { display: inline-flex; align-items: center; min-height: 24px; padding: 0 8px; font-size: 12px; font-weight: 600; background: var(--teal-soft); color: #075f59; }
+    .status-pill.pending { background: var(--amber-soft); color: var(--amber); }
+
+    .refresh-error {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 44px;
+      padding: 7px 12px;
+      border-top: 1px solid #efc46d;
+      border-bottom: 1px solid #efc46d;
+      background: var(--amber-soft);
+      color: #6c3c00;
+      font-size: 13px;
+    }
+
+    .error-copy { display: flex; align-items: center; gap: 9px; min-width: 0; }
+    .error-copy strong { color: #5c3300; }
+
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 48px;
+      padding: 7px 12px;
+      background: #fbfcfc;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .pager { display: flex; align-items: center; gap: 6px; }
+    .pager .icon-button { width: 30px; height: 30px; font-size: 14px; }
+    .page-number { min-width: 30px; height: 30px; border: 1px solid var(--teal); color: var(--teal); background: white; font-weight: 700; }
+
+    .lower-grid { display: grid; grid-template-columns: minmax(0, 1fr) 410px; gap: 18px; margin-top: 18px; }
+    .note-panel, .mobile-demo { border: 1px solid var(--line); background: white; }
+    .note-panel { padding: 18px; }
+    .note-panel h2, .mobile-demo h2 { margin-bottom: 12px; }
+    .checks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; }
+    .check { position: relative; padding-left: 20px; color: #3f4f56; font-size: 13px; line-height: 1.55; }
+    .check::before { content: ""; position: absolute; left: 0; top: 6px; width: 8px; height: 8px; background: var(--teal); }
+
+    .mobile-demo { overflow: hidden; }
+    .mobile-demo h2 { padding: 14px 14px 0; }
+    .mobile-toolbar { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .mobile-toolbar .search { width: 100%; }
+    .mobile-scroll { overflow-x: auto; }
+    .mobile-grid { width: 720px; }
+    .mobile-grid .row { grid-template-columns: 42px 136px 180px 140px 120px 102px; }
+    .mobile-grid .cell.identifier { left: 42px; }
+    .scroll-hint { padding: 8px 12px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+
+    .decision {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-top: 18px;
+      padding: 15px 16px;
+      border: 1px solid var(--line-strong);
+      background: white;
+    }
+
+    .decision.selected { border-color: var(--teal); box-shadow: inset 4px 0 var(--teal); }
+    .decision p { color: var(--muted); font-size: 13px; }
+
+    @media (max-width: 900px) {
+      .page { width: min(100% - 24px, 1500px); }
+      .intro, .decision { align-items: flex-start; flex-direction: column; }
+      .legend { justify-content: flex-start; }
+      .lower-grid { grid-template-columns: 1fr; }
+      .checks { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="intro">
+      <div>
+        <h1>DataGrid 生产布局契约</h1>
+        <p>安静、密集、面向重复操作；状态变化不改变二维表格的空间模型。</p>
+      </div>
+      <div class="legend" aria-label="设计要点">
+        <span><i class="dot"></i>稳定上下文</span>
+        <span><i class="dot amber"></i>非模态错误</span>
+        <span><i class="dot blue"></i>连续键盘焦点</span>
+      </div>
+    </div>
+
+    <section class="workspace" aria-label="桌面数据表格示例">
+      <header class="workspace-header">
+        <div class="workspace-title"><h2>采购订单</h2><span class="count">共 12,840 条</span></div>
+        <button class="icon-button" title="列显示设置" aria-label="列显示设置">☷</button>
+      </header>
+
+      <div class="toolbar">
+        <div class="toolbar-group">
+          <input class="search" value="华东" aria-label="搜索采购订单">
+          <button class="button">筛选 2</button>
+          <button class="button">清除</button>
+          <span class="selection-summary">已选 3 条 · 当前页 2 条</span>
+        </div>
+        <div class="toolbar-group">
+          <button class="icon-button" title="刷新" aria-label="刷新">↻</button>
+          <button class="button primary">导出所选</button>
+        </div>
+      </div>
+
+      <div class="grid-scroll" tabindex="0" aria-label="采购订单数据区域">
+        <div class="grid" role="grid" aria-rowcount="12840" aria-colcount="8">
+          <div class="row header" role="row">
+            <div class="cell checkbox" role="columnheader"><input type="checkbox" aria-label="选择当前页"></div>
+            <div class="cell identifier" role="columnheader">订单号 <span class="sort">↑</span></div>
+            <div class="cell" role="columnheader">供应商</div>
+            <div class="cell" role="columnheader">组织</div>
+            <div class="cell" role="columnheader">交付日期</div>
+            <div class="cell amount" role="columnheader">含税金额</div>
+            <div class="cell" role="columnheader">状态</div>
+            <div class="cell" role="columnheader">操作</div>
+          </div>
+          <div class="row selected" role="row" aria-selected="true">
+            <div class="cell checkbox" role="gridcell"><input type="checkbox" checked aria-label="选择 PO-240715-0186"></div>
+            <div class="cell identifier active" role="gridcell" tabindex="0">PO-240715-0186</div>
+            <div class="cell" role="gridcell">海曙精密材料有限公司</div>
+            <div class="cell" role="gridcell">华东采购中心</div>
+            <div class="cell" role="gridcell">2026-07-18</div>
+            <div class="cell amount" role="gridcell">¥ 286,400.00</div>
+            <div class="cell" role="gridcell"><span class="status-pill">已确认</span></div>
+            <div class="cell" role="gridcell">•••</div>
+          </div>
+          <div class="row" role="row">
+            <div class="cell checkbox" role="gridcell"><input type="checkbox" aria-label="选择 PO-240715-0185"></div>
+            <div class="cell identifier" role="gridcell">PO-240715-0185</div>
+            <div class="cell" role="gridcell">江北智能包装制造厂</div>
+            <div class="cell" role="gridcell">华东采购中心</div>
+            <div class="cell" role="gridcell">2026-07-19</div>
+            <div class="cell amount" role="gridcell">¥ 91,725.80</div>
+            <div class="cell" role="gridcell"><span class="status-pill pending">待审批</span></div>
+            <div class="cell" role="gridcell">•••</div>
+          </div>
+          <div class="row selected" role="row" aria-selected="true">
+            <div class="cell checkbox" role="gridcell"><input type="checkbox" checked aria-label="选择 PO-240715-0182"></div>
+            <div class="cell identifier" role="gridcell">PO-240715-0182</div>
+            <div class="cell" role="gridcell">辰光工业设备股份有限公司</div>
+            <div class="cell" role="gridcell">华东采购中心</div>
+            <div class="cell" role="gridcell">2026-07-22</div>
+            <div class="cell amount" role="gridcell">¥ 548,000.00</div>
+            <div class="cell" role="gridcell"><span class="status-pill">已确认</span></div>
+            <div class="cell" role="gridcell">•••</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="refresh-error" role="status">
+        <div class="error-copy"><strong>刷新失败</strong><span>当前仍显示 10:42 的数据，筛选、选择和活动单元格均已保留。</span></div>
+        <button class="button">重试</button>
+      </div>
+
+      <footer class="pagination">
+        <span>第 1–50 条，共 12,840 条 · 每页 50 条</span>
+        <div class="pager"><button class="icon-button" aria-label="上一页">‹</button><button class="page-number">1</button><button class="icon-button" aria-label="下一页">›</button></div>
+      </footer>
+    </section>
+
+    <div class="lower-grid">
+      <section class="note-panel">
+        <h2>交互与布局底线</h2>
+        <div class="checks">
+          <div class="check">表头保持 sticky，横向滚动只归 body；左侧选择列和订单号列固定。</div>
+          <div class="check">刷新失败只占用 status 区，不用遮罩、不清空数据、不重置选择。</div>
+          <div class="check">单一活动单元格采用 roving tabindex；方向键、Home/End 和 Ctrl 组合键连续导航。</div>
+          <div class="check">列宽 80–640px，调整手柄有 24px 命中区，标题与正文始终像素对齐。</div>
+          <div class="check">390px 仍保留二维 Grid，不转换成卡片；末列可通过滚动和键盘到达。</div>
+          <div class="check">工具栏可换行，分页信息可折行，但任何命令不得覆盖表头或状态。</div>
+        </div>
+      </section>
+
+      <section class="mobile-demo">
+        <h2>390px 窄屏契约</h2>
+        <div class="mobile-toolbar">
+          <input class="search" value="华东" aria-label="窄屏搜索">
+          <button class="button">筛选 2</button>
+          <span class="selection-summary">已选 3 条</span>
+        </div>
+        <div class="mobile-scroll">
+          <div class="mobile-grid" role="grid" aria-label="窄屏订单表格">
+            <div class="row header" role="row">
+              <div class="cell checkbox" role="columnheader">□</div>
+              <div class="cell identifier" role="columnheader">订单号</div>
+              <div class="cell" role="columnheader">供应商</div>
+              <div class="cell" role="columnheader">交付日期</div>
+              <div class="cell amount" role="columnheader">金额</div>
+              <div class="cell" role="columnheader">状态</div>
+            </div>
+            <div class="row selected" role="row">
+              <div class="cell checkbox" role="gridcell">☑</div>
+              <div class="cell identifier" role="gridcell">0186</div>
+              <div class="cell" role="gridcell">海曙精密材料有限公司</div>
+              <div class="cell" role="gridcell">2026-07-18</div>
+              <div class="cell amount" role="gridcell">¥286,400</div>
+              <div class="cell" role="gridcell">已确认</div>
+            </div>
+          </div>
+        </div>
+        <p class="scroll-hint">← 固定两列 · 水平滚动查看其余列 →</p>
+      </section>
+    </div>
+
+    <div class="decision" data-choice="approve-layout" onclick="this.classList.toggle('selected')">
+      <div>
+        <h2>确认此生产布局方向</h2>
+        <p>确认后，代码会以这一空间结构实现全部状态；视觉令牌仍允许主题覆盖。</p>
+      </div>
+      <button class="button primary">选择此方向</button>
+    </div>
+  </main>
+</body>
+</html>
