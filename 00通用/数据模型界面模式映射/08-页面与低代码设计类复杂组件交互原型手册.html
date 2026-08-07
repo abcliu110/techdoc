@@ -1,0 +1,404 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>页面与低代码设计类复杂组件交互原型手册</title><style>
+button{min-width:44px;min-height:44px}
+.app,.shell,main,.inner,.hero,.proto,.stage-wrap,.stage,.prototype-demo{min-width:0;max-width:100%}.stage{width:100%}.prototype-demo{overflow:auto}img,svg,canvas{max-width:100%}
+:root{--ink:#202936;--nav:#222d39;--paper:#fff;--ground:#edf1f5;--line:#cbd3dc;--muted:#667487;--accent:#e4a91a;--teal:#16796f;--blue:#356f9f;--red:#a84d4d}*{box-sizing:border-box}html,body{height:100%}body{margin:0;overflow:hidden;background:var(--ground);color:var(--ink);font:14px/1.55 "Microsoft YaHei UI",sans-serif}button,input,select,textarea{font:inherit;letter-spacing:0}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[contenteditable]:focus-visible{outline:3px solid #e4a91a66;outline-offset:2px}.app{height:100%;display:grid;grid-template-rows:58px minmax(0,1fr)}header{display:flex;align-items:center;gap:12px;padding:0 18px;color:#fff;background:#19222d;border-bottom:3px solid var(--accent)}.mark{width:7px;height:27px;background:var(--accent)}.brand{font:700 16px Bahnschrift,"Microsoft YaHei UI"}.brand small{margin-left:9px;color:#aeb9c6;font-size:12px;font-weight:500}.count{margin-left:auto;font:12px Consolas}.menu{display:none;min-width:44px;min-height:44px;border:1px solid #687788;color:#fff;background:transparent}.shell{min-height:0;display:grid;grid-template-columns:280px minmax(0,1fr)}aside{min-height:0;display:grid;grid-template-rows:auto 1fr auto;overflow:hidden;color:#c6d0db;background:var(--nav)}.side-head{padding:14px 13px 10px;border-bottom:1px solid #394552}.side-label{margin-bottom:8px;color:#8290a0;font-size:10px;font-weight:700;text-transform:uppercase}.search{width:100%;min-height:44px;padding:8px 9px;border:1px solid #495766;color:#fff;background:#18212b}.nav{overflow:auto;padding:7px}.nav button{width:100%;display:grid;grid-template-columns:34px 1fr;border:0;border-left:3px solid transparent;padding:8px;color:#c6d0db;background:transparent;text-align:left}.nav button:hover{background:#2b3745}.nav button.active{color:#17202a;background:var(--accent);font-weight:700}.num{font:11px Consolas;color:#8593a3}.en{display:block;color:#8190a0;font-size:10px;font-weight:400}.nav button.active .en{color:#6d4d04}.side-foot{padding:10px 13px;border-top:1px solid #394552;color:#8997a7;font-size:11px}main{min-width:0;overflow:auto;padding:24px 28px 44px}.inner{width:min(1160px,100%);margin:auto}.hero{display:flex;justify-content:space-between;gap:20px}.eyebrow{color:#8b6200;font:700 11px Consolas}.hero h1{margin:3px 0 5px;font:700 clamp(24px,3vw,34px)/1.2 Bahnschrift,"Microsoft YaHei UI"}.hero h1 small{color:var(--muted);font-size:.48em;font-weight:500}.summary{max-width:790px;margin:0;color:var(--muted)}.pager{display:flex;gap:6px}.btn{min-height:44px;padding:7px 12px;border:1px solid #b8c3ce;background:#fff;color:var(--ink)}.btn.primary,.btn.active{border-color:#a87906;background:var(--accent);font-weight:700}.btn.danger{border-color:#b36a6a;color:#8a3030}.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:17px}.fact{padding:11px 13px;border:1px solid var(--line);border-left:4px solid var(--accent);background:#fff}.fact:nth-child(2){border-left-color:var(--teal)}.fact:nth-child(3){border-left-color:var(--blue)}.label{color:var(--muted);font-size:10px;font-weight:700}.value{margin-top:3px;font:700 12px Consolas,"Microsoft YaHei UI";overflow-wrap:anywhere}.proto{margin-top:14px;border:1px solid #bfc9d3;background:#fff;box-shadow:0 12px 32px #18202b1f}.proto-head{min-height:52px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 10px 7px 14px;border-bottom:1px solid var(--line);background:#f8fafc}.proto-head .hint{color:var(--muted);font-size:11px}.actions{margin-left:auto;display:flex;gap:6px}.stage-wrap{padding:14px;background:#e8edf2}.stage{position:relative;min-height:350px;overflow:auto;border:1px solid #aeb9c5;background:#f7f9fb;background-image:linear-gradient(#e6ebf0 1px,transparent 1px),linear-gradient(90deg,#e6ebf0 1px,transparent 1px);background-size:20px 20px;padding:16px}.prototype-state{min-height:42px;padding:10px 13px;border-top:1px solid var(--line);border-left:4px solid var(--teal);background:#e3f0eb;font:12px Consolas,"Microsoft YaHei UI"}.notes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.note{padding:13px 14px;border:1px solid var(--line);background:#fff}.note h2{margin:0 0 5px;font-size:13px}.note p{margin:0;color:var(--muted);font-size:12px}.toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;padding:8px;border:1px solid var(--line);background:#eef2f5}.panel{padding:12px;border:1px solid #aeb9c5;background:#fff}.row{display:flex;gap:10px;align-items:flex-start}.col{display:grid;gap:8px}.grid{display:grid;gap:9px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.item{padding:10px;border:1px solid #c5ced8;background:#fff}.item.active,.selected{border-color:#b17f05;background:#fff8df}.field{display:grid;gap:5px;min-width:150px}.field-label{color:var(--muted);font-size:11px}.field input,.field select,.field textarea,input,select,textarea{min-height:40px;padding:7px 9px;border:1px solid #aeb9c5;background:#fff}.status{padding:9px 11px;border-left:4px solid var(--teal);background:#e3f0eb}.table-scroll{overflow:auto;border:1px solid var(--line);background:#fff}table{width:100%;border-collapse:collapse;background:#fff}th,td{padding:9px;border:1px solid var(--line);text-align:left}th{background:#e7edf2}.canvas{position:relative;min-width:620px;min-height:290px;background:#eef2f5}.node{position:absolute;min-width:110px;padding:10px;border:1px solid #91a1b1;background:#fff}.badge{display:inline-block;padding:3px 7px;border:1px solid #aeb9c5;background:#fff;font-size:11px}.toast{position:fixed;z-index:100;right:16px;bottom:16px;padding:10px 13px;color:#fff;background:#202936;border-left:4px solid var(--accent);opacity:0;transform:translateY(15px);transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:none}@media(max-width:760px){.app{grid-template-rows:54px 1fr}.brand small{display:none}.menu{display:block}.shell{display:block;position:relative}.shell>aside{position:absolute;inset:0 auto 0 0;z-index:20;width:min(88vw,300px);transform:translateX(-102%);transition:.2s}.shell>aside.open{transform:none;box-shadow:12px 0 30px #0005}main{height:100%;padding:16px 12px 32px}.hero{display:block}.pager{margin-top:12px}.facts,.notes,.grid.two,.grid.three{grid-template-columns:1fr}.stage-wrap{padding:8px}.stage{min-height:360px;padding:10px}.actions{width:100%;margin-left:0}.btn{min-width:44px}}
+.business-task{display:grid;gap:10px;color:var(--ink)}.business-task-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:11px;border:1px solid var(--line);background:#fff}.business-task-head h3{margin:0;font-size:15px}.business-task-head p{margin:2px 0 0;color:var(--muted);font-size:11px}.business-badge{padding:4px 7px;border:1px solid #9fabb7;background:#f4f7f9;font-size:10px;white-space:nowrap}.business-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.business-field{display:grid;gap:2px;padding:8px;border:1px solid var(--line);background:#fff}.business-label{color:var(--muted);font-size:10px}.business-decision{padding:9px 11px;border-left:4px solid var(--accent);background:#fff4d7}.business-success{padding:9px 11px;border-left:4px solid var(--teal);background:#e3f0eb}.business-error{padding:9px 11px;border-left:4px solid var(--red);background:#f6e7e7}.business-actions{display:flex;gap:7px;flex-wrap:wrap}.business-timeline{display:grid;gap:7px;padding:9px;border:1px solid var(--line);background:#fff}.business-timeline-item{display:grid;gap:1px;padding-left:9px;border-left:3px solid #aeb9c5}.business-timeline-item.done{border-color:var(--teal)}.business-timeline-item.error{border-color:var(--red)}.business-timeline-item span{color:var(--muted);font-size:10px}.business-system{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:10px}.business-kpis{display:grid;gap:8px}.business-kpi{padding:9px;border:1px solid var(--line);background:#fff}.business-kpi strong{display:block;font:700 18px Consolas}@media(max-width:760px){.business-grid,.business-system{grid-template-columns:1fr}}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[contenteditable]:focus-visible,[tabindex]:focus-visible,a:focus-visible{outline:3px solid #b27b00;outline-offset:2px}
+.business-notice{display:grid;gap:2px;padding:9px 11px;border-left:4px solid #7d8a97;background:#f1f4f6}.business-notice span{color:var(--muted);font-size:11px}.business-warning{padding:9px 11px;border-left:4px solid #a87906;background:#fff4d7}.business-actions button{min-width:44px}.business-recovery{border-color:#8f6a0a;background:#fff8df;font-weight:700}@media(max-width:760px){.business-task-head{display:grid}.business-badge{width:max-content;max-width:100%;white-space:normal}}
+@media(max-width:760px){.stage label{display:grid;grid-template-columns:1fr;gap:4px}.stage label>input,.stage label>select,.stage label>textarea{width:100%;min-width:0}.business-actions .btn{flex:1 1 150px}}
+#stage[aria-disabled="true"]{filter:grayscale(.25);opacity:.68;cursor:not-allowed}#stage[aria-disabled="true"]::after{content:"业务操作已阻断，先执行恢复动作";position:absolute;inset:12px 12px auto auto;z-index:4;max-width:260px;padding:8px 10px;color:#fff;background:#7d2929;border-left:4px solid #efb0b0}.business-system{padding:10px;border:1px solid var(--line);background:#f6f8fa}.business-system ul{margin:7px 0 12px;padding-left:20px}
+</style></head><body><div class="app"><header><button class="menu" id="menu" type="button" aria-label="打开目录">目录</button><span class="mark"></span><div class="brand">数据模型 × 界面模式 <small>页面与低代码设计类原型手册</small></div><div class="count" id="count"></div></header><div class="shell"><aside id="side"><div class="side-head"><div class="side-label">08 · Low-code Design</div><input id="search" class="search" type="search" aria-label="搜索组件" placeholder="搜索组件名称或模型"></div><nav id="nav" class="nav" aria-label="组件目录"></nav><div class="side-foot">方向键切换 · Esc 收起目录</div></aside><main id="main" tabindex="-1"><div class="inner"><div class="hero"><div><div class="eyebrow" id="eyebrow"></div><h1 id="title"></h1><p class="summary" id="summary"></p></div><div class="pager"><button class="btn" id="prev" type="button">上一项</button><button class="btn" id="next" type="button">下一项</button></div></div><div class="facts" id="facts"></div><section class="proto"><div class="proto-head"><strong>关键交互原型</strong><span class="hint">本组件拥有独立结构、动作和状态。</span><div class="actions"><button class="btn" id="reset" type="button">重置原型</button></div></div><section class="business-task" id="taskContext" hidden><div class="business-task-head"><div><h3>生产级任务场景</h3><p>先载入任务上下文，再完成组件主动作；异常与恢复路径用于评审边界。</p></div><span class="business-badge" id="taskLevel"></span></div><div class="business-grid" id="taskFields"></div><div class="business-notice business-warning"><strong>非理想场景</strong><span id="taskException"></span></div><div class="business-actions"><button class="btn primary" type="button" data-readiness-start>载入任务上下文</button><button class="btn danger" type="button" data-readiness-exception>注入非理想场景</button><button class="btn business-recovery" type="button" data-readiness-recovery>执行恢复动作</button></div><div class="business-grid"><div class="business-field"><span class="business-label">恢复方式</span><strong id="taskRecovery"></strong></div><div class="business-field"><span class="business-label">键盘路径</span><strong id="taskKeyboard"></strong></div></div><section class="business-system" id="systemReadiness" hidden><div><strong>职责边界</strong><ul id="systemResponsibilities"></ul><strong>跨模块时间线</strong><div class="business-timeline" id="systemTimeline"></div></div><div class="business-notice" id="systemCompensation"></div></section><div class="business-notice" id="readinessResult" role="status" aria-live="polite"></div></section><div class="stage-wrap"><div class="stage" id="stage"></div></div><div class="prototype-state" id="prototypeState" data-state="initial" aria-live="polite">初始状态</div></section><div class="notes" id="notes"></div></div></main></div></div><div class="toast" id="toast" role="status" aria-live="polite"></div><script>const categoryNumber = "08";
+function workbench(ctx, title, ...children) { return ctx.el("div", { className: "demo col" }, ctx.el("h3", { text: title }), ...children); }
+function state(ctx, text) { return ctx.el("div", { className: "status", text }); }
+function renderPageDesigner(ctx) { const view = state(ctx, "画布：单列；组件 1"); const add = ctx.button("放置双栏容器", "page-place"); ctx.on(add, "click", () => { view.textContent = "画布：双栏；左栏表格，右栏详情"; ctx.setStatus("页面布局已改变", "layout:two-column"); }); ctx.stage.append(workbench(ctx, "页面布局设计", view, add)); return {}; }
+function renderFormDesigner(ctx) { const fields = state(ctx, "字段：客户名称"); const add = ctx.button("放置金额字段", "form-place"); ctx.on(add, "click", () => { fields.textContent = "字段：客户名称、金额（数值/必填）"; ctx.setStatus("表单字段增至 2 个", "fields:2"); }); ctx.stage.append(workbench(ctx, "表单设计", fields, add)); return {}; }
+function renderReportDesigner(ctx) { const axes = state(ctx, "维度：月份；度量：销售额"); const add = ctx.button("添加地区维度", "report-dimension"); ctx.on(add, "click", () => { axes.textContent = "维度：地区 > 月份；度量：销售额"; ctx.setStatus("报表维度增至 2 个", "dimensions:2"); }); ctx.stage.append(workbench(ctx, "报表维度与度量", axes, add)); return {}; }
+function renderDashboardDesigner(ctx) { const widgets = state(ctx, "组件：销售额卡片"); const bind = ctx.button("绑定趋势图数据", "dashboard-bind"); ctx.on(bind, "click", () => { widgets.textContent = "销售额卡片 + 月度趋势图（12 点）"; ctx.setStatus("仪表盘组件增至 2 个", "widgets:2"); }); ctx.stage.append(workbench(ctx, "仪表盘", widgets, bind)); return {}; }
+function renderMobilePageDesigner(ctx) { const phone = state(ctx, "设备 390×844；安全区可见"); const add = ctx.button("添加底部操作栏", "mobile-bar"); ctx.on(add, "click", () => { phone.textContent = "底栏已吸附于安全区上方，主内容可滚动"; ctx.setStatus("移动安全区布局完成", "mobile:safe-bar"); }); ctx.stage.append(workbench(ctx, "移动页设计", phone, add)); return {}; }
+function renderDataSourceDesigner(ctx) { const connection = state(ctx, "连接 CRM：未测试"); const test = ctx.button("测试连接", "source-test"); ctx.on(test, "click", () => { connection.textContent = "CRM 连接成功；延迟 42ms；表 18"; ctx.setStatus("数据源连接成功", "source:connected"); }); ctx.stage.append(workbench(ctx, "数据源连接", connection, test)); return {}; }
+function renderEventDesigner(ctx) { const chain = state(ctx, "onSubmit → validate"); const append = ctx.button("追加 sendRequest", "event-add"); ctx.on(append, "click", () => { chain.textContent = "onSubmit → validate → sendRequest"; ctx.setStatus("事件链增至 3 步", "events:3"); }); ctx.stage.append(workbench(ctx, "事件链", chain, append)); return {}; }
+function renderActionDesigner(ctx) { const config = state(ctx, "动作：打开页面；route 未配置"); const configure = ctx.button("配置客户详情路由", "action-config"); ctx.on(configure, "click", () => { config.textContent = "打开 /customer/:id，参数 id={{record.id}}"; ctx.setStatus("动作参数已配置", "action:configured"); }); ctx.stage.append(workbench(ctx, "动作参数", config, configure)); return {}; }
+function renderExpressionDesigner(ctx) { const expression = ctx.el("input", { value: "amount > 10000", "aria-label": "可见性表达式" }); const out = state(ctx, "amount=12000"); const test = ctx.button("测试表达式", "expression-run"); ctx.on(test, "click", () => { out.textContent = "结果 true；组件可见"; ctx.setStatus("表达式测试为 true", "expression:true"); }); ctx.stage.append(workbench(ctx, "表达式测试", expression, out, test)); return {}; }
+function renderThemeDesigner(ctx) { const tokens = state(ctx, "--brand: #356f9f"); const change = ctx.button("切换高对比主题", "theme-switch"); ctx.on(change, "click", () => { tokens.textContent = "--brand: #0b57d0；--surface: #ffffff；对比度 7.2"; ctx.setStatus("高对比主题已应用", "theme:contrast"); }); ctx.stage.append(workbench(ctx, "主题令牌", tokens, change)); return {}; }
+function renderComponentBuilder(ctx) { const api = state(ctx, "Props: title；Slots: default"); const add = ctx.button("添加 loading 属性", "component-prop"); ctx.on(add, "click", () => { api.textContent = "Props: title, loading；事件: retry"; ctx.setStatus("组件 API 已扩展", "component:loading"); }); ctx.stage.append(workbench(ctx, "组件构建器", api, add)); return {}; }
+function renderTemplateManager(ctx) { const template = state(ctx, "模板：客户详情 v3"); const instantiate = ctx.button("从模板实例化", "template-create"); ctx.on(instantiate, "click", () => { template.textContent = "已创建 页面-客户详情-副本；模板版本仍为 v3"; ctx.setStatus("模板实例已创建", "template:instantiated"); }); ctx.stage.append(workbench(ctx, "页面模板", template, instantiate)); return {}; }
+function renderPageTree(ctx) { const tree = state(ctx, "应用 / 客户 / 客户详情"); const move = ctx.button("将客户详情移到销售下", "page-reparent"); ctx.on(move, "click", () => { tree.textContent = "应用 / 销售 / 客户详情；路由引用已更新"; ctx.setStatus("页面节点已重挂载", "tree:reparented"); }); ctx.stage.append(workbench(ctx, "页面树", tree, move)); return {}; }
+function renderNavigationDesigner(ctx) { const route = state(ctx, "客户 → /customers"); const edit = ctx.button("修改为 /crm/customers", "nav-route"); ctx.on(edit, "click", () => { route.textContent = "客户 → /crm/customers；权限 crm.read"; ctx.setStatus("导航路由已更新", "route:/crm/customers"); }); ctx.stage.append(workbench(ctx, "导航设计", route, edit)); return {}; }
+function renderResponsiveDesigner(ctx) { const preview = state(ctx, "Desktop 1440：三栏"); const mobile = ctx.button("切换 Mobile 390", "device-mobile"); ctx.on(mobile, "click", () => { preview.textContent = "Mobile 390：单栏；侧栏折叠；底部操作可达"; ctx.setStatus("设备预览切到移动端", "device:mobile"); }); ctx.stage.append(workbench(ctx, "响应式设计", preview, mobile)); return {}; }
+function renderRuntimePreview(ctx) { const runtime = state(ctx, "设计数据未提交"); const submit = ctx.button("提交预览表单", "runtime-submit"); ctx.on(submit, "click", () => { runtime.textContent = "运行时校验通过；模拟记录 ID PREVIEW-1"; ctx.setStatus("运行时预览提交成功", "runtime:submitted"); }); ctx.stage.append(workbench(ctx, "运行时预览", runtime, submit)); return {}; }
+
+function renderSchemaEditor(ctx) {
+  const source = ctx.el("textarea", { rows: 6, "aria-label": "页面 Schema", value: "{\"type\":\"page\",\"children\":[]}" }); const lastValid = state(ctx, "上一个有效版本：page / 0 children"); const validate = ctx.button("校验 Schema", "schema-validate");
+  ctx.on(validate, "click", () => { try { const value = JSON.parse(source.value); if (value.type !== "page") throw new Error(); lastValid.textContent = `有效：${value.type} / ${(value.children || []).length} children`; ctx.setStatus("Schema 校验通过", "schema:valid"); } catch { lastValid.textContent = "校验失败；保留上一个有效版本：page / 0 children"; ctx.setStatus("Schema 校验失败", "schema:error"); } }); ctx.stage.append(workbench(ctx, "Schema 与 last-valid", source, lastValid, validate)); return {};
+}
+function renderVersionManager(ctx) { const history = state(ctx, "当前 v7；草稿有 3 处修改"); const create = ctx.button("生成 v8 修订", "version-create"); ctx.on(create, "click", () => { history.textContent = "v8 已创建；可比较 v7 ↔ v8；v7 未覆盖"; ctx.setStatus("页面版本 v8 已创建", "version:v8"); }); ctx.stage.append(workbench(ctx, "页面版本", history, create)); return {}; }
+
+function renderPublishConsole(ctx) {
+  const environment = ctx.el("select", { "aria-label": "发布环境" }, ctx.el("option", { value: "staging", text: "预发布" }), ctx.el("option", { value: "production", text: "生产" })); const out = state(ctx, "前置校验未运行"); const publish = ctx.button("校验并发布", "publish-run");
+  ctx.on(publish, "click", () => { out.textContent = `${environment.value}：前置校验通过，发布 0%`; ctx.setStatus("发布进行中", "publish:running"); ctx.timeout(() => { out.textContent = `${environment.value}：发布 100%，健康检查通过`; ctx.setStatus("发布成功", "publish:success"); }, 100); }); ctx.stage.append(workbench(ctx, "发布控制台", environment, out, publish)); return {};
+}
+function renderDesignSystemManager(ctx) { const library = state(ctx, "Button v2；Input v4"); const deprecate = ctx.button("弃用 Button v1", "system-deprecate"); ctx.on(deprecate, "click", () => { library.textContent = "Button v1 deprecated → 迁移 Button v2；影响页面 6"; ctx.setStatus("旧组件已标记弃用", "system:deprecated-v1"); }); ctx.stage.append(workbench(ctx, "设计系统管理", library, deprecate)); return {}; }
+
+const renderers08 = Object.freeze({
+  "08:page-designer": renderPageDesigner, "08:form-designer": renderFormDesigner, "08:report-designer": renderReportDesigner,
+  "08:dashboard-designer": renderDashboardDesigner, "08:mobile-page-designer": renderMobilePageDesigner, "08:data-source-designer": renderDataSourceDesigner,
+  "08:event-designer": renderEventDesigner, "08:action-designer": renderActionDesigner, "08:expression-designer": renderExpressionDesigner,
+  "08:theme-designer": renderThemeDesigner, "08:component-builder": renderComponentBuilder, "08:template-manager": renderTemplateManager,
+  "08:page-tree": renderPageTree, "08:navigation-designer": renderNavigationDesigner, "08:responsive-designer": renderResponsiveDesigner,
+  "08:runtime-preview": renderRuntimePreview, "08:schema-editor": renderSchemaEditor, "08:version-manager": renderVersionManager,
+  "08:publish-console": renderPublishConsole, "08:design-system-manager": renderDesignSystemManager,
+});
+const renderers = renderers08;
+
+function createDomRuntime(stage, statusNode, toastNode) {
+  let active = true;
+  const cleanups = [];
+  const timers = new Set();
+  const token = { get active() { return active; } };
+
+  function append(parent, child) {
+    if (child === null || child === undefined || child === false) return;
+    if (Array.isArray(child)) {
+      child.forEach((item) => append(parent, item));
+      return;
+    }
+    parent.append(child instanceof Node ? child : document.createTextNode(String(child)));
+  }
+
+  function el(tag, attributes = {}, ...children) {
+    const node = document.createElement(tag);
+    for (const [name, value] of Object.entries(attributes || {})) {
+      if (value === null || value === undefined || value === false) continue;
+      if (/^on/i.test(name)) throw new Error("Inline event attributes are forbidden");
+      if (name === "className") node.className = value;
+      else if (name === "text") node.textContent = value;
+      else if (name === "dataset") Object.assign(node.dataset, value);
+      else if (name === "style" && typeof value === "object") Object.assign(node.style, value);
+      else if (name in node && !name.startsWith("aria-") && !name.startsWith("data-")) node[name] = value;
+      else node.setAttribute(name, value === true ? "" : String(value));
+    }
+    children.forEach((child) => append(node, child));
+    return node;
+  }
+
+  function button(label, action, options = {}) {
+    return el("button", {
+      type: "button",
+      className: options.className || "btn",
+      disabled: options.disabled || false,
+      "data-action": action,
+      "aria-label": options.ariaLabel || label,
+      title: options.title || "",
+    }, label);
+  }
+
+  function field(label, control) {
+    const id = control.id || "control-" + Math.random().toString(36).slice(2);
+    control.id = id;
+    if (!control.getAttribute("aria-label")) control.setAttribute("aria-label", label);
+    return el("label", { className: "field", htmlFor: id }, el("span", { className: "field-label" }, label), control);
+  }
+
+  function setText(node, value) { node.textContent = value == null ? "" : String(value); }
+  function setStatus(text, state = text) {
+    setText(statusNode, text);
+    statusNode.dataset.state = String(state);
+  }
+  function toast(text) {
+    setText(toastNode, text);
+    toastNode.classList.add("show");
+    const id = window.setTimeout(() => { if (active) toastNode.classList.remove("show"); }, 1400);
+    timers.add(id);
+  }
+  function on(target, type, listener, options) {
+    target.addEventListener(type, listener, options);
+    cleanups.push(() => target.removeEventListener(type, listener, options));
+    return listener;
+  }
+  function timeout(listener, delay) {
+    const id = window.setTimeout(() => {
+      timers.delete(id);
+      if (active) listener();
+    }, delay);
+    timers.add(id);
+    return id;
+  }
+  function cleanup() {
+    active = false;
+    cleanups.splice(0).reverse().forEach((dispose) => dispose());
+    timers.forEach((id) => window.clearTimeout(id));
+    timers.clear();
+  }
+  return { stage, el, button, field, setText, setStatus, toast, on, timeout, token, cleanup };
+}
+(function handbookRuntime(category, rendererRegistry) {
+  const patterns = category.components;
+  let currentIndex = -1;
+  let mounted = null;
+  let toastTimer = 0;
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+
+  function showToast(message) {
+    const toast = $("#toast");
+    toast.textContent = String(message);
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 1400);
+  }
+
+  function renderNav() {
+    const query = $("#search").value.trim().toLowerCase();
+    const items = patterns.flatMap((component, index) => {
+      const haystack = [component.name, component.en, component.model, component.state].join(" ").toLowerCase();
+      if (query && !haystack.includes(query)) return [];
+      const item = document.createElement("button");
+      item.type = "button";
+      item.dataset.index = String(index);
+      item.className = index === currentIndex ? "active" : "";
+      item.setAttribute("aria-label", component.name);
+      const number = document.createElement("span");
+      number.className = "num";
+      number.textContent = String(index + 1).padStart(2, "0");
+      const label = document.createElement("span");
+      label.textContent = component.name;
+      const english = document.createElement("span");
+      english.className = "en";
+      english.textContent = component.en;
+      label.append(english);
+      item.append(number, label);
+      return [item];
+    });
+    $("#nav").replaceChildren(...items);
+  }
+
+  function destroyMounted() {
+    if (!mounted) return;
+    try { mounted.result?.destroy?.(); } finally { mounted.dom.cleanup(); }
+    mounted = null;
+  }
+
+  function mount(component) {
+    destroyMounted();
+    const stage = $("#stage");
+    stage.removeAttribute("aria-disabled");
+    stage.inert = false;
+    stage.replaceChildren();
+    const stateNode = $("#prototypeState");
+    stateNode.textContent = "初始状态";
+    stateNode.dataset.state = "initial";
+    const dom = createDomRuntime(stage, stateNode, $("#toast"));
+    const renderer = rendererRegistry[component.key];
+    if (typeof renderer !== "function") throw new Error("Missing renderer: " + component.key);
+    const result = renderer({ ...dom, component, showToast });
+    mounted = { dom, result };
+    const readinessResult = $("#readinessResult");
+    readinessResult.className = "business-notice";
+    readinessResult.textContent = component.contract?.business ? "预期业务影响：" + component.contract.business.effect : "";
+  }
+
+  function setStageLocked(locked) {
+    const stage = $("#stage");
+    if (locked) stage.setAttribute("aria-disabled", "true");
+    else stage.removeAttribute("aria-disabled");
+    stage.inert = locked;
+    $$(`button,input,select,textarea,[tabindex]`, stage).forEach((control) => {
+      if (locked) {
+        control.dataset.readinessDisabled = String(Boolean(control.disabled));
+        control.disabled = true;
+      } else {
+        control.disabled = control.dataset.readinessDisabled === "true";
+        delete control.dataset.readinessDisabled;
+      }
+    });
+    if (!locked) {
+      const target = $("button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),[tabindex]:not([tabindex='-1'])", stage);
+      target?.focus();
+    }
+  }
+
+  function updateSystemReadiness(state) {
+    const root = $("#systemReadiness");
+    if (root.hidden) return;
+    $$(`[data-system-step]`, root).forEach((step, index) => {
+      step.className = "business-timeline-item";
+      if (state === "primary") step.classList.add("done");
+      if (state === "exception" && index === 1) step.classList.add("error");
+      if (state === "recovered" && index <= 1) step.classList.add("done");
+    });
+    $("#systemCompensation", root).className = state === "exception" ? "business-notice business-error" : "business-notice";
+  }
+
+  function renderTaskContext(component) {
+    const root = $("#taskContext");
+    const result = $("#readinessResult");
+    const contract = component.contract;
+    if (!contract?.business || !contract?.readiness) {
+      root.hidden = true;
+      result.textContent = "";
+      return;
+    }
+    root.hidden = false;
+    const business = contract.business;
+    const fields = [
+      ["当前角色", business.role],
+      ["业务任务", business.task],
+      ["业务对象", business.objects.join(" · ")],
+      ["决策规则", business.rule],
+    ];
+    $("#taskFields").replaceChildren(...fields.map(([label, value]) => {
+      const field = document.createElement("div");
+      field.className = "business-field";
+      const caption = document.createElement("span");
+      caption.className = "business-label";
+      caption.textContent = label;
+      const content = document.createElement("strong");
+      content.textContent = value;
+      field.append(caption, content);
+      return field;
+    }));
+    $("#taskLevel").textContent = contract.business.level + " 级交互规范";
+    $("#taskException").textContent = business.exception;
+    $("#taskRecovery").textContent = contract.readiness.recovery;
+    $("#taskKeyboard").textContent = contract.readiness.keyboard;
+    const systemRoot = $("#systemReadiness");
+    const systemBusiness = business.level === "C" ? business : null;
+    systemRoot.hidden = !systemBusiness;
+    if (systemBusiness) {
+      $("#systemResponsibilities").replaceChildren(...systemBusiness.responsibilities.map((value) => {
+        const item = document.createElement("li"); item.textContent = value; return item;
+      }));
+      $("#systemTimeline").replaceChildren(...systemBusiness.timeline.map((value) => {
+        const item = document.createElement("div"); item.className = "business-timeline-item"; item.dataset.systemStep = "";
+        const copy = document.createElement("span"); copy.textContent = value; item.append(copy); return item;
+      }));
+      $("#systemCompensation").textContent = "补偿路径：" + systemBusiness.compensation;
+      updateSystemReadiness("initial");
+    }
+    result.className = "business-notice";
+    result.textContent = "预期业务影响：" + business.effect;
+  }
+
+  function show(index, options = {}) {
+    const nextIndex = Math.max(0, Math.min(patterns.length - 1, index));
+    const component = patterns[nextIndex];
+    currentIndex = nextIndex;
+    renderNav();
+    $("#count").textContent = String(nextIndex + 1).padStart(2, "0") + " / " + patterns.length;
+    $("#eyebrow").textContent = (category.number + " · " + (component.kind || component.group || "COMPONENT")).toUpperCase();
+    const englishTitle = document.createElement("small");
+    englishTitle.textContent = component.en;
+    $("#title").replaceChildren(document.createTextNode(component.name + " "), englishTitle);
+    $("#summary").textContent = component.summary;
+
+    const factData = [
+      ["统一模型", "Component = Data + State + Action"],
+      ["数据模型", component.model],
+      ["核心状态", component.state],
+    ];
+    $("#facts").replaceChildren(...factData.map(([label, value]) => {
+      const fact = document.createElement("div");
+      fact.className = "fact";
+      const labelNode = document.createElement("div");
+      labelNode.className = "label";
+      labelNode.textContent = label;
+      const valueNode = document.createElement("div");
+      valueNode.className = "value";
+      valueNode.textContent = value;
+      fact.append(labelNode, valueNode);
+      return fact;
+    }));
+
+    const noteData = [["适用边界", component.boundary], ["关键不变量", component.invariant]];
+    $("#notes").replaceChildren(...noteData.map(([heading, copy]) => {
+      const article = document.createElement("article");
+      article.className = "note";
+      const title = document.createElement("h2");
+      title.textContent = heading;
+      const text = document.createElement("p");
+      text.textContent = copy;
+      article.append(title, text);
+      return article;
+    }));
+    renderTaskContext(component);
+    mount(component);
+    $("#main").scrollTop = 0;
+    $("#side").classList.remove("open");
+    if (options.updateHash !== false && location.hash.slice(1) !== component.id) location.hash = component.id;
+  }
+
+  function showFromHash() {
+    const id = decodeURIComponent(location.hash.slice(1));
+    const index = patterns.findIndex((component) => component.id === id);
+    show(index >= 0 ? index : 0, { updateHash: false });
+  }
+
+  $("#nav").addEventListener("click", (event) => {
+    const item = event.target.closest("[data-index]");
+    if (item) show(Number(item.dataset.index));
+  });
+  $("#search").addEventListener("input", renderNav);
+  $("#menu").addEventListener("click", () => $("#side").classList.toggle("open"));
+  $("#prev").addEventListener("click", () => show(currentIndex - 1));
+  $("#next").addEventListener("click", () => show(currentIndex + 1));
+  $("#reset").addEventListener("click", () => { mount(patterns[currentIndex]); showToast("原型已重置"); });
+  $("#taskContext").addEventListener("click", (event) => {
+    const contract = patterns[currentIndex]?.contract;
+    if (!contract) return;
+    const result = $("#readinessResult");
+    const stateNode = $("#prototypeState");
+    if (event.target.closest("[data-readiness-start]")) {
+      result.className = "business-notice business-success";
+      result.textContent = "任务已载入：" + contract.business.objects.join(" · ") + "；规则：" + contract.business.rule;
+      stateNode.textContent = "任务已载入 · " + contract.business.task;
+      stateNode.dataset.state = "readiness:started";
+    }
+    if (event.target.closest("[data-readiness-exception]")) {
+      setStageLocked(true);
+      updateSystemReadiness("exception");
+      result.className = "business-notice business-error";
+      result.textContent = "非理想场景：" + contract.business.exception;
+      stateNode.textContent = "异常路径 · " + contract.business.exception;
+      stateNode.dataset.state = "readiness:exception";
+    }
+    if (event.target.closest("[data-readiness-recovery]")) {
+      setStageLocked(false);
+      updateSystemReadiness("recovered");
+      result.className = "business-notice business-success";
+      result.textContent = "已恢复：" + contract.readiness.recovery + "；" + contract.business.effect;
+      stateNode.textContent = "恢复路径 · " + contract.readiness.recovery;
+      stateNode.dataset.state = "readiness:recovered";
+    }
+  });
+  ["click", "contextmenu"].forEach((type) => $("#stage").addEventListener(type, (event) => {
+    if (!event.target.closest("button,input,select,textarea,[role='button'],[data-action]")) return;
+    const contract = patterns[currentIndex]?.contract;
+    if (!contract?.business) return;
+    requestAnimationFrame(() => {
+      const componentState = $("#prototypeState").dataset.state;
+      updateSystemReadiness("primary");
+      const result = $("#readinessResult");
+      result.className = "business-notice business-success";
+      result.textContent = "主路径完成：" + contract.business.effect + "；组件状态：" + componentState;
+    });
+  }));
+  window.addEventListener("hashchange", showFromHash);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      $("#side").classList.remove("open");
+      if ($("#stage").getAttribute("aria-disabled") === "true") {
+        setStageLocked(false);
+        updateSystemReadiness("recovered");
+        const contract = patterns[currentIndex]?.contract;
+        $("#readinessResult").textContent = "已恢复：" + contract.readiness.recovery + "；" + contract.business.effect;
+        $("#prototypeState").dataset.state = "readiness:recovered";
+      }
+    }
+    const target = event.target;
+    const editing = event.isComposing || target.closest?.("input,textarea,select,button,[contenteditable='true'],[contenteditable='']");
+    if (editing) return;
+    if (event.key === "ArrowLeft") show(currentIndex - 1);
+    if (event.key === "ArrowRight") show(currentIndex + 1);
+  });
+  showFromHash();
+})({"number":"08","name":"页面与低代码设计类","en":"Low-code Design","count":20,"file":"08-页面与低代码设计类复杂组件交互原型手册.html","module":"08-lowcode.mjs","components":[{"id":"page-designer","name":"页面设计器","en":"Page Designer","kind":"builder","model":"PageSchema → Region[] → ComponentNode[]","state":"selectedId, nodeTree, draft","summary":"页面设计器在稳定页面骨架内编排组件、区域和属性，并把设计态节点树输出为可版本化页面结构。","boundary":"适合后台页面与门户的受控配置；复杂专业交互仍需代码组件承载。","invariant":"节点身份必须稳定，选择、移动和属性修改不能破坏已有绑定。","key":"08:page-designer","contract":{"componentKey":"08:page-designer","hash":"page-designer","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-action=\"page-place\"]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"李明｜实施顾问","task":"使用页面设计器配置应用结构、数据源、事件并完成预览或发布","objects":["页面设计器","订单应用与工单应用版本"],"rule":"发布前依赖、权限、数据源和版本差异必须全部通过校验","exception":"页面设计器：组件依赖缺失、数据源不可用或发布版本冲突","effect":"页面设计器：生成可审计的应用版本并通知受影响岗位"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"保留当前设计，修复校验项或回滚到最近已发布版本","keyboard":"Tab 在画布与属性区切换，Enter 执行，Esc 取消拖放或关闭面板","riskCapabilities":["authoring-recovery"]}}},{"id":"form-designer","name":"表单设计器","en":"Form Designer","kind":"builder","model":"FormSchema → FieldNode[] + ValidationRule[]","state":"selectedField, layout, rules","summary":"表单设计器把字段元数据、布局、校验和联动规则组合为可运行的数据录入界面。","boundary":"适合结构化录入；自由排版文档和高频表格编辑应使用专用组件。","invariant":"字段 key 与提交数据必须一一对应，重排不能改变数据语义。","key":"08:form-designer","contract":{"componentKey":"08:form-designer","hash":"form-designer","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-action=\"form-place\"]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"李明｜实施顾问","task":"使用表单设计器配置应用结构、数据源、事件并完成预览或发布","objects":["表单设计器","订单应用与工单应用版本"],"rule":"发布前依赖、权限、数据源和版本差异必须全部通过校验","exception":"表单设计器：组件依赖缺失、数据源不可用或发布版本冲突","effect":"表单设计器：生成可审计的应用版本并通知受影响岗位"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"保留当前设计，修复校验项或回滚到最近已发布版本","keyboard":"Tab 在画布与属性区切换，Enter 执行，Esc 取消拖放或关闭面板","riskCapabilities":["authoring-recovery"]}}},{"id":"report-designer","name":"报表设计器","en":"Report Designer","kind":"builder","model":"Dataset + Dimension[] + Measure[] → Report","state":"selectedBand, grouping, preview","summary":"报表设计器把数据集、维度、度量和分组区域映射为可预览与导出的报表结构。","boundary":"适合格式固定的业务报表；自由探索分析应使用多维分析工具。","invariant":"设计预览、导出结果和数据口径必须一致。","key":"08:report-designer","contract":{"componentKey":"08:report-designer","hash":"report-designer","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-action=\"report-dimension\"]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"李明｜实施顾问","task":"使用报表设计器配置应用结构、数据源、事件并完成预览或发布","objects":["报表设计器","订单应用与工单应用版本"],"rule":"发布前依赖、权限、数据源和版本差异必须全部通过校验","exception":"报表设计器：组件依赖缺失、数据源不可用或发布版本冲突","effect":"报表设计器：生成可审计的应用版本并通知受影响岗位"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"保留当前设计，修复校验项或回滚到最近已发布版本","keyboard":"Tab 在画布与属性区切换，Enter 执行，Esc 取消拖放或关闭面板","riskCapabilities":["authoring-recovery"]}}},{"id":"dashboard-designer","name":"仪表盘设计器","en":"Dashboard Designer","kind":"builder","model":"Dashboard → Widget[] + GridPlacement","state":"widgets, positions, editMode","summary":"仪表盘设计器以网格约束组织指标、图表和列表，兼顾监控优先级与可调整布局。","boundary":"适合监控和运营分析；不应替代完整业务操作页面。","invariant":"部件不能重叠丢失，关键指标在默认首屏可达。","key":"08:dashboard-designer","contract":{"componentKey":"08:dashboard-designer","hash":"dashboard-designer","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-action=\"dashboard-bind\"]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"李明｜实施顾问","task":"使用仪表盘设计器配置应用结构、数据源、事件并完成预览或发布","objects":["仪表盘设计器","订单应用与工单应用版本"],"rule":"发布前依赖、权限、数据源和版本差异必须全部通过校验","exception":"仪表盘设计器：组件依赖缺失、数据源不可用或发布版本冲突","effect":"仪表盘设计器：生成可审计的应用版本并通知受影响岗位"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"保留当前设计，修复校验项或回滚到最近已发布版本","keyboard":"Tab 在画布与属性区切换，Enter 执行，Esc 取消拖放或关闭面板","riskCapabilities":["authoring-recovery"]}}},{"id":"mobile-page-designer","name":"移动端页面设计器","en":"Mobile Page Designer","kind":"builder","model":"MobilePage → Section[] → MobileComponent[]","state":"device, safeArea, selectedId","summary":"移动端页面设计器在窄屏、安全区和触控约束下组合业务组件与底部操作。","boundary":"适合移动任务流；不能仅把桌面页面等比缩小。","invariant":"触控目标可达，底部操作不得遮挡内容。","key":"08:mobile-page-designer","contract":{"componentKey":"08:mobile-page-designer","hash":"mobile-page-designer","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-action=\"mobile-bar\"]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"李明｜实施顾问","task":"使用移动端页面设计器配置应用结构、数据源、事件并完成预览或发布","objects":["移动端页面设计器","订单应用与工单应用版本"],"rule":"发布前依赖、权限、数据源和版本差异必须全部通过校验","exception":"移动端页面设计器：组件依赖缺失、数据源不可用或发布版本冲突","effect":"移动端页面设计器：生成可审计的应用版本并通知受影响岗位"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"保留当前设计，修复校验项或回滚到最近已发布版本","keyboard":"Tab 在画布与属性区切换，Enter 执行，Esc 取消拖放或关闭面板","riskCapabilities":["authoring-recovery"]}}},{"id":"data-source-designer","name":"数据源设计器","en":"Data Source Designer","kind":"flow","model":"Source[] → Transform[] → ViewModel","state":"connections, mapping, sampleData","summary":"数据源设计器连接 API、表和变量，通过映射与转换形成页面可消费的数据形状。","boundary":"适合低代码数据编排；复杂事务和大规模 ETL 应交给后端数据平台。","invariant":"输入输出字段可追踪，连接失败不能静默返回旧样例。","key":"08:data-source-designer","contract":{"componentKey":"08:data-source-designer","hash":"data-source-designer","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-action=\"source-test\"]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"李明｜实施顾问","task":"使用数据源设计器配置应用结构、数据源、事件并完成预览或发布","objects":["数据源设计器","订单应用与工单应用版本"],"rule":"发布前依赖、权限、数据源和版本差异必须全部通过校验","exception":"数据源设计器：组件依赖缺失、数据源不可用或发布版本冲突","effect":"数据源设计器：生成可审计的应用版本并通知受影响岗位"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"保留当前设计，修复校验项或回滚到最近已发布版本","keyboard":"Tab 在画布与属性区切换，Enter 执行，Esc 取消拖放或关闭面板","riskCapabilities":["authoring-recovery"]}}},{"id":"event-designer","name":"事件编排器","en":"Event Designer","kind":"flow","model":"UIEvent → Condition[] → Action[]","state":"trigger, branches, actionOrder","summary":"事件编排器把点击、变更等触发器连接到条件和动作，形成可解释的交互链。","boundary":"适合页面级轻量自动化；长事务与跨系统流程应使用工作流引擎。","invariant":"动作顺序明确，失败策略和副作用必须可见。","key":"08:event-designer","contract":{"componentKey":"08:event-designer","hash":"event-designer","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-action=\"event-add\"]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"李明｜实施顾问","task":"使用事件编排器配置应用结构、数据源、事件并完成预览或发布","objects":["事件编排器","订单应用与工单应用版本"],"rule":"发布前依赖、权限、数据源和版本差异必须全部通过校验","exception":"事件编排器：组件依赖缺失、数据源不可用或发布版本冲突","effect":"事件编排器：生成可审计的应用版本并通知受影响岗位"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"保留当前设计，修复校验项或回滚到最近已发布版本","keyboard":"Tab 在画布与属性区切换，Enter 执行，Esc 取消拖放或关闭面板","riskCapabilities":["authoring-recovery"]}}},{"id":"action-designer","name":"动作设计器","en":"Action Designer","kind":"flow","model":"ActionGraph → Input + Handler + Output","state":"selectedAction, parameters, resultMap","summary":"动作设计器配置调用、导航、赋值和提示等命令，并声明输入输出映射。","boundary":"适合受限动作集合；不允许把任意脚本当作默认扩展机制。","invariant":"动作参数类型可校验，输出写回目标必须存在。","key":"08:action-designer","contract":{"componentKey":"08:action-designer","hash":"action-designer","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-action=\"action-config\"]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"李明｜实施顾问","task":"使用动作设计器配置应用结构、数据源、事件并完成预览或发布","objects":["动作设计器","订单应用与工单应用版本"],"rule":"发布前依赖、权限、数据源和版本差异必须全部通过校验","exception":"动作设计器：组件依赖缺失、数据源不可用或发布版本冲突","effect":"动作设计器：生成可审计的应用版本并通知受影响岗位"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"保留当前设计，修复校验项或回滚到最近已发布版本","keyboard":"Tab 在画布与属性区切换，Enter 执行，Esc 取消拖放或关闭面板","riskCapabilities":["authoring-recovery"]}}},{"id":"expression-designer","name":"表达式编辑器","en":"Expression Designer","kind":"flow","model":"ExpressionAST + VariableScope → Value","state":"tokens, scope, diagnostics","summary":"表达式编辑器用可视节点和文本表达式描述计算、条件与字段派生。","boundary":"适合受控计算和条件；复杂领域算法应进入可测试的代码模块。","invariant":"表达式必须可解析、可诊断，并在相同上下文得到确定结果。","key":"08:expression-designer","contract":{"componentKey":"08:expression-designer","hash":"expression-designer","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-action=\"expression-run\"]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"李明｜实施顾问","task":"使用表达式编辑器配置应用结构、数据源、事件并完成预览或发布","objects":["表达式编辑器","订单应用与工单应用版本"],"rule":"发布前依赖、权限、数据源和版本差异必须全部通过校验","exception":"表达式编辑器：组件依赖缺失、数据源不可用或发布版本冲突","effect":"表达式编辑器：生成可审计的应用版本并通知受影响岗位"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"保留当前设计，修复校验项或回滚到最近已发布版本","keyboard":"Tab 在画布与属性区切换，Enter 执行，Esc 取消拖放或关闭面板","riskCapabilities":["authoring-recovery"]}}},{"id":"theme-designer","name":"主题设计器","en":"Theme Designer","kind":"catalog","model":"DesignToken[] → ThemeVariant","state":"activeTheme, tokens, contrast","summary":"主题设计器集中调整颜色、密度和组件外观，用令牌传播而非逐组件覆盖。","boundary":"适合品牌和密度变化；布局语义不应被主题配置改变。","invariant":"令牌变更全局一致，文字与交互状态保持足够对比度。","key":"08:theme-designer","contract":{"componentKey":"08:theme-designer","hash":"theme-designer","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-action=\"theme-switch\"]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"李明｜实施顾问","task":"使用主题设计器配置应用结构、数据源、事件并完成预览或发布","objects":["主题设计器","订单应用与工单应用版本"],"rule":"发布前依赖、权限、数据源和版本差异必须全部通过校验","exception":"主题设计器：组件依赖缺失、数据源不可用或发布版本冲突","effect":"主题设计器：生成可审计的应用版本并通知受影响岗位"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"保留当前设计，修复校验项或回滚到最近已发布版本","keyboard":"Tab 在画布与属性区切换，Enter 执行，Esc 取消拖放或关闭面板","riskCapabilities":["authoring-recovery"]}}},{"id":"component-builder","name":"组件构建器","en":"Component Builder","kind":"catalog","model":"ComponentSchema → Props + Slots + Events","state":"variant, props, slotTree","summary":"组件构建器定义属性、插槽、事件和变体，把重复界面结构封装为受控物料。","boundary":"适合重复且边界稳定的模式；一次性页面片段不必组件化。","invariant":"公开契约向后兼容，内部调整不得破坏已发布实例。","key":"08:component-builder","contract":{"componentKey":"08:component-builder","hash":"component-builder","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-action=\"component-prop\"]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"李明｜实施顾问","task":"使用组件构建器配置应用结构、数据源、事件并完成预览或发布","objects":["组件构建器","订单应用与工单应用版本"],"rule":"发布前依赖、权限、数据源和版本差异必须全部通过校验","exception":"组件构建器：组件依赖缺失、数据源不可用或发布版本冲突","effect":"组件构建器：生成可审计的应用版本并通知受影响岗位"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"保留当前设计，修复校验项或回滚到最近已发布版本","keyboard":"Tab 在画布与属性区切换，Enter 执行，Esc 取消拖放或关闭面板","riskCapabilities":["authoring-recovery"]}}},{"id":"template-manager","name":"页面模板管理器","en":"Template Manager","kind":"catalog","model":"Template + Parameters → PageDraft","state":"category, selectedTemplate, parameters","summary":"模板管理器保存可复用页面骨架，并通过参数创建独立草稿而非共享可变实例。","boundary":"适合高频同类页面创建；差异过大的业务不应强套模板。","invariant":"从模板创建后实例身份独立，模板升级不能覆盖用户修改。","key":"08:template-manager","contract":{"componentKey":"08:template-manager","hash":"template-manager","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-action=\"template-create\"]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"李明｜实施顾问","task":"使用页面模板管理器配置应用结构、数据源、事件并完成预览或发布","objects":["页面模板管理器","订单应用与工单应用版本"],"rule":"发布前依赖、权限、数据源和版本差异必须全部通过校验","exception":"页面模板管理器：组件依赖缺失、数据源不可用或发布版本冲突","effect":"页面模板管理器：生成可审计的应用版本并通知受影响岗位"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"保留当前设计，修复校验项或回滚到最近已发布版本","keyboard":"Tab 在画布与属性区切换，Enter 执行，Esc 取消拖放或关闭面板","riskCapabilities":["authoring-recovery"]}}},{"id":"page-tree","name":"页面结构树","en":"Page Structure Tree","kind":"tree","model":"PageNode → ChildNode[]","state":"expandedIds, selectedId, order","summary":"页面结构树用层级方式呈现容器与组件的父子关系，支持选择、重排和定位。","boundary":"适合嵌套页面；深度过大时应提示结构复杂度。","invariant":"树顺序与画布层级同步，任何节点始终只有一个父容器。","key":"08:page-tree","contract":{"componentKey":"08:page-tree","hash":"page-tree","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-action=\"page-reparent\"]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"李明｜实施顾问","task":"使用页面结构树配置应用结构、数据源、事件并完成预览或发布","objects":["页面结构树","订单应用与工单应用版本"],"rule":"发布前依赖、权限、数据源和版本差异必须全部通过校验","exception":"页面结构树：组件依赖缺失、数据源不可用或发布版本冲突","effect":"页面结构树：生成可审计的应用版本并通知受影响岗位"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"保留当前设计，修复校验项或回滚到最近已发布版本","keyboard":"Tab 在画布与属性区切换，Enter 执行，Esc 取消拖放或关闭面板","riskCapabilities":["authoring-recovery"]}}},{"id":"navigation-designer","name":"导航设计器","en":"Navigation Designer","kind":"tree","model":"RouteTree + MenuMeta → Navigation","state":"route, visibility, order","summary":"导航设计器把页面路由、菜单标题、可见条件和层级组织成可访问入口。","boundary":"适合应用级导航；对象内局部跳转应使用标签或锚点。","invariant":"每个可见入口指向有效页面，隐藏菜单不等于取消路由授权。","key":"08:navigation-designer","contract":{"componentKey":"08:navigation-designer","hash":"navigation-designer","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-action=\"nav-route\"]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"李明｜实施顾问","task":"使用导航设计器配置应用结构、数据源、事件并完成预览或发布","objects":["导航设计器","订单应用与工单应用版本"],"rule":"发布前依赖、权限、数据源和版本差异必须全部通过校验","exception":"导航设计器：组件依赖缺失、数据源不可用或发布版本冲突","effect":"导航设计器：生成可审计的应用版本并通知受影响岗位"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"保留当前设计，修复校验项或回滚到最近已发布版本","keyboard":"Tab 在画布与属性区切换，Enter 执行，Esc 取消拖放或关闭面板","riskCapabilities":["authoring-recovery"]}}},{"id":"responsive-designer","name":"响应式断点设计器","en":"Responsive Designer","kind":"preview","model":"Breakpoint[] → LayoutOverride[]","state":"viewport, breakpoint, overrides","summary":"响应式断点设计器在多个代表宽度下配置布局差异并检查断点邻域。","boundary":"适合跨设备结构调整；不应为每个像素宽度维护独立方案。","invariant":"所有断点任务完整，局部覆盖必须能追溯到基础布局。","key":"08:responsive-designer","contract":{"componentKey":"08:responsive-designer","hash":"responsive-designer","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-action=\"device-mobile\"]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"李明｜实施顾问","task":"使用响应式断点设计器配置应用结构、数据源、事件并完成预览或发布","objects":["响应式断点设计器","订单应用与工单应用版本"],"rule":"发布前依赖、权限、数据源和版本差异必须全部通过校验","exception":"响应式断点设计器：组件依赖缺失、数据源不可用或发布版本冲突","effect":"响应式断点设计器：生成可审计的应用版本并通知受影响岗位"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"保留当前设计，修复校验项或回滚到最近已发布版本","keyboard":"Tab 在画布与属性区切换，Enter 执行，Esc 取消拖放或关闭面板","riskCapabilities":["authoring-recovery"]}}},{"id":"runtime-preview","name":"多设备运行预览","en":"Runtime Preview","kind":"preview","model":"PageSchema + RuntimeContext → Preview","state":"device, dataScenario, interactionMode","summary":"运行预览把设计结构放入真实数据与设备上下文，验证页面而非只看静态画布。","boundary":"适合发布前快速检查；不能替代真实浏览器和端到端测试。","invariant":"预览使用与运行态一致的解析规则，模拟数据必须明确标识。","key":"08:runtime-preview","contract":{"componentKey":"08:runtime-preview","hash":"runtime-preview","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-action=\"runtime-submit\"]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"李明｜实施顾问","task":"使用多设备运行预览配置应用结构、数据源、事件并完成预览或发布","objects":["多设备运行预览","订单应用与工单应用版本"],"rule":"发布前依赖、权限、数据源和版本差异必须全部通过校验","exception":"多设备运行预览：组件依赖缺失、数据源不可用或发布版本冲突","effect":"多设备运行预览：生成可审计的应用版本并通知受影响岗位"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"保留当前设计，修复校验项或回滚到最近已发布版本","keyboard":"Tab 在画布与属性区切换，Enter 执行，Esc 取消拖放或关闭面板","riskCapabilities":["authoring-recovery"]}}},{"id":"schema-editor","name":"Schema 编辑器","en":"Schema Editor","kind":"schema","model":"SchemaDocument ↔ NodeTree","state":"text, diagnostics, selection","summary":"Schema 编辑器提供结构化文本与节点树双向编辑，服务精确配置和批量调整。","boundary":"适合高级用户与诊断；普通业务用户优先使用表单化属性面板。","invariant":"文本与画布往返不能丢字段，非法结构不得覆盖最后有效版本。","key":"08:schema-editor","contract":{"componentKey":"08:schema-editor","hash":"schema-editor","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-action=\"schema-validate\"]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"李明｜实施顾问","task":"使用Schema 编辑器配置应用结构、数据源、事件并完成预览或发布","objects":["Schema 编辑器","订单应用与工单应用版本"],"rule":"发布前依赖、权限、数据源和版本差异必须全部通过校验","exception":"Schema 编辑器：组件依赖缺失、数据源不可用或发布版本冲突","effect":"Schema 编辑器：生成可审计的应用版本并通知受影响岗位"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"保留当前设计，修复校验项或回滚到最近已发布版本","keyboard":"Tab 在画布与属性区切换，Enter 执行，Esc 取消拖放或关闭面板","riskCapabilities":["authoring-recovery"]}}},{"id":"version-manager","name":"页面版本管理器","en":"Version Manager","kind":"release","model":"PageRevision[] + PublishedRevision","state":"draftId, publishedId, compareIds","summary":"版本管理器记录页面修订、发布指针和差异，使修改可审计、可比较、可回退。","boundary":"适合多人维护与生产发布；临时草稿也应有清晰生命周期。","invariant":"已发布版本不可原地改写，回滚通过新发布动作完成。","key":"08:version-manager","contract":{"componentKey":"08:version-manager","hash":"version-manager","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-action=\"version-create\"]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"李明｜实施顾问","task":"使用页面版本管理器配置应用结构、数据源、事件并完成预览或发布","objects":["页面版本管理器","订单应用与工单应用版本"],"rule":"发布前依赖、权限、数据源和版本差异必须全部通过校验","exception":"页面版本管理器：组件依赖缺失、数据源不可用或发布版本冲突","effect":"页面版本管理器：生成可审计的应用版本并通知受影响岗位"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"保留当前设计，修复校验项或回滚到最近已发布版本","keyboard":"Tab 在画布与属性区切换，Enter 执行，Esc 取消拖放或关闭面板","riskCapabilities":["authoring-recovery"]}}},{"id":"publish-console","name":"发布控制台","en":"Publish Console","kind":"release","model":"BuildArtifact + Environment[] → Deployment","state":"target, checks, status","summary":"发布控制台在部署前执行校验并明确目标环境、版本和结果。","boundary":"适合低代码应用交付；生产发布仍需遵守组织变更流程。","invariant":"环境和版本必须清晰，校验失败时禁止伪装成功。","key":"08:publish-console","contract":{"componentKey":"08:publish-console","hash":"publish-console","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-action=\"publish-run\"]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"李明｜实施顾问","task":"使用发布控制台配置应用结构、数据源、事件并完成预览或发布","objects":["发布控制台","订单应用与工单应用版本"],"rule":"发布前依赖、权限、数据源和版本差异必须全部通过校验","exception":"发布控制台：组件依赖缺失、数据源不可用或发布版本冲突","effect":"发布控制台：生成可审计的应用版本并通知受影响岗位"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"保留当前设计，修复校验项或回滚到最近已发布版本","keyboard":"Tab 在画布与属性区切换，Enter 执行，Esc 取消拖放或关闭面板","riskCapabilities":["authoring-recovery"]}}},{"id":"design-system-manager","name":"设计系统管理器","en":"Design System Manager","kind":"catalog","model":"Token[] + ComponentContract[] → LibraryVersion","state":"libraryVersion, deprecatedItems, consumers","summary":"设计系统管理器统一维护令牌、物料契约、示例与废弃信息，为多个应用提供稳定基线。","boundary":"适合多应用规模化复用；单页局部样式无需升级为全局系统。","invariant":"版本、兼容性和消费方影响可追踪，废弃组件保留迁移路径。","key":"08:design-system-manager","contract":{"componentKey":"08:design-system-manager","hash":"design-system-manager","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-action=\"system-deprecate\"]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"李明｜实施顾问","task":"使用设计系统管理器配置应用结构、数据源、事件并完成预览或发布","objects":["设计系统管理器","订单应用与工单应用版本"],"rule":"发布前依赖、权限、数据源和版本差异必须全部通过校验","exception":"设计系统管理器：组件依赖缺失、数据源不可用或发布版本冲突","effect":"设计系统管理器：生成可审计的应用版本并通知受影响岗位"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"保留当前设计，修复校验项或回滚到最近已发布版本","keyboard":"Tab 在画布与属性区切换，Enter 执行，Esc 取消拖放或关闭面板","riskCapabilities":["authoring-recovery"]}}}]}, renderers08);</script></body></html>

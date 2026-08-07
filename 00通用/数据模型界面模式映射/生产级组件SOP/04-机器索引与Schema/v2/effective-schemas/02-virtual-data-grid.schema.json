@@ -1,0 +1,60 @@
+{
+  "$id": "effective/02-virtual-data-grid.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [
+    {
+      "$ref": "../core/component-spec.schema.json"
+    }
+  ],
+  "x-applied-profiles": [
+    "capability:viewport-strategy",
+    "category:table"
+  ],
+  "x-component-key": "02:virtual-data-grid",
+  "x-data-modes": [
+    "local-virtual",
+    "remote-window"
+  ],
+  "x-minimum-risk": "R2",
+  "x-required-approval-roles": [
+    "component-maintainer",
+    "performance-reviewer",
+    "test-reviewer",
+    "ux-a11y-reviewer"
+  ],
+  "x-required-implementation-pointers": [
+    "/api/features/viewport",
+    "/api/props/ariaLabel",
+    "/api/props/columns",
+    "/api/props/data",
+    "/api/props/getRowId",
+    "/api/props/viewport",
+    "/behavior/identity/column",
+    "/behavior/identity/row",
+    "/view/regions/body",
+    "/view/regions/header"
+  ],
+  "x-required-pointers": [
+    "/accessibility/keyboardModel",
+    "/api/features/viewport",
+    "/behavior/identity/column",
+    "/behavior/identity/row",
+    "/quality/oracles/focusNavigationMaterializesTarget",
+    "/quality/oracles/stableAnchorAfterGeometryChange",
+    "/quality/oracles/windowRemainsBounded",
+    "/quality/scaleFixtures",
+    "/view/regions/body",
+    "/view/regions/header"
+  ],
+  "x-required-semantic-checks": [
+    "table-identity-contract"
+  ],
+  "x-required-types": {
+    "/api/features/viewport": "object",
+    "/api/props/viewport": "object",
+    "/behavior/identity/column": "object",
+    "/behavior/identity/row": "object",
+    "/view/regions/body": "object",
+    "/view/regions/header": "object"
+  }
+}

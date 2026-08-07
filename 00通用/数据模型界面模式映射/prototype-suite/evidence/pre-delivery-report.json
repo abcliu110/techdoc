@@ -1,0 +1,43 @@
+{
+  "status": "PASS",
+  "runLevel": "pre-delivery",
+  "generatedAt": "2026-07-15T12:30:00+08:00",
+  "targetRoot": "D:\\mywork\\techdoc\\00通用\\数据模型界面模式映射",
+  "sourceIdentity": "untracked working-tree prototype suite",
+  "targetFlow": "total index -> handbook component -> load task -> primary or exception -> recovery -> visible business result",
+  "visualContract": "docs/superpowers/specs/2026-07-14-309-business-realism-upgrade-design.md",
+  "commands": [
+    { "command": "node .\\test-prototype-suite.mjs --static", "exitCode": 0, "result": "13 categories, 309 components, 309 renderers, 309 rich contracts" },
+    { "command": "node .\\build-prototype-suite.mjs", "exitCode": 0, "result": "14 generated HTML files" },
+    { "command": "python .\\prototype-suite\\browser-regression.py --url http://127.0.0.1:8765 --viewport 1440x900", "exitCode": 0, "result": "309 passed, 0 failed" },
+    { "command": "python .\\prototype-suite\\browser-regression.py --url http://127.0.0.1:8765 --viewport 390x844", "exitCode": 0, "result": "309 passed, 0 failed" },
+    { "command": "python .\\prototype-suite\\keyboard-audit.py --url http://127.0.0.1:8765", "exitCode": 0, "result": "309 primary, 618 exception/recovery, 309 Escape recovery checks passed" },
+    { "command": "python .\\prototype-suite\\responsive-audit.py", "exitCode": 0, "result": "5562 viewport/state/component checks passed" },
+    { "command": "python .\\prototype-suite\\confirmed-regressions.py", "exitCode": 0, "result": "10 passed, 0 failed" },
+    { "command": "python .\\prototype-suite\\capture-production-evidence.py --url http://127.0.0.1:8765", "exitCode": 0, "result": "7 screenshots and screenshot manifest generated" }
+  ],
+  "matrix": [
+    { "viewport": "1440x900", "states": ["primary", "exception", "recovery"], "components": 309, "status": "PASS" },
+    { "viewport": "390x844", "states": ["primary", "exception", "recovery"], "components": 309, "status": "PASS" },
+    { "viewports": ["360x800", "390x844", "759x900", "761x900", "1024x768", "1440x900"], "states": ["initial", "exception", "recovery"], "components": 309, "checks": 5562, "status": "PASS" }
+  ],
+  "mechanicalReport": "prototype-suite/evidence/pre-delivery-report.json",
+  "findings": [],
+  "browser": {
+    "url": "http://127.0.0.1:8765",
+    "browserPath": "Python Playwright with system Chrome",
+    "preferredBrowserFailure": "In-app Browser returned: No browser is available",
+    "console": "No page errors or error console messages in desktop/mobile 309-item matrices",
+    "interactions": ["309 two-step primary paths", "309 blocked exception paths", "309 recovery paths with focus return", "30 C-level dynamic timelines"]
+  },
+  "screenshots": ["prototype-suite/evidence/screenshots.json"],
+  "acceptedReferences": [],
+  "visualVerdict": null,
+  "interactionReplay": null,
+  "independentReview": "prototype-suite/evidence/independent-review-remediation.md",
+  "evidenceGaps": [
+    "No accepted reference images were supplied, so reference comparison is not applicable.",
+    "visual-verdict skill was not available in this session; seven screenshots were inspected manually.",
+    "The first independent review found two P1 and two P2 findings; remediation is mechanically verified. A second independent approval was unavailable because the collaboration runtime delivered an empty task payload."
+  ]
+}

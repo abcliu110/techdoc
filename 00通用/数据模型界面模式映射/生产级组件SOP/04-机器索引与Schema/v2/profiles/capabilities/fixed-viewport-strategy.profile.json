@@ -1,0 +1,30 @@
+{
+  "profileVersion": 1,
+  "profileKey": "capability:fixed-viewport-strategy",
+  "appliesTo": "component-spec-v2",
+  "constraints": {
+    "requiredPointers": [
+      "/api/features/viewport",
+      "/quality/oracles/windowRemainsBounded",
+      "/quality/oracles/focusNavigationMaterializesTarget",
+      "/quality/oracles/logicalAriaPositionSurvivesWindowing"
+    ],
+    "requiredImplementationPointers": [
+      "/api/props/viewport",
+      "/api/features/viewport"
+    ],
+    "requiredSemanticChecks": [],
+    "minimumRisk": "R2",
+    "requiredApprovalRoles": [
+      "component-maintainer",
+      "ux-a11y-reviewer",
+      "performance-reviewer",
+      "test-reviewer"
+    ],
+    "requiredTypes": {
+      "/api/props/viewport": "object",
+      "/api/features/viewport": "object"
+    },
+    "incompatibleProfiles": []
+  }
+}

@@ -1,0 +1,440 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>树与层级类复杂组件交互原型手册</title><style>
+button{min-width:44px;min-height:44px}
+.app,.shell,main,.inner,.hero,.proto,.stage-wrap,.stage,.prototype-demo{min-width:0;max-width:100%}.stage{width:100%}.prototype-demo{overflow:auto}img,svg,canvas{max-width:100%}
+:root{--ink:#202936;--nav:#222d39;--paper:#fff;--ground:#edf1f5;--line:#cbd3dc;--muted:#667487;--accent:#e4a91a;--teal:#16796f;--blue:#356f9f;--red:#a84d4d}*{box-sizing:border-box}html,body{height:100%}body{margin:0;overflow:hidden;background:var(--ground);color:var(--ink);font:14px/1.55 "Microsoft YaHei UI",sans-serif}button,input,select,textarea{font:inherit;letter-spacing:0}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[contenteditable]:focus-visible{outline:3px solid #e4a91a66;outline-offset:2px}.app{height:100%;display:grid;grid-template-rows:58px minmax(0,1fr)}header{display:flex;align-items:center;gap:12px;padding:0 18px;color:#fff;background:#19222d;border-bottom:3px solid var(--accent)}.mark{width:7px;height:27px;background:var(--accent)}.brand{font:700 16px Bahnschrift,"Microsoft YaHei UI"}.brand small{margin-left:9px;color:#aeb9c6;font-size:12px;font-weight:500}.count{margin-left:auto;font:12px Consolas}.menu{display:none;min-width:44px;min-height:44px;border:1px solid #687788;color:#fff;background:transparent}.shell{min-height:0;display:grid;grid-template-columns:280px minmax(0,1fr)}aside{min-height:0;display:grid;grid-template-rows:auto 1fr auto;overflow:hidden;color:#c6d0db;background:var(--nav)}.side-head{padding:14px 13px 10px;border-bottom:1px solid #394552}.side-label{margin-bottom:8px;color:#8290a0;font-size:10px;font-weight:700;text-transform:uppercase}.search{width:100%;min-height:44px;padding:8px 9px;border:1px solid #495766;color:#fff;background:#18212b}.nav{overflow:auto;padding:7px}.nav button{width:100%;display:grid;grid-template-columns:34px 1fr;border:0;border-left:3px solid transparent;padding:8px;color:#c6d0db;background:transparent;text-align:left}.nav button:hover{background:#2b3745}.nav button.active{color:#17202a;background:var(--accent);font-weight:700}.num{font:11px Consolas;color:#8593a3}.en{display:block;color:#8190a0;font-size:10px;font-weight:400}.nav button.active .en{color:#6d4d04}.side-foot{padding:10px 13px;border-top:1px solid #394552;color:#8997a7;font-size:11px}main{min-width:0;overflow:auto;padding:24px 28px 44px}.inner{width:min(1160px,100%);margin:auto}.hero{display:flex;justify-content:space-between;gap:20px}.eyebrow{color:#8b6200;font:700 11px Consolas}.hero h1{margin:3px 0 5px;font:700 clamp(24px,3vw,34px)/1.2 Bahnschrift,"Microsoft YaHei UI"}.hero h1 small{color:var(--muted);font-size:.48em;font-weight:500}.summary{max-width:790px;margin:0;color:var(--muted)}.pager{display:flex;gap:6px}.btn{min-height:44px;padding:7px 12px;border:1px solid #b8c3ce;background:#fff;color:var(--ink)}.btn.primary,.btn.active{border-color:#a87906;background:var(--accent);font-weight:700}.btn.danger{border-color:#b36a6a;color:#8a3030}.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:17px}.fact{padding:11px 13px;border:1px solid var(--line);border-left:4px solid var(--accent);background:#fff}.fact:nth-child(2){border-left-color:var(--teal)}.fact:nth-child(3){border-left-color:var(--blue)}.label{color:var(--muted);font-size:10px;font-weight:700}.value{margin-top:3px;font:700 12px Consolas,"Microsoft YaHei UI";overflow-wrap:anywhere}.proto{margin-top:14px;border:1px solid #bfc9d3;background:#fff;box-shadow:0 12px 32px #18202b1f}.proto-head{min-height:52px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 10px 7px 14px;border-bottom:1px solid var(--line);background:#f8fafc}.proto-head .hint{color:var(--muted);font-size:11px}.actions{margin-left:auto;display:flex;gap:6px}.stage-wrap{padding:14px;background:#e8edf2}.stage{position:relative;min-height:350px;overflow:auto;border:1px solid #aeb9c5;background:#f7f9fb;background-image:linear-gradient(#e6ebf0 1px,transparent 1px),linear-gradient(90deg,#e6ebf0 1px,transparent 1px);background-size:20px 20px;padding:16px}.prototype-state{min-height:42px;padding:10px 13px;border-top:1px solid var(--line);border-left:4px solid var(--teal);background:#e3f0eb;font:12px Consolas,"Microsoft YaHei UI"}.notes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.note{padding:13px 14px;border:1px solid var(--line);background:#fff}.note h2{margin:0 0 5px;font-size:13px}.note p{margin:0;color:var(--muted);font-size:12px}.toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;padding:8px;border:1px solid var(--line);background:#eef2f5}.panel{padding:12px;border:1px solid #aeb9c5;background:#fff}.row{display:flex;gap:10px;align-items:flex-start}.col{display:grid;gap:8px}.grid{display:grid;gap:9px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.item{padding:10px;border:1px solid #c5ced8;background:#fff}.item.active,.selected{border-color:#b17f05;background:#fff8df}.field{display:grid;gap:5px;min-width:150px}.field-label{color:var(--muted);font-size:11px}.field input,.field select,.field textarea,input,select,textarea{min-height:40px;padding:7px 9px;border:1px solid #aeb9c5;background:#fff}.status{padding:9px 11px;border-left:4px solid var(--teal);background:#e3f0eb}.table-scroll{overflow:auto;border:1px solid var(--line);background:#fff}table{width:100%;border-collapse:collapse;background:#fff}th,td{padding:9px;border:1px solid var(--line);text-align:left}th{background:#e7edf2}.canvas{position:relative;min-width:620px;min-height:290px;background:#eef2f5}.node{position:absolute;min-width:110px;padding:10px;border:1px solid #91a1b1;background:#fff}.badge{display:inline-block;padding:3px 7px;border:1px solid #aeb9c5;background:#fff;font-size:11px}.toast{position:fixed;z-index:100;right:16px;bottom:16px;padding:10px 13px;color:#fff;background:#202936;border-left:4px solid var(--accent);opacity:0;transform:translateY(15px);transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:none}@media(max-width:760px){.app{grid-template-rows:54px 1fr}.brand small{display:none}.menu{display:block}.shell{display:block;position:relative}.shell>aside{position:absolute;inset:0 auto 0 0;z-index:20;width:min(88vw,300px);transform:translateX(-102%);transition:.2s}.shell>aside.open{transform:none;box-shadow:12px 0 30px #0005}main{height:100%;padding:16px 12px 32px}.hero{display:block}.pager{margin-top:12px}.facts,.notes,.grid.two,.grid.three{grid-template-columns:1fr}.stage-wrap{padding:8px}.stage{min-height:360px;padding:10px}.actions{width:100%;margin-left:0}.btn{min-width:44px}}
+.business-task{display:grid;gap:10px;color:var(--ink)}.business-task-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:11px;border:1px solid var(--line);background:#fff}.business-task-head h3{margin:0;font-size:15px}.business-task-head p{margin:2px 0 0;color:var(--muted);font-size:11px}.business-badge{padding:4px 7px;border:1px solid #9fabb7;background:#f4f7f9;font-size:10px;white-space:nowrap}.business-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.business-field{display:grid;gap:2px;padding:8px;border:1px solid var(--line);background:#fff}.business-label{color:var(--muted);font-size:10px}.business-decision{padding:9px 11px;border-left:4px solid var(--accent);background:#fff4d7}.business-success{padding:9px 11px;border-left:4px solid var(--teal);background:#e3f0eb}.business-error{padding:9px 11px;border-left:4px solid var(--red);background:#f6e7e7}.business-actions{display:flex;gap:7px;flex-wrap:wrap}.business-timeline{display:grid;gap:7px;padding:9px;border:1px solid var(--line);background:#fff}.business-timeline-item{display:grid;gap:1px;padding-left:9px;border-left:3px solid #aeb9c5}.business-timeline-item.done{border-color:var(--teal)}.business-timeline-item.error{border-color:var(--red)}.business-timeline-item span{color:var(--muted);font-size:10px}.business-system{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:10px}.business-kpis{display:grid;gap:8px}.business-kpi{padding:9px;border:1px solid var(--line);background:#fff}.business-kpi strong{display:block;font:700 18px Consolas}@media(max-width:760px){.business-grid,.business-system{grid-template-columns:1fr}}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[contenteditable]:focus-visible,[tabindex]:focus-visible,a:focus-visible{outline:3px solid #b27b00;outline-offset:2px}
+.business-notice{display:grid;gap:2px;padding:9px 11px;border-left:4px solid #7d8a97;background:#f1f4f6}.business-notice span{color:var(--muted);font-size:11px}.business-warning{padding:9px 11px;border-left:4px solid #a87906;background:#fff4d7}.business-actions button{min-width:44px}.business-recovery{border-color:#8f6a0a;background:#fff8df;font-weight:700}@media(max-width:760px){.business-task-head{display:grid}.business-badge{width:max-content;max-width:100%;white-space:normal}}
+@media(max-width:760px){.stage label{display:grid;grid-template-columns:1fr;gap:4px}.stage label>input,.stage label>select,.stage label>textarea{width:100%;min-width:0}.business-actions .btn{flex:1 1 150px}}
+#stage[aria-disabled="true"]{filter:grayscale(.25);opacity:.68;cursor:not-allowed}#stage[aria-disabled="true"]::after{content:"业务操作已阻断，先执行恢复动作";position:absolute;inset:12px 12px auto auto;z-index:4;max-width:260px;padding:8px 10px;color:#fff;background:#7d2929;border-left:4px solid #efb0b0}.business-system{padding:10px;border:1px solid var(--line);background:#f6f8fa}.business-system ul{margin:7px 0 12px;padding-left:20px}
+</style></head><body><div class="app"><header><button class="menu" id="menu" type="button" aria-label="打开目录">目录</button><span class="mark"></span><div class="brand">数据模型 × 界面模式 <small>树与层级类原型手册</small></div><div class="count" id="count"></div></header><div class="shell"><aside id="side"><div class="side-head"><div class="side-label">03 · Tree &amp; Hierarchy</div><input id="search" class="search" type="search" aria-label="搜索组件" placeholder="搜索组件名称或模型"></div><nav id="nav" class="nav" aria-label="组件目录"></nav><div class="side-foot">方向键切换 · Esc 收起目录</div></aside><main id="main" tabindex="-1"><div class="inner"><div class="hero"><div><div class="eyebrow" id="eyebrow"></div><h1 id="title"></h1><p class="summary" id="summary"></p></div><div class="pager"><button class="btn" id="prev" type="button">上一项</button><button class="btn" id="next" type="button">下一项</button></div></div><div class="facts" id="facts"></div><section class="proto"><div class="proto-head"><strong>关键交互原型</strong><span class="hint">本组件拥有独立结构、动作和状态。</span><div class="actions"><button class="btn" id="reset" type="button">重置原型</button></div></div><section class="business-task" id="taskContext" hidden><div class="business-task-head"><div><h3>生产级任务场景</h3><p>先载入任务上下文，再完成组件主动作；异常与恢复路径用于评审边界。</p></div><span class="business-badge" id="taskLevel"></span></div><div class="business-grid" id="taskFields"></div><div class="business-notice business-warning"><strong>非理想场景</strong><span id="taskException"></span></div><div class="business-actions"><button class="btn primary" type="button" data-readiness-start>载入任务上下文</button><button class="btn danger" type="button" data-readiness-exception>注入非理想场景</button><button class="btn business-recovery" type="button" data-readiness-recovery>执行恢复动作</button></div><div class="business-grid"><div class="business-field"><span class="business-label">恢复方式</span><strong id="taskRecovery"></strong></div><div class="business-field"><span class="business-label">键盘路径</span><strong id="taskKeyboard"></strong></div></div><section class="business-system" id="systemReadiness" hidden><div><strong>职责边界</strong><ul id="systemResponsibilities"></ul><strong>跨模块时间线</strong><div class="business-timeline" id="systemTimeline"></div></div><div class="business-notice" id="systemCompensation"></div></section><div class="business-notice" id="readinessResult" role="status" aria-live="polite"></div></section><div class="stage-wrap"><div class="stage" id="stage"></div></div><div class="prototype-state" id="prototypeState" data-state="initial" aria-live="polite">初始状态</div></section><div class="notes" id="notes"></div></div></main></div></div><div class="toast" id="toast" role="status" aria-live="polite"></div><script>function mount(ctx, html) {
+  ctx.stage.innerHTML = `<div class="prototype-demo">${html}<output data-state aria-live="polite"></output></div>`;
+  const q = (selector) => ctx.stage.querySelector(selector), qa = (selector) => [...ctx.stage.querySelectorAll(selector)];
+  const state = (value) => { q("[data-state]").textContent = String(value); ctx.setStatus?.(value, value); };
+  const on = (selector, type, listener) => ctx.on(q(selector), type, listener);
+  return { q, qa, state, on };
+}
+
+function renderTreeView(ctx) {
+  const ui = mount(ctx, `<ul><li><button data-node="root">产品</button><ul><li><button data-node="crm">CRM</button></li><li><button data-node="erp">ERP</button></li></ul></li></ul>`);
+  ui.qa("[data-node]").forEach((node) => ctx.on(node, "click", () => { ui.qa("[data-node]").forEach((item) => item.classList.toggle("selected", item === node)); ui.state(`selected:${node.dataset.node}`); })); ui.state("selected:none");
+}
+function renderCheckboxTree(ctx) {
+  const ui = mount(ctx, `<label><input type="checkbox" data-parent> 华东区</label><ul><li><label><input type="checkbox" data-child> 上海</label></li><li><label><input type="checkbox" data-child> 杭州</label></li></ul>`);
+  ui.on("[data-parent]", "change", () => { const checked = ui.q("[data-parent]").checked; ui.qa("[data-child]").forEach((child) => { child.checked = checked; }); ui.state(`checked:${checked ? 3 : 0}`); }); ui.qa("[data-child]").forEach((child) => ctx.on(child, "change", () => { const count = ui.qa("[data-child]:checked").length; ui.q("[data-parent]").indeterminate = count === 1; ui.state(`childrenChecked:${count}`); })); ui.state("checked:0");
+}
+function renderRadioTree(ctx) {
+  const ui = mount(ctx, `<fieldset><legend>选择唯一分类</legend><label><input type="radio" name="category" data-radio="hardware"> 硬件</label><label><input type="radio" name="category" data-radio="software"> 软件</label></fieldset>`);
+  ui.qa("[data-radio]").forEach((radio) => ctx.on(radio, "change", () => ui.state(`selected:${radio.dataset.radio}`))); ui.state("selected:none");
+}
+function renderLazyTree(ctx) {
+  const ui = mount(ctx, `<ul><li><button data-load aria-expanded="false">▶ 华南区</button><ul data-children></ul></li></ul>`);
+  let loaded = false; ui.on("[data-load]", "click", () => { if (!loaded) { ["广州", "深圳"].forEach((text) => { const li = document.createElement("li"); li.textContent = text; ui.q("[data-children]").append(li); }); loaded = true; } ui.q("[data-load]").setAttribute("aria-expanded", "true"); ui.state("lazy:loaded:2"); }); ui.state("lazy:idle");
+}
+function renderVirtualTree(ctx) {
+  const ui = mount(ctx, `<ul data-window></ul><button data-next-window>显示第 101 个节点</button>`);
+  let start = 1; const draw = () => { const list = ui.q("[data-window]"); list.replaceChildren(...Array.from({length:7},(_,i)=>{const li=document.createElement("li");li.textContent=`节点 ${start+i}`;return li;})); ui.state(`windowStart:${start}`); }; ui.on("[data-next-window]", "click",()=>{start=start===1?101:1;draw();}); draw();
+}
+function renderSearchTree(ctx) {
+  const ui = mount(ctx, `<label>搜索节点 <input data-search value="上海"></label><ul><li>中国<ul><li>华东<ul><li data-node="上海">上海</li><li data-node="杭州">杭州</li></ul></li></ul></li></ul><button data-find>定位节点</button>`);
+  ui.on("[data-find]", "click",()=>{const term=ui.q("[data-search]").value;const node=ui.qa("[data-node]").find((item)=>item.dataset.node.includes(term));ui.qa("[data-node]").forEach((item)=>item.classList.toggle("selected",item===node));ui.state(node?`revealed:${node.dataset.node}`:"revealed:none");}); ui.state("revealed:none");
+}
+function renderDraggableTree(ctx) {
+  const ui = mount(ctx, `<ul><li data-parent="root">根目录<ul data-root><li data-node="report">报表</li><li data-node="archive">归档<ul data-archive></ul></li></ul></li></ul><button data-reparent>移动报表到归档</button>`);
+  let parent="root";ui.on("[data-reparent]","click",()=>{parent=parent==="root"?"archive":"root";ui.q(parent==="archive"?"[data-archive]":"[data-root]").append(ui.q('[data-node="report"]'));ui.state(`parent:${parent}`);});ui.state("parent:root");
+}
+function renderEditableTree(ctx) {
+  const ui=mount(ctx,`<ul><li><span data-label>销售资料</span> <button data-edit>重命名</button></li></ul>`);let editing=false;ui.on("[data-edit]","click",()=>{editing=!editing;ui.q("[data-label]").contentEditable=String(editing);ui.q("[data-label]").focus();ui.q("[data-edit]").textContent=editing?"保存":"重命名";ui.state(`editing:${editing}`);});ui.state("editing:false");
+}
+function renderContextTree(ctx) {
+  const ui=mount(ctx,`<button data-target>项目文档</button><menu data-menu hidden><button data-command="duplicate">复制节点</button><button data-command="delete">删除节点</button></menu>`);ui.on("[data-target]","contextmenu",(event)=>{event.preventDefault();ui.q("[data-menu]").hidden=false;ui.state("menu:open");});ui.qa("[data-command]").forEach((button)=>ctx.on(button,"click",()=>{ui.q("[data-menu]").hidden=true;ui.state(`command:${button.dataset.command}`);}));ui.state("menu:closed");
+}
+function renderFileTree(ctx) {
+  const ui=mount(ctx,`<ul data-files><li data-file="readme">README.md</li></ul><button data-new-file>新建文件</button><button data-rename-file>重命名</button>`);ui.on("[data-new-file]","click",()=>{if(!ui.q('[data-file="draft"]')){const li=document.createElement("li");li.dataset.file="draft";li.textContent="draft.md";ui.q("[data-files]").append(li);}ui.state("file:created");});ui.on("[data-rename-file]","click",()=>{const file=ui.q('[data-file="draft"]');if(file){file.textContent="proposal.md";ui.state("file:renamed");}});ui.state("file:initial");
+}
+function renderOrgTree(ctx) {
+  const ui=mount(ctx,`<ul><li>总部<ul><li data-unit="sales">销售部</li><li data-unit="tech">技术部<ul data-tech></ul></li></ul></li></ul><button data-org-move>将销售部并入技术中心</button>`);let parent="hq";ui.on("[data-org-move]","click",()=>{parent=parent==="hq"?"tech":"hq";if(parent==="tech")ui.q("[data-tech]").append(ui.q('[data-unit="sales"]'));else ui.q('[data-unit="tech"]').before(ui.q('[data-unit="sales"]'));ui.state(`orgParent:${parent}`);});ui.state("orgParent:hq");
+}
+function renderCategoryTree(ctx) {
+  const ui=mount(ctx,`<ul><li>商品分类<ul><li><button data-category="office">办公用品</button></li><li><button data-category="digital">数码设备</button></li></ul></li></ul><aside data-products>未选择分类</aside>`);ui.qa("[data-category]").forEach((button)=>ctx.on(button,"click",()=>{ui.q("[data-products]").textContent=button.dataset.category==="office"?"纸张、笔、文件夹":"电脑、显示器、键盘";ui.state(`category:${button.dataset.category}`);}));ui.state("category:none");
+}
+function renderRegionTree(ctx) {
+  const ui=mount(ctx,`<button data-region="china">中国</button> › <button data-region="east">华东</button> › <button data-region="shanghai">上海</button><output data-path></output>`);ui.qa("[data-region]").forEach((button)=>ctx.on(button,"click",()=>{ui.q("[data-path]").textContent=`当前位置：中国 / ${button.textContent}`;ui.state(`region:${button.dataset.region}`);}));ui.state("region:china");
+}
+function renderMenuTree(ctx) {
+  const ui=mount(ctx,`<ul><li><label><input type="checkbox" data-menu="dashboard" checked> 仪表盘</label></li><li><label><input type="checkbox" data-menu="admin"> 管理设置</label></li></ul>`);ui.qa("[data-menu]").forEach((input)=>ctx.on(input,"change",()=>ui.state(`${input.dataset.menu}:${input.checked?"enabled":"disabled"}`)));ui.state("menus:initial");
+}
+function renderPermissionTree(ctx) {
+  const ui=mount(ctx,`<label><input type="checkbox" data-parent checked> 客户管理（继承）</label><ul><li><label><input type="checkbox" data-child checked disabled> 查看客户</label></li><li><label><input type="checkbox" data-child checked disabled> 编辑客户</label></li></ul><button data-override>覆盖继承</button>`);let inherited=true;ui.on("[data-override]","click",()=>{inherited=!inherited;ui.qa("[data-child]").forEach((input)=>{input.disabled=inherited;});ui.state(`inherited:${inherited}`);});ui.state("inherited:true");
+}
+function renderDependencyTree(ctx) {
+  const ui=mount(ctx,`<ul><li>订单服务<ul><li data-dependent>库存服务</li><li data-dependent>支付服务</li></ul></li></ul><button data-impact>分析变更影响</button>`);ui.on("[data-impact]","click",()=>{ui.qa("[data-dependent]").forEach((node)=>node.style.background="#ffe2a8");ui.state("impacted:2");});ui.state("impacted:0");
+}
+function renderRelationshipTree(ctx) {
+  const ui=mount(ctx,`<div data-relation>客户 → 订单 → 商品</div><button data-direction>反向查看关系</button>`);let direction="out";ui.on("[data-direction]","click",()=>{direction=direction==="out"?"in":"out";ui.q("[data-relation]").textContent=direction==="out"?"客户 → 订单 → 商品":"商品 ← 订单 ← 客户";ui.state(`direction:${direction}`);});ui.state("direction:out");
+}
+function renderOutlineTree(ctx) {
+  const ui=mount(ctx,`<nav><button data-heading="intro">1. 简介</button><button data-heading="design">2. 设计</button></nav><article data-section>文档正文</article>`);ui.qa("[data-heading]").forEach((button)=>ctx.on(button,"click",()=>{ui.q("[data-section]").textContent=`已定位：${button.textContent}`;ui.state(`heading:${button.dataset.heading}`);}));ui.state("heading:none");
+}
+function renderMindmapTree(ctx) {
+  const ui=mount(ctx,`<div data-map>产品 <span>— 需求</span> <span>— 设计</span></div><button data-branch>添加研发分支</button>`);let branches=2;ui.on("[data-branch]","click",()=>{if(branches===2){const span=document.createElement("span");span.textContent=" — 研发";span.dataset.newBranch="";ui.q("[data-map]").append(span);branches=3;}else{ui.q("[data-new-branch]")?.remove();branches=2;}ui.state(`branches:${branches}`);});ui.state("branches:2");
+}
+function renderGenealogyTree(ctx) {
+  const ui=mount(ctx,`<div>第一代：<button data-person="grandparent">祖辈</button></div><div>第二代：<button data-person="parent">父辈</button></div><div>第三代：<button data-person="child">子代</button></div><aside data-profile>选择成员</aside>`);ui.qa("[data-person]").forEach((button)=>ctx.on(button,"click",()=>{ui.q("[data-profile]").textContent=`焦点成员：${button.textContent}；展示上下两代`;ui.state(`focus:${button.dataset.person}`);}));ui.state("focus:none");
+}
+
+const treeRenderers={"03:tree-view":renderTreeView,"03:checkbox-tree":renderCheckboxTree,"03:radio-tree":renderRadioTree,"03:lazy-tree":renderLazyTree,"03:virtual-tree":renderVirtualTree,"03:search-tree":renderSearchTree,"03:draggable-tree":renderDraggableTree,"03:editable-tree":renderEditableTree,"03:context-tree":renderContextTree,"03:file-tree":renderFileTree,"03:org-tree":renderOrgTree,"03:category-tree":renderCategoryTree,"03:region-tree":renderRegionTree,"03:menu-tree":renderMenuTree,"03:permission-tree":renderPermissionTree,"03:dependency-tree":renderDependencyTree,"03:relationship-tree":renderRelationshipTree,"03:outline-tree":renderOutlineTree,"03:mindmap-tree":renderMindmapTree,"03:genealogy-tree":renderGenealogyTree};
+const renderers03=treeRenderers;
+
+function createDomRuntime(stage, statusNode, toastNode) {
+  let active = true;
+  const cleanups = [];
+  const timers = new Set();
+  const token = { get active() { return active; } };
+
+  function append(parent, child) {
+    if (child === null || child === undefined || child === false) return;
+    if (Array.isArray(child)) {
+      child.forEach((item) => append(parent, item));
+      return;
+    }
+    parent.append(child instanceof Node ? child : document.createTextNode(String(child)));
+  }
+
+  function el(tag, attributes = {}, ...children) {
+    const node = document.createElement(tag);
+    for (const [name, value] of Object.entries(attributes || {})) {
+      if (value === null || value === undefined || value === false) continue;
+      if (/^on/i.test(name)) throw new Error("Inline event attributes are forbidden");
+      if (name === "className") node.className = value;
+      else if (name === "text") node.textContent = value;
+      else if (name === "dataset") Object.assign(node.dataset, value);
+      else if (name === "style" && typeof value === "object") Object.assign(node.style, value);
+      else if (name in node && !name.startsWith("aria-") && !name.startsWith("data-")) node[name] = value;
+      else node.setAttribute(name, value === true ? "" : String(value));
+    }
+    children.forEach((child) => append(node, child));
+    return node;
+  }
+
+  function button(label, action, options = {}) {
+    return el("button", {
+      type: "button",
+      className: options.className || "btn",
+      disabled: options.disabled || false,
+      "data-action": action,
+      "aria-label": options.ariaLabel || label,
+      title: options.title || "",
+    }, label);
+  }
+
+  function field(label, control) {
+    const id = control.id || "control-" + Math.random().toString(36).slice(2);
+    control.id = id;
+    if (!control.getAttribute("aria-label")) control.setAttribute("aria-label", label);
+    return el("label", { className: "field", htmlFor: id }, el("span", { className: "field-label" }, label), control);
+  }
+
+  function setText(node, value) { node.textContent = value == null ? "" : String(value); }
+  function setStatus(text, state = text) {
+    setText(statusNode, text);
+    statusNode.dataset.state = String(state);
+  }
+  function toast(text) {
+    setText(toastNode, text);
+    toastNode.classList.add("show");
+    const id = window.setTimeout(() => { if (active) toastNode.classList.remove("show"); }, 1400);
+    timers.add(id);
+  }
+  function on(target, type, listener, options) {
+    target.addEventListener(type, listener, options);
+    cleanups.push(() => target.removeEventListener(type, listener, options));
+    return listener;
+  }
+  function timeout(listener, delay) {
+    const id = window.setTimeout(() => {
+      timers.delete(id);
+      if (active) listener();
+    }, delay);
+    timers.add(id);
+    return id;
+  }
+  function cleanup() {
+    active = false;
+    cleanups.splice(0).reverse().forEach((dispose) => dispose());
+    timers.forEach((id) => window.clearTimeout(id));
+    timers.clear();
+  }
+  return { stage, el, button, field, setText, setStatus, toast, on, timeout, token, cleanup };
+}
+(function handbookRuntime(category, rendererRegistry) {
+  const patterns = category.components;
+  let currentIndex = -1;
+  let mounted = null;
+  let toastTimer = 0;
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+
+  function showToast(message) {
+    const toast = $("#toast");
+    toast.textContent = String(message);
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 1400);
+  }
+
+  function renderNav() {
+    const query = $("#search").value.trim().toLowerCase();
+    const items = patterns.flatMap((component, index) => {
+      const haystack = [component.name, component.en, component.model, component.state].join(" ").toLowerCase();
+      if (query && !haystack.includes(query)) return [];
+      const item = document.createElement("button");
+      item.type = "button";
+      item.dataset.index = String(index);
+      item.className = index === currentIndex ? "active" : "";
+      item.setAttribute("aria-label", component.name);
+      const number = document.createElement("span");
+      number.className = "num";
+      number.textContent = String(index + 1).padStart(2, "0");
+      const label = document.createElement("span");
+      label.textContent = component.name;
+      const english = document.createElement("span");
+      english.className = "en";
+      english.textContent = component.en;
+      label.append(english);
+      item.append(number, label);
+      return [item];
+    });
+    $("#nav").replaceChildren(...items);
+  }
+
+  function destroyMounted() {
+    if (!mounted) return;
+    try { mounted.result?.destroy?.(); } finally { mounted.dom.cleanup(); }
+    mounted = null;
+  }
+
+  function mount(component) {
+    destroyMounted();
+    const stage = $("#stage");
+    stage.removeAttribute("aria-disabled");
+    stage.inert = false;
+    stage.replaceChildren();
+    const stateNode = $("#prototypeState");
+    stateNode.textContent = "初始状态";
+    stateNode.dataset.state = "initial";
+    const dom = createDomRuntime(stage, stateNode, $("#toast"));
+    const renderer = rendererRegistry[component.key];
+    if (typeof renderer !== "function") throw new Error("Missing renderer: " + component.key);
+    const result = renderer({ ...dom, component, showToast });
+    mounted = { dom, result };
+    const readinessResult = $("#readinessResult");
+    readinessResult.className = "business-notice";
+    readinessResult.textContent = component.contract?.business ? "预期业务影响：" + component.contract.business.effect : "";
+  }
+
+  function setStageLocked(locked) {
+    const stage = $("#stage");
+    if (locked) stage.setAttribute("aria-disabled", "true");
+    else stage.removeAttribute("aria-disabled");
+    stage.inert = locked;
+    $$(`button,input,select,textarea,[tabindex]`, stage).forEach((control) => {
+      if (locked) {
+        control.dataset.readinessDisabled = String(Boolean(control.disabled));
+        control.disabled = true;
+      } else {
+        control.disabled = control.dataset.readinessDisabled === "true";
+        delete control.dataset.readinessDisabled;
+      }
+    });
+    if (!locked) {
+      const target = $("button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),[tabindex]:not([tabindex='-1'])", stage);
+      target?.focus();
+    }
+  }
+
+  function updateSystemReadiness(state) {
+    const root = $("#systemReadiness");
+    if (root.hidden) return;
+    $$(`[data-system-step]`, root).forEach((step, index) => {
+      step.className = "business-timeline-item";
+      if (state === "primary") step.classList.add("done");
+      if (state === "exception" && index === 1) step.classList.add("error");
+      if (state === "recovered" && index <= 1) step.classList.add("done");
+    });
+    $("#systemCompensation", root).className = state === "exception" ? "business-notice business-error" : "business-notice";
+  }
+
+  function renderTaskContext(component) {
+    const root = $("#taskContext");
+    const result = $("#readinessResult");
+    const contract = component.contract;
+    if (!contract?.business || !contract?.readiness) {
+      root.hidden = true;
+      result.textContent = "";
+      return;
+    }
+    root.hidden = false;
+    const business = contract.business;
+    const fields = [
+      ["当前角色", business.role],
+      ["业务任务", business.task],
+      ["业务对象", business.objects.join(" · ")],
+      ["决策规则", business.rule],
+    ];
+    $("#taskFields").replaceChildren(...fields.map(([label, value]) => {
+      const field = document.createElement("div");
+      field.className = "business-field";
+      const caption = document.createElement("span");
+      caption.className = "business-label";
+      caption.textContent = label;
+      const content = document.createElement("strong");
+      content.textContent = value;
+      field.append(caption, content);
+      return field;
+    }));
+    $("#taskLevel").textContent = contract.business.level + " 级交互规范";
+    $("#taskException").textContent = business.exception;
+    $("#taskRecovery").textContent = contract.readiness.recovery;
+    $("#taskKeyboard").textContent = contract.readiness.keyboard;
+    const systemRoot = $("#systemReadiness");
+    const systemBusiness = business.level === "C" ? business : null;
+    systemRoot.hidden = !systemBusiness;
+    if (systemBusiness) {
+      $("#systemResponsibilities").replaceChildren(...systemBusiness.responsibilities.map((value) => {
+        const item = document.createElement("li"); item.textContent = value; return item;
+      }));
+      $("#systemTimeline").replaceChildren(...systemBusiness.timeline.map((value) => {
+        const item = document.createElement("div"); item.className = "business-timeline-item"; item.dataset.systemStep = "";
+        const copy = document.createElement("span"); copy.textContent = value; item.append(copy); return item;
+      }));
+      $("#systemCompensation").textContent = "补偿路径：" + systemBusiness.compensation;
+      updateSystemReadiness("initial");
+    }
+    result.className = "business-notice";
+    result.textContent = "预期业务影响：" + business.effect;
+  }
+
+  function show(index, options = {}) {
+    const nextIndex = Math.max(0, Math.min(patterns.length - 1, index));
+    const component = patterns[nextIndex];
+    currentIndex = nextIndex;
+    renderNav();
+    $("#count").textContent = String(nextIndex + 1).padStart(2, "0") + " / " + patterns.length;
+    $("#eyebrow").textContent = (category.number + " · " + (component.kind || component.group || "COMPONENT")).toUpperCase();
+    const englishTitle = document.createElement("small");
+    englishTitle.textContent = component.en;
+    $("#title").replaceChildren(document.createTextNode(component.name + " "), englishTitle);
+    $("#summary").textContent = component.summary;
+
+    const factData = [
+      ["统一模型", "Component = Data + State + Action"],
+      ["数据模型", component.model],
+      ["核心状态", component.state],
+    ];
+    $("#facts").replaceChildren(...factData.map(([label, value]) => {
+      const fact = document.createElement("div");
+      fact.className = "fact";
+      const labelNode = document.createElement("div");
+      labelNode.className = "label";
+      labelNode.textContent = label;
+      const valueNode = document.createElement("div");
+      valueNode.className = "value";
+      valueNode.textContent = value;
+      fact.append(labelNode, valueNode);
+      return fact;
+    }));
+
+    const noteData = [["适用边界", component.boundary], ["关键不变量", component.invariant]];
+    $("#notes").replaceChildren(...noteData.map(([heading, copy]) => {
+      const article = document.createElement("article");
+      article.className = "note";
+      const title = document.createElement("h2");
+      title.textContent = heading;
+      const text = document.createElement("p");
+      text.textContent = copy;
+      article.append(title, text);
+      return article;
+    }));
+    renderTaskContext(component);
+    mount(component);
+    $("#main").scrollTop = 0;
+    $("#side").classList.remove("open");
+    if (options.updateHash !== false && location.hash.slice(1) !== component.id) location.hash = component.id;
+  }
+
+  function showFromHash() {
+    const id = decodeURIComponent(location.hash.slice(1));
+    const index = patterns.findIndex((component) => component.id === id);
+    show(index >= 0 ? index : 0, { updateHash: false });
+  }
+
+  $("#nav").addEventListener("click", (event) => {
+    const item = event.target.closest("[data-index]");
+    if (item) show(Number(item.dataset.index));
+  });
+  $("#search").addEventListener("input", renderNav);
+  $("#menu").addEventListener("click", () => $("#side").classList.toggle("open"));
+  $("#prev").addEventListener("click", () => show(currentIndex - 1));
+  $("#next").addEventListener("click", () => show(currentIndex + 1));
+  $("#reset").addEventListener("click", () => { mount(patterns[currentIndex]); showToast("原型已重置"); });
+  $("#taskContext").addEventListener("click", (event) => {
+    const contract = patterns[currentIndex]?.contract;
+    if (!contract) return;
+    const result = $("#readinessResult");
+    const stateNode = $("#prototypeState");
+    if (event.target.closest("[data-readiness-start]")) {
+      result.className = "business-notice business-success";
+      result.textContent = "任务已载入：" + contract.business.objects.join(" · ") + "；规则：" + contract.business.rule;
+      stateNode.textContent = "任务已载入 · " + contract.business.task;
+      stateNode.dataset.state = "readiness:started";
+    }
+    if (event.target.closest("[data-readiness-exception]")) {
+      setStageLocked(true);
+      updateSystemReadiness("exception");
+      result.className = "business-notice business-error";
+      result.textContent = "非理想场景：" + contract.business.exception;
+      stateNode.textContent = "异常路径 · " + contract.business.exception;
+      stateNode.dataset.state = "readiness:exception";
+    }
+    if (event.target.closest("[data-readiness-recovery]")) {
+      setStageLocked(false);
+      updateSystemReadiness("recovered");
+      result.className = "business-notice business-success";
+      result.textContent = "已恢复：" + contract.readiness.recovery + "；" + contract.business.effect;
+      stateNode.textContent = "恢复路径 · " + contract.readiness.recovery;
+      stateNode.dataset.state = "readiness:recovered";
+    }
+  });
+  ["click", "contextmenu"].forEach((type) => $("#stage").addEventListener(type, (event) => {
+    if (!event.target.closest("button,input,select,textarea,[role='button'],[data-action]")) return;
+    const contract = patterns[currentIndex]?.contract;
+    if (!contract?.business) return;
+    requestAnimationFrame(() => {
+      const componentState = $("#prototypeState").dataset.state;
+      updateSystemReadiness("primary");
+      const result = $("#readinessResult");
+      result.className = "business-notice business-success";
+      result.textContent = "主路径完成：" + contract.business.effect + "；组件状态：" + componentState;
+    });
+  }));
+  window.addEventListener("hashchange", showFromHash);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      $("#side").classList.remove("open");
+      if ($("#stage").getAttribute("aria-disabled") === "true") {
+        setStageLocked(false);
+        updateSystemReadiness("recovered");
+        const contract = patterns[currentIndex]?.contract;
+        $("#readinessResult").textContent = "已恢复：" + contract.readiness.recovery + "；" + contract.business.effect;
+        $("#prototypeState").dataset.state = "readiness:recovered";
+      }
+    }
+    const target = event.target;
+    const editing = event.isComposing || target.closest?.("input,textarea,select,button,[contenteditable='true'],[contenteditable='']");
+    if (editing) return;
+    if (event.key === "ArrowLeft") show(currentIndex - 1);
+    if (event.key === "ArrowRight") show(currentIndex + 1);
+  });
+  showFromHash();
+})({"number":"03","name":"树与层级类","en":"Tree & Hierarchy","count":20,"file":"03-树与层级类复杂组件交互原型手册.html","module":"03-tree.mjs","components":[{"id":"tree-view","name":"树视图","en":"Tree View","kind":"tree","model":"TreeNode → ChildNode[]","state":"expandedKeys, selectedKey","summary":"树视图把结构化数据、运行状态与用户操作组织为可连续理解和操作的界面。","boundary":"适用于树与层级中的复杂任务；简单展示或单字段输入应使用更轻量的基础组件。","invariant":"对象身份、层级或字段路径必须稳定；筛选、切换与编辑不能静默丢失用户状态。","key":"03:tree-view","contract":{"componentKey":"03:tree-view","hash":"tree-view","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-node='crm']","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"赵峰｜系统管理员","task":"使用树视图核验组织、产品、仓位或权限层级关系","objects":["树视图","组织与资源层级 HC-INDUSTRY"],"rule":"父子关系不得形成循环，移动节点后范围、路径和继承关系必须可解释","exception":"树视图：目标父节点无权访问、尚未加载或移动后形成循环依赖","effect":"树视图：更新层级路径并保留原位置用于撤销和审计"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"撤销层级变更并恢复原展开路径与焦点","keyboard":"Tab 进入树，方向键导航，Enter 展开或执行，Esc 取消上下文操作","riskCapabilities":["navigation-context"]}}},{"id":"checkbox-tree","name":"复选树","en":"Checkbox Tree","kind":"check-tree","model":"TreeNode[] + CheckedSet","state":"checkedKeys, halfChecked","summary":"复选树把结构化数据、运行状态与用户操作组织为可连续理解和操作的界面。","boundary":"适用于树与层级中的复杂任务；简单展示或单字段输入应使用更轻量的基础组件。","invariant":"对象身份、层级或字段路径必须稳定；筛选、切换与编辑不能静默丢失用户状态。","key":"03:checkbox-tree","contract":{"componentKey":"03:checkbox-tree","hash":"checkbox-tree","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-parent]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"赵峰｜系统管理员","task":"使用复选树核验组织、产品、仓位或权限层级关系","objects":["复选树","组织与资源层级 HC-INDUSTRY"],"rule":"父子关系不得形成循环，移动节点后范围、路径和继承关系必须可解释","exception":"复选树：目标父节点无权访问、尚未加载或移动后形成循环依赖","effect":"复选树：更新层级路径并保留原位置用于撤销和审计"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"撤销层级变更并恢复原展开路径与焦点","keyboard":"Tab 进入树，方向键导航，Enter 展开或执行，Esc 取消上下文操作","riskCapabilities":["navigation-context"]}}},{"id":"radio-tree","name":"单选树","en":"Radio Tree","kind":"check-tree","model":"TreeNode[] + SelectedKey","state":"selectedKey","summary":"单选树把结构化数据、运行状态与用户操作组织为可连续理解和操作的界面。","boundary":"适用于树与层级中的复杂任务；简单展示或单字段输入应使用更轻量的基础组件。","invariant":"对象身份、层级或字段路径必须稳定；筛选、切换与编辑不能静默丢失用户状态。","key":"03:radio-tree","contract":{"componentKey":"03:radio-tree","hash":"radio-tree","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-radio='hardware']","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"赵峰｜系统管理员","task":"使用单选树核验组织、产品、仓位或权限层级关系","objects":["单选树","组织与资源层级 HC-INDUSTRY"],"rule":"父子关系不得形成循环，移动节点后范围、路径和继承关系必须可解释","exception":"单选树：目标父节点无权访问、尚未加载或移动后形成循环依赖","effect":"单选树：更新层级路径并保留原位置用于撤销和审计"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"撤销层级变更并恢复原展开路径与焦点","keyboard":"Tab 进入树，方向键导航，Enter 展开或执行，Esc 取消上下文操作","riskCapabilities":["navigation-context"]}}},{"id":"lazy-tree","name":"懒加载树","en":"Lazy-loaded Tree","kind":"lazy-tree","model":"Node → Async<Child[]>","state":"loadingKeys, loadedKeys","summary":"懒加载树把结构化数据、运行状态与用户操作组织为可连续理解和操作的界面。","boundary":"适用于树与层级中的复杂任务；简单展示或单字段输入应使用更轻量的基础组件。","invariant":"对象身份、层级或字段路径必须稳定；筛选、切换与编辑不能静默丢失用户状态。","key":"03:lazy-tree","contract":{"componentKey":"03:lazy-tree","hash":"lazy-tree","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-load]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"赵峰｜系统管理员","task":"使用懒加载树核验组织、产品、仓位或权限层级关系","objects":["懒加载树","组织与资源层级 HC-INDUSTRY"],"rule":"父子关系不得形成循环，移动节点后范围、路径和继承关系必须可解释","exception":"懒加载树：目标父节点无权访问、尚未加载或移动后形成循环依赖","effect":"懒加载树：更新层级路径并保留原位置用于撤销和审计"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"撤销层级变更并恢复原展开路径与焦点","keyboard":"Tab 进入树，方向键导航，Enter 展开或执行，Esc 取消上下文操作","riskCapabilities":["navigation-context"]}}},{"id":"virtual-tree","name":"虚拟滚动树","en":"Virtual Tree","kind":"virtual-tree","model":"Flatten(Tree) → Window","state":"startIndex, expandedKeys","summary":"虚拟滚动树把结构化数据、运行状态与用户操作组织为可连续理解和操作的界面。","boundary":"适用于树与层级中的复杂任务；简单展示或单字段输入应使用更轻量的基础组件。","invariant":"对象身份、层级或字段路径必须稳定；筛选、切换与编辑不能静默丢失用户状态。","key":"03:virtual-tree","contract":{"componentKey":"03:virtual-tree","hash":"virtual-tree","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-next-window]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"赵峰｜系统管理员","task":"使用虚拟滚动树核验组织、产品、仓位或权限层级关系","objects":["虚拟滚动树","组织与资源层级 HC-INDUSTRY"],"rule":"父子关系不得形成循环，移动节点后范围、路径和继承关系必须可解释","exception":"虚拟滚动树：目标父节点无权访问、尚未加载或移动后形成循环依赖","effect":"虚拟滚动树：更新层级路径并保留原位置用于撤销和审计"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"撤销层级变更并恢复原展开路径与焦点","keyboard":"Tab 进入树，方向键导航，Enter 展开或执行，Esc 取消上下文操作","riskCapabilities":["navigation-context"]}}},{"id":"search-tree","name":"可搜索树","en":"Searchable Tree","kind":"search-tree","model":"Query + Tree → MatchPath[]","state":"query, matchedKeys","summary":"可搜索树把结构化数据、运行状态与用户操作组织为可连续理解和操作的界面。","boundary":"适用于树与层级中的复杂任务；简单展示或单字段输入应使用更轻量的基础组件。","invariant":"对象身份、层级或字段路径必须稳定；筛选、切换与编辑不能静默丢失用户状态。","key":"03:search-tree","contract":{"componentKey":"03:search-tree","hash":"search-tree","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-find]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"赵峰｜系统管理员","task":"使用可搜索树核验组织、产品、仓位或权限层级关系","objects":["可搜索树","组织与资源层级 HC-INDUSTRY"],"rule":"父子关系不得形成循环，移动节点后范围、路径和继承关系必须可解释","exception":"可搜索树：目标父节点无权访问、尚未加载或移动后形成循环依赖","effect":"可搜索树：更新层级路径并保留原位置用于撤销和审计"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"撤销层级变更并恢复原展开路径与焦点","keyboard":"Tab 进入树，方向键导航，Enter 展开或执行，Esc 取消上下文操作","riskCapabilities":["navigation-context"]}}},{"id":"draggable-tree","name":"可拖拽树","en":"Draggable Tree","kind":"drag-tree","model":"TreeNode + DropTarget → Tree","state":"dragKey, dropPosition","summary":"可拖拽树把结构化数据、运行状态与用户操作组织为可连续理解和操作的界面。","boundary":"适用于树与层级中的复杂任务；简单展示或单字段输入应使用更轻量的基础组件。","invariant":"对象身份、层级或字段路径必须稳定；筛选、切换与编辑不能静默丢失用户状态。","key":"03:draggable-tree","contract":{"componentKey":"03:draggable-tree","hash":"draggable-tree","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-reparent]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"赵峰｜系统管理员","task":"使用可拖拽树核验组织、产品、仓位或权限层级关系","objects":["可拖拽树","组织与资源层级 HC-INDUSTRY"],"rule":"父子关系不得形成循环，移动节点后范围、路径和继承关系必须可解释","exception":"可拖拽树：目标父节点无权访问、尚未加载或移动后形成循环依赖","effect":"可拖拽树：更新层级路径并保留原位置用于撤销和审计"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"撤销层级变更并恢复原展开路径与焦点","keyboard":"Tab 进入树，方向键导航，Enter 展开或执行，Esc 取消上下文操作","riskCapabilities":["navigation-context"]}}},{"id":"editable-tree","name":"可编辑树","en":"Editable Tree","kind":"edit-tree","model":"TreeNode → LabelPatch","state":"editingKey, draft","summary":"可编辑树把结构化数据、运行状态与用户操作组织为可连续理解和操作的界面。","boundary":"适用于树与层级中的复杂任务；简单展示或单字段输入应使用更轻量的基础组件。","invariant":"对象身份、层级或字段路径必须稳定；筛选、切换与编辑不能静默丢失用户状态。","key":"03:editable-tree","contract":{"componentKey":"03:editable-tree","hash":"editable-tree","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-edit]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"赵峰｜系统管理员","task":"使用可编辑树核验组织、产品、仓位或权限层级关系","objects":["可编辑树","组织与资源层级 HC-INDUSTRY"],"rule":"父子关系不得形成循环，移动节点后范围、路径和继承关系必须可解释","exception":"可编辑树：目标父节点无权访问、尚未加载或移动后形成循环依赖","effect":"可编辑树：更新层级路径并保留原位置用于撤销和审计"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"撤销层级变更并恢复原展开路径与焦点","keyboard":"Tab 进入树，方向键导航，Enter 展开或执行，Esc 取消上下文操作","riskCapabilities":["navigation-context"]}}},{"id":"context-tree","name":"带上下文菜单的树","en":"Context-menu Tree","kind":"tree","model":"TreeNode → Action[]","state":"contextKey, menuOpen","summary":"带上下文菜单的树把结构化数据、运行状态与用户操作组织为可连续理解和操作的界面。","boundary":"适用于树与层级中的复杂任务；简单展示或单字段输入应使用更轻量的基础组件。","invariant":"对象身份、层级或字段路径必须稳定；筛选、切换与编辑不能静默丢失用户状态。","key":"03:context-tree","contract":{"componentKey":"03:context-tree","hash":"context-tree","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"contextmenu","selector":"[data-target]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"赵峰｜系统管理员","task":"使用带上下文菜单的树核验组织、产品、仓位或权限层级关系","objects":["带上下文菜单的树","组织与资源层级 HC-INDUSTRY"],"rule":"父子关系不得形成循环，移动节点后范围、路径和继承关系必须可解释","exception":"带上下文菜单的树：目标父节点无权访问、尚未加载或移动后形成循环依赖","effect":"带上下文菜单的树：更新层级路径并保留原位置用于撤销和审计"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"撤销层级变更并恢复原展开路径与焦点","keyboard":"Tab 进入树，方向键导航，Enter 展开或执行，Esc 取消上下文操作","riskCapabilities":["navigation-context"]}}},{"id":"file-tree","name":"文件目录树","en":"File Tree","kind":"tree","model":"Directory → Entry[]","state":"expandedPaths, activePath","summary":"文件目录树把结构化数据、运行状态与用户操作组织为可连续理解和操作的界面。","boundary":"适用于树与层级中的复杂任务；简单展示或单字段输入应使用更轻量的基础组件。","invariant":"对象身份、层级或字段路径必须稳定；筛选、切换与编辑不能静默丢失用户状态。","key":"03:file-tree","contract":{"componentKey":"03:file-tree","hash":"file-tree","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-new-file]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"赵峰｜系统管理员","task":"使用文件目录树核验组织、产品、仓位或权限层级关系","objects":["文件目录树","组织与资源层级 HC-INDUSTRY"],"rule":"父子关系不得形成循环，移动节点后范围、路径和继承关系必须可解释","exception":"文件目录树：目标父节点无权访问、尚未加载或移动后形成循环依赖","effect":"文件目录树：更新层级路径并保留原位置用于撤销和审计"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"撤销层级变更并恢复原展开路径与焦点","keyboard":"Tab 进入树，方向键导航，Enter 展开或执行，Esc 取消上下文操作","riskCapabilities":["navigation-context"]}}},{"id":"org-tree","name":"组织架构树","en":"Organization Tree","kind":"tree","model":"OrgUnit → ChildUnit[]","state":"expandedIds, selectedUnit","summary":"组织架构树把结构化数据、运行状态与用户操作组织为可连续理解和操作的界面。","boundary":"适用于树与层级中的复杂任务；简单展示或单字段输入应使用更轻量的基础组件。","invariant":"对象身份、层级或字段路径必须稳定；筛选、切换与编辑不能静默丢失用户状态。","key":"03:org-tree","contract":{"componentKey":"03:org-tree","hash":"org-tree","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-org-move]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"赵峰｜系统管理员","task":"使用组织架构树核验组织、产品、仓位或权限层级关系","objects":["组织架构树","组织与资源层级 HC-INDUSTRY"],"rule":"父子关系不得形成循环，移动节点后范围、路径和继承关系必须可解释","exception":"组织架构树：目标父节点无权访问、尚未加载或移动后形成循环依赖","effect":"组织架构树：更新层级路径并保留原位置用于撤销和审计"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"撤销层级变更并恢复原展开路径与焦点","keyboard":"Tab 进入树，方向键导航，Enter 展开或执行，Esc 取消上下文操作","riskCapabilities":["navigation-context"]}}},{"id":"category-tree","name":"分类树","en":"Category Tree","kind":"tree","model":"Category → ChildCategory[]","state":"activeCategory, path","summary":"分类树把结构化数据、运行状态与用户操作组织为可连续理解和操作的界面。","boundary":"适用于树与层级中的复杂任务；简单展示或单字段输入应使用更轻量的基础组件。","invariant":"对象身份、层级或字段路径必须稳定；筛选、切换与编辑不能静默丢失用户状态。","key":"03:category-tree","contract":{"componentKey":"03:category-tree","hash":"category-tree","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-category='office']","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"赵峰｜系统管理员","task":"使用分类树核验组织、产品、仓位或权限层级关系","objects":["分类树","组织与资源层级 HC-INDUSTRY"],"rule":"父子关系不得形成循环，移动节点后范围、路径和继承关系必须可解释","exception":"分类树：目标父节点无权访问、尚未加载或移动后形成循环依赖","effect":"分类树：更新层级路径并保留原位置用于撤销和审计"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"撤销层级变更并恢复原展开路径与焦点","keyboard":"Tab 进入树，方向键导航，Enter 展开或执行，Esc 取消上下文操作","riskCapabilities":["navigation-context"]}}},{"id":"region-tree","name":"地区层级树","en":"Region Tree","kind":"tree","model":"Region → Subregion[]","state":"selectedCode, path","summary":"地区层级树把结构化数据、运行状态与用户操作组织为可连续理解和操作的界面。","boundary":"适用于树与层级中的复杂任务；简单展示或单字段输入应使用更轻量的基础组件。","invariant":"对象身份、层级或字段路径必须稳定；筛选、切换与编辑不能静默丢失用户状态。","key":"03:region-tree","contract":{"componentKey":"03:region-tree","hash":"region-tree","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-region='shanghai']","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"赵峰｜系统管理员","task":"使用地区层级树核验组织、产品、仓位或权限层级关系","objects":["地区层级树","组织与资源层级 HC-INDUSTRY"],"rule":"父子关系不得形成循环，移动节点后范围、路径和继承关系必须可解释","exception":"地区层级树：目标父节点无权访问、尚未加载或移动后形成循环依赖","effect":"地区层级树：更新层级路径并保留原位置用于撤销和审计"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"撤销层级变更并恢复原展开路径与焦点","keyboard":"Tab 进入树，方向键导航，Enter 展开或执行，Esc 取消上下文操作","riskCapabilities":["navigation-context"]}}},{"id":"menu-tree","name":"菜单树","en":"Menu Tree","kind":"drag-tree","model":"MenuItem → ChildMenu[]","state":"expandedKeys, order","summary":"菜单树把结构化数据、运行状态与用户操作组织为可连续理解和操作的界面。","boundary":"适用于树与层级中的复杂任务；简单展示或单字段输入应使用更轻量的基础组件。","invariant":"对象身份、层级或字段路径必须稳定；筛选、切换与编辑不能静默丢失用户状态。","key":"03:menu-tree","contract":{"componentKey":"03:menu-tree","hash":"menu-tree","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-menu='admin']","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"赵峰｜系统管理员","task":"使用菜单树核验组织、产品、仓位或权限层级关系","objects":["菜单树","组织与资源层级 HC-INDUSTRY"],"rule":"父子关系不得形成循环，移动节点后范围、路径和继承关系必须可解释","exception":"菜单树：目标父节点无权访问、尚未加载或移动后形成循环依赖","effect":"菜单树：更新层级路径并保留原位置用于撤销和审计"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"撤销层级变更并恢复原展开路径与焦点","keyboard":"Tab 进入树，方向键导航，Enter 展开或执行，Esc 取消上下文操作","riskCapabilities":["navigation-context"]}}},{"id":"permission-tree","name":"权限树","en":"Permission Tree","kind":"check-tree","model":"ResourceTree + GrantSet","state":"checkedKeys, inherited","summary":"权限树把结构化数据、运行状态与用户操作组织为可连续理解和操作的界面。","boundary":"适用于树与层级中的复杂任务；简单展示或单字段输入应使用更轻量的基础组件。","invariant":"对象身份、层级或字段路径必须稳定；筛选、切换与编辑不能静默丢失用户状态。","key":"03:permission-tree","contract":{"componentKey":"03:permission-tree","hash":"permission-tree","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-override]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"赵峰｜系统管理员","task":"使用权限树核验组织、产品、仓位或权限层级关系","objects":["权限树","组织与资源层级 HC-INDUSTRY"],"rule":"父子关系不得形成循环，移动节点后范围、路径和继承关系必须可解释","exception":"权限树：目标父节点无权访问、尚未加载或移动后形成循环依赖","effect":"权限树：更新层级路径并保留原位置用于撤销和审计"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"撤销层级变更并恢复原展开路径与焦点","keyboard":"Tab 进入树，方向键导航，Enter 展开或执行，Esc 取消上下文操作","riskCapabilities":["navigation-context"]}}},{"id":"dependency-tree","name":"依赖树","en":"Dependency Tree","kind":"tree","model":"Dependency → ChildDependency[]","state":"expanded, cycleFlags","summary":"依赖树把结构化数据、运行状态与用户操作组织为可连续理解和操作的界面。","boundary":"适用于树与层级中的复杂任务；简单展示或单字段输入应使用更轻量的基础组件。","invariant":"对象身份、层级或字段路径必须稳定；筛选、切换与编辑不能静默丢失用户状态。","key":"03:dependency-tree","contract":{"componentKey":"03:dependency-tree","hash":"dependency-tree","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-impact]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"赵峰｜系统管理员","task":"使用依赖树核验组织、产品、仓位或权限层级关系","objects":["依赖树","组织与资源层级 HC-INDUSTRY"],"rule":"父子关系不得形成循环，移动节点后范围、路径和继承关系必须可解释","exception":"依赖树：目标父节点无权访问、尚未加载或移动后形成循环依赖","effect":"依赖树：更新层级路径并保留原位置用于撤销和审计"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"撤销层级变更并恢复原展开路径与焦点","keyboard":"Tab 进入树，方向键导航，Enter 展开或执行，Esc 取消上下文操作","riskCapabilities":["navigation-context"]}}},{"id":"relationship-tree","name":"关系层级浏览器","en":"Relationship Hierarchy","kind":"tree","model":"Entity + Relation[] → Hierarchy","state":"rootId, path","summary":"关系层级浏览器把结构化数据、运行状态与用户操作组织为可连续理解和操作的界面。","boundary":"适用于树与层级中的复杂任务；简单展示或单字段输入应使用更轻量的基础组件。","invariant":"对象身份、层级或字段路径必须稳定；筛选、切换与编辑不能静默丢失用户状态。","key":"03:relationship-tree","contract":{"componentKey":"03:relationship-tree","hash":"relationship-tree","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-direction]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"赵峰｜系统管理员","task":"使用关系层级浏览器核验组织、产品、仓位或权限层级关系","objects":["关系层级浏览器","组织与资源层级 HC-INDUSTRY"],"rule":"父子关系不得形成循环，移动节点后范围、路径和继承关系必须可解释","exception":"关系层级浏览器：目标父节点无权访问、尚未加载或移动后形成循环依赖","effect":"关系层级浏览器：更新层级路径并保留原位置用于撤销和审计"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"撤销层级变更并恢复原展开路径与焦点","keyboard":"Tab 进入树，方向键导航，Enter 展开或执行，Esc 取消上下文操作","riskCapabilities":["navigation-context"]}}},{"id":"outline-tree","name":"文档大纲树","en":"Outline Tree","kind":"search-tree","model":"Heading → ChildHeading[]","state":"activeHeading, query","summary":"文档大纲树把结构化数据、运行状态与用户操作组织为可连续理解和操作的界面。","boundary":"适用于树与层级中的复杂任务；简单展示或单字段输入应使用更轻量的基础组件。","invariant":"对象身份、层级或字段路径必须稳定；筛选、切换与编辑不能静默丢失用户状态。","key":"03:outline-tree","contract":{"componentKey":"03:outline-tree","hash":"outline-tree","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-heading='intro']","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"赵峰｜系统管理员","task":"使用文档大纲树核验组织、产品、仓位或权限层级关系","objects":["文档大纲树","组织与资源层级 HC-INDUSTRY"],"rule":"父子关系不得形成循环，移动节点后范围、路径和继承关系必须可解释","exception":"文档大纲树：目标父节点无权访问、尚未加载或移动后形成循环依赖","effect":"文档大纲树：更新层级路径并保留原位置用于撤销和审计"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"撤销层级变更并恢复原展开路径与焦点","keyboard":"Tab 进入树，方向键导航，Enter 展开或执行，Esc 取消上下文操作","riskCapabilities":["navigation-context"]}}},{"id":"mindmap-tree","name":"思维导图树","en":"Mind-map Tree","kind":"map-tree","model":"Topic → Branch[]","state":"selectedTopic, collapsed","summary":"思维导图树把结构化数据、运行状态与用户操作组织为可连续理解和操作的界面。","boundary":"适用于树与层级中的复杂任务；简单展示或单字段输入应使用更轻量的基础组件。","invariant":"对象身份、层级或字段路径必须稳定；筛选、切换与编辑不能静默丢失用户状态。","key":"03:mindmap-tree","contract":{"componentKey":"03:mindmap-tree","hash":"mindmap-tree","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-branch]","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"赵峰｜系统管理员","task":"使用思维导图树核验组织、产品、仓位或权限层级关系","objects":["思维导图树","组织与资源层级 HC-INDUSTRY"],"rule":"父子关系不得形成循环，移动节点后范围、路径和继承关系必须可解释","exception":"思维导图树：目标父节点无权访问、尚未加载或移动后形成循环依赖","effect":"思维导图树：更新层级路径并保留原位置用于撤销和审计"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"撤销层级变更并恢复原展开路径与焦点","keyboard":"Tab 进入树，方向键导航，Enter 展开或执行，Esc 取消上下文操作","riskCapabilities":["navigation-context"]}}},{"id":"genealogy-tree","name":"谱系树","en":"Genealogy Tree","kind":"map-tree","model":"Entity → Parent[] + Child[]","state":"focusId, generations","summary":"谱系树把结构化数据、运行状态与用户操作组织为可连续理解和操作的界面。","boundary":"适用于树与层级中的复杂任务；简单展示或单字段输入应使用更轻量的基础组件。","invariant":"对象身份、层级或字段路径必须稳定；筛选、切换与编辑不能静默丢失用户状态。","key":"03:genealogy-tree","contract":{"componentKey":"03:genealogy-tree","hash":"genealogy-tree","steps":[{"action":"click","selector":"[data-readiness-start]","path":"primary"},{"action":"click","selector":"[data-person='child']","path":"primary"},{"action":"click","selector":"[data-readiness-exception]","path":"exception"},{"action":"click","selector":"[data-readiness-exception]","path":"recovery"},{"action":"click","selector":"[data-readiness-recovery]","path":"recovery"}],"observe":"#prototypeState","changed":"not:initial","reset":"initial","business":{"level":"B","role":"赵峰｜系统管理员","task":"使用谱系树核验组织、产品、仓位或权限层级关系","objects":["谱系树","组织与资源层级 HC-INDUSTRY"],"rule":"父子关系不得形成循环，移动节点后范围、路径和继承关系必须可解释","exception":"谱系树：目标父节点无权访问、尚未加载或移动后形成循环依赖","effect":"谱系树：更新层级路径并保留原位置用于撤销和审计"},"readiness":{"states":["initial","primary","exception","recovered"],"recovery":"撤销层级变更并恢复原展开路径与焦点","keyboard":"Tab 进入树，方向键导航，Enter 展开或执行，Esc 取消上下文操作","riskCapabilities":["navigation-context"]}}}]}, renderers03);</script></body></html>

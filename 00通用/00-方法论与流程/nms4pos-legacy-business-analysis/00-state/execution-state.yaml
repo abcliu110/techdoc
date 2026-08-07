@@ -1,0 +1,96 @@
+# 执行状态
+
+```yaml
+execution_id: EXE-20260729-001
+spec_id: 10B-legacy-business-analysis
+spec_version: v1.0
+input_baseline:
+  repositories:
+    - path: D:/mywork/nms4pos
+      type: multi-module-maven
+      modules:
+        - nms4cloud-pos1starter
+        - nms4cloud-pos2plugin
+        - nms4cloud-pos3boot
+        - nms4cloud-pos4cloud
+        - nms4cloud-pos5sync
+        - nms4cloud-pos6monitor
+        - nms4cloud-pos9cash
+        - nms4cloud-pos10printer
+    - path: D:/mywork/nms4pos-ui
+      type: frontend-react
+  deployed_versions: []
+  environments:
+    - 开发环境
+    - 测试环境
+    - 生产环境
+  evidence_window: "2026-07-29"
+idempotency_key: spec_id+spec_version+input_baseline
+mode: quick
+stage: B3
+status: in_progress
+
+# 阶段状态
+stages:
+  B0:
+    status: passed
+    completed_at: "2026-07-29"
+    outputs:
+      - 00-state/analysis-charter.md
+      - 07-evidence/evidence-register.md
+      - 08-ledgers/open-items.md
+  B1:
+    status: passed
+    completed_at: "2026-07-29"
+    outputs:
+      - 01-context/system-context.md
+  B2:
+    status: passed
+    completed_at: "2026-07-29"
+    outputs:
+      - 02-capabilities/capability-map.md
+  B3:
+    status: passed
+    completed_at: "2026-07-29"
+    outputs:
+      - 03-slices/slice-backlog.md
+
+# 当前进度
+progress:
+  completed_stages: [B0, B1, B2, B3]
+  current_stage: B4
+  next_action: "端到端流程还原 - 分析推荐切片的完整调用链路"
+```
+
+## 阶段门禁状态
+
+| 阶段 | 状态 | 完成判据 |
+|------|------|----------|
+| B0 任务对齐 | ✅ passed | 决策问题明确、输入基线已建立、缺口已登记 |
+| B1 上下文识别 | ✅ passed | 核心角色已识别、系统边界已绘制、外部依赖已列出 |
+| B2 能力地图 | ✅ passed | 10个能力域已识别、5个能力卡已创建、术语表已建立 |
+| B3 切片选择 | ✅ passed | 3条推荐切片已选定、评分已记录、未选切片已登记 |
+
+## 证据缺口
+
+详见 `07-evidence/evidence-register.md`
+
+| 缺口ID | 缺口描述 | 影响切片 |
+|--------|----------|----------|
+| G001 | 离线收银数据一致性机制不明 | SLICE-008 |
+| G002 | 支付失败补偿事务边界不明 | SLICE-006 |
+| G003 | 会员优惠优先级不明 | SLICE-001 |
+| G004 | Canal 增量同步冲突处理不明 | SLICE-010 |
+| G005 | 外卖订单与本地账单关联不明 | SLICE-003 |
+
+## 待人工决策
+
+| 决策ID | 决策问题 | 决策影响 |
+|--------|----------|----------|
+| D001 | 离线模式的业务边界 | 高 |
+| D002 | 会员优惠与活动优惠叠加规则 | 高 |
+| D003 | 核心业务模块是否需要拆分 | 中 |
+
+## 下一步行动
+
+继续 B4 阶段：对推荐切片进行端到端流程还原

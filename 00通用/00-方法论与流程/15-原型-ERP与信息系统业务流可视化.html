@@ -1,0 +1,1337 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ERP 商流、物流、资金流、信息流及专业业务流转化原型">
+  <title>ERP 多业务流转化图谱</title>
+  <style>
+    :root {
+      --font-sans: "Segoe UI", "Microsoft YaHei UI", "PingFang SC", sans-serif;
+      --font-mono: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+      --text-xs: 12px;
+      --text-sm: 14px;
+      --text-md: 16px;
+      --text-lg: 20px;
+      --text-xl: 28px;
+      --text-2xl: 40px;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 24px;
+      --space-6: 32px;
+      --space-7: 48px;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-pill: 999px;
+      --canvas: #eef2f7;
+      --surface: #ffffff;
+      --surface-muted: #f7f9fc;
+      --surface-strong: #0b1527;
+      --ink: #172033;
+      --ink-soft: #526076;
+      --ink-faint: #667085;
+      --line: #d8e0ec;
+      --line-strong: #bdc9d8;
+      --primary: #1d4ed8;
+      --primary-soft: #e8efff;
+      --primary-dark: #153b9f;
+      --accent: #0f766e;
+      --accent-soft: #e3f5f1;
+      --warning: #b45309;
+      --warning-soft: #fff3db;
+      --danger: #b42318;
+      --danger-soft: #feeceb;
+      --success: #16794b;
+      --success-soft: #e4f6ec;
+      --focus: #2563eb;
+      --commercial: #6d28d9;
+      --commercial-soft: #f1ebff;
+      --plan: #0369a1;
+      --plan-soft: #e5f4fb;
+      --logistics: #047857;
+      --logistics-soft: #e2f6ed;
+      --production: #0f766e;
+      --production-soft: #e3f5f1;
+      --quality: #a16207;
+      --quality-soft: #fff6d9;
+      --funds: #be123c;
+      --funds-soft: #ffe8ef;
+      --accounting: #b45309;
+      --accounting-soft: #fff1de;
+      --tax: #475569;
+      --tax-soft: #edf1f5;
+      --information: #2563eb;
+      --information-soft: #e8efff;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.08);
+      --shadow-md: 0 12px 30px rgba(15, 23, 42, 0.10);
+      --shadow-lg: 0 24px 60px rgba(15, 23, 42, 0.14);
+    }
+
+    * { box-sizing: border-box; }
+    html { color-scheme: light; scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: var(--text-md);
+      line-height: 1.55;
+    }
+    button { font: inherit; }
+    button:focus-visible, [tabindex]:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+    button:disabled { cursor: not-allowed; opacity: 0.45; pointer-events: none; }
+
+    .shell { min-height: 100vh; }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: var(--surface-strong);
+      color: var(--surface);
+    }
+    .hero::before {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      background-size: 28px 28px;
+      content: "";
+      pointer-events: none;
+    }
+    .hero::after {
+      position: absolute;
+      top: -180px;
+      right: -120px;
+      width: 520px;
+      height: 520px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.32), rgba(37, 99, 235, 0));
+      content: "";
+      pointer-events: none;
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      width: min(1500px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: var(--space-6) 0 var(--space-7);
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
+      color: #9dc0ff;
+      font-size: var(--text-xs);
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before { width: 28px; height: 2px; background: #6ea0ff; content: ""; }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(300px, 0.6fr); gap: var(--space-7); align-items: end; }
+    h1, h2, h3, h4, p { margin-top: 0; }
+    h1 { max-width: 880px; margin-bottom: var(--space-4); font-size: clamp(var(--text-xl), 4vw, var(--text-2xl)); line-height: 1.12; letter-spacing: -0.035em; }
+    .hero-copy { max-width: 820px; margin-bottom: 0; color: #b8c4d8; font-size: var(--text-md); }
+    .hero-principle {
+      padding: var(--space-5);
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.06);
+      box-shadow: var(--shadow-md);
+      backdrop-filter: blur(12px);
+    }
+    .hero-principle strong { display: block; margin-bottom: var(--space-2); color: #ffffff; font-size: var(--text-sm); }
+    .hero-principle p { margin-bottom: 0; color: #c9d3e3; font-size: var(--text-sm); }
+
+    .workspace { width: min(1500px, calc(100% - 48px)); margin: -20px auto 0; padding-bottom: var(--space-7); }
+    .control-deck {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--space-5);
+      padding: var(--space-5);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: var(--shadow-lg);
+    }
+    .control-label { margin-bottom: var(--space-2); color: var(--ink-faint); font-size: var(--text-xs); font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+    .scenario-tabs, .mode-switch, .filter-list { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    .scenario-tab, .mode-button, .filter-chip {
+      min-height: 42px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      color: var(--ink-soft);
+      cursor: pointer;
+      font-size: var(--text-sm);
+      font-weight: 750;
+      transition: border-color 160ms ease, background 160ms ease, color 160ms ease, transform 160ms ease;
+    }
+    .scenario-tab, .mode-button { padding: 9px var(--space-4); }
+    .scenario-tab:hover, .mode-button:hover, .filter-chip:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-1px); }
+    .scenario-tab[aria-pressed="true"], .mode-button[aria-pressed="true"] { border-color: var(--primary); background: var(--primary); color: var(--surface); }
+    .mode-switch { justify-content: flex-end; }
+    .scenario-summary {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) repeat(3, minmax(130px, 170px));
+      gap: var(--space-4);
+      margin-top: var(--space-5);
+    }
+    .summary-main, .metric-card, .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+    }
+    .summary-main { padding: var(--space-5); }
+    .summary-main h2 { margin-bottom: var(--space-2); font-size: var(--text-lg); }
+    .summary-main p { margin-bottom: 0; color: var(--ink-soft); font-size: var(--text-sm); }
+    .metric-card { padding: var(--space-4); }
+    .metric-card span { display: block; margin-bottom: var(--space-2); color: var(--ink-faint); font-size: var(--text-xs); font-weight: 750; }
+    .metric-card strong { display: block; font-family: var(--font-mono); font-size: var(--text-xl); line-height: 1; }
+
+    .panel { margin-top: var(--space-5); overflow: hidden; }
+    .panel-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-5);
+      padding: var(--space-5);
+      border-bottom: 1px solid var(--line);
+    }
+    .panel-header h2 { margin-bottom: var(--space-1); font-size: var(--text-lg); }
+    .panel-header p { margin-bottom: 0; color: var(--ink-soft); font-size: var(--text-sm); }
+    .flow-legend { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-3); color: var(--ink-soft); font-size: var(--text-xs); }
+    .legend-item { display: inline-flex; align-items: center; gap: var(--space-2); white-space: nowrap; }
+    .legend-line { width: 30px; height: 2px; background: var(--primary); }
+    .legend-line.reverse { background: var(--warning); }
+    .legend-dot { width: 9px; height: 9px; border: 2px solid var(--information); border-radius: 50%; background: var(--surface); }
+
+    .filter-bar { padding: 0 var(--space-5) var(--space-4); border-bottom: 1px solid var(--line); }
+    .filter-chip { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 36px; padding: 7px var(--space-3); border-radius: var(--radius-pill); }
+    .filter-chip::before { width: 9px; height: 9px; border-radius: 50%; background: var(--lane-color, var(--ink-faint)); content: ""; }
+    .filter-chip[aria-pressed="true"] { border-color: var(--lane-color, var(--primary)); background: var(--lane-soft, var(--primary-soft)); color: var(--lane-color, var(--primary)); }
+
+    .flow-scroll { width: 100%; overflow-x: auto; overscroll-behavior-inline: contain; }
+    .flow-board { min-width: 1120px; }
+    .phase-row, .flow-lane { display: grid; grid-template-columns: 190px minmax(0, 1fr); }
+    .phase-row { position: sticky; top: 0; z-index: 5; border-bottom: 1px solid var(--line-strong); background: var(--surface-muted); }
+    .phase-corner {
+      position: sticky;
+      left: 0;
+      z-index: 7;
+      display: flex;
+      align-items: center;
+      padding: var(--space-4);
+      border-right: 1px solid var(--line-strong);
+      background: var(--surface-muted);
+      color: var(--ink-faint);
+      font-size: var(--text-xs);
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .phase-grid, .lane-track { display: grid; grid-template-columns: repeat(5, minmax(170px, 1fr)); }
+    .phase {
+      padding: var(--space-3) var(--space-4);
+      border-right: 1px solid var(--line);
+      color: var(--ink-soft);
+      font-size: var(--text-xs);
+      font-weight: 800;
+    }
+    .phase span { display: block; margin-bottom: var(--space-1); color: var(--primary); font-family: var(--font-mono); }
+
+    .flow-lane { border-bottom: 1px solid var(--line); }
+    .flow-lane:last-child { border-bottom: 0; }
+    .lane-label {
+      position: sticky;
+      left: 0;
+      z-index: 4;
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      min-height: 116px;
+      padding: var(--space-4);
+      border-right: 1px solid var(--line-strong);
+      background: var(--surface);
+    }
+    .lane-badge {
+      display: grid;
+      flex: 0 0 auto;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: var(--radius-md);
+      background: var(--lane-soft);
+      color: var(--lane-color);
+      font-size: var(--text-xs);
+      font-weight: 900;
+    }
+    .lane-label strong { display: block; color: var(--lane-color); font-size: var(--text-sm); }
+    .lane-label small { display: block; margin-top: var(--space-1); color: var(--ink-faint); font-size: var(--text-xs); line-height: 1.4; }
+    .lane-track { background: var(--surface); }
+    .lane-cell {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      min-height: 116px;
+      justify-content: center;
+      padding: var(--space-3) var(--space-4);
+      border-right: 1px solid var(--line);
+    }
+    .lane-cell:not(:last-child)::before {
+      position: absolute;
+      top: 50%;
+      right: -1px;
+      left: 0;
+      height: 2px;
+      background: var(--line);
+      content: "";
+      pointer-events: none;
+    }
+    .lane-cell:not(:last-child)::after {
+      position: absolute;
+      top: calc(50% - 4px);
+      right: -1px;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 7px solid var(--line-strong);
+      content: "";
+      pointer-events: none;
+    }
+    .flow-node {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      min-height: 66px;
+      padding: var(--space-3);
+      border: 1px solid var(--line-strong);
+      border-left: 4px solid var(--lane-color);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      color: var(--ink);
+      cursor: pointer;
+      text-align: left;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+    }
+    .flow-node:hover { border-color: var(--lane-color); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .flow-node[aria-pressed="true"] { border-color: var(--lane-color); background: var(--lane-soft); box-shadow: 0 0 0 3px var(--surface), 0 0 0 5px var(--lane-color); }
+    .flow-node.source-node::after, .flow-node.target-node::after {
+      position: absolute;
+      top: -8px;
+      right: 8px;
+      padding: 2px 6px;
+      border-radius: var(--radius-pill);
+      color: var(--surface);
+      font-size: 10px;
+      font-weight: 900;
+      line-height: 1.4;
+    }
+    .flow-node.source-node::after { background: var(--lane-color); content: "源"; }
+    .flow-node.target-node::after { background: var(--information); content: "目标"; }
+    .flow-node.reverse { border-left-color: var(--warning); background: var(--warning-soft); }
+    .node-kicker { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); margin-bottom: var(--space-1); color: var(--ink-faint); font-family: var(--font-mono); font-size: var(--text-xs); }
+    .node-kicker b { color: var(--lane-color); }
+    .flow-node.reverse .node-kicker b { color: var(--warning); }
+    .node-title { display: block; font-size: var(--text-sm); font-weight: 800; line-height: 1.35; }
+    .node-empty { position: relative; z-index: 1; width: 100%; color: var(--ink-faint); font-size: var(--text-xs); text-align: center; }
+
+    .flow-commercial { --lane-color: var(--commercial); --lane-soft: var(--commercial-soft); }
+    .flow-plan { --lane-color: var(--plan); --lane-soft: var(--plan-soft); }
+    .flow-logistics { --lane-color: var(--logistics); --lane-soft: var(--logistics-soft); }
+    .flow-production { --lane-color: var(--production); --lane-soft: var(--production-soft); }
+    .flow-quality { --lane-color: var(--quality); --lane-soft: var(--quality-soft); }
+    .flow-funds { --lane-color: var(--funds); --lane-soft: var(--funds-soft); }
+    .flow-accounting { --lane-color: var(--accounting); --lane-soft: var(--accounting-soft); }
+    .flow-tax { --lane-color: var(--tax); --lane-soft: var(--tax-soft); }
+    .flow-information { --lane-color: var(--information); --lane-soft: var(--information-soft); }
+
+    .detail-wrap { padding: var(--space-5); background: var(--surface-muted); }
+    .detail-identity {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-5);
+      margin-bottom: var(--space-5);
+    }
+    .detail-identity h2 { margin-bottom: var(--space-1); font-size: var(--text-lg); }
+    .detail-identity p { max-width: 840px; margin-bottom: 0; color: var(--ink-soft); font-size: var(--text-sm); }
+    .direction-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      flex: 0 0 auto;
+      padding: 7px var(--space-3);
+      border-radius: var(--radius-pill);
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: var(--text-xs);
+      font-weight: 850;
+    }
+    .direction-badge.reverse { background: var(--warning-soft); color: var(--warning); }
+    .cross-flow-map {
+      display: grid;
+      grid-template-columns: minmax(180px, 0.7fr) auto minmax(220px, 0.8fr) auto minmax(280px, 1.5fr);
+      gap: var(--space-3);
+      align-items: center;
+      margin-bottom: var(--space-5);
+      padding: var(--space-4);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+    }
+    .cross-role { min-width: 0; padding: var(--space-3); border-radius: var(--radius-sm); background: var(--surface-muted); }
+    .cross-role small { display: block; margin-bottom: var(--space-1); color: var(--ink-faint); font-size: var(--text-xs); font-weight: 800; }
+    .cross-role strong { display: block; overflow-wrap: anywhere; font-size: var(--text-sm); }
+    .cross-event { border: 1px solid var(--information); background: var(--information-soft); color: var(--information); }
+    .cross-targets { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    .target-chip { padding: 6px var(--space-2); border: 1px solid var(--line); border-radius: var(--radius-pill); background: var(--surface); color: var(--ink-soft); font-size: var(--text-xs); font-weight: 750; }
+    .cross-arrow { color: var(--primary); font-family: var(--font-mono); font-size: var(--text-lg); font-weight: 900; }
+
+    .transform-chain {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: var(--space-4);
+      align-items: stretch;
+    }
+    .chain-step {
+      position: relative;
+      min-width: 0;
+      padding: var(--space-4);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+    }
+    .chain-step:not(:last-child)::after {
+      position: absolute;
+      top: 50%;
+      right: calc(var(--space-4) * -1);
+      width: var(--space-4);
+      height: 2px;
+      background: var(--primary);
+      content: "";
+    }
+    .chain-step:not(:last-child)::before {
+      position: absolute;
+      z-index: 2;
+      top: calc(50% - 4px);
+      right: calc(var(--space-4) * -1);
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 7px solid var(--primary);
+      content: "";
+    }
+    .chain-index { display: block; margin-bottom: var(--space-2); color: var(--primary); font-family: var(--font-mono); font-size: var(--text-xs); font-weight: 850; }
+    .chain-step h3 { margin-bottom: var(--space-2); font-size: var(--text-sm); }
+    .chain-step p { margin-bottom: 0; color: var(--ink-soft); font-size: var(--text-sm); overflow-wrap: anywhere; }
+    .chain-step code { color: var(--primary-dark); font-family: var(--font-mono); font-size: var(--text-xs); }
+
+    .detail-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: var(--space-5); margin-top: var(--space-5); }
+    .detail-grid > div { display: grid; gap: var(--space-4); align-content: start; }
+    .detail-card { padding: var(--space-5); border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); }
+    .detail-card h3 { margin-bottom: var(--space-3); font-size: var(--text-md); }
+    .effect-list, .guard-list, .evidence-list { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+    .effect-item { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: var(--space-3); padding: var(--space-3); border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface-muted); }
+    .effect-item strong { color: var(--effect-color, var(--ink)); font-size: var(--text-xs); }
+    .effect-item span { color: var(--ink-soft); font-size: var(--text-sm); }
+    .guard-list li, .evidence-list li { position: relative; padding-left: var(--space-5); color: var(--ink-soft); font-size: var(--text-sm); }
+    .guard-list li::before, .evidence-list li::before { position: absolute; left: 0; top: 2px; width: 16px; height: 16px; border-radius: 50%; text-align: center; font-size: 10px; font-weight: 900; line-height: 16px; }
+    .guard-list li::before { background: var(--success-soft); color: var(--success); content: "✓"; }
+    .evidence-list li::before { border: 1px solid var(--information); color: var(--information); content: "i"; }
+
+    .invariant-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); padding: var(--space-5); }
+    .invariant-card { padding: var(--space-4); border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); }
+    .invariant-card header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-3); }
+    .invariant-card h3 { margin-bottom: 0; font-size: var(--text-sm); }
+    .invariant-code { color: var(--ink-faint); font-family: var(--font-mono); font-size: var(--text-xs); }
+    .invariant-card p { margin-bottom: var(--space-3); color: var(--ink-soft); font-size: var(--text-sm); }
+    .invariant-meta { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    .meta-tag { padding: 5px var(--space-2); border-radius: var(--radius-pill); background: var(--surface-muted); color: var(--ink-faint); font-size: var(--text-xs); font-weight: 750; }
+
+    .principle-strip {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: var(--space-4);
+      align-items: center;
+      margin-top: var(--space-5);
+      padding: var(--space-5);
+      border: 1px solid #b7cffd;
+      border-radius: var(--radius-lg);
+      background: var(--primary-soft);
+    }
+    .principle-mark { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 50%; background: var(--primary); color: var(--surface); font-family: var(--font-mono); font-weight: 900; }
+    .principle-strip strong { display: block; margin-bottom: var(--space-1); font-size: var(--text-sm); }
+    .principle-strip p { margin-bottom: 0; color: var(--ink-soft); font-size: var(--text-sm); }
+    .page-footer { margin-top: var(--space-6); color: var(--ink-faint); font-size: var(--text-xs); text-align: center; }
+    .noscript-warning { margin: var(--space-4); padding: var(--space-4); border: 1px solid var(--warning); border-radius: var(--radius-md); background: var(--warning-soft); color: var(--ink); font-weight: 750; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+    @media (max-width: 1100px) {
+      .hero-grid { grid-template-columns: 1fr; gap: var(--space-5); }
+      .hero-principle { max-width: 680px; }
+      .control-deck { grid-template-columns: 1fr; }
+      .mode-switch { justify-content: flex-start; }
+      .scenario-summary { grid-template-columns: repeat(3, 1fr); }
+      .summary-main { grid-column: 1 / -1; }
+      .cross-flow-map { grid-template-columns: 1fr; }
+      .cross-arrow { transform: rotate(90deg); text-align: center; }
+      .transform-chain { grid-template-columns: 1fr 1fr; }
+      .chain-step:not(:last-child)::before, .chain-step:not(:last-child)::after { display: none; }
+      .detail-grid { grid-template-columns: 1fr; }
+      .invariant-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 700px) {
+      .hero-inner, .workspace { width: min(100% - 24px, 1500px); }
+      .hero-inner { padding-top: var(--space-5); }
+      .flow-board { min-width: 860px; }
+      .phase-row, .flow-lane { grid-template-columns: 128px minmax(0, 1fr); }
+      .phase-row { position: static; }
+      .phase-grid, .lane-track { grid-template-columns: repeat(5, minmax(140px, 1fr)); }
+      .lane-label { padding: var(--space-2); }
+      .lane-badge { width: 28px; height: 28px; }
+      .workspace { margin-top: -12px; }
+      .control-deck, .panel-header, .detail-wrap, .invariant-grid { padding: var(--space-4); }
+      .scenario-tabs, .mode-switch { display: grid; grid-template-columns: 1fr; }
+      .scenario-tab, .mode-button { width: 100%; }
+      .scenario-summary { grid-template-columns: 1fr; }
+      .summary-main { grid-column: auto; }
+      .panel-header, .detail-identity { display: grid; }
+      .flow-legend { justify-content: flex-start; }
+      .transform-chain, .invariant-grid { grid-template-columns: 1fr; }
+      .effect-item { grid-template-columns: 1fr; }
+      .principle-strip { grid-template-columns: 1fr; }
+      h1 { font-size: var(--text-xl); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <noscript><div class="noscript-warning" role="alert">此交互图谱需要启用 JavaScript；当前仅能查看静态页面框架。</div></noscript>
+  <div class="shell">
+    <header class="hero">
+      <div class="hero-inner">
+        <div class="eyebrow">Enterprise Flow Atlas · Interactive Prototype</div>
+        <div class="hero-grid">
+          <div>
+            <h1>ERP 多业务流转化图谱</h1>
+            <p class="hero-copy">把商流、计划流、物流、资金流、成本会计、票税和信息流放进同一业务时间轴；每条流保留独立状态，通过业务事件产生跨流转化，而不是压缩成一个“订单状态”。</p>
+          </div>
+          <aside class="hero-principle" aria-label="建模原则">
+            <strong>独立生命周期 · 事件协同 · 跨流对账</strong>
+            <p>点击任一节点，查看它如何从输入事实形成业务决策，并驱动其他流产生新对象、状态或任务。</p>
+          </aside>
+        </div>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="control-deck" aria-label="图谱控制台">
+        <div>
+          <div class="control-label">端到端业务场景</div>
+          <div id="scenario-tabs" class="scenario-tabs" role="group" aria-label="选择业务场景"></div>
+        </div>
+        <div>
+          <div class="control-label">流向视角</div>
+          <div id="mode-switch" class="mode-switch" role="group" aria-label="选择正向或逆向/补偿调整视角"></div>
+        </div>
+      </section>
+
+      <section id="scenario-summary" class="scenario-summary"></section>
+
+      <section class="panel" aria-labelledby="flow-board-title">
+        <header class="panel-header">
+          <div>
+            <h2 id="flow-board-title">多业务流泳道</h2>
+            <p>横向表示业务阶段，纵向表示独立业务流；箭头表示本流内演进，节点点击后展示跨流转化。</p>
+          </div>
+          <div class="flow-legend" aria-label="图例">
+            <span class="legend-item"><i class="legend-line"></i>时间阶段推进</span>
+            <span class="legend-item"><i class="legend-line reverse"></i>逆向/补偿调整节点</span>
+            <span class="legend-item"><i class="legend-dot"></i>源→事件→目标</span>
+          </div>
+        </header>
+        <div class="filter-bar">
+          <div class="control-label">显示业务流</div>
+          <div id="flow-filters" class="filter-list" role="group" aria-label="筛选业务流"></div>
+        </div>
+        <div class="flow-scroll" tabindex="0" aria-label="可横向滚动的多业务流图">
+          <div id="flow-board" class="flow-board"></div>
+        </div>
+      </section>
+
+      <section id="transformation-detail" class="panel"></section>
+      <section id="invariant-panel" class="panel" aria-labelledby="invariant-title"></section>
+
+      <aside class="principle-strip">
+        <div class="principle-mark">Σ</div>
+        <div>
+          <strong>跨流一致不等于所有数字机械相等</strong>
+          <p>拆单、部分履约、手续费、补贴、税差、汇率、退款和红冲会形成合法差异；对账必须声明范围、时间、币种、口径、容差与责任人。</p>
+        </div>
+      </aside>
+
+      <footer class="page-footer">配套方法论：15-方法论-ERP与信息系统业务流建模.md · 单文件离线原型</footer>
+    </main>
+    <div id="live-region" class="sr-only" aria-live="polite"></div>
+  </div>
+
+  <script>
+    (() => {
+      'use strict';
+      const flowMeta = {
+        commercial: { name: '商流', short: '商', description: '合同、订单、权利义务', className: 'flow-commercial' },
+        plan: { name: '计划流', short: '计', description: '需求、供给与执行建议', className: 'flow-plan' },
+        logistics: { name: '物流/物料流', short: '物', description: '库存、保管与交付', className: 'flow-logistics' },
+        production: { name: '生产流', short: '产', description: '工单、工序与完工', className: 'flow-production' },
+        quality: { name: '质量流', short: '质', description: '检验、放行与不合格', className: 'flow-quality' },
+        funds: { name: '资金流', short: '资', description: '支付、退款、清算与结算', className: 'flow-funds' },
+        accounting: { name: '成本/会计流', short: '会', description: '成本、应收应付与凭证', className: 'flow-accounting' },
+        tax: { name: '票税流', short: '票', description: '开票、认证、红冲与申报', className: 'flow-tax' },
+        information: { name: '信息/事件流', short: '信', description: '单据、事件、消息与证据', className: 'flow-information' }
+      };
+
+      const scenarios = {
+        o2c: {
+          tab: 'O2C · 销售到收款',
+          title: 'Order-to-Cash：订单如何转化为交付、资金与会计事实',
+          description: '从交易承诺开始，分别形成库存预占、支付/授信/账期条件、发货签收、收入与结算；退货退款作为新的逆向/补偿调整事实收敛，而不是删除原订单。',
+          phases: ['交易形成', '承诺与预占', '履约与确认', '财务完成', '逆向/补偿调整收敛'],
+          streams: [
+            { id: 'commercial', nodes: [
+              { phase: 0, code: 'SO-001', title: '合同与销售订单成立', direction: 'forward', transform: 'o2c-order' },
+              { phase: 1, code: 'SO-CFM', title: '订单承诺已确认', direction: 'forward', transform: 'o2c-reserve' },
+              { phase: 2, code: 'FUL-ACK', title: '客户履约确认', direction: 'forward', transform: 'o2c-sign' },
+              { phase: 3, code: 'SO-DONE', title: 'O2C 聚合关闭（条件满足）', direction: 'forward', transform: 'o2c-settle' },
+              { phase: 4, code: 'RMA-001', title: '退货/解除交易', direction: 'reverse', transform: 'o2c-return' }
+            ]},
+            { id: 'plan', nodes: [
+              { phase: 0, code: 'ATP-REQ', title: '可承诺量请求', direction: 'forward', transform: 'o2c-order' },
+              { phase: 1, code: 'ATP-OK', title: '交期与供给承诺', direction: 'forward', transform: 'o2c-reserve' },
+              { phase: 2, code: 'PLAN-CLOSE', title: '履约需求关闭', direction: 'forward', transform: 'o2c-sign' },
+              { phase: 4, code: 'DEMAND-REV', title: '冲减原需求', direction: 'reverse', transform: 'o2c-return' }
+            ]},
+            { id: 'logistics', nodes: [
+              { phase: 0, code: 'STOCK-CHK', title: '库存与批次可用', direction: 'forward', transform: 'o2c-order' },
+              { phase: 1, code: 'RSV-001', title: '库存预占', direction: 'forward', transform: 'o2c-reserve' },
+              { phase: 2, code: 'SHIP-001', title: '拣货→出库→运输→签收', direction: 'forward', transform: 'o2c-sign' },
+              { phase: 2, code: 'CUSTODY-END', title: '按交付条款转移保管/风险', direction: 'forward', transform: 'o2c-sign' },
+              { phase: 4, code: 'RTN-001', title: '退货收货与重新质检', direction: 'reverse', transform: 'o2c-return' }
+            ]},
+            { id: 'funds', nodes: [
+              { phase: 0, code: 'AR-CAND', title: '形成收款条件', direction: 'forward', transform: 'o2c-order' },
+              { phase: 1, code: 'PAY-001', title: '支付/信用/账期条件满足', direction: 'forward', transform: 'o2c-reserve' },
+              { phase: 2, code: 'CLEARING', title: '按结算模式进入清算或账期', direction: 'forward', transform: 'o2c-sign' },
+              { phase: 3, code: 'SETTLED', title: '结算到账与核销', direction: 'forward', transform: 'o2c-settle' },
+              { phase: 4, code: 'REFUND-001', title: '退款、冲正与返还', direction: 'reverse', transform: 'o2c-return' }
+            ]},
+            { id: 'accounting', nodes: [
+              { phase: 0, code: 'ACC-PENDING', title: '待生成会计事件', direction: 'forward', transform: 'o2c-order' },
+              { phase: 1, code: 'ADVANCE', title: '预收/待履约负债', direction: 'forward', transform: 'o2c-reserve' },
+              { phase: 2, code: 'REV-COGS', title: '收入条件与销售成本', direction: 'forward', transform: 'o2c-sign' },
+              { phase: 3, code: 'AR-WRITEOFF', title: '应收核销与总账过账', direction: 'forward', transform: 'o2c-settle' },
+              { phase: 4, code: 'REVERSAL', title: '收入/成本调整分录', direction: 'reverse', transform: 'o2c-return' }
+            ]},
+            { id: 'tax', nodes: [
+              { phase: 0, code: 'TAX-BASIS', title: '确定税务与开票条件', direction: 'forward', transform: 'o2c-order' },
+              { phase: 2, code: 'INV-001', title: '开票申请与蓝票', direction: 'forward', transform: 'o2c-sign' },
+              { phase: 3, code: 'TAX-POSTED', title: '销项税与申报依据', direction: 'forward', transform: 'o2c-settle' },
+              { phase: 4, code: 'RED-INV', title: '红冲/换票/税额调整', direction: 'reverse', transform: 'o2c-return' }
+            ]},
+            { id: 'information', nodes: [
+              { phase: 0, code: 'SalesOrderConfirmed', title: '订单确认事件', direction: 'forward', transform: 'o2c-order' },
+              { phase: 1, code: 'OrderReadyForFulfillment', title: '履约准备完成事件', direction: 'forward', transform: 'o2c-reserve' },
+              { phase: 2, code: 'ShipmentSigned', title: '签收与履约证据', direction: 'forward', transform: 'o2c-sign' },
+              { phase: 3, code: 'SettlementCompleted', title: '结算与入账事件', direction: 'forward', transform: 'o2c-settle' },
+              { phase: 4, code: 'ReturnAccepted', title: '逆向/补偿调整业务事件链', direction: 'reverse', transform: 'o2c-return' }
+            ]}
+          ],
+          transformations: [
+            {
+              id: 'o2c-order', direction: 'forward', phase: 0, title: '销售订单确认',
+              summary: '客户意图和商业条件冻结为销售订单，触发供给承诺、库存检查、收款和税务判断。',
+              input: '客户、商品、数量、价格、合同、交付与支付条件',
+              rule: '资格校验 + 价格政策 + 信用/库存预检',
+              output: 'SalesOrder@CONFIRMED + 决策快照',
+              event: 'SalesOrderConfirmed',
+              owner: '订单系统',
+              effects: [
+                ['商流', '形成双方可追溯的交易承诺'], ['计划流', '产生 ATP 与供给需求'], ['物流/物料流', '请求库存和批次可用性'],
+                ['资金流', '产生应收或支付意图'], ['票税流', '确定税率与开票前提'], ['信息/事件流', '向下游发布订单确认事实']
+              ],
+              guards: ['商品、价格和合同版本必须冻结', '订单确认事件使用业务幂等键', '客户、销售组织和结算主体必须明确'],
+              evidence: ['订单版本与明细', '价格决策快照', '合同/政策版本', 'SalesOrderConfirmed 事件记录']
+            },
+            {
+              id: 'o2c-reserve', direction: 'forward', phase: 1, title: '订单承诺转化为可执行履约',
+              summary: '支付与库存预占分别形成独立事实，满足策略后订单才进入可履约状态。',
+              input: '已确认订单 + 可用库存 + 支付/信用结果',
+              rule: 'ATP 承诺 + Reservation + 支付策略',
+              output: 'InventoryReservation + FulfillmentOrder',
+              event: 'OrderReadyForFulfillment',
+              owner: '库存与履约系统',
+              effects: [
+                ['计划流', '冻结本次承诺数量与日期'], ['物流/物料流', '可用库存转为预占库存'], ['资金流', '记录支付成功、预授权或账期承诺'],
+                ['商流', '订单获得可履约命令'], ['信息/事件流', '生成履约准备完成事件']
+              ],
+              guards: ['预占确认与释放必须幂等', '支付成功不等于结算完成', '并发下已使用加已预占不得超过可支配库存'],
+              evidence: ['预占单及有效期', '支付渠道流水', '履约单', '承诺日期版本']
+            },
+            {
+              id: 'o2c-sign', direction: 'forward', phase: 2, title: '实物签收转化为履约事实',
+              summary: '出库和签收形成保管责任变化，并按合同、会计和税务政策触发收入、成本及开票事件。',
+              input: '出库批次 + 运输轨迹 + 签收证明',
+              rule: '交付条件 + 所有权/风险转移政策',
+              output: 'Fulfillment@ACCEPTED + Shipment@SIGNED',
+              event: 'ShipmentSigned',
+              owner: 'WMS/TMS 与履约系统',
+              effects: [
+                ['物流/物料流', '库存出库并完成签收'], ['商流', '完成本次交付义务'], ['成本/会计流', '判断收入与销售成本确认条件'],
+                ['票税流', '生成开票资格或开票申请'], ['资金流', '进入清算、分账或账期起算'], ['信息/事件流', '固化签收证据']
+              ],
+              guards: ['发货、签收和所有权转移不得自动等同', '部分签收按明细数量记录', '签收事件需防重复和乱序'],
+              evidence: ['出库单', '运输轨迹', '签收凭证', '合同交付条款']
+            },
+            {
+              id: 'o2c-settle', direction: 'forward', phase: 3, title: '交付与资金转化为财务完成',
+              summary: '业务、支付渠道、银行、结算和会计记录完成核对后，形成可解释的财务完成状态。',
+              input: '签收事实 + 支付/银行流水 + 分账与结算规则',
+              rule: '清算分账 + 应收核销 + 会计过账',
+              output: 'Settlement@COMPLETED + AccountingDocument',
+              event: 'SettlementCompleted',
+              owner: '结算与财务系统',
+              effects: [
+                ['资金流', '完成参与方结算与资金核对'], ['成本/会计流', '应收核销并过账总账'], ['商流', '满足聚合关闭的财务条件'],
+                ['票税流', '形成申报和销项税依据'], ['信息/事件流', '发布结算完成和差异摘要']
+              ],
+              guards: ['订单应付、支付、退款、分账和结算按统一口径核对', '差异不能被静默抹平', '会计期间关闭后通过调整分录处理'],
+              evidence: ['支付渠道对账单', '银行流水', '结算单', '会计凭证与核销关系']
+            },
+            {
+              id: 'o2c-return', direction: 'reverse', phase: 4, title: '退货退款形成新的逆向/补偿调整业务链',
+              summary: '退货、退款、红冲和会计调整分别形成独立对象，并关联原交易；原始订单和分录保持不可覆盖。',
+              input: '原订单/支付/发票 + 退货原因 + 实际退回数量',
+              rule: '售后资格 + 可退金额不变量 + 原路退款政策',
+              output: 'RMA + ReturnReceipt + Refund + Reversal',
+              event: 'ReturnAccepted',
+              owner: '售后协调服务',
+              effects: [
+                ['商流', '部分或全部解除原交易义务'], ['物流/物料流', '退货收货、质检和库存处置'], ['资金流', '退款、冲正或结果未知查询'],
+                ['成本/会计流', '形成收入和成本调整分录'], ['票税流', '红冲、换票或税额调整'], ['信息/事件流', '串联全部逆向/补偿调整对象和原始证据']
+              ],
+              guards: ['累计有效退款不得超过原有效支付', '逆向/补偿调整对象必须关联原对象', '结果未知时禁止重复退款'],
+              evidence: ['售后申请与审批', '退货收货/质检记录', '原支付与退款流水', '红票和调整凭证']
+            }
+          ],
+          invariants: [
+            { id: 'O2C-QTY', title: '数量守恒', text: '订单、预占、出库、签收、退货按明细和时间范围可解释。', tags: ['数量', '明细级', '允许部分履约'] },
+            { id: 'O2C-MONEY', title: '资金完整性', text: '有效退款不超过有效支付；分账与结算差异有明确责任。', tags: ['金额', '幂等', '对账'] },
+            { id: 'O2C-HISTORY', title: '历史不可覆盖', text: '退款、红冲和调整生成新事实，不删除原订单、分录和发票。', tags: ['审计', '版本', '逆向/补偿调整'] }
+          ]
+        },
+        p2p: {
+          tab: 'P2P · 采购到付款',
+          title: 'Procure-to-Pay：采购承诺如何转化为库存、应付与付款',
+          description: '从采购需求和订单开始，经供应商交付、质量放行、三单匹配和付款核销形成闭环；退货与供应商退款构成逆向/补偿调整链。',
+          phases: ['需求与采购', '收货与待检', '放行与匹配', '付款与核销', '退货与调整'],
+          streams: [
+            { id: 'commercial', nodes: [
+              { phase: 0, code: 'PO-001', title: '采购申请→采购订单', direction: 'forward', transform: 'p2p-po' },
+              { phase: 1, code: 'PO-DELIVERY', title: '供应商履约中', direction: 'forward', transform: 'p2p-receive' },
+              { phase: 2, code: 'PO-ACCEPT', title: '采购义务已接受', direction: 'forward', transform: 'p2p-match' },
+              { phase: 3, code: 'PO-CLOSE', title: '采购商业关闭', direction: 'forward', transform: 'p2p-pay' },
+              { phase: 4, code: 'PRTN-001', title: '采购退货/索赔', direction: 'reverse', transform: 'p2p-return' }
+            ]},
+            { id: 'plan', nodes: [
+              { phase: 0, code: 'MRP-REQ', title: 'MRP/补货需求转采购建议', direction: 'forward', transform: 'p2p-po' },
+              { phase: 1, code: 'SUPPLY-IN', title: '在途供给更新', direction: 'forward', transform: 'p2p-receive' },
+              { phase: 2, code: 'DEMAND-COVER', title: '需求覆盖与计划关闭', direction: 'forward', transform: 'p2p-quality' },
+              { phase: 4, code: 'SUPPLY-REV', title: '冲减可用供给', direction: 'reverse', transform: 'p2p-return' }
+            ]},
+            { id: 'logistics', nodes: [
+              { phase: 0, code: 'ASN-REQ', title: '预约到货/ASN', direction: 'forward', transform: 'p2p-po' },
+              { phase: 1, code: 'GR-001', title: '收货进入待检库存', direction: 'forward', transform: 'p2p-receive' },
+              { phase: 1, code: 'CUSTODY-OWN', title: '按贸易条款确认保管/风险', direction: 'forward', transform: 'p2p-receive' },
+              { phase: 2, code: 'STOCK-AVL', title: '合格入库转为可用', direction: 'forward', transform: 'p2p-quality' },
+              { phase: 4, code: 'RTV-001', title: '退供出库', direction: 'reverse', transform: 'p2p-return' }
+            ]},
+            { id: 'quality', nodes: [
+              { phase: 1, code: 'IQC-001', title: '来料检验与隔离', direction: 'forward', transform: 'p2p-receive' },
+              { phase: 2, code: 'IQC-PASS', title: '合格放行/不合格处置', direction: 'forward', transform: 'p2p-quality' },
+              { phase: 4, code: 'NCR-RTV', title: '不合格退供与索赔', direction: 'reverse', transform: 'p2p-return' }
+            ]},
+            { id: 'funds', nodes: [
+              { phase: 0, code: 'PAY-TERM', title: '付款条件冻结', direction: 'forward', transform: 'p2p-po' },
+              { phase: 2, code: 'AP-DUE', title: '形成应付与到期计划', direction: 'forward', transform: 'p2p-match' },
+              { phase: 3, code: 'BANK-OUT', title: '付款、到账与核销', direction: 'forward', transform: 'p2p-pay' },
+              { phase: 4, code: 'SUP-REFUND', title: '供应商现金退款到账', direction: 'reverse', transform: 'p2p-return' }
+            ]},
+            { id: 'accounting', nodes: [
+              { phase: 1, code: 'GRNI', title: '已收货未开票暂估', direction: 'forward', transform: 'p2p-receive' },
+              { phase: 2, code: 'AP-POST', title: '三单匹配与应付过账', direction: 'forward', transform: 'p2p-match' },
+              { phase: 3, code: 'AP-CLEAR', title: '应付核销与总账过账', direction: 'forward', transform: 'p2p-pay' },
+              { phase: 4, code: 'AP-REV', title: '存货/应付调整分录', direction: 'reverse', transform: 'p2p-return' }
+            ]},
+            { id: 'tax', nodes: [
+              { phase: 1, code: 'INV-WAIT', title: '等待供应商发票', direction: 'forward', transform: 'p2p-receive' },
+              { phase: 2, code: 'INPUT-VAT', title: '收票、验真与进项税', direction: 'forward', transform: 'p2p-match' },
+              { phase: 2, code: 'VAT-CERT', title: '按发票有效性与税期认证抵扣', direction: 'forward', transform: 'p2p-match' },
+              { phase: 4, code: 'RED-PINV', title: '红票/贷项调整', direction: 'reverse', transform: 'p2p-return' }
+            ]},
+            { id: 'information', nodes: [
+              { phase: 0, code: 'PurchaseOrderReleased', title: '采购订单下达事件', direction: 'forward', transform: 'p2p-po' },
+              { phase: 1, code: 'GoodsReceived', title: '收货与待检事件', direction: 'forward', transform: 'p2p-receive' },
+              { phase: 2, code: 'InspectionCompleted', title: '质量判定完成事件', direction: 'forward', transform: 'p2p-quality' },
+              { phase: 2, code: 'ThreeWayMatched', title: '三单匹配完成事件', direction: 'forward', transform: 'p2p-match' },
+              { phase: 3, code: 'SupplierPaid', title: '付款与核销事件', direction: 'forward', transform: 'p2p-pay' },
+              { phase: 4, code: 'PurchaseReturnAccepted', title: '退供逆向/补偿调整事件', direction: 'reverse', transform: 'p2p-return' }
+            ]}
+          ],
+          transformations: [
+            {
+              id: 'p2p-po', direction: 'forward', phase: 0, title: '采购需求转化为采购承诺',
+              summary: '已批准需求、供应策略和合同条件形成采购订单，并向供应商、仓储、资金和计划发布承诺。',
+              input: '采购需求、供应商、物料、价格、税率、交期',
+              rule: '寻源政策 + 预算/权限 + 合同条款',
+              output: 'PurchaseOrder@RELEASED',
+              event: 'PurchaseOrderReleased',
+              owner: '采购系统',
+              effects: [['商流', '形成与供应商的采购承诺'], ['计划流', '采购建议转为在途供给'], ['物流/物料流', '生成到货预约和收货预期'], ['资金流', '冻结付款条件和资金计划'], ['信息/事件流', '发布采购订单版本']],
+              guards: ['供应商、物料、组织和币种必须明确', '采购订单版本不可被收货后静默覆盖', '超预算或例外价格必须审批'],
+              evidence: ['采购申请与审批', '采购订单版本', '供应商合同', 'PurchaseOrderReleased 事件']
+            },
+            {
+              id: 'p2p-receive', direction: 'forward', phase: 1, title: '供应商交付转化为收货事实',
+              summary: '实际到货按采购订单验收，进入待检库存并形成暂估和质量任务。',
+              input: '采购订单 + ASN + 实收物料/批次/数量',
+              rule: '收货容差 + 批次追溯 + 质量检验计划',
+              output: 'GoodsReceipt + InspectionLot + GRNI',
+              event: 'GoodsReceived',
+              owner: 'WMS/QMS',
+              effects: [['物流/物料流', '形成待检或冻结库存'], ['质量流', '生成来料检验批'], ['计划流', '更新在途与供给状态'], ['成本/会计流', '形成已收货未开票暂估'], ['票税流', '建立后续发票匹配基础']],
+              guards: ['实收数量不得用订单数量代填', '批次和序列号必须可追溯', '待检库存不得直接成为可用库存'],
+              evidence: ['ASN/送货单', '收货单', '称重或点收记录', '检验批与暂估记录']
+            },
+            {
+              id: 'p2p-quality', direction: 'forward', phase: 2, title: '质量结论转化为库存处置',
+              summary: '检验结果决定物料放行、让步、返工、退供或报废；质量流只产生处置决定，由库存命令实际执行。',
+              input: '检验标准 + 抽样结果 + 检验批',
+              rule: '质量判定 + 让步授权 + 不合格处置',
+              output: 'QualityDecision + StockDisposition',
+              event: 'InspectionCompleted',
+              owner: 'QMS',
+              effects: [['质量流', '形成合格或不合格结论'], ['物流/物料流', '待检转可用或隔离库存'], ['商流', '形成供应商索赔依据'], ['计划流', '更新可用供给'], ['信息/事件流', '发布质量处置事件']],
+              guards: ['质量结论和库存移动分离', '让步接收必须记录授权与范围', '不合格批次不得被普通移库绕过'],
+              evidence: ['检验标准版本', '原始检测值', '质量判定', '放行/隔离库存事务']
+            },
+            {
+              id: 'p2p-match', direction: 'forward', phase: 2, title: '订单、收货与发票完成三单匹配',
+              summary: '采购订单、实际收货和供应商发票按主体、数量、价格、税额及币种匹配，形成可支付应付。',
+              input: 'PurchaseOrder + GoodsReceipt + SupplierInvoice',
+              rule: '三单匹配 + 容差政策 + 税务验真',
+              output: 'AccountsPayable@APPROVED',
+              event: 'ThreeWayMatched',
+              owner: '应付与发票系统',
+              effects: [['成本/会计流', '暂估转正式应付和存货价值'], ['资金流', '生成到期付款计划'], ['票税流', '确认发票和进项税资格'], ['商流', '确认供应商已满足付款前提'], ['信息/事件流', '记录差异、容差和审批']],
+              guards: ['匹配主体、明细、数量、价格、税率、币种和时间', '超容差差异必须阻断或审批', '重复发票必须识别'],
+              evidence: ['采购订单', '收货记录', '验真发票', '差异与审批记录']
+            },
+            {
+              id: 'p2p-pay', direction: 'forward', phase: 3, title: '应付转化为付款与核销',
+              summary: '付款申请经过授权、银行执行和结果确认后，完成应付核销；支付指令发出不等于供应商已到账。',
+              input: '已批准应付 + 到期计划 + 银行账户',
+              rule: '付款权限 + 资金头寸 + 银行结果核验',
+              output: 'Payment + BankStatement + APClearing',
+              event: 'SupplierPaid',
+              owner: '资金与应付系统',
+              effects: [['资金流', '企业资金转出并确认对方到账'], ['成本/会计流', '应付核销和总账过账'], ['商流', '完成付款义务'], ['票税流', '保留付款与发票关联'], ['信息/事件流', '发布付款完成或结果未知']],
+              guards: ['付款指令、银行受理和到账分状态记录', '同一应付不可重复支付', '账户变更和大额付款遵守职责分离'],
+              evidence: ['付款申请与审批', '银行回单', '应付核销关系', '资金对账结果']
+            },
+            {
+              id: 'p2p-return', direction: 'reverse', phase: 4, title: '采购退货转化为供应与财务调整',
+              summary: '不合格或商业退货形成退供出库；现金退款到账与供应商贷项抵扣应付是不同路径，并分别驱动应付、成本和进项税调整，全部关联原采购链。',
+              input: '原采购/收货/发票 + 退货数量 + 质量/商业原因',
+              rule: '退供资格 + 库存可退量 + 贷项/退款政策',
+              output: 'PurchaseReturn + SupplierCredit + Reversal',
+              event: 'PurchaseReturnAccepted',
+              owner: '采购售后协调服务',
+              effects: [['商流', '调整供应商履约和索赔'], ['物流/物料流', '退供出库并冲减库存'], ['质量流', '关联不合格原因和供应商绩效'], ['资金流', '供应商现金退款到账'], ['成本/会计流', '供应商贷项抵扣应付；存货、应付和成本调整'], ['票税流', '红票或进项税调整']],
+              guards: ['退货数量不得超过可退收货数量', '原采购、收货、发票和付款关系必须保留', '退款与应付抵扣不得重复获益'],
+              evidence: ['采购退货单', '退供出库', '供应商贷项/退款', '红票和调整凭证']
+            }
+          ],
+          invariants: [
+            { id: 'P2P-MATCH', title: '三单匹配可解释', text: '订单、收货和发票差异按明细、税率、币种和容差政策解释。', tags: ['采购', '应付', '票税'] },
+            { id: 'P2P-STOCK', title: '质量隔离有效', text: '待检和不合格库存不能通过普通业务入口变成可用。', tags: ['质量', '库存', '权限'] },
+            { id: 'P2P-PAY', title: '付款唯一性', text: '同一应付业务意图最多形成一次有效资金转出。', tags: ['资金', '幂等', '职责分离'] }
+          ]
+        },
+        production: {
+          tab: 'Plan-to-Produce · 计划到生产',
+          title: 'Plan-to-Produce：需求如何转化为物料、工序、质量与成本',
+          description: '计划只生成建议；工单释放后才形成执行承诺，领料、报工、检验和完工入库分别形成独立事实，返工、报废与差异形成补偿调整链；当前切片不展示资金流和票税流。',
+          phases: ['供需计划', '工单与备料', '生产与报工', '完工与结转', '返工与差异'],
+          streams: [
+            { id: 'plan', nodes: [
+              { phase: 0, code: 'MPS/MRP', title: '需求→MPS→MRP', direction: 'forward', transform: 'prd-plan' },
+              { phase: 1, code: 'PLAN-FIRM', title: '计划订单转生产工单', direction: 'forward', transform: 'prd-order' },
+              { phase: 2, code: 'PLAN-PROGRESS', title: '进度与供需重算', direction: 'forward', transform: 'prd-report' },
+              { phase: 3, code: 'PLAN-CLOSE', title: '供给反馈与需求重新挂接', direction: 'forward', transform: 'prd-complete' },
+              { phase: 4, code: 'PLAN-ADJUST', title: '差异回写后续计划', direction: 'reverse', transform: 'prd-rework' }
+            ]},
+            { id: 'commercial', nodes: [
+              { phase: 0, code: 'DEMAND', title: '已确认销售/内部供给承诺', direction: 'forward', transform: 'prd-plan' },
+              { phase: 1, code: 'SUPPLY-MODE', title: '自制/外购策略确定', direction: 'forward', transform: 'prd-order' },
+              { phase: 3, code: 'DEMAND-FULFILLED', title: '增加可承诺供给', direction: 'forward', transform: 'prd-complete' },
+              { phase: 4, code: 'PROMISE-REV', title: '交期/数量承诺调整', direction: 'reverse', transform: 'prd-rework' }
+            ]},
+            { id: 'logistics', nodes: [
+              { phase: 0, code: 'STOCK-NET', title: '净需求扣减现有库存', direction: 'forward', transform: 'prd-plan' },
+              { phase: 1, code: 'MAT-RSV', title: '齐套检查与物料预留', direction: 'forward', transform: 'prd-order' },
+              { phase: 2, code: 'ISSUE/WIP', title: '领料→在制品转移', direction: 'forward', transform: 'prd-issue' },
+              { phase: 3, code: 'FG-RECEIPT', title: '成品入库与批次建立', direction: 'forward', transform: 'prd-complete' },
+              { phase: 4, code: 'RETURN/SCRAP', title: '退料、补料与报废', direction: 'reverse', transform: 'prd-rework' }
+            ]},
+            { id: 'production', nodes: [
+              { phase: 0, code: 'ROUTING-CAP', title: '工艺与产能模拟', direction: 'forward', transform: 'prd-plan' },
+              { phase: 1, code: 'MO-001', title: '工单释放与工序排程', direction: 'forward', transform: 'prd-order' },
+              { phase: 2, code: 'OP-REPORT', title: '开工、报工与工序转移', direction: 'forward', transform: 'prd-report' },
+              { phase: 3, code: 'MO-COMPLETE', title: '生产完工已报告', direction: 'forward', transform: 'prd-complete' },
+              { phase: 4, code: 'REWORK-001', title: '返工、拆解或报废', direction: 'reverse', transform: 'prd-rework' }
+            ]},
+            { id: 'quality', nodes: [
+              { phase: 1, code: 'Q-PLAN', title: '检验计划与控制点', direction: 'forward', transform: 'prd-order' },
+              { phase: 2, code: 'IPQC', title: '过程检验与异常隔离', direction: 'forward', transform: 'prd-report' },
+              { phase: 3, code: 'FQC-RELEASE', title: '完工检验与成品放行', direction: 'forward', transform: 'prd-complete' },
+              { phase: 4, code: 'NCR/CAPA', title: '不合格、返工与 CAPA', direction: 'reverse', transform: 'prd-rework' }
+            ]},
+            { id: 'accounting', nodes: [
+              { phase: 0, code: 'STD-COST', title: '标准成本与成本对象', direction: 'forward', transform: 'prd-plan' },
+              { phase: 1, code: 'MO-COST', title: '工单成本对象建立', direction: 'forward', transform: 'prd-order' },
+              { phase: 2, code: 'WIP-COST', title: '材料/人工/制造费用归集', direction: 'forward', transform: 'prd-issue' },
+              { phase: 3, code: 'FG-COST', title: '完工成本结转与差异', direction: 'forward', transform: 'prd-complete' },
+              { phase: 4, code: 'VARIANCE-ADJ', title: '报废/返工成本调整', direction: 'reverse', transform: 'prd-rework' }
+            ]},
+            { id: 'information', nodes: [
+              { phase: 0, code: 'PlanApproved', title: '计划版本批准事件', direction: 'forward', transform: 'prd-plan' },
+              { phase: 1, code: 'ManufacturingOrderReleased', title: '工单释放事件', direction: 'forward', transform: 'prd-order' },
+              { phase: 2, code: 'MaterialIssued', title: '领料与批次转移事件', direction: 'forward', transform: 'prd-issue' },
+              { phase: 2, code: 'OperationReported', title: '工序报工事件', direction: 'forward', transform: 'prd-report' },
+              { phase: 3, code: 'FinishedGoodsAccepted', title: '完工放行事件', direction: 'forward', transform: 'prd-complete' },
+              { phase: 4, code: 'ReworkOrdered', title: '返工/差异调整事件', direction: 'reverse', transform: 'prd-rework' }
+            ]}
+          ],
+          transformations: [
+            {
+              id: 'prd-plan', direction: 'forward', phase: 0, title: '需求转化为批准的供给计划',
+              summary: '预测、销售订单和补库需求经过库存净算、BOM 展开、产能与提前期评估后形成计划建议。',
+              input: '需求、库存、BOM、工艺、产能、提前期',
+              rule: 'MPS/MRP + 批量策略 + 安全库存',
+              output: 'ApprovedPlanVersion + PlannedOrders',
+              event: 'PlanApproved',
+              owner: '计划系统',
+              effects: [['计划流', '形成采购、生产与调拨建议'], ['商流', '更新可承诺量和交期候选'], ['物流/物料流', '产生未来物料需求'], ['生产流', '形成产能负荷候选'], ['成本/会计流', '加载标准成本和成本对象候选']],
+              guards: ['计划建议不等于执行订单', '计划版本、参数和需求快照可追溯', '冻结区内变更需要明确授权'],
+              evidence: ['需求来源', '计划参数版本', 'MRP 展开结果', '产能与例外清单']
+            },
+            {
+              id: 'prd-order', direction: 'forward', phase: 1, title: '计划订单转化为生产执行承诺',
+              summary: '计划员确认数量、日期、BOM、工艺和资源后释放生产工单，建立物料预留、质量计划和成本对象。',
+              input: 'PlannedOrder + BOM/Routing Version + Capacity',
+              rule: '工单释放 Guard + 齐套/产能检查',
+              output: 'ManufacturingOrder@RELEASED',
+              event: 'ManufacturingOrderReleased',
+              owner: '制造 ERP/MES',
+              effects: [['生产流', '生成工序任务和排程'], ['物流/物料流', '预留生产物料'], ['质量流', '生成过程与完工检验计划'], ['成本/会计流', '建立工单成本对象'], ['信息/事件流', '发布工单版本和释放事实']],
+              guards: ['BOM 和工艺版本必须冻结', '计划量与工单量差异可解释', '缺料、超产能或替代料需按政策处理'],
+              evidence: ['工单版本', 'BOM/工艺版本', '物料预留', '排程和审批记录']
+            },
+            {
+              id: 'prd-issue', direction: 'forward', phase: 2, title: '库存物料转化为在制品与成本',
+              summary: '领料事务减少可用库存并增加工单耗用；材料价值进入在制品，不能只修改工单进度。',
+              input: 'ReleasedMO + MaterialReservation + Batch',
+              rule: '领料权限 + 批次/替代料 + 超领政策',
+              output: 'MaterialIssue + WIPCostEntry',
+              event: 'MaterialIssued',
+              owner: 'WMS 与成本系统',
+              effects: [['物流/物料流', '库存转为工单耗用/在制品'], ['生产流', '工序获得实际投入'], ['成本/会计流', '材料成本归集至工单'], ['质量流', '继承批次和质量追溯'], ['信息/事件流', '发布领料及批次事实']],
+              guards: ['实际领料量不能用标准用量代填', '超领和替代料必须显式授权', '库存与在制品价值同步可对账'],
+              evidence: ['领料单', '批次/序列号', '库存事务', '工单成本分录']
+            },
+            {
+              id: 'prd-report', direction: 'forward', phase: 2, title: '工序执行转化为进度、质量与人工成本',
+              summary: '报工记录实际产量、工时、设备和不良；它更新工序事实，但不自动代表成品合格入库。',
+              input: '工序任务 + 实际产量/工时/设备数据',
+              rule: '报工校验 + 工序顺序 + 质量控制点',
+              output: 'OperationConfirmation + InspectionResult',
+              event: 'OperationReported',
+              owner: 'MES/QMS',
+              effects: [['生产流', '更新工序完成量和在制品位置'], ['质量流', '触发过程检验或隔离'], ['成本/会计流', '归集人工和制造费用'], ['计划流', '反馈实际进度和预计完工'], ['信息/事件流', '形成设备、人员和工序证据']],
+              guards: ['报工、工序完成和工单完工分离', '返工数量不混入一次合格量', '重复报工使用业务幂等键'],
+              evidence: ['工序报工', '人员/设备记录', '过程检验', 'WIP 转移记录']
+            },
+            {
+              id: 'prd-complete', direction: 'forward', phase: 3, title: '合格完工转化为成品入库与后续结转条件',
+              summary: '完工检验放行后形成成品批次和入库事实；制造完工、工单技术关闭与最终成本结转分别判断，不以任一事实替代其余判断。',
+              input: '合格完工量 + 检验结论 + WIP 成本',
+              rule: '完工 Guard + 批次建立 + 独立关闭/结转校验',
+              output: 'FinishedGoodsReceipt + ManufacturingCompletion + CostingCandidate',
+              event: 'FinishedGoodsAccepted',
+              owner: 'MES/WMS/成本系统',
+              effects: [['质量流', '形成完工放行结论'], ['物流/物料流', '增加合格成品库存'], ['生产流', '记录制造完工；技术关闭需独立判断'], ['成本/会计流', '形成成本结转候选与差异待办'], ['商流', '增加可承诺供给']],
+              guards: ['报工完成不等于质量放行', '完工入库量与合格量一致或差异可解释', '技术关闭须独立检查未清预留、在制品和未完任务', '最终成本结转须独立校验成本归集、期间和差异处理'],
+              evidence: ['完工检验', '成品入库', '批次谱系', '成本结转和差异报告']
+            },
+            {
+              id: 'prd-rework', direction: 'reverse', phase: 4, title: '不合格与差异形成补偿与调整链',
+              summary: '不合格品建立独立返工或报废业务，并以补偿与调整事实修正库存、成本、工单和交期；这不是抹掉原报工、检验或库存事实。',
+              input: 'NCR + 原工单/批次 + 不合格数量与原因',
+              rule: '处置评审 + 返工路线 + 报废授权',
+              output: 'ReworkOrder / ScrapTransaction / Variance',
+              event: 'ReworkOrdered',
+              owner: '质量与制造协调服务',
+              effects: [['质量流', '记录不合格、原因和 CAPA'], ['生产流', '生成返工工单或拆解任务'], ['物流/物料流', '隔离、补料、退料或报废'], ['成本/会计流', '归集返工和报废差异'], ['计划流', '更新供给、交期和后续需求']],
+              guards: ['原工单、报工和检验事实不可覆盖', '返工产出不能重复计入原合格量', '报废、补料和成本调整职责分离'],
+              evidence: ['NCR/CAPA', '返工工单', '报废/补料事务', '成本差异和交期调整']
+            }
+          ],
+          invariants: [
+            { id: 'PRD-QTY', title: '生产数量谱系', text: '投入、在制、合格、不合格、返工和报废数量能够按批次解释。', tags: ['数量', '批次', '追溯'] },
+            { id: 'PRD-COST', title: '成本连续性', text: '材料、人工和制造费用从库存到在制品再到成品连续可对账。', tags: ['成本', 'WIP', '差异'] },
+            { id: 'PRD-STATE', title: '事实分层', text: '计划、工单、报工、质量放行和入库是不同事实，不能相互代替。', tags: ['状态', '权威', '防误判'] }
+          ]
+        }
+      };
+
+      const transformationSources = {
+        'o2c-order': 'commercial',
+        'o2c-reserve': 'commercial',
+        'o2c-sign': 'logistics',
+        'o2c-settle': 'funds',
+        'o2c-return': 'commercial',
+        'p2p-po': 'commercial',
+        'p2p-receive': 'logistics',
+        'p2p-quality': 'quality',
+        'p2p-match': 'accounting',
+        'p2p-pay': 'funds',
+        'p2p-return': 'commercial',
+        'prd-plan': 'plan',
+        'prd-order': 'production',
+        'prd-issue': 'logistics',
+        'prd-report': 'production',
+        'prd-complete': 'quality',
+        'prd-rework': 'quality'
+      };
+
+      const viewState = {
+        scenarioId: 'o2c',
+        mode: 'all',
+        visibleFlows: new Set(scenarios.o2c.streams.map((stream) => stream.id)),
+        selectedTransformationId: 'o2c-order'
+      };
+
+      const scenarioTabs = document.querySelector('#scenario-tabs');
+      const modeSwitch = document.querySelector('#mode-switch');
+      const scenarioSummary = document.querySelector('#scenario-summary');
+      const flowFilters = document.querySelector('#flow-filters');
+      const flowBoard = document.querySelector('#flow-board');
+      const transformationDetail = document.querySelector('#transformation-detail');
+      const invariantPanel = document.querySelector('#invariant-panel');
+      const liveRegion = document.querySelector('#live-region');
+
+      const escapeHtml = (value) => String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+
+      function currentScenario() {
+        return scenarios[viewState.scenarioId];
+      }
+
+      function visibleTransformations() {
+        const visibleIds = new Set();
+        currentScenario().streams.forEach((stream) => {
+          if (!viewState.visibleFlows.has(stream.id)) return;
+          stream.nodes.forEach((node) => visibleIds.add(node.transform));
+        });
+        return currentScenario().transformations.filter((item) =>
+          visibleIds.has(item.id) && (viewState.mode === 'all' || item.direction === viewState.mode));
+      }
+
+      function ensureVisibleSelection() {
+        const visible = visibleTransformations();
+        if (!visible.some((item) => item.id === viewState.selectedTransformationId)) {
+          viewState.selectedTransformationId = visible.length ? visible[0].id : currentScenario().transformations[0].id;
+        }
+      }
+
+      function selectedTransformation() {
+        return currentScenario().transformations.find((item) => item.id === viewState.selectedTransformationId)
+          || currentScenario().transformations[0];
+      }
+
+      function focusControlled(container, attribute, id) {
+        window.requestAnimationFrame(() => {
+          const element = container.querySelector(`[${attribute}="${id}"]`);
+          if (element) element.focus();
+        });
+      }
+
+      function focusDetailTitle() {
+        window.requestAnimationFrame(() => {
+          const title = document.querySelector('#transformation-title');
+          if (!title) return;
+          title.focus();
+          const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          transformationDetail.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+        });
+      }
+
+      function announce(message) {
+        liveRegion.textContent = '';
+        window.setTimeout(() => { liveRegion.textContent = message; }, 20);
+      }
+
+      function renderScenarioTabs() {
+        scenarioTabs.innerHTML = Object.entries(scenarios).map(([id, scenario]) => `
+          <button class="scenario-tab" type="button" data-scenario="${escapeHtml(id)}" aria-pressed="${id === viewState.scenarioId}" tabindex="${id === viewState.scenarioId ? '0' : '-1'}">
+            ${escapeHtml(scenario.tab)}
+          </button>`).join('');
+      }
+
+      function renderModeSwitch() {
+        const modes = [
+          ['all', '全部流向'],
+          ['forward', '只看正向'],
+          ['reverse', '只看逆向/补偿调整']
+        ];
+        modeSwitch.innerHTML = modes.map(([id, label]) => `
+          <button class="mode-button" type="button" data-mode="${id}" aria-pressed="${id === viewState.mode}">${label}</button>`).join('');
+      }
+
+      function renderSummary() {
+        const scenario = currentScenario();
+        const forwardCount = scenario.transformations.filter((item) => item.direction === 'forward').length;
+        const reverseCount = scenario.transformations.filter((item) => item.direction === 'reverse').length;
+        scenarioSummary.innerHTML = `
+          <article class="summary-main">
+            <div class="control-label">当前业务切片</div>
+            <h2>${escapeHtml(scenario.title)}</h2>
+            <p>${escapeHtml(scenario.description)}</p>
+          </article>
+          <article class="metric-card"><span>场景总业务流</span><strong>${scenario.streams.length}</strong></article>
+          <article class="metric-card"><span>场景总正向转化</span><strong>${forwardCount}</strong></article>
+          <article class="metric-card"><span>场景总逆向转化</span><strong>${reverseCount}</strong></article>`;
+      }
+
+      function renderFilters() {
+        flowFilters.innerHTML = currentScenario().streams.map((stream) => {
+          const meta = flowMeta[stream.id];
+          return `<button class="filter-chip ${meta.className}" type="button" data-flow-filter="${stream.id}" aria-pressed="${viewState.visibleFlows.has(stream.id)}">${escapeHtml(meta.name)}</button>`;
+        }).join('');
+      }
+
+      function nodeIsVisible(node) {
+        return viewState.mode === 'all' || node.direction === viewState.mode;
+      }
+
+      function renderNode(node, streamId) {
+        const selected = node.transform === viewState.selectedTransformationId;
+        const sourceClass = transformationSources[node.transform] === streamId ? ' source-node' : ' target-node';
+        return `
+          <button class="flow-node${sourceClass}${node.direction === 'reverse' ? ' reverse' : ''}" type="button" data-transform-id="${escapeHtml(node.transform)}" aria-pressed="${selected}">
+            <span class="node-kicker"><b>${node.direction === 'reverse' ? '↶ 逆向/补偿调整' : '→ 正向'}</b>${escapeHtml(node.code)}</span>
+            <span class="node-title">${escapeHtml(node.title)}</span>
+          </button>`;
+      }
+
+      function renderBoard() {
+        const scenario = currentScenario();
+        const phaseHeader = scenario.phases.map((phase, index) => `<div class="phase"><span>0${index + 1}</span>${escapeHtml(phase)}</div>`).join('');
+        const lanes = scenario.streams
+          .filter((stream) => viewState.visibleFlows.has(stream.id))
+          .map((stream) => {
+            const meta = flowMeta[stream.id];
+            const cells = scenario.phases.map((_, phaseIndex) => {
+              const nodes = stream.nodes.filter((node) => node.phase === phaseIndex && nodeIsVisible(node));
+              return `<div class="lane-cell">${nodes.length ? nodes.map((node) => renderNode(node, stream.id)).join('') : '<span class="node-empty">—</span>'}</div>`;
+            }).join('');
+            return `
+              <article class="flow-lane ${meta.className}" data-flow-lane="${stream.id}">
+                <header class="lane-label">
+                  <span class="lane-badge">${escapeHtml(meta.short)}</span>
+                  <span><strong>${escapeHtml(meta.name)}</strong><small>${escapeHtml(meta.description)}</small></span>
+                </header>
+                <div class="lane-track">${cells}</div>
+              </article>`;
+          }).join('');
+        flowBoard.innerHTML = `
+          <div class="phase-row">
+            <div class="phase-corner">业务流 / 阶段</div>
+            <div class="phase-grid">${phaseHeader}</div>
+          </div>
+          ${lanes || '<div class="node-empty">至少保留一条业务流。</div>'}`;
+      }
+
+      function renderDetail() {
+        const scenario = currentScenario();
+        const item = selectedTransformation();
+        const sourceId = transformationSources[item.id];
+        const sourceMeta = flowMeta[sourceId];
+        const targetFlows = item.effects
+          .filter(([flow]) => flow !== sourceMeta.name)
+          .map(([flow]) => `<span class="target-chip">${escapeHtml(flow)}</span>`).join('');
+        const effects = item.effects.map(([flow, text]) => `
+          <li class="effect-item"><strong>${escapeHtml(flow)}</strong><span>${escapeHtml(text)}</span></li>`).join('');
+        const guards = item.guards.map((guard) => `<li>${escapeHtml(guard)}</li>`).join('');
+        const evidence = item.evidence.map((entry) => `<li>${escapeHtml(entry)}</li>`).join('');
+        transformationDetail.innerHTML = `
+          <div class="detail-wrap">
+            <div class="detail-identity">
+              <div>
+                <div class="control-label">Transformation · ${escapeHtml(scenario.phases[item.phase])}</div>
+                <h2 id="transformation-title" tabindex="-1">${escapeHtml(item.title)}</h2>
+                <p>${escapeHtml(item.summary)}</p>
+              </div>
+              <span class="direction-badge${item.direction === 'reverse' ? ' reverse' : ''}">${item.direction === 'reverse' ? '↶ 逆向/补偿调整' : '→ 正向价值流'}</span>
+            </div>
+            <div class="cross-flow-map" aria-label="跨业务流转化映射">
+              <div class="cross-role"><small>源业务流 / 输入事实</small><strong>${escapeHtml(sourceMeta.name)} · ${escapeHtml(item.input)}</strong></div>
+              <span class="cross-arrow" aria-hidden="true">→</span>
+              <div class="cross-role cross-event"><small>领域事件</small><strong>${escapeHtml(item.event)}</strong></div>
+              <span class="cross-arrow" aria-hidden="true">→</span>
+              <div class="cross-role"><small>目标业务流</small><div class="cross-targets">${targetFlows}</div></div>
+            </div>
+            <div class="transform-chain" aria-label="业务转化链">
+              <article class="chain-step"><span class="chain-index">01 · INPUT</span><h3>输入事实</h3><p>${escapeHtml(item.input)}</p></article>
+              <article class="chain-step"><span class="chain-index">02 · RULE</span><h3>业务规则/转化</h3><p>${escapeHtml(item.rule)}</p></article>
+              <article class="chain-step"><span class="chain-index">03 · OUTPUT</span><h3>输出对象</h3><p><code>${escapeHtml(item.output)}</code></p></article>
+              <article class="chain-step"><span class="chain-index">04 · EVENT</span><h3>领域事件</h3><p><code>${escapeHtml(item.event)}</code></p></article>
+              <article class="chain-step"><span class="chain-index">05 · OWNER</span><h3>权威/协调边界</h3><p>${escapeHtml(item.owner)}</p></article>
+            </div>
+            <div class="detail-grid">
+              <article class="detail-card"><h3>跨流影响</h3><ul class="effect-list">${effects}</ul></article>
+              <div>
+                <article class="detail-card"><h3>必须守住的边界</h3><ul class="guard-list">${guards}</ul></article>
+                <article class="detail-card"><h3>可验证证据</h3><ul class="evidence-list">${evidence}</ul></article>
+              </div>
+            </div>
+          </div>`;
+      }
+
+      function renderInvariants() {
+        const cards = currentScenario().invariants.map((item) => `
+          <article class="invariant-card">
+            <header><h3>${escapeHtml(item.title)}</h3><span class="invariant-code">${escapeHtml(item.id)}</span></header>
+            <p>${escapeHtml(item.text)}</p>
+            <div class="invariant-meta">${item.tags.map((tag) => `<span class="meta-tag">${escapeHtml(tag)}</span>`).join('')}</div>
+          </article>`).join('');
+        invariantPanel.innerHTML = `
+          <header class="panel-header">
+            <div><h2 id="invariant-title">跨流不变量与对账焦点</h2><p>这些性质跨越多个专业系统，不能由单个页面或单条消息独立保证。</p></div>
+          </header>
+          <div class="invariant-grid">${cards}</div>`;
+      }
+
+      function renderAll() {
+        ensureVisibleSelection();
+        renderScenarioTabs();
+        renderModeSwitch();
+        renderSummary();
+        renderFilters();
+        renderBoard();
+        renderDetail();
+        renderInvariants();
+      }
+
+      scenarioTabs.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-scenario]');
+        if (!button || !scenarios[button.dataset.scenario]) return;
+        const id = button.dataset.scenario;
+        viewState.scenarioId = id;
+        viewState.mode = 'all';
+        viewState.visibleFlows = new Set(currentScenario().streams.map((stream) => stream.id));
+        viewState.selectedTransformationId = currentScenario().transformations[0].id;
+        renderAll();
+        focusControlled(scenarioTabs, 'data-scenario', id);
+        announce(`已切换到${currentScenario().tab}`);
+      });
+
+      scenarioTabs.addEventListener('keydown', (event) => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        const buttons = [...scenarioTabs.querySelectorAll('[data-scenario]')];
+        const currentIndex = buttons.indexOf(event.target);
+        if (currentIndex < 0) return;
+        event.preventDefault();
+        const nextIndex = event.key === 'Home'
+          ? 0
+          : event.key === 'End'
+            ? buttons.length - 1
+            : (currentIndex + (event.key === 'ArrowRight' ? 1 : -1) + buttons.length) % buttons.length;
+        buttons[nextIndex].click();
+      });
+
+      modeSwitch.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-mode]');
+        if (!button || !['all', 'forward', 'reverse'].includes(button.dataset.mode)) return;
+        const id = button.dataset.mode;
+        viewState.mode = id;
+        ensureVisibleSelection();
+        renderModeSwitch();
+        renderBoard();
+        renderDetail();
+        focusControlled(modeSwitch, 'data-mode', id);
+        announce(`当前视角：${button.textContent.trim()}`);
+      });
+
+      flowFilters.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-flow-filter]');
+        if (!button) return;
+        const id = button.dataset.flowFilter;
+        if (viewState.visibleFlows.has(id)) {
+          if (viewState.visibleFlows.size === 1) {
+            announce('至少需要保留一条业务流');
+            return;
+          }
+          viewState.visibleFlows.delete(id);
+        } else {
+          viewState.visibleFlows.add(id);
+        }
+        ensureVisibleSelection();
+        renderFilters();
+        renderBoard();
+        renderDetail();
+        focusControlled(flowFilters, 'data-flow-filter', id);
+        announce(`${flowMeta[id].name}${viewState.visibleFlows.has(id) ? '已显示' : '已隐藏'}`);
+      });
+
+      flowBoard.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-transform-id]');
+        if (!button) return;
+        viewState.selectedTransformationId = button.dataset.transformId;
+        renderBoard();
+        renderDetail();
+        focusDetailTitle();
+        announce(`正在查看：${selectedTransformation().title}`);
+      });
+
+      renderAll();
+    })();
+  </script>
+</body>
+</html>

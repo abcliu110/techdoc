@@ -1,0 +1,1583 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>数据模型到 UI 元素与页面导航映射方法</title>
+  <style>
+    :root {
+      --paper: #f5f3ec;
+      --surface: #fffefa;
+      --ink: #20231f;
+      --muted: #656961;
+      --line: #d8d8ce;
+      --strong-line: #aaa99d;
+      --green: #176b51;
+      --green-soft: #dcebe4;
+      --blue: #245e91;
+      --blue-soft: #dfeaf4;
+      --amber: #9b5b10;
+      --amber-soft: #f5e6cc;
+      --red: #a13f35;
+      --red-soft: #f5dfdc;
+      --code: #252a27;
+      --sidebar: 252px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: "Microsoft YaHei", "Noto Sans SC", sans-serif;
+      line-height: 1.65;
+      letter-spacing: 0;
+    }
+    button, input, select { font: inherit; letter-spacing: 0; }
+    a { color: inherit; }
+    code { font-family: Consolas, "SFMono-Regular", monospace; }
+
+    .shell { min-height: 100vh; }
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: var(--sidebar);
+      padding: 28px 22px;
+      color: #eef4ef;
+      background: #20312a;
+      overflow-y: auto;
+      z-index: 10;
+    }
+    .mark {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      margin-bottom: 18px;
+      border: 1px solid #709080;
+      color: #cce4d7;
+      font: 700 18px/1 Consolas, monospace;
+    }
+    .sidebar h1 { margin: 0; font-size: 18px; line-height: 1.45; }
+    .sidebar .version { margin: 8px 0 26px; color: #9eb4a8; font-size: 12px; }
+    .toc { display: grid; gap: 4px; }
+    .toc a {
+      padding: 8px 10px;
+      border-left: 2px solid transparent;
+      color: #bcd0c4;
+      font-size: 13px;
+      text-decoration: none;
+    }
+    .toc a:hover, .toc a.active { color: white; border-color: #77c09c; background: #2a4036; }
+    .sidebar-note { margin-top: 28px; padding-top: 18px; border-top: 1px solid #3d5549; color: #9eb4a8; font-size: 12px; }
+
+    main { margin-left: var(--sidebar); }
+    .hero {
+      min-height: 520px;
+      padding: 72px clamp(28px, 6vw, 92px) 54px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.7) 1px, transparent 1px) 0 0 / 40px 40px,
+        linear-gradient(rgba(255,255,255,.7) 1px, transparent 1px) 0 0 / 40px 40px,
+        #e7e5dc;
+      border-bottom: 1px solid var(--strong-line);
+    }
+    .kicker { margin: 0 0 16px; color: var(--green); font-size: 12px; font-weight: 800; text-transform: uppercase; }
+    .hero h2 { max-width: 900px; margin: 0; font-family: Georgia, "STSong", serif; font-size: clamp(38px, 6vw, 76px); line-height: 1.12; font-weight: 500; }
+    .hero .lead { max-width: 790px; margin: 26px 0 38px; color: #4f554f; font-size: 18px; }
+    .formula {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      max-width: 960px;
+      padding: 20px;
+      border: 1px solid var(--strong-line);
+      background: rgba(255,254,250,.86);
+      box-shadow: 8px 8px 0 rgba(32,49,42,.12);
+    }
+    .formula span { padding: 8px 12px; border: 1px solid var(--line); background: white; font-weight: 700; }
+    .formula b { color: var(--green); font-size: 19px; }
+
+    .content { max-width: 1240px; margin: auto; padding: 0 clamp(24px, 5vw, 72px) 100px; }
+    section { scroll-margin-top: 20px; padding: 74px 0 0; }
+    .section-head { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 22px; margin-bottom: 28px; }
+    .section-no { padding-top: 3px; color: var(--green); font: 700 13px/1 Consolas, monospace; }
+    h3 { margin: 0; font-family: Georgia, "STSong", serif; font-size: clamp(28px, 4vw, 44px); line-height: 1.22; font-weight: 500; }
+    .section-intro { max-width: 820px; margin: 12px 0 0; color: var(--muted); }
+    h4 { margin: 0 0 12px; font-size: 18px; }
+
+    .principles { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--strong-line); background: var(--surface); }
+    .principle { min-height: 210px; padding: 26px; border-right: 1px solid var(--line); }
+    .principle:last-child { border-right: 0; }
+    .principle b { display: block; margin-bottom: 14px; color: var(--green); font: 700 12px/1 Consolas, monospace; }
+    .principle p { margin: 0; color: var(--muted); font-size: 14px; }
+
+    .toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px; }
+    .search {
+      min-width: min(100%, 320px);
+      padding: 11px 13px;
+      border: 1px solid var(--strong-line);
+      border-radius: 0;
+      background: white;
+      outline: none;
+    }
+    .search:focus { border-color: var(--green); box-shadow: 0 0 0 3px var(--green-soft); }
+    .filters { display: flex; flex-wrap: wrap; gap: 6px; }
+    .filter {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 0;
+      color: var(--muted);
+      background: var(--surface);
+      cursor: pointer;
+    }
+    .filter[aria-pressed="true"] { color: white; border-color: var(--green); background: var(--green); }
+
+    .table-wrap { border: 1px solid var(--strong-line); background: var(--surface); overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th { position: sticky; top: 0; padding: 13px 14px; color: #e8f0eb; background: #2d3d35; text-align: left; white-space: nowrap; }
+    td { min-width: 128px; padding: 15px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    tr:last-child td { border-bottom: 0; }
+    tbody tr:hover { background: #f0f3ee; }
+    .type { color: var(--green); font-weight: 800; white-space: nowrap; }
+    .control { font-weight: 700; }
+    .secondary { color: var(--muted); }
+    .tag { display: inline-block; margin: 2px 2px 2px 0; padding: 2px 7px; border: 1px solid currentColor; font-size: 11px; line-height: 1.4; }
+    .tag.input { color: var(--green); }
+    .tag.output { color: var(--blue); }
+    .tag.nav { color: var(--amber); }
+
+    .atlas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 30px; }
+    .sample { min-width: 0; padding: 20px; border: 1px solid var(--strong-line); background: var(--surface); }
+    .sample-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; min-height: 50px; margin-bottom: 14px; }
+    .sample-head h4 { margin: 0; font-size: 15px; }
+    .sample-head code { color: var(--green); font-size: 11px; }
+    .sample small { display: block; margin-top: 8px; color: var(--muted); }
+    .sample input:not([type="radio"]):not([type="checkbox"]):not([type="range"]),
+    .sample select, .sample textarea { width: 100%; min-height: 40px; padding: 8px 10px; border: 1px solid var(--strong-line); border-radius: 0; background: white; }
+    .sample textarea { min-height: 78px; resize: vertical; }
+    .sample input[type="range"] { width: 100%; accent-color: var(--green); }
+    .inline-control { display: flex; align-items: stretch; width: 100%; }
+    .inline-control > * { min-width: 0; }
+    .inline-control input { flex: 1; }
+    .inline-control select { width: 92px; border-left: 0; }
+    .choice-stack { display: grid; gap: 7px; }
+    .choice-stack label, .choice-row label { display: flex; align-items: center; gap: 7px; margin: 0; font-weight: 400; }
+    .choice-row { display: flex; flex-wrap: wrap; gap: 14px; }
+    .range-value { display: flex; justify-content: space-between; color: var(--muted); font-size: 12px; }
+    .reference-result { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; padding: 9px 10px; border-left: 3px solid var(--green); background: var(--green-soft); font-size: 12px; }
+    .reference-result a { color: var(--green); font-weight: 700; }
+    .mini-list { display: grid; gap: 6px; margin-top: 8px; }
+    .mini-list div { display: grid; grid-template-columns: 1fr 70px 28px; gap: 5px; align-items: center; }
+    .mini-list button { border: 1px solid var(--line); color: var(--red); background: white; cursor: pointer; }
+    .tree { margin: 0; padding-left: 18px; font-size: 13px; }
+    .tree summary { cursor: pointer; }
+    .metric { display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; align-items: end; }
+    .metric output { color: var(--blue); font: 500 30px/1 Georgia, serif; }
+    .metric progress { width: 100%; accent-color: var(--blue); }
+    .possibility-lab { margin: 30px 0; border: 1px solid var(--strong-line); background: #e9e8e0; }
+    .possibility-head { display: grid; grid-template-columns: minmax(0, 1fr) 270px; gap: 20px; align-items: end; padding: 24px; border-bottom: 1px solid var(--strong-line); }
+    .possibility-head h4 { margin: 0 0 5px; font-family: Georgia, "STSong", serif; font-size: 25px; }
+    .possibility-head p { margin: 0; color: var(--muted); font-size: 13px; }
+    .possibility-head select { width: 100%; min-height: 42px; padding: 8px 10px; border: 1px solid var(--strong-line); border-radius: 0; background: white; }
+    .candidate-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--strong-line); }
+    .candidate { min-width: 0; padding: 22px; background: var(--surface); }
+    .candidate.recommended { box-shadow: inset 0 4px 0 var(--green); }
+    .candidate-title { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; min-height: 47px; }
+    .candidate-title h5 { margin: 0; font-size: 16px; }
+    .rank { padding: 2px 6px; border: 1px solid var(--green); color: var(--green); font-size: 10px; white-space: nowrap; }
+    .candidate-demo { min-height: 84px; margin: 14px 0; padding: 13px; border: 1px dashed var(--strong-line); background: #f5f4ed; }
+    .candidate-demo input:not([type="radio"]):not([type="checkbox"]):not([type="range"]), .candidate-demo select, .candidate-demo textarea { width: 100%; min-height: 36px; border: 1px solid var(--strong-line); background: white; }
+    .candidate-demo input[type="range"] { width: 100%; accent-color: var(--green); }
+    .candidate-demo textarea { min-height: 58px; }
+    .tradeoff { display: grid; gap: 9px; margin: 0; }
+    .tradeoff div { padding-left: 10px; border-left: 3px solid var(--line); }
+    .tradeoff .pro { border-color: var(--green); }
+    .tradeoff .con { border-color: var(--red); }
+    .tradeoff .when { border-color: var(--blue); }
+    .tradeoff dt { font-size: 11px; font-weight: 800; }
+    .tradeoff dd { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+
+    .layer-map { display: grid; grid-template-columns: repeat(5, minmax(150px, 1fr)); overflow-x: auto; border: 1px solid var(--strong-line); background: var(--strong-line); gap: 1px; }
+    .layer-map article { min-width: 150px; padding: 18px; background: var(--surface); }
+    .layer-map b { color: var(--green); font: 700 12px/1 Consolas, monospace; }
+    .layer-map strong { display: block; margin: 9px 0 5px; }
+    .layer-map small { color: var(--muted); }
+    .view-filter { display: flex; flex-wrap: wrap; gap: 6px; margin: 22px 0 14px; }
+    .complex-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .complex-card { min-width: 0; border: 1px solid var(--strong-line); background: var(--surface); }
+    .complex-card[hidden] { display: none; }
+    .complex-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 18px 20px 12px; }
+    .complex-head h4 { margin: 0; font-size: 17px; }
+    .complex-head code { color: var(--green); font-size: 11px; }
+    .complex-demo { min-height: 210px; margin: 0 20px; padding: 14px; border: 1px solid var(--line); background: #f1f0e8; overflow: hidden; }
+    .complex-notes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 16px; background: var(--line); }
+    .complex-notes div { min-width: 0; padding: 13px; background: var(--surface); }
+    .complex-notes b { display: block; margin-bottom: 4px; font-size: 11px; }
+    .complex-notes p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
+    .complex-notes .good b { color: var(--green); }
+    .complex-notes .bad b { color: var(--red); }
+    .complex-notes .fit b { color: var(--blue); }
+    .mini-toolbar { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+    .mini-toolbar span { height: 26px; padding: 4px 8px; border: 1px solid var(--line); background: white; font-size: 10px; }
+    .mini-table { width: 100%; font-size: 10px; background: white; }
+    .mini-table th { position: static; padding: 6px; font-size: 9px; }
+    .mini-table td { min-width: 0; padding: 7px 6px; }
+    .mini-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .mini-card { min-height: 74px; padding: 8px; border: 1px solid var(--line); background: white; font-size: 9px; }
+    .mini-card i { display: block; height: 28px; margin-bottom: 6px; background: #c9d8cf; }
+    .kanban { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; min-width: 360px; }
+    .kanban-col { padding: 7px; background: #e1e3dc; font-size: 9px; }
+    .kanban-col strong { display: block; margin-bottom: 7px; }
+    .kanban-item { margin-top: 5px; padding: 7px; border-left: 3px solid var(--green); background: white; }
+    .calendar { display: grid; grid-template-columns: 36px repeat(5, 1fr); gap: 1px; background: var(--line); font-size: 8px; }
+    .calendar div { min-height: 32px; padding: 4px; background: white; }
+    .calendar .time { color: var(--muted); background: #ecebe4; }
+    .calendar .event { color: white; background: var(--blue); }
+    .timeline { position: relative; display: grid; gap: 10px; padding-left: 28px; }
+    .timeline::before { content: ""; position: absolute; left: 9px; top: 4px; bottom: 4px; width: 2px; background: var(--strong-line); }
+    .timeline-item { position: relative; padding: 8px 10px; background: white; font-size: 9px; }
+    .timeline-item::before { content: ""; position: absolute; left: -24px; top: 12px; width: 9px; height: 9px; border-radius: 50%; background: var(--green); }
+    .gantt { display: grid; grid-template-columns: 78px repeat(6, 1fr); gap: 1px; background: var(--line); font-size: 8px; }
+    .gantt div { min-height: 26px; padding: 5px; background: white; }
+    .gantt .task { color: white; background: var(--green); }
+    .gantt .delay { color: white; background: var(--red); }
+    .map-demo { position: relative; min-height: 180px; background: linear-gradient(30deg, transparent 48%, #cfd7cd 49% 51%, transparent 52%), linear-gradient(150deg, transparent 48%, #d7d2c6 49% 51%, transparent 52%), #e4eadf; background-size: 70px 70px, 90px 90px; }
+    .pin { position: absolute; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50% 50% 50% 0; color: white; background: var(--red); font-size: 8px; transform: rotate(-45deg); }
+    .pin span { transform: rotate(45deg); }
+    .heat { display: grid; grid-template-columns: 70px repeat(4, 1fr); gap: 2px; font-size: 8px; }
+    .heat div { min-height: 27px; padding: 6px; background: white; text-align: center; }
+    .heat .h1 { background: #dcebe4; } .heat .h2 { background: #9bc7b2; } .heat .h3 { color: white; background: #43896c; }
+    .bars { display: flex; align-items: end; gap: 9px; height: 150px; padding: 12px 8px 0; border-bottom: 1px solid var(--strong-line); }
+    .bar { flex: 1; position: relative; min-width: 18px; background: var(--blue); }
+    .bar span { position: absolute; left: 0; right: 0; bottom: -20px; font-size: 8px; text-align: center; }
+    .network { position: relative; min-height: 180px; }
+    .network::before, .network::after { content: ""; position: absolute; left: 25%; right: 25%; top: 50%; height: 1px; background: var(--strong-line); transform: rotate(25deg); }
+    .network::after { transform: rotate(-28deg); }
+    .node { position: absolute; display: grid; place-items: center; width: 52px; height: 52px; border: 2px solid var(--green); border-radius: 50%; background: white; font-size: 8px; text-align: center; }
+    .match { display: grid; grid-template-columns: 1fr 58px 1fr; gap: 7px; }
+    .match-list { display: grid; gap: 6px; }
+    .match-item { padding: 8px; border: 1px solid var(--line); background: white; font-size: 8px; }
+    .match-link { display: grid; place-items: center; color: var(--green); font-size: 9px; }
+    .rule-builder { display: grid; gap: 7px; }
+    .rule-row { display: grid; grid-template-columns: 56px 1fr 70px 1fr; gap: 5px; align-items: center; padding: 7px; background: white; font-size: 8px; }
+    .rule-chip { padding: 5px; border: 1px solid var(--line); background: #f4f4ef; }
+    .designer { display: grid; grid-template-columns: 80px 1fr 96px; min-height: 180px; border: 1px solid var(--line); background: white; }
+    .designer > div { padding: 8px; border-right: 1px solid var(--line); font-size: 8px; }
+    .designer > div:last-child { border: 0; }
+    .canvas-field { margin: 6px 0; padding: 8px; border: 1px dashed var(--green); }
+    .permission { display: grid; grid-template-columns: 86px repeat(4, 1fr); gap: 1px; background: var(--line); font-size: 8px; }
+    .permission div { min-height: 27px; padding: 6px; background: white; text-align: center; }
+    .permission .yes { color: var(--green); font-weight: 800; }
+    .master-detail { display: grid; grid-template-columns: 38% 1fr; min-height: 180px; border: 1px solid var(--line); background: white; }
+    .master-list { border-right: 1px solid var(--line); }
+    .master-list div { padding: 8px; border-bottom: 1px solid var(--line); font-size: 8px; }
+    .master-list .selected { color: white; background: var(--green); }
+    .detail-pane { padding: 14px; font-size: 9px; }
+    .projection-lab { border: 1px solid var(--strong-line); background: var(--surface); }
+    .projection-tabs { display: flex; gap: 5px; padding: 14px; overflow-x: auto; border-bottom: 1px solid var(--line); }
+    .projection-tabs button { flex: 0 0 auto; padding: 7px 9px; border: 1px solid var(--line); background: white; cursor: pointer; }
+    .projection-tabs button.active { color: white; border-color: var(--green); background: var(--green); }
+    .projection-body { display: grid; grid-template-columns: minmax(280px, 1.2fr) minmax(240px, .8fr); min-height: 300px; }
+    .projection-preview { padding: 22px; border-right: 1px solid var(--line); background: #efeee7; }
+    .projection-explain { padding: 24px; }
+    .projection-explain h4 { font-family: Georgia, "STSong", serif; font-size: 26px; }
+    .projection-explain dl { display: grid; gap: 12px; }
+    .projection-explain dt { color: var(--green); font-size: 11px; font-weight: 800; }
+    .projection-explain dd { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+    .principle-lab { border: 1px solid var(--strong-line); background: var(--surface); }
+    .principle-tabs { display: flex; gap: 5px; padding: 14px; overflow-x: auto; border-bottom: 1px solid var(--line); }
+    .principle-tabs button { flex: 0 0 auto; padding: 7px 10px; border: 1px solid var(--line); background: white; cursor: pointer; }
+    .principle-tabs button.active { color: white; border-color: var(--green); background: var(--green); }
+    .principle-stage { display: grid; grid-template-columns: minmax(320px, 1.25fr) minmax(260px, .75fr); min-height: 360px; }
+    .stage-visual { padding: 22px; border-right: 1px solid var(--line); background: #efeee7; }
+    .stage-explain { padding: 24px; }
+    .stage-explain h4 { font-family: Georgia, "STSong", serif; font-size: 25px; }
+    .stage-explain p { color: var(--muted); font-size: 13px; }
+    .context-vector { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
+    .context-vector div { min-width: 0; padding: 9px; border-left: 3px solid var(--blue); background: white; }
+    .context-vector b { display: block; color: var(--blue); font: 700 10px/1 Consolas, monospace; }
+    .context-vector code { display: block; margin-top: 5px; overflow-wrap: anywhere; color: var(--muted); font-size: 9px; }
+    .nav-scenes { position: relative; min-height: 180px; margin-top: 12px; border: 1px solid var(--line); background: white; overflow: hidden; }
+    .scene-page { position: absolute; inset: 12px; padding: 14px; border: 1px solid var(--strong-line); background: #f8f8f3; font-size: 10px; transition: transform .25s ease, opacity .25s ease; }
+    .scene-page.secondary-page { transform: translateX(112%); }
+    .scene-page.visible { transform: translateX(0); }
+    .scene-overlay { position: absolute; inset: 18px 18px 18px 37%; z-index: 2; padding: 14px; border-left: 4px solid var(--green); background: white; box-shadow: -8px 0 20px rgba(0,0,0,.12); font-size: 10px; }
+    .scene-node { display: inline-block; margin: 5px; padding: 7px 9px; border: 1px solid var(--line); background: white; font-size: 9px; }
+    .scene-node.current { color: white; border-color: var(--green); background: var(--green); }
+    .stack-view { display: flex; align-items: end; gap: 8px; min-height: 95px; padding: 12px; }
+    .stack-item { width: 30%; padding: 10px; border: 1px solid var(--line); background: white; font-size: 8px; box-shadow: 4px 4px 0 #d7d6cf; }
+    .tree-stage { display: grid; grid-template-columns: minmax(320px, 1.2fr) minmax(270px, .8fr); min-height: 410px; }
+    .tree-visual { padding: 22px; border-right: 1px solid var(--line); background: #efeee7; }
+    .tree-explain { padding: 24px; }
+    .tree-explain h4 { font-family: Georgia, "STSong", serif; font-size: 25px; }
+    .tree-explain dl { display: grid; gap: 10px; }
+    .tree-explain dt { color: var(--green); font-size: 11px; font-weight: 800; }
+    .tree-explain dd { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+    .tree-prototype { min-height: 255px; padding: 16px; border: 1px solid var(--line); background: white; overflow: auto; }
+    .proto-tree, .proto-tree ul { margin: 0; padding-left: 20px; list-style: none; }
+    .proto-tree li { position: relative; margin: 5px 0; font-size: 10px; }
+    .proto-tree li::before { content: ""; position: absolute; left: -12px; top: -6px; bottom: 11px; border-left: 1px solid var(--strong-line); }
+    .proto-tree li::after { content: ""; position: absolute; left: -12px; top: 10px; width: 9px; border-top: 1px solid var(--strong-line); }
+    .proto-tree > li::before, .proto-tree > li::after { display: none; }
+    .tree-node { display: inline-flex; align-items: center; gap: 6px; min-height: 25px; padding: 3px 7px; border: 1px solid transparent; cursor: pointer; }
+    .tree-node:hover, .tree-node.selected { border-color: var(--green); background: var(--green-soft); }
+    .tree-node.disabled { color: #999; cursor: not-allowed; }
+    .node-state { display: inline-block; width: 10px; height: 10px; border: 1px solid var(--strong-line); background: white; }
+    .node-state.checked { border-color: var(--green); background: var(--green); }
+    .node-state.partial { border-color: var(--green); background: linear-gradient(var(--green) 50%, white 50%); }
+    .dag-prototype { position: relative; min-height: 245px; }
+    .dag-node { position: absolute; display: grid; place-items: center; width: 76px; min-height: 38px; padding: 6px; border: 1px solid var(--green); background: white; font-size: 9px; text-align: center; z-index: 2; }
+    .dag-edge { position: absolute; height: 1px; background: var(--strong-line); transform-origin: left center; z-index: 1; }
+    .tree-invariant { margin-top: 12px; padding: 10px; border-left: 4px solid var(--amber); background: var(--amber-soft); color: #644a27; font-size: 11px; }
+
+    .rule-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .rule { padding: 22px; border-left: 4px solid var(--blue); background: var(--blue-soft); }
+    .rule.warn { border-color: var(--amber); background: var(--amber-soft); }
+    .rule strong { display: block; margin-bottom: 6px; }
+    .rule p { margin: 0; color: #485057; font-size: 14px; }
+
+    .flow { display: grid; grid-template-columns: repeat(5, minmax(130px, 1fr)); gap: 0; align-items: stretch; overflow-x: auto; }
+    .flow-step { position: relative; min-width: 150px; padding: 22px 30px 22px 18px; border: 1px solid var(--strong-line); background: white; }
+    .flow-step:not(:last-child)::after { content: "→"; position: absolute; right: -14px; top: 50%; z-index: 2; width: 28px; height: 28px; margin-top: -14px; display: grid; place-items: center; color: white; background: var(--green); }
+    .flow-step b { display: block; color: var(--green); font: 700 12px/1 Consolas, monospace; }
+    .flow-step strong { display: block; margin: 10px 0 5px; }
+    .flow-step small { color: var(--muted); }
+
+    .relation-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .relation-card { padding: 24px; border: 1px solid var(--strong-line); background: var(--surface); }
+    .relation-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; margin-bottom: 16px; }
+    .relation-symbol { color: var(--amber); font: 800 16px/1.3 Consolas, monospace; white-space: nowrap; }
+    .relation-card p { color: var(--muted); font-size: 14px; }
+    .route {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 7px;
+      margin-top: 16px;
+      padding: 14px;
+      background: #f0eee5;
+      font-size: 13px;
+    }
+    .route span { padding: 5px 8px; border: 1px solid var(--line); background: white; }
+    .route b { color: var(--amber); }
+    .route button { padding: 6px 9px; border: 1px solid var(--amber); color: var(--amber); background: white; cursor: pointer; }
+    .nav-lab { margin-top: 18px; border: 1px solid var(--strong-line); background: var(--surface); }
+    .nav-lab-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; color: white; background: #2d3d35; }
+    .nav-lab-head strong { font-size: 14px; }
+    .nav-context { color: #bed0c5; font-size: 12px; }
+    .nav-screen { min-height: 190px; padding: 24px; }
+    .nav-screen h4 { font-family: Georgia, "STSong", serif; font-size: 25px; }
+    .nav-screen p { max-width: 720px; color: var(--muted); }
+    .nav-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+    .nav-actions button { padding: 9px 12px; border: 1px solid var(--strong-line); color: var(--ink); background: white; cursor: pointer; }
+    .nav-actions .primary { color: white; border-color: var(--green); background: var(--green); }
+    .nav-actions button:disabled { opacity: .45; cursor: not-allowed; }
+
+    .demo { display: grid; grid-template-columns: 320px minmax(0, 1fr); border: 1px solid var(--strong-line); background: white; }
+    .model-panel { padding: 25px; color: #eaf2ed; background: var(--code); }
+    .model-panel h4 { color: white; }
+    .model-panel pre { margin: 18px 0 0; overflow-x: auto; color: #acd5c1; font: 13px/1.7 Consolas, monospace; white-space: pre-wrap; }
+    .ui-panel { padding: 26px; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .field { min-width: 0; }
+    .field.full { grid-column: 1 / -1; }
+    label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 700; }
+    .mock-input, .mock-select, .stepper { width: 100%; min-height: 42px; border: 1px solid var(--strong-line); background: white; }
+    .mock-input, .mock-select { padding: 9px 11px; }
+    .stepper { display: grid; grid-template-columns: 42px 1fr 42px; }
+    .stepper button { border: 0; background: #edf1ec; cursor: pointer; }
+    .stepper output { display: grid; place-items: center; border-inline: 1px solid var(--line); }
+    .toggle-line { display: flex; align-items: center; gap: 10px; min-height: 42px; }
+    .switch { width: 42px; height: 23px; padding: 3px; border: 0; border-radius: 20px; background: var(--green); }
+    .switch::after { content: ""; display: block; width: 17px; height: 17px; margin-left: auto; border-radius: 50%; background: white; }
+    .lines { margin-top: 24px; border-top: 1px solid var(--strong-line); padding-top: 22px; }
+    .line-row { display: grid; grid-template-columns: 1.5fr .65fr .8fr 38px; gap: 9px; align-items: center; margin-top: 9px; }
+    .icon-button { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid var(--line); color: var(--red); background: white; cursor: pointer; }
+    .demo-note { margin: 20px 0 0; padding: 14px; border-left: 4px solid var(--green); background: var(--green-soft); font-size: 13px; }
+
+    .decision { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .decision article { padding: 22px; border-top: 3px solid var(--green); background: white; }
+    .decision b { color: var(--green); font: 700 12px/1 Consolas, monospace; }
+    .decision h4 { margin-top: 12px; }
+    .decision p { color: var(--muted); font-size: 14px; }
+
+    .anti { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .anti article { padding: 18px 20px; border-left: 4px solid var(--red); background: var(--red-soft); }
+    .anti strong { display: block; margin-bottom: 5px; }
+    .anti p { margin: 0; color: #654844; font-size: 14px; }
+
+    .benchmark-strip { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1px; margin-bottom: 18px; border: 1px solid var(--strong-line); background: var(--strong-line); }
+    .benchmark-strip a { min-width: 0; padding: 13px 14px; color: var(--ink); background: var(--surface); text-decoration: none; }
+    .benchmark-strip a:hover { background: var(--green-soft); }
+    .benchmark-strip strong { display: block; color: var(--green); font-size: 12px; }
+    .benchmark-strip span { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; }
+    .commercial-catalog { margin-bottom: 18px; border: 1px solid var(--strong-line); background: var(--surface); }
+    .commercial-catalog summary { padding: 14px 16px; color: var(--green); background: #e8e7df; font-weight: 800; cursor: pointer; }
+    .commercial-catalog .table-wrap { border: 0; border-top: 1px solid var(--strong-line); }
+    .commercial-catalog td { min-width: 150px; font-size: 11px; }
+    .commercial-catalog td:first-child { min-width: 110px; color: var(--green); font-weight: 800; }
+    .commercial-catalog td:nth-child(2) { min-width: 190px; font-weight: 800; }
+    .commercial-lab { border: 1px solid var(--strong-line); background: var(--surface); }
+    .commercial-controls { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 18px; padding: 18px; border-bottom: 1px solid var(--strong-line); background: #e8e7df; }
+    .commercial-controls label { display: grid; gap: 5px; color: var(--muted); font-size: 11px; font-weight: 800; }
+    .commercial-controls select { min-height: 42px; padding: 8px 10px; border: 1px solid var(--strong-line); border-radius: 0; background: white; }
+    .commercial-tabs { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 5px; }
+    .commercial-tabs button { flex: 0 0 auto; min-height: 42px; padding: 8px 11px; border: 1px solid var(--line); color: var(--muted); background: white; cursor: pointer; }
+    .commercial-tabs button.active { color: white; border-color: var(--green); background: var(--green); }
+    .commercial-stage { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(280px, .6fr); min-height: 580px; }
+    .commercial-canvas { min-width: 0; padding: 18px; border-right: 1px solid var(--line); background: #dcddd5; }
+    .commercial-meta { padding: 24px; }
+    .commercial-meta h4 { margin: 0; font-family: Georgia, "STSong", serif; font-size: 27px; line-height: 1.25; }
+    .commercial-family { display: inline-block; margin-bottom: 9px; color: var(--green); font: 700 11px/1 Consolas, monospace; }
+    .commercial-meta dl { display: grid; gap: 11px; margin: 20px 0 0; }
+    .commercial-meta dt { color: var(--green); font-size: 10px; font-weight: 800; }
+    .commercial-meta dd { margin: 2px 0 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+    .commercial-meta .reject dt { color: var(--red); }
+    .enterprise-prototype { position: relative; min-height: 542px; border: 1px solid #858b84; color: #202620; background: #f7f8f5; overflow: hidden; }
+    .enterprise-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; padding: 8px 12px; color: white; background: #293b34; font-size: 10px; }
+    .enterprise-bar strong { font-size: 12px; }
+    .enterprise-scope { padding: 5px 8px; border: 1px solid #789084; background: #344c42; }
+    .enterprise-body { display: grid; grid-template-columns: 120px minmax(0, 1fr); min-height: 496px; }
+    .enterprise-nav { padding: 12px 8px; color: #d6e1db; background: #34463e; font-size: 9px; }
+    .enterprise-nav b { display: block; margin: 10px 6px 5px; color: #86c5a6; font-size: 8px; text-transform: uppercase; }
+    .enterprise-nav span { display: block; padding: 6px; }
+    .enterprise-nav .current { color: white; background: #176b51; }
+    .enterprise-main { min-width: 0; padding: 14px; overflow: hidden; }
+    .proto-titlebar { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+    .proto-titlebar h5 { margin: 0; font-size: 16px; }
+    .proto-titlebar p { margin: 2px 0 0; color: #687068; font-size: 9px; }
+    .proto-actions { display: flex; gap: 5px; }
+    .proto-button { min-height: 28px; padding: 5px 8px; border: 1px solid #a4aaa2; background: white; font-size: 9px; }
+    .proto-button.primary { color: white; border-color: var(--green); background: var(--green); }
+    .proto-toolbar { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 9px; padding: 7px; border: 1px solid #c7cbc4; background: white; }
+    .proto-input { min-width: 84px; padding: 5px 7px; border: 1px solid #c7cbc4; background: #fafbf8; font-size: 8px; }
+    .proto-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin-bottom: 9px; }
+    .proto-kpi { min-width: 0; padding: 9px; border-left: 3px solid var(--blue); background: white; }
+    .proto-kpi small { display: block; color: #687068; font-size: 7px; }
+    .proto-kpi strong { font-size: 15px; }
+    .proto-table { width: 100%; table-layout: fixed; border: 1px solid #c7cbc4; background: white; font-size: 8px; }
+    .proto-table th { position: static; padding: 6px; color: white; background: #44554d; font-size: 7px; }
+    .proto-table td { min-width: 0; padding: 7px 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .proto-table .row-error td { color: #7c312b; background: #f8e7e4; }
+    .proto-badge { display: inline-block; padding: 2px 5px; border: 1px solid currentColor; color: var(--green); font-size: 7px; }
+    .proto-badge.warn { color: var(--amber); }
+    .proto-badge.fail { color: var(--red); }
+    .proto-split { display: grid; grid-template-columns: 38% minmax(0, 1fr); min-height: 380px; border: 1px solid #c7cbc4; background: white; }
+    .proto-list { border-right: 1px solid #c7cbc4; }
+    .proto-list div { padding: 9px; border-bottom: 1px solid #d8dbd5; font-size: 8px; }
+    .proto-list .selected { color: white; background: var(--green); }
+    .proto-detail { min-width: 0; padding: 12px; }
+    .proto-detail h6 { margin: 0 0 6px; font-size: 12px; }
+    .proto-detail p { margin: 4px 0; color: #687068; font-size: 8px; }
+    .proto-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 7px; }
+    .proto-panel { min-width: 0; padding: 10px; border: 1px solid #c7cbc4; background: white; font-size: 8px; }
+    .proto-panel h6 { margin: 0 0 7px; font-size: 9px; }
+    .proto-field { display: grid; gap: 3px; margin-bottom: 7px; }
+    .proto-field label { color: #687068; font-size: 7px; }
+    .proto-field span { min-height: 26px; padding: 5px 7px; border: 1px solid #c7cbc4; background: #fafbf8; font-size: 8px; }
+    .proto-timeline { display: grid; gap: 7px; padding-left: 13px; border-left: 2px solid #b8c1bb; }
+    .proto-timeline div { padding: 7px; background: #eef1ed; font-size: 8px; }
+    .proto-steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin-bottom: 10px; }
+    .proto-step { padding: 7px 4px; color: #647068; background: #e5e8e3; font-size: 7px; text-align: center; }
+    .proto-step.current { color: white; background: var(--green); }
+    .proto-chart { display: flex; align-items: end; gap: 6px; height: 150px; padding: 14px 8px 18px; border-bottom: 1px solid #8f9790; }
+    .proto-chart i { flex: 1; position: relative; min-width: 12px; background: var(--blue); }
+    .proto-chart i:nth-child(3n) { background: var(--green); }
+    .proto-chart span { position: absolute; left: 0; right: 0; bottom: -16px; color: #687068; font-size: 6px; font-style: normal; text-align: center; }
+    .state-banner { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 10px; padding: 9px 10px; border-left: 4px solid var(--amber); color: #6c480f; background: var(--amber-soft); font-size: 8px; }
+    .state-banner.error { border-color: var(--red); color: #6f302b; background: var(--red-soft); }
+    .state-banner.info { border-color: var(--blue); color: #244f74; background: var(--blue-soft); }
+    .state-center { display: grid; place-items: center; min-height: 410px; padding: 28px; text-align: center; }
+    .state-center > div { max-width: 360px; }
+    .state-center strong { display: block; margin-bottom: 6px; font-size: 17px; }
+    .state-center p { margin: 0 0 13px; color: #687068; font-size: 9px; }
+    .state-glyph { display: grid; place-items: center; width: 42px; height: 42px; margin: 0 auto 12px; border: 2px solid currentColor; color: var(--green); font: 800 17px/1 Consolas, monospace; }
+    .skeleton { display: grid; gap: 10px; padding: 20px; }
+    .skeleton i { display: block; height: 28px; background: linear-gradient(90deg, #e2e5e0 25%, #f1f2ef 50%, #e2e5e0 75%); background-size: 200% 100%; animation: skeleton 1.3s linear infinite; }
+    .skeleton i:first-child { width: 42%; height: 38px; }
+    .skeleton i:nth-child(2) { width: 72%; }
+    .skeleton i:nth-child(4) { height: 160px; }
+    .conflict-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 10px 0; }
+    .conflict-grid div { padding: 8px; border: 1px solid #c7cbc4; background: white; font-size: 7px; }
+    .progress-track { height: 8px; margin: 9px 0; background: #d9ddd8; }
+    .progress-track i { display: block; width: 64%; height: 100%; background: var(--blue); }
+    .commercial-source-note { margin: 14px 18px 18px; padding-top: 13px; border-top: 1px solid var(--line); color: var(--muted); font-size: 10px; }
+    @keyframes skeleton { to { background-position: -200% 0; } }
+
+    footer { margin-top: 80px; padding: 28px 0; border-top: 1px solid var(--strong-line); color: var(--muted); font-size: 13px; }
+    .empty { display: none; padding: 24px; color: var(--muted); text-align: center; }
+
+    @media (max-width: 1180px) {
+      .commercial-stage { grid-template-columns: 1fr; }
+      .commercial-canvas { border-right: 0; border-bottom: 1px solid var(--line); }
+    }
+    @media (max-width: 980px) {
+      :root { --sidebar: 0px; }
+      .sidebar { position: static; width: auto; padding: 18px 22px; }
+      .mark, .sidebar-note { display: none; }
+      .sidebar h1 { font-size: 16px; }
+      .sidebar .version { margin: 4px 0 12px; }
+      .toc { display: flex; overflow-x: auto; }
+      .toc a { flex: 0 0 auto; border-left: 0; border-bottom: 2px solid transparent; }
+      main { margin-left: 0; }
+      .hero { min-height: auto; padding-top: 50px; }
+      .principles, .decision { grid-template-columns: 1fr; }
+      .principle { min-height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+      .principle:last-child { border-bottom: 0; }
+      .demo { grid-template-columns: 1fr; }
+      .benchmark-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 680px) {
+      .hero h2 { font-size: 38px; }
+      .hero .lead { font-size: 16px; }
+      .section-head { grid-template-columns: 1fr; gap: 8px; }
+      .rule-grid, .relation-cards, .anti, .form-grid, .atlas, .candidate-grid, .complex-grid { grid-template-columns: 1fr; }
+      .possibility-head { grid-template-columns: 1fr; }
+      .complex-notes, .projection-body, .principle-stage, .tree-stage { grid-template-columns: 1fr; }
+      .projection-preview { border-right: 0; border-bottom: 1px solid var(--line); }
+      .stage-visual, .tree-visual { border-right: 0; border-bottom: 1px solid var(--line); }
+      .field.full { grid-column: auto; }
+      .line-row { grid-template-columns: 1fr 1fr; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+      .line-row > :first-child { grid-column: 1 / -1; }
+      .formula { align-items: stretch; }
+      .formula span { width: 100%; }
+      .formula b { display: none; }
+      .commercial-controls { grid-template-columns: 1fr; }
+      .benchmark-strip { grid-template-columns: 1fr; }
+      .enterprise-body { grid-template-columns: 1fr; }
+      .enterprise-nav { display: none; }
+      .proto-split, .proto-grid, .conflict-grid { grid-template-columns: 1fr; }
+      .proto-list { border-right: 0; border-bottom: 1px solid #c7cbc4; }
+      .proto-kpis { grid-template-columns: 1fr; }
+    }
+    @media print {
+      .sidebar, .toolbar { display: none; }
+      main { margin: 0; }
+      .hero { min-height: auto; padding: 32px; }
+      .content { max-width: none; padding: 0 24px; }
+      section { break-inside: avoid; padding-top: 38px; }
+      th { color: var(--ink); background: #ddd; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar" aria-label="文档目录">
+      <div class="mark" aria-hidden="true">M→UI</div>
+      <h1>数据模型到 UI 元素与页面导航映射方法</h1>
+      <p class="version">REFERENCE / V1.0</p>
+      <nav class="toc">
+        <a href="#definition">01 核心定义</a>
+        <a href="#field-map">02 字段到控件</a>
+        <a href="#complex-views">03 复杂界面图谱</a>
+        <a href="#projections">04 同模型多投影</a>
+        <a href="#navigation-principles">05 导航原理</a>
+        <a href="#tree-principles">06 树形原理</a>
+        <a href="#commercial-patterns">07 商业软件模式</a>
+        <a href="#constraints">08 约束修正</a>
+        <a href="#navigation">09 关系到导航</a>
+        <a href="#example">10 完整示例</a>
+        <a href="#process">11 决策步骤</a>
+        <a href="#pitfalls">12 常见误区</a>
+      </nav>
+      <p class="sidebar-note">类型决定候选控件，语义、约束、任务和设备决定最终表达。</p>
+    </aside>
+
+    <main>
+      <header class="hero">
+        <p class="kicker">Model-driven interface reference</p>
+        <h2>从数据的形状，推导界面的表达</h2>
+        <p class="lead">本方法从字段、对象、集合、层级、网络、时间、空间、状态和多维事实出发，推导原子控件、复合视图、页面模式与导航体系。它既回答整数为何可能映射为文本框或增减器，也解释同一订单集合为何可以形成表格、看板、日历、甘特、地图、透视表和异常工作台。</p>
+        <div class="formula" aria-label="映射公式">
+          <span>数据类型</span><b>＋</b><span>字段语义</span><b>＋</b><span>约束</span><b>＋</b><span>用户任务</span><b>＝</b><span>UI 元素 / 导航方式</span>
+        </div>
+      </header>
+
+      <div class="content">
+        <section id="definition">
+          <div class="section-head">
+            <div class="section-no">01 / 12</div>
+            <div><h3>核心定义</h3><p class="section-intro">映射不是“数据库类型与控件一一对应”，而是从一组合法候选中，选择最适合当前任务的 UI 表达。</p></div>
+          </div>
+          <div class="principles">
+            <article class="principle"><b>CANDIDATE</b><h4>类型给出候选集</h4><p>整数可映射为数字输入框、增减器、滑块、只读数字或刻度。它只缩小范围，不直接给出唯一答案。</p></article>
+            <article class="principle"><b>REFINEMENT</b><h4>约束完成修正</h4><p>最小值、最大值、步长、是否必填、可编辑性、候选规模和精度，会淘汰不合适的控件。</p></article>
+            <article class="principle"><b>CONTEXT</b><h4>任务决定最终选择</h4><p>精确录入、快速微调、范围感知、筛选、展示和批量编辑是不同任务，即使数据类型相同也应采用不同表达。</p></article>
+          </div>
+        </section>
+
+        <section id="field-map">
+          <div class="section-head">
+            <div class="section-no">02 / 12</div>
+            <div><h3>字段到 UI 控件映射矩阵</h3><p class="section-intro">先按类型找到候选控件，再结合右侧条件选择。使用搜索和分类按钮可以快速定位。</p></div>
+          </div>
+          <div class="atlas" aria-label="可操作的字段控件图鉴">
+            <article class="sample"><div class="sample-head"><div><h4>普通整数</h4><code>Integer</code></div><span class="tag input">数字框</span></div><input type="number" value="128" step="1"><small>适合精确录入和大跨度数值。</small></article>
+            <article class="sample"><div class="sample-head"><div><h4>数量 / 人数</h4><code>Integer {1..99, step:1}</code></div><span class="tag input">增减器</span></div><div class="stepper"><button type="button" data-step="-1" aria-label="减少">−</button><output>2</output><button type="button" data-step="1" aria-label="增加">＋</button></div><small>适合高频小幅调整，同时保留数字值。</small></article>
+            <article class="sample"><div class="sample-head"><div><h4>比例 / 范围</h4><code>Decimal {0..100}</code></div><span class="tag input">滑块</span></div><input class="live-range" type="range" min="0" max="100" value="65"><div class="range-value"><span>0%</span><output>65%</output><span>100%</span></div><small>让用户感知当前位置，不替代高精度输入。</small></article>
+            <article class="sample"><div class="sample-head"><div><h4>金额</h4><code>Money</code></div><span class="tag input">金额 + 币种</span></div><div class="inline-control"><input type="number" value="1299.00" step="0.01" aria-label="金额"><select aria-label="币种"><option>CNY</option><option>USD</option><option>EUR</option></select></div><small>数值、币种和精度共同构成金额。</small></article>
+            <article class="sample"><div class="sample-head"><div><h4>短文本</h4><code>String {max:50}</code></div><span class="tag input">文本框</span></div><input type="text" value="华东零售有限公司" maxlength="50"><small>名称、标题、编号等单行内容。</small></article>
+            <article class="sample"><div class="sample-head"><div><h4>长文本</h4><code>Text?</code></div><span class="tag input">文本域</span></div><textarea placeholder="输入补充说明…">交付前请联系仓库确认收货时间。</textarea><small>内容较长且允许换行时使用。</small></article>
+            <article class="sample"><div class="sample-head"><div><h4>语义字符串</h4><code>Email / Tel / URL</code></div><span class="tag input">语义输入</span></div><input type="email" value="buyer@example.com"><small>浏览器可提供键盘、自动填充和格式校验。</small></article>
+            <article class="sample"><div class="sample-head"><div><h4>即时布尔设置</h4><code>Boolean</code></div><span class="tag input">开关</span></div><div class="toggle-line"><button class="switch demo-switch" type="button" aria-pressed="true" aria-label="启用自动续订"></button><span class="switch-label">已启用</span></div><small>立即生效的二态设置；三态值不能使用。</small></article>
+            <article class="sample"><div class="sample-head"><div><h4>提交时确认</h4><code>Boolean</code></div><span class="tag input">复选框</span></div><label><input type="checkbox" checked> 我已核对订单信息</label><small>表达同意、确认或表单的一部分。</small></article>
+            <article class="sample"><div class="sample-head"><div><h4>少量枚举</h4><code>Enum {normal, urgent}</code></div><span class="tag input">单选组</span></div><div class="choice-row"><label><input type="radio" name="priority-sample" checked> 普通</label><label><input type="radio" name="priority-sample"> 紧急</label></div><small>选项少且需要一眼比较时直接展开。</small></article>
+            <article class="sample"><div class="sample-head"><div><h4>较多枚举</h4><code>Enum</code></div><span class="tag input">下拉框</span></div><select><option>请选择行业</option><option>零售</option><option>制造</option><option>专业服务</option><option>物流运输</option></select><small>候选较多或空间有限时收纳选项。</small></article>
+            <article class="sample"><div class="sample-head"><div><h4>枚举集合</h4><code>Enum[]</code></div><span class="tag input">复选组</span></div><div class="choice-stack"><label><input type="checkbox" checked> 邮件通知</label><label><input type="checkbox"> 短信通知</label><label><input type="checkbox" checked> 站内通知</label></div><small>少量可并存选项；大量候选改用可搜索多选。</small></article>
+            <article class="sample"><div class="sample-head"><div><h4>自然日</h4><code>Date</code></div><span class="tag input">日期选择</span></div><input type="date" value="2026-07-13"><small>不携带时刻和时区语义。</small></article>
+            <article class="sample"><div class="sample-head"><div><h4>明确时刻</h4><code>DateTime</code></div><span class="tag input">日期时间</span></div><input type="datetime-local" value="2026-07-13T14:30"><small>跨时区业务还需要明确显示时区。</small></article>
+            <article class="sample"><div class="sample-head"><div><h4>持续时间</h4><code>Duration</code></div><span class="tag input">数值 + 单位</span></div><div class="inline-control"><input type="number" value="48" min="0" aria-label="持续时间"><select aria-label="时间单位"><option>小时</option><option>分钟</option><option>天</option></select></div><small>持续时间不是某个日期时间。</small></article>
+            <article class="sample"><div class="sample-head"><div><h4>单对象引用</h4><code>Reference&lt;Customer&gt;</code></div><span class="tag nav">搜索选择器</span></div><input list="customers" value="华东零售有限公司" aria-label="选择客户"><datalist id="customers"><option value="华东零售有限公司"><option value="南区商业集团"><option value="北辰供应链"></datalist><div class="reference-result"><span>客户等级：A · 上海</span><a href="#navigation">查看详情</a></div></article>
+            <article class="sample"><div class="sample-head"><div><h4>子项集合</h4><code>OrderLine[]</code></div><span class="tag input">明细列表</span></div><div class="mini-list"><div><input value="轻量工作台" aria-label="商品"><input type="number" value="2" aria-label="数量"><button type="button" aria-label="删除">×</button></div><div><input value="实施服务" aria-label="商品"><input type="number" value="1" aria-label="数量"><button type="button" aria-label="删除">×</button></div></div><small>同构子项与父对象一起编辑和保存。</small></article>
+            <article class="sample"><div class="sample-head"><div><h4>递归层级</h4><code>Tree&lt;Department&gt;</code></div><span class="tag nav">树控件</span></div><ul class="tree"><li><details open><summary>集团总部</summary><ul><li>财务中心</li><li><details open><summary>销售中心</summary><ul><li>华东区</li><li>华南区</li></ul></details></li></ul></details></li></ul><small>浏览层级用树；选择路径可换成级联控件。</small></article>
+            <article class="sample"><div class="sample-head"><div><h4>文件 / 图片</h4><code>FileReference[]</code></div><span class="tag input">上传器</span></div><input type="file" multiple><small>HTML 控件负责选择，业务 UI 还需进度、失败重试和权限。</small></article>
+            <article class="sample"><div class="sample-head"><div><h4>派生值 / 指标</h4><code>Derived&lt;Decimal&gt;</code></div><span class="tag output">只读指标</span></div><div class="metric"><output>72%</output><span>本月目标完成率</span><progress max="100" value="72">72%</progress><small>数据更新于 14:30</small></div><small>说明口径、来源与更新时间，不伪装成输入框。</small></article>
+          </div>
+          <div class="possibility-lab">
+            <div class="possibility-head">
+              <div><h4>映射可能性决策台</h4><p>选择一种模型形状，比较它可映射的不同 UI。标记“常用起点”不代表固定答案，最终仍由语义、约束与任务决定。</p></div>
+              <div><label for="possibilityType">模型类型 / 语义</label><select id="possibilityType"></select></div>
+            </div>
+            <div id="candidateGrid" class="candidate-grid"></div>
+          </div>
+          <div class="toolbar">
+            <input id="mappingSearch" class="search" type="search" placeholder="搜索：整数、金额、日期、枚举……" aria-label="搜索映射规则">
+            <div class="filters" aria-label="映射分类">
+              <button class="filter" data-filter="all" aria-pressed="true">全部</button>
+              <button class="filter" data-filter="number" aria-pressed="false">数值</button>
+              <button class="filter" data-filter="text" aria-pressed="false">文本</button>
+              <button class="filter" data-filter="choice" aria-pressed="false">选择</button>
+              <button class="filter" data-filter="time" aria-pressed="false">时间</button>
+              <button class="filter" data-filter="relation" aria-pressed="false">关系</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>模型类型 / 语义</th><th>首选 UI</th><th>其他候选</th><th>选择条件</th><th>不适合的情况</th></tr></thead>
+              <tbody id="mappingRows">
+                <tr data-category="number"><td><span class="type">Integer</span><br>普通整数</td><td class="control">数字输入框 <span class="tag input">输入</span></td><td>增减器、滑块、只读数字</td><td>精确录入用数字框；小范围逐步调整用增减器；强调范围位置用滑块。</td><td class="secondary">范围无限或跨度很大时不用滑块；高频键盘录入不宜只用增减按钮。</td></tr>
+                <tr data-category="number"><td><span class="type">Integer + step</span><br>数量 / 人数</td><td class="control">增减器 <span class="tag input">输入</span></td><td>数字输入框</td><td>存在明确步长、常做 ±1 或小幅调整，且上下界清晰。</td><td class="secondary">需要一次输入大数值时，应允许直接键盘输入。</td></tr>
+                <tr data-category="number"><td><span class="type">Decimal</span><br>小数 / 比率</td><td class="control">带精度的数字框 <span class="tag input">输入</span></td><td>滑块、格式化只读值</td><td>显式展示单位、精度与范围；比例可在 UI 显示百分比但按约定存储。</td><td class="secondary">不能忽略四舍五入、单位或小数位规则。</td></tr>
+                <tr data-category="number"><td><span class="type">Money</span><br>金额值对象</td><td class="control">金额输入框 + 币种 <span class="tag input">输入</span></td><td>只读金额、币种选择器</td><td>金额与币种共同表达；按币种控制精度和格式。</td><td class="secondary">不要用普通浮点框，也不要只显示货币符号而丢失币种。</td></tr>
+                <tr data-category="text"><td><span class="type">String</span><br>短文本</td><td class="control">单行文本框 <span class="tag input">输入</span></td><td>只读文本、可复制文本</td><td>名称、标题、编号等短内容；按长度、格式、唯一性补充校验。</td><td class="secondary">固定候选值不应让用户自由输入。</td></tr>
+                <tr data-category="text"><td><span class="type">Text</span><br>长文本</td><td class="control">多行文本域 <span class="tag input">输入</span></td><td>富文本编辑器、Markdown、只读段落</td><td>纯文本说明用文本域；需要结构、链接、图片时才升级富文本。</td><td class="secondary">短字段不要用大文本域；无格式需求不引入富文本。</td></tr>
+                <tr data-category="text"><td><span class="type">String + pattern</span><br>电话 / 邮箱 / URL</td><td class="control">语义输入框 <span class="tag input">输入</span></td><td>掩码输入、组合输入</td><td>使用对应 input 类型、格式提示和即时校验；电话需考虑国家区号。</td><td class="secondary">格式校验不能代替服务端真实性或唯一性验证。</td></tr>
+                <tr data-category="choice"><td><span class="type">Boolean</span><br>即时设置</td><td class="control">开关 <span class="tag input">输入</span></td><td>复选框、单选组</td><td>设置立即生效用开关；表单提交后生效或表示“同意”用复选框。</td><td class="secondary">有“未知/未设置”第三态时不能用二态开关。</td></tr>
+                <tr data-category="choice"><td><span class="type">Enum</span><br>少量互斥选项</td><td class="control">单选组 / 分段控件 <span class="tag input">选择</span></td><td>下拉框</td><td>2–5 个高频选项直接展开；选项多或空间紧张时使用下拉。</td><td class="secondary">业务状态机不能直接映射为任意可改的下拉框。</td></tr>
+                <tr data-category="choice"><td><span class="type">Enum[]</span><br>多选集合</td><td class="control">复选组 <span class="tag input">选择</span></td><td>多选下拉、标签选择器</td><td>少量选项用复选组；候选多且可搜索时用多选选择器。</td><td class="secondary">大量选项全部铺开会造成扫描负担。</td></tr>
+                <tr data-category="time"><td><span class="type">Date</span><br>自然日</td><td class="control">日期选择器 <span class="tag input">输入</span></td><td>文本输入、日历视图</td><td>生日、业务日期等不含时刻；允许熟练用户键盘录入。</td><td class="secondary">不要偷偷附加时区或午夜时间。</td></tr>
+                <tr data-category="time"><td><span class="type">DateTime</span><br>明确时刻</td><td class="control">日期时间选择器 <span class="tag input">输入</span></td><td>只读时间、相对时间</td><td>编辑时明确时区；展示可用“刚刚”，但应能查看绝对时间。</td><td class="secondary">跨时区场景不能只显示模糊的本地时间。</td></tr>
+                <tr data-category="time"><td><span class="type">Duration</span><br>持续时间</td><td class="control">数值 + 单位 <span class="tag input">输入</span></td><td>时分组合输入、滑块</td><td>统一存储单位；UI 根据业务使用分钟、小时或天。</td><td class="secondary">不要把持续时间误建模为某个日期时间。</td></tr>
+                <tr data-category="relation"><td><span class="type">Foreign Key</span><br>单对象引用</td><td class="control">可搜索选择器 <span class="tag input">选择</span></td><td>自动补全、对象卡片、详情链接</td><td>显示业务名称而非 ID；候选大时服务端搜索；选中后可查看摘要。</td><td class="secondary">禁止让用户手填数据库主键。</td></tr>
+                <tr data-category="relation"><td><span class="type">Object[]</span><br>子项集合</td><td class="control">可编辑明细表 <span class="tag input">输入</span></td><td>重复表单、卡片列表、独立子页面</td><td>少量同构子项适合明细表；字段多或移动端可用重复卡片。</td><td class="secondary">大集合不能一次渲染，也不应塞进单个多选框。</td></tr>
+                <tr data-category="relation"><td><span class="type">Tree</span><br>递归层级</td><td class="control">树选择器 <span class="tag input">选择</span></td><td>级联选择、树表、面包屑导航</td><td>选择路径用级联；浏览结构用树；深层定位需搜索和路径回显。</td><td class="secondary">浅且稳定的两级数据不必强行使用复杂树控件。</td></tr>
+                <tr data-category="text"><td><span class="type">File / Image</span><br>附件引用</td><td class="control">上传器 + 文件列表 <span class="tag input">输入</span></td><td>图片预览、拖放区、下载链接</td><td>展示类型、大小、进度、失败重试和删除权限。</td><td class="secondary">文件二进制通常不直接嵌入业务表单字段。</td></tr>
+                <tr data-category="number"><td><span class="type">Derived</span><br>计算值 / 汇总值</td><td class="control">只读数字或指标 <span class="tag output">输出</span></td><td>进度条、趋势、图表</td><td>能解释口径、来源和更新时间；需要比较时再加视觉编码。</td><td class="secondary">派生值不应伪装成可编辑输入框。</td></tr>
+              </tbody>
+            </table>
+            <div id="emptyState" class="empty">没有匹配的映射规则。</div>
+          </div>
+        </section>
+
+        <section id="complex-views">
+          <div class="section-head">
+            <div class="section-no">03 / 12</div>
+            <div><h3>复杂数据形状到复合界面图谱</h3><p class="section-intro">控件只解决一个值如何读写。对象集合、时间、空间、状态、网络、多维事实、规则和权限会形成表格、看板、日历、地图、图表、设计器等复合界面。</p></div>
+          </div>
+          <div class="layer-map" aria-label="模型到界面的五层映射">
+            <article><b>L1</b><strong>数据形状</strong><small>原子、对象、集合、树、图、时间、空间、多维</small></article>
+            <article><b>L2</b><strong>操作语义</strong><small>查找、比较、录入、分组、调度、匹配、分析</small></article>
+            <article><b>L3</b><strong>UI 表达</strong><small>控件、表格、卡片、树、图表、地图、画布</small></article>
+            <article><b>L4</b><strong>页面模式</strong><small>列表、详情、主从、工作台、向导、驾驶舱</small></article>
+            <article><b>L5</b><strong>导航体系</strong><small>嵌入、抽屉、跳转、钻取、流程、上下文恢复</small></article>
+          </div>
+          <div class="view-filter" aria-label="复杂界面分类">
+            <button class="filter complex-filter" data-complex-filter="all" aria-pressed="true">全部</button>
+            <button class="filter complex-filter" data-complex-filter="collection" aria-pressed="false">集合</button>
+            <button class="filter complex-filter" data-complex-filter="process" aria-pressed="false">状态与时间</button>
+            <button class="filter complex-filter" data-complex-filter="analysis" aria-pressed="false">分析与空间</button>
+            <button class="filter complex-filter" data-complex-filter="relation" aria-pressed="false">关系与匹配</button>
+            <button class="filter complex-filter" data-complex-filter="configuration" aria-pressed="false">配置与权限</button>
+          </div>
+          <div class="complex-grid">
+            <article class="complex-card" data-view="table" data-complex="collection"><div class="complex-head"><div><h4>数据表格</h4><code>Order[] × Compare</code></div><span class="tag output">集合视图</span></div><div class="complex-demo"><div class="mini-toolbar"><span>状态：待发货</span><span>客户搜索</span><span>批量操作</span></div><table class="mini-table"><thead><tr><th>订单</th><th>客户</th><th>金额</th><th>状态</th></tr></thead><tbody><tr><td>SO-1042</td><td>华东零售</td><td>¥12,480</td><td>待发货</td></tr><tr><td>SO-1043</td><td>北辰供应链</td><td>¥8,900</td><td>待确认</td></tr><tr><td>SO-1044</td><td>南区商业</td><td>¥26,120</td><td>异常</td></tr></tbody></table></div><div class="complex-notes"><div class="good"><b>优点</b><p>密度高、列对齐，查找、精确比较和批处理效率高。</p></div><div class="bad"><b>缺点</b><p>窄屏差；视觉对象、深层嵌套和长内容不适合。</p></div><div class="fit"><b>选择条件</b><p>同构集合，用户关心稳定维度上的跨行比较。</p></div></div></article>
+            <article class="complex-card" data-view="cards" data-complex="collection"><div class="complex-head"><div><h4>卡片网格</h4><code>Product[] × Browse</code></div><span class="tag output">集合视图</span></div><div class="complex-demo"><div class="mini-cards"><div class="mini-card"><i></i><strong>轻量工作台</strong><br>库存 28</div><div class="mini-card"><i style="background:#d8cdbb"></i><strong>移动展架</strong><br>库存 7</div><div class="mini-card"><i style="background:#c8d2dc"></i><strong>收银终端</strong><br>库存 15</div></div></div><div class="complex-notes"><div class="good"><b>优点</b><p>视觉识别快，能容纳图片、状态和少量快捷动作。</p></div><div class="bad"><b>缺点</b><p>信息密度低，无法进行严格的跨项列比较。</p></div><div class="fit"><b>选择条件</b><p>图片或对象外观是识别依据，移动端浏览优先。</p></div></div></article>
+            <article class="complex-card" data-view="master" data-complex="collection"><div class="complex-head"><div><h4>主从工作台</h4><code>Queue[] → CurrentItem</code></div><span class="tag nav">页面模式</span></div><div class="complex-demo"><div class="master-detail"><div class="master-list"><div class="selected">SO-1042 · 高风险</div><div>SO-1043 · 待确认</div><div>SO-1044 · 缺货</div></div><div class="detail-pane"><strong>订单 SO-1042</strong><p>客户信用接近上限，毛利率 8.4%。</p><button>查看证据</button> <button>处理</button></div></div></div><div class="complex-notes"><div class="good"><b>优点</b><p>连续处理少跳转，列表和当前对象上下文同时可见。</p></div><div class="bad"><b>缺点</b><p>依赖宽屏；URL、选中项、键盘焦点和移动端退化复杂。</p></div><div class="fit"><b>选择条件</b><p>用户需要在同一队列中高频逐条审核或处置。</p></div></div></article>
+            <article class="complex-card" data-view="kanban" data-complex="process"><div class="complex-head"><div><h4>状态看板</h4><code>Order[] × StateMachine</code></div><span class="tag nav">过程视图</span></div><div class="complex-demo" style="overflow-x:auto"><div class="kanban"><div class="kanban-col"><strong>待确认 · 3</strong><div class="kanban-item">SO-1043<br>¥8,900</div></div><div class="kanban-col"><strong>待发货 · 8</strong><div class="kanban-item">SO-1042<br>今天到期</div><div class="kanban-item">SO-1048<br>缺货</div></div><div class="kanban-col"><strong>运输中 · 5</strong><div class="kanban-item">SO-1038<br>预计明天到</div></div></div></div><div class="complex-notes"><div class="good"><b>优点</b><p>状态分布、阻塞和在制品数量一眼可见。</p></div><div class="bad"><b>缺点</b><p>卡片信息有限；拖拽不能直接绕过状态机和权限。</p></div><div class="fit"><b>选择条件</b><p>状态流动和队列平衡是主要任务，而非精确比较。</p></div></div></article>
+            <article class="complex-card" data-view="calendar" data-complex="process"><div class="complex-head"><div><h4>日历与资源排期</h4><code>TimeRange[] × Resource</code></div><span class="tag nav">时间视图</span></div><div class="complex-demo"><div class="calendar"><div></div><div>周一</div><div>周二</div><div>周三</div><div>周四</div><div>周五</div><div class="time">09:00</div><div class="event">仓库 A<br>发货 8 单</div><div></div><div class="event">车辆 03</div><div></div><div></div><div class="time">14:00</div><div></div><div class="event">盘点</div><div></div><div class="event">客户预约</div><div></div></div></div><div class="complex-notes"><div class="good"><b>优点</b><p>占用、空档、重叠和工作时间符合自然时间心智。</p></div><div class="bad"><b>缺点</b><p>事件多时拥挤；时区、跨日和拖拽冲突处理复杂。</p></div><div class="fit"><b>选择条件</b><p>何时发生以及资源是否冲突决定用户决策。</p></div></div></article>
+            <article class="complex-card" data-view="gantt" data-complex="process"><div class="complex-head"><div><h4>甘特与依赖计划</h4><code>Task[] × Dependency DAG</code></div><span class="tag nav">时间关系</span></div><div class="complex-demo"><div class="gantt"><div>任务</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div><div>备货</div><div class="task"></div><div class="task"></div><div></div><div></div><div></div><div></div><div>质检</div><div></div><div></div><div class="task"></div><div></div><div></div><div></div><div>发运</div><div></div><div></div><div></div><div class="delay"></div><div class="delay"></div><div></div></div></div><div class="complex-notes"><div class="good"><b>优点</b><p>时间区间、里程碑、延期和前置依赖同时可见。</p></div><div class="bad"><b>缺点</b><p>横向滚动重，依赖编辑和大计划的视觉管理复杂。</p></div><div class="fit"><b>选择条件</b><p>顺序、持续时间和依赖比单个任务字段更重要。</p></div></div></article>
+            <article class="complex-card" data-view="timeline" data-complex="process"><div class="complex-head"><div><h4>事件时间线</h4><code>DomainEvent[] × Audit</code></div><span class="tag output">历史视图</span></div><div class="complex-demo"><div class="timeline"><div class="timeline-item"><strong>14:32 已分配承运商</strong><br>操作人：李敏</div><div class="timeline-item"><strong>11:08 信用审核通过</strong><br>额度占用 ¥12,480</div><div class="timeline-item"><strong>09:14 订单已创建</strong><br>来源：客户门户</div></div></div><div class="complex-notes"><div class="good"><b>优点</b><p>事件顺序、行为人、前后状态和来源易追溯。</p></div><div class="bad"><b>缺点</b><p>大事件流噪声高；技术日志不能直接冒充业务历史。</p></div><div class="fit"><b>选择条件</b><p>用户要回答“何时由谁发生了什么以及为什么”。</p></div></div></article>
+            <article class="complex-card" data-view="map" data-complex="analysis"><div class="complex-head"><div><h4>地图与轨迹</h4><code>GeoPoint[] / GeoPath</code></div><span class="tag output">空间视图</span></div><div class="complex-demo"><div class="map-demo"><div class="pin" style="left:18%;top:20%"><span>8</span></div><div class="pin" style="left:54%;top:48%;background:var(--blue)"><span>3</span></div><div class="pin" style="left:75%;top:18%;background:var(--amber)"><span>!</span></div></div></div><div class="complex-notes"><div class="good"><b>优点</b><p>邻近、覆盖、聚类、路径和区域关系无需文字解释。</p></div><div class="bad"><b>缺点</b><p>精确比较弱；坐标、隐私、缩放尺度和聚合可能误导。</p></div><div class="fit"><b>选择条件</b><p>空间关系直接影响配送、选址、巡检或区域判断。</p></div></div></article>
+            <article class="complex-card" data-view="pivot" data-complex="analysis"><div class="complex-head"><div><h4>透视表与热力矩阵</h4><code>Fact × Dimensions</code></div><span class="tag output">多维分析</span></div><div class="complex-demo"><div class="heat"><div>区域 \ 品类</div><div>终端</div><div>家具</div><div>服务</div><div>合计</div><div>华东</div><div class="h3">128</div><div class="h2">86</div><div class="h1">32</div><div>246</div><div>华南</div><div class="h1">42</div><div class="h3">146</div><div class="h2">78</div><div>266</div><div>华北</div><div class="h2">79</div><div class="h1">38</div><div class="h3">132</div><div>249</div></div></div><div class="complex-notes"><div class="good"><b>优点</b><p>行列维度交叉、聚合和异常分布具有很高信息密度。</p></div><div class="bad"><b>缺点</b><p>认知门槛高；口径、空值桶、总计和钻取路径必须明确。</p></div><div class="fit"><b>选择条件</b><p>任务是比较多个维度组合，而非处理单条业务对象。</p></div></div></article>
+            <article class="complex-card" data-view="dashboard" data-complex="analysis"><div class="complex-head"><div><h4>分析驾驶舱</h4><code>Metrics + Series + Drilldown</code></div><span class="tag output">页面模式</span></div><div class="complex-demo"><div style="display:flex;justify-content:space-between"><div><small>本月销售额</small><strong style="display:block;font-size:24px">¥ 8.6M</strong></div><span class="tag input">+12.4%</span></div><div class="bars"><div class="bar" style="height:35%"><span>一</span></div><div class="bar" style="height:52%"><span>二</span></div><div class="bar" style="height:44%"><span>三</span></div><div class="bar" style="height:72%"><span>四</span></div><div class="bar" style="height:88%"><span>五</span></div><div class="bar" style="height:64%"><span>六</span></div></div></div><div class="complex-notes"><div class="good"><b>优点</b><p>从总体态势快速发现趋势、异常和需要钻取的指标。</p></div><div class="bad"><b>缺点</b><p>容易装饰化；图表不能替代精确值、口径、明细和行动。</p></div><div class="fit"><b>选择条件</b><p>用户要监控和解释整体结果，并能继续钻取业务事实。</p></div></div></article>
+            <article class="complex-card" data-view="network" data-complex="relation"><div class="complex-head"><div><h4>网络与依赖图</h4><code>Graph&lt;Node, Edge&gt;</code></div><span class="tag nav">拓扑视图</span></div><div class="complex-demo"><div class="network"><div class="node" style="left:8%;top:12%">订单</div><div class="node" style="left:42%;top:2%;border-color:var(--blue)">客户</div><div class="node" style="left:72%;top:55%;border-color:var(--amber)">发货</div><div class="node" style="left:18%;top:62%;border-color:var(--red)">付款</div><div class="node" style="left:48%;top:45%;width:64px;height:64px;background:var(--green);color:white">SO-1042</div></div></div><div class="complex-notes"><div class="good"><b>优点</b><p>多跳关系、依赖、路径和影响传播比列表更直观。</p></div><div class="bad"><b>缺点</b><p>节点一多迅速失控，不适合普通查找、录入和批处理。</p></div><div class="fit"><b>选择条件</b><p>拓扑探索、路径或影响范围本身就是核心任务。</p></div></div></article>
+            <article class="complex-card" data-view="match" data-complex="relation"><div class="complex-head"><div><h4>双栏匹配与对账</h4><code>A[] ↔ Match ↔ B[]</code></div><span class="tag input">协调视图</span></div><div class="complex-demo"><div class="match"><div class="match-list"><div class="match-item">银行流水<br>¥12,480</div><div class="match-item">银行流水<br>¥8,900</div></div><div class="match-link">95% →<br><br>← 72%</div><div class="match-list"><div class="match-item">收款单 R-82<br>¥12,480</div><div class="match-item">收款单 R-91<br>¥9,000<br><b style="color:var(--red)">差 ¥100</b></div></div></div></div><div class="complex-notes"><div class="good"><b>优点</b><p>两侧证据、候选关系、差异和核销动作可以并列决策。</p></div><div class="bad"><b>缺点</b><p>一对多、拆分、余额、撤销和并发匹配非常复杂。</p></div><div class="fit"><b>选择条件</b><p>两套独立事实需要建立可审计的对应关系。</p></div></div></article>
+            <article class="complex-card" data-view="rules" data-complex="configuration"><div class="complex-head"><div><h4>条件与规则构建器</h4><code>Expression / DecisionRule</code></div><span class="tag input">配置视图</span></div><div class="complex-demo"><div class="rule-builder"><div class="rule-row"><b>如果</b><span class="rule-chip">订单金额</span><span class="rule-chip">大于</span><span class="rule-chip">¥10,000</span></div><div class="rule-row"><b>并且</b><span class="rule-chip">客户等级</span><span class="rule-chip">等于</span><span class="rule-chip">B</span></div><div class="rule-row"><b>那么</b><span class="rule-chip">要求审批</span><span class="rule-chip">级别</span><span class="rule-chip">经理</span></div></div></div><div class="complex-notes"><div class="good"><b>优点</b><p>结构化条件比自由代码更可读，可做类型检查和测试。</p></div><div class="bad"><b>缺点</b><p>深层嵌套仍难理解；优先级、冲突和版本不能隐藏。</p></div><div class="fit"><b>选择条件</b><p>业务用户需要组合条件、动作并验证规则结果。</p></div></div></article>
+            <article class="complex-card" data-view="designer" data-complex="configuration"><div class="complex-head"><div><h4>表单/流程设计器</h4><code>Schema + Layout + Behavior</code></div><span class="tag input">设计器页面</span></div><div class="complex-demo"><div class="designer"><div><strong>组件</strong><p>文本框</p><p>数字框</p><p>明细表</p></div><div><strong>订单表单</strong><div class="canvas-field">客户选择器</div><div class="canvas-field">订单明细表</div></div><div><strong>属性</strong><p>必填 ✓</p><p>标签宽 90</p><p>权限：编辑</p></div></div></div><div class="complex-notes"><div class="good"><b>优点</b><p>结构树、画布、属性和预览能共同支持复杂配置。</p></div><div class="bad"><b>缺点</b><p>撤销、选择、拖放、版本、预览和发布形成庞大状态空间。</p></div><div class="fit"><b>选择条件</b><p>用户的任务是构造界面或流程，而不是填写业务表单。</p></div></div></article>
+            <article class="complex-card" data-view="permission" data-complex="configuration"><div class="complex-head"><div><h4>权限矩阵与范围树</h4><code>Subject × Resource × Action × Scope</code></div><span class="tag input">授权视图</span></div><div class="complex-demo"><div class="permission"><div>角色 \ 能力</div><div>查看</div><div>创建</div><div>审批</div><div>导出</div><div>销售</div><div class="yes">✓</div><div class="yes">✓</div><div>—</div><div>—</div><div>经理</div><div class="yes">✓</div><div class="yes">✓</div><div class="yes">✓</div><div>范围内</div><div>审计员</div><div class="yes">✓</div><div>—</div><div>—</div><div class="yes">✓</div></div></div><div class="complex-notes"><div class="good"><b>优点</b><p>主体、资源、动作和范围可以交叉比较并发现权限缺口。</p></div><div class="bad"><b>缺点</b><p>继承、拒绝优先级和有效权限很难仅靠勾选表达。</p></div><div class="fit"><b>选择条件</b><p>授权者需要批量比较角色能力，并预览最终有效权限。</p></div></div></article>
+            <article class="complex-card" data-view="tree" data-complex="relation"><div class="complex-head"><div><h4>树表与层级管理</h4><code>Tree&lt;Organization&gt;</code></div><span class="tag nav">层级视图</span></div><div class="complex-demo"><table class="mini-table"><thead><tr><th>组织</th><th>负责人</th><th>人数</th></tr></thead><tbody><tr><td>▾ 集团总部</td><td>周宁</td><td>620</td></tr><tr><td>　▾ 销售中心</td><td>李敏</td><td>180</td></tr><tr><td>　　华东区</td><td>王青</td><td>86</td></tr><tr><td>　　华南区</td><td>陈哲</td><td>72</td></tr></tbody></table></div><div class="complex-notes"><div class="good"><b>优点</b><p>层级位置与多列业务属性可以在同一视图中比较。</p></div><div class="bad"><b>缺点</b><p>深树、大树和移动端困难，需要搜索、懒加载和虚拟化。</p></div><div class="fit"><b>选择条件</b><p>层级关系和节点属性都影响管理决策。</p></div></div></article>
+          </div>
+        </section>
+
+        <section id="projections">
+          <div class="section-head">
+            <div class="section-no">04 / 12</div>
+            <div><h3>同一个订单模型的十四种页面投影</h3><p class="section-intro">模型不对应唯一页面。切换下面的任务，可以看到同一组订单事实如何生成不同查询投影、复合视图、页面模式和导航。</p></div>
+          </div>
+          <div class="projection-lab">
+            <div id="projectionTabs" class="projection-tabs" aria-label="订单页面投影"></div>
+            <div class="projection-body">
+              <div id="projectionPreview" class="projection-preview"></div>
+              <div class="projection-explain"><h4 id="projectionTitle"></h4><dl><div><dt>模型投影</dt><dd id="projectionModel"></dd></div><div><dt>主要任务</dt><dd id="projectionTask"></dd></div><div><dt>优点</dt><dd id="projectionPro"></dd></div><div><dt>缺点 / 边界</dt><dd id="projectionCon"></dd></div><div><dt>页面导航</dt><dd id="projectionNav"></dd></div></dl></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="navigation-principles">
+          <div class="section-head">
+            <div class="section-no">05 / 12</div>
+            <div><h3>各种导航的原理与状态变换</h3><p class="section-intro">导航不是简单换页，而是对焦点、查询、视图、选择、草稿、历史和返回契约进行受控变换。切换原型观察每种导航保留了什么、改变了什么。</p></div>
+          </div>
+          <div class="principle-lab">
+            <div id="navPrincipleTabs" class="principle-tabs" aria-label="导航原理类型"></div>
+            <div class="principle-stage">
+              <div class="stage-visual"><div id="navPrincipleStage"></div><div id="navContextVector" class="context-vector"></div></div>
+              <div class="stage-explain"><h4 id="navPrincipleTitle"></h4><p id="navPrincipleCore"></p><dl class="tradeoff"><div class="pro"><dt>保留什么</dt><dd id="navKeeps"></dd></div><div class="con"><dt>改变什么</dt><dd id="navChanges"></dd></div><div class="when"><dt>关键风险</dt><dd id="navRisk"></dd></div></dl></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="tree-principles">
+          <div class="section-head">
+            <div class="section-no">06 / 12</div>
+            <div><h3>各种树形结构原理与边界</h3><p class="section-intro">树的优势来自唯一路径和祖先关系。多父节点是 DAG，有环关系是图；它们可以局部投影成树，但不能静默丢失其他关系。</p></div>
+          </div>
+          <div class="principle-lab">
+            <div id="treeTabs" class="principle-tabs" aria-label="树形结构类型"></div>
+            <div class="tree-stage">
+              <div class="tree-visual"><div id="treeStage" class="tree-prototype"></div><div id="treeInvariant" class="tree-invariant"></div></div>
+              <div class="tree-explain"><h4 id="treeTitle"></h4><dl><div><dt>结构原理</dt><dd id="treePrinciple"></dd></div><div><dt>适合的 UI</dt><dd id="treeUI"></dd></div><div><dt>优点</dt><dd id="treePro"></dd></div><div><dt>缺点 / 错误套用</dt><dd id="treeCon"></dd></div><div><dt>关键交互</dt><dd id="treeInteraction"></dd></div></dl></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="commercial-patterns">
+          <div class="section-head">
+            <div class="section-no">07 / 12</div>
+            <div><h3>行业标杆验证的商业软件模式库</h3><p class="section-intro">这些原型不是照抄某个产品界面，而是从 Microsoft Power Apps、Shopify Polaris、Stripe、Datadog、GitHub Projects、IBM Carbon、GitLab Pajamas、Material 3 与 Ant Design 的官方文档中抽取可迁移模式。先选任务模式，再切换运行状态，观察同一页面如何加载、失败、冲突和恢复。</p></div>
+          </div>
+          <div class="benchmark-strip" aria-label="行业标杆官方证据">
+            <a href="https://learn.microsoft.com/en-us/power-apps/maker/model-driven-apps/model-driven-app-overview" target="_blank" rel="noreferrer"><strong>Power Apps</strong><span>模型、关系、表单、视图、仪表盘与导航</span></a>
+            <a href="https://polaris-react.shopify.com/patterns" target="_blank" rel="noreferrer"><strong>Shopify Polaris</strong><span>资源索引、资源详情、设置与加载模式</span></a>
+            <a href="https://docs.stripe.com/dashboard/basics" target="_blank" rel="noreferrer"><strong>Stripe Dashboard</strong><span>业务范围、搜索、客户 360、角色与审计</span></a>
+            <a href="https://docs.datadoghq.com/dashboards/" target="_blank" rel="noreferrer"><strong>Datadog</strong><span>网格、统一时间轴、自由画布与刷新语义</span></a>
+            <a href="https://docs.github.com/en/issues/planning-and-tracking-with-projects/customizing-views-in-your-project/changing-the-layout-of-a-view" target="_blank" rel="noreferrer"><strong>GitHub Projects</strong><span>同一数据的表格、看板与路线图投影</span></a>
+            <a href="https://carbondesignsystem.com/patterns/overview/" target="_blank" rel="noreferrer"><strong>IBM Carbon</strong><span>壳层、搜索、过滤、空、加载和通知</span></a>
+            <a href="https://design.gitlab.com/patterns/" target="_blank" rel="noreferrer"><strong>GitLab Pajamas</strong><span>破坏性操作、保存反馈、设置与 AI 透明度</span></a>
+            <a href="https://m3.material.io/foundations/layout/layout-overview/overview" target="_blank" rel="noreferrer"><strong>Material 3</strong><span>Scaffold、断点、规范布局与适应式重组</span></a>
+            <a href="https://ant.design/docs/spec/overview" target="_blank" rel="noreferrer"><strong>Ant Design</strong><span>列表、表单、工作台、结果与异常页</span></a>
+            <a href="数据模型到UI映射方法论-从字段关系到聚合导航与页面架构-v1.md#19-商业软件-ui-模式语言与行业标杆逆向"><strong>证据矩阵与边界</strong><span>打开 Markdown 第 19 章查看逐项拆解</span></a>
+          </div>
+          <details class="commercial-catalog" open>
+            <summary>8 族 24 种商业模式总目录：输入、输出与拒绝条件</summary>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>模式族</th><th>模式</th><th>映射输入 → 页面输出</th><th>适合的任务</th><th>拒绝条件 / 主要代价</th></tr></thead>
+                <tbody>
+                  <tr><td>应用壳层</td><td>Application Shell</td><td>组织/环境/角色/模块 → 全局头、主导航、范围切换、搜索</td><td>跨模块、跨业务范围工作</td><td>单模块短任务无需重壳；切换必须处理草稿与旧权限</td></tr>
+                  <tr><td>应用壳层</td><td>Role Home / Launchpad</td><td>岗位目标/待办/指标 → 角色首页与快捷入口</td><td>稳定岗位的高频任务启动</td><td>低频角色或只是模块卡片堆砌时拒绝</td></tr>
+                  <tr><td>应用壳层</td><td>Multi-task Workspace</td><td>并行对象/长任务 → 多标签或分栏工作区</td><td>核对、切换和持续处理多个对象</td><td>移动端、单线程流程和无冲突策略时拒绝</td></tr>
+                  <tr><td>集合与生产率</td><td>Resource Index / List Report</td><td>同构集合/查询 → 高密度表格、筛选、保存视图</td><td>查找、比较、批量处理</td><td>对象少、强视觉或结构差异大时用卡片</td></tr>
+                  <tr><td>集合与生产率</td><td>Worklist / Queue</td><td>任务/SLA/责任 → 待办队列、领取与下一项</td><td>按责任连续处理</td><td>无责任或不可排序的对象不能伪装成队列</td></tr>
+                  <tr><td>集合与生产率</td><td>Board / Schedule / Roadmap</td><td>状态或时间字段 → 看板、日历、路线图</td><td>观察流动、排期并直接回写</td><td>无稳定回写字段、拖拽风险高或规模过大时拒绝</td></tr>
+                  <tr><td>对象与交易</td><td>Object Page / 360</td><td>稳定身份/关系/生命周期 → 对象头、相关列表、活动</td><td>理解单一对象全貌</td><td>不得形成跨聚合大保存；大集合进入独立页</td></tr>
+                  <tr><td>对象与交易</td><td>Transaction Editor</td><td>聚合根/明细/不变量 → 事务表单、草稿、整体提交</td><td>维护主从交易一致性</td><td>独立生命周期对象或纯查询不适用</td></tr>
+                  <tr><td>对象与交易</td><td>Comparison / Reconciliation</td><td>多来源记录/差异 → 并排证据、匹配、处置</td><td>对账、版本比较、候选匹配</td><td>数据不可比或匹配依据不可解释时拒绝自动处置</td></tr>
+                  <tr><td>工作流与队列</td><td>Approval / Case Workspace</td><td>流程/证据/合法命令 → 任务详情、决策和历史</td><td>审批、案件和异常决定</td><td>无业务决定时不引入审批；状态不可任意编辑</td></tr>
+                  <tr><td>工作流与队列</td><td>Wizard / Guided Process</td><td>依赖顺序的复杂输入 → 分步导航、分段校验、草稿</td><td>低频但复杂且有自然顺序的任务</td><td>步骤可自由完成或频繁往返时增加阻力</td></tr>
+                  <tr><td>工作流与队列</td><td>Operations Console</td><td>实时多对象状态/异常 → 运行表、告警、控制动作</td><td>调度、监控与现场干预</td><td>非实时低频任务用普通列表即可</td></tr>
+                  <tr><td>分析与决策</td><td>Analytical List</td><td>明细/指标/维度 → 指标摘要、图表、可钻取表格</td><td>分析后立即行动</td><td>口径不稳或不能钻回明细时会误导</td></tr>
+                  <tr><td>分析与决策</td><td>Dashboard / Cockpit</td><td>多指标/时间窗口 → 网格或同步时间轴驾驶舱</td><td>发现异常与趋势</td><td>无口径、时点或行动出口时只是装饰墙</td></tr>
+                  <tr><td>分析与决策</td><td>Report / Exploration</td><td>语义层/维度度量 → 透视、分组、订阅和快照</td><td>重复报表与开放分析</td><td>监管报表与探索式查询不能混用保存语义</td></tr>
+                  <tr><td>协作与责任</td><td>Activity / Timeline</td><td>业务事件/评论/审计 → 事实时间线与协作流</td><td>恢复上下文和解释变化</td><td>评论不能冒充权威业务事实</td></tr>
+                  <tr><td>协作与责任</td><td>Assignment / Handoff</td><td>请求/责任/承诺/回执 → 指派、认领、交接和验收</td><td>跨人或跨团队责任交付</td><td>只有聊天、没有责任状态时不能称为交接</td></tr>
+                  <tr><td>协作与责任</td><td>Notification Center</td><td>事件/订阅/优先级 → 通知、提醒、确认和回到任务</td><td>异步触达和召回</td><td>不能代替任务队列；必须去重并有关闭反馈</td></tr>
+                  <tr><td>治理与高风险</td><td>Permission / Scope Designer</td><td>主体×资源×动作×范围 → 权限矩阵、范围树、有效解释</td><td>授权、影响预览和审计</td><td>复选框不能表达继承、Deny、多角色和职责冲突</td></tr>
+                  <tr><td>治理与高风险</td><td>Rule / Configuration Designer</td><td>条件/动作/版本/依赖 → 规则构建、模拟、测试和发布</td><td>业务规则和产品行为配置</td><td>简单参数无需设计器；无版本测试时风险过高</td></tr>
+                  <tr><td>治理与高风险</td><td>Audit / Version Workspace</td><td>版本/事件/Diff/有效期 → 审计、比较和恢复入口</td><td>解释与治理变更</td><td>日志不完整或无法安全恢复时不显示虚假回滚</td></tr>
+                  <tr><td>集成与恢复</td><td>Import / Export Workbench</td><td>文件/查询/映射/校验 → 导入向导、逐项结果、后台导出</td><td>大批量数据交换</td><td>少量手录无需导入；敏感导出需独立权限与审计</td></tr>
+                  <tr><td>集成与恢复</td><td>Background Job / Exception Center</td><td>异步任务/错误/重试 → 进度、失败项和恢复动作</td><td>长任务与部分成功恢复</td><td>秒级操作不建任务中心；不可重试错误不显示通用重试</td></tr>
+                  <tr><td>集成与恢复</td><td>Sync / Conflict Resolver</td><td>多来源版本/权威规则 → 同步状态、三方比较、合并</td><td>离线、双向同步与并发冲突</td><td>无来源证据或不可字段合并时只允许重载或升级人工</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+          <div class="commercial-lab">
+            <div class="commercial-controls">
+              <div id="commercialTabs" class="commercial-tabs" role="tablist" aria-label="商业软件页面模式"></div>
+              <label for="commercialState">运行状态
+                <select id="commercialState">
+                  <option value="normal">正常</option>
+                  <option value="loading">首次加载</option>
+                  <option value="empty">真空数据</option>
+                  <option value="filtered">筛选无结果</option>
+                  <option value="forbidden">无权限</option>
+                  <option value="stale">数据过期</option>
+                  <option value="network">网络错误</option>
+                  <option value="validation">校验失败</option>
+                  <option value="conflict">并发冲突</option>
+                  <option value="processing">异步处理中</option>
+                  <option value="partial">部分成功</option>
+                </select>
+              </label>
+            </div>
+            <div class="commercial-stage">
+              <div class="commercial-canvas"><div id="commercialCanvas" aria-live="polite"></div></div>
+              <aside class="commercial-meta">
+                <span id="commercialFamily" class="commercial-family"></span>
+                <h4 id="commercialTitle"></h4>
+                <dl>
+                  <div><dt>映射输入</dt><dd id="commercialInput"></dd></div>
+                  <div><dt>核心任务</dt><dd id="commercialTask"></dd></div>
+                  <div><dt>页面组成</dt><dd id="commercialComposition"></dd></div>
+                  <div><dt>导航 / 返回契约</dt><dd id="commercialNavigation"></dd></div>
+                  <div><dt>优点</dt><dd id="commercialPro"></dd></div>
+                  <div><dt>代价</dt><dd id="commercialCon"></dd></div>
+                  <div class="reject"><dt>拒绝条件</dt><dd id="commercialReject"></dd></div>
+                  <div><dt>官方证据锚点</dt><dd id="commercialEvidence"></dd></div>
+                </dl>
+              </aside>
+            </div>
+            <p class="commercial-source-note">访问日期：2026-07-13。原型只演示从官方资料可迁移的模式语义，不复刻厂商品牌、私有数据模型或未公开内部机制。正常态之外的状态由统一状态契约叠加，说明“页面模式 × 运行状态”是两个正交维度。</p>
+          </div>
+        </section>
+
+        <section id="constraints">
+          <div class="section-head">
+            <div class="section-no">08 / 12</div>
+            <div><h3>约束如何修正控件选择</h3><p class="section-intro">同一个 Integer，因为范围、步长和任务不同，可以得到完全不同的 UI。</p></div>
+          </div>
+          <div class="flow" aria-label="从模型到控件的五步流程">
+            <div class="flow-step"><b>STEP 1</b><strong>读取类型</strong><small>Integer</small></div>
+            <div class="flow-step"><b>STEP 2</b><strong>读取语义</strong><small>商品购买数量</small></div>
+            <div class="flow-step"><b>STEP 3</b><strong>读取约束</strong><small>1–99，步长 1</small></div>
+            <div class="flow-step"><b>STEP 4</b><strong>识别任务</strong><small>频繁小幅调整</small></div>
+            <div class="flow-step"><b>RESULT</b><strong>选择增减器</strong><small>同时允许键盘输入</small></div>
+          </div>
+          <div class="rule-grid" style="margin-top:18px">
+            <article class="rule"><strong><code>min / max</code> 范围较小且用户需要感知位置</strong><p>可以从数字输入框修正为滑块；若仍要求精确值，应同时显示当前数值或保留输入框。</p></article>
+            <article class="rule"><strong><code>step</code> 固定且调整频繁</strong><p>可以从数字输入框修正为增减器。按钮只负责快捷调整，输入框仍负责大跨度录入。</p></article>
+            <article class="rule"><strong><code>readOnly / derived</code> 不允许用户修改</strong><p>从输入控件修正为格式化文本、状态徽标、指标或进度条，避免制造“可以编辑”的错误暗示。</p></article>
+            <article class="rule"><strong><code>nullable</code> 存在“未设置”语义</strong><p>必须保留清空能力。Nullable Boolean 是三态值，不应直接使用只有开/关的二态开关。</p></article>
+            <article class="rule warn"><strong>高风险字段</strong><p>金额、库存、权限和业务状态不能只按类型映射；应通过业务命令、校验、确认和审计完成修改。</p></article>
+            <article class="rule warn"><strong>候选规模变化</strong><p>3 个选项可用单选组，300 个对象应改用远程搜索选择器；控件必须随数据规模改变。</p></article>
+          </div>
+        </section>
+
+        <section id="navigation">
+          <div class="section-head">
+            <div class="section-no">09 / 12</div>
+            <div><h3>模型关系到页面导航</h3><p class="section-intro">字段回答“页面里放什么控件”；关系回答“对象在哪里呈现，以及用户如何从一个对象到另一个对象”。</p></div>
+          </div>
+          <div class="relation-cards">
+            <article class="relation-card"><div class="relation-top"><div><h4>组成关系：订单 → 订单行</h4><span class="tag input">同一事务</span></div><span class="relation-symbol">1 ◆── *</span></div><p>子项依赖父对象存在、与父对象一起创建和保存。优先在同一页面嵌入明细表；子项复杂时进入子编辑页，返回父任务继续保存。</p><div class="route"><button type="button" data-route="composition">演示此导航</button><b>订单编辑 → 行项目编辑 → 返回草稿</b></div></article>
+            <article class="relation-card"><div class="relation-top"><div><h4>引用关系：订单 → 客户</h4><span class="tag nav">跨对象</span></div><span class="relation-symbol">* ──→ 1</span></div><p>录入时使用客户选择器；查看时显示客户摘要和详情链接。跳转后，返回应恢复原订单和来源上下文。</p><div class="route"><button type="button" data-route="reference">演示此导航</button><b>订单详情 → 客户详情 → 返回订单</b></div></article>
+            <article class="relation-card"><div class="relation-top"><div><h4>一对多：客户 → 订单</h4><span class="tag nav">集合导航</span></div><span class="relation-symbol">1 ── *</span></div><p>少量数据可显示摘要；完整集合进入带客户过滤条件的订单列表页，再从列表进入订单详情。</p><div class="route"><button type="button" data-route="collection">演示此导航</button><b>客户详情 → 已过滤订单列表 → 订单详情</b></div></article>
+            <article class="relation-card"><div class="relation-top"><div><h4>多对多：用户 ↔ 角色</h4><span class="tag input">关联编辑</span></div><span class="relation-symbol">* ── *</span></div><p>简单关系可多选；当关联带有效期、范围等属性时，应将关联建模为对象并进入独立编辑页。</p><div class="route"><button type="button" data-route="many">演示此导航</button><b>用户详情 → 角色分配 → 关联属性</b></div></article>
+            <article class="relation-card"><div class="relation-top"><div><h4>层级关系：组织 → 子组织</h4><span class="tag nav">层级导航</span></div><span class="relation-symbol">1 ── self</span></div><p>用树浏览，用级联选择，用面包屑说明当前位置；进入节点详情后可以继续到子节点或返回上级。</p><div class="route"><button type="button" data-route="tree">演示此导航</button><b>组织树 → 节点详情 → 子节点</b></div></article>
+            <article class="relation-card"><div class="relation-top"><div><h4>流程关系：申请 → 审批任务</h4><span class="tag nav">任务继续</span></div><span class="relation-symbol">A ⇢ B ⇢ C</span></div><p>导航引导用户进入下一项合法任务，并保留待办队列的位置，而不是让用户任意编辑状态字段。</p><div class="route"><button type="button" data-route="workflow">演示此导航</button><b>待办队列 → 审批详情 → 下一条待办</b></div></article>
+          </div>
+          <div class="table-wrap" style="margin-top:18px">
+            <table>
+              <thead><tr><th>导航表达</th><th>可映射的关系</th><th>优点</th><th>缺点</th><th>选择条件</th></tr></thead>
+              <tbody>
+                <tr><td class="control">同页嵌入</td><td>组成关系、少量一对多</td><td>上下文完整，编辑和比较路径最短。</td><td>页面会变长；大集合、独立权限和复杂子对象难承载。</td><td>子对象依赖父对象，数量少，并且共同保存。</td></tr>
+                <tr><td class="control">模态弹窗</td><td>短暂选择、简单确认、轻量子编辑</td><td>不离开当前任务，完成后能立即回填结果。</td><td>空间有限，深层导航和复杂表单容易形成“弹窗套弹窗”。</td><td>任务短、可一次完成、不需要 URL 和跨页历史。</td></tr>
+                <tr><td class="control">侧边抽屉</td><td>引用对象预览、列表行快速编辑</td><td>保留原页面可见性，比弹窗容纳更多内容。</td><td>窄屏体验差；用户容易混淆当前对象和背景对象的保存边界。</td><td>需要参考背景信息，但目标任务仍相对轻量。</td></tr>
+                <tr><td class="control">独立详情页</td><td>引用关系、独立生命周期对象</td><td>空间、URL、权限、历史和深层操作边界清晰。</td><td>产生跳转成本；必须恢复来源筛选、页码和滚动位置。</td><td>对象可独立识别、分享、收藏或执行复杂操作。</td></tr>
+                <tr><td class="control">主从布局</td><td>一对多集合、队列到详情</td><td>连续浏览效率高，选择列表项即可更新详情。</td><td>需要较宽屏幕；URL、焦点和移动端堆叠策略更复杂。</td><td>用户需要在同一集合中快速逐条处理或比较。</td></tr>
+                <tr><td class="control">标签页 / 分区</td><td>同一主对象的不同投影</td><td>把概览、明细、历史等稳定分区收纳在同一对象上下文。</td><td>内容不易被发现；标签过多会退化为隐藏导航。</td><td>各区域共享同一主对象身份，但信息任务不同。</td></tr>
+                <tr><td class="control">树 + 节点详情</td><td>递归层级、自引用关系</td><td>结构位置和详情可配合呈现，适合管理层级。</td><td>大树性能、搜索、展开状态和移动端操作复杂。</td><td>路径和父子关系本身就是用户决策的重要依据。</td></tr>
+                <tr><td class="control">流程前进 / 下一任务</td><td>状态迁移、工作流任务</td><td>把用户导向合法下一步，减少返回队列的重复定位。</td><td>不能代替自由浏览；自动前进可能让用户失去完成感。</td><td>任务有明确顺序、合法动作和队列上下文。</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="nav-lab" aria-live="polite">
+            <div class="nav-lab-head"><strong id="navTitle">页面导航实验区</strong><span id="navContext" class="nav-context">请选择上方一种关系开始</span></div>
+            <div class="nav-screen"><h4 id="screenTitle">尚未选择导航类型</h4><p id="screenBody">点击“演示此导航”，这里会模拟真实的页面前进与返回，并展示需要保留的上下文。</p><div class="nav-actions"><button id="navBack" type="button" disabled>← 返回</button><button id="navNext" class="primary" type="button" disabled>下一页面 →</button></div></div>
+          </div>
+        </section>
+
+        <section id="example">
+          <div class="section-head">
+            <div class="section-no">10 / 12</div>
+            <div><h3>完整示例：订单模型到录入界面</h3><p class="section-intro">左侧是模型元数据，右侧是它在“创建销售订单”任务中的一种合法 UI 投影。</p></div>
+          </div>
+          <div class="demo">
+            <aside class="model-panel">
+              <h4>SalesOrder</h4>
+              <pre>customerId: Reference&lt;Customer&gt;
+orderDate: Date
+priority: Enum
+isGift: Boolean
+note: Text?
+lines: OrderLine[]
+
+OrderLine
+productId: Reference&lt;Product&gt;
+quantity: Integer { min: 1, step: 1 }
+unitPrice: Money { currency: CNY }</pre>
+            </aside>
+            <div class="ui-panel">
+              <div class="form-grid">
+                <div class="field"><label for="customer">客户</label><select id="customer" class="mock-select"><option>搜索并选择客户…</option><option>华东零售有限公司</option></select></div>
+                <div class="field"><label for="date">订单日期</label><input id="date" class="mock-input" type="date" value="2026-07-13"></div>
+                <div class="field"><label for="priority">优先级</label><select id="priority" class="mock-select"><option>普通</option><option>紧急</option></select></div>
+                <div class="field"><label>礼品订单</label><div class="toggle-line"><button class="switch" type="button" aria-label="礼品订单，已开启" aria-pressed="true"></button><span>开启</span></div></div>
+                <div class="field full"><label for="note">备注</label><textarea id="note" class="mock-input" rows="2" placeholder="可选"></textarea></div>
+              </div>
+              <div class="lines">
+                <h4>订单明细 <span class="tag input">组成关系嵌入</span></h4>
+                <div class="line-row">
+                  <select class="mock-select" aria-label="商品"><option>轻量工作台</option></select>
+                  <div class="stepper"><button type="button" data-step="-1" aria-label="减少数量">−</button><output>2</output><button type="button" data-step="1" aria-label="增加数量">＋</button></div>
+                  <input class="mock-input" aria-label="单价" value="¥ 1,299.00">
+                  <button class="icon-button" type="button" title="删除明细" aria-label="删除明细">×</button>
+                </div>
+              </div>
+              <p class="demo-note"><strong>映射解释：</strong> <code>customerId</code> 是对象引用，所以显示可搜索的业务对象选择器，而不是 ID 文本框；<code>quantity</code> 是小步长正整数，所以使用可输入的增减器；<code>lines</code> 与订单是组成关系，所以嵌入同一录入页。</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="process">
+          <div class="section-head">
+            <div class="section-no">11 / 12</div>
+            <div><h3>六步决策法</h3><p class="section-intro">把这套步骤用于元数据驱动表单、低代码设计器或人工界面设计，都能得到可解释的映射结论。</p></div>
+          </div>
+          <div class="decision">
+            <article><b>01</b><h4>识别数据形状</h4><p>原子值、枚举、可空值、对象引用、集合、树、派生值，先确定结构。</p></article>
+            <article><b>02</b><h4>补齐业务语义</h4><p>同为字符串，名称、密码、手机号、颜色和代码需要不同控件与行为。</p></article>
+            <article><b>03</b><h4>读取约束</h4><p>范围、步长、精度、格式、必填、只读、唯一性和候选规模。</p></article>
+            <article><b>04</b><h4>明确用户操作</h4><p>用户是在查看、录入、微调、选择、比较、筛选，还是执行业务命令？</p></article>
+            <article><b>05</b><h4>确定关系呈现</h4><p>组成关系优先嵌入，引用关系优先选择与跳转，大集合优先独立列表。</p></article>
+            <article><b>06</b><h4>验证边界状态</h4><p>检查空值、错误、加载、无权限、大数据量、移动端和返回上下文。</p></article>
+          </div>
+        </section>
+
+        <section id="pitfalls">
+          <div class="section-head">
+            <div class="section-no">12 / 12</div>
+            <div><h3>常见误区</h3><p class="section-intro">这些机械映射会让界面看似自动生成，实际却丢失业务语义。</p></div>
+          </div>
+          <div class="anti">
+            <article><strong>整数一律映射成数字框</strong><p>忽略范围、步长和调整频率，会错过增减器、滑块或只读指标。</p></article>
+            <article><strong>字符串一律映射成文本框</strong><p>枚举、对象引用、电话、密码和颜色虽然可存为字符串，却不是自由文本。</p></article>
+            <article><strong>外键直接显示 ID</strong><p>用户识别的是客户名、商品名和摘要，不是数据库主键。</p></article>
+            <article><strong>业务状态映射成下拉框</strong><p>状态应由合法命令迁移，必须考虑权限、前置条件、并发和审计。</p></article>
+            <article><strong>所有关系都嵌入详情页</strong><p>大集合和独立生命周期对象需要单独页面与过滤上下文。</p></article>
+            <article><strong>跳转后丢失来源上下文</strong><p>从列表进入详情、再进入关联对象时，应保留筛选、页码、滚动和返回目标。</p></article>
+          </div>
+        </section>
+
+        <footer>数据模型到 UI 元素与页面导航映射方法 · V1.0 · 单文件离线 HTML · <a href="数据模型到UI映射方法论-从字段关系到聚合导航与页面架构-v1.md">阅读完整 Markdown 方法论</a></footer>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const commercialPatterns = [
+      {
+        key: 'shell', label: '应用外壳', family: 'APPLICATION SHELL', title: '应用外壳与业务范围',
+        input: '租户、组织、门店、环境、角色、模块图、最近访问与后台任务。',
+        task: '先进入正确业务空间，再全局发现对象、任务和工具。',
+        composition: '全局头 + 业务范围 + 主导航 + 搜索/命令 + 最近/收藏 + 通知/任务。',
+        navigation: '范围切换后重算菜单、权限、查询、当前对象与草稿适用性；深链接重新鉴权。',
+        pro: '稳定空间心智，减少跨模块查找和错范围操作。',
+        con: '重壳占用内容空间，并引入多标签、深链和草稿迁移状态。',
+        reject: '单租户、单模块、一次性短任务工具不需要完整企业壳层。',
+        evidence: 'Power Apps 的导航与安全角色；Stripe 的账户/组织、全局搜索、产品导航、沙盒和活动日志；Carbon Global header。',
+        body: `<div class="proto-titlebar"><div><h5>销售运营中心</h5><p>华东法人 · 上海门店 · 生产环境</p></div><div class="proto-actions"><button class="proto-button">⌕ 搜索</button><button class="proto-button primary">＋ 新建订单</button></div></div><div class="proto-kpis"><div class="proto-kpi"><small>待我处理</small><strong>24</strong></div><div class="proto-kpi"><small>后台任务</small><strong>3</strong></div><div class="proto-kpi"><small>今日异常</small><strong>7</strong></div></div><div class="proto-grid"><div class="proto-panel"><h6>最近访问</h6><p>SO-1042 · 销售订单</p><p>C-018 · 华东零售</p><p>7 月异常订单视图</p></div><div class="proto-panel"><h6>岗位入口</h6><p>待发货订单　128</p><p>信用冻结复核　6</p><p>导入任务结果　3</p></div><div class="proto-panel"><h6>模块健康</h6><p>订单服务　正常</p><p>物流同步　延迟 8 分钟</p></div><div class="proto-panel"><h6>收藏视图</h6><p>华东大额订单</p><p>本周退货异常</p></div></div>`
+      },
+      {
+        key: 'workbench', label: '集合工作台', family: 'COLLECTION & PRODUCTIVITY', title: '高级集合工作台',
+        input: '同构对象集合、查询投影、稳定行身份、筛选/排序/分组和选择集。',
+        task: '在大集合中查找、比较、保存视图、跨页选择和批量处理。',
+        composition: '搜索 + 结构化筛选 + 保存视图 + 列设置 + 表格 + 批处理回执。',
+        navigation: '列表进入详情后恢复 query、页码/游标、滚动和焦点；选择本页与选择全部查询结果分离。',
+        pro: '信息密度和重复任务效率高，可形成岗位专用视图。',
+        con: '状态、选择范围、虚拟化、内联编辑和批处理语义复杂。',
+        reject: '对象少、强视觉或每项结构差异大时使用卡片；移动端转为任务卡片。',
+        evidence: 'Shopify Resource index；Stripe 交易筛选与导出；GitHub Projects Table；Carbon/Pajamas Filtering。',
+        body: `<div class="proto-titlebar"><div><h5>订单工作台</h5><p>保存视图：待发货 · 华东 · 按承诺日升序</p></div><div class="proto-actions"><button class="proto-button">导出</button><button class="proto-button primary">批量分配</button></div></div><div class="proto-toolbar"><span class="proto-input">⌕ 订单 / 客户</span><span class="proto-input">状态：待发货</span><span class="proto-input">区域：华东</span><span class="proto-input">承诺日：本周</span><span class="proto-badge">12,438 条</span></div><div class="state-banner info"><span>已选择本页 50 条。也可以选择符合当前条件的全部 12,438 条。</span><button class="proto-button">选择全部结果</button></div><table class="proto-table"><thead><tr><th>订单</th><th>客户</th><th>金额</th><th>状态</th><th>承诺日</th></tr></thead><tbody><tr><td>SO-1042</td><td>华东零售</td><td>¥ 12,480</td><td><span class="proto-badge">待发货</span></td><td>07-14</td></tr><tr><td>SO-1043</td><td>远航商业</td><td>¥ 8,900</td><td><span class="proto-badge warn">有风险</span></td><td>07-14</td></tr><tr><td>SO-1044</td><td>星海门店</td><td>¥ 31,200</td><td><span class="proto-badge">待发货</span></td><td>07-15</td></tr><tr><td>SO-1045</td><td>北辰商贸</td><td>¥ 6,730</td><td><span class="proto-badge fail">已逾期</span></td><td>07-11</td></tr></tbody></table>`
+      },
+      {
+        key: 'object', label: '对象 360', family: 'OBJECT & TRANSACTION', title: '对象 360 工作空间',
+        input: '稳定对象身份、生命周期、关键事实、关系集合、风险和业务事件。',
+        task: '围绕一个客户、订单、合同或资产理解全貌并执行合法动作。',
+        composition: '对象头 + 状态/指标 + 动作 + 事实分区 + 相关列表 + 活动/审计。',
+        navigation: '锚点同页定位、Tab 子路由切换稳定投影、关联链接进入独立对象并返回。',
+        pro: '对象身份稳定，事实、关系、状态与历史处于同一上下文。',
+        con: '容易膨胀成万能详情页；跨聚合只读组合不能变成大保存事务。',
+        reject: '高频连续队列优先主从 Worklist；超大关联集合进入独立列表。',
+        evidence: 'Shopify Resource details；Stripe 客户 360；Power Apps 表单、关系与记录导航。',
+        body: `<div class="proto-titlebar"><div><h5>华东零售有限公司 <span class="proto-badge">A级客户</span></h5><p>C-018 · 上海 · 数据更新于 14:32</p></div><div class="proto-actions"><button class="proto-button">更多</button><button class="proto-button primary">创建订单</button></div></div><div class="proto-kpis"><div class="proto-kpi"><small>应收余额</small><strong>¥ 82K</strong></div><div class="proto-kpi"><small>近 90 天订单</small><strong>46</strong></div><div class="proto-kpi"><small>信用占用</small><strong>68%</strong></div></div><div class="proto-grid"><div class="proto-panel"><h6>关键事实</h6><p>客户经理　李敏</p><p>信用额度　¥ 120,000</p><p>结算方式　月结 30 天</p></div><div class="proto-panel"><h6>当前风险</h6><p><span class="proto-badge warn">1 笔逾期</span></p><p>外部工商数据 8 小时前更新</p></div><div class="proto-panel"><h6>最近订单</h6><p>SO-1042　¥ 12,480</p><p>SO-1018　¥ 8,900</p><p>查看全部 46 笔 →</p></div><div class="proto-panel"><h6>活动与审计</h6><div class="proto-timeline"><div>14:20　信用额度被复核</div><div>11:02　订单 SO-1042 已批准</div></div></div></div>`
+      },
+      {
+        key: 'transaction', label: '事务编辑器', family: 'OBJECT & TRANSACTION', title: '带草稿与冲突的事务编辑器',
+        input: '聚合根、组成明细、跨字段不变量、派生值、草稿和预期版本。',
+        task: '创建或修改一个需要整体校验与提交的业务交易。',
+        composition: '对象头 + 分组表单 + 明细表 + 合计解释 + 错误摘要 + 草稿/提交命令。',
+        navigation: '子编辑页返回父草稿；离开时处理 Dirty 状态；刷新可恢复服务端草稿。',
+        pro: '保存边界和业务不变量一致，适合订单、合同等高价值主从交易。',
+        con: '长表单、跨区校验和并发合并成本高。',
+        reject: '子对象有独立生命周期或无需整体事务时拆成独立页面。',
+        evidence: 'Power Apps Forms；Carbon/Pajamas Forms 与 Saving and feedback；GitLab Destructive actions。',
+        body: `<div class="proto-titlebar"><div><h5>编辑销售订单 SO-1042</h5><p>草稿已保存于 14:31 · 基于版本 18</p></div><div class="proto-actions"><button class="proto-button">保存草稿</button><button class="proto-button primary">提交审批</button></div></div><div class="proto-grid"><div class="proto-panel"><h6>客户与交付</h6><div class="proto-field"><label>客户</label><span>华东零售有限公司</span></div><div class="proto-field"><label>承诺日期</label><span>2026-07-16</span></div></div><div class="proto-panel"><h6>价格与结算</h6><div class="proto-field"><label>币种 / 结算</label><span>CNY · 月结 30 天</span></div><div class="proto-field"><label>折扣原因</label><span>年度框架协议</span></div></div></div><table class="proto-table"><thead><tr><th>商品</th><th>数量</th><th>单价</th><th>折扣</th><th>小计</th></tr></thead><tbody><tr><td>轻量工作台</td><td>2</td><td>¥ 1,299</td><td>5%</td><td>¥ 2,468.10</td></tr><tr><td>服务包</td><td>1</td><td>¥ 9,800</td><td>0%</td><td>¥ 9,800.00</td></tr></tbody></table><div class="proto-titlebar" style="margin-top:10px"><p>税额由税码与交付地派生；最终金额由服务端重新计算。</p><h5>合计 ¥ 12,268.10</h5></div>`
+      },
+      {
+        key: 'approval', label: '审批中心', family: 'WORKFLOW & QUEUE', title: '任务与审批中心',
+        input: '流程实例、任务、候选/责任人、SLA、证据、决策与流程版本。',
+        task: '按优先级连续领取、判断、转派、退回或完成有责任的任务。',
+        composition: 'Worklist + 证据详情 + 决策动作 + 流程历史 + 下一项。',
+        navigation: '完成后进入下一任务或恢复原队列位置；任务上下文而非任意状态编辑。',
+        pro: '责任、时限、证据、合法命令和审计形成闭环。',
+        con: '领取、转派、会签、超时升级和版本绑定带来复杂状态机。',
+        reject: '通知或无责任的信息不应混入任务队列；无业务决定时不要引入审批。',
+        evidence: 'Shopify Common actions；GitLab Saving/feedback、Notifications 和 Destructive actions；Ant Design Workbench/Result/Exception。',
+        body: `<div class="proto-titlebar"><div><h5>订单审批中心</h5><p>我的队列 · 24 项 · 4 项将在 2 小时内到期</p></div><div class="proto-actions"><button class="proto-button">转派</button><button class="proto-button">退回补充</button><button class="proto-button primary">通过</button></div></div><div class="proto-split"><div class="proto-list"><div><b>AP-1041</b><br>普通 · 3h</div><div class="selected"><b>AP-1042</b><br>高风险 · 48m</div><div><b>AP-1043</b><br>普通 · 5h</div><div><b>AP-1044</b><br>已升级 · 逾期</div></div><div class="proto-detail"><h6>大额折扣审批 · SO-1042</h6><p>申请人：王青　当前责任人：李敏　流程版本：v7</p><div class="state-banner"><span>折扣 18% 超过岗位阈值 10%，需要经理复核并填写原因。</span></div><div class="proto-grid"><div class="proto-panel"><h6>决策证据</h6><p>客户等级　A级</p><p>毛利率　23.4%</p><p>历史逾期　1 次</p></div><div class="proto-panel"><h6>流程历史</h6><div class="proto-timeline"><div>14:10　销售提交</div><div>14:12　风控检查通过</div></div></div></div></div></div>`
+      },
+      {
+        key: 'batch', label: '导入批处理', family: 'INTEGRATION & RECOVERY', title: '导入映射与批处理回执',
+        input: '文件、Schema、列映射、转换、校验、重复策略、批次和逐项结果。',
+        task: '预检大量数据，后台执行，识别部分成功并只重试失败项。',
+        composition: '上传 → 列映射 → 预校验 → 策略 → 预览 → 执行 → 逐行结果。',
+        navigation: '向导可恢复草稿；后台任务持久化到应用壳；结果返回源文件和业务对象。',
+        pro: '把不可控文件交换变成可解释、可审计、可恢复的任务。',
+        con: '步骤多，需要幂等、错误文件脱敏、取消和断点策略。',
+        reject: '少量简单数据可用表格粘贴；不可逐项成功的业务应原子执行。',
+        evidence: 'Ant Design Form/Result/Exception；Carbon Loading/Forms；Stripe 导出和活动日志作为批量任务入口证据。',
+        body: `<div class="proto-titlebar"><div><h5>导入客户资料</h5><p>customer-20260713.xlsx · 8,420 行</p></div><div class="proto-actions"><button class="proto-button">保存映射</button><button class="proto-button primary">开始导入</button></div></div><div class="proto-steps"><div class="proto-step">上传</div><div class="proto-step">识别</div><div class="proto-step current">列映射</div><div class="proto-step">预校验</div><div class="proto-step">执行</div></div><table class="proto-table"><thead><tr><th>文件列</th><th>识别样例</th><th>目标字段</th><th>转换</th><th>状态</th></tr></thead><tbody><tr><td>customer_name</td><td>华东零售</td><td>客户名称</td><td>去除空格</td><td><span class="proto-badge">已匹配</span></td></tr><tr><td>credit</td><td>120000</td><td>信用额度</td><td>CNY 元</td><td><span class="proto-badge">已匹配</span></td></tr><tr class="row-error"><td>sale_person</td><td>王小青</td><td>客户经理</td><td>按姓名查找</td><td><span class="proto-badge fail">12 个歧义</span></td></tr><tr><td>legacy_code</td><td>C018</td><td>外部编码</td><td>保留原值</td><td><span class="proto-badge">已匹配</span></td></tr></tbody></table><div class="state-banner info"><span>重复记录策略：外部编码相同则更新；名称相同但编码不同则进入人工复核。</span></div>`
+      },
+      {
+        key: 'recovery', label: '异常恢复', family: 'INTEGRATION & RECOVERY', title: '后台任务与异常恢复中心',
+        input: '异步任务、批次、尝试、错误分类、重试策略、关联号和补偿。',
+        task: '查看长任务进度，定位失败范围，修正后仅重试可恢复项。',
+        composition: '任务列表 + 阶段进度 + 错误摘要 + 失败项 + 重试/取消/补偿。',
+        navigation: '刷新或重新登录仍可找到任务；结果链接回到正确批次和业务对象。',
+        pro: '前台可离开，错误不被隐藏，恢复动作有记录。',
+        con: '取消不等于回滚，补偿不等于数据库撤销；日志还需脱敏。',
+        reject: '秒级同步操作不要建立任务中心；不可重试错误不能提供通用重试。',
+        evidence: 'Carbon Loading/Notifications；Stripe Workbench 与活动日志；Datadog 实时监控和故障诊断。',
+        body: `<div class="proto-titlebar"><div><h5>后台任务中心</h5><p>最近 24 小时 · 任务和业务结果分离</p></div><div class="proto-actions"><button class="proto-button">刷新</button><button class="proto-button primary">仅重试失败项</button></div></div><div class="proto-kpis"><div class="proto-kpi"><small>运行中</small><strong>3</strong></div><div class="proto-kpi"><small>需处理</small><strong>7</strong></div><div class="proto-kpi"><small>今日完成</small><strong>146</strong></div></div><table class="proto-table"><thead><tr><th>任务</th><th>阶段</th><th>结果</th><th>关联号</th><th>动作</th></tr></thead><tbody><tr><td>客户导入 B-82</td><td>完成</td><td><span class="proto-badge warn">8,392 / 8,420</span></td><td>JOB-7721</td><td>查看 28 个失败项</td></tr><tr><td>物流同步 S-18</td><td>重试 2/5</td><td><span class="proto-badge fail">连接超时</span></td><td>SYNC-881</td><td>诊断</td></tr><tr><td>报表导出 E-41</td><td>生成文件</td><td><span class="proto-badge">64%</span></td><td>EXP-223</td><td>可离开</td></tr><tr><td>库存补偿 C-09</td><td>需复核</td><td><span class="proto-badge fail">不可自动重试</span></td><td>CMP-901</td><td>升级人工</td></tr></tbody></table>`
+      },
+      {
+        key: 'governance', label: '权限规则', family: 'GOVERNANCE & RISK', title: '权限与规则治理设计器',
+        input: '主体、资源、动作、范围、继承、Allow/Deny、规则、版本和依赖。',
+        task: '配置并解释有效权限，模拟规则，比较版本后发布或回滚。',
+        composition: '范围树/规则构建 + 有效结果 + 来源解释 + 模拟 + Diff + 发布。',
+        navigation: '草稿、已发布、生效和历史版本分离；发布前预览影响范围。',
+        pro: '高风险配置可解释、可测试、可版本化和可审计。',
+        con: '自由度高会放大错误；Undo 编辑操作不等于回滚已生效影响。',
+        reject: '简单稳定参数用设置表单；没有版本、模拟和审批时不要提供复杂设计器。',
+        evidence: 'GitLab Settings/Feature management 与 Destructive actions；Stripe 角色权限；Power Apps 安全角色和生命周期。',
+        body: `<div class="proto-titlebar"><div><h5>角色：区域销售经理</h5><p>草稿 v12 · 影响 86 名用户 · 待安全管理员复核</p></div><div class="proto-actions"><button class="proto-button">模拟用户</button><button class="proto-button">比较 v11</button><button class="proto-button primary">提交发布</button></div></div><div class="proto-split"><div class="proto-list"><div class="selected">▾ 华东区域（继承）</div><div>　✓ 上海门店</div><div>　✓ 杭州门店</div><div>　⊘ 财务中心（Deny）</div><div>▸ 华南区域</div></div><div class="proto-detail"><h6>有效权限解释</h6><table class="proto-table"><thead><tr><th>资源</th><th>查看</th><th>编辑</th><th>审批</th><th>来源</th></tr></thead><tbody><tr><td>订单</td><td>允许</td><td>范围内</td><td>≤ ¥50K</td><td>角色 + 组织</td></tr><tr><td>客户信用</td><td>脱敏</td><td>禁止</td><td>禁止</td><td>显式 Deny</td></tr><tr><td>导出</td><td>—</td><td>—</td><td>需二次认证</td><td>合规策略</td></tr></tbody></table><div class="state-banner"><span>职责冲突：该角色同时拥有折扣申请与同级审批能力，发布将被阻止。</span></div></div></div>`
+      },
+      {
+        key: 'analytics', label: '分析驾驶舱', family: 'ANALYTICS & DECISION', title: '可钻取的分析驾驶舱',
+        input: '指标、维度、粒度、时间窗口、基准、阈值、数据时点和血缘。',
+        task: '从态势发现异常，保持分析路径钻取到可行动的业务对象。',
+        composition: '统一筛选 + 指标摘要 + 同步时间轴/网格面板 + 事件叠加 + 明细出口。',
+        navigation: '每次 Drill 增加过滤或粒度，返回逐级上卷；快照报告与实时视图分离。',
+        pro: '趋势、异常、事件和明细处于同一查询上下文。',
+        con: '口径、时点和局部数据源失败若不可见，会制造错误决策。',
+        reject: '没有稳定指标口径、数据质量或行动出口时不要建装饰型驾驶舱。',
+        evidence: 'Datadog Grid/Timeboard/Screenboard、模板变量和事件叠加；Stripe 分析与报告；GitHub Roadmap 的时间投影。',
+        body: `<div class="proto-titlebar"><div><h5>订单履约驾驶舱</h5><p>时间：最近 30 天 · 区域：全国 · 刷新于 14:30</p></div><div class="proto-actions"><button class="proto-button">订阅</button><button class="proto-button">保存快照</button><button class="proto-button primary">查看异常订单</button></div></div><div class="proto-kpis"><div class="proto-kpi"><small>准时交付率</small><strong>92.4%</strong></div><div class="proto-kpi"><small>平均周期</small><strong>3.8 天</strong></div><div class="proto-kpi"><small>高风险订单</small><strong>27</strong></div></div><div class="proto-grid"><div class="proto-panel"><h6>统一时间轴 · 交付率</h6><div class="proto-chart"><i style="height:52%"><span>07/08</span></i><i style="height:64%"><span>07/09</span></i><i style="height:48%"><span>07/10</span></i><i style="height:80%"><span>07/11</span></i><i style="height:72%"><span>07/12</span></i><i style="height:88%"><span>07/13</span></i></div></div><div class="proto-panel"><h6>异常构成</h6><p>库存短缺　12</p><p>承运商延迟　8</p><p>地址异常　4</p><p>审批阻塞　3</p><div class="state-banner info"><span>事件叠加：07/10 华东仓切换。</span></div></div></div>`
+      },
+      {
+        key: 'reconcile', label: '对账工作台', family: 'OBJECT & TRANSACTION', title: '匹配、差异与对账工作台',
+        input: '双来源记录、候选匹配、差异、口径、处置命令和审计。',
+        task: '并排核对两套独立事实，解释差异并作出匹配、拆分或升级决定。',
+        composition: '差异队列 + 双栏证据 + 字段 Diff + 匹配依据 + 处置动作。',
+        navigation: '从汇总钻到差异集合与源记录，返回保持日期、账户和未匹配筛选。',
+        pro: '减少跨系统跳转，把异常变成可审核的结构化任务。',
+        con: '高密度且口径复杂；自动匹配必须解释规则与置信依据。',
+        reject: '来源数据不可比、时点不一致且无调整规则时不得强制对平。',
+        evidence: 'Stripe 的交易/支付对象与活动日志提供高风险运营参照；Carbon Filtering/Dialogs 提供通用交互依据；本模式为跨产品抽象。',
+        body: `<div class="proto-titlebar"><div><h5>收款对账工作台</h5><p>账户 6228 · 2026-07-12 · 未匹配 18 笔</p></div><div class="proto-actions"><button class="proto-button">挂账</button><button class="proto-button">升级人工</button><button class="proto-button primary">确认匹配</button></div></div><div class="proto-split"><div class="proto-list"><div><b>银行流水 B-81</b><br>¥ 8,900 · 95%</div><div class="selected"><b>银行流水 B-82</b><br>¥ 12,480 · 差异</div><div><b>银行流水 B-83</b><br>¥ 6,730 · 无候选</div></div><div class="proto-detail"><h6>B-82 与收款单 R-1042</h6><div class="proto-grid"><div class="proto-panel"><h6>银行流水</h6><p>金额　¥ 12,480.00</p><p>付款方　华东零售</p><p>时间　07-12 16:02</p></div><div class="proto-panel"><h6>收款单</h6><p>金额　¥ 12,480.00</p><p>客户　华东零售有限公司</p><p>时间　07-12 15:58</p></div></div><div class="state-banner info"><span>匹配依据：金额相等、时间差 4 分钟、付款方别名命中。规则版本 M-17。</span></div></div></div>`
+      }
+    ];
+
+    const commercialStates = {
+      normal: { label: '正常' },
+      loading: { label: '首次加载', center: `<div class="skeleton" aria-label="内容加载中"><i></i><i></i><i></i><i></i><i></i></div>` },
+      empty: { label: '真空数据', center: `<div class="state-center"><div><span class="state-glyph">0</span><strong>当前业务范围没有数据</strong><p>这是权威查询的真空结果，不是筛选失败。首个创建、导入或配置动作应与当前模式匹配。</p><button class="proto-button primary">创建第一项</button></div></div>` },
+      filtered: { label: '筛选无结果', center: `<div class="state-center"><div><span class="state-glyph">⌕</span><strong>没有记录符合当前条件</strong><p>数据可能存在。保留并展示查询条件，优先提供清除条件或逐项放宽，而不是引导创建重复对象。</p><button class="proto-button primary">清除筛选</button></div></div>` },
+      forbidden: { label: '无权限', center: `<div class="state-center"><div><span class="state-glyph">!</span><strong>当前范围不允许访问</strong><p>只披露安全的拒绝原因。菜单隐藏不能替代服务端鉴权，可提供申请权限、切换范围或返回来源。</p><button class="proto-button primary">返回来源</button></div></div>` },
+      network: { label: '网络错误', center: `<div class="state-center"><div><span class="state-glyph">×</span><strong>请求未完成</strong><p>已保存的草稿和既有内容不会丢失。显示关联号、失败范围和可重试性，避免让用户猜测命令是否已执行。</p><button class="proto-button primary">重试请求</button></div></div>` },
+      stale: { label: '数据过期', banner: `<div class="state-banner"><span><strong>数据已过期：</strong>你正在查看版本 18，服务器已有版本 19。可先查看差异或刷新，禁止静默覆盖。</span><button class="proto-button">查看更新</button></div>` },
+      validation: { label: '校验失败', banner: `<div class="state-banner error"><span><strong>提交被业务规则拒绝：</strong>发现 3 个字段错误和 1 个明细行错误。错误摘要必须能定位到折叠区、Tab 或行。</span><button class="proto-button">定位首个错误</button></div>` },
+      conflict: { label: '并发冲突', banner: `<div class="state-banner error"><div><strong>另一位用户已修改当前对象。</strong><div class="conflict-grid"><div>共同基线<br><b>版本 18</b></div><div>我的草稿<br><b>交付日 07-16</b></div><div>最新版本<br><b>交付日 07-18</b></div></div></div><button class="proto-button">比较并合并</button></div>` },
+      processing: { label: '异步处理中', banner: `<div class="state-banner info"><div><strong>命令已受理 · JOB-7721</strong><div class="progress-track"><i></i></div><span>阶段 3/5：执行业务校验。可以离开页面，结果会进入后台任务中心。</span></div><button class="proto-button">查看任务</button></div>` },
+      partial: { label: '部分成功', banner: `<div class="state-banner"><div><strong>部分成功：96 成功 · 3 失败 · 1 跳过</strong><span>已成功项不会重复执行。下载逐项回执，修正后只重试失败项。</span></div><button class="proto-button">只重试失败项</button></div>` }
+    };
+
+    function enterpriseFrame(body, active) {
+      return `<div class="enterprise-prototype"><div class="enterprise-bar"><strong>Northstar Operations</strong><span class="enterprise-scope">华东法人 / 上海门店 / 生产环境</span><span>⌕　◷　◎</span></div><div class="enterprise-body"><nav class="enterprise-nav"><b>业务模块</b><span class="${active === '订单' ? 'current' : ''}">订单</span><span class="${active === '客户' ? 'current' : ''}">客户</span><span class="${active === '任务' ? 'current' : ''}">任务</span><span class="${active === '分析' ? 'current' : ''}">分析</span><b>控制面</b><span class="${active === '治理' ? 'current' : ''}">权限与规则</span><span class="${active === '运行' ? 'current' : ''}">后台任务</span></nav><div class="enterprise-main">${body}</div></div></div>`;
+    }
+
+    const commercialTabs = document.querySelector('#commercialTabs');
+    const commercialState = document.querySelector('#commercialState');
+    let activeCommercialPattern = 0;
+    const patternSections = { shell: '订单', workbench: '订单', object: '客户', transaction: '订单', approval: '任务', batch: '运行', recovery: '运行', governance: '治理', analytics: '分析', reconcile: '订单' };
+
+    function renderCommercialPattern() {
+      const item = commercialPatterns[activeCommercialPattern];
+      const state = commercialStates[commercialState.value];
+      [...commercialTabs.children].forEach((button, index) => {
+        button.classList.toggle('active', index === activeCommercialPattern);
+        button.setAttribute('aria-selected', String(index === activeCommercialPattern));
+      });
+      let content = item.body;
+      if (state.center) content = state.center;
+      else if (state.banner) content = state.banner + content;
+      document.querySelector('#commercialCanvas').innerHTML = enterpriseFrame(content, patternSections[item.key]);
+      document.querySelector('#commercialFamily').textContent = `${item.family} / ${state.label}`;
+      document.querySelector('#commercialTitle').textContent = item.title;
+      document.querySelector('#commercialInput').textContent = item.input;
+      document.querySelector('#commercialTask').textContent = item.task;
+      document.querySelector('#commercialComposition').textContent = item.composition;
+      document.querySelector('#commercialNavigation').textContent = item.navigation;
+      document.querySelector('#commercialPro').textContent = item.pro;
+      document.querySelector('#commercialCon').textContent = item.con;
+      document.querySelector('#commercialReject').textContent = item.reject;
+      document.querySelector('#commercialEvidence').textContent = item.evidence;
+    }
+
+    commercialPatterns.forEach((item, index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.role = 'tab';
+      button.textContent = item.label;
+      button.addEventListener('click', () => { activeCommercialPattern = index; renderCommercialPattern(); });
+      commercialTabs.append(button);
+    });
+    commercialState.addEventListener('change', renderCommercialPattern);
+    renderCommercialPattern();
+
+    const navigationPrinciples = [
+      {
+        key: 'select', label: 'Select 聚焦', title: '同一任务空间内切换焦点',
+        core: '不改变页面任务和集合，只替换当前 focus。主从列表、树节点详情和地图点位详情都属于这种变换。',
+        keeps: 'route、query、view 和集合上下文。', changes: 'focus、selection 以及详情区域。', risk: '选中项、URL、键盘焦点和详情内容不同步。',
+        context: { route: '/orders', focus: 'SO-1042', query: 'status=pending&page=3', view: 'split/list-detail', selection: 'SO-1042', history: '不新增历史项', returnContract: '仍在订单队列' },
+        html: '<div class="master-detail"><div class="master-list"><div class="selected">SO-1042</div><div>SO-1043</div><div>SO-1044</div></div><div class="detail-pane"><b>当前焦点：SO-1042</b><p>筛选和列表位置不变，只更新详情。</p></div></div>'
+      },
+      {
+        key: 'push', label: 'Push 前进', title: '压入历史栈的可逆前进',
+        core: '新页面上下文压入访问历史，来源仍可返回。典型路径是列表到详情、详情到关联对象。',
+        keeps: '来源上下文完整保留在历史项中。', changes: 'route、focus 和页面视图切换为目标对象。', risk: '只保存 URL 而没有保存筛选、滚动和选择集，返回时任务断裂。',
+        context: { route: '/customers/C-18', focus: 'Customer C-18', query: '继承来源标识', view: 'customer/detail', selection: '客户对象', history: 'Orders → SO-1042 → C-18', returnContract: '返回 SO-1042' },
+        html: '<div class="stack-view"><div class="stack-item">订单列表<br><small>待发货 · 第3页</small></div><div class="stack-item">SO-1042<br><small>订单详情</small></div><div class="stack-item" style="border-color:var(--green)">客户 C-18<br><small>当前页面</small></div></div><div class="route"><span>列表</span><b>→</b><span>订单</span><b>→</b><span>客户</span></div>'
+      },
+      {
+        key: 'replace', label: 'Replace 替换', title: '更新当前可寻址状态而不增加历史',
+        core: '用新的路由状态替换当前历史项，适合连续筛选、分页归一化或重定向，避免返回键经过每一次细小状态变化。',
+        keeps: '当前页面身份与任务。', changes: 'query/view 写回当前历史项。', risk: '误用会覆盖用户期望返回的位置；关键任务切换不应 Replace。',
+        context: { route: '/orders?status=late', focus: 'Order collection', query: 'status=late', view: 'table', selection: 'none', history: '当前项被替换', returnContract: '返回进入订单页之前的位置' },
+        html: '<div class="nav-scenes"><div class="scene-page"><b>订单列表</b><p>URL 状态连续变化：</p><div class="scene-node">?status=all</div><div class="scene-node current">?status=late</div><p>浏览器返回不会经过每个输入字符。</p></div></div>'
+      },
+      {
+        key: 'overlay', label: 'Overlay 叠加', title: '在背景任务上叠加短子任务',
+        core: '背景上下文继续存在，弹窗、Popover 或抽屉临时承载选择、确认或轻量编辑，完成后结果回填背景。',
+        keeps: '背景 route、focus、query、view 和草稿。', changes: '临时增加 overlayFocus 和局部输入。', risk: '叠加过深、关闭丢草稿、背景对象异步变化或保存边界不清。',
+        context: { route: '/orders/SO-1042/edit', focus: 'SO-1042', query: 'none', view: 'edit + customerDrawer', selection: 'Customer C-18', history: '可选是否入栈', returnContract: '关闭抽屉回填客户' },
+        html: '<div class="nav-scenes"><div class="scene-page"><b>订单编辑</b><p>客户、日期和明细草稿仍在背景。</p></div><div class="scene-overlay"><b>选择客户</b><p>华东零售有限公司</p><button>选择并返回</button></div></div>'
+      },
+      {
+        key: 'drill', label: 'Drill 钻取', title: '从汇总事实逐级解释到构成事实',
+        core: '每次钻取增加过滤条件或分析粒度，并保存完整口径路径；上卷则撤销最后一层限定。',
+        keeps: '指标定义、上层过滤和分析时间范围。', changes: '维度粒度、focus 与明细集合。', risk: '只展示最终列表而不显示过滤路径，用户无法判断明细为何属于指标。',
+        context: { route: '/analytics/sales/drill', focus: '华东/终端/128单', query: 'month=07&region=east&category=terminal', view: 'detail-table', selection: '128 orders', history: '销售额 → 华东 → 终端 → 订单', returnContract: '逐级上卷到原指标' },
+        html: '<div class="route"><span>销售额 ¥8.6M</span><b>→</b><span>华东 42%</span><b>→</b><span>终端 128单</span><b>→</b><span>订单明细</span></div><div class="heat" style="margin-top:12px"><div>当前口径</div><div>7月</div><div>华东</div><div>终端</div><div>128单</div></div>'
+      },
+      {
+        key: 'advance', label: 'Advance 流程', title: '由状态机驱动的下一合法任务',
+        core: '下一页面不是任意链接，而由当前状态、前置条件、角色和命令结果共同决定，适用于向导、审批和队列连续处理。',
+        keeps: '流程实例、已完成步骤、草稿和责任上下文。', changes: 'currentStep、合法动作和责任人。', risk: '把非线性流程伪装成固定步骤，失败后没有回退、重试或草稿恢复。',
+        context: { route: '/approval/AP-1043', focus: 'Approval AP-1043', query: 'assignee=me&status=pending', view: 'approval/detail', selection: 'next task', history: 'Queue → AP-1042 → AP-1043', returnContract: '完成后下一项或队列' },
+        html: '<div class="flow" style="grid-template-columns:repeat(4,1fr)"><div class="flow-step"><b>1</b><strong>提交</strong><small>完成</small></div><div class="flow-step"><b>2</b><strong>风控</strong><small>完成</small></div><div class="flow-step"><b>3</b><strong>经理审批</strong><small>当前</small></div><div class="flow-step"><b>4</b><strong>生效</strong><small>待前置条件</small></div></div>'
+      },
+      {
+        key: 'jump', label: 'Jump 深链', title: '直接重建完整目标上下文',
+        core: '通知、收藏或跨系统链接直接进入目标，不依赖先访问父页面；链接必须携带足够身份和视图状态以重建任务。',
+        keeps: '来源系统和回跳地址可作为 returnContract。', changes: '从任意位置重建 route、focus、view 与必要 query。', risk: '目标无权限、对象删除、身份映射失败或链接过期时没有安全落点。',
+        context: { route: '/orders/SO-1042?tab=history', focus: 'SO-1042', query: 'event=EV-82', view: 'detail/history', selection: 'EV-82', history: '由通知直接进入', returnContract: '返回通知中心' },
+        html: '<div class="nav-scenes"><div class="scene-page"><b>来自通知的深链接</b><p>/orders/SO-1042?tab=history&amp;event=EV-82</p><div class="scene-node current">订单 SO-1042</div><div class="scene-node current">历史 Tab</div><div class="scene-node current">定位 EV-82</div></div></div>'
+      },
+      {
+        key: 'fork', label: 'Fork 并列', title: '保留多个独立焦点进行比较',
+        core: '并排详情、版本对比或新窗口保留两个及以上上下文，适合差异决策而非线性浏览。',
+        keeps: '每个焦点的独立对象身份和版本。', changes: 'selection 从单对象变成比较集合。', risk: '命令作用对象不明确、某侧数据过期、滚动和维度不对齐。',
+        context: { route: '/orders/compare?left=1042&right=1048', focus: 'Compare set', query: 'sameDimensions=true', view: 'split/compare', selection: 'SO-1042 + SO-1048', history: '比较上下文单独入栈', returnContract: '返回原选择集' },
+        html: '<div class="match"><div class="match-item"><b>SO-1042</b><p>¥12,480<br>毛利 8.4%<br>客户 A</p></div><div class="match-link">VS</div><div class="match-item"><b>SO-1048</b><p>¥13,120<br>毛利 6.1%<br>客户 B</p></div></div>'
+      }
+    ];
+
+    const navPrincipleTabs = document.querySelector('#navPrincipleTabs');
+    function renderNavigationPrinciple(index) {
+      const item = navigationPrinciples[index];
+      [...navPrincipleTabs.children].forEach((button, buttonIndex) => button.classList.toggle('active', buttonIndex === index));
+      document.querySelector('#navPrincipleStage').innerHTML = item.html;
+      document.querySelector('#navPrincipleTitle').textContent = item.title;
+      document.querySelector('#navPrincipleCore').textContent = item.core;
+      document.querySelector('#navKeeps').textContent = item.keeps;
+      document.querySelector('#navChanges').textContent = item.changes;
+      document.querySelector('#navRisk').textContent = item.risk;
+      document.querySelector('#navContextVector').innerHTML = Object.entries(item.context).map(([key, value]) => `<div><b>${key}</b><code>${value}</code></div>`).join('');
+    }
+    navigationPrinciples.forEach((item, index) => {
+      const button = document.createElement('button');
+      button.type = 'button'; button.textContent = item.label;
+      button.addEventListener('click', () => renderNavigationPrinciple(index));
+      navPrincipleTabs.append(button);
+    });
+    renderNavigationPrinciple(0);
+
+    const treeStructures = [
+      {
+        key: 'rooted', label: '单根树', title: '有根单父树', principle: '一个根；除根外每个节点恰有一个父节点；从根到节点只有一条路径；无环。', ui: '展开树、树表、级联、面包屑。', pro: '祖先、后代和路径稳定，导航与继承规则清晰。', con: '深树难定位；若节点实际有多个父关系，硬套单父树会丢信息。', interaction: '展开/折叠、搜索定位、路径回显、当前节点选择。', invariant: '不变量：single parent + unique path + acyclic。',
+        html: '<ul class="proto-tree"><li><span class="tree-node selected">▾ 集团总部</span><ul><li><span class="tree-node">▾ 销售中心</span><ul><li><span class="tree-node">华东区</span></li><li><span class="tree-node">华南区</span></li></ul></li><li><span class="tree-node">财务中心</span></li></ul></li></ul>'
+      },
+      {
+        key: 'forest', label: '森林', title: '多根森林与虚拟总根', principle: '存在多个互不相交的根，每棵子树仍满足单父和无环；UI 可增加不写回模型的虚拟总根。', ui: '多根树、按根分组、虚拟“全部”节点。', pro: '保留多个独立层级，又可在一个控件中浏览。', con: '虚拟总根不是业务对象；不能让用户误以为根节点共享真实父级。', interaction: '根分组、跨根搜索、独立展开状态。', invariant: '不变量：0..N roots；虚拟根仅是 UI 投影。',
+        html: '<ul class="proto-tree"><li><span class="tree-node">▾ 国内组织</span><ul><li><span class="tree-node">华东</span></li><li><span class="tree-node">华南</span></li></ul></li><li><span class="tree-node">▾ 海外组织</span><ul><li><span class="tree-node">欧洲</span></li><li><span class="tree-node">亚太</span></li></ul></li></ul>'
+      },
+      {
+        key: 'taxonomy', label: '分类树', title: '分类法与逐层收敛', principle: '父分类包含更具体的子分类；对象归属可能是一对多，分类结构本身与对象挂载关系要分开。', ui: '分类树、级联选择、分面、叶子选择器。', pro: '从宽到窄浏览自然，适合商品、知识和资产分类。', con: '对象可多分类时不是“对象树”；同义分类、交叉分类和版本迁移复杂。', interaction: '逐级筛选、只选叶子/允许选父级、显示完整分类路径。', invariant: '分类节点可为树；对象→分类通常是多对多关联。',
+        html: '<ul class="proto-tree"><li><span class="tree-node">▾ 办公设备</span><ul><li><span class="tree-node">▾ 计算设备</span><ul><li><span class="tree-node selected">笔记本电脑</span></li><li><span class="tree-node">台式机</span></li></ul></li><li><span class="tree-node">打印设备</span></li></ul></li></ul>'
+      },
+      {
+        key: 'organization', label: '组织树', title: '行政组织与有效期层级', principle: '节点表达组织单位和行政归属，通常还带负责人、人数、有效期和数据范围。矩阵汇报是另一种关系。', ui: '树表、主从树、组织图、历史组织快照。', pro: '行政归属与节点属性可组合展示，适合范围选择。', con: '项目组、虚线汇报、多岗位和历史调动不能强塞入单父结构。', interaction: '节点详情、范围勾选、调动/移动、防环、历史时点切换。', invariant: '当前行政父级通常唯一；其他汇报关系单独建模。',
+        html: '<table class="mini-table"><thead><tr><th>组织</th><th>负责人</th><th>人数</th></tr></thead><tbody><tr><td>▾ 集团</td><td>周宁</td><td>620</td></tr><tr><td>　▾ 销售中心</td><td>李敏</td><td>180</td></tr><tr><td>　　华东区</td><td>王青</td><td>86</td></tr><tr><td>　　华南区</td><td>陈哲</td><td>72</td></tr></tbody></table>'
+      },
+      {
+        key: 'directory', label: '目录树', title: '路径身份与文件目录', principle: '节点拥有稳定 ID 和可变路径；移动节点改变路径但不应改变身份。兄弟顺序可能具有业务意义。', ui: '目录树 + 文件列表、面包屑、路径搜索。', pro: '用户对目录、展开和路径的心智成熟。', con: '大目录一次加载会崩溃；移动、同名、快捷方式和权限裁剪需明确。', interaction: '懒加载、移动、重命名、路径定位、返回时恢复展开状态。', invariant: 'identity ≠ path；move 必须防止移入自身后代。',
+        html: '<ul class="proto-tree"><li><span class="tree-node">▾ /业务文档</span><ul><li><span class="tree-node">▾ /销售</span><ul><li><span class="tree-node selected">订单规范.md</span></li></ul></li><li><span class="tree-node">/采购</span></li><li><span class="tree-node disabled">/财务（无权限）</span></li></ul></li></ul>'
+      },
+      {
+        key: 'bom', label: 'BOM / DAG', title: '组成树投影与共享零件 DAG', principle: '产品展开看似树，但同一零件可被多个组件复用，因此完整 BOM 通常是无环多父图。树视图会重复显示同一节点投影。', ui: '可展开 BOM 树、用量树表、依赖图、统一零件详情。', pro: '按装配路径展开易理解数量和层级。', con: '重复投影不能当作多个不同零件；汇总用量、版本和替代件复杂。', interaction: '路径数量计算、重复节点身份提示、查看所有父项、版本切换。', invariant: '共享节点 ⇒ multiple parents ⇒ DAG，不再是严格树。',
+        html: '<div class="dag-prototype"><div class="dag-node" style="left:40%;top:3%">产品 A</div><div class="dag-node" style="left:10%;top:38%">组件 B</div><div class="dag-node" style="right:10%;top:38%">组件 C</div><div class="dag-node" style="left:40%;bottom:4%;border-color:var(--red)">共享零件 D</div><span class="dag-edge" style="left:45%;top:22%;width:130px;transform:rotate(25deg)"></span><span class="dag-edge" style="left:45%;top:22%;width:130px;transform:rotate(155deg)"></span><span class="dag-edge" style="left:22%;top:54%;width:145px;transform:rotate(27deg)"></span><span class="dag-edge" style="right:22%;top:54%;width:145px;transform:rotate(153deg)"></span></div>'
+      },
+      {
+        key: 'permission', label: '权限继承树', title: '范围树与有效权限预览', principle: '授权可沿资源/组织树继承，但用户最终权限还可能由多个角色、Allow/Deny 和例外合并。', ui: '带半选的范围树、权限矩阵、继承来源和有效权限预览。', pro: '范围选择和继承路径清楚，适合批量授权。', con: '勾选不等于最终权限；懒加载后代、拒绝优先级和无权祖先容易误导。', interaction: '父子联动、半选、显示继承来源、预览最终权限、服务端复核。', invariant: 'UI selection state ≠ effective authorization；服务端仍是权威。',
+        html: '<ul class="proto-tree"><li><span class="tree-node"><i class="node-state partial"></i> 集团（部分）</span><ul><li><span class="tree-node"><i class="node-state checked"></i> 华东区</span><ul><li><span class="tree-node"><i class="node-state checked"></i> 上海</span></li><li><span class="tree-node"><i class="node-state checked"></i> 杭州</span></li></ul></li><li><span class="tree-node disabled"><i class="node-state"></i> 财务中心（不可授权）</span></li></ul></li></ul>'
+      },
+      {
+        key: 'version', label: '版本树', title: '版本分叉、修订与合并', principle: '一个版本可以产生多个后继分支；一旦存在合并，目标版本拥有多个父版本，完整结构成为 DAG。', ui: '版本树、分支线、并排 Diff、来源与合并说明。', pro: '修订来源、分叉和生效版本可追踪。', con: '只用普通树会隐藏合并父版本；草稿、当前版和法律快照必须区分。', interaction: '选择版本、比较、恢复、合并、标记当前/生效时间。', invariant: 'branch 是树形；merge 使版本历史成为 DAG。',
+        html: '<div class="dag-prototype"><div class="dag-node" style="left:4%;top:42%">v1</div><div class="dag-node" style="left:33%;top:15%">v2-A</div><div class="dag-node" style="left:33%;bottom:15%">v2-B</div><div class="dag-node" style="right:4%;top:42%;border-color:var(--blue)">v3 合并</div><span class="dag-edge" style="left:19%;top:48%;width:100px;transform:rotate(-20deg)"></span><span class="dag-edge" style="left:19%;top:50%;width:100px;transform:rotate(20deg)"></span><span class="dag-edge" style="left:49%;top:28%;width:115px;transform:rotate(20deg)"></span><span class="dag-edge" style="left:49%;bottom:28%;width:115px;transform:rotate(-20deg)"></span></div>'
+      },
+      {
+        key: 'lazy', label: '懒加载大树', title: '异步加载与未知后代', principle: '节点的子集合按需请求，未加载不等于没有子节点；父级计数和选择状态可能只对已知数据成立。', ui: '异步树、虚拟滚动树、服务端搜索、路径定位。', pro: '可处理十万级节点，不阻塞首次渲染。', con: '全选、半选、计数和搜索语义复杂，不能仅根据已加载节点推断全局。', interaction: '展开加载、加载失败重试、搜索后补齐祖先、明确“选择全部后代”。', invariant: 'loadedChildren ⊂ allChildren；unknown 不是 empty。',
+        html: '<ul class="proto-tree"><li><span class="tree-node">▾ 全国组织 <small>（12,480）</small></span><ul><li><span class="tree-node">▾ 华东区 <small>（加载 3 / 共 126）</small></span><ul><li><span class="tree-node">上海</span></li><li><span class="tree-node">杭州</span></li><li><span class="tree-node">正在加载更多…</span></li></ul></li><li><span class="tree-node">▸ 华南区 <small>（未加载）</small></span></li></ul></li></ul>'
+      },
+      {
+        key: 'graph', label: '一般图边界', title: '有环关系不能使用树的不变量', principle: '节点可多父、双向连接并形成环；不存在唯一根和唯一路径，展开树只能显示某次遍历结果。', ui: '网络图、邻接列表、路径搜索、聚焦子图；必要时提供主路径树投影。', pro: '能保留任意关联、环和多跳路径。', con: '布局和认知成本高；不能套用树的级联选择、父子继承和删除语义。', interaction: '聚焦节点、限制跳数、过滤边类型、路径高亮、切换列表。', invariant: 'cycle or multi-parent ⇒ graph；树只是 traversal projection。',
+        html: '<div class="network"><div class="node" style="left:6%;top:8%">客户 A</div><div class="node" style="left:43%;top:2%;border-color:var(--blue)">订单</div><div class="node" style="right:6%;top:48%;border-color:var(--amber)">商品</div><div class="node" style="left:36%;bottom:2%;border-color:var(--red)">客户 B</div><div class="node" style="left:5%;bottom:12%">推荐人</div></div>'
+      }
+    ];
+
+    const treeTabs = document.querySelector('#treeTabs');
+    function renderTreeStructure(index) {
+      const item = treeStructures[index];
+      [...treeTabs.children].forEach((button, buttonIndex) => button.classList.toggle('active', buttonIndex === index));
+      document.querySelector('#treeStage').innerHTML = item.html;
+      document.querySelector('#treeTitle').textContent = item.title;
+      document.querySelector('#treePrinciple').textContent = item.principle;
+      document.querySelector('#treeUI').textContent = item.ui;
+      document.querySelector('#treePro').textContent = item.pro;
+      document.querySelector('#treeCon').textContent = item.con;
+      document.querySelector('#treeInteraction').textContent = item.interaction;
+      document.querySelector('#treeInvariant').textContent = item.invariant;
+      document.querySelectorAll('#treeStage .tree-node:not(.disabled)').forEach((node) => node.addEventListener('click', () => {
+        document.querySelectorAll('#treeStage .tree-node').forEach((other) => other.classList.remove('selected'));
+        node.classList.add('selected');
+      }));
+    }
+    treeStructures.forEach((item, index) => {
+      const button = document.createElement('button');
+      button.type = 'button'; button.textContent = item.label;
+      button.addEventListener('click', () => renderTreeStructure(index));
+      treeTabs.append(button);
+    });
+    renderTreeStructure(0);
+
+    const complexFilters = [...document.querySelectorAll('.complex-filter')];
+    const complexCards = [...document.querySelectorAll('.complex-card')];
+    complexFilters.forEach((button) => button.addEventListener('click', () => {
+      const filter = button.dataset.complexFilter;
+      complexFilters.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+      complexCards.forEach((card) => { card.hidden = filter !== 'all' && card.dataset.complex !== filter; });
+    }));
+
+    const orderProjections = [
+      { key: 'table', label: '搜索表格', title: '订单搜索与批处理', model: 'Order[] + CustomerSummary + Status', task: '查找、筛选、精确比较和批量处理订单。', pro: '列对齐和信息密度高，熟练用户可快速扫描与键盘操作。', con: '不能承载单张订单全部上下文，移动端需要改为摘要列表。', nav: '保存视图 → 订单详情 → 返回原筛选、页码与滚动位置。', html: '<div class="mini-toolbar"><span>待发货</span><span>客户：全部</span><span>本周</span></div><table class="mini-table"><thead><tr><th>订单</th><th>客户</th><th>金额</th><th>交期</th></tr></thead><tbody><tr><td>SO-1042</td><td>华东零售</td><td>¥12,480</td><td>今天</td></tr><tr><td>SO-1043</td><td>北辰供应链</td><td>¥8,900</td><td>明天</td></tr><tr><td>SO-1044</td><td>南区商业</td><td>¥26,120</td><td>逾期</td></tr></tbody></table>' },
+      { key: 'cards', label: '订单卡片', title: '移动订单浏览', model: 'Order[] + Customer + ProductCover + Status', task: '通过客户、门店、商品或状态快速识别订单。', pro: '视觉识别强、触控友好，能自然响应不同屏幕宽度。', con: '金额、交期等精确跨项比较弱，单屏承载量较低。', nav: '卡片列表 → 订单预览/详情 → 返回原分组与位置。', html: '<div class="mini-cards"><div class="mini-card"><i></i><strong>SO-1042</strong><br>华东零售 · 待发货</div><div class="mini-card"><i style="background:#d8cdbb"></i><strong>SO-1043</strong><br>北辰供应链 · 待确认</div><div class="mini-card"><i style="background:#c8d2dc"></i><strong>SO-1044</strong><br>南区商业 · 异常</div></div>' },
+      { key: 'detail', label: '订单详情', title: '订单对象详情', model: 'Order aggregate + Related summaries + Events', task: '确认身份、理解当前状态、查看关系、追溯历史并执行合法动作。', pro: '围绕稳定对象身份组织摘要、明细、关联、历史和动作。', con: '容易膨胀成万能详情；跨聚合字段不能因为同屏就一起保存。', nav: '订单列表 → 订单详情 → 客户/发货/付款详情 → 返回订单。', html: '<div class="master-detail" style="grid-template-columns:1fr"><div class="detail-pane"><span class="tag input">待发货</span><h4>SO-1042 · 华东零售</h4><p>订单金额 <strong>¥12,480</strong>　预计交付 7 月 15 日</p><hr><p>3 个商品 · 信用审核已通过 · 发货单未创建</p><button>创建发货单</button> <button>查看历史</button></div></div>' },
+      { key: 'entry', label: '订单录入', title: '销售订单创建表单', model: 'CreateOrderCommand + OrderLine[]', task: '录入客户、交付和订单明细，并守住聚合内整体约束。', pro: '命令参数和保存边界清楚，能做整体校验、草稿和汇总。', con: '不应直接编辑客户信用、库存余额和发票状态等外部事实。', nav: '订单列表/客户详情 → 新建订单 → 成功进入订单详情或返回来源。', html: '<div class="form-grid"><div class="field"><label>客户</label><select class="mock-select"><option>华东零售有限公司</option></select></div><div class="field"><label>订单日期</label><input class="mock-input" type="date" value="2026-07-13"></div><div class="field full"><label>商品明细</label><div class="line-row"><input class="mock-input" value="轻量工作台"><input class="mock-input" value="2"><input class="mock-input" value="¥1,299"><button class="icon-button">×</button></div></div></div>' },
+      { key: 'wizard', label: '下单向导', title: '分步骤下单向导', model: 'Customer → Product[] → Delivery → Confirmation', task: '引导低频用户完成有先后依赖的复杂创建任务。', pro: '每一步聚焦一类决策，可逐步校验并解释后续条件。', con: '前后信息不能同时比较，高频熟练用户跨步成本高。', nav: '来源 → 客户 → 商品 → 交付 → 确认 → 结果；支持草稿和返回上一步。', html: '<div class="flow" style="grid-template-columns:repeat(4,1fr)"><div class="flow-step"><b>01</b><strong>客户</strong><small>已完成</small></div><div class="flow-step"><b>02</b><strong>商品</strong><small>3 项</small></div><div class="flow-step"><b>03</b><strong>交付</strong><small>当前</small></div><div class="flow-step"><b>04</b><strong>确认</strong><small>待完成</small></div></div><div style="margin-top:18px"><label>交付方式</label><select class="mock-select"><option>仓库配送</option></select></div>' },
+      { key: 'kanban', label: '履约看板', title: '订单履约状态看板', model: 'Order[] grouped by FulfillmentState', task: '监控订单流动、发现阻塞和处理状态队列。', pro: '状态分布、WIP、逾期和阻塞可以一眼识别。', con: '卡片维度少，拖拽必须调用合法业务命令而非直接改状态。', nav: '履约工作台 → 卡片预览/详情 → 执行命令 → 返回原看板列。', html: '<div class="kanban"><div class="kanban-col"><strong>待确认</strong><div class="kanban-item">SO-1043</div></div><div class="kanban-col"><strong>待发货</strong><div class="kanban-item">SO-1042</div><div class="kanban-item">SO-1048 · 缺货</div></div><div class="kanban-col"><strong>运输中</strong><div class="kanban-item">SO-1038</div></div></div>' },
+      { key: 'calendar', label: '发货日历', title: '订单发货日历', model: 'ShipmentPlan[] × Warehouse/Carrier', task: '按日期安排发货并识别仓库、车辆和客户预约冲突。', pro: '时间占用和重叠符合自然心智，适合拖拽排期。', con: '大事件量拥挤；时区、跨日、容量和并发拖拽必须处理。', nav: '未排订单 → 日历排期 → 冲突详情 → 保存后保持当前日期视口。', html: '<div class="calendar"><div></div><div>周一</div><div>周二</div><div>周三</div><div>周四</div><div>周五</div><div class="time">09:00</div><div class="event">8 单发货</div><div></div><div class="event">车辆 03</div><div></div><div></div><div class="time">14:00</div><div></div><div class="event">客户预约</div><div></div><div class="event">盘点</div><div></div></div>' },
+      { key: 'gantt', label: '履约甘特', title: '订单履约依赖计划', model: 'FulfillmentTask[] + Dependency DAG + TimeRange', task: '理解备货、质检、发运和运输的区间、依赖与延期。', pro: '时间、顺序、里程碑和关键路径能在同一坐标中观察。', con: '维护成本和横向滚动高，不适合普通订单浏览。', nav: '订单详情 → 履约计划 → 任务/依赖详情 → 返回原时间尺度。', html: '<div class="gantt"><div>任务</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div><div>备货</div><div class="task"></div><div class="task"></div><div></div><div></div><div></div><div></div><div>质检</div><div></div><div></div><div class="task"></div><div></div><div></div><div></div><div>发运</div><div></div><div></div><div></div><div class="delay"></div><div class="delay"></div><div></div></div>' },
+      { key: 'timeline', label: '客户时间线', title: '客户订单事件时间线', model: 'Customer → Order[] → DomainEvent[]', task: '按时间理解客户下单、审核、付款、发货和异常历史。', pro: '业务过程和因果顺序清楚，适合追溯与服务沟通。', con: '不适合大规模精确筛选和比较；需过滤低价值事件。', nav: '客户 360 → 时间线事件 → 订单/付款/发货详情 → 返回事件位置。', html: '<div class="timeline"><div class="timeline-item"><strong>今天 14:32 · SO-1042 已分配承运商</strong></div><div class="timeline-item"><strong>今天 11:08 · 信用审核通过</strong></div><div class="timeline-item"><strong>7 月 12 日 · 收到客户付款</strong></div><div class="timeline-item"><strong>7 月 10 日 · 订单已创建</strong></div></div>' },
+      { key: 'map', label: '区域地图', title: '区域订单与配送地图', model: 'Order[] + DeliveryGeoPoint + Route', task: '识别空间聚类、覆盖空白、配送路径和区域异常。', pro: '邻近、覆盖和路线无需转换成大量文字即可理解。', con: '精确比较弱；位置隐私、坐标误差和聚合尺度影响结论。', nav: '区域地图 → 点位聚类 → 订单列表/详情 → 返回原地图视口。', html: '<div class="map-demo"><div class="pin" style="left:18%;top:20%"><span>8</span></div><div class="pin" style="left:54%;top:48%;background:var(--blue)"><span>3</span></div><div class="pin" style="left:75%;top:18%;background:var(--amber)"><span>!</span></div></div>' },
+      { key: 'pivot', label: '销售透视', title: '订单多维销售透视表', model: 'OrderFact × Customer/Product/Time dimensions', task: '按区域、品类、客户和时间切片汇总并钻取订单明细。', pro: '多维交叉比较和层级展开具有很高分析密度。', con: '口径、空值桶、总计和过滤上下文复杂，普通用户学习成本高。', nav: '销售分析 → 维度单元格钻取 → 订单明细列表 → 返回原透视状态。', html: '<div class="heat"><div>区域 \ 品类</div><div>终端</div><div>家具</div><div>服务</div><div>合计</div><div>华东</div><div class="h3">128</div><div class="h2">86</div><div class="h1">32</div><div>246</div><div>华南</div><div class="h1">42</div><div class="h3">146</div><div class="h2">78</div><div>266</div><div>华北</div><div class="h2">79</div><div class="h1">38</div><div class="h3">132</div><div>249</div></div>' },
+      { key: 'dashboard', label: '销售驾驶舱', title: '订单经营分析驾驶舱', model: 'OrderMetrics + TimeSeries + Distribution + Drilldown', task: '监控销售态势、识别趋势与异常并进入解释链。', pro: '总览效率高，KPI、趋势、分布和异常能够建立层次。', con: '容易装饰化；必须提供口径、更新时间、精确值和明细钻取。', nav: '角色首页/分析入口 → 指标钻取 → 维度分析 → 订单明细。', html: '<div style="display:flex;justify-content:space-between"><div><small>本月销售额</small><strong style="display:block;font-size:28px">¥ 8.6M</strong></div><span class="tag input">+12.4%</span></div><div class="bars"><div class="bar" style="height:35%"><span>一</span></div><div class="bar" style="height:52%"><span>二</span></div><div class="bar" style="height:44%"><span>三</span></div><div class="bar" style="height:72%"><span>四</span></div><div class="bar" style="height:88%"><span>五</span></div></div>' },
+      { key: 'exception', label: '异常工作台', title: '异常订单处置工作台', model: 'ExceptionQueue + Order + Inventory + Credit + Shipment', task: '连续处理缺货、信用阻塞、同步失败和超期订单。', pro: '跨模块证据、影响、责任和恢复命令围绕处置任务组合。', con: '组合读取不能变成跨聚合大保存；异常规则和责任归属需稳定。', nav: '异常中心 → 异常详情 → 权威模块命令 → 回执/下一异常。', html: '<div class="master-detail"><div class="master-list"><div class="selected">缺货 · SO-1048</div><div>信用阻塞 · SO-1042</div><div>同步失败 · SO-1039</div></div><div class="detail-pane"><span class="tag nav">库存不足</span><h4>影响 3 个订单</h4><p>商品 P-208 可用 2，需求 8。</p><button>调整分配</button> <button>转人工采购</button></div></div>' },
+      { key: 'approval', label: '订单审批', title: '高风险订单审批中心', model: 'ApprovalTask + OrderRiskSummary + Evidence', task: '结合金额、毛利、信用、折扣和历史证据执行审批命令。', pro: '待办、风险、证据、理由和动作可以形成完整决策闭环。', con: '过度压缩证据或自动前进太快会放大错误审批。', nav: '待办队列 → 审批详情 → 证据/关联对象 → 提交 → 下一项或返回队列。', html: '<div class="master-detail"><div class="master-list"><div class="selected">SO-1042 · 高风险</div><div>SO-1050 · 毛利低</div><div>SO-1051 · 超额度</div></div><div class="detail-pane"><span class="tag nav">需经理审批</span><h4>¥128,400</h4><p>折扣 18% · 毛利率 7.2% · 信用占用 91%</p><textarea class="mock-input" placeholder="审批理由"></textarea><p><button>驳回</button> <button>通过</button></p></div></div>' }
+    ];
+
+    const projectionTabs = document.querySelector('#projectionTabs');
+    const projectionPreview = document.querySelector('#projectionPreview');
+    function renderProjection(index) {
+      const item = orderProjections[index];
+      [...projectionTabs.children].forEach((button, buttonIndex) => button.classList.toggle('active', buttonIndex === index));
+      projectionPreview.innerHTML = item.html;
+      document.querySelector('#projectionTitle').textContent = item.title;
+      document.querySelector('#projectionModel').textContent = item.model;
+      document.querySelector('#projectionTask').textContent = item.task;
+      document.querySelector('#projectionPro').textContent = item.pro;
+      document.querySelector('#projectionCon').textContent = item.con;
+      document.querySelector('#projectionNav').textContent = item.nav;
+    }
+    orderProjections.forEach((item, index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = item.label;
+      button.addEventListener('click', () => renderProjection(index));
+      projectionTabs.append(button);
+    });
+    renderProjection(0);
+
+    const possibilities = {
+      integer: { label: '整数 / 数量', options: [
+        ['数字输入框', 'number', '直接、精确，支持键盘录入大数值。', '范围感和步长感较弱，容易输入越界值。', '精确值、跨度大或专业用户高频录入。', true],
+        ['增减器', 'stepper', '小幅调整快，步长和上下界容易理解。', '连续点击效率低，占用横向空间。', '数量、人数、份数等小范围逐步调整。'],
+        ['滑块', 'range', '范围位置直观，适合探索和粗调。', '精确录入困难，不适合极大或无界范围。', '音量、比例、阈值等有明确上下界的值。'],
+        ['离散选择器', 'selectNumber', '彻底避免非法值，移动端容易操作。', '候选稍多就难浏览，扩展范围需要改选项。', '只有少量合法整数，如 1–5 星、1–12 期。'],
+        ['只读数字', 'metric', '信息层级清楚，不制造可编辑暗示。', '不能直接修改，需要另设业务动作。', '派生值、审计值、权限不允许编辑的值。']
+      ]},
+      decimal: { label: '小数 / 比率', options: [
+        ['精度数字框', 'decimal', '精确且可明确小数位和单位。', '用户需理解精度，格式错误较常见。', '价格、重量、折扣率等精确录入。', true],
+        ['滑块 + 数值', 'range', '兼顾范围感和当前值反馈。', '仍不适合高精度或跨度极大的数值。', '容差、透明度、百分比等连续调节。'],
+        ['格式化只读值', 'percent', '阅读效率高，可按百分比或单位展示。', '展示格式可能掩盖底层存储口径。', '计算结果、统计指标和不可编辑比例。']
+      ]},
+      money: { label: '金额 / 货币', options: [
+        ['金额框 + 币种', 'money', '语义完整，可同时控制精度和币种。', '组合控件更占空间，币种变更有换算风险。', '允许用户输入且支持多币种。', true],
+        ['固定币种金额框', 'moneyFixed', '录入快，界面简洁。', '币种来自页面上下文，脱离上下文易误读。', '单币种业务或币种由单据锁定。'],
+        ['只读格式化金额', 'moneyRead', '扫描效率高，适合汇总和对账。', '不能说明计算过程，需另提供口径或明细。', '合计、余额、应收等输出值。']
+      ]},
+      string: { label: '字符串 / 文本', options: [
+        ['单行文本框', 'text', '通用、紧凑，键盘编辑效率高。', '不能约束固定候选，也不适合长段落。', '名称、标题、编号等短自由文本。', true],
+        ['多行文本域', 'textarea', '支持长内容和换行，编辑空间明确。', '占据较多页面空间，不提供结构化格式。', '备注、说明、原因等长文本。'],
+        ['掩码 / 语义输入', 'email', '键盘、自动填充和格式反馈更贴合语义。', '格式合法不等于数据真实，规则可能因地区不同。', '邮箱、电话、URL、身份证明等有格式的字符串。'],
+        ['自动补全', 'autocomplete', '兼顾自由输入和已有候选复用。', '候选来源、重复值和无结果状态更复杂。', '标签、地址、商品关键词等半开放集合。'],
+        ['只读可复制文本', 'readonly', '避免误改，适合技术标识和系统值。', '占用表单位置但没有直接编辑能力。', '单号、编码、哈希、生成后的标识。']
+      ]},
+      boolean: { label: '布尔 / 三态', options: [
+        ['开关', 'switch', '当前状态醒目，适合即时生效。', '容易被理解为点击后立即保存，不适合三态。', '启停、显示隐藏等即时二态设置。', true],
+        ['复选框', 'checkbox', '适合表单提交、同意和批量选择。', '单独出现时状态含义不如开关明显。', '提交后生效或表示“包含/同意”。'],
+        ['是 / 否单选', 'yesno', '两个选项含义明确，也可扩展“未知”。', '占空间，简单设置显得笨重。', '严肃确认、问卷，以及 Nullable Boolean 三态。']
+      ]},
+      enum: { label: '枚举 / 固定候选', options: [
+        ['单选组', 'radio', '候选全部可见，比较成本低。', '选项多时占空间并增加扫描负担。', '2–5 个互斥且高频比较的选项。', true],
+        ['分段控件', 'segments', '紧凑、切换快，适合视图或模式。', '长文案容纳差，易被误解为导航标签。', '2–4 个短标签的高频模式切换。'],
+        ['下拉框', 'select', '节省空间，可容纳较多选项。', '选项不可见，比较和发现成本更高。', '5–20 个熟悉选项或空间紧张场景。'],
+        ['搜索选择器', 'autocomplete', '能处理大量候选并支持搜索。', '加载、无结果和模糊匹配需要设计。', '几十到数千个候选。']
+      ]},
+      multiChoice: { label: '多选集合 / 标签', options: [
+        ['复选框组', 'checkbox', '候选和已选状态都可见，比较直接。', '候选一多页面就过长，且缺乏搜索。', '少量稳定候选的多选。', true],
+        ['多选下拉', 'multiSelect', '节省页面空间，可容纳中等数量候选。', '候选被隐藏，已选与未选不易同时比较。', '候选较多但用户熟悉名称。'],
+        ['搜索式标签选择', 'autocomplete', '兼顾大候选集、搜索和开放标签。', '需处理重复标签、无结果和创建权限。', '技能、标签、收件人等半开放集合。'],
+        ['只读标签', 'badge', '扫描快，适合详情和列表摘要。', '不能直接修改；标签多时容易换行占空间。', '无编辑权限或只需展示选中结果。']
+      ]},
+      date: { label: '日期 / 时间', options: [
+        ['日期选择器', 'date', '日历语义明确，格式由浏览器处理。', '跨年月跳转可能慢，原生外观因平台不同。', '生日、业务日、截止日等自然日。', true],
+        ['日期时间选择器', 'datetime', '可一次输入日期与时刻。', '控件复杂，时区语义仍需额外说明。', '预约、执行时刻、发布时间。'],
+        ['日期范围', 'dateRange', '起止关系直接，适合筛选和有效期。', '移动端空间紧张，包含边界需明确。', '报表筛选、活动周期、有效期。'],
+        ['相对时间只读', 'relative', '易快速理解新旧程度。', '不精确且持续变化，审计时不够可靠。', '动态列表中的最近更新时间，同时提供绝对时间。']
+      ]},
+      duration: { label: '持续时间 / 时间段', options: [
+        ['数值 + 单位', 'number', '紧凑、精确，能明确分钟、小时或天。', '切换单位涉及换算，混合单位不直观。', '48 小时、30 天等单一单位时长。', true],
+        ['时分组合输入', 'stepper', '适合小步调整，符合预约时长的操作习惯。', '表达跨天或高精度时长会变复杂。', '会议、工时和服务时长。'],
+        ['预设时长选择', 'selectNumber', '选择快且不会产生非法值。', '灵活性低，预设外数值无法表达。', '15、30、60 分钟等标准档位。'],
+        ['起止时间', 'dateRange', '完整保留开始与结束两个业务事实。', '它表达的是时间区间而非纯时长，时区和跨日更复杂。', '业务同时关心边界时刻，而不只是相差多久。']
+      ]},
+      reference: { label: '对象引用 / 外键', options: [
+        ['搜索选择器', 'autocomplete', '按业务名称选择，可处理大量候选。', '依赖搜索服务，需处理权限、加载和无结果。', '编辑对象引用的默认起点。', true],
+        ['下拉框', 'referenceSelect', '实现简单，所有选项可控。', '候选一多就慢且难找，不适合远程数据。', '候选稳定且少于约 20 个。'],
+        ['对象卡片', 'objectCard', '能展示摘要、状态和识别信息。', '占空间，通常只适合已选结果而非完整选择。', '选择后的确认、详情查看或少量对象择一。'],
+        ['详情链接', 'detailLink', '保持当前页面简洁，可深入关联对象。', '产生页面跳转，必须保留返回上下文。', '只读场景或需要查看完整关联对象。']
+      ]},
+      collection: { label: '集合 / 一对多', options: [
+        ['可编辑明细表', 'editableTable', '密度高，适合同构行和批量录入。', '移动端困难，复杂字段会挤压列宽。', '订单行、费用明细等中小规模组成集合。', true],
+        ['重复卡片', 'repeatCards', '容纳复杂字段，移动端适应性更好。', '纵向空间大，不利于跨行比较。', '每项字段多、差异大或移动端录入。'],
+        ['摘要列表 + 独立页', 'summaryList', '主页面轻量，可承载大集合和独立生命周期。', '编辑路径变长，需要返回与保存上下文。', '数量大或子对象可独立管理。'],
+        ['多选选择器', 'multiSelect', '关联已有对象速度快。', '看不到关联属性，不适合组成对象。', '简单多对多关系且关联本身无属性。']
+      ]},
+      tree: { label: '树 / 层级', options: [
+        ['展开树', 'tree', '结构和同级关系可见，适合浏览。', '深树占空间，大数据量性能和定位困难。', '层级浏览、勾选和结构管理。', true],
+        ['级联选择器', 'cascade', '逐级收敛，适合路径选择。', '无法同时观察全局结构，跨分支比较困难。', '地区、分类、组织路径的表单选择。'],
+        ['面包屑', 'breadcrumb', '当前位置和上级路径清楚。', '不能展示兄弟与子节点，不是完整浏览器。', '详情页说明位置并返回上级。'],
+        ['树表', 'treeTable', '层级与多列属性可同时比较。', '复杂、横向拥挤，移动端体验差。', '组织、科目、物料分类的管理后台。']
+      ]},
+      file: { label: '文件 / 图片', options: [
+        ['文件选择器', 'file', '原生、可靠、无额外依赖。', '默认视觉和状态能力有限。', '简单附件上传。', true],
+        ['拖放上传区', 'dropzone', '批量操作直观，可强化进度反馈。', '实现复杂，仍要保留键盘可访问的文件选择。', '多文件、高频上传和桌面端工作台。'],
+        ['图片画廊', 'gallery', '视觉内容可直接预览和排序。', '缩略图加载成本高，不适合普通文档。', '商品图片、素材库和头像选择。'],
+        ['只读文件列表', 'fileList', '可展示名称、大小、状态和下载动作。', '不能添加或修改文件。', '详情、审计和无上传权限场景。']
+      ]},
+      derived: { label: '派生值 / 指标', options: [
+        ['格式化文本', 'metric', '最克制、最准确，适合单值阅读。', '缺乏比较背景和趋势信息。', '单个计算值或审计字段。', true],
+        ['进度条', 'progress', '目标与完成程度一眼可见。', '依赖明确上下界，精确比较能力弱。', '完成率、配额、容量。'],
+        ['趋势微图', 'spark', '展示变化方向和异常点。', '需要时间序列，可能放大视觉噪声。', '指标趋势比单点值更重要。'],
+        ['状态徽标', 'badge', '分类结果醒目且节省空间。', '丢失连续数值细节，颜色还需文字辅助。', '由规则派生的等级、风险和健康状态。']
+      ]}
+    };
+
+    function demoMarkup(kind) {
+      const demos = {
+        number: '<input type="number" value="128">', stepper: '<div class="stepper"><button type="button">−</button><output>2</output><button type="button">＋</button></div>', range: '<input type="range" min="0" max="100" value="65"><div class="range-value"><span>0</span><span>65</span><span>100</span></div>', selectNumber: '<select><option>3</option><option>4</option><option>5</option></select>', metric: '<strong style="font-size:28px;color:var(--blue)">128</strong>', decimal: '<input type="number" value="12.50" step="0.01">', percent: '<strong style="font-size:26px">12.5%</strong>', money: '<div class="inline-control"><input type="number" value="1299.00"><select><option>CNY</option></select></div>', moneyFixed: '<div class="inline-control"><input type="number" value="1299.00"><span style="padding:7px;border:1px solid var(--strong-line)">¥</span></div>', moneyRead: '<strong style="font-size:25px">¥ 1,299.00</strong>', text: '<input value="华东零售有限公司">', textarea: '<textarea>补充说明内容</textarea>', email: '<input type="email" value="buyer@example.com">', autocomplete: '<input list="demo-options" placeholder="输入关键词搜索…"><datalist id="demo-options"><option value="华东零售"><option value="华南商业"></datalist>', readonly: '<input value="SO-20260713-001" readonly>', switch: '<button class="switch" type="button" aria-label="开关"></button>', checkbox: '<label><input type="checkbox" checked> 已确认</label>', yesno: '<div class="choice-row"><label><input type="radio" name="yn"> 是</label><label><input type="radio" name="yn"> 否</label><label><input type="radio" name="yn"> 未知</label></div>', radio: '<div class="choice-row"><label><input type="radio" name="enum" checked> 普通</label><label><input type="radio" name="enum"> 紧急</label></div>', segments: '<div class="filters"><button class="filter" aria-pressed="true">列表</button><button class="filter">看板</button></div>', select: '<select><option>零售</option><option>制造</option><option>服务</option></select>', date: '<input type="date" value="2026-07-13">', datetime: '<input type="datetime-local" value="2026-07-13T14:30">', dateRange: '<div class="inline-control"><input type="date"><input type="date"></div>', relative: '<strong title="2026-07-13 14:30:00">3 小时前</strong>', referenceSelect: '<select><option>华东零售有限公司</option></select>', objectCard: '<div class="reference-result"><span>华东零售 · A级 · 上海</span></div>', detailLink: '<a href="#navigation" style="color:var(--green);font-weight:700">华东零售有限公司 →</a>', editableTable: '<div class="mini-list"><div><input value="商品 A"><input value="2"><button>×</button></div></div>', repeatCards: '<div class="reference-result"><span>商品 A<br>数量 2 · ¥99</span><button>编辑</button></div>', summaryList: '<div class="reference-result"><span>共 128 条记录</span><a href="#navigation">查看全部 →</a></div>', multiSelect: '<select multiple><option selected>管理员</option><option>审核员</option><option selected>采购员</option></select>', tree: '<ul class="tree"><li><details open><summary>总部</summary><ul><li>华东区</li><li>华南区</li></ul></details></li></ul>', cascade: '<div class="inline-control"><select><option>总部</option></select><select><option>华东区</option></select></div>', breadcrumb: '<nav>总部 / 销售中心 / <strong>华东区</strong></nav>', treeTable: '<table><tr><td>▾ 总部</td><td>320 人</td></tr><tr><td>　└ 华东区</td><td>86 人</td></tr></table>', file: '<input type="file">', dropzone: '<button style="width:100%;height:56px;border:1px dashed var(--green);background:white">选择或拖放文件</button>', gallery: '<div style="display:flex;gap:6px"><span style="width:52px;height:52px;background:#cbd7cf"></span><span style="width:52px;height:52px;background:#d6cab9"></span></div>', fileList: '<div class="reference-result"><span>报价单.pdf · 2.4 MB</span><a href="#">下载</a></div>', progress: '<progress max="100" value="72" style="width:100%">72%</progress>', spark: '<div style="font:24px/1 monospace;color:var(--blue)">▁▂▃▅▄▆█</div>', badge: '<span class="tag input">低风险</span>'
+      };
+      return demos[kind] || '';
+    }
+
+    const possibilityType = document.querySelector('#possibilityType');
+    const candidateGrid = document.querySelector('#candidateGrid');
+    Object.entries(possibilities).forEach(([key, item]) => possibilityType.add(new Option(item.label, key)));
+    function renderPossibilities() {
+      const item = possibilities[possibilityType.value];
+      candidateGrid.innerHTML = item.options.map(([name, kind, pro, con, when, recommended]) => `
+        <article class="candidate ${recommended ? 'recommended' : ''}">
+          <div class="candidate-title"><h5>${name}</h5>${recommended ? '<span class="rank">常用起点</span>' : ''}</div>
+          <div class="candidate-demo">${demoMarkup(kind)}</div>
+          <dl class="tradeoff"><div class="pro"><dt>优点</dt><dd>${pro}</dd></div><div class="con"><dt>缺点</dt><dd>${con}</dd></div><div class="when"><dt>选择条件</dt><dd>${when}</dd></div></dl>
+        </article>`).join('');
+    }
+    possibilityType.addEventListener('change', renderPossibilities);
+    renderPossibilities();
+
+    const rows = [...document.querySelectorAll('#mappingRows tr')];
+    const search = document.querySelector('#mappingSearch');
+    const filters = [...document.querySelectorAll('.filter')];
+    const emptyState = document.querySelector('#emptyState');
+    let category = 'all';
+
+    function filterRows() {
+      const query = search.value.trim().toLowerCase();
+      let visible = 0;
+      rows.forEach((row) => {
+        const matchesCategory = category === 'all' || row.dataset.category === category;
+        const matchesQuery = !query || row.textContent.toLowerCase().includes(query);
+        const show = matchesCategory && matchesQuery;
+        row.hidden = !show;
+        if (show) visible += 1;
+      });
+      emptyState.style.display = visible ? 'none' : 'block';
+    }
+
+    search.addEventListener('input', filterRows);
+    filters.forEach((button) => button.addEventListener('click', () => {
+      category = button.dataset.filter;
+      filters.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+      filterRows();
+    }));
+
+    document.querySelectorAll('[data-step]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const output = button.parentElement.querySelector('output');
+        output.value = Math.max(1, Number(output.value) + Number(button.dataset.step));
+      });
+    });
+
+    document.querySelectorAll('.live-range').forEach((range) => range.addEventListener('input', () => {
+      range.parentElement.querySelector('.range-value output').value = `${range.value}%`;
+    }));
+    document.querySelectorAll('.demo-switch').forEach((button) => button.addEventListener('click', () => {
+      const enabled = button.getAttribute('aria-pressed') !== 'true';
+      button.setAttribute('aria-pressed', String(enabled));
+      button.style.background = enabled ? 'var(--green)' : 'var(--strong-line)';
+      button.nextElementSibling.textContent = enabled ? '已启用' : '已停用';
+    }));
+
+    const routeFlows = {
+      composition: [
+        ['订单编辑页', '草稿 SO-20260713-001 已保留。订单行与订单共享保存边界。', '来源：订单草稿 · 未保存变更 2 项'],
+        ['订单行编辑页', '编辑商品、数量和单价。完成后返回订单，而不是独立提交另一个业务对象。', '父对象：SO-20260713-001 · 行号：2']
+      ],
+      reference: [
+        ['订单详情', '当前查看华东零售有限公司的订单，可通过客户名称进入关联对象。', '来源：订单列表 · 筛选：待发货 · 第 3 页'],
+        ['客户详情', '展示客户完整信息。返回时恢复原订单，而不是回到一个无上下文的首页。', '返回目标：SO-20260713-001']
+      ],
+      collection: [
+        ['客户详情', '页面只展示最近 3 笔订单和“查看全部”，避免嵌入完整大集合。', '客户：华东零售有限公司'],
+        ['客户订单列表', '列表自动携带 customerId 过滤条件，并允许排序、分页和批处理。', '固定筛选：客户 = 华东零售有限公司'],
+        ['订单详情', '从集合中选择一条订单继续查看。返回时仍回到该客户的已过滤列表。', '来源列表：客户订单 · 第 2 页']
+      ],
+      many: [
+        ['用户详情', '显示当前角色摘要，并提供角色分配入口。', '用户：张明 · 租户：华东区'],
+        ['角色分配', '选择已有角色；当关联带范围和有效期时，进入关联属性编辑。', '已选：采购员、审核员'],
+        ['用户角色属性', '编辑生效范围、开始日期和失效日期，这些字段属于关联本身。', '关联：张明 × 审核员']
+      ],
+      tree: [
+        ['组织树', '从全局层级中选择节点，树负责浏览而不是承载所有详情。', '展开路径：总部 / 销售中心'],
+        ['华东区详情', '面包屑说明当前位置，可以进入子节点或返回上级。', '路径：总部 / 销售中心 / 华东区'],
+        ['上海分部详情', '进入子节点后继续保留完整祖先路径。', '路径：总部 / 销售中心 / 华东区 / 上海分部']
+      ],
+      workflow: [
+        ['待办队列', '当前筛选为“需要我审批”，并记录队列位置。', '筛选：待审批 · 第 1 页 · 第 4 条'],
+        ['审批详情', '页面展示合法命令“通过/驳回”，而不是允许任意修改 status。', '任务：AP-1042 · 状态：待审批'],
+        ['下一条待办', '完成后进入下一任务；也可返回队列并恢复原筛选位置。', '上一任务已完成 · 当前：AP-1043']
+      ]
+    };
+    const navTitle = document.querySelector('#navTitle');
+    const navContext = document.querySelector('#navContext');
+    const screenTitle = document.querySelector('#screenTitle');
+    const screenBody = document.querySelector('#screenBody');
+    const navBack = document.querySelector('#navBack');
+    const navNext = document.querySelector('#navNext');
+    let activeFlow = null;
+    let activeStep = 0;
+    function renderRoute() {
+      const screen = routeFlows[activeFlow][activeStep];
+      navTitle.textContent = `导航演示 · ${activeStep + 1}/${routeFlows[activeFlow].length}`;
+      screenTitle.textContent = screen[0];
+      screenBody.textContent = screen[1];
+      navContext.textContent = screen[2];
+      navBack.disabled = activeStep === 0;
+      navNext.disabled = activeStep === routeFlows[activeFlow].length - 1;
+      navNext.textContent = navNext.disabled ? '已到达目标页面' : '下一页面 →';
+    }
+    document.querySelectorAll('[data-route]').forEach((button) => button.addEventListener('click', () => {
+      activeFlow = button.dataset.route;
+      activeStep = 0;
+      renderRoute();
+      document.querySelector('.nav-lab').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }));
+    navBack.addEventListener('click', () => { if (activeStep > 0) { activeStep -= 1; renderRoute(); } });
+    navNext.addEventListener('click', () => { if (activeFlow && activeStep < routeFlows[activeFlow].length - 1) { activeStep += 1; renderRoute(); } });
+
+    const sections = [...document.querySelectorAll('main section[id]')];
+    const links = [...document.querySelectorAll('.toc a')];
+    const observer = new IntersectionObserver((entries) => {
+      const current = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!current) return;
+      links.forEach((link) => link.classList.toggle('active', link.hash === `#${current.target.id}`));
+    }, { rootMargin: '-15% 0px -70% 0px', threshold: [0, 0.2, 0.6] });
+    sections.forEach((section) => observer.observe(section));
+  </script>
+</body>
+</html>

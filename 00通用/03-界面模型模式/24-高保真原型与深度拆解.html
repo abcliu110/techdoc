@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>界面模型模式 — 高保真原型与深度拆解</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f5f6f8;color:#2c3e50;font-size:14px;line-height:1.8}
+.nav{position:sticky;top:0;background:#fff;border-bottom:2px solid #1890ff;padding:10px 20px;z-index:999;display:flex;gap:4px;flex-wrap:wrap;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.nav h1{font-size:14px;color:#1890ff;margin-right:8px}
+.nav a{font-size:11px;color:#595959;text-decoration:none;padding:3px 8px;border-radius:4px}
+.nav a:hover{background:#e6f7ff;color:#1890ff}
+.wrap{max-width:1200px;margin:0 auto;padding:24px 20px}
+.pattern{background:#fff;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:32px;overflow:hidden}
+.p-head{background:linear-gradient(135deg,#1890ff,#0066cc);color:#fff;padding:20px 28px}
+.p-head .num{font-size:12px;opacity:.8;letter-spacing:2px}
+.p-head h2{font-size:22px;font-weight:700;margin:2px 0}
+.p-head .sys{font-size:12px;opacity:.9;margin-top:4px}
+.p-body{display:grid;grid-template-columns:1fr 380px;gap:0}
+@media(max-width:900px){.p-body{grid-template-columns:1fr}}
+.proto{padding:24px;background:#f0f2f5;border-right:1px solid #e8e8e8;min-width:0}
+.analysis{padding:24px 28px}
+.analysis h3{font-size:15px;color:#1890ff;margin:16px 0 8px;border-left:3px solid #1890ff;padding-left:10px}
+.analysis h3:first-child{margin-top:0}
+.analysis p{font-size:13px;color:#595959;margin-bottom:8px;line-height:1.9}
+.analysis b{color:#2c3e50}
+.analysis .insight{background:#e6f7ff;border:1px solid #91d5ff;border-radius:6px;padding:10px 14px;margin:10px 0;font-size:12px;color:#0066cc}
+.analysis .insight b{color:#0066cc}
+.analysis .anti{background:#fff1f0;border:1px solid #ffa39e;border-radius:6px;padding:10px 14px;margin:10px 0;font-size:12px;color:#cf1322}
+.analysis .anti b{color:#cf1322}
+.analysis .theory{background:#f9f0ff;border:1px solid #d3adf7;border-radius:6px;padding:10px 14px;margin:10px 0;font-size:12px;color:#531dab}
+.analysis .theory b{color:#531dab}
+.analysis ul{padding-left:18px;margin:6px 0}
+.analysis li{font-size:12px;color:#595959;margin:3px 0}
+.tag{display:inline-block;font-size:10px;padding:1px 7px;border-radius:8px;margin-right:4px;font-weight:600}
+.tag-sap{background:#e6f7ff;color:#0066cc}.tag-sf{background:#e6f4ff;color:#0b5cab}.tag-ant{background:#e6f7ff;color:#1890ff}
+/* === 原型通用样式 === */
+.mu{background:#fff;border-radius:6px;overflow:hidden;border:1px solid #e0e0e0;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.hdr{height:38px;display:flex;align-items:center;padding:0 12px;border-bottom:1px solid #e5e5e5;gap:8px}
+.hdr.sap{border-bottom:2px solid #0066cc}.hdr.sf{background:#0b5cab;color:#fff;border:none}.hdr.ant{background:#001529;color:#fff}
+.fb{padding:8px 12px;border-bottom:1px solid #e8e8e8;display:flex;gap:6px;flex-wrap:wrap;align-items:flex-end;background:#fafafa}
+.fi{display:flex;flex-direction:column;gap:1px}.fi label{font-size:9px;color:#999}
+.fi input{height:24px;border:1px solid #d9d9d9;border-radius:3px;padding:0 5px;font-size:11px;min-width:90px}
+.btn{height:24px;padding:0 8px;border-radius:3px;font-size:11px;cursor:pointer;border:none;line-height:24px}
+.bp{background:#1890ff;color:#fff}.bd{background:#fff;border:1px solid #d9d9d9;color:#666}.bx{background:#ff4d4f;color:#fff}
+table.t{width:100%;border-collapse:collapse;font-size:11px}
+.t th{background:#fafafa;padding:5px 8px;text-align:left;font-weight:600;border-bottom:1px solid #e8e8e8;white-space:nowrap}
+.t td{padding:5px 8px;border-bottom:1px solid #f0f0f0}
+.t tr:hover td{background:#e6f7ff}
+.ck{width:12px;height:12px;border:1px solid #d9d9d9;border-radius:2px;display:inline-block;vertical-align:middle}
+.ck.on{background:#1890ff;border-color:#1890ff}.ck.on::after{content:'✓';color:#fff;font-size:9px;display:block;text-align:center;line-height:11px}
+.bg{background:#f6ffed;color:#52c41a;border:1px solid #b7eb8f;padding:0 6px;border-radius:7px;font-size:10px;white-space:nowrap}
+.bb{background:#e6f7ff;color:#1890ff;border:1px solid #91d5ff;padding:0 6px;border-radius:7px;font-size:10px;white-space:nowrap}
+.bo{background:#fff7e6;color:#fa8c16;border:1px solid #ffd591;padding:0 6px;border-radius:7px;font-size:10px;white-space:nowrap}
+.br{background:#fff1f0;color:#ff4d4f;border:1px solid #ffa39e;padding:0 6px;border-radius:7px;font-size:10px;white-space:nowrap}
+.oh{padding:10px 12px;border-bottom:1px solid #e8e8e8}
+.oh .tt{font-size:15px;font-weight:700;display:flex;gap:6px;align-items:center}
+.oh .mt{display:flex;gap:14px;font-size:10px;color:#666;margin-top:5px;flex-wrap:wrap}
+.sn{display:flex;border-bottom:1px solid #e8e8e8;padding:0 12px;background:#fafafa}
+.st{padding:6px 10px;font-size:11px;cursor:pointer;border-bottom:2px solid transparent}
+.st.on{color:#1890ff;border-bottom-color:#1890ff;font-weight:600}
+.tl{padding:10px 12px}
+.ti{display:flex;gap:8px;padding-bottom:12px;position:relative}
+.ti:last-child{padding-bottom:0}
+.td{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0}
+.td.sys{background:#e6f7ff;color:#1890ff}.td.hu{background:#fff7e6;color:#fa8c16}.td.bz{background:#f6ffed;color:#52c41a}
+.tc{flex:1}.tc .tt2{font-size:9px;color:#999}.tc .tn{font-size:11px;font-weight:600}.tc .td2{font-size:10px;color:#666}
+.tc .tv{font-size:10px;background:#fafafa;padding:2px 5px;border-radius:3px;margin-top:2px;display:inline-block;border:1px solid #f0f0f0}
+.kan{display:flex;gap:8px;padding:10px;overflow-x:auto}
+.kc{min-width:130px;flex-shrink:0}
+.kch{font-size:10px;font-weight:600;margin-bottom:4px}
+.kcd{background:#fff;border-radius:4px;padding:6px;margin-bottom:4px;box-shadow:0 1px 2px rgba(0,0,0,.08);border-left:2px solid #1890ff}
+.kcd .kt{font-size:10px;font-weight:600}.kcd .ka{font-size:12px;font-weight:700;color:#1890ff}
+.pth{background:#fff;padding:8px 12px;border-bottom:1px solid #e8e8e8}
+.ps{display:flex;align-items:center;gap:2px}
+.psg{display:flex;align-items:center;gap:3px;font-size:9px;color:#999}
+.psg.done{color:#52c41a}.psg.cur{color:#0b5cab;font-weight:600}
+.psn{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;border:1.5px solid #d9d9d9}
+.psg.done .psn{background:#52c41a;color:#fff;border-color:#52c41a}.psg.cur .psn{background:#0b5cab;color:#fff;border-color:#0b5cab}
+.kg{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:10px}
+.kc2{background:#fff;border-radius:5px;padding:10px;border:1px solid #e8e8e8}
+.kc2 .kt{font-size:9px;color:#999;margin-bottom:3px}.kc2 .kv{font-size:18px;font-weight:700}
+.kc2 .ktr{font-size:9px;margin-top:2px}.kc2 .ktg{font-size:8px;color:#999}
+.bc{display:flex;align-items:flex-end;gap:6px;height:60px;padding-top:10px}
+.bar{flex:1;background:#1890ff;border-radius:2px 2px 0 0;position:relative;min-height:2px}
+.bar span{position:absolute;bottom:-12px;left:0;right:0;text-align:center;font-size:7px;color:#999}
+.bar b{position:absolute;top:-12px;left:0;right:0;text-align:center;font-size:7px}
+.mo{background:rgba(0,0,0,.35);padding:16px;display:flex;justify-content:center}
+.md{background:#fff;border-radius:5px;width:260px;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.mh{padding:10px 14px;border-bottom:1px solid #e8e8e8;display:flex;justify-content:space-between;font-size:12px;font-weight:600}
+.mb{padding:12px 14px}.mb p{font-size:10px;margin-bottom:4px;color:#666}
+.mw{background:#fff7e6;border:1px solid #ffd591;border-radius:3px;padding:5px 8px;font-size:9px;color:#fa8c16;margin:6px 0}
+.mf{padding:8px 14px;border-top:1px solid #e8e8e8;display:flex;justify-content:flex-end;gap:4px}
+.dr{display:flex;height:200px;position:relative;overflow:hidden;background:#f0f2f5}
+.dr-l{flex:1;overflow:auto;padding:8px}
+.dr-p{width:200px;background:#fff;box-shadow:-3px 0 8px rgba(0,0,0,.08);position:absolute;right:0;top:0;bottom:0;display:flex;flex-direction:column}
+.wz{display:flex;align-items:center;padding:12px;background:#fff;border-bottom:1px solid #e8e8e8}
+.wzs{display:flex;align-items:center;gap:4px;font-size:10px;color:#999}
+.wzs.done{color:#52c41a}.wzs.cur{color:#1890ff;font-weight:600}
+.wzsn{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;border:1.5px solid #d9d9d9}
+.wzs.done .wzsn{background:#52c41a;color:#fff;border-color:#52c41a}.wzs.cur .wzsn{background:#1890ff;color:#fff;border-color:#1890ff}
+.wzc{flex:1;height:2px;background:#e8e8e8;margin:0 4px;min-width:10px}
+.md3{display:flex;height:200px;overflow:hidden}
+.md3m{width:140px;border-right:1px solid #e8e8e8;overflow:auto;background:#fafafa}
+.md3d{flex:1;overflow:auto;background:#fff;padding:12px}
+.mdi{padding:5px 8px;border-bottom:1px solid #f0f0f0;cursor:pointer;font-size:10px}
+.mdi.on{background:#e6f7ff;border-left:2px solid #1890ff}
+.ptbl{width:100%;border-collapse:collapse;font-size:10px}
+.ptbl th{background:#fafafa;padding:4px;text-align:center;font-weight:600;border:1px solid #e8e8e8}
+.ptbl th:first-child{text-align:left;padding-left:8px}
+.ptbl td{padding:3px;text-align:center;border:1px solid #e8e8e8}
+.ptbl td:first-child{text-align:left;padding-left:8px;font-weight:500}
+.pck{color:#52c41a}.pcr{color:#ff4d4f}.pmx{color:#fa8c16}.pin{color:#1890ff;font-size:9px}
+.rtbl{width:100%;border-collapse:collapse;font-size:10px}
+.rtbl th{background:#fafafa;padding:4px 8px;text-align:left;font-weight:600;border-bottom:2px solid #e8e8e8}
+.rtbl td{padding:4px 8px;border-bottom:1px solid #f0f0f0}
+.rtbl .diff td{background:#fff7e6}.rtbl .ok td{background:#f6ffed}
+.ets{display:flex;border-bottom:1px solid #e8e8e8;background:#fafafa}
+.et{padding:6px 12px;font-size:11px;cursor:pointer;border-bottom:2px solid transparent;color:#666}
+.et.on{color:#ff4d4f;border-bottom-color:#ff4d4f;font-weight:600}
+.et .c{background:#ff4d4f;color:#fff;border-radius:7px;padding:0 4px;font-size:8px;margin-left:2px}
+.ei{padding:8px 12px;border-bottom:1px solid #f0f0f0;display:flex;gap:8px;align-items:flex-start;font-size:10px}
+.eib{flex:1}.eit{font-weight:600}.eid{color:#999;font-size:9px}
+.eia a{font-size:9px;color:#1890ff;text-decoration:none;padding:1px 5px;border:1px solid #91d5ff;border-radius:3px;margin-right:3px}
+.sf3{display:flex;min-height:280px}
+.sf3l{width:100px;border-right:1px solid #e8e8e8;padding:8px;background:#fff}
+.sf3m{flex:1;padding:8px}
+.sf3r{width:120px;border-left:1px solid #e8e8e8;padding:8px;background:#f9fafb}
+.sfh{background:#0b5cab;color:#fff;padding:8px;border-radius:4px;margin-bottom:8px}
+.sfh .nm{font-size:13px;font-weight:700}
+.sfh .fl{display:flex;gap:10px;margin-top:6px;font-size:9px;flex-wrap:wrap}
+.sfh .fl label{opacity:.8;display:block;font-size:8px}
+.ap{width:150px;background:#fff;border-left:1px solid #e8e8e8;display:flex;flex-direction:column;height:260px}
+.aph{padding:6px 8px;border-bottom:1px solid #e8e8e8;font-size:10px;font-weight:600}
+.apb{flex:1;padding:8px;overflow:auto;display:flex;flex-direction:column;gap:6px}
+.msg{max-width:95%;padding:6px 8px;border-radius:5px;font-size:9px;line-height:1.5}
+.msg.u{background:#1890ff;color:#fff;align-self:flex-end}
+.msg.b{background:#f5f5f5;align-self:flex-start}
+.msg.b b{color:#1890ff}
+.ev{font-size:8px;color:#999;margin-top:3px;padding-top:3px;border-top:1px dashed #d9d9d9}
+</style>
+</head>
+<body>
+<div class="nav">
+<h1>UI模式×高保真原型×深度拆解</h1>
+<a href="#p1">1.List Report</a><a href="#p2">2.Object Page</a><a href="#p3">3.Timeline</a>
+<a href="#p4">4.Related Lists</a><a href="#p5">5.Master-Detail</a><a href="#p6">6.Dashboard</a>
+<a href="#p7">7.Kanban</a><a href="#p8">8.Forms</a><a href="#p9">9.Wizard</a>
+<a href="#p10">10.Exception</a><a href="#p11">11.Permission</a><a href="#p12">12.Reconciliation</a>
+<a href="#p13">13.AI Copilot</a><a href="#p14">14.Drill-down</a><a href="#p15">15.Cust360</a>
+</div>
+<div class="wrap">
+<div id="content">
+
+<!-- P1 -->
+<div class="pattern" id="p1">
+<div class="p-head"><div class="num">PATTERN 01</div><h2>List Report — 列表报告</h2><div class="sys"><span class="tag tag-sap">SAP Fiori</span><span class="tag tag-ant">Ant Design Pro</span> 金蝶云苍穹 / IBM Carbon</div></div>
+<div class="p-body">
+<div class="proto">
+<div class="mu">
+<div class="hdr sap"><b style="color:#0066cc;font-size:11px">SAP</b><span style="flex:1;max-width:180px;height:20px;border:1px solid #d9d9d9;border-radius:10px;display:flex;align-items:center;padding:0 8px;color:#999;font-size:8px">🔍 搜索...</span><span style="margin-left:auto;width:18px;height:18px;border-radius:50%;background:#0066cc;color:#fff;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600">张</span></div>
+<div class="fb"><div class="fi"><label>销售组织</label><input value="1000华东"></div><div class="fi"><label>渠道</label><input value="直销"></div><div class="fi"><label>日期</label><input value="07-01~15"></div><button class="btn bp">Go</button><span style="margin-left:auto;font-size:8px;color:#1890ff">▾高级筛选</span></div>
+<div style="background:#e6f7ff;padding:3px 10px;border-bottom:1px solid #91d5ff;font-size:9px"><b style="color:#1890ff">已选3项</b> <button class="btn bp" style="height:16px">批量审批</button><button class="btn bd" style="height:16px">导出</button><button class="btn bd" style="height:16px">影响预览</button></div>
+<table class="t"><tr><th><span class="ck on"></span></th><th>订单号</th><th>客户</th><th>金额</th><th>状态</th><th>交货</th></tr>
+<tr><td><span class="ck on"></span></td><td>SO00100</td><td>Siemens AG</td><td><b>¥128K</b></td><td><span class="bg">✓确认</span></td><td>07-20</td></tr>
+<tr><td><span class="ck on"></span></td><td>SO00101</td><td>BMW Group</td><td><b>¥56K</b></td><td><span class="bo">⏳审批</span></td><td>07-22</td></tr>
+<tr><td><span class="ck on"></span></td><td>SO00102</td><td>BASF SE</td><td><b>¥89.5K</b></td><td><span class="bb">📦交货</span></td><td>07-15</td></tr>
+<tr><td><span class="ck"></span></td><td>SO00103</td><td>Volkswagen</td><td><b>¥215K</b></td><td><span class="bo">⏳审批</span></td><td>07-25</td></tr>
+<tr><td><span class="ck"></span></td><td>SO00104</td><td>Bayer AG</td><td><b>¥43.2K</b></td><td><span class="br">⚠冻结</span></td><td>07-18</td></tr></table>
+<div style="padding:4px 8px;display:flex;justify-content:flex-end;gap:2px;font-size:8px"><span class="btn bd" style="height:14px;min-width:14px">‹</span><span class="btn bp" style="height:14px;min-width:14px">1</span><span class="btn bd" style="height:14px;min-width:14px">2</span><span class="btn bd" style="height:14px;min-width:14px">›</span></div>
+</div></div>
+<div class="analysis">
+<h3>解决什么问题</h3>
+<p>用户需从<strong>数万条</strong>订单中快速找到目标。核心矛盾：数据量大但用户只需关注其中几条。</p>
+<h3>SAP Fiori 怎么做</h3>
+<ul>
+<li><b>Smart Filter Bar</b>：核心筛选默认展开，高级筛选折叠。遵循 Hick-Hyman 定律——选项收敛降低决策时间。</li>
+<li><b>状态徽章三重编码</b>：✓确认(绿)、⏳审批(橙)、📦交货(蓝)、⚠冻结(红)。图标+文本+颜色三者同时用，不只靠颜色——SAP Fiori Guidelines 硬性要求。</li>
+<li><b>批量操作栏渐进出现</b>：未选中不占空间，选中后从顶部滑入。含"影响预览"按钮。</li>
+<li><b>行摘要聚合</b>：订单号+客户+金额+状态+交货日，一眼区分对象。</li>
+</ul>
+<div class="insight"><b>标杆洞察：</b>Smart Filter Bar 与表格共享同一 OData 上下文，保证图表和明细口径一致。</div>
+<h3>Ant Design Pro 差异</h3>
+<p>ProTable 把低频操作（刷新/密度/列设置/全屏）收敛到右上角图标组。这是"高频外露低频收敛"的工程实现。</p>
+<div class="anti"><b>✗ 反模式：</b>SAP GUI 传统 ALV——所有筛选平铺、所有按钮平铺，30+列20+按钮，认知负荷极高。</div>
+<div class="theory"><b>理论桥接：</b>§2 信息分层；§3 状态轴（筛选=状态过滤器）；§13 信息-认知失配。</div>
+</div></div></div>
+
+<!-- P2 -->
+<div class="pattern" id="p2">
+<div class="p-head"><div class="num">PATTERN 02</div><h2>Object Page — 对象详情页</h2><div class="sys"><span class="tag tag-sap">SAP Fiori</span><span class="tag tag-sf">Salesforce Lightning</span> 金蝶云苍穹</div></div>
+<div class="p-body">
+<div class="proto">
+<div class="mu">
+<div class="hdr sf"><b style="font-size:10px">Salesforce</b><span style="margin-left:auto;width:18px;height:18px;border-radius:50%;background:#fff;color:#0b5cab;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600">张</span></div>
+<div class="sf3">
+<div class="sf3l"><div style="font-size:9px;color:#999;margin-bottom:4px">导航</div><div style="font-size:10px;padding:3px 0;color:#0b5cab;font-weight:600">📝概览</div><div style="font-size:10px;padding:3px 0;color:#666">💬详情</div><div style="font-size:10px;padding:3px 0;color:#666">📦相关</div></div>
+<div class="sf3m">
+<div class="sfh"><div class="nm">Siemens AG</div><div class="fl"><div><label>行业</label><span>制造业</span></div><div><label>年营收</label><span>¥8.5B</span></div><div><label>评分</label><span>⭐A级</span></div><div><label>销售</label><span>张三</span></div></div></div>
+<div style="font-size:10px;font-weight:600;margin:8px 0 4px">相关列表</div>
+<table class="t"><tr><th>订单号</th><th>金额</th><th>状态</th></tr><tr><td>SO00100</td><td>¥128K</td><td><span class="bg">确认</span></td></tr><tr><td>SO00101</td><td>¥56K</td><td><span class="bo">审批</span></td></tr></table>
+<div style="font-size:10px;font-weight:600;margin:8px 0 4px">活动时间线</div>
+<div style="font-size:9px;border-left:2px solid #e8e8e8;padding-left:8px"><div style="margin-bottom:4px"><b>📧邮件</b> 今天14:30<br><span style="color:#999">回复了报价邮件</span></div><div><b>☎电话</b> 11:00 张三<br><span style="color:#999">沟通合同条款</span></div></div>
+</div>
+<div class="sf3r"><div style="font-size:10px;font-weight:600;margin-bottom:4px">🤖Einstein</div><div style="background:#e6f4ff;border:1px solid #91d5ff;border-radius:4px;padding:6px;font-size:9px"><b>流失风险：中</b><br>依据：30天无活动<br>置信度：78%<br><button class="btn bp" style="height:16px;margin-top:3px">安排联系</button></div></div>
+</div></div></div>
+<div class="analysis">
+<h3>解决什么问题</h3>
+<p>一个订单在数据库里涉及 8+ 张表（订单/商品/支付/物流/优惠/发票/日志…）。Object Page 把这些散落的数据聚合成用户能理解的<strong>一个完整业务对象</strong>。</p>
+<h3>SAP Fiori 怎么做</h3>
+<ul>
+<li><b>对象头部</b>：订单号+状态+金额+客户+主操作。一眼知道"这是哪个对象、什么状态、能干什么"。</li>
+<li><b>分区锚点导航</b>：概览/行项目/合作伙伴/定价/交货/状态历史。点击标签自动滚动到对应分区，滚动时高亮当前标签——比 Tab 切换更流畅。</li>
+<li><b>SAP 官方规范</b>：对象详情页由页眉、内容区域、操作区域三部分组成。</li>
+</ul>
+<h3>Salesforce Lightning 的差异</h3>
+<ul>
+<li><b>三列布局</b>：左列 Highlights（4-6个关键字段），中列详情+Related Lists，右列 AI 建议+提醒。</li>
+<li><b>可组合</b>：管理员通过 Lightning App Builder 拖拽组件定制不同角色布局。Object Page 从"固定结构"进化到"可组合架构"。</li>
+<li><b>Highlights Panel 只展示 4-6 个关键字段</b>，严格遵守信息分层。</li>
+</ul>
+<h3>金蝶云苍穹的特色</h3>
+<p>采用<strong>单据头+明细分录+状态命令栏</strong>——中国 ERP 经典结构。命令栏随状态动态调整：草稿态显示"暂存+提交"，待审态显示"审批+驳回"。这是能力模型（CAP-1）的实践。</p>
+<div class="insight"><b>标杆洞察：</b>Object Page 的本质是"数据库语言→用户心理模型的翻译器"。SAP 按业务语义分区，Salesforce 按角色组合，金蝶按单据头分录——三种变体都在解决同一个问题。</div>
+<div class="theory"><b>理论桥接：</b>§1 数据-心理失配；§3.2 状态四问（是什么/为什么/怎么办/如何恢复）；§5 可追溯性。</div>
+</div></div></div>
+
+<!-- P3 -->
+<div class="pattern" id="p3">
+<div class="p-head"><div class="num">PATTERN 03</div><h2>Timeline — 时间线</h2><div class="sys"><span class="tag tag-sf">Salesforce</span><span class="tag tag-sap">SAP Fiori</span><span class="tag tag-ant">Ant Design</span></div></div>
+<div class="p-body">
+<div class="proto"><div class="mu">
+<div class="hdr"><b style="color:#0066cc;font-size:10px">订单 SO00100 状态历史</b></div>
+<div class="tl">
+<div class="ti"><div class="td bz">✓</div><div class="tc"><div class="tt2">07-12 14:30 · 业务状态</div><div class="tn">订单完成</div><div class="td2">系统自动确认收货</div><div class="tv">已发货→<b>已完成</b></div></div></div>
+<div class="ti"><div class="td sys">📦</div><div class="tc"><div class="tt2">07-12 14:00 · 系统事件</div><div class="tn">物流推送成功</div><div class="td2">快递单号 SF123456789</div></div></div>
+<div class="ti"><div class="td sys">🔒</div><div class="tc"><div class="tt2">07-12 11:00 · 系统事件</div><div class="tn">库存锁定</div><div class="td2">SKU001 扣减2件</div></div></div>
+<div class="ti"><div class="td hu">👤</div><div class="tc"><div class="tt2">07-12 10:35 · 人工·张三</div><div class="tn">确认订单</div><div class="td2">信用检查通过</div><div class="tv">待审批→<b>已确认</b></div></div></div>
+<div class="ti"><div class="td sys">💳</div><div class="tc"><div class="tt2">07-12 10:32 · 系统事件</div><div class="tn">支付成功</div><div class="td2">微信支付 ¥1,280</div></div></div>
+</div></div></div>
+<div class="analysis">
+<h3>解决什么问题</h3>
+<p>用户问"这个状态怎么变成这样的"——业务事实的<strong>可追溯性</strong>。财务对账、问题排查、责任追溯都依赖追踪形成过程。</p>
+<h3>三层事件模型</h3>
+<ul>
+<li><b>系统自动事件</b>（蓝色圆点）：支付回调、库存锁定、物流推送。触发者是系统。</li>
+<li><b>人工操作事件</b>（橙色圆点）：客服审核、运营修改。记录操作人+时间+前后值+原因。</li>
+<li><b>业务状态事件</b>（绿色圆点）：状态机流转。记录前状态→后状态+触发条件。</li>
+</ul>
+<h3>Salesforce vs SAP 差异</h3>
+<p>Salesforce 的 Activity Timeline 偏<strong>沟通记录</strong>（邮件/电话/会议/任务），用不同图标区分类型，支持筛选。SAP 的状态历史偏<strong>业务状态机事件</strong>，严格记录前后状态值，支持审计回溯。</p>
+<div class="insight"><b>标杆洞察：</b>Salesforce 用图标+文本区分事件类型（不只靠颜色），符合可访问性。Ant Design 把 Timeline 拆成"进度概览(Steps)+详细日志(Timeline)"两层——前者一眼看到流程走到哪，后者追踪每步细节。</div>
+<div class="theory"><b>理论桥接：</b>§5 可追溯性（三层事件）；§5.3 状态流转完整表达（时间+事件类型+操作人+前后状态+原因）。</div>
+</div></div></div>
+
+<!-- P4 -->
+<div class="pattern" id="p4">
+<div class="p-head"><div class="num">PATTERN 04</div><h2>Related Lists — 关联列表</h2><div class="sys"><span class="tag tag-sf">Salesforce Lightning</span><span class="tag tag-sap">SAP Fiori</span></div></div>
+<div class="p-body">
+<div class="proto"><div class="mu">
+<div class="hdr sf"><b style="font-size:10px">客户：Siemens AG</b></div>
+<div style="padding:10px 12px">
+<div style="font-size:11px;font-weight:600;margin-bottom:6px">关联订单 <span style="font-size:9px;color:#999;font-weight:400">（显示最近5条）</span></div>
+<table class="t"><tr><th>订单号</th><th>金额</th><th>状态</th><th>日期</th></tr><tr><td>SO00100</td><td>¥128K</td><td><span class="bg">确认</span></td><td>07-12</td></tr><tr><td>SO00101</td><td>¥56K</td><td><span class="bo">审批</span></td><td>07-14</td></tr><tr><td>SO00098</td><td>¥89.5K</td><td><span class="bg">完成</span></td><td>07-10</td></tr></table>
+<div style="text-align:right;margin-top:6px"><a style="font-size:10px;color:#0b5cab;text-decoration:none">View All (12条)→</a></div>
+</div></div></div>
+<div class="analysis">
+<h3>解决什么问题</h3>
+<p>一个客户关联订单、合同、案例、活动等。如何在不喧宾夺主的情况下完整呈现。</p>
+<h3>Salesforce 怎么做</h3>
+<ul>
+<li><b>默认只展示5条</b>最近记录，避免喧宾夺主。</li>
+<li><b>只展示关键字段</b>（订单号/金额/状态/日期），完整字段跳转独立页。</li>
+<li><b>关联列表内只做查看和轻量操作</b>，复杂操作跳转独立页面。</li>
+<li>2025年推出 <b>Dynamic Related Lists</b>——可按筛选条件动态过滤，例如只展示"本年度金额>1万的订单"。</li>
+</ul>
+<h3>SAP Fiori 的差异</h3>
+<p>SAP 把 Related Lists 融入 Object Page 分区结构（如"交货"分区展示关联交货单），而非像 Salesforce 作为独立组件堆叠。优势是上下文连贯，劣势是关联对象多时分区很长——SAP 通过默认折叠次要分区解决。</p>
+<div class="insight"><b>标杆洞察：</b>Salesforce 三个关键约束确保"不喧宾夺主"：①默认5条 ②只展示关键字段 ③轻量操作。Dynamic Related Lists 进一步允许按上下文动态过滤。</div>
+<div class="theory"><b>理论桥接：</b>§1 信息聚合；§2 信息分层（关联列表=二级信息，不是详情页核心）。</div>
+</div></div></div>
+
+<!-- P5 -->
+<div class="pattern" id="p5">
+<div class="p-head"><div class="num">PATTERN 05</div><h2>Master-Detail — 主从布局</h2><div class="sys"><span class="tag tag-sap">SAP Fiori</span> Microsoft Fluent</div></div>
+<div class="p-body">
+<div class="proto"><div class="mu">
+<div class="hdr sap"><b style="color:#0066cc;font-size:10px">SAP</b><span style="font-size:9px;color:#666;margin-left:4px">订单管理</span></div>
+<div class="md3">
+<div class="md3m">
+<div style="padding:4px 6px;font-size:8px;color:#999;border-bottom:1px solid #e8e8e8">[搜索][筛选:待发货▼]</div>
+<div class="mdi on"><b>SO00100</b> Siemens<br>¥128K <span class="bg" style="font-size:8px">待发货</span></div>
+<div class="mdi">SO00101 BMW ¥56K <span class="bo" style="font-size:8px">审批</span></div>
+<div class="mdi">SO00102 BASF ¥89.5K <span class="bb" style="font-size:8px">交货</span></div>
+<div class="mdi">SO00103 VW ¥215K <span class="bo" style="font-size:8px">审批</span></div>
+</div>
+<div class="md3d">
+<div style="font-size:13px;font-weight:700;margin-bottom:4px">订单 SO00100 <span class="bo" style="font-size:9px">待发货</span></div>
+<div style="font-size:9px;color:#666;margin-bottom:6px">客户：Siemens AG · 金额：<b>¥128,000</b> · 已支付✓</div>
+<div style="display:flex;gap:3px;margin-bottom:8px"><button class="btn bp">发货</button><button class="btn bd">打印</button><button class="btn bd">退款</button></div>
+<div style="font-size:10px;font-weight:600;margin-bottom:4px">商品明细</div>
+<table class="t"><tr><th>物料</th><th>数量</th><th>金额</th></tr><tr><td>电机A型</td><td>100</td><td>¥120K</td></tr><tr><td>控制器B</td><td>20</td><td>¥8K</td></tr></table>
+</div>
+</div></div></div>
+<div class="analysis">
+<h3>解决什么问题</h3>
+<p>连续处理多个对象时减少页面跳转带来的上下文切换。客服处理今日退款——每次点进去处理完再跳回列表再点下一个，每次跳转丢失上下文。</p>
+<h3>SAP Fiori — Flexible Column Layout</h3>
+<ul>
+<li>支持最多<strong>三栏并列</strong>：列表→详情→子详情。订单→支付单→物流流水三级展开。</li>
+<li>栏宽可拖拽调整，窄屏自动退化为单栏。</li>
+<li>切换选中项时右侧详情同步更新，左侧筛选和排序状态不变。</li>
+</ul>
+<h3>Microsoft Fluent UI</h3>
+<p>Outlook、Teams、SharePoint 中大量使用。Fluent UI 提供 <code>DetailsList</code> 支持键盘方向键导航（↑↓切换项，Enter打开），这是技能型用户高频操作的效率保障。</p>
+<div class="insight"><b>标杆洞察：</b>SAP Flexible Column Layout 解决了"主从只有两层不够"的问题——订单关联支付单，支付单又关联银行流水，三级展开让用户追踪完整链路。窄屏退化时保留上下文（返回列表时筛选状态不变）。</div>
+<div class="theory"><b>理论桥接：</b>§2 认知负荷（减少跳转=减少上下文切换）；§3 状态轴（列表栏本质是状态过滤）。</div>
+</div></div></div>
+
+<!-- P6 -->
+<div class="pattern" id="p6">
+<div class="p-head"><div class="num">PATTERN 06</div><h2>Dashboard — 角色工作台</h2><div class="sys"><span class="tag tag-sap">SAP Fiori</span><span class="tag tag-sf">Salesforce</span> 金蝶云苍穹</div></div>
+<div class="p-body">
+<div class="proto"><div class="mu">
+<div class="hdr sap"><b style="color:#0066cc;font-size:10px">SAP</b><span style="font-size:9px;color:#666">销售概览</span><span style="margin-left:auto;font-size:8px;color:#999">数据截止 07-15 14:00</span></div>
+<div class="fb"><div class="fi"><label>期间</label><input value="2026年7月"></div><div class="fi"><label>区域</label><input value="华东区"></div><button class="btn bp">查询</button></div>
+<div class="kg">
+<div class="kc2"><div class="kt">销售额</div><div class="kv">¥2.8M</div><div class="ktr" style="color:#52c41a">▲+12.3%</div><div class="ktg">目标¥3.3M 达成85%</div></div>
+<div class="kc2"><div class="kt">订单数</div><div class="kv">1,560</div><div class="ktr" style="color:#ff4d4f">▼-3%</div><div class="ktg">环比上月</div></div>
+<div class="kc2"><div class="kt">客单价</div><div class="kv">¥1,800</div><div class="ktr" style="color:#52c41a">▲+5.2%</div><div class="ktg">行业均值¥1,500</div></div>
+<div class="kc2"><div class="kt">异常订单</div><div class="kv" style="color:#ff4d4f">3</div><div class="ktr">⚠待处理</div><div class="ktg"><a style="color:#1890ff">查看→</a></div></div>
+</div>
+<div style="padding:0 10px 10px"><div style="background:#fafafa;border-radius:5px;padding:10px"><div style="font-size:10px;font-weight:600;margin-bottom:6px">门店销售趋势</div><div class="bc"><div class="bar" style="height:55%"><b>¥12K</b><span>人民广场</span></div><div class="bar" style="height:44%"><b>¥9.5K</b><span>浦东</span></div><div class="bar" style="height:32%"><b>¥6.9K</b><span>徐汇</span></div><div class="bar" style="height:23%"><b>¥5K</b><span>静安</span></div></div></div></div>
+</div></div>
+<div class="analysis">
+<h3>解决什么问题</h3>
+<p>角色每天开始工作时如何在几秒内了解全局状态、快速进入任务。店长打开系统应直接看到"销售额¥28,450、待发货12单、库存预警5个"，而不是自己拼凑。</p>
+<h3>SAP Fiori — Overview Page</h3>
+<ul>
+<li><b>全局筛选</b>控制所有卡片和图表的筛选上下文（公司代码/期间），保证口径一致。</li>
+<li>每个 KPI 卡片展示<strong>数值+趋势+目标达成率</strong>，点击可钻取到 Analytical List Page。</li>
+<li>卡片可拖拽重排，按角色配置。</li>
+</ul>
+<h3>Salesforce — Dashboard + Report Chart</h3>
+<p>每个图表直接关联一个 Report——点击图表跳转到对应 Report，再从 Report 钻取到具体记录。形成"图表→报表→记录"完整钻取链。</p>
+<div class="insight"><b>标杆洞察：</b>SAP 的核心创新是<strong>全局筛选器控制所有可视化组件</strong>——KPI卡片、图表和列表共享同一筛选上下文，保证用户看到的数字和图表是同一口径。每个 KPI 都可钻取。</div>
+<div class="anti"><b>✗ 反模式：</b>首页只堆图表不提供钻取。用户问"为什么销售额下降了"，页面无法回答。</div>
+<div class="theory"><b>理论桥接：</b>§2 信息分层（KPI→图表→明细）；§7 钻取链路；§14.4 Goodhart 效应（KPI 需护栏指标）。</div>
+</div></div></div>
+
+<!-- P7 -->
+<div class="pattern" id="p7">
+<div class="p-head"><div class="num">PATTERN 07</div><h2>Kanban + Path — 看板与阶段路径</h2><div class="sys"><span class="tag tag-sf">Salesforce Lightning</span></div></div>
+<div class="p-body">
+<div class="proto"><div class="mu">
+<div class="hdr sf"><b style="font-size:10px">Salesforce</b><span style="font-size:8px;padding:2px 6px;background:rgba(255,255,255,.2);border-radius:3px">Opportunities</span></div>
+<div class="pth"><div class="ps"><div class="psg done"><span class="psn">✓</span>资格认定</div><span style="color:#d9d9d9;margin:0 2px">→</span><div class="psg done"><span class="psn">✓</span>需求分析</div><span style="color:#d9d9d9;margin:0 2px">→</span><div class="psg cur"><span class="psn">3</span>方案报价</div><span style="color:#d9d9d9;margin:0 2px">→</span><div class="psg"><span class="psn">4</span>谈判</div><span style="color:#d9d9d9;margin:0 2px">→</span><div class="psg"><span class="psn">5</span>成交</div></div></div>
+<div class="kan">
+<div class="kc"><div class="kch">资格认定 ¥56K</div><div class="kcd"><div class="kt">BMW Group</div><div class="ka">¥56K</div><div style="font-size:8px;color:#999;display:flex;justify-content:space-between"><span>张三</span><span>07-14</span></div></div></div>
+<div class="kc"><div class="kch">需求分析 ¥89K</div><div class="kcd"><div class="kt">BASF SE</div><div class="ka">¥89.5K</div><div style="font-size:8px;color:#999;display:flex;justify-content:space-between"><span>李四</span><span>07-12</span></div></div></div>
+<div class="kc"><div class="kch" style="color:#0b5cab">方案报价(当前) ¥128K</div><div class="kcd" style="border-left-color:#0b5cab"><div class="kt">Siemens AG</div><div class="ka">¥128K</div><div style="font-size:8px;color:#999;display:flex;justify-content:space-between"><span>张三</span><span>07-15</span></div></div></div>
+<div class="kc"><div class="kch">谈判 ¥215K</div><div class="kcd"><div class="kt">Volkswagen</div><div class="ka">¥215K</div><div style="font-size:8px;color:#999;display:flex;justify-content:space-between"><span>王五</span><span>07-10</span></div></div></div>
+</div></div></div>
+<div class="analysis">
+<h3>解决什么问题</h3>
+<p>对象按阶段流转时的可视化。传统下拉框选择阶段不直观，用户无法看到整体漏斗分布。</p>
+<h3>Salesforce Kanban</h3>
+<ul>
+<li><b>列即阶段</b>：每列代表一个销售阶段，卡片代表商机。</li>
+<li><b>拖拽操作</b>：拖拽卡片在阶段间移动——更直观地映射"对象在阶段间推进"的心理模型。</li>
+<li><b>每列金额合计</b>：销售经理一眼看到漏斗分布。</li>
+<li>支持按字段分组、汇总和筛选。Salesforce 官方：Kanban 几乎可在任何列表视图中查看。</li>
+</ul>
+<h3>Salesforce Path 组件</h3>
+<p>在 Record Page 顶部展示阶段进度+关键字段+指南。Path 每一步最多选5个关键字段，提供指南信息帮助新员工快速上手。点击"标记状态为完成"推进到下一步。</p>
+<div class="insight"><b>标杆洞察：</b>Kanban 把"阶段流转"从下拉框变成了<strong>拖拽操作</strong>——更直观映射心理模型。结合 Path 组件（阶段进度+关键字段+指南），形成完整的阶段流转工作台。</div>
+<div class="theory"><b>理论桥接：</b>§3 状态与能力（阶段=状态）；§10.2 排队与流动（漏斗=排队系统）。</div>
+</div></div></div>
+
+<!-- P8 -->
+<div class="pattern" id="p8">
+<div class="p-head"><div class="num">PATTERN 08</div><h2>表单族 — Modal Form + Drawer Form</h2><div class="sys"><span class="tag tag-ant">Ant Design Pro</span> Microsoft Fluent</div></div>
+<div class="p-body">
+<div class="proto">
+<div style="display:flex;gap:8px">
+<div style="flex:1"><div class="mu" style="margin:0">
+<div class="hdr"><b style="color:#ff4d4f;font-size:9px">⚠Modal Form</b></div>
+<div class="mo" style="padding:10px;justify-content:center">
+<div class="md">
+<div class="mh"><span>确认退款</span><span style="cursor:pointer;color:#999">×</span></div>
+<div class="mb"><p><b>订单号：</b>SO00100</p><p><b>退款金额：</b><span style="color:#ff4d4f;font-weight:700">¥1,280</span></p><p><b>退款原因 *</b></p><div style="border:1px solid #d9d9d9;border-radius:3px;padding:4px;font-size:9px;color:#999;min-height:30px">顾客误拍...</div><div class="mw">⚠退款将退回原支付方式，预计1-3工作日到账</div></div>
+<div class="mf"><button class="btn bd">取消</button><button class="btn bx">确认退款</button></div>
+</div></div>
+</div></div>
+<div style="flex:1"><div class="mu" style="margin:0">
+<div class="hdr"><b style="color:#1890ff;font-size:9px">Drawer Form</b></div>
+<div class="dr">
+<div class="dr-l"><div style="font-size:8px;color:#999;margin-bottom:3px">订单列表</div><div style="background:#fff;padding:3px 5px;border-radius:3px;margin-bottom:2px;font-size:8px">SO00100 ¥1,280</div><div style="background:#e6f7ff;padding:3px 5px;border-radius:3px;margin-bottom:2px;font-size:8px;border-left:2px solid #1890ff">SO00101 ←编辑中</div><div style="background:#fff;padding:3px 5px;border-radius:3px;font-size:8px">SO00102 ¥89</div></div>
+<div class="dr-p">
+<div style="padding:6px 8px;border-bottom:1px solid #e8e8e8;font-size:10px;font-weight:600;display:flex;justify-content:space-between"><span>编辑备注</span><span style="color:#999">×</span></div>
+<div style="flex:1;padding:8px;overflow:auto"><p style="font-size:9px;margin-bottom:2px"><b>备注</b></p><div style="border:1px solid #1890ff;border-radius:3px;padding:4px;font-size:9px;min-height:30px">顾客要求下午配送</div></div>
+<div style="padding:5px 8px;border-top:1px solid #e8e8e8;display:flex;justify-content:flex-end;gap:3px"><button class="btn bd">取消</button><button class="btn bp">保存</button></div>
+</div>
+</div></div></div>
+</div></div>
+<div class="analysis">
+<h3>解决什么问题</h3>
+<p>不同复杂度的业务录入如何选择合适的表单承载方式。短确认用弹窗，列表内编辑用抽屉，复杂录入用独立页。</p>
+<h3>Ant Design Pro — 表单全家桶</h3>
+<ul>
+<li><b>ModalForm</b>：弹窗表单，适合1-3字段短确认（退款/取消/填写原因）。</li>
+<li><b>DrawerForm</b>：抽屉表单，保留列表上下文的快速编辑。关键约束：抽屉内不嵌套抽屉（NEST-1）。</li>
+<li><b>StepsForm</b>：分步表单，最后一步总览确认。</li>
+<li><b>ProForm(分组)</b>：配置化表单，支持分组、依赖联动。</li>
+</ul>
+<h3>Microsoft Fluent UI — Dialog vs Panel</h3>
+<p>Microsoft 明确区分 <strong>Dialog</strong>（阻断式，必须处理才能继续）和 <strong>Panel</strong>（非阻断式，可忽略）。Dialog 用于高风险操作（删除/提交），Panel 用于需参考当前页面的编辑。这是<strong>风险分层</strong>的体现。</p>
+<div class="insight"><b>标杆洞察：</b>Ant Design Pro 把表单模式做成了一一对应的组件——开发者根据场景选组件即选模式。这是模式从"设计指导"到"工程组件"的落地。</div>
+<div class="theory"><b>理论桥接：</b>§6 表单（业务承诺）；§6.3 表单复杂度；§4 操作风险（高风险用 Modal 确认）。</div>
+</div></div></div>
+
+<!-- P9 -->
+<div class="pattern" id="p9">
+<div class="p-head"><div class="num">PATTERN 09</div><h2>Wizard — 向导模型</h2><div class="sys"><span class="tag tag-ant">Ant Design</span> Google Material · SAP Fiori</div></div>
+<div class="p-body">
+<div class="proto"><div class="mu">
+<div class="hdr ant"><b style="font-size:10px">Ant Design Pro</b><span style="font-size:8px;color:rgba(255,255,255,.6);margin-left:4px">开店配置</span></div>
+<div class="wz"><div class="wzs done"><span class="wzsn">✓</span>基础信息</div><div class="wzc" style="background:#52c41a"></div><div class="wzs cur"><span class="wzsn">2</span>业务配置</div><div class="wzc"></div><div class="wzs"><span class="wzsn">3</span>硬件配置</div><div class="wzc"></div><div class="wzs"><span class="wzsn">4</span>预览确认</div></div>
+<div style="padding:12px"><div style="font-size:11px;font-weight:600;margin-bottom:8px">步骤 2/4：业务配置</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><label style="font-size:9px;color:#999;display:block;margin-bottom:2px">营业时间 *</label><input style="width:100%;height:24px;border:1px solid #d9d9d9;border-radius:3px;padding:0 5px;font-size:10px" value="09:00-22:00"></div><div><label style="font-size:9px;color:#999;display:block;margin-bottom:2px">主营类目 *</label><select style="width:100%;height:24px;border:1px solid #d9d9d9;border-radius:3px;padding:0 5px;font-size:10px"><option>零售>食品</option></select></div></div></div>
+<div style="padding:6px 12px;border-top:1px solid #e8e8e8;display:flex;justify-content:space-between;background:#fafafa"><button class="btn bd">上一步</button><button class="btn bp">下一步→</button></div>
+</div></div>
+<div class="analysis">
+<h3>解决什么问题</h3>
+<p>长流程多步骤，让用户每次只专注于当前步骤。单页30+字段用户不知道从哪开始。</p>
+<h3>Google Material — Stepper</h3>
+<ul><li><b>水平Stepper</b>（≤5步）和<b>垂直Stepper</b>（移动端或>5步）。</li><li>支持<b>线性</b>（必须按顺序，适合有依赖）和<b>非线性</b>（可跳转，适合并行填写）。</li></ul>
+<h3>SAP Fiori Wizard</h3>
+<p>每步对应一个<b>业务决策点</b>，不只是字段分组——供应商选择→物料选择→数量日期→价格条件→确认提交。步骤间有数据依赖。这是 Wizard 与 Sectioned Form 的关键区别。</p>
+<div class="insight"><b>标杆洞察：</b>Ant Design StepsForm 的"最后一步总览确认"是关键设计——用户提交前可看到所有步骤的填写结果，降低错误率。</div>
+<div class="theory"><b>理论桥接：</b>§2 渐进披露；§6.3 表单复杂度（有顺序依赖→Wizard）。</div>
+</div></div></div>
+
+<!-- P10 -->
+<div class="pattern" id="p10">
+<div class="p-head"><div class="num">PATTERN 10</div><h2>Exception Center — 异常中心</h2><div class="sys"><span class="tag tag-sap">SAP Fiori</span><span class="tag tag-ant">Ant Design</span></div></div>
+<div class="p-body">
+<div class="proto"><div class="mu">
+<div class="hdr"><b style="color:#ff4d4f;font-size:10px">⚠异常处理中心</b></div>
+<div class="ets"><div class="et on">全部<span class="c">12</span></div><div class="et">支付异常<span class="c">3</span></div><div class="et">库存异常<span class="c">2</span></div><div class="et">同步异常<span class="c">7</span></div></div>
+<div class="ei"><div style="font-size:14px">🔴</div><div class="eib"><div class="eit">支付回调超时</div><div class="eid">订单SO00103·¥89·微信支付·10:32</div><div class="eia"><a>查询渠道</a><a>幂等补记</a><a>升级</a></div></div></div>
+<div class="ei"><div style="font-size:14px">🟠</div><div class="eib"><div class="eit">库存扣减失败</div><div class="eid">SKU001·库存0·需求2·09:15</div><div class="eia"><a>核验库存</a><a>转人工</a></div></div></div>
+</div></div>
+<div class="analysis">
+<h3>解决什么问题</h3>
+<p>系统异常从"技术人员看日志"变成"业务人员可处理"。支付回调失败写入error.log，业务人员完全不知道。</p>
+<h3>SAP Fiori — 分层消息</h3>
+<ul><li><b>Toast</b>（3秒消失）→ <b>Strip</b>（页面内需处理）→ <b>Dialog</b>（阻断确认）→ <b>Page</b>（全页错误）。不同级别不同容器，避免"所有异常都弹窗"的疲劳。</li></ul>
+<h3>异常中心五要素</h3>
+<ul><li>分类分级·绑定对象·受控处理动作·处理留痕·重复聚合</li></ul>
+<div class="anti"><b>✗ 反模式：</b>异常只在error.log里。业务人员完全不知道有这个异常。</div>
+<div class="theory"><b>理论桥接：</b>§8 异常闭环（五要素）；§10.4 分布式事务（重试必须幂等）。</div>
+</div></div></div>
+
+<!-- P11 -->
+<div class="pattern" id="p11">
+<div class="p-head"><div class="num">PATTERN 11</div><h2>Permission Matrix — 权限矩阵</h2><div class="sys"><span class="tag tag-sf">Salesforce</span><span class="tag tag-sap">SAP PFCG</span></div></div>
+<div class="p-body">
+<div class="proto"><div class="mu">
+<div class="hdr"><b style="color:#0066cc;font-size:10px">权限配置</b><span style="margin-left:auto;font-size:8px;color:#999">本次变更影响3个用户</span></div>
+<div style="padding:10px"><table class="ptbl">
+<tr><th>权限</th><th>店长</th><th>收银员</th><th>财务</th><th>客服</th></tr>
+<tr><td>订单查看</td><td><span class="pck">✓</span></td><td><span class="pck">✓</span></td><td><span class="pck">✓</span></td><td><span class="pck">✓</span></td></tr>
+<tr><td>订单编辑</td><td><span class="pck">✓</span></td><td><span class="pmx">◐</span></td><td><span class="pcr">✗</span></td><td><span class="pcr">✗</span></td></tr>
+<tr><td>退款审核</td><td><span class="pck">✓</span></td><td><span class="pcr">✗</span></td><td><span class="pck">✓</span></td><td><span class="pcr">✗</span></td></tr>
+<tr><td>报表查看</td><td><span class="pck">✓</span></td><td><span class="pcr">✗</span></td><td><span class="pin">✓继承</span></td><td><span class="pck">✓</span></td></tr>
+</table></div>
+</div></div>
+<div class="analysis">
+<h3>解决什么问题</h3>
+<p>权限配置可视化，批量设置不漏项。逐个角色配置无法横向对比，容易出现权限漏洞。</p>
+<h3>Salesforce — Profile + Permission Set</h3>
+<ul><li><b>Profile</b>（角色基线）+ <b>Permission Set</b>（增量授权）分离。</li><li><b>Effective Access View</b>展示合并后实际权限，避免叠加超出预期。</li></ul>
+<h3>SAP PFCG</h3>
+<p>把<b>操作权限</b>和<b>数据范围</b>分离——ACTVT控制能做什么，BUKRS控制能看哪些公司数据。支持权限模拟。</p>
+<div class="insight"><b>标杆洞察：</b>Profile+PermissionSet分离是职责分离的工程实现。Effective Access View 避免权限叠加超出预期。</div>
+<div class="theory"><b>理论桥接：</b>§4 操作风险；§9.5 商业完整性（职责分离、禁止自批）。</div>
+</div></div></div>
+
+<!-- P12 -->
+<div class="pattern" id="p12">
+<div class="p-head"><div class="num">PATTERN 12</div><h2>Reconciliation — 对账工作台</h2><div class="sys"><span class="tag tag-sap">SAP S/4HANA</span> 金蝶云苍穹</div></div>
+<div class="p-body">
+<div class="proto"><div class="mu">
+<div class="hdr"><b style="color:#0066cc;font-size:10px">支付对账</b><span style="margin-left:auto;font-size:8px;color:#999">07-14</span></div>
+<div style="display:flex;gap:12px;padding:8px 10px;background:#fafafa;border-bottom:1px solid #e8e8e8;font-size:10px"><div><div style="font-size:8px;color:#999">系统</div><div style="font-weight:700;font-size:13px">¥28,450</div></div><div><div style="font-size:8px;color:#999">第三方</div><div style="font-weight:700;font-size:13px">¥28,430</div></div><div><div style="font-size:8px;color:#999">差异</div><div style="font-weight:700;font-size:13px;color:#ff4d4f">¥20</div></div></div>
+<table class="rtbl"><tr><th>状态</th><th>订单</th><th>系统</th><th>第三方</th><th>差异</th></tr>
+<tr class="ok"><td><span class="bg">✓</span></td><td>SO100</td><td>¥1,280</td><td>¥1,280</td><td>¥0</td></tr>
+<tr class="diff"><td><span class="br">⚠</span></td><td>SO103</td><td>¥89</td><td>¥79</td><td style="color:#ff4d4f"><b>¥10</b></td></tr></table>
+<div style="padding:5px 10px;border-top:1px solid #e8e8e8;font-size:9px;display:flex;justify-content:space-between"><span style="color:#999">差异待处理</span><button class="btn bd" style="opacity:.5" disabled>确认日结(不可用)</button></div>
+</div></div>
+<div class="analysis">
+<h3>解决什么问题</h3>
+<p>系统流水和第三方流水核对，差异闭环处理。手工Excel核对效率低。</p>
+<h3>SAP — 银行对账</h3>
+<ul><li>系统流水和银行对账单同屏展示，自动匹配。</li><li><b>全部差异处理后才能完成对账</b>——借贷必平不变量在UI层强制执行。</li></ul>
+<h3>金蝶 — 余额调节表</h3>
+<p>中国会计特有——未达账项分"企收银未收"等四类。这是 Reconciliation 在中国会计准则下的领域化实现。</p>
+<div class="insight"><b>标杆洞察：</b>日结门禁是关键——全部差异已处理或有受控挂账后才允许确认日结。</div>
+<div class="theory"><b>理论桥接：</b>§8 异常闭环；§10.4 分布式事务（补偿和对账收敛）。</div>
+</div></div></div>
+
+<!-- P13 -->
+<div class="pattern" id="p13">
+<div class="p-head"><div class="num">PATTERN 13</div><h2>AI Copilot — 智能助手</h2><div class="sys"><span class="tag tag-sf">Salesforce Einstein</span> SAP Joule · MS Copilot</div></div>
+<div class="p-body">
+<div class="proto"><div class="mu">
+<div class="hdr sf"><b style="font-size:10px">🤖Einstein</b></div>
+<div style="display:flex;height:220px">
+<div style="flex:1;padding:8px;font-size:10px"><div style="font-weight:600;margin-bottom:4px">订单SO00100</div><div style="color:#666">客户：Siemens AG</div><div style="color:#666">金额：¥128,000</div><div style="color:#666">状态：<span class="bo">待审批</span></div><div style="color:#666">历史逾期：2次</div></div>
+<div class="ap"><div class="aph">🤖Einstein</div><div class="apb">
+<div class="msg u">为什么延迟审批？</div>
+<div class="msg b">原因是<b>信用风险</b>。近6个月有<b>2次逾期</b>，触发信用审查。建议联系财务确认。<div class="ev">📚证据：信用审查记录<div style="background:#e6f7ff;border:1px solid #91d5ff;border-radius:3px;padding:2px 4px;margin-top:2px;font-size:8px">💡置信度：85%</div></div></div>
+</div><div style="padding:5px 8px;border-top:1px solid #e8e8e8;display:flex;gap:4px"><input style="flex:1;height:22px;border:1px solid #d9d9d9;border-radius:11px;padding:0 8px;font-size:9px" placeholder="输入问题..."><button class="btn bp">发送</button></div></div>
+</div></div>
+<div class="analysis">
+<h3>解决什么问题</h3>
+<p>用户需要快速理解复杂数据背后的原因。AI不是"放一个聊天框"，而是校准信任。</p>
+<h3>Salesforce Einstein — 四要素</h3>
+<ul><li><b>推荐结论</b>+<b>置信度</b>(85%)+<b>依据</b>(信用记录)+<b>替代方案</b>(联系财务/分期交付)。</li><li><b>Trust Layer</b>：数据脱敏后发送给LLM，返回结果经过审计。</li></ul>
+<h3>SAP Joule — 上下文感知</h3>
+<p>AI知道用户当前在哪个页面、选中了什么对象。不需要用户重新描述。</p>
+<div class="insight"><b>标杆洞察：</b>用户反馈"不准确"用于模型校准——这是AGENT-10（拒绝后记录并校准）的实践。</div>
+<div class="theory"><b>理论桥接：</b>§14.3 自动化功能分配；§3.5 韧性与控制权交接；方向6 Agent-Native。</div>
+</div></div></div>
+
+<!-- P14 -->
+<div class="pattern" id="p14">
+<div class="p-head"><div class="num">PATTERN 14</div><h2>Drill-down Report — 钻取报表</h2><div class="sys"><span class="tag tag-sap">SAP Fiori</span> Salesforce · Power BI</div></div>
+<div class="p-body">
+<div class="proto"><div class="mu">
+<div class="hdr sap"><b style="color:#0066cc;font-size:10px">SAP</b><span style="font-size:9px;color:#666;margin-left:4px">销售分析</span></div>
+<div style="padding:4px 10px;font-size:9px;color:#999;background:#fafafa;border-bottom:1px solid #e8e8e8">📊概览/华东区/<b style="color:#333">人民广场店</b></div>
+<div style="padding:8px;display:flex;gap:8px">
+<div style="flex:1;background:#fafafa;border-radius:4px;padding:8px"><div style="font-size:10px;font-weight:600;margin-bottom:6px">门店占比(可点击)</div><div style="font-size:9px"><div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;cursor:pointer;background:#e6f7ff;padding:3px 5px;border-radius:3px;border:1px solid #91d5ff"><span style="width:40px;height:10px;background:#1890ff;border-radius:2px"></span><b>人民广场42%</b></div><div style="display:flex;align-items:center;gap:4px;cursor:pointer"><span style="width:31px;height:10px;background:#69c0ff;border-radius:2px"></span>浦东33%</div></div></div>
+<div style="flex:1;background:#fafafa;border-radius:4px;padding:8px"><div style="font-size:10px;font-weight:600;margin-bottom:6px">明细(已联动)</div><table class="t" style="font-size:8px"><tr><th>订单</th><th>金额</th></tr><tr><td>SO100</td><td>¥1,280</td></tr><tr><td>SO103</td><td>¥1,200</td></tr></table></div>
+</div></div>
+<div class="analysis">
+<h3>解决什么问题</h3>
+<p>汇总指标如何可解释。用户看到"销售额¥100万"后问"哪类商品卖得好？哪个门店拖累了？"——页面必须能回答。</p>
+<h3>SAP — Analytical List Page</h3>
+<ul><li><b>Visual Filter</b>：图表本身就是筛选器。点击图表中的"人民广场"，明细表自动过滤。</li><li>图表和明细共享同一筛选上下文，保证口径一致。</li><li>钻取链路：指标→维度→明细→Object Page。</li></ul>
+<h3>Power BI — 钻取层级</h3>
+<p>开发者定义层级（区域→国家→城市→门店），用户按层级逐层下钻。</p>
+<div class="anti"><b>✗ 反模式：</b>Dashboard只展示大数字不提供钻取。</div>
+<div class="theory"><b>理论桥接：</b>§7 钻取链路（四层：汇总→维度→明细→对象）；§7.3 五要求。</div>
+</div></div></div>
+
+<!-- P15 -->
+<div class="pattern" id="p15">
+<div class="p-head"><div class="num">PATTERN 15</div><h2>Customer 360 — 客户全景</h2><div class="sys"><span class="tag tag-sf">Salesforce</span> Microsoft Dynamics</div></div>
+<div class="p-body">
+<div class="proto"><div class="mu">
+<div class="hdr sf"><b style="font-size:10px">Salesforce</b><span style="font-size:8px;padding:2px 5px;background:rgba(255,255,255,.2);border-radius:3px;margin-left:4px">Accounts</span></div>
+<div class="sf3">
+<div class="sf3l"><div style="font-size:8px;color:#999;margin-bottom:3px">渠道</div><div style="font-size:9px;padding:2px 0;color:#0b5cab;font-weight:600">📍全部</div><div style="font-size:9px;padding:2px 0;color:#666">🛒门店</div><div style="font-size:9px;padding:2px 0;color:#666">💬微信</div></div>
+<div class="sf3m">
+<div class="sfh"><div class="nm">周杰伦</div><div class="fl"><div><label>等级</label><span>黄金</span></div><div><label>积分</label><span>2,000</span></div><div><label>消费</label><span>¥3,280</span></div><div><label>置信度</label><span>92%</span></div></div></div>
+<div style="font-size:8px;color:#999;margin-bottom:4px">身份解析：手机138xxx8888↔微信wx_jay↔会员卡VIP001（92%手工确认）</div>
+<div style="font-size:9px;font-weight:600;margin:6px 0 3px">交互时间线</div>
+<div style="font-size:8px;border-left:2px solid #e8e8e8;padding-left:6px"><div style="margin-bottom:3px"><b>🛒门店</b> 07-12 ¥156</div><div style="margin-bottom:3px"><b>💬微信</b> 07-11 ¥89</div><div><b>🔄退货</b> 07-05 ¥80</div></div>
+</div>
+<div class="sf3r"><div style="font-size:9px;font-weight:600;margin-bottom:4px">🤖推荐</div><div style="background:#e6f4ff;border:1px solid #91d5ff;border-radius:4px;padding:5px;font-size:8px"><b>推荐：服饰类</b><br>依据：07-05尺码退货<br>置信度：中<br><button class="btn bp" style="height:14px;margin-top:3px">✓采用</button></div></div>
+</div></div>
+<div class="analysis">
+<h3>解决什么问题</h3>
+<p>多渠道客户数据如何归一呈现。客服在5个系统里来回切换——门店POS/微信商城/积分/优惠券/售后——耗时且容易遗漏。</p>
+<h3>Salesforce — Customer 360</h3>
+<ul><li><b>身份归一</b>：同一客户在不同渠道的记录都关联到同一客户记录。</li><li><b>身份解析展示置信度</b>（92%）——当两个标识可能是同一客户时，展示匹配依据，而非自动合并。</li><li>Activity Timeline按时间聚合所有渠道沟通记录。</li></ul>
+<h3>Microsoft Dynamics — Customer Insights</h3>
+<p>聚合多源数据（CRM/ERP/电商/社交），通过身份解析合并同一客户的不同标识。展示客户画像+交易历史+行为轨迹+预测评分。</p>
+<div class="insight"><b>标杆洞察：</b>身份归一展示置信度和匹配规则，而非自动合并——这对应ID-1不变量（身份映射必须展示置信度和冲突处理流程）。</div>
+<div class="theory"><b>理论桥接：</b>§1 数据聚合；§10.5 边界对象；§9.6 上下文完整性（最小披露）。</div>
+</div></div></div>
+
+<div style="text-align:center;padding:30px 20px;color:#999;font-size:12px">
+<p>15个核心界面模式 × 高保真原型 × 深度拆解</p>
+<p>覆盖 SAP Fiori / Salesforce Lightning / Ant Design Pro / 金蝶云苍穹 / IBM Carbon / Microsoft Fluent</p>
+</div>
+
+</div>
+</body>
+</html>

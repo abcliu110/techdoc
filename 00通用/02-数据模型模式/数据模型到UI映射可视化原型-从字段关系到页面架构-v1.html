@@ -1,0 +1,1919 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>数据模型到 UI 映射实验台</title>
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --surface: #ffffff;
+      --surface-2: #f8fafb;
+      --ink: #18212b;
+      --muted: #63707d;
+      --line: #d9e0e6;
+      --line-strong: #b9c4ce;
+      --brand: #177a62;
+      --brand-soft: #e5f4ef;
+      --blue: #2467a9;
+      --blue-soft: #eaf2fa;
+      --amber: #a46608;
+      --amber-soft: #fff4dc;
+      --red: #b13b42;
+      --red-soft: #fdebed;
+      --violet: #6b55a2;
+      --violet-soft: #f0ecf8;
+      --shadow: 0 8px 24px rgba(24, 33, 43, 0.08);
+      --radius: 6px;
+      --header-h: 68px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 14px;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+    button, select, input { font: inherit; letter-spacing: 0; }
+    button, select { min-height: 36px; }
+    button { color: inherit; }
+    a { color: var(--blue); }
+    :focus-visible { outline: 3px solid rgba(36, 103, 169, 0.28); outline-offset: 2px; }
+    [hidden] { display: none !important; }
+
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      min-height: var(--header-h);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 12px 20px;
+      color: #fff;
+      background: #17242b;
+      border-bottom: 1px solid #2f3d45;
+    }
+    .brand-lockup {
+      min-width: 240px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+    .brand-mark { flex: 0 0 34px; width: 34px; height: 34px; }
+    .brand-title { margin: 0; font-size: 16px; line-height: 1.2; font-weight: 700; }
+    .brand-subtitle { margin: 3px 0 0; color: #b9c6cc; font-size: 12px; }
+    .top-tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex: 1 1 auto;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+    .top-tab {
+      white-space: nowrap;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      padding: 7px 11px;
+      background: transparent;
+      color: #c7d2d7;
+      cursor: pointer;
+    }
+    .top-tab:hover { background: #22343d; color: #fff; }
+    .top-tab[aria-selected="true"] { background: #fff; color: var(--ink); }
+    .header-tools { display: flex; align-items: center; gap: 8px; }
+    .scenario-select {
+      max-width: 210px;
+      border: 1px solid #53656f;
+      border-radius: 4px;
+      background: #22343d;
+      color: #fff;
+      padding: 6px 32px 6px 10px;
+    }
+    .icon-button {
+      width: 36px;
+      height: 36px;
+      min-height: 36px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #53656f;
+      border-radius: 4px;
+      background: #22343d;
+      color: #fff;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    .icon-button:hover { background: #2c424d; }
+    .action-status {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 40;
+      max-width: min(360px, calc(100vw - 24px));
+      padding: 10px 12px;
+      border: 1px solid #8ab8aa;
+      border-radius: 5px;
+      background: #153c32;
+      color: #fff;
+      box-shadow: var(--shadow);
+      font-size: 12px;
+    }
+
+    .view { display: none; }
+    .view.active { display: block; }
+    .workspace {
+      min-height: calc(100vh - var(--header-h));
+      display: grid;
+      grid-template-columns: 210px minmax(0, 1fr) 300px;
+      align-items: stretch;
+    }
+
+    .level-rail {
+      background: var(--surface);
+      border-right: 1px solid var(--line);
+      padding: 20px 14px;
+    }
+    .rail-label, .eyebrow {
+      margin: 0 0 9px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .level-list { display: grid; gap: 6px; }
+    .level-button {
+      width: 100%;
+      min-height: 58px;
+      display: grid;
+      grid-template-columns: 30px minmax(0, 1fr);
+      align-items: center;
+      gap: 9px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      padding: 8px;
+    }
+    .level-button:hover { background: var(--surface-2); border-color: var(--line); }
+    .level-button[aria-selected="true"] { background: var(--brand-soft); border-color: #a9d3c6; color: #0e5d4a; }
+    .level-number {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+      background: var(--surface);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .level-name { display: block; font-weight: 700; }
+    .level-desc { display: block; margin-top: 1px; color: var(--muted); font-size: 11px; }
+    .rail-principle {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .rail-principle strong { display: block; margin-bottom: 5px; color: var(--ink); }
+
+    .mapping-main { min-width: 0; padding: 20px; }
+    .context-strip {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .context-strip h2 { margin: 0; font-size: 20px; line-height: 1.25; }
+    .context-copy { margin: 5px 0 0; color: var(--muted); }
+    .mode-switch {
+      flex: 0 0 auto;
+      display: inline-grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--line-strong);
+      border-radius: 5px;
+      overflow: hidden;
+      background: var(--surface);
+    }
+    .mode-button {
+      min-width: 60px;
+      border: 0;
+      border-right: 1px solid var(--line);
+      background: transparent;
+      cursor: pointer;
+      padding: 6px 10px;
+    }
+    .mode-button:last-child { border-right: 0; }
+    .mode-button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+
+    .mapping-board {
+      display: grid;
+      grid-template-columns: minmax(200px, 0.9fr) 44px minmax(200px, 0.9fr) 44px minmax(270px, 1.2fr);
+      align-items: stretch;
+      min-height: 470px;
+    }
+    .mapping-stage {
+      min-width: 0;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 2px 8px rgba(24, 33, 43, 0.04);
+      overflow: hidden;
+    }
+    .stage-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      min-height: 55px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface-2);
+    }
+    .stage-index {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .stage-title { display: block; font-weight: 800; }
+    .stage-kind {
+      color: var(--muted);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+    .stage-body { padding: 12px; }
+    .stage-arrow {
+      position: relative;
+      display: grid;
+      place-items: center;
+      color: var(--brand);
+      font-weight: 800;
+    }
+    .stage-arrow::before { content: ""; width: 26px; height: 1px; background: #8dc4b4; }
+    .stage-arrow::after {
+      content: "";
+      position: absolute;
+      right: 8px;
+      width: 7px;
+      height: 7px;
+      border-top: 2px solid var(--brand);
+      border-right: 2px solid var(--brand);
+      transform: rotate(45deg);
+    }
+    .mapping-items { display: grid; gap: 7px; }
+    .mapping-item {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 8px minmax(0, 1fr);
+      gap: 9px;
+      align-items: start;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: #fff;
+      padding: 9px;
+      text-align: left;
+      cursor: pointer;
+    }
+    .mapping-item:hover { border-color: var(--line-strong); background: var(--surface-2); }
+    .mapping-item.active { border-color: #77bba8; box-shadow: inset 3px 0 0 var(--brand); background: #fbfefd; }
+    .item-dot { width: 8px; height: 8px; margin-top: 5px; border-radius: 50%; background: var(--blue); }
+    .mapping-item.active .item-dot { background: var(--brand); }
+    .item-title { display: block; font-weight: 700; overflow-wrap: anywhere; }
+    .item-meta { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; overflow-wrap: anywhere; }
+    .task-objective {
+      border-left: 3px solid var(--amber);
+      padding: 2px 0 2px 10px;
+      margin-bottom: 14px;
+    }
+    .task-objective strong { display: block; }
+    .task-objective span { color: var(--muted); font-size: 12px; }
+    .fact-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+    .fact-list li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 7px; }
+    .fact-list b { color: var(--brand); }
+    .projection-formula {
+      margin-top: 14px;
+      padding: 10px;
+      border: 1px dashed var(--line-strong);
+      background: var(--surface-2);
+      color: #40505d;
+      font-family: "Cascadia Code", Consolas, monospace;
+      font-size: 11px;
+      overflow-wrap: anywhere;
+    }
+
+    .ui-preview { min-height: 350px; }
+    .preview-shell { border: 1px solid var(--line); border-radius: 5px; overflow: hidden; background: #fff; }
+    .preview-bar {
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 7px 9px;
+      background: #edf1f4;
+      border-bottom: 1px solid var(--line);
+    }
+    .preview-bar strong { font-size: 12px; }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 23px;
+      border-radius: 99px;
+      padding: 2px 8px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .status-badge.warn { background: var(--amber-soft); color: var(--amber); }
+    .status-badge.danger { background: var(--red-soft); color: var(--red); }
+    .preview-content { padding: 11px; }
+    .preview-label { display: block; margin-bottom: 5px; color: #4b5965; font-size: 11px; font-weight: 700; }
+    .preview-field { margin-bottom: 11px; }
+    .field-control {
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 1px solid var(--line-strong);
+      border-radius: 4px;
+      background: #fff;
+    }
+    .field-control.readonly { border-color: transparent; background: var(--surface-2); }
+    .field-control.error { border-color: var(--red); background: #fffafa; }
+    .field-main { min-width: 0; }
+    .field-value { display: block; font-weight: 700; overflow-wrap: anywhere; }
+    .field-sub { display: block; color: var(--muted); font-size: 11px; }
+    .field-action { color: var(--blue); font-size: 12px; white-space: nowrap; }
+    .helper { margin: 4px 0 0; color: var(--muted); font-size: 11px; }
+    .helper.error { color: var(--red); }
+    .mini-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .mini-table th, .mini-table td { padding: 7px 5px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    .mini-table th { color: var(--muted); font-weight: 700; }
+    .mini-table tr:last-child td { border-bottom: 0; }
+    .metric-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+    .metric { border-left: 3px solid var(--blue); background: var(--surface-2); padding: 8px; }
+    .metric.warn { border-left-color: var(--amber); }
+    .metric strong { display: block; font-size: 16px; }
+    .metric span { color: var(--muted); font-size: 10px; }
+    .event-row { display: grid; grid-template-columns: 9px 1fr auto; gap: 7px; align-items: start; padding: 8px 0; border-bottom: 1px solid var(--line); }
+    .event-row:last-child { border-bottom: 0; }
+    .event-dot { width: 8px; height: 8px; margin-top: 5px; border-radius: 50%; background: var(--brand); }
+    .event-row.warn .event-dot { background: var(--amber); }
+    .event-row.error .event-dot { background: var(--red); }
+    .event-time { color: var(--muted); font-size: 10px; }
+    .action-row { display: flex; justify-content: flex-end; gap: 7px; margin-top: 12px; }
+    .action-button {
+      border: 1px solid var(--line-strong);
+      border-radius: 4px;
+      background: #fff;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .action-button.primary { border-color: var(--brand); background: var(--brand); color: #fff; }
+    .action-button.danger { border-color: var(--red); color: var(--red); }
+
+    .semantic-guard {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      overflow: hidden;
+    }
+    .guard-item { min-width: 0; padding: 10px 12px; border-right: 1px solid var(--line); }
+    .guard-item:last-child { border-right: 0; }
+    .guard-item strong { display: block; font-size: 12px; }
+    .guard-item span { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; overflow-wrap: anywhere; }
+
+    .inspector {
+      min-width: 0;
+      background: var(--surface);
+      border-left: 1px solid var(--line);
+      padding: 20px 16px;
+    }
+    .inspector-section { padding: 0 0 16px; margin-bottom: 16px; border-bottom: 1px solid var(--line); }
+    .inspector-section:last-child { border-bottom: 0; }
+    .inspector h3 { margin: 0 0 8px; font-size: 15px; }
+    .inspector p { margin: 0; color: var(--muted); font-size: 12px; }
+    .key-value { display: grid; grid-template-columns: 82px minmax(0, 1fr); gap: 7px; margin: 8px 0 0; }
+    .key-value dt { color: var(--muted); font-size: 11px; }
+    .key-value dd { margin: 0; font-size: 12px; font-weight: 600; overflow-wrap: anywhere; }
+    .rule-list { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; }
+    .rule-list li { padding-left: 13px; position: relative; font-size: 12px; }
+    .rule-list li::before { content: ""; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--brand); }
+    .risk-box { padding: 9px 10px; border-left: 3px solid var(--amber); background: var(--amber-soft); color: #6e490f; font-size: 12px; }
+    .evidence-tag { display: inline-block; margin-top: 8px; padding: 3px 6px; border: 1px solid #b7c9dc; border-radius: 3px; color: var(--blue); background: var(--blue-soft); font-size: 10px; }
+
+    .document-view { padding: 22px; }
+    .content-wrap { width: min(1240px, 100%); margin: 0 auto; }
+    .section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 16px; }
+    .section-heading h2 { margin: 0; font-size: 22px; }
+    .section-heading p { max-width: 680px; margin: 4px 0 0; color: var(--muted); }
+    .architecture-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; }
+    .architecture-canvas { min-height: 590px; padding: 16px; border: 1px solid var(--line); background: var(--surface); overflow: auto; }
+    .architecture-stage { min-width: 760px; }
+    .arch-layer { display: grid; grid-template-columns: 100px repeat(4, 1fr); gap: 9px; align-items: stretch; margin-bottom: 12px; }
+    .arch-label { display: flex; align-items: center; color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; }
+    .arch-node {
+      min-height: 74px;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--blue);
+      border-radius: 5px;
+      background: #fff;
+      padding: 9px;
+      text-align: left;
+      cursor: pointer;
+    }
+    .arch-node:hover, .arch-node.active { border-color: #80aacf; background: var(--blue-soft); }
+    .arch-node.module { border-left-color: var(--brand); }
+    .arch-node.module:hover, .arch-node.module.active { border-color: #77bba8; background: var(--brand-soft); }
+    .arch-node.page { border-left-color: var(--amber); }
+    .arch-node.page:hover, .arch-node.page.active { border-color: #d8af68; background: var(--amber-soft); }
+    .arch-node strong { display: block; }
+    .arch-node span { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; }
+    .arch-connectors { margin: 0 0 12px 109px; display: flex; align-items: center; color: var(--muted); font-size: 11px; }
+    .arch-connectors::before, .arch-connectors::after { content: ""; flex: 1; height: 1px; background: var(--line-strong); }
+    .arch-connectors span { padding: 0 10px; }
+    .architecture-note { padding: 16px; border: 1px solid var(--line); background: var(--surface); }
+    .architecture-note h3 { margin: 0 0 8px; }
+    .architecture-note p { color: var(--muted); font-size: 12px; }
+    .decision-list { margin: 12px 0 0; padding: 0; list-style: none; }
+    .decision-list li { padding: 9px 0; border-top: 1px solid var(--line); }
+    .decision-list strong { display: block; font-size: 12px; }
+    .decision-list span { color: var(--muted); font-size: 11px; }
+
+    .trace-tools { display: flex; gap: 8px; margin-bottom: 12px; }
+    .search-input { width: min(340px, 100%); min-height: 38px; border: 1px solid var(--line-strong); border-radius: 4px; padding: 7px 10px; background: #fff; }
+    .table-wrap { overflow: auto; border: 1px solid var(--line); background: var(--surface); }
+    .trace-table { width: 100%; min-width: 1040px; border-collapse: collapse; }
+    .trace-table th, .trace-table td { padding: 10px; border-bottom: 1px solid var(--line); border-right: 1px solid #edf0f2; text-align: left; vertical-align: top; }
+    .trace-table th { position: sticky; top: 0; z-index: 2; background: #edf1f4; color: #42505b; font-size: 11px; }
+    .trace-table td { font-size: 12px; }
+    .trace-table tr:hover td { background: #fbfcfd; }
+    .trace-table tr:last-child td { border-bottom: 0; }
+    .trace-token { display: inline-block; padding: 2px 5px; border-radius: 3px; background: var(--violet-soft); color: var(--violet); font-size: 10px; font-weight: 700; }
+    .empty-row { padding: 28px !important; color: var(--muted); text-align: center !important; }
+
+    .method-grid { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 16px; }
+    .method-modes { align-self: start; border: 1px solid var(--line); background: var(--surface); padding: 10px; }
+    .method-mode {
+      width: 100%;
+      margin-bottom: 6px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      background: transparent;
+      padding: 9px;
+      text-align: left;
+      cursor: pointer;
+    }
+    .method-mode:last-child { margin-bottom: 0; }
+    .method-mode[aria-selected="true"] { border-color: #a9d3c6; background: var(--brand-soft); }
+    .method-mode strong { display: block; }
+    .method-mode span { display: block; color: var(--muted); font-size: 11px; }
+    .method-content { min-width: 0; }
+    .step-list { display: grid; gap: 9px; }
+    .method-step { display: grid; grid-template-columns: 40px minmax(0, 1fr) 180px; gap: 11px; align-items: start; padding: 12px; border: 1px solid var(--line); background: var(--surface); }
+    .step-no { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: var(--ink); color: #fff; font-weight: 800; }
+    .method-step h3 { margin: 0; font-size: 14px; }
+    .method-step p { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
+    .exit-test { border-left: 2px solid var(--brand); padding-left: 9px; font-size: 11px; }
+    .exit-test strong { display: block; color: var(--brand); }
+    .decision-matrix { margin-top: 18px; }
+    .decision-matrix h3 { margin: 0 0 9px; }
+    .matrix-grid { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); background: var(--surface); }
+    .matrix-cell { padding: 11px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .matrix-cell:nth-child(3n) { border-right: 0; }
+    .matrix-cell:nth-last-child(-n+3) { border-bottom: 0; }
+    .matrix-cell strong { display: block; font-size: 12px; }
+    .matrix-cell span { color: var(--muted); font-size: 11px; }
+
+    .benchmark-evidence {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .evolution-principle {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      margin-bottom: 16px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+    .evolution-principle article { padding: 13px; background: var(--surface); }
+    .evolution-principle strong { display: block; color: var(--brand); font-size: 12px; }
+    .evolution-principle p { margin: 4px 0 0; color: var(--muted); font-size: 11px; }
+    .evolution-lab {
+      margin-bottom: 18px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .evolution-scenarios { display: flex; flex-wrap: wrap; gap: 5px; padding: 12px; border-bottom: 1px solid var(--line); background: var(--surface-2); }
+    .evolution-scenario {
+      min-height: 34px;
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 11px;
+    }
+    .evolution-scenario[aria-selected="true"] { border-color: var(--brand); background: var(--brand); color: #fff; }
+    .evolution-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; padding: 1px; background: var(--line); }
+    .evolution-step { min-width: 0; min-height: 72px; padding: 10px; border: 0; background: var(--surface); text-align: left; cursor: pointer; }
+    .evolution-step:hover { background: #fbfefd; }
+    .evolution-step[aria-selected="true"] { box-shadow: inset 0 4px 0 var(--brand); background: var(--brand-soft); }
+    .evolution-step b { display: block; color: var(--brand); font-size: 9px; }
+    .evolution-step strong { display: block; margin-top: 4px; font-size: 11px; }
+    .evolution-stage { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr); min-height: 430px; }
+    .evolution-preview { padding: 18px; border-right: 1px solid var(--line); background: #e9edf0; }
+    .evolution-explain { padding: 18px; }
+    .evolution-explain h3 { margin: 0; font-size: 19px; }
+    .evolution-explain > p { margin: 6px 0 14px; color: var(--muted); font-size: 11px; }
+    .evolution-facts { display: grid; gap: 8px; }
+    .evolution-fact { padding: 9px 10px; border-left: 3px solid var(--line-strong); background: var(--surface-2); }
+    .evolution-fact strong { display: block; font-size: 10px; }
+    .evolution-fact span { color: var(--muted); font-size: 10px; }
+    .evolution-fact.keep { border-color: var(--brand); background: var(--brand-soft); }
+    .evolution-fact.add { border-color: var(--blue); background: var(--blue-soft); }
+    .evolution-fact.cost { border-color: var(--amber); background: var(--amber-soft); }
+    .evolution-prototype { min-height: 390px; padding: 14px; border: 1px solid #8e9ba3; background: #f8fafb; }
+    .evolution-prototype-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+    .evolution-prototype-head strong { font-size: 13px; }
+    .evolution-prototype-head span { color: var(--muted); font-size: 9px; }
+    .evolution-demo-stack { display: grid; gap: 7px; }
+    .evolution-demo-row { display: grid; grid-template-columns: 100px minmax(0, 1fr); gap: 8px; align-items: center; padding: 8px; border: 1px solid var(--line); background: #fff; font-size: 9px; }
+    .evolution-demo-row b { color: var(--muted); font-size: 8px; }
+    .evolution-demo-row span { min-width: 0; }
+    .evolution-demo-row.actionable span { padding: 6px 8px; border: 1px solid var(--line-strong); background: #fbfcfd; }
+    .evolution-demo-row.highlight { border-left: 4px solid var(--brand); }
+    .evolution-mini-columns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .evolution-mini-column { min-height: 150px; padding: 8px; background: #e3e8eb; font-size: 8px; }
+    .evolution-mini-column strong { display: block; margin-bottom: 6px; }
+    .evolution-mini-card { margin-bottom: 5px; padding: 7px; border-left: 3px solid var(--brand); background: #fff; }
+    .evolution-flow { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-bottom: 10px; }
+    .evolution-flow span { padding: 6px 8px; border: 1px solid var(--line); background: #fff; font-size: 8px; }
+    .evolution-flow b { color: var(--brand); }
+    .evidence-card {
+      min-width: 0;
+      min-height: 112px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--brand);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: inherit;
+      text-decoration: none;
+    }
+    .evidence-card:hover { border-color: #83bbaa; background: #fbfefd; }
+    .evidence-card strong { display: block; color: var(--brand); font-size: 13px; }
+    .evidence-card span { display: block; margin-top: 4px; color: var(--muted); font-size: 11px; }
+    .evidence-card small { display: block; margin-top: 8px; color: var(--blue); font-size: 10px; }
+    .benchmark-boundary {
+      margin-bottom: 16px;
+      padding: 11px 13px;
+      border-left: 4px solid var(--amber);
+      background: var(--amber-soft);
+      color: #67470f;
+      font-size: 12px;
+    }
+    .pattern-catalog {
+      margin-bottom: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      overflow: hidden;
+    }
+    .pattern-catalog summary {
+      padding: 12px 14px;
+      color: var(--brand);
+      background: var(--surface-2);
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      border-top: 1px solid var(--line);
+      background: var(--line);
+    }
+    .catalog-item { min-width: 0; padding: 11px; background: var(--surface); }
+    .catalog-family { display: block; color: var(--brand); font-size: 9px; font-weight: 800; text-transform: uppercase; }
+    .catalog-item strong { display: block; margin: 4px 0; font-size: 12px; }
+    .catalog-item p { margin: 0; color: var(--muted); font-size: 10px; }
+    .catalog-item em { display: block; margin-top: 5px; color: var(--red); font-size: 9px; font-style: normal; }
+    .benchmark-lab {
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .benchmark-toolbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      gap: 14px;
+      padding: 13px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface-2);
+    }
+    .benchmark-tabs { display: flex; flex-wrap: wrap; gap: 5px; }
+    .benchmark-tab {
+      min-height: 34px;
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 11px;
+    }
+    .benchmark-tab[aria-selected="true"] { border-color: var(--brand); background: var(--brand); color: #fff; }
+    .benchmark-state-control { display: grid; gap: 4px; align-content: start; color: var(--muted); font-size: 10px; font-weight: 800; }
+    .benchmark-state-control select { width: 100%; border: 1px solid var(--line-strong); border-radius: 4px; background: #fff; padding: 6px 9px; }
+    .benchmark-stage { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(270px, .65fr); min-height: 570px; }
+    .benchmark-preview-area { min-width: 0; padding: 16px; border-right: 1px solid var(--line); background: #e9edf0; }
+    .benchmark-explain { padding: 18px; }
+    .benchmark-explain .eyebrow { color: var(--brand); }
+    .benchmark-explain h3 { margin: 0; font-size: 20px; }
+    .benchmark-explain dl { display: grid; gap: 9px; margin: 16px 0 0; }
+    .benchmark-explain dt { color: var(--brand); font-size: 10px; font-weight: 800; }
+    .benchmark-explain dd { margin: 2px 0 0; color: var(--muted); font-size: 11px; }
+    .benchmark-explain .reject dt { color: var(--red); }
+    .enterprise-demo { min-height: 520px; border: 1px solid #8e9ba3; background: #f7f9fa; overflow: hidden; }
+    .demo-global-bar { min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 11px; color: #fff; background: #203039; font-size: 9px; }
+    .demo-global-bar strong { font-size: 12px; }
+    .demo-scope { padding: 4px 7px; border: 1px solid #647984; background: #293e48; }
+    .demo-layout { display: grid; grid-template-columns: 108px minmax(0, 1fr); min-height: 476px; }
+    .demo-nav { padding: 10px 7px; color: #cbd5da; background: #30434c; font-size: 8px; }
+    .demo-nav span { display: block; padding: 6px; }
+    .demo-nav .active { color: #fff; background: var(--brand); }
+    .demo-main { min-width: 0; padding: 12px; }
+    .demo-titlebar { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 9px; }
+    .demo-titlebar h4 { margin: 0; font-size: 15px; }
+    .demo-titlebar p { margin: 2px 0 0; color: var(--muted); font-size: 8px; }
+    .demo-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; }
+    .demo-button { min-height: 27px; padding: 4px 7px; border: 1px solid var(--line-strong); border-radius: 3px; background: #fff; font-size: 8px; }
+    .demo-button.primary { border-color: var(--brand); background: var(--brand); color: #fff; }
+    .demo-toolbar { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; padding: 6px; border: 1px solid var(--line); background: #fff; }
+    .demo-filter { padding: 4px 6px; border: 1px solid var(--line); background: #fafcfd; font-size: 7px; }
+    .demo-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px; }
+    .demo-kpi { min-width: 0; padding: 8px; border-left: 3px solid var(--blue); background: #fff; }
+    .demo-kpi small { display: block; color: var(--muted); font-size: 7px; }
+    .demo-kpi strong { font-size: 14px; }
+    .demo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+    .demo-panel { min-width: 0; padding: 8px; border: 1px solid var(--line); background: #fff; font-size: 8px; }
+    .demo-panel h5 { margin: 0 0 5px; font-size: 9px; }
+    .demo-panel p { margin: 4px 0; color: var(--muted); }
+    .demo-table { width: 100%; table-layout: fixed; border-collapse: collapse; border: 1px solid var(--line); background: #fff; font-size: 7px; }
+    .demo-table th { padding: 5px; color: #fff; background: #455760; text-align: left; }
+    .demo-table td { padding: 6px 5px; border-bottom: 1px solid var(--line); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .demo-badge { display: inline-block; padding: 1px 4px; border: 1px solid currentColor; color: var(--brand); font-size: 7px; }
+    .demo-badge.warn { color: var(--amber); }
+    .demo-badge.fail { color: var(--red); }
+    .demo-split { display: grid; grid-template-columns: 36% minmax(0, 1fr); min-height: 330px; border: 1px solid var(--line); background: #fff; }
+    .demo-list { border-right: 1px solid var(--line); }
+    .demo-list div { padding: 8px; border-bottom: 1px solid var(--line); font-size: 8px; }
+    .demo-list .selected { color: #fff; background: var(--brand); }
+    .demo-detail { min-width: 0; padding: 9px; }
+    .demo-detail h5 { margin: 0 0 5px; font-size: 10px; }
+    .demo-detail p { margin: 4px 0; color: var(--muted); font-size: 8px; }
+    .demo-steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin-bottom: 8px; }
+    .demo-step { padding: 6px 3px; background: #e3e8eb; color: var(--muted); font-size: 7px; text-align: center; }
+    .demo-step.active { background: var(--brand); color: #fff; }
+    .demo-chart { display: flex; align-items: end; gap: 5px; height: 125px; padding: 10px 7px 17px; border-bottom: 1px solid var(--line-strong); }
+    .demo-chart i { flex: 1; position: relative; min-width: 10px; background: var(--blue); }
+    .demo-chart i:nth-child(3n) { background: var(--brand); }
+    .demo-chart span { position: absolute; left: 0; right: 0; bottom: -14px; color: var(--muted); font-size: 6px; font-style: normal; text-align: center; }
+    .benchmark-state-banner { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 8px; padding: 8px; border-left: 4px solid var(--amber); background: var(--amber-soft); color: #67470f; font-size: 8px; }
+    .benchmark-state-banner.error { border-color: var(--red); background: var(--red-soft); color: #6f3035; }
+    .benchmark-state-banner.info { border-color: var(--blue); background: var(--blue-soft); color: #234f78; }
+    .benchmark-state-center { min-height: 410px; display: grid; place-items: center; padding: 24px; text-align: center; }
+    .benchmark-state-center div { max-width: 340px; }
+    .benchmark-state-center strong { display: block; margin-bottom: 5px; font-size: 15px; }
+    .benchmark-state-center p { margin: 0 0 10px; color: var(--muted); font-size: 9px; }
+    .state-symbol { width: 40px; height: 40px; display: grid; place-items: center; margin: 0 auto 10px; border: 2px solid currentColor; color: var(--brand); font-weight: 800; }
+    .benchmark-skeleton { display: grid; gap: 9px; padding: 20px; }
+    .benchmark-skeleton i { display: block; height: 26px; background: #dfe5e7; }
+    .benchmark-skeleton i:first-child { width: 42%; height: 36px; }
+    .benchmark-skeleton i:last-child { height: 170px; }
+    .conflict-compare { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 6px; }
+    .conflict-compare span { padding: 6px; border: 1px solid var(--line); background: #fff; font-size: 7px; }
+    .benchmark-progress { height: 7px; margin: 6px 0; background: #d2dce1; }
+    .benchmark-progress i { display: block; width: 64%; height: 100%; background: var(--blue); }
+
+    .source-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 20px;
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    @media (max-width: 1180px) {
+      .workspace { grid-template-columns: 178px minmax(0, 1fr); }
+      .inspector { grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+      .inspector-section { margin: 0; padding: 0 16px 0 0; border-bottom: 0; border-right: 1px solid var(--line); }
+      .inspector-section:last-child { border-right: 0; }
+      .mapping-board { grid-template-columns: 1fr 28px 1fr; }
+      .mapping-stage:last-child { grid-column: 1 / -1; margin-top: 12px; }
+      .stage-arrow:nth-of-type(4) { display: none; }
+    }
+
+    @media (max-width: 820px) {
+      :root { --header-h: auto; }
+      .app-header { position: static; flex-wrap: wrap; gap: 10px; padding: 10px 12px; }
+      .brand-lockup { min-width: 0; flex: 1 1 240px; }
+      .top-tabs { order: 3; flex-basis: 100%; }
+      .header-tools { margin-left: auto; }
+      .scenario-select { max-width: 160px; }
+      .workspace { display: block; }
+      .level-rail { padding: 10px 12px; border-right: 0; border-bottom: 1px solid var(--line); overflow-x: auto; }
+      .level-rail .rail-label, .rail-principle { display: none; }
+      .level-list { display: flex; min-width: 680px; }
+      .level-button { min-height: 48px; grid-template-columns: 28px auto; }
+      .level-desc { display: none; }
+      .mapping-main { padding: 14px 12px; }
+      .context-strip { align-items: stretch; flex-direction: column; }
+      .mode-switch { align-self: flex-start; }
+      .mapping-board { display: block; }
+      .stage-arrow { height: 30px; transform: rotate(90deg); }
+      .stage-arrow::after { right: calc(50% - 11px); }
+      .mapping-stage:last-child { margin-top: 0; }
+      .semantic-guard { grid-template-columns: repeat(2, 1fr); }
+      .guard-item:nth-child(2) { border-right: 0; }
+      .guard-item:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .inspector { display: block; padding: 16px 12px; }
+      .inspector-section { padding: 0 0 14px; margin-bottom: 14px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .document-view { padding: 16px 12px; }
+      .architecture-layout, .method-grid { grid-template-columns: 1fr; }
+      .method-modes { display: grid; grid-template-columns: repeat(3, 1fr); }
+      .method-mode { margin: 0; }
+      .method-step { grid-template-columns: 36px minmax(0, 1fr); }
+      .exit-test { grid-column: 2; }
+      .matrix-grid { grid-template-columns: 1fr; }
+      .matrix-cell, .matrix-cell:nth-child(3n) { border-right: 0; border-bottom: 1px solid var(--line); }
+      .matrix-cell:last-child { border-bottom: 0; }
+      .benchmark-evidence, .catalog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .benchmark-stage { grid-template-columns: 1fr; }
+      .benchmark-preview-area { border-right: 0; border-bottom: 1px solid var(--line); }
+      .evolution-stage { grid-template-columns: 1fr; }
+      .evolution-preview { border-right: 0; border-bottom: 1px solid var(--line); }
+    }
+
+    @media (max-width: 520px) {
+      .brand-subtitle { display: none; }
+      .header-tools { width: 100%; }
+      .scenario-select { max-width: none; flex: 1; }
+      .context-strip h2 { font-size: 18px; }
+      .mode-switch { width: 100%; }
+      .mode-button { min-width: 0; }
+      .semantic-guard, .metric-row { grid-template-columns: 1fr; }
+      .guard-item { border-right: 0; border-bottom: 1px solid var(--line); }
+      .guard-item:last-child { border-bottom: 0; }
+      .section-heading { align-items: flex-start; flex-direction: column; }
+      .method-modes { grid-template-columns: 1fr; }
+      .source-footer { flex-direction: column; }
+      .benchmark-evidence, .catalog-grid, .benchmark-toolbar { grid-template-columns: 1fr; }
+      .benchmark-state-control select { width: 100%; }
+      .demo-layout { grid-template-columns: 1fr; }
+      .demo-nav { display: none; }
+      .demo-grid, .demo-split, .conflict-compare { grid-template-columns: 1fr; }
+      .demo-list { border-right: 0; border-bottom: 1px solid var(--line); }
+      .demo-kpis { grid-template-columns: 1fr; }
+      .evolution-principle, .evolution-steps { grid-template-columns: 1fr; }
+      .evolution-step { min-height: 58px; }
+      .evolution-demo-row { grid-template-columns: 1fr; }
+      .evolution-mini-columns { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand-lockup">
+      <svg class="brand-mark" viewBox="0 0 40 40" role="img" aria-label="领域、任务与界面三层映射">
+        <rect x="1" y="1" width="38" height="38" rx="6" fill="#e5f4ef"/>
+        <circle cx="10" cy="20" r="4" fill="#177a62"/>
+        <circle cx="20" cy="10" r="4" fill="#2467a9"/>
+        <circle cx="30" cy="20" r="4" fill="#a46608"/>
+        <circle cx="20" cy="30" r="4" fill="#6b55a2"/>
+        <path d="M13 17L17 13M23 13L27 17M27 23L23 27M17 27L13 23" stroke="#17242b" stroke-width="1.6"/>
+      </svg>
+      <div>
+        <h1 class="brand-title">数据模型到 UI 映射实验台</h1>
+        <p class="brand-subtitle">语义保持 · 任务投影 · 表征选择</p>
+      </div>
+    </div>
+
+    <nav class="top-tabs" aria-label="文档视图" role="tablist">
+      <button class="top-tab" role="tab" aria-selected="true" aria-controls="view-workbench" tabindex="0" data-view="workbench">映射工作台</button>
+      <button class="top-tab" role="tab" aria-selected="false" aria-controls="view-architecture" tabindex="-1" data-view="architecture">页面架构</button>
+      <button class="top-tab" role="tab" aria-selected="false" aria-controls="view-traceability" tabindex="-1" data-view="traceability">追踪矩阵</button>
+      <button class="top-tab" role="tab" aria-selected="false" aria-controls="view-method" tabindex="-1" data-view="method">方法流程</button>
+      <button class="top-tab" role="tab" aria-selected="false" aria-controls="view-benchmarks" tabindex="-1" data-view="benchmarks">行业标杆</button>
+    </nav>
+
+    <div class="header-tools">
+      <label for="scenarioSelect" class="sr-only" hidden>业务场景</label>
+      <select id="scenarioSelect" class="scenario-select" aria-label="选择业务场景">
+        <option value="create">销售订单录入</option>
+        <option value="fulfill">订单履约处理</option>
+        <option value="approve">信用例外审批</option>
+        <option value="exception">跨系统同步异常</option>
+      </select>
+      <button id="resetButton" class="icon-button" type="button" title="恢复初始视图" aria-label="恢复初始视图">↺</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="view-workbench" class="view active" role="tabpanel" aria-labelledby="workbenchTitle">
+      <div class="workspace">
+        <aside class="level-rail">
+          <p class="rail-label">映射尺度</p>
+          <div class="level-list" role="tablist" aria-label="五级映射尺度">
+            <button class="level-button" role="tab" aria-selected="true" aria-controls="mappingContent" tabindex="0" data-level="field">
+              <span class="level-number">1</span><span><span class="level-name">字段级</span><span class="level-desc">值、单位、约束</span></span>
+            </button>
+            <button class="level-button" role="tab" aria-selected="false" aria-controls="mappingContent" tabindex="-1" data-level="entity">
+              <span class="level-number">2</span><span><span class="level-name">实体级</span><span class="level-desc">身份、状态、能力</span></span>
+            </button>
+            <button class="level-button" role="tab" aria-selected="false" aria-controls="mappingContent" tabindex="-1" data-level="relation">
+              <span class="level-number">3</span><span><span class="level-name">关系级</span><span class="level-desc">基数、所有权、导航</span></span>
+            </button>
+            <button class="level-button" role="tab" aria-selected="false" aria-controls="mappingContent" tabindex="-1" data-level="module">
+              <span class="level-number">4</span><span><span class="level-name">模块级</span><span class="level-desc">能力、权威、交接</span></span>
+            </button>
+            <button class="level-button" role="tab" aria-selected="false" aria-controls="mappingContent" tabindex="-1" data-level="system">
+              <span class="level-number">5</span><span><span class="level-name">系统级</span><span class="level-desc">信任、时延、对账</span></span>
+            </button>
+          </div>
+          <div class="rail-principle">
+            <strong>核心约束</strong>
+            每升一级都会新增无法从下一级自动推出的语义，不能把字段逐层堆成页面架构。
+          </div>
+        </aside>
+
+        <section id="mappingContent" class="mapping-main" role="tabpanel" aria-labelledby="workbenchTitle">
+          <div class="context-strip">
+            <div>
+              <p class="eyebrow">当前投影</p>
+              <h2 id="workbenchTitle">销售订单录入 · 字段级映射</h2>
+              <p id="contextCopy" class="context-copy">销售代表创建一张语义正确、可提交且可恢复的订单。</p>
+            </div>
+            <div class="mode-switch" role="group" aria-label="界面状态">
+              <button class="mode-button" type="button" aria-pressed="true" data-mode="read">读取</button>
+              <button class="mode-button" type="button" aria-pressed="false" data-mode="edit">编辑</button>
+              <button class="mode-button" type="button" aria-pressed="false" data-mode="error">异常</button>
+            </div>
+          </div>
+
+          <div class="mapping-board" aria-live="polite">
+            <article class="mapping-stage">
+              <header class="stage-head">
+                <div><span class="stage-index">输入 A</span><span id="sourceHeading" class="stage-title">领域字段</span></div>
+                <span id="sourceKind" class="stage-kind">业务事实</span>
+              </header>
+              <div class="stage-body">
+                <div id="sourceItems" class="mapping-items"></div>
+              </div>
+            </article>
+
+            <div class="stage-arrow" aria-hidden="true"></div>
+
+            <article class="mapping-stage">
+              <header class="stage-head">
+                <div><span class="stage-index">约束 B</span><span class="stage-title">任务投影</span></div>
+                <span class="stage-kind">角色 + 场景</span>
+              </header>
+              <div id="taskProjection" class="stage-body"></div>
+            </article>
+
+            <div class="stage-arrow" aria-hidden="true"></div>
+
+            <article class="mapping-stage">
+              <header class="stage-head">
+                <div><span class="stage-index">输出 C</span><span class="stage-title">UI 表征</span></div>
+                <span id="previewKind" class="stage-kind">候选视图</span>
+              </header>
+              <div class="stage-body">
+                <div id="uiPreview" class="ui-preview"></div>
+              </div>
+            </article>
+          </div>
+
+          <div id="semanticGuard" class="semantic-guard"></div>
+        </section>
+
+        <aside class="inspector" aria-label="映射决策检查器">
+          <section class="inspector-section">
+            <p class="eyebrow">选中语义</p>
+            <h3 id="inspectorTitle">客户引用</h3>
+            <p id="inspectorSummary"></p>
+            <dl id="inspectorMeta" class="key-value"></dl>
+          </section>
+          <section class="inspector-section">
+            <p class="eyebrow">不可丢失</p>
+            <ul id="ruleList" class="rule-list"></ul>
+          </section>
+          <section class="inspector-section">
+            <p class="eyebrow">失败预演</p>
+            <div id="riskBox" class="risk-box"></div>
+            <span class="evidence-tag">工程规则 · 待项目验证</span>
+          </section>
+        </aside>
+      </div>
+    </section>
+
+    <section id="view-architecture" class="view document-view" role="tabpanel" aria-labelledby="architectureTitle">
+      <div class="content-wrap">
+        <div class="section-heading">
+          <div><p class="eyebrow">多图并存</p><h2 id="architectureTitle">模型层级不等于页面导航树</h2></div>
+          <p>系统、模块、页面和任务各自回答不同问题。点击节点可查看它在销售订单场景中的责任与边界。</p>
+        </div>
+        <div class="architecture-layout">
+          <div class="architecture-canvas">
+            <div class="architecture-stage">
+              <div class="arch-layer">
+                <div class="arch-label">系统边界</div>
+                <button class="arch-node" data-arch="erp"><strong>ERP 核心</strong><span>订单与应收权威</span></button>
+                <button class="arch-node" data-arch="crm"><strong>CRM</strong><span>客户与信用资料</span></button>
+                <button class="arch-node" data-arch="wms"><strong>WMS</strong><span>库存与发货执行</span></button>
+                <button class="arch-node" data-arch="payment"><strong>支付平台</strong><span>支付回执与对账</span></button>
+              </div>
+              <div class="arch-connectors"><span>契约、身份映射、时延、失败与对账</span></div>
+              <div class="arch-layer">
+                <div class="arch-label">能力模块</div>
+                <button class="arch-node module" data-arch="sales"><strong>销售订单</strong><span>订单规则与生命周期</span></button>
+                <button class="arch-node module" data-arch="credit"><strong>信用管理</strong><span>额度、风险与例外审批</span></button>
+                <button class="arch-node module" data-arch="inventory"><strong>库存可用量</strong><span>查询时点与分配承诺</span></button>
+                <button class="arch-node module" data-arch="fulfillment"><strong>履约协同</strong><span>发货编排与异常恢复</span></button>
+              </div>
+              <div class="arch-connectors"><span>围绕角色任务组合读取，按命令责任方写入</span></div>
+              <div class="arch-layer">
+                <div class="arch-label">任务页面</div>
+                <button class="arch-node page" data-arch="entry"><strong>订单录入</strong><span>创建一张有效订单</span></button>
+                <button class="arch-node page" data-arch="approval"><strong>信用例外审批</strong><span>判断并处理信用风险</span></button>
+                <button class="arch-node page" data-arch="desk"><strong>履约工作台</strong><span>连续处理待履约队列</span></button>
+                <button class="arch-node page" data-arch="exception"><strong>集成异常中心</strong><span>定位、重试、补偿、接管</span></button>
+              </div>
+              <div class="arch-connectors"><span>同一对象产生多个任务投影，一个页面组合多个权威事实</span></div>
+              <div class="arch-layer">
+                <div class="arch-label">领域对象</div>
+                <button class="arch-node module" data-arch="order"><strong>SalesOrder</strong><span>身份、订单行、金额、状态</span></button>
+                <button class="arch-node module" data-arch="customer"><strong>Customer</strong><span>独立身份与生命周期</span></button>
+                <button class="arch-node module" data-arch="shipment"><strong>Shipment</strong><span>独立履约聚合</span></button>
+                <button class="arch-node module" data-arch="receipt"><strong>PaymentReceipt</strong><span>外部支付事实映射</span></button>
+              </div>
+            </div>
+          </div>
+          <aside class="architecture-note">
+            <p class="eyebrow">节点说明</p>
+            <h3 id="archTitle">选择一个节点</h3>
+            <p id="archDescription">页面不是表或服务的镜像。选择任一节点，观察它通过什么契约参与当前任务。</p>
+            <ul id="archDecisions" class="decision-list"></ul>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-traceability" class="view document-view" role="tabpanel" aria-labelledby="traceTitle">
+      <div class="content-wrap">
+        <div class="section-heading">
+          <div><p class="eyebrow">双向可追踪</p><h2 id="traceTitle">从 UI 元素回到业务依据</h2></div>
+          <p>每个重要 UI 元素都应能追溯到任务、事实、命令、权威边界和失败恢复；反向也能检查领域事实是否有必要表征。</p>
+        </div>
+        <div class="trace-tools">
+          <input id="traceSearch" class="search-input" type="search" placeholder="筛选角色、页面、事实或命令" aria-label="筛选追踪矩阵">
+        </div>
+        <div class="table-wrap">
+          <table class="trace-table">
+            <thead><tr><th>角色 / 任务</th><th>页面 / UI 元素</th><th>业务事实 / 查询</th><th>用户动作</th><th>命令责任方</th><th>状态 / 权限</th><th>反馈 / 恢复</th></tr></thead>
+            <tbody id="traceBody"></tbody>
+          </table>
+        </div>
+        <footer class="source-footer">
+          <span>内容来源：同目录 Markdown 方法论；本页将抽象规则转成可交互原型。</span>
+          <a href="./数据模型到UI映射方法论-从字段关系到聚合导航与页面架构-v1.md">打开理论原文</a>
+        </footer>
+      </div>
+    </section>
+
+    <section id="view-method" class="view document-view" role="tabpanel" aria-labelledby="methodTitle">
+      <div class="content-wrap">
+        <div class="section-heading">
+          <div><p class="eyebrow">DTRM 执行主链</p><h2 id="methodTitle">从证据到候选 UI，再到验证结论</h2></div>
+          <p>流程不是单向自动生成。每一步都需要明确产物和退出条件，失败时回到最近一个错误假设。</p>
+        </div>
+        <div class="method-grid">
+          <div class="method-modes" role="tablist" aria-label="执行强度">
+            <button class="method-mode" role="tab" aria-selected="true" aria-controls="methodSteps" tabindex="0" data-rigor="light"><strong>轻量</strong><span>低风险基础资料</span></button>
+            <button class="method-mode" role="tab" aria-selected="false" aria-controls="methodSteps" tabindex="-1" data-rigor="standard"><strong>标准</strong><span>关系、状态或多角色</span></button>
+            <button class="method-mode" role="tab" aria-selected="false" aria-controls="methodSteps" tabindex="-1" data-rigor="strict"><strong>严格</strong><span>金额、库存、权限、跨系统</span></button>
+          </div>
+          <div class="method-content">
+            <div id="methodSteps" class="step-list"></div>
+            <div class="decision-matrix">
+              <h3>页面表征冲突裁决</h3>
+              <div class="matrix-grid">
+                <div class="matrix-cell"><strong>高频 + 熟练</strong><span>优先工作台、批处理、键盘路径和上下文连续。</span></div>
+                <div class="matrix-cell"><strong>低频 + 高风险</strong><span>优先向导、复核、二次确认和可撤销性。</span></div>
+                <div class="matrix-cell"><strong>高比较需求</strong><span>优先稳定列、对齐视图和差异编码，不使用分散卡片。</span></div>
+                <div class="matrix-cell"><strong>大规模集合</strong><span>优先筛选、搜索、分页或虚拟化，禁止全量下拉。</span></div>
+                <div class="matrix-cell"><strong>跨边界协作</strong><span>读取可组合；写入经明确命令责任方与一致性策略协调。</span></div>
+                <div class="matrix-cell"><strong>失败恢复昂贵</strong><span>优先草稿、幂等、进度、逐项回执和人工接管。</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-benchmarks" class="view document-view" role="tabpanel" aria-labelledby="benchmarkTitle">
+      <div class="content-wrap">
+        <div class="section-heading">
+          <div><p class="eyebrow">First principles · Pattern evolution · Official evidence</p><h2 id="benchmarkTitle">商业 UI 为什么这样设计，又怎样演进</h2></div>
+          <p>先从人的注意力、业务事实、对象关系、状态、规模和风险等朴素约束推导模式，再用行业标杆官方资料校验。新模式扩展覆盖范围，不表示原设计错误或被淘汰。</p>
+        </div>
+
+        <div class="evolution-principle">
+          <article><strong>原模式仍然成立</strong><p>旧设计在原任务、规模和风险下可能仍是最佳方案。文本、列表、键值详情和 Spinner 都不会因为新模式出现而消失。</p></article>
+          <article><strong>新模式覆盖新问题</strong><p>对象、关系、状态、责任、数据量或不确定性增加后，在原模式之外进行细化、组合、分化或叠加。</p></article>
+          <article><strong>复杂度必须有证据</strong><p>新模式同时引入状态、学习、实现和治理成本。没有具体覆盖缺口，就不应为了“高级”而升级。</p></article>
+        </div>
+
+        <div class="evolution-lab">
+          <div id="evolutionScenarios" class="evolution-scenarios" role="tablist" aria-label="UI 模式演进场景"></div>
+          <div id="evolutionSteps" class="evolution-steps" role="tablist" aria-label="当前演进链的设计阶段"></div>
+          <div class="evolution-stage">
+            <div class="evolution-preview"><div id="evolutionPreview"></div></div>
+            <aside class="evolution-explain">
+              <p id="evolutionRelation" class="eyebrow"></p>
+              <h3 id="evolutionTitle"></h3>
+              <p id="evolutionSummary"></p>
+              <div class="evolution-facts">
+                <div class="evolution-fact keep"><strong>原模式继续适用</strong><span id="evolutionKeep"></span></div>
+                <div class="evolution-fact add"><strong>本阶段新增覆盖</strong><span id="evolutionAdd"></span></div>
+                <div class="evolution-fact"><strong>触发压力 / 覆盖缺口</strong><span id="evolutionPressure"></span></div>
+                <div class="evolution-fact cost"><strong>新增代价与边界</strong><span id="evolutionCost"></span></div>
+                <div class="evolution-fact"><strong>继续分化的条件</strong><span id="evolutionNext"></span></div>
+                <div class="evolution-fact"><strong>演进中保持的不变量</strong><span id="evolutionInvariant"></span></div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <div class="section-heading" style="margin-top:24px">
+          <div><p class="eyebrow">Industry validation · 2026-07-13</p><h2>行业标杆用于验证演进结果</h2></div>
+          <p>下面的产品证据只回答“成熟软件是否反复采用了这些模式”，不替代前面的原理推导，也不证明某一种模式适合所有业务。</p>
+        </div>
+        <div class="benchmark-evidence" aria-label="行业标杆官方来源">
+          <a class="evidence-card" href="https://learn.microsoft.com/en-us/power-apps/maker/model-driven-apps/model-driven-app-overview" target="_blank" rel="noreferrer"><strong>Microsoft Power Apps</strong><span>表、关系、表单、视图、图表、仪表盘、导航、安全角色与生命周期。</span><small>迁移：模型生成页面骨架，但任务、导航和权限必须进入模型。</small></a>
+          <a class="evidence-card" href="https://polaris-react.shopify.com/patterns" target="_blank" rel="noreferrer"><strong>Shopify Polaris</strong><span>Resource index、Resource details、App settings、Loading、Pickers。</span><small>迁移：模式按商家目标组织，而不是按组件名称分类。</small></a>
+          <a class="evidence-card" href="https://docs.stripe.com/dashboard/basics" target="_blank" rel="noreferrer"><strong>Stripe Dashboard</strong><span>账户/组织范围、全局搜索、交易筛选、客户 360、角色、沙盒和活动日志。</span><small>迁移：应用壳必须承载范围、环境、权限、发现与审计。</small></a>
+          <a class="evidence-card" href="https://docs.datadoghq.com/dashboards/" target="_blank" rel="noreferrer"><strong>Datadog</strong><span>网格 Dashboard、统一时间轴 Timeboard、自由布局 Screenboard、模板变量和事件叠加。</span><small>迁移：同一时间数据可因诊断任务形成不同投影。</small></a>
+          <a class="evidence-card" href="https://docs.github.com/en/issues/planning-and-tracking-with-projects/customizing-views-in-your-project/changing-the-layout-of-a-view" target="_blank" rel="noreferrer"><strong>GitHub Projects</strong><span>同一工作项集合可切换 Table、Board、Roadmap，并按字段筛选、分组和回写。</span><small>迁移：视觉拖拽必须对应明确领域字段和命令。</small></a>
+          <a class="evidence-card" href="https://carbondesignsystem.com/patterns/overview/" target="_blank" rel="noreferrer"><strong>IBM Carbon</strong><span>Global header、Filtering、Forms、Empty、Loading、Notifications、Search。</span><small>迁移：壳层、空和加载是商业页面的一等模式。</small></a>
+          <a class="evidence-card" href="https://design.gitlab.com/patterns/" target="_blank" rel="noreferrer"><strong>GitLab Pajamas</strong><span>Destructive actions、Saving and feedback、Settings、Progressive disclosure、AI-human interaction。</span><small>迁移：高风险操作需要适当摩擦，保存与反馈成对设计。</small></a>
+          <a class="evidence-card" href="https://m3.material.io/foundations/layout/layout-overview/overview" target="_blank" rel="noreferrer"><strong>Material Design 3</strong><span>Scaffold、canonical layouts、breakpoints、adaptive design 和 bidirectionality。</span><small>迁移：响应式是任务重组，不是把桌面同比缩小。</small></a>
+          <a class="evidence-card" href="https://ant.design/docs/spec/overview" target="_blank" rel="noreferrer"><strong>Ant Design</strong><span>Navigation、Data Entry、Data Display、List、Workbench、Result 和 Exception Page。</span><small>迁移：商业系统必须覆盖列表、表单、工作台、结果与异常。</small></a>
+        </div>
+
+        <div class="benchmark-boundary"><strong>证据边界：</strong>以上只证明官方页面明确描述的模式，不推断厂商未公开的数据模型或内部机制。SAP Fiori、ServiceNow Horizon、Workday Canvas 与 Odoo 官方站点本次访问受限，未使用搜索摘要或第三方博客代替。</div>
+
+        <details class="pattern-catalog" open>
+          <summary>8 族 24 种商业软件模式总谱：映射输入、页面输出和拒绝条件</summary>
+          <div id="benchmarkCatalog" class="catalog-grid"></div>
+        </details>
+
+        <div class="benchmark-lab">
+          <div class="benchmark-toolbar">
+            <div id="benchmarkTabs" class="benchmark-tabs" role="tablist" aria-label="重点商业软件模式"></div>
+            <label class="benchmark-state-control" for="benchmarkState">运行状态
+              <select id="benchmarkState">
+                <option value="normal">正常</option>
+                <option value="loading">首次加载</option>
+                <option value="empty">真空数据</option>
+                <option value="filtered">筛选无结果</option>
+                <option value="forbidden">无权限</option>
+                <option value="stale">数据过期</option>
+                <option value="network">网络错误</option>
+                <option value="validation">校验失败</option>
+                <option value="conflict">并发冲突</option>
+                <option value="processing">异步处理中</option>
+                <option value="partial">部分成功</option>
+              </select>
+            </label>
+          </div>
+          <div class="benchmark-stage">
+            <div class="benchmark-preview-area"><div id="benchmarkPreview" aria-live="polite"></div></div>
+            <aside class="benchmark-explain">
+              <p id="benchmarkFamily" class="eyebrow"></p>
+              <h3 id="benchmarkPatternTitle"></h3>
+              <dl>
+                <div><dt>映射输入</dt><dd id="benchmarkInput"></dd></div>
+                <div><dt>核心任务</dt><dd id="benchmarkTask"></dd></div>
+                <div><dt>页面组成</dt><dd id="benchmarkComposition"></dd></div>
+                <div><dt>导航 / 返回契约</dt><dd id="benchmarkNavigation"></dd></div>
+                <div><dt>优点</dt><dd id="benchmarkPro"></dd></div>
+                <div><dt>代价</dt><dd id="benchmarkCon"></dd></div>
+                <div class="reject"><dt>拒绝条件</dt><dd id="benchmarkReject"></dd></div>
+                <div><dt>官方证据锚点</dt><dd id="benchmarkSource"></dd></div>
+              </dl>
+            </aside>
+          </div>
+        </div>
+
+        <footer class="source-footer">
+          <span>正常态只是状态空间之一。页面模式与加载、权限、冲突、异步和部分成功是正交维度。</span>
+          <a href="./数据模型到UI映射方法论-从字段关系到聚合导航与页面架构-v1.md#19-商业软件-ui-模式语言与行业标杆逆向">打开完整证据矩阵与模式深拆</a>
+        </footer>
+      </div>
+    </section>
+  </main>
+  <div id="actionStatus" class="action-status" role="status" aria-live="polite" hidden></div>
+
+  <script>
+    const evolutionScenarios = [
+      {
+        key: "value", label: "一个值", invariant: "值的类型、单位、精度、空值与来源始终不变。",
+        stages: [
+          { name: "格式化文本", relation: "朴素起点", summary: "最小目标只是让人准确看见一个事实。", keep: "只读、低风险、无修改任务时，它仍是最直接的表达。", add: "标签、格式和值，把不可见事实带入人的认知。", pressure: "尚无输入、选择或业务命令需求。", cost: "几乎没有交互成本，但不能修改事实。", next: "用户需要改变该值时，增加输入控件。", kind: "value-read" },
+          { name: "自由输入", relation: "能力叠加", summary: "在只读表达之外增加改变事实的入口。", keep: "只读详情仍继续使用格式化文本；输入框只出现在编辑任务。", add: "输入、Dirty、校验、保存与反馈。", pressure: "用户需要录入或修改值。", cost: "必须处理必填、格式、撤销和服务端校验。", next: "值出现明确类型、单位、候选集或范围时进行语义细化。", kind: "value-input" },
+          { name: "语义控件", relation: "语义细化", summary: "数字、日期、枚举和对象引用分化为不同控件。", keep: "真正开放的文本仍使用文本框；简单整数仍可直接输入。", add: "类型限制、候选搜索、步长调整、日期和引用解码。", pressure: "自由文本不负责保证类型、范围和候选合法性。", cost: "增加格式、本地化、无障碍、远程搜索和无结果状态。", next: "多个值共同表达一个业务概念时组合为复合字段。", kind: "value-semantic" },
+          { name: "复合字段", relation: "结构组合", summary: "多个原子值组合成金额、时间区间、地址或对象摘要。", keep: "数字框、选择器等原子控件仍是组成部分。", add: "组合/拆分规则、单位一致性、局部空值和派生说明。", pressure: "单个控件无法完整表达 Money、Range 或 Reference。", cost: "局部编辑、整体校验和序列化更复杂。", next: "复合字段与其他字段共同守住对象不变量时进入事务表单。", kind: "value-compound" }
+        ]
+      },
+      {
+        key: "form", label: "一组字段", invariant: "字段仍映射到同一对象事实，最终业务不变量由命令责任方维护。",
+        stages: [
+          { name: "平铺表单", relation: "朴素起点", summary: "少量字段依次录入并一次保存。", keep: "字段少、顺序自然、无主从和跨字段规则时仍是最佳方案。", add: "一次性编辑多个属性。", pressure: "简单基础资料维护。", cost: "字段增长后扫描和错误定位成本上升。", next: "出现语义区域或渐进披露需求时分组。", kind: "form-flat" },
+          { name: "分组表单", relation: "结构组合", summary: "按业务语义和任务顺序组织字段。", keep: "每个分组内部仍由朴素字段控件组成。", add: "Section、折叠、摘要和跨区错误定位。", pressure: "字段增加，用户需要理解结构而不只是顺序。", cost: "分组过多会隐藏内容；Tab 可能降低发现性。", next: "出现明细、派生合计、草稿和整体校验时进入事务编辑器。", kind: "form-group" },
+          { name: "事务编辑器", relation: "结构组合 + 横切叠加", summary: "主表、明细、合计、草稿和业务命令形成一个提交边界。", keep: "分组表单和原子控件仍承担具体输入。", add: "明细表、错误摘要、草稿、Dirty、版本与整体提交。", pressure: "多个字段和组成对象共同维护业务不变量。", cost: "并发冲突、离开拦截、重算和草稿生命周期。", next: "低频任务有严格依赖步骤且一次展示负担过高时分化为向导。", kind: "form-transaction" },
+          { name: "可恢复向导", relation: "任务分化", summary: "为有自然依赖顺序的低频复杂任务提供分步完成路径。", keep: "熟练用户或可自由编辑的任务仍使用事务编辑器。", add: "步骤资格、分段校验、草稿恢复和完成进度。", pressure: "用户无法一次理解全部输入，前一步决定后一步。", cost: "跨步比较和往返变慢；不当拆步会制造阻力。", next: "高频熟练任务反而可能退回单页工作台，而不是继续增加步骤。", kind: "form-wizard" }
+        ]
+      },
+      {
+        key: "object", label: "一个对象", invariant: "对象身份、生命周期和动作责任方不能因页面结构变化而改变。",
+        stages: [
+          { name: "键值详情", relation: "朴素起点", summary: "准确读取一个对象的若干属性。", keep: "基础资料、审计快照和窄任务仍适合键值详情。", add: "稳定对齐的标签和值。", pressure: "只需回答“有哪些事实”。", cost: "不表达身份层级、状态和关系。", next: "需要回答“这是谁、能做什么”时增加对象页结构。", kind: "object-kv" },
+          { name: "对象页", relation: "结构组合", summary: "身份头、状态、事实分区和合法动作形成对象上下文。", keep: "键值块继续承载准确事实读取。", add: "身份、生命周期、状态和命令资格。", pressure: "对象不只是字段集合，而有身份与行为。", cost: "需要管理对象头、动作区和区域优先级。", next: "关系、活动和角色视角增加时扩展为 360。", kind: "object-page" },
+          { name: "Object 360", relation: "横切叠加", summary: "在对象页上叠加关系摘要、风险、活动和审计。", keep: "对象页仍是核心；大关系集仍回到独立列表。", add: "相关对象、事件时间线、风险和跨来源摘要。", pressure: "决策依赖对象周边事实，而非只看自身属性。", cost: "页面容易膨胀，数据来源与时点可能不一致。", next: "不同角色需要不同信息和动作时分化角色投影。", kind: "object-360" },
+          { name: "角色化工作空间", relation: "任务分化", summary: "同一对象按销售、财务、客服等任务生成并列投影。", keep: "通用对象页仍可用于低频浏览和跨角色共享。", add: "角色摘要、专用动作、队列上下文和下一项。", pressure: "同一对象对不同角色具有不同最小充分信息。", cost: "投影数量增加，需要共享术语、身份和规则。", next: "需要连续处理多个对象时与 Worklist 组合。", kind: "object-role" }
+        ]
+      },
+      {
+        key: "collection", label: "多个对象", invariant: "每行或卡片始终映射到稳定对象身份；选择范围必须可解释。",
+        stages: [
+          { name: "名称列表", relation: "朴素起点", summary: "在少量同类对象中找到并打开一个。", keep: "少量候选、单一识别字段和移动端菜单仍适合列表。", add: "多个对象的顺序浏览和选择。", pressure: "对象数量超过一个。", cost: "无法对齐比较多个属性。", next: "需要比较字段时增加数据表。", kind: "collection-list" },
+          { name: "数据表", relation: "结构细化", summary: "稳定列对齐多个对象属性，支持排序和筛选。", keep: "名称列表仍用于窄屏、简单选择和快速菜单。", add: "多字段比较、排序、筛选和精确扫描。", pressure: "用户需要横向比较同构事实。", cost: "移动端困难，列过多和大数据量会溢出。", next: "查询、分页和视图复用增加时进入 List Report。", kind: "collection-table" },
+          { name: "List Report", relation: "规模升级", summary: "表格与结构化查询、分页、列设置和保存视图结合。", keep: "数据表仍是核心结果表征；简单列表继续用于小集合。", add: "服务端查询、URL 状态、保存/共享视图和返回恢复。", pressure: "数据量、查询复杂度和重复任务增长。", cost: "查询模型、偏好迁移和性能治理。", next: "出现跨页选择、批处理和逐项回执时叠加工作台能力。", kind: "collection-report" },
+          { name: "集合工作台", relation: "横切叠加 + 任务分化", summary: "在 List Report 上叠加选择集、批处理、部分成功和岗位视图。", keep: "只读浏览仍可使用 List Report；状态流任务可并列分化为看板。", add: "跨页选择、批处理快照、后台任务和逐项结果。", pressure: "用户要连续、高频地改变一批对象。", cost: "逐项鉴权、并发、幂等和部分成功语义。", next: "按状态流动分化为 Board；按责任处理分化为 Worklist。", kind: "collection-workbench" }
+        ]
+      },
+      {
+        key: "state", label: "状态与责任", invariant: "业务状态只能通过合法命令迁移，视觉移动不改变这一点。",
+        stages: [
+          { name: "状态文本", relation: "朴素起点", summary: "只告诉用户对象当前处于哪种状态。", keep: "只读列表和详情中的状态摘要仍使用文本或徽标。", add: "生命周期可见性。", pressure: "对象存在有限状态。", cost: "不说明能否改变和为何不能改变。", next: "用户需要推动状态时增加合法动作。", kind: "state-label" },
+          { name: "状态 + 合法动作", relation: "能力叠加", summary: "根据当前状态、角色和规则显示可执行命令。", keep: "状态文本继续表达事实；按钮只是命令入口。", add: "前置条件、阻塞原因、确认和反馈。", pressure: "状态改变具有规则和副作用。", cost: "动作资格要与服务端一致，失败后重新求值。", next: "需要观察多个对象的状态流动时分化看板。", kind: "state-action" },
+          { name: "状态看板", relation: "任务分化", summary: "把集合按状态投影成列，服务流动观察和轻量回写。", keep: "表格仍用于精确比较；详情仍用于完整证据。", add: "WIP、状态流、拖拽和瓶颈可见性。", pressure: "核心任务从查找转为观察和推动流动。", cost: "大集合和多维比较弱；拖拽需处理权限与失败。", next: "出现责任人、SLA、领取、退回和证据时进入 Worklist/审批。", kind: "state-board" },
+          { name: "审批工作空间", relation: "结构组合 + 治理叠加", summary: "队列、证据、责任、合法决定和历史形成闭环。", keep: "状态徽标、动作按钮、表格和对象页仍是组成部分。", add: "领取/转派、SLA、会签、理由和审计。", pressure: "状态转移需要明确责任、证据和复核。", cost: "流程版本、并发领取、升级和撤回语义复杂。", next: "跨团队交付时可叠加 Handoff；实时调度时分化 Operations Console。", kind: "state-approval" }
+        ]
+      },
+      {
+        key: "navigation", label: "页面导航", invariant: "目标对象、来源上下文、权限和未保存状态都必须可追踪。",
+        stages: [
+          { name: "普通链接", relation: "朴素起点", summary: "从一个页面到另一个可寻址页面。", keep: "独立对象、简单目录和外部资源仍使用普通链接。", add: "到达目标和浏览器历史。", pressure: "用户需要在对象之间移动。", cost: "复杂来源状态可能只存在内存中。", next: "来源筛选、焦点和草稿需要恢复时增加返回契约。", kind: "nav-link" },
+          { name: "返回契约", relation: "横切叠加", summary: "路由同时携带查询、焦点、页码和返回目标。", keep: "链接仍负责导航，History 仍负责基本前进后退。", add: "来源上下文恢复、深链和失效对象处理。", pressure: "用户从筛选集合进入详情和关联对象。", cost: "URL、History、局部状态和服务端草稿需要分工。", next: "跨模块、组织、环境和全局任务增加时引入应用壳。", kind: "nav-return" },
+          { name: "Application Shell", relation: "结构组合", summary: "范围、模块、搜索、最近、通知和后台任务形成全局空间。", keep: "页面内链接、面包屑和对象导航继续存在。", add: "业务范围、全局发现、角色入口和持久任务入口。", pressure: "系统从单模块扩展为多模块、多组织和多环境。", cost: "壳层占空间；范围切换要重算权限、查询和草稿。", next: "用户需要同时保持多个长任务时扩展多任务工作区。", kind: "nav-shell" },
+          { name: "多任务工作区", relation: "任务分化", summary: "用多标签或分栏保持多个对象和草稿上下文。", keep: "普通页面仍用于单任务；移动端仍以单项处理为主。", add: "并行核对、任务切换、未保存标记和跨标签身份。", pressure: "工作需要对照多个对象或等待外部结果。", cost: "多标签冲突、内存、焦点和跨窗口一致性。", next: "任务数量过多时必须限制并发并回到队列管理。", kind: "nav-multi" }
+        ]
+      },
+      {
+        key: "hierarchy", label: "层级与图", invariant: "稳定节点身份与真实父子/多父关系不能被视觉投影改变。",
+        stages: [
+          { name: "缩进列表", relation: "朴素起点", summary: "用缩进表达一个静态、小规模父子层级。", keep: "帮助目录、短提纲和只读小层级仍适用。", add: "祖先和深度的视觉提示。", pressure: "对象存在单父层级。", cost: "缺少持久展开、搜索和结构操作。", next: "需要交互浏览和选择时引入 Tree。", kind: "tree-indent" },
+          { name: "Tree", relation: "能力叠加", summary: "增加展开、焦点、选择、搜索和懒加载。", keep: "静态缩进列表仍用于只读摘要和文档。", add: "路径浏览、节点定位、选择与异步加载。", pressure: "层级变深、变大或需要交互。", cost: "半选、未知后代、键盘和路径恢复。", next: "节点属性也需对齐比较时组合成 TreeGrid。", kind: "tree-basic" },
+          { name: "TreeGrid", relation: "结构组合", summary: "树的路径浏览与表格的多列比较组合。", keep: "Tree 仍用于纯结构浏览和选择。", add: "层级与负责人、数量、状态等属性同屏比较。", pressure: "结构位置和节点属性共同影响决策。", cost: "横向空间、虚拟化、移动节点和并发复杂。", next: "出现多父引用时，不能继续假设它是树。", kind: "tree-grid" },
+          { name: "DAG / 图", relation: "模型分化", summary: "多父或有环关系超出树的结构定义，改用图或主路径树投影。", keep: "树仍可作为选定主路径的局部投影。", add: "共享依赖、多来源、路径和影响传播。", pressure: "同一对象拥有多个父级，或关系形成环。", cost: "布局、认知、路径选择和去重统计更复杂。", next: "节点过多时使用聚焦子图、路径搜索和邻接列表，而非全图展示。", kind: "tree-graph" }
+        ]
+      },
+      {
+        key: "async", label: "等待与恢复", invariant: "命令是否受理、业务结果和恢复责任必须可确认。",
+        stages: [
+          { name: "Spinner", relation: "朴素起点", summary: "为短暂等待阻止重复点击并说明系统正在工作。", keep: "可预测的亚秒到数秒等待仍适合 Spinner。", add: "忙碌反馈。", pressure: "同步请求需要少量时间。", cost: "不说明阶段、结果和是否可离开。", next: "等待时间增长且阶段可估计时显示进度。", kind: "async-spinner" },
+          { name: "阶段进度", relation: "信息细化", summary: "显示当前阶段、完成度和剩余工作。", keep: "局部短等待仍使用 Spinner；进度只用于可度量过程。", add: "阶段、百分比、取消和错误定位。", pressure: "用户需要判断是否继续等待。", cost: "虚假精确度和进度停滞会降低信任。", next: "用户需要离开页面并稍后恢复时持久化后台任务。", kind: "async-progress" },
+          { name: "Background Job", relation: "状态持久化", summary: "命令受理后生成任务号，允许离开、通知和重新进入。", keep: "Spinner/进度继续用于当前页局部反馈。", add: "任务身份、持久状态、尝试历史和结果入口。", pressure: "任务长、跨系统或不能占据前台。", cost: "幂等、取消、通知和任务保留策略。", next: "批量项可独立失败且需要修复时进入恢复中心。", kind: "async-job" },
+          { name: "异常恢复中心", relation: "横切叠加", summary: "错误分类、失败项、重试、补偿和人工接管形成恢复闭环。", keep: "后台任务仍是执行载体；简单失败仍可局部重试。", add: "部分成功、仅重试失败项、不可重试分类和审计。", pressure: "失败不是一个布尔值，不同对象和原因需要不同处置。", cost: "错误模型、补偿语义、日志脱敏和运营责任。", next: "离线双向修改出现后，与 Sync / Conflict Resolver 组合。", kind: "async-recovery" }
+        ]
+      },
+      {
+        key: "permission", label: "权限与治理", invariant: "UI 可见性不等于服务端授权，有效权限必须绑定主体、资源、动作和范围。",
+        stages: [
+          { name: "隐藏 / 禁用", relation: "朴素起点", summary: "减少用户看到或触发无权动作的机会。", keep: "最终界面仍需要隐藏不可披露能力、禁用条件不满足动作。", add: "基本可见性和操作提示。", pressure: "不同用户能做的事情不同。", cost: "不能解释权限来源，也不能作为安全边界。", next: "管理员需要批量配置角色能力时增加矩阵。", kind: "permission-hidden" },
+          { name: "角色矩阵", relation: "结构组合", summary: "把主体、资源和动作交叉对齐，支持批量比较。", keep: "业务页面仍使用隐藏/禁用表达当前结果。", add: "角色级配置和差异扫描。", pressure: "权限项增加，需要集中管理。", cost: "难以表达数据范围、继承、Deny 和多角色。", next: "复杂合并后必须显示有效权限解释。", kind: "permission-matrix" },
+          { name: "有效权限解释", relation: "语义细化", summary: "展示最终允许/拒绝、范围和配置来源。", keep: "角色矩阵继续作为输入视图。", add: "继承、Deny、多角色合并、范围和“为什么”。", pressure: "配置输入不等于最终权限，管理员需要诊断结果。", cost: "需要权威求值引擎、来源追踪和安全披露。", next: "变更需要模拟、审批、版本和发布时进入治理设计器。", kind: "permission-effective" },
+          { name: "治理设计器", relation: "治理叠加", summary: "权限或规则的草稿、模拟、Diff、影响分析和发布形成控制面。", keep: "矩阵和有效解释仍是设计器内部的重要视图。", add: "版本、测试、Maker-Checker、发布与回滚边界。", pressure: "配置变化本身成为高风险业务命令。", cost: "学习、依赖分析、环境迁移和职责分离。", next: "简单参数仍应留在普通设置页，不全部进入设计器。", kind: "permission-governance" }
+        ]
+      },
+      {
+        key: "analytics", label: "汇总与分析", invariant: "指标口径、粒度、时间窗口、数据时点和权限必须一致。",
+        stages: [
+          { name: "总数 / 汇总表", relation: "朴素起点", summary: "快速读取一个准确结果或少量分类汇总。", keep: "单一 KPI、正式报表数字和移动摘要仍适用。", add: "从明细得到整体值。", pressure: "用户需要整体而非逐条阅读。", cost: "无法解释趋势、构成和变化原因。", next: "需要观察时间或类别关系时增加图表。", kind: "analytics-total" },
+          { name: "单图表", relation: "视觉细化", summary: "用位置、长度或趋势编码一个主要关系。", keep: "准确总数仍与图表并列；表格仍用于精确值。", add: "趋势、分布、构成或异常的快速识别。", pressure: "人需要比较而非只读一个数。", cost: "图形会受尺度、颜色和聚合方式影响。", next: "多个指标需要共享筛选、时点和事件时组成 Dashboard。", kind: "analytics-chart" },
+          { name: "Dashboard", relation: "结构组合", summary: "多个 KPI、图表和事件在统一筛选与时间窗口下组合。", keep: "单 KPI、图表和表格仍是面板组成部分。", add: "态势、联动筛选、数据时点和异常入口。", pressure: "决策需要同时看多个相关指标。", cost: "面板过多、口径不一和局部数据源失败。", next: "发现异常后需要直接处理对象时与明细列表组合。", kind: "analytics-dashboard" },
+          { name: "Analytical List", relation: "任务组合", summary: "指标、图表和可操作对象列表共享同一查询上下文。", keep: "Dashboard 继续用于高层监控；正式报表继续用于稳定输出。", add: "从发现异常到筛选明细、批量行动的闭环。", pressure: "分析不只为了观看，还要立即作用于业务对象。", cost: "汇总/明细一致性、行级权限和选择范围复杂。", next: "开放式维度探索分化为 Report / Exploration，而非继续堆面板。", kind: "analytics-list" }
+        ]
+      }
+    ];
+
+    const benchmarkCatalog = [
+      ["应用壳层", "Application Shell", "组织/环境/角色/模块 → 全局头、主导航、范围切换、搜索", "跨模块与跨业务范围", "单模块短任务无需重壳；切换必须处理草稿与权限"],
+      ["应用壳层", "Role Home / Launchpad", "岗位目标/待办/指标 → 角色首页与快捷入口", "稳定岗位的高频启动", "低频角色或模块卡片堆砌时拒绝"],
+      ["应用壳层", "Multi-task Workspace", "并行对象/长任务 → 多标签或分栏工作区", "核对并切换多个对象", "移动端、单线程流程和无冲突策略时拒绝"],
+      ["集合与生产率", "Resource Index / List Report", "同构集合/查询 → 表格、筛选、保存视图", "查找、比较与批处理", "对象少、强视觉或结构差异大时改用卡片"],
+      ["集合与生产率", "Worklist / Queue", "任务/SLA/责任 → 队列、领取与下一项", "按责任连续处理", "无责任或不可排序的对象不能伪装成队列"],
+      ["集合与生产率", "Board / Schedule / Roadmap", "状态或时间字段 → 看板、日历、路线图", "观察流动、排期并回写", "无稳定回写字段、风险高或规模过大时拒绝"],
+      ["对象与交易", "Object Page / 360", "稳定身份/关系/生命周期 → 对象头、相关列表、活动", "理解单一对象全貌", "不得形成跨聚合大保存；大集合进入独立页"],
+      ["对象与交易", "Transaction Editor", "聚合根/明细/不变量 → 事务表单、草稿、整体提交", "维护主从交易一致性", "独立生命周期对象或纯查询不适用"],
+      ["对象与交易", "Comparison / Reconciliation", "多来源记录/差异 → 并排证据、匹配、处置", "对账、版本比较与匹配", "数据不可比或依据不可解释时拒绝自动处置"],
+      ["工作流与队列", "Approval / Case Workspace", "流程/证据/合法命令 → 任务详情、决策和历史", "审批、案件与异常决定", "无业务决定时不引入审批；状态不可任意编辑"],
+      ["工作流与队列", "Wizard / Guided Process", "依赖顺序的复杂输入 → 分步导航、分段校验、草稿", "低频复杂且有自然顺序", "步骤可自由完成或频繁往返时增加阻力"],
+      ["工作流与队列", "Operations Console", "实时多对象状态/异常 → 运行表、告警、控制动作", "调度、监控和干预", "非实时低频任务使用普通列表"],
+      ["分析与决策", "Analytical List", "明细/指标/维度 → 指标摘要、图表、可钻取表格", "分析后立即行动", "口径不稳或不能钻回明细时会误导"],
+      ["分析与决策", "Dashboard / Cockpit", "多指标/时间窗口 → 网格或同步时间轴驾驶舱", "发现异常和趋势", "无口径、时点或行动出口时只是装饰墙"],
+      ["分析与决策", "Report / Exploration", "语义层/维度度量 → 透视、分组、订阅和快照", "重复报表与开放分析", "监管报表与探索查询不能混用保存语义"],
+      ["协作与责任", "Activity / Timeline", "业务事件/评论/审计 → 事实时间线与协作流", "恢复上下文与解释变化", "评论不能冒充权威业务事实"],
+      ["协作与责任", "Assignment / Handoff", "请求/责任/承诺/回执 → 指派、认领、交接和验收", "跨人或跨团队交付", "只有聊天没有责任状态时不能称为交接"],
+      ["协作与责任", "Notification Center", "事件/订阅/优先级 → 通知、提醒、确认和回到任务", "异步触达与召回", "不能代替任务队列；必须去重和关闭反馈"],
+      ["治理与高风险", "Permission / Scope Designer", "主体×资源×动作×范围 → 权限矩阵、范围树、有效解释", "授权、影响预览和审计", "复选框不能表达继承、Deny、多角色和职责冲突"],
+      ["治理与高风险", "Rule / Configuration Designer", "条件/动作/版本/依赖 → 构建、模拟、测试和发布", "业务规则与产品行为配置", "简单参数无需设计器；无版本测试时风险过高"],
+      ["治理与高风险", "Audit / Version Workspace", "版本/事件/Diff/有效期 → 审计、比较和恢复入口", "解释与治理变更", "日志不完整或不可安全恢复时不显示虚假回滚"],
+      ["集成与恢复", "Import / Export Workbench", "文件/查询/映射/校验 → 导入向导、逐项结果、后台导出", "大批量数据交换", "少量手录无需导入；敏感导出需独立权限与审计"],
+      ["集成与恢复", "Background Job / Exception Center", "异步任务/错误/重试 → 进度、失败项和恢复动作", "长任务与部分成功恢复", "秒级操作不建任务中心；不可重试错误不显示通用重试"],
+      ["集成与恢复", "Sync / Conflict Resolver", "多来源版本/权威规则 → 同步状态、三方比较、合并", "离线、双向同步与并发冲突", "无来源证据或不可字段合并时只允许重载或升级人工"]
+    ];
+
+    const benchmarkPatterns = [
+      {
+        key: "shell", label: "应用外壳", family: "APPLICATION SHELL", title: "应用外壳与业务范围",
+        input: "租户、组织、门店、环境、角色、模块图、最近访问与后台任务。", task: "先进入正确业务空间，再全局发现对象、任务和工具。",
+        composition: "全局头 + 业务范围 + 主导航 + 搜索/命令 + 最近/收藏 + 通知/任务。", navigation: "范围切换后重算菜单、权限、查询、当前对象与草稿适用性；深链接重新鉴权。",
+        pro: "稳定空间心智，减少跨模块查找和错范围操作。", con: "重壳占用内容空间，并引入多标签、深链和草稿迁移状态。", reject: "单租户、单模块、一次性短任务工具不需要完整企业壳层。",
+        source: "Power Apps 导航与安全角色；Stripe 账户/组织、搜索、产品导航、沙盒和活动日志；Carbon Global header。", active: "订单",
+        body: `<div class="demo-titlebar"><div><h4>销售运营中心</h4><p>华东法人 · 上海门店 · 生产环境</p></div><div class="demo-actions"><button class="demo-button">全局搜索</button><button class="demo-button primary">新建订单</button></div></div><div class="demo-kpis"><div class="demo-kpi"><small>待我处理</small><strong>24</strong></div><div class="demo-kpi"><small>后台任务</small><strong>3</strong></div><div class="demo-kpi"><small>今日异常</small><strong>7</strong></div></div><div class="demo-grid"><div class="demo-panel"><h5>最近访问</h5><p>SO-1042 · 销售订单</p><p>C-018 · 华东零售</p></div><div class="demo-panel"><h5>岗位入口</h5><p>待发货订单　128</p><p>信用冻结复核　6</p></div><div class="demo-panel"><h5>模块健康</h5><p>订单服务　正常</p><p>物流同步　延迟 8 分钟</p></div><div class="demo-panel"><h5>收藏视图</h5><p>华东大额订单</p><p>本周退货异常</p></div></div>`
+      },
+      {
+        key: "workbench", label: "集合工作台", family: "COLLECTION & PRODUCTIVITY", title: "高级集合工作台",
+        input: "同构对象集合、查询投影、稳定行身份、筛选/排序/分组和选择集。", task: "在大集合中查找、比较、保存视图、跨页选择和批量处理。",
+        composition: "搜索 + 结构化筛选 + 保存视图 + 列设置 + 表格 + 批处理回执。", navigation: "列表进入详情后恢复查询、页码/游标、滚动和焦点；选择本页与选择全部结果分离。",
+        pro: "信息密度和重复任务效率高，可形成岗位专用视图。", con: "状态、选择范围、虚拟化、内联编辑和批处理语义复杂。", reject: "对象少、强视觉或每项结构差异大时使用卡片；移动端转为任务卡片。",
+        source: "Shopify Resource index；Stripe 交易筛选与导出；GitHub Projects Table；Carbon/Pajamas Filtering。", active: "订单",
+        body: `<div class="demo-titlebar"><div><h4>订单工作台</h4><p>保存视图：待发货 · 华东 · 承诺日升序</p></div><div class="demo-actions"><button class="demo-button">导出</button><button class="demo-button primary">批量分配</button></div></div><div class="demo-toolbar"><span class="demo-filter">搜索订单 / 客户</span><span class="demo-filter">状态：待发货</span><span class="demo-filter">区域：华东</span><span class="demo-badge">12,438 条</span></div><div class="benchmark-state-banner info"><span>已选择本页 50 条。也可以选择符合当前条件的全部 12,438 条。</span><button class="demo-button">选择全部结果</button></div><table class="demo-table"><thead><tr><th>订单</th><th>客户</th><th>金额</th><th>状态</th><th>承诺日</th></tr></thead><tbody><tr><td>SO-1042</td><td>华东零售</td><td>¥12,480</td><td><span class="demo-badge">待发货</span></td><td>07-14</td></tr><tr><td>SO-1043</td><td>远航商业</td><td>¥8,900</td><td><span class="demo-badge warn">有风险</span></td><td>07-14</td></tr><tr><td>SO-1044</td><td>星海门店</td><td>¥31,200</td><td><span class="demo-badge">待发货</span></td><td>07-15</td></tr><tr><td>SO-1045</td><td>北辰商贸</td><td>¥6,730</td><td><span class="demo-badge fail">逾期</span></td><td>07-11</td></tr></tbody></table>`
+      },
+      {
+        key: "object", label: "对象 360", family: "OBJECT & TRANSACTION", title: "对象 360 工作空间",
+        input: "稳定对象身份、生命周期、关键事实、关系集合、风险和业务事件。", task: "围绕一个客户、订单、合同或资产理解全貌并执行合法动作。",
+        composition: "对象头 + 状态/指标 + 动作 + 事实分区 + 相关列表 + 活动/审计。", navigation: "锚点同页定位、Tab 切换稳定投影、关联链接进入独立对象并返回。",
+        pro: "对象身份稳定，事实、关系、状态与历史处于同一上下文。", con: "容易膨胀成万能详情页；跨聚合只读组合不能变成大保存事务。", reject: "高频连续队列优先 Worklist；超大关联集合进入独立列表。",
+        source: "Shopify Resource details；Stripe 客户 360；Power Apps 表单、关系与记录导航。", active: "客户",
+        body: `<div class="demo-titlebar"><div><h4>华东零售有限公司 <span class="demo-badge">A级客户</span></h4><p>C-018 · 上海 · 更新于 14:32</p></div><div class="demo-actions"><button class="demo-button">更多</button><button class="demo-button primary">创建订单</button></div></div><div class="demo-kpis"><div class="demo-kpi"><small>应收余额</small><strong>¥82K</strong></div><div class="demo-kpi"><small>近 90 天订单</small><strong>46</strong></div><div class="demo-kpi"><small>信用占用</small><strong>68%</strong></div></div><div class="demo-grid"><div class="demo-panel"><h5>关键事实</h5><p>客户经理　李敏</p><p>信用额度　¥120,000</p></div><div class="demo-panel"><h5>当前风险</h5><p><span class="demo-badge warn">1 笔逾期</span></p><p>工商数据 8 小时前更新</p></div><div class="demo-panel"><h5>最近订单</h5><p>SO-1042　¥12,480</p><p>查看全部 46 笔 →</p></div><div class="demo-panel"><h5>活动与审计</h5><p>14:20　信用额度被复核</p><p>11:02　订单已批准</p></div></div>`
+      },
+      {
+        key: "transaction", label: "事务编辑器", family: "OBJECT & TRANSACTION", title: "带草稿与冲突的事务编辑器",
+        input: "聚合根、组成明细、跨字段不变量、派生值、草稿和预期版本。", task: "创建或修改一个需要整体校验与提交的业务交易。",
+        composition: "对象头 + 分组表单 + 明细表 + 合计解释 + 错误摘要 + 草稿/提交命令。", navigation: "子编辑返回父草稿；离开处理 Dirty；刷新恢复服务端草稿。",
+        pro: "保存边界和业务不变量一致，适合订单、合同等高价值主从交易。", con: "长表单、跨区校验和并发合并成本高。", reject: "子对象有独立生命周期或无需整体事务时拆成独立页面。",
+        source: "Power Apps Forms；Carbon/Pajamas Forms 与 Saving and feedback；GitLab Destructive actions。", active: "订单",
+        body: `<div class="demo-titlebar"><div><h4>编辑销售订单 SO-1042</h4><p>草稿已保存于 14:31 · 基于版本 18</p></div><div class="demo-actions"><button class="demo-button">保存草稿</button><button class="demo-button primary">提交审批</button></div></div><div class="demo-grid"><div class="demo-panel"><h5>客户与交付</h5><p>客户　华东零售有限公司</p><p>承诺日　2026-07-16</p></div><div class="demo-panel"><h5>价格与结算</h5><p>CNY · 月结 30 天</p><p>折扣原因　年度协议</p></div></div><table class="demo-table"><thead><tr><th>商品</th><th>数量</th><th>单价</th><th>折扣</th><th>小计</th></tr></thead><tbody><tr><td>轻量工作台</td><td>2</td><td>¥1,299</td><td>5%</td><td>¥2,468.10</td></tr><tr><td>服务包</td><td>1</td><td>¥9,800</td><td>0%</td><td>¥9,800.00</td></tr></tbody></table><div class="demo-titlebar" style="margin-top:8px"><p>最终金额由服务端重新计算。</p><h4>合计 ¥12,268.10</h4></div>`
+      },
+      {
+        key: "approval", label: "审批中心", family: "WORKFLOW & QUEUE", title: "任务与审批中心",
+        input: "流程实例、任务、候选/责任人、SLA、证据、决策与流程版本。", task: "按优先级连续领取、判断、转派、退回或完成有责任的任务。",
+        composition: "Worklist + 证据详情 + 决策动作 + 流程历史 + 下一项。", navigation: "完成后进入下一任务或恢复原队列位置；任务上下文而非任意状态编辑。",
+        pro: "责任、时限、证据、合法命令和审计形成闭环。", con: "领取、转派、会签、超时升级和版本绑定带来复杂状态机。", reject: "通知或无责任的信息不应混入任务队列；无业务决定时不要引入审批。",
+        source: "GitLab Saving/feedback、Notifications 与 Destructive actions；Ant Design Workbench/Result/Exception。", active: "任务",
+        body: `<div class="demo-titlebar"><div><h4>订单审批中心</h4><p>我的队列 · 24 项 · 4 项即将到期</p></div><div class="demo-actions"><button class="demo-button">转派</button><button class="demo-button">退回</button><button class="demo-button primary">通过</button></div></div><div class="demo-split"><div class="demo-list"><div>AP-1041<br>普通 · 3h</div><div class="selected">AP-1042<br>高风险 · 48m</div><div>AP-1043<br>普通 · 5h</div><div>AP-1044<br>已升级 · 逾期</div></div><div class="demo-detail"><h5>大额折扣审批 · SO-1042</h5><p>申请人：王青　责任人：李敏　流程 v7</p><div class="benchmark-state-banner"><span>折扣 18% 超过岗位阈值 10%，需要经理复核并填写原因。</span></div><div class="demo-grid"><div class="demo-panel"><h5>决策证据</h5><p>客户等级　A级</p><p>毛利率　23.4%</p></div><div class="demo-panel"><h5>流程历史</h5><p>14:10　销售提交</p><p>14:12　风控通过</p></div></div></div></div>`
+      },
+      {
+        key: "batch", label: "导入批处理", family: "INTEGRATION & RECOVERY", title: "导入映射与批处理回执",
+        input: "文件、Schema、列映射、转换、校验、重复策略、批次和逐项结果。", task: "预检大量数据，后台执行，识别部分成功并只重试失败项。",
+        composition: "上传 → 列映射 → 预校验 → 策略 → 预览 → 执行 → 逐行结果。", navigation: "向导恢复草稿；后台任务持久化到应用壳；结果返回源文件和业务对象。",
+        pro: "把不可控文件交换变成可解释、可审计、可恢复的任务。", con: "步骤多，需要幂等、错误文件脱敏、取消和断点策略。", reject: "少量简单数据可用表格粘贴；不可逐项成功的业务应原子执行。",
+        source: "Ant Design Form/Result/Exception；Carbon Loading/Forms；Stripe 导出与活动日志。", active: "运行",
+        body: `<div class="demo-titlebar"><div><h4>导入客户资料</h4><p>customer-20260713.xlsx · 8,420 行</p></div><div class="demo-actions"><button class="demo-button">保存映射</button><button class="demo-button primary">开始导入</button></div></div><div class="demo-steps"><div class="demo-step">上传</div><div class="demo-step">识别</div><div class="demo-step active">列映射</div><div class="demo-step">预校验</div><div class="demo-step">执行</div></div><table class="demo-table"><thead><tr><th>文件列</th><th>样例</th><th>目标字段</th><th>转换</th><th>状态</th></tr></thead><tbody><tr><td>customer_name</td><td>华东零售</td><td>客户名称</td><td>去空格</td><td><span class="demo-badge">已匹配</span></td></tr><tr><td>credit</td><td>120000</td><td>信用额度</td><td>CNY</td><td><span class="demo-badge">已匹配</span></td></tr><tr><td>sale_person</td><td>王小青</td><td>客户经理</td><td>按姓名</td><td><span class="demo-badge fail">12 个歧义</span></td></tr></tbody></table>`
+      },
+      {
+        key: "recovery", label: "异常恢复", family: "INTEGRATION & RECOVERY", title: "后台任务与异常恢复中心",
+        input: "异步任务、批次、尝试、错误分类、重试策略、关联号和补偿。", task: "查看长任务进度，定位失败范围，修正后仅重试可恢复项。",
+        composition: "任务列表 + 阶段进度 + 错误摘要 + 失败项 + 重试/取消/补偿。", navigation: "刷新或重新登录仍可找到任务；结果链接回正确批次和业务对象。",
+        pro: "前台可离开，错误不被隐藏，恢复动作有记录。", con: "取消不等于回滚，补偿不等于数据库撤销；日志还需脱敏。", reject: "秒级同步操作不要建立任务中心；不可重试错误不能提供通用重试。",
+        source: "Carbon Loading/Notifications；Stripe Workbench 与活动日志；Datadog 故障诊断。", active: "运行",
+        body: `<div class="demo-titlebar"><div><h4>后台任务中心</h4><p>最近 24 小时 · 任务与业务结果分离</p></div><div class="demo-actions"><button class="demo-button">刷新</button><button class="demo-button primary">只重试失败项</button></div></div><div class="demo-kpis"><div class="demo-kpi"><small>运行中</small><strong>3</strong></div><div class="demo-kpi"><small>需处理</small><strong>7</strong></div><div class="demo-kpi"><small>今日完成</small><strong>146</strong></div></div><table class="demo-table"><thead><tr><th>任务</th><th>阶段</th><th>结果</th><th>关联号</th><th>动作</th></tr></thead><tbody><tr><td>客户导入 B-82</td><td>完成</td><td><span class="demo-badge warn">8,392/8,420</span></td><td>JOB-7721</td><td>查看失败</td></tr><tr><td>物流同步 S-18</td><td>重试 2/5</td><td><span class="demo-badge fail">超时</span></td><td>SYNC-881</td><td>诊断</td></tr><tr><td>报表导出 E-41</td><td>生成文件</td><td><span class="demo-badge">64%</span></td><td>EXP-223</td><td>可离开</td></tr></tbody></table>`
+      },
+      {
+        key: "governance", label: "权限规则", family: "GOVERNANCE & RISK", title: "权限与规则治理设计器",
+        input: "主体、资源、动作、范围、继承、Allow/Deny、规则、版本和依赖。", task: "配置并解释有效权限，模拟规则，比较版本后发布或回滚。",
+        composition: "范围树/规则构建 + 有效结果 + 来源解释 + 模拟 + Diff + 发布。", navigation: "草稿、已发布、生效和历史版本分离；发布前预览影响范围。",
+        pro: "高风险配置可解释、可测试、可版本化和可审计。", con: "自由度高会放大错误；Undo 不等于回滚已生效影响。", reject: "简单稳定参数用设置表单；没有版本、模拟和审批时不要提供复杂设计器。",
+        source: "GitLab Settings/Feature management 与 Destructive actions；Stripe 角色权限；Power Apps 安全角色。", active: "治理",
+        body: `<div class="demo-titlebar"><div><h4>角色：区域销售经理</h4><p>草稿 v12 · 影响 86 名用户 · 待复核</p></div><div class="demo-actions"><button class="demo-button">模拟用户</button><button class="demo-button">比较 v11</button><button class="demo-button primary">提交发布</button></div></div><div class="demo-split"><div class="demo-list"><div class="selected">华东区域（继承）</div><div>　上海门店</div><div>　杭州门店</div><div>　财务中心（Deny）</div></div><div class="demo-detail"><h5>有效权限解释</h5><table class="demo-table"><thead><tr><th>资源</th><th>查看</th><th>编辑</th><th>审批</th><th>来源</th></tr></thead><tbody><tr><td>订单</td><td>允许</td><td>范围内</td><td>≤¥50K</td><td>角色+组织</td></tr><tr><td>客户信用</td><td>脱敏</td><td>禁止</td><td>禁止</td><td>Deny</td></tr></tbody></table><div class="benchmark-state-banner"><span>职责冲突：同时拥有折扣申请与同级审批能力。</span></div></div></div>`
+      },
+      {
+        key: "analytics", label: "分析驾驶舱", family: "ANALYTICS & DECISION", title: "可钻取的分析驾驶舱",
+        input: "指标、维度、粒度、时间窗口、基准、阈值、数据时点和血缘。", task: "从态势发现异常，保持分析路径钻取到可行动的业务对象。",
+        composition: "统一筛选 + 指标摘要 + 同步时间轴/网格面板 + 事件叠加 + 明细出口。", navigation: "每次 Drill 增加过滤或粒度，返回逐级上卷；快照报告与实时视图分离。",
+        pro: "趋势、异常、事件和明细处于同一查询上下文。", con: "口径、时点和局部数据源失败若不可见，会制造错误决策。", reject: "没有稳定指标口径、数据质量或行动出口时不要建装饰型驾驶舱。",
+        source: "Datadog Grid/Timeboard/Screenboard、模板变量与事件叠加；Stripe 分析与报告；GitHub Roadmap。", active: "分析",
+        body: `<div class="demo-titlebar"><div><h4>订单履约驾驶舱</h4><p>最近 30 天 · 全国 · 刷新于 14:30</p></div><div class="demo-actions"><button class="demo-button">订阅</button><button class="demo-button">保存快照</button><button class="demo-button primary">异常订单</button></div></div><div class="demo-kpis"><div class="demo-kpi"><small>准时交付率</small><strong>92.4%</strong></div><div class="demo-kpi"><small>平均周期</small><strong>3.8 天</strong></div><div class="demo-kpi"><small>高风险订单</small><strong>27</strong></div></div><div class="demo-grid"><div class="demo-panel"><h5>统一时间轴 · 交付率</h5><div class="demo-chart"><i style="height:52%"><span>08</span></i><i style="height:64%"><span>09</span></i><i style="height:48%"><span>10</span></i><i style="height:80%"><span>11</span></i><i style="height:72%"><span>12</span></i><i style="height:88%"><span>13</span></i></div></div><div class="demo-panel"><h5>异常构成</h5><p>库存短缺　12</p><p>承运商延迟　8</p><p>地址异常　4</p><div class="benchmark-state-banner info"><span>事件：07/10 华东仓切换。</span></div></div></div>`
+      },
+      {
+        key: "reconcile", label: "对账工作台", family: "OBJECT & TRANSACTION", title: "匹配、差异与对账工作台",
+        input: "双来源记录、候选匹配、差异、口径、处置命令和审计。", task: "并排核对两套独立事实，解释差异并作出匹配、拆分或升级决定。",
+        composition: "差异队列 + 双栏证据 + 字段 Diff + 匹配依据 + 处置动作。", navigation: "从汇总钻到差异集合与源记录，返回保持日期、账户和未匹配筛选。",
+        pro: "减少跨系统跳转，把异常变成可审核的结构化任务。", con: "高密度且口径复杂；自动匹配必须解释规则与置信依据。", reject: "来源数据不可比、时点不一致且无调整规则时不得强制对平。",
+        source: "Stripe 交易与活动日志提供高风险运营参照；Carbon Filtering/Dialogs 提供通用交互依据。", active: "订单",
+        body: `<div class="demo-titlebar"><div><h4>收款对账工作台</h4><p>账户 6228 · 2026-07-12 · 未匹配 18 笔</p></div><div class="demo-actions"><button class="demo-button">挂账</button><button class="demo-button">升级人工</button><button class="demo-button primary">确认匹配</button></div></div><div class="demo-split"><div class="demo-list"><div>B-81<br>¥8,900 · 95%</div><div class="selected">B-82<br>¥12,480 · 差异</div><div>B-83<br>¥6,730 · 无候选</div></div><div class="demo-detail"><h5>B-82 与收款单 R-1042</h5><div class="demo-grid"><div class="demo-panel"><h5>银行流水</h5><p>金额　¥12,480.00</p><p>付款方　华东零售</p></div><div class="demo-panel"><h5>收款单</h5><p>金额　¥12,480.00</p><p>客户　华东零售有限公司</p></div></div><div class="benchmark-state-banner info"><span>依据：金额相等、时间差 4 分钟、付款方别名命中。规则 M-17。</span></div></div></div>`
+      }
+    ];
+
+    const benchmarkStates = {
+      normal: { label: "正常" },
+      loading: { label: "首次加载", replace: `<div class="benchmark-skeleton" aria-label="内容加载中"><i></i><i></i><i></i><i></i></div>` },
+      empty: { label: "真空数据", replace: `<div class="benchmark-state-center"><div><span class="state-symbol">0</span><strong>当前业务范围没有数据</strong><p>这是权威查询的真空结果，不是筛选失败。首个创建、导入或配置动作应与当前模式匹配。</p><button class="demo-button primary">创建第一项</button></div></div>` },
+      filtered: { label: "筛选无结果", replace: `<div class="benchmark-state-center"><div><span class="state-symbol">⌕</span><strong>没有记录符合当前条件</strong><p>保留并展示查询条件，优先清除或逐项放宽，不引导创建重复对象。</p><button class="demo-button primary">清除筛选</button></div></div>` },
+      forbidden: { label: "无权限", replace: `<div class="benchmark-state-center"><div><span class="state-symbol">!</span><strong>当前范围不允许访问</strong><p>只披露安全的拒绝原因。菜单隐藏不能替代服务端鉴权。</p><button class="demo-button primary">返回来源</button></div></div>` },
+      network: { label: "网络错误", replace: `<div class="benchmark-state-center"><div><span class="state-symbol">×</span><strong>请求未完成</strong><p>显示关联号、失败范围和可重试性，避免让用户猜测命令是否已执行。</p><button class="demo-button primary">重试请求</button></div></div>` },
+      stale: { label: "数据过期", banner: `<div class="benchmark-state-banner"><span><strong>数据已过期：</strong>当前版本 18，服务器已有版本 19。先查看差异或刷新，禁止静默覆盖。</span><button class="demo-button">查看更新</button></div>` },
+      validation: { label: "校验失败", banner: `<div class="benchmark-state-banner error"><span><strong>提交被拒绝：</strong>3 个字段错误、1 个明细行错误。错误摘要应定位到区域或行。</span><button class="demo-button">定位错误</button></div>` },
+      conflict: { label: "并发冲突", banner: `<div class="benchmark-state-banner error"><div><strong>另一位用户已修改当前对象。</strong><div class="conflict-compare"><span>共同基线<br><b>版本 18</b></span><span>我的草稿<br><b>交付日 07-16</b></span><span>最新版本<br><b>交付日 07-18</b></span></div></div><button class="demo-button">比较并合并</button></div>` },
+      processing: { label: "异步处理中", banner: `<div class="benchmark-state-banner info"><div><strong>命令已受理 · JOB-7721</strong><div class="benchmark-progress"><i></i></div><span>阶段 3/5，可离开页面，结果进入任务中心。</span></div><button class="demo-button">查看任务</button></div>` },
+      partial: { label: "部分成功", banner: `<div class="benchmark-state-banner"><div><strong>部分成功：96 成功 · 3 失败 · 1 跳过</strong><span>已成功项不会重复执行，修正后只重试失败项。</span></div><button class="demo-button">只重试失败项</button></div>` }
+    };
+
+    const scenarios = {
+      create: { label: "销售订单录入", role: "销售代表", objective: "创建一张语义正确、可提交且可恢复的订单。", defaultLevel: "field" },
+      fulfill: { label: "订单履约处理", role: "仓储调度员", objective: "判断订单是否可履约，并创建可追踪的发货任务。", defaultLevel: "relation" },
+      approve: { label: "信用例外审批", role: "财务审批人", objective: "基于额度、欠款和订单影响作出可审计决定。", defaultLevel: "module" },
+      exception: { label: "跨系统同步异常", role: "集成运营", objective: "定位事实差异，安全重试或转人工处理。", defaultLevel: "system" }
+    };
+
+    const levelData = {
+      field: {
+        name: "字段级映射", sourceHeading: "领域字段", sourceKind: "值与约束", previewKind: "字段表征",
+        items: [
+          { id: "customerId", title: "customerId", meta: "Customer 引用 · 必填", label: "客户引用", summary: "它不是一个 BIGINT 输入框，而是订单对独立客户对象的受约束引用。", role: "对象引用", authority: "客户主数据", topology: "解码 + 导航 + 政策", rules: ["提交稳定客户标识，同时显示可识别摘要", "候选集必须经过租户、权限和停用状态裁剪", "无权限与对象不存在不能使用相同错误"], risk: "只显示客户名称会产生同名误选；全量下拉会在规模增长后失效。" },
+          { id: "status", title: "status", meta: "订单状态机 · 条件只读", label: "订单状态", summary: "状态是生命周期事实，不是允许用户任意修改的枚举。", role: "业务状态", authority: "订单命令处理器", topology: "徽标 + 能力控制 + 历史", rules: ["当前状态与允许动作同时表达", "状态变化只能通过有业务含义的命令", "非法转换由服务端最终拒绝"], risk: "把状态做成下拉框会绕开前置条件、审计和副作用。" },
+          { id: "totalAmount", title: "totalAmount", meta: "Money 派生值 · CNY", label: "订单总额", summary: "总额由订单行、优惠、税额和舍入口径共同形成。", role: "金额派生值", authority: "订单定价规则", topology: "复合 + 派生 + 解释", rules: ["金额与币种不可拆开理解", "显示精度、计算精度和舍入规则必须明确", "编辑源字段后要标明重算状态"], risk: "把 Decimal 当普通数字会混淆币种、精度和旧报价时点。" },
+          { id: "deliveryDate", title: "deliveryDate", meta: "业务日期 · 门店时区", label: "期望交付日", summary: "这是业务承诺日期，需要结合时区、截单和库存规则解释。", role: "时间事实", authority: "订单履约策略", topology: "日期 + 约束 + 可用性", rules: ["区分业务日期与记录时间", "禁用日期必须能解释原因", "跨时区时显示所用时区"], risk: "仅使用 DatePicker 会隐藏截单时间、节假日和履约不可用原因。" }
+        ]
+      },
+      entity: {
+        name: "实体级映射", sourceHeading: "领域实体", sourceKind: "身份与生命周期", previewKind: "实体视图族",
+        items: [
+          { id: "salesOrder", title: "SalesOrder", meta: "聚合根 · 稳定身份", label: "销售订单", summary: "同一订单按任务形成列表项、详情、录入、审批摘要和历史视图。", role: "有身份实体", authority: "销售订单模块", topology: "1 个实体 → 多个任务视图", rules: ["不同页面共享稳定订单身份与术语", "详情、编辑和历史不必使用同一字段集合", "每个动作映射到合法业务命令"], risk: "万能详情页会把所有角色、关系和动作塞进大量 Tab。" },
+          { id: "customer", title: "Customer", meta: "独立聚合根 · 跨模块引用", label: "客户", summary: "订单只持有引用；客户维护、信用规则和客户 360 各有独立任务边界。", role: "主数据实体", authority: "客户模块", topology: "摘要 + 选择 + 导航", rules: ["订单页只投影当前决策需要的客户事实", "客户修改回到其命令责任方", "历史订单应解释客户快照与当前资料差异"], risk: "把客户字段复制进订单维护会形成双写和权威冲突。" },
+          { id: "shipment", title: "Shipment", meta: "下游聚合根 · 异步产生", label: "发货单", summary: "发货单不是订单的可编辑 Tab，而是拥有独立状态、失败和重试的履约对象。", role: "过程实体", authority: "履约模块", topology: "关联摘要 + 流程继续", rules: ["创建发货是命令，不是修改订单字段", "展示独立发货状态和更新时间", "多次发货必须保留基数和部分完成"], risk: "将发货当订单子表整体保存会伪装跨边界失败。" }
+        ]
+      },
+      relation: {
+        name: "关系级映射", sourceHeading: "对象关系", sourceKind: "基数与所有权", previewKind: "导航与组合",
+        items: [
+          { id: "orderLines", title: "Order → OrderLine", meta: "1:N 组成 · 同一一致性边界", label: "订单明细组成", summary: "订单行随订单创建和校验，由订单根维护金额与数量不变量。", role: "聚合内组成", authority: "SalesOrder", topology: "主从编辑 + 汇总", rules: ["整体提交前执行跨行校验", "删除订单时按生命周期规则处理订单行", "行金额与订单总额保持口径一致"], risk: "把明细拆成独立即时保存会出现部分行成功、总额失真。" },
+          { id: "orderCustomer", title: "Order → Customer", meta: "N:1 引用 · 独立生命周期", label: "订单客户引用", summary: "订单关联一个客户，但客户不随订单删除，导航需要保存当前订单上下文。", role: "跨聚合引用", authority: "Customer", topology: "选择器 + 摘要 + 窥视 + 导航", rules: ["表达客户身份而不是外键值", "离开订单后能够返回原编辑上下文", "客户不可选原因必须解释"], risk: "将引用误作组成，会允许订单页直接覆盖客户权威资料。" },
+          { id: "orderShipments", title: "Order → Shipment", meta: "1:N 下游关系 · 最终一致", label: "订单与发货", summary: "一张订单可产生多张发货单，关系带有时间、履约进度和失败状态。", role: "流程派生关系", authority: "履约编排", topology: "进度 + 关联列表 + 命令", rules: ["显示订单与发货的各自状态", "部分发货不能被压成一个布尔值", "重复创建必须由幂等键防护"], risk: "一个“已发货”字段无法表达多批次、部分失败和补偿。" },
+          { id: "orderInventory", title: "OrderLine → Availability", meta: "N:M 查询投影 · 带时点", label: "订单行与可用库存", summary: "可用量是跨仓库、批次和时间的查询事实，不表示订单拥有库存。", role: "跨模块查询关系", authority: "库存模块", topology: "逐行摘要 + 钻取 + 刷新", rules: ["每个可用量显示仓库范围与时点", "读取组合不改变库存所有权", "承诺或分配必须使用明确库存命令"], risk: "把查询时的可用量当成已锁定库存会造成超卖。" }
+        ]
+      },
+      module: {
+        name: "模块级映射", sourceHeading: "能力模块", sourceKind: "规则与责任", previewKind: "跨模块任务页",
+        items: [
+          { id: "sales", title: "销售订单模块", meta: "订单事实与生命周期权威", label: "销售订单能力", summary: "负责订单身份、明细、价格确认和订单状态命令。", role: "业务能力模块", authority: "订单服务", topology: "对象中心 + 命令入口", rules: ["订单规则只在一个权威边界维护", "其他模块通过稳定命令或事件协作", "技术服务拆分不直接变成菜单"], risk: "按微服务数量生成菜单会把技术边界泄漏给用户。" },
+          { id: "credit", title: "信用管理模块", meta: "额度与风险策略权威", label: "信用决策能力", summary: "订单页读取风险摘要，例外审批由信用模块负责并返回可审计决定。", role: "规则供给模块", authority: "信用策略服务", topology: "摘要嵌入 + 原位委托", rules: ["摘要必须带评估时间和规则版本", "例外审批是明确命令而非改风险字段", "审批人权限由接收模块重新验证"], risk: "在订单前端复制信用规则会形成不可追踪的第二套判断。" },
+          { id: "inventory", title: "库存模块", meta: "库存事实与分配承诺权威", label: "库存可用性能力", summary: "履约工作台可组合读取可用量，但锁定、释放和调整仍由库存命令负责。", role: "事实供给模块", authority: "库存服务", topology: "查询嵌入 + 命令委托", rules: ["区分查询时点与承诺结果", "每个命令返回权威回执", "超时后先查询结果再决定是否重试"], risk: "前端盲重试分配命令可能重复占用库存。" },
+          { id: "orchestration", title: "履约编排模块", meta: "跨能力流程责任", label: "履约协同", summary: "协调订单、库存和发货命令，向用户暴露业务进度而非技术调用链。", role: "过程编排", authority: "履约流程管理器", topology: "工作台 + 进度 + 补偿", rules: ["每一步有明确责任和状态", "跨边界操作声明一致性与补偿策略", "部分成功逐项给出回执和恢复入口"], risk: "把编排伪装成单次大保存会让失败结果不可解释。" }
+        ]
+      },
+      system: {
+        name: "系统级映射", sourceHeading: "独立系统", sourceKind: "信任与契约", previewKind: "集成状态",
+        items: [
+          { id: "erp", title: "ERP 核心系统", meta: "订单与应收权威", label: "ERP 权威边界", summary: "维护订单业务身份和核心状态，并通过契约与外部系统协作。", role: "权威系统", authority: "ERP", topology: "门户 + 深链接 + 回执", rules: ["跨系统使用稳定业务标识和关联号", "本地状态不能冒充外部已完成", "外部不可用时采用与风险匹配的降级"], risk: "统一门户只能统一入口，不能假装数据和事务已经统一。" },
+          { id: "wms", title: "WMS", meta: "库存与发货执行系统", label: "WMS 履约边界", summary: "接收履约请求、维护仓内事实，并异步回传发货进度和失败。", role: "执行系统", authority: "WMS", topology: "异步请求 + 状态投影 + 对账", rules: ["区分已发送、已受理、处理中和业务完成", "超时不等于失败，必须支持结果查询", "重复消息和重复请求必须幂等"], risk: "把 HTTP 200 当作发货完成会扭曲业务状态。" },
+          { id: "payment", title: "支付平台", meta: "支付结果外部权威", label: "支付集成", summary: "支付结果来自外部权威回执，需要签名验证、状态映射和主动查询。", role: "外部可信系统", authority: "支付平台 + 本地核验", topology: "跳转 + 回调 + 查询 + 对账", rules: ["前端返回页不能作为支付成功依据", "外部状态码必须显式映射到本地语义", "金额、币种、商户和订单身份全部核对"], risk: "网络超时后再次支付可能形成重复扣款。" },
+          { id: "identity", title: "统一身份系统", meta: "认证来源 · 本地仍需授权", label: "身份与授权", summary: "身份系统证明用户是谁，业务系统仍需判断其能访问哪些租户、对象和命令。", role: "信任系统", authority: "IAM + 业务授权", topology: "单点登录 + 上下文映射", rules: ["认证与业务授权不能混为一谈", "租户和组织上下文必须显式绑定", "深链接进入后仍需目标系统重新授权"], risk: "携带前端角色或租户参数不能替代服务端授权。" }
+        ]
+      }
+    };
+
+    const architectureData = {
+      erp: ["权威：订单身份、订单状态、应收事实", "输入：业务命令与外部回执", "失败：安全阻断或排队，不静默覆盖"],
+      crm: ["权威：客户身份与主数据", "投影：客户摘要、信用上下文", "边界：订单不能直接维护客户主档"],
+      wms: ["权威：仓内库存和执行状态", "契约：履约请求、进度事件、回执", "恢复：查询、幂等重试、人工接管"],
+      payment: ["权威：支付渠道结果", "验证：签名、金额、币种、商户、订单", "恢复：主动查询和日终对账"],
+      sales: ["维护订单不变量", "输出订单事件和可执行能力", "不以菜单或微服务数量定义边界"],
+      credit: ["维护额度与风险策略", "向订单提供带时点的评估摘要", "例外审批通过正式命令返回"],
+      inventory: ["维护库存事实与分配承诺", "可用量是查询，不是锁定结果", "命令超时先查结果再重试"],
+      fulfillment: ["协调库存、订单和发货", "公开业务进度与责任", "部分成功必须可恢复"],
+      entry: ["任务：创建有效订单", "组合：客户、价格、库存提示", "写入：订单命令责任方"],
+      approval: ["任务：判断信用例外", "组合：订单影响、额度、欠款、历史", "写入：信用审批命令"],
+      desk: ["任务：连续处理待履约队列", "组合：订单、库存、信用、发货", "写入：分别路由到责任命令"],
+      exception: ["任务：定位事实差异", "状态：超时、重复、冲突、部分成功", "恢复：查询、重试、补偿、接管"],
+      order: ["身份：orderNo / orderId", "不变量：订单行、金额、状态", "可产生录入、详情、审批和履约投影"],
+      customer: ["独立身份与生命周期", "订单通过稳定引用关联", "历史快照与当前资料需要区分"],
+      shipment: ["一张订单可关联多张发货单", "拥有独立状态与失败", "创建发货是命令，不是改订单状态"],
+      receipt: ["映射外部支付事实", "保留渠道关联号与验证证据", "冲突通过查询和对账解决"]
+    };
+
+    const traceRows = [
+      ["销售代表｜创建订单", "订单录入｜客户选择器", "可选客户集、客户摘要、停用与信用提示", "选择客户", "订单创建命令；客户模块提供查询", "本租户可读；草稿态可选", "保留输入；重选或申请权限"],
+      ["销售代表｜创建订单", "订单录入｜可编辑明细表", "商品引用、数量、单价、行金额", "增删订单行", "SalesOrder 聚合", "草稿态；价格权限裁剪", "定位冲突行；整体校验后提交"],
+      ["财务审批人｜处理例外", "信用例外审批｜风险摘要", "额度、欠款、订单影响、评估时间", "批准或拒绝例外", "信用审批命令", "待审批；审批数据范围", "记录理由；并发变化后重新评估"],
+      ["仓储调度员｜履约", "履约工作台｜逐行可用量", "仓库范围、可用量、数据时点", "创建发货", "履约编排 → 库存 / 发货命令", "订单可履约；仓库权限", "逐步回执；失败项重试或接管"],
+      ["集成运营｜处理异常", "异常中心｜同步事件", "本地状态、外部状态、关联号、重试记录", "查询结果 / 重试 / 补偿", "集成编排器", "运维授权；幂等键有效", "先查后重试；保留人工决定审计"],
+      ["顾客｜完成支付", "支付结果页｜支付状态", "渠道回执、金额、币种、商户、订单身份", "查询支付结果", "支付平台提供结果；本地支付模块核验", "当前订单；回执签名有效", "前端返回不作成功依据；超时后主动查询并参与对账"],
+      ["管理者｜分析销售", "销售分析｜订单金额趋势", "订单事实、客户 / 商品 / 时间维度", "筛选和钻取", "分析查询模型；订单仍为事实权威", "指标数据范围；只读", "显示口径与刷新时间；钻取原单"]
+    ];
+
+    const methodByRigor = {
+      light: [
+        ["1", "确认业务字段", "定义身份、类型、空值和基本约束。", "字段卡已填写，无歧义列名"],
+        ["2", "确认单一任务", "明确谁读取或编辑，以及完成标准。", "角色和主任务各一个"],
+        ["3", "选择抽象交互", "先定读取、输入、选择，再选具体控件。", "候选表征保留字段语义"],
+        ["4", "验证边界状态", "覆盖空值、错误、权限和代表性数据量。", "最小场景全部可恢复"]
+      ],
+      standard: [
+        ["1", "建立领域语义图", "识别实体、关系、状态、规则和权威来源。", "关键对象与关系有证据"],
+        ["2", "建立角色任务图", "记录目标、判断、频率、风险和异常路径。", "主路径与关键异常有完成定义"],
+        ["3", "分离查询与命令", "查询服务判断；命令表达业务意图。", "每个动作有责任方和失败语义"],
+        ["4", "构造任务视图", "选择、连接、派生、脱敏并保留来源时点。", "信息最小充分且可追溯"],
+        ["5", "选择页面表征", "按频率、风险、规模和上下文裁决候选。", "拒绝方案及理由已记录"],
+        ["6", "建立双向追踪", "连接任务、UI、事实、命令、状态和恢复。", "关键元素无断链"],
+        ["7", "真实场景验证", "覆盖角色、状态、规模、冲突和异常。", "否决门槛全部通过"]
+      ],
+      strict: [
+        ["1", "证据化领域语义", "标注来源、置信度、权威和关键未知项。", "单向门决策有依据"],
+        ["2", "量化角色任务", "补充频率、时限、错误成本和数据规模。", "代表性场景和极值已确认"],
+        ["3", "定义命令契约", "声明幂等、并发、权限、不变量和一致性策略。", "非法路径可由服务端拒绝"],
+        ["4", "定义跨边界读模型", "记录来源、版本、刷新、脱敏和数据范围。", "旧值与未知状态不会冒充事实"],
+        ["5", "裁决页面与恢复", "针对高风险、部分成功和人工接管设计。", "失败后无需从头重做"],
+        ["6", "建立端到端追踪", "加入系统契约、关联号、审计和回滚责任。", "每项写入有权威回执"],
+        ["7", "压力与对抗验证", "覆盖越权、重复、超时、冲突、10 倍规模和降级。", "否决项为零且证据可复现"]
+      ]
+    };
+
+    const state = { view: "workbench", scenario: "create", level: "field", mode: "read", itemIndex: 0, rigor: "light", evolutionScenario: 0, evolutionStage: 0, benchmarkIndex: 0, benchmarkState: "normal" };
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>'"]/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[char]);
+    }
+
+    function currentItem() { return levelData[state.level].items[state.itemIndex] || levelData[state.level].items[0]; }
+
+    function renderWorkbench() {
+      const scenario = scenarios[state.scenario];
+      const level = levelData[state.level];
+      const item = currentItem();
+      document.getElementById("workbenchTitle").textContent = `${scenario.label} · ${level.name}`;
+      document.getElementById("contextCopy").textContent = `${scenario.role}：${scenario.objective}`;
+      document.getElementById("sourceHeading").textContent = level.sourceHeading;
+      document.getElementById("sourceKind").textContent = level.sourceKind;
+      document.getElementById("previewKind").textContent = level.previewKind;
+
+      document.getElementById("sourceItems").innerHTML = level.items.map((entry, index) => `
+        <button class="mapping-item ${index === state.itemIndex ? "active" : ""}" type="button" data-item-index="${index}" aria-pressed="${index === state.itemIndex}">
+          <span class="item-dot"></span><span><span class="item-title">${escapeHtml(entry.title)}</span><span class="item-meta">${escapeHtml(entry.meta)}</span></span>
+        </button>`).join("");
+
+      document.getElementById("taskProjection").innerHTML = `
+        <div class="task-objective"><strong>${escapeHtml(scenario.role)}</strong><span>${escapeHtml(scenario.objective)}</span></div>
+        <ul class="fact-list">
+          <li><b>1</b><span>读取与“${escapeHtml(item.label)}”有关的最小充分事实</span></li>
+          <li><b>2</b><span>按当前状态、权限和数据范围裁剪能力</span></li>
+          <li><b>3</b><span>选择能表达 ${escapeHtml(item.topology)} 的界面结构</span></li>
+          <li><b>4</b><span>补齐等待、拒绝、冲突和恢复状态</span></li>
+        </ul>
+        <div class="projection-formula">UI = Project(${escapeHtml(item.label)}, ${escapeHtml(scenario.role)}, ${escapeHtml(state.mode)}, 权限, 规模, 风险)</div>`;
+
+      document.getElementById("uiPreview").innerHTML = previewTemplate(item, scenario, state.mode);
+      renderInspector(item);
+      renderGuards(item);
+      bindDynamicWorkbenchEvents();
+    }
+
+    function previewTemplate(item, scenario, mode) {
+      const error = mode === "error";
+      const editing = mode === "edit";
+      const badge = error ? '<span class="status-badge danger">需要处理</span>' : editing ? '<span class="status-badge warn">未保存</span>' : '<span class="status-badge">当前投影</span>';
+      const shellStart = `<div class="preview-shell"><div class="preview-bar"><strong>${escapeHtml(scenario.label)}</strong>${badge}</div><div class="preview-content">`;
+      const shellEnd = `</div></div>`;
+
+      if (state.level === "field") {
+        const fieldValue = item.id === "customerId" ? "华东远景零售有限公司" : item.id === "status" ? "草稿" : item.id === "totalAmount" ? "CNY 12,680.00" : "2026-07-18（上海）";
+        const sub = item.id === "customerId" ? "CUS-004218 · 信用正常" : item.id === "status" ? "可编辑订单内容；提交后进入待审核" : item.id === "totalAmount" ? "含税 · 价格版本 2026-Q3 · 刚刚重算" : "距承诺日 5 天 · 截单前可调整";
+        return `${shellStart}
+          <div class="preview-field"><span class="preview-label">${escapeHtml(item.label)}</span>
+            <div class="field-control ${editing ? "" : "readonly"} ${error ? "error" : ""}">
+              <span class="field-main"><span class="field-value">${error ? "需要重新确认" : escapeHtml(fieldValue)}</span><span class="field-sub">${escapeHtml(sub)}</span></span>
+              <span class="field-action">${editing ? "选择" : "查看依据"}</span>
+            </div>
+            <p class="helper ${error ? "error" : ""}">${error ? escapeHtml(item.risk) : "来源、时点和限制与业务值一起表达。"}</p>
+          </div>
+          <div class="action-row"><button class="action-button">取消</button><button class="action-button primary">${editing ? "应用修改" : "进入任务"}</button></div>
+        ${shellEnd}`;
+      }
+
+      if (state.level === "entity") {
+        return `${shellStart}
+          <div class="preview-field"><span class="preview-label">SO-20260713-0186</span><div class="field-control readonly"><span class="field-main"><span class="field-value">华东远景零售有限公司</span><span class="field-sub">7 项商品 · CNY 12,680.00</span></span><span class="status-badge ${error ? "danger" : "warn"}">${error ? "价格已过期" : "待确认"}</span></div></div>
+          <div class="metric-row"><div class="metric"><strong>7</strong><span>订单行</span></div><div class="metric warn"><strong>2</strong><span>需关注</span></div><div class="metric"><strong>12.7k</strong><span>含税金额</span></div></div>
+          <div class="event-row ${error ? "error" : ""}"><span class="event-dot"></span><span><strong>${error ? "报价版本发生变化" : "订单内容已保存"}</strong><br><small>${error ? "比较差异后重新确认" : "当前版本 12"}</small></span><span class="event-time">14:32</span></div>
+          <div class="action-row"><button class="action-button">查看历史</button><button class="action-button primary">${editing ? "保存草稿" : error ? "比较差异" : "继续处理"}</button></div>
+        ${shellEnd}`;
+      }
+
+      if (state.level === "relation") {
+        return `${shellStart}
+          <table class="mini-table"><thead><tr><th>对象 / 关系</th><th>当前事实</th><th>动作</th></tr></thead><tbody>
+            <tr><td>订单明细</td><td>7 行 · 整体校验</td><td>编辑</td></tr>
+            <tr><td>客户</td><td>独立引用 · 信用正常</td><td>预览</td></tr>
+            <tr><td>发货单</td><td>${error ? "1 失败 / 1 处理中" : "尚未创建"}</td><td>${error ? "处理" : "创建"}</td></tr>
+            <tr><td>库存可用量</td><td>${error ? "数据已过期" : "上海仓 · 14:30"}</td><td>刷新</td></tr>
+          </tbody></table>
+          <p class="helper ${error ? "error" : ""}">${error ? "关系异常必须保留两端身份、状态、时点和恢复动作。" : "组成、引用、流程和查询关系使用不同表达。"}</p>
+        ${shellEnd}`;
+      }
+
+      if (state.level === "module") {
+        return `${shellStart}
+          <div class="metric-row"><div class="metric"><strong>订单</strong><span>事实权威</span></div><div class="metric warn"><strong>信用</strong><span>${error ? "评估过期" : "额度正常"}</span></div><div class="metric"><strong>库存</strong><span>上海仓</span></div></div>
+          <div class="event-row"><span class="event-dot"></span><span><strong>订单内容已确认</strong><br><small>SalesOrder · 版本 12</small></span><span class="event-time">完成</span></div>
+          <div class="event-row ${error ? "error" : "warn"}"><span class="event-dot"></span><span><strong>${error ? "库存分配超时" : "等待信用评估"}</strong><br><small>${error ? "先查询权威结果，再决定重试" : "由信用模块返回决定"}</small></span><span class="event-time">${error ? "处理" : "等待"}</span></div>
+          <div class="action-row"><button class="action-button">查看责任链</button><button class="action-button primary">${error ? "查询处理结果" : "继续流程"}</button></div>
+        ${shellEnd}`;
+      }
+
+      return `${shellStart}
+        <div class="event-row"><span class="event-dot"></span><span><strong>ERP 请求已创建</strong><br><small>关联号 INT-260713-8491</small></span><span class="event-time">14:31</span></div>
+        <div class="event-row ${error ? "error" : "warn"}"><span class="event-dot"></span><span><strong>${error ? "WMS 回执超时" : "WMS 已受理"}</strong><br><small>${error ? "未知结果，不等同于业务失败" : "等待仓内分配"}</small></span><span class="event-time">${error ? "待核验" : "处理中"}</span></div>
+        <div class="event-row"><span class="event-dot"></span><span><strong>本地订单保持已确认</strong><br><small>外部状态单独投影</small></span><span class="event-time">当前</span></div>
+        <div class="action-row"><button class="action-button">查看原始回执</button><button class="action-button ${error ? "danger" : "primary"}">${error ? "查询外部结果" : "刷新状态"}</button></div>
+      ${shellEnd}`;
+    }
+
+    function renderInspector(item) {
+      document.getElementById("inspectorTitle").textContent = item.label;
+      document.getElementById("inspectorSummary").textContent = item.summary;
+      document.getElementById("inspectorMeta").innerHTML = `
+        <dt>语义角色</dt><dd>${escapeHtml(item.role)}</dd>
+        <dt>权威来源</dt><dd>${escapeHtml(item.authority)}</dd>
+        <dt>映射方式</dt><dd>${escapeHtml(item.topology)}</dd>`;
+      document.getElementById("ruleList").innerHTML = item.rules.map(rule => `<li>${escapeHtml(rule)}</li>`).join("");
+      document.getElementById("riskBox").textContent = item.risk;
+    }
+
+    function renderGuards(item) {
+      const guards = [
+        ["身份守恒", item.label],
+        ["权威守恒", item.authority],
+        ["命令合法", "写入经明确责任方"],
+        ["失败可恢复", state.mode === "error" ? "异常状态已展开" : "切换“异常”检查"]
+      ];
+      document.getElementById("semanticGuard").innerHTML = guards.map(([title, value]) => `<div class="guard-item"><strong>${escapeHtml(title)}</strong><span>${escapeHtml(value)}</span></div>`).join("");
+    }
+
+    function bindDynamicWorkbenchEvents() {
+      document.querySelectorAll("[data-item-index]").forEach(button => button.addEventListener("click", () => {
+        state.itemIndex = Number(button.dataset.itemIndex);
+        renderWorkbench();
+      }));
+    }
+
+    function setView(view) {
+      state.view = view;
+      document.querySelectorAll(".top-tab").forEach(tab => {
+        const selected = tab.dataset.view === view;
+        tab.setAttribute("aria-selected", String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+      });
+      document.querySelectorAll(".view").forEach(panel => panel.classList.toggle("active", panel.id === `view-${view}`));
+      if (view === "traceability") renderTraceTable();
+      if (view === "method") renderMethod();
+    }
+
+    function renderTraceTable() {
+      const query = document.getElementById("traceSearch").value.trim().toLowerCase();
+      const rows = traceRows.filter(row => row.join(" ").toLowerCase().includes(query));
+      document.getElementById("traceBody").innerHTML = rows.length ? rows.map(row => `<tr>${row.map((cell, index) => `<td>${index === 4 ? `<span class="trace-token">责任</span> ` : ""}${escapeHtml(cell)}</td>`).join("")}</tr>`).join("") : '<tr><td class="empty-row" colspan="7">没有匹配的追踪关系</td></tr>';
+    }
+
+    function renderMethod() {
+      document.getElementById("methodSteps").innerHTML = methodByRigor[state.rigor].map(([number, title, detail, exit]) => `
+        <article class="method-step"><span class="step-no">${number}</span><div><h3>${escapeHtml(title)}</h3><p>${escapeHtml(detail)}</p></div><div class="exit-test"><strong>退出条件</strong>${escapeHtml(exit)}</div></article>`).join("");
+    }
+
+    function benchmarkFrame(body, active) {
+      const navItems = ["订单", "客户", "任务", "分析", "治理", "运行"];
+      return `<div class="enterprise-demo"><div class="demo-global-bar"><strong>Northstar Operations</strong><span class="demo-scope">华东法人 / 上海门店 / 生产环境</span><span>搜索　任务　账户</span></div><div class="demo-layout"><nav class="demo-nav">${navItems.map(item => `<span class="${item === active ? "active" : ""}">${item}</span>`).join("")}</nav><div class="demo-main">${body}</div></div></div>`;
+    }
+
+    function evolutionMarkup(kind) {
+      const table = `<table class="demo-table"><thead><tr><th>订单</th><th>客户</th><th>金额</th><th>状态</th></tr></thead><tbody><tr><td>SO-1042</td><td>华东零售</td><td>¥12,480</td><td><span class="demo-badge">待发货</span></td></tr><tr><td>SO-1043</td><td>远航商业</td><td>¥8,900</td><td><span class="demo-badge warn">风险</span></td></tr><tr><td>SO-1044</td><td>星海门店</td><td>¥31,200</td><td><span class="demo-badge fail">逾期</span></td></tr></tbody></table>`;
+      const rows = items => `<div class="evolution-demo-stack">${items.map(([label, value, cls = ""]) => `<div class="evolution-demo-row ${cls}"><b>${label}</b><span>${value}</span></div>`).join("")}</div>`;
+      const templates = {
+        "value-read": rows([["订单金额", "CNY 12,680.00", "highlight"]]),
+        "value-input": rows([["订单金额", "<input aria-label='订单金额' value='12680.00' style='width:100%;border:0'>", "actionable"], ["反馈", "尚未保存 · 服务端提交时再次校验"]]),
+        "value-semantic": rows([["数量", "<button class='demo-button'>−</button>　2　<button class='demo-button'>＋</button>", "actionable"], ["交付日", "2026-07-18 · 上海时区", "actionable"], ["客户", "华东零售有限公司 · C-018", "actionable"]]),
+        "value-compound": rows([["金额", "CNY　12,680.00", "actionable"], ["有效期", "2026-07-13 → 2026-07-31", "actionable"], ["客户引用", "华东零售 · A级 · 上海 · 查看详情", "highlight"]]),
+        "form-flat": rows([["客户", "华东零售有限公司", "actionable"], ["交付日", "2026-07-18", "actionable"], ["备注", "仓库确认后发货", "actionable"], ["提交", "<button class='demo-button primary'>保存</button>"]]),
+        "form-group": `<div class="demo-grid"><div class="demo-panel"><h5>客户与交付</h5><p>客户　华东零售</p><p>交付日　07-18</p></div><div class="demo-panel"><h5>价格与结算</h5><p>币种　CNY</p><p>结算　月结 30 天</p></div></div>`,
+        "form-transaction": `<div class="demo-titlebar"><div><h4>订单草稿 SO-1042</h4><p>版本 18 · 自动草稿 14:31</p></div><button class="demo-button primary">提交审批</button></div>${table}<div class="demo-titlebar" style="margin-top:8px"><p>服务端整体校验订单行、税额与折扣。</p><h4>合计 ¥12,268.10</h4></div>`,
+        "form-wizard": `<div class="demo-steps"><div class="demo-step">客户</div><div class="demo-step active">明细</div><div class="demo-step">交付</div><div class="demo-step">复核</div><div class="demo-step">完成</div></div>${rows([["当前步骤", "选择商品、数量和价格"], ["草稿", "可以离开，稍后从第 2 步继续"], ["下一步资格", "2 个必填项已完成"]])}`,
+        "object-kv": rows([["客户名称", "华东零售有限公司"], ["客户编码", "C-018"], ["信用额度", "CNY 120,000"], ["客户经理", "李敏"]]),
+        "object-page": `<div class="demo-titlebar"><div><h4>华东零售有限公司 <span class="demo-badge">A级</span></h4><p>C-018 · 当前状态：正常</p></div><button class="demo-button primary">创建订单</button></div>${rows([["关键事实", "额度 ¥120K · 月结 30 天"], ["合法动作", "编辑资料 · 冻结客户 · 创建订单"]])}`,
+        "object-360": `<div class="demo-titlebar"><div><h4>华东零售有限公司</h4><p>C-018 · 更新于 14:32</p></div><button class="demo-button primary">创建订单</button></div><div class="demo-kpis"><div class="demo-kpi"><small>应收</small><strong>¥82K</strong></div><div class="demo-kpi"><small>订单</small><strong>46</strong></div><div class="demo-kpi"><small>信用占用</small><strong>68%</strong></div></div><div class="demo-grid"><div class="demo-panel"><h5>关系</h5><p>最近订单 · 联系人 · 合同</p></div><div class="demo-panel"><h5>活动</h5><p>14:20 信用复核</p><p>11:02 订单批准</p></div></div>`,
+        "object-role": `<div class="demo-toolbar"><span class="demo-badge">销售视角</span><span class="demo-filter">财务视角</span><span class="demo-filter">客服视角</span></div>${rows([["任务摘要", "待跟进商机 3 · 报价 2 · 逾期 1"], ["角色动作", "创建报价 · 安排回访 · 查看下一客户"], ["共享身份", "Customer C-018"]])}`,
+        "collection-list": rows([["1", "SO-1042 · 华东零售"], ["2", "SO-1043 · 远航商业"], ["3", "SO-1044 · 星海门店"]]),
+        "collection-table": table,
+        "collection-report": `<div class="demo-toolbar"><span class="demo-filter">搜索</span><span class="demo-filter">状态：待发货</span><span class="demo-filter">区域：华东</span><span class="demo-badge">12,438 条</span></div>${table}<p class="helper">URL 保存筛选、排序、页码和当前焦点。</p>`,
+        "collection-workbench": `<div class="benchmark-state-banner info"><span>已选本页 50 条，也可选择全部 12,438 条查询结果。</span><button class="demo-button">选择全部</button></div>${table}<div class="benchmark-state-banner"><span>批处理：46 成功 · 3 失败 · 1 跳过</span><button class="demo-button">只重试失败项</button></div>`,
+        "state-label": rows([["订单状态", "<span class='demo-badge warn'>待审批</span>", "highlight"]]),
+        "state-action": rows([["当前状态", "<span class='demo-badge warn'>待审批</span>"], ["合法动作", "<button class='demo-button primary'>通过</button> <button class='demo-button'>退回</button>", "actionable"], ["阻塞原因", "折扣超过 10%，必须填写审批理由"]]),
+        "state-board": `<div class="evolution-mini-columns"><div class="evolution-mini-column"><strong>待处理 · 8</strong><div class="evolution-mini-card">SO-1042<br>高风险</div></div><div class="evolution-mini-column"><strong>处理中 · 4</strong><div class="evolution-mini-card">SO-1043<br>李敏</div></div><div class="evolution-mini-column"><strong>已完成 · 21</strong><div class="evolution-mini-card">SO-1041<br>14:20</div></div></div>`,
+        "state-approval": `<div class="demo-split"><div class="demo-list"><div>AP-1041 · 3h</div><div class="selected">AP-1042 · 48m</div><div>AP-1043 · 5h</div></div><div class="demo-detail"><h5>大额折扣审批</h5><p>责任人：李敏 · 流程 v7</p><div class="benchmark-state-banner"><span>折扣 18%，需要经理复核。</span></div><button class="demo-button">转派</button> <button class="demo-button primary">通过</button></div></div>`,
+        "nav-link": `<div class="evolution-flow"><span>订单列表</span><b>→</b><span>SO-1042 详情</span><b>→</b><span>客户 C-018</span></div><p class="helper">浏览器返回负责基本历史。</p>`,
+        "nav-return": `<div class="evolution-flow"><span>待发货 · 第3页</span><b>→</b><span>SO-1042</span><b>→</b><span>客户 C-018</span></div>${rows([["返回契约", "返回 SO-1042，再返回待发货第 3 页"], ["恢复状态", "筛选、焦点、滚动和选择集"]])}`,
+        "nav-shell": `<div class="demo-global-bar"><strong>Northstar</strong><span class="demo-scope">华东 / 上海 / 生产</span><span>搜索　任务</span></div><div class="demo-layout" style="min-height:300px"><nav class="demo-nav"><span class="active">订单</span><span>客户</span><span>分析</span><span>后台任务</span></nav><div class="demo-main">${rows([["最近", "SO-1042 · C-018"], ["岗位入口", "待审批 24 · 异常 7"], ["当前范围", "华东法人 / 上海门店 / 生产环境"]])}</div></div>`,
+        "nav-multi": `<div class="demo-toolbar"><span class="demo-badge">SO-1042 ●</span><span class="demo-filter">客户 C-018</span><span class="demo-filter">对账 B-82 ●</span></div><div class="demo-grid"><div class="demo-panel"><h5>当前任务</h5><p>编辑订单 SO-1042</p><p>草稿版本 18</p></div><div class="demo-panel"><h5>伴随视图</h5><p>客户信用与历史订单</p><p>保持来源上下文</p></div></div>`,
+        "tree-indent": rows([["结构", "总部"], ["", "　销售中心"], ["", "　　华东区"], ["", "　　华南区"]]),
+        "tree-basic": rows([["▾ 总部", "展开 · 已加载"], ["　▾ 销售中心", "部分选择"], ["　　华东区", "当前焦点"], ["　　华南区", "未加载后代"]]),
+        "tree-grid": `<table class="demo-table"><thead><tr><th>组织</th><th>负责人</th><th>人数</th><th>状态</th></tr></thead><tbody><tr><td>▾ 总部</td><td>周宁</td><td>620</td><td>启用</td></tr><tr><td>　▾ 销售中心</td><td>李敏</td><td>180</td><td>启用</td></tr><tr><td>　　华东区</td><td>王青</td><td>86</td><td>调整中</td></tr></tbody></table>`,
+        "tree-graph": `<div class="evolution-flow"><span>零件 P-18</span><b>←</b><span>组件 A</span><b>←</b><span>产品 X</span></div><div class="evolution-flow"><span>同一 P-18</span><b>←</b><span>组件 B</span><b>←</b><span>产品 Y</span></div>${rows([["主路径投影", "产品 X / 组件 A / P-18"], ["其他父引用", "组件 B / 产品 Y"], ["身份", "两处显示仍是同一零件 P-18"]])}`,
+        "async-spinner": `<div class="benchmark-state-center"><div><span class="state-symbol">…</span><strong>正在保存</strong><p>适合可预测的短等待，请勿重复提交。</p></div></div>`,
+        "async-progress": `<div class="benchmark-state-center"><div><strong>正在导入客户资料</strong><div class="benchmark-progress"><i></i></div><p>阶段 3/5 · 已校验 5,420 / 8,420 行</p><button class="demo-button">取消</button></div></div>`,
+        "async-job": rows([["任务号", "JOB-7721"], ["当前阶段", "业务校验 · 64%"], ["可否离开", "可以，结果进入后台任务中心"], ["结果入口", "通知 / 最近任务 / 深链"]]),
+        "async-recovery": `<div class="demo-kpis"><div class="demo-kpi"><small>成功</small><strong>8,392</strong></div><div class="demo-kpi"><small>失败</small><strong>28</strong></div><div class="demo-kpi"><small>不可重试</small><strong>3</strong></div></div>${table}<div class="benchmark-state-banner"><span>修正数据后只重试失败项，保留原任务和尝试历史。</span><button class="demo-button">重试失败项</button></div>`,
+        "permission-hidden": rows([["普通用户", "导出按钮已隐藏"], ["审批人", "通过按钮可见"], ["条件不足", "提交按钮禁用：缺少审批理由"]]),
+        "permission-matrix": `<table class="demo-table"><thead><tr><th>角色</th><th>查看</th><th>编辑</th><th>审批</th><th>导出</th></tr></thead><tbody><tr><td>销售</td><td>✓</td><td>✓</td><td>—</td><td>—</td></tr><tr><td>经理</td><td>✓</td><td>范围内</td><td>≤¥50K</td><td>二次认证</td></tr></tbody></table>`,
+        "permission-effective": rows([["订单：查看", "允许 · 来源：销售经理角色"], ["订单：编辑", "仅华东范围 · 来源：组织范围"], ["客户信用", "拒绝 · 来源：合规策略 Deny"], ["导出", "允许但需二次认证 · 来源：敏感操作策略"]]),
+        "permission-governance": `<div class="demo-titlebar"><div><h4>权限草稿 v12</h4><p>影响 86 名用户 · 待安全管理员复核</p></div><button class="demo-button primary">提交发布</button></div>${rows([["模拟", "用户张明在上海门店查看订单"], ["Diff", "新增导出权限，收窄客户信用范围"], ["职责冲突", "申请与同级审批同时存在，发布被阻止"]])}`,
+        "analytics-total": `<div class="demo-kpis"><div class="demo-kpi"><small>本月销售额</small><strong>¥8.6M</strong></div><div class="demo-kpi"><small>订单数</small><strong>1,284</strong></div><div class="demo-kpi"><small>准时率</small><strong>92.4%</strong></div></div>`,
+        "analytics-chart": `<div class="demo-panel"><h5>最近 7 天交付率</h5><div class="demo-chart"><i style="height:52%"><span>08</span></i><i style="height:64%"><span>09</span></i><i style="height:48%"><span>10</span></i><i style="height:80%"><span>11</span></i><i style="height:72%"><span>12</span></i><i style="height:88%"><span>13</span></i></div></div>`,
+        "analytics-dashboard": `<div class="demo-kpis"><div class="demo-kpi"><small>准时率</small><strong>92.4%</strong></div><div class="demo-kpi"><small>平均周期</small><strong>3.8天</strong></div><div class="demo-kpi"><small>高风险</small><strong>27</strong></div></div><div class="demo-grid"><div class="demo-panel"><h5>统一时间轴</h5><div class="demo-chart"><i style="height:52%"></i><i style="height:64%"></i><i style="height:48%"></i><i style="height:80%"></i></div></div><div class="demo-panel"><h5>异常构成</h5><p>库存短缺 12</p><p>承运商延迟 8</p><p>地址异常 4</p></div></div>`,
+        "analytics-list": `<div class="demo-kpis"><div class="demo-kpi"><small>高风险订单</small><strong>27</strong></div><div class="demo-kpi"><small>影响金额</small><strong>¥1.2M</strong></div><div class="demo-kpi"><small>需今日处理</small><strong>8</strong></div></div><div class="demo-toolbar"><span class="demo-filter">原因：库存短缺</span><span class="demo-filter">区域：华东</span></div>${table}`
+      };
+      return `<div class="evolution-prototype"><div class="evolution-prototype-head"><strong>阶段原型</strong><span>当前模式不是全局唯一答案</span></div>${templates[kind] || ""}</div>`;
+    }
+
+    function renderEvolution() {
+      const scenario = evolutionScenarios[state.evolutionScenario];
+      const stage = scenario.stages[state.evolutionStage];
+      document.querySelectorAll(".evolution-scenario").forEach((button, index) => {
+        const selected = index === state.evolutionScenario;
+        button.setAttribute("aria-selected", String(selected));
+        button.tabIndex = selected ? 0 : -1;
+      });
+      document.getElementById("evolutionSteps").innerHTML = scenario.stages.map((item, index) => `<button class="evolution-step" type="button" role="tab" aria-selected="${index === state.evolutionStage}" tabindex="${index === state.evolutionStage ? 0 : -1}" data-evolution-stage="${index}"><b>阶段 ${index + 1}</b><strong>${escapeHtml(item.name)}</strong></button>`).join("");
+      document.getElementById("evolutionPreview").innerHTML = evolutionMarkup(stage.kind);
+      document.getElementById("evolutionRelation").textContent = `${scenario.label} / ${stage.relation}`;
+      document.getElementById("evolutionTitle").textContent = stage.name;
+      document.getElementById("evolutionSummary").textContent = stage.summary;
+      document.getElementById("evolutionKeep").textContent = stage.keep;
+      document.getElementById("evolutionAdd").textContent = stage.add;
+      document.getElementById("evolutionPressure").textContent = stage.pressure;
+      document.getElementById("evolutionCost").textContent = stage.cost;
+      document.getElementById("evolutionNext").textContent = stage.next;
+      document.getElementById("evolutionInvariant").textContent = scenario.invariant;
+    }
+
+    function initializeEvolution() {
+      const scenariosRoot = document.getElementById("evolutionScenarios");
+      scenariosRoot.innerHTML = evolutionScenarios.map((scenario, index) => `<button class="evolution-scenario" type="button" role="tab" aria-selected="${index === 0}" tabindex="${index === 0 ? 0 : -1}" data-evolution-scenario="${index}">${escapeHtml(scenario.label)}</button>`).join("");
+      scenariosRoot.addEventListener("click", event => {
+        const button = event.target.closest("[data-evolution-scenario]");
+        if (!button) return;
+        state.evolutionScenario = Number(button.dataset.evolutionScenario);
+        state.evolutionStage = 0;
+        renderEvolution();
+      });
+      document.getElementById("evolutionSteps").addEventListener("click", event => {
+        const button = event.target.closest("[data-evolution-stage]");
+        if (!button) return;
+        state.evolutionStage = Number(button.dataset.evolutionStage);
+        renderEvolution();
+      });
+      renderEvolution();
+    }
+
+    function renderBenchmarkCatalog() {
+      document.getElementById("benchmarkCatalog").innerHTML = benchmarkCatalog.map(([family, name, mapping, task, reject]) => `
+        <article class="catalog-item"><span class="catalog-family">${escapeHtml(family)}</span><strong>${escapeHtml(name)}</strong><p>${escapeHtml(mapping)}</p><p>任务：${escapeHtml(task)}</p><em>拒绝：${escapeHtml(reject)}</em></article>`).join("");
+    }
+
+    function renderBenchmark() {
+      const pattern = benchmarkPatterns[state.benchmarkIndex];
+      const stateView = benchmarkStates[state.benchmarkState];
+      document.querySelectorAll(".benchmark-tab").forEach((button, index) => {
+        const selected = index === state.benchmarkIndex;
+        button.setAttribute("aria-selected", String(selected));
+        button.tabIndex = selected ? 0 : -1;
+      });
+      let body = pattern.body;
+      if (stateView.replace) body = stateView.replace;
+      else if (stateView.banner) body = stateView.banner + body;
+      document.getElementById("benchmarkPreview").innerHTML = benchmarkFrame(body, pattern.active);
+      document.getElementById("benchmarkFamily").textContent = `${pattern.family} / ${stateView.label}`;
+      document.getElementById("benchmarkPatternTitle").textContent = pattern.title;
+      document.getElementById("benchmarkInput").textContent = pattern.input;
+      document.getElementById("benchmarkTask").textContent = pattern.task;
+      document.getElementById("benchmarkComposition").textContent = pattern.composition;
+      document.getElementById("benchmarkNavigation").textContent = pattern.navigation;
+      document.getElementById("benchmarkPro").textContent = pattern.pro;
+      document.getElementById("benchmarkCon").textContent = pattern.con;
+      document.getElementById("benchmarkReject").textContent = pattern.reject;
+      document.getElementById("benchmarkSource").textContent = pattern.source;
+    }
+
+    function initializeBenchmarks() {
+      const tabs = document.getElementById("benchmarkTabs");
+      tabs.innerHTML = benchmarkPatterns.map((pattern, index) => `<button class="benchmark-tab" type="button" role="tab" aria-selected="${index === 0}" tabindex="${index === 0 ? 0 : -1}" data-benchmark-index="${index}">${escapeHtml(pattern.label)}</button>`).join("");
+      tabs.addEventListener("click", event => {
+        const button = event.target.closest("[data-benchmark-index]");
+        if (!button) return;
+        state.benchmarkIndex = Number(button.dataset.benchmarkIndex);
+        renderBenchmark();
+      });
+      document.getElementById("benchmarkState").addEventListener("change", event => {
+        state.benchmarkState = event.target.value;
+        renderBenchmark();
+      });
+      renderBenchmarkCatalog();
+      renderBenchmark();
+    }
+
+    function selectMode(mode) {
+      state.mode = mode;
+      document.querySelectorAll(".mode-button").forEach(entry => entry.setAttribute("aria-pressed", String(entry.dataset.mode === mode)));
+      renderWorkbench();
+    }
+
+    function revealSelectedLevel() {
+      const selected = document.querySelector('.level-button[aria-selected="true"]');
+      if (selected) selected.scrollIntoView({ block: "nearest", inline: "center" });
+    }
+
+    let actionStatusTimer;
+    function announceAction(message) {
+      const status = document.getElementById("actionStatus");
+      status.textContent = message;
+      status.hidden = false;
+      clearTimeout(actionStatusTimer);
+      actionStatusTimer = setTimeout(() => { status.hidden = true; }, 3200);
+    }
+
+    function handlePreviewAction(label) {
+      if (label === "取消") {
+        selectMode("read");
+        announceAction("已取消当前编辑，领域事实未改变。");
+        return;
+      }
+      if (["进入任务", "继续处理", "继续流程"].includes(label)) {
+        selectMode("edit");
+        announceAction("已进入受约束编辑状态，提交前仍需校验权限与业务规则。");
+        return;
+      }
+      if (["应用修改", "保存草稿"].includes(label)) {
+        selectMode("read");
+        announceAction("原型状态已保存；真实系统应由命令责任方返回权威回执。");
+        return;
+      }
+      if (label === "比较差异") {
+        selectMode("edit");
+        announceAction("已进入差异处理状态，原值与新值需要并列确认。");
+        return;
+      }
+      announceAction(`${label}：已记录该原型动作；当前业务事实保持不变。`);
+    }
+
+    function setupTablist(selector) {
+      document.querySelectorAll(selector).forEach(tablist => tablist.addEventListener("keydown", event => {
+        if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) return;
+        const tabs = [...tablist.querySelectorAll(':scope > [role="tab"]')];
+        const current = tabs.indexOf(document.activeElement);
+        if (current < 0) return;
+        event.preventDefault();
+        const backwards = event.key === "ArrowLeft" || event.key === "ArrowUp";
+        const nextIndex = event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : (current + (backwards ? -1 : 1) + tabs.length) % tabs.length;
+        tabs[nextIndex].focus();
+        tabs[nextIndex].click();
+        if (tablist.classList.contains("level-list")) revealSelectedLevel();
+      }));
+    }
+
+    document.querySelectorAll(".top-tab").forEach(tab => tab.addEventListener("click", () => setView(tab.dataset.view)));
+    document.querySelectorAll(".level-button").forEach(button => button.addEventListener("click", () => {
+      state.level = button.dataset.level;
+      state.itemIndex = 0;
+      document.querySelectorAll(".level-button").forEach(entry => {
+        const selected = entry === button;
+        entry.setAttribute("aria-selected", String(selected));
+        entry.tabIndex = selected ? 0 : -1;
+      });
+      renderWorkbench();
+      revealSelectedLevel();
+    }));
+    document.querySelectorAll(".mode-button").forEach(button => button.addEventListener("click", () => {
+      selectMode(button.dataset.mode);
+    }));
+    document.getElementById("scenarioSelect").addEventListener("change", event => {
+      state.scenario = event.target.value;
+      state.level = scenarios[state.scenario].defaultLevel;
+      state.itemIndex = 0;
+      document.querySelectorAll(".level-button").forEach(entry => {
+        const selected = entry.dataset.level === state.level;
+        entry.setAttribute("aria-selected", String(selected));
+        entry.tabIndex = selected ? 0 : -1;
+      });
+      renderWorkbench();
+      revealSelectedLevel();
+    });
+    document.getElementById("resetButton").addEventListener("click", () => {
+      Object.assign(state, { view: "workbench", scenario: "create", level: "field", mode: "read", itemIndex: 0, rigor: "light", evolutionScenario: 0, evolutionStage: 0, benchmarkIndex: 0, benchmarkState: "normal" });
+      document.getElementById("scenarioSelect").value = "create";
+      document.getElementById("benchmarkState").value = "normal";
+      document.querySelectorAll(".level-button").forEach(entry => {
+        const selected = entry.dataset.level === "field";
+        entry.setAttribute("aria-selected", String(selected));
+        entry.tabIndex = selected ? 0 : -1;
+      });
+      document.querySelectorAll(".mode-button").forEach(entry => entry.setAttribute("aria-pressed", String(entry.dataset.mode === "read")));
+      document.querySelectorAll(".method-mode").forEach(entry => {
+        const selected = entry.dataset.rigor === "light";
+        entry.setAttribute("aria-selected", String(selected));
+        entry.tabIndex = selected ? 0 : -1;
+      });
+      setView("workbench");
+      renderWorkbench();
+      renderEvolution();
+      renderBenchmark();
+    });
+    document.querySelectorAll(".arch-node").forEach(button => button.addEventListener("click", () => {
+      document.querySelectorAll(".arch-node").forEach(entry => entry.classList.toggle("active", entry === button));
+      const decisions = architectureData[button.dataset.arch];
+      document.getElementById("archTitle").textContent = button.querySelector("strong").textContent;
+      document.getElementById("archDescription").textContent = button.querySelector("span").textContent;
+      document.getElementById("archDecisions").innerHTML = decisions.map((decision, index) => `<li><strong>${["责任", "投影", "边界"][index] || "约束"}</strong><span>${escapeHtml(decision)}</span></li>`).join("");
+    }));
+    document.getElementById("traceSearch").addEventListener("input", renderTraceTable);
+    document.querySelectorAll(".method-mode").forEach(button => button.addEventListener("click", () => {
+      state.rigor = button.dataset.rigor;
+      document.querySelectorAll(".method-mode").forEach(entry => {
+        const selected = entry === button;
+        entry.setAttribute("aria-selected", String(selected));
+        entry.tabIndex = selected ? 0 : -1;
+      });
+      renderMethod();
+    }));
+    document.getElementById("uiPreview").addEventListener("click", event => {
+      const button = event.target.closest(".action-button");
+      if (button) handlePreviewAction(button.textContent.trim());
+    });
+    renderWorkbench();
+    renderTraceTable();
+    renderMethod();
+    initializeEvolution();
+    initializeBenchmarks();
+    setupTablist(".top-tabs, .level-list, .method-modes, .evolution-scenarios, .evolution-steps, .benchmark-tabs");
+  </script>
+</body>
+</html>

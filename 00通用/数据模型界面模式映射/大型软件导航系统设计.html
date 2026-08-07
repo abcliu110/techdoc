@@ -1,0 +1,2986 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大型软件导航系统设计</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #333; line-height: 1.8; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+  .doc-header { text-align: center; margin-bottom: 48px; }
+  .doc-header h1 { font-size: 2.2em; color: #1a1a2e; margin-bottom: 12px; }
+  .doc-header .meta { color: #888; font-size: 0.9em; }
+  h2 { font-size: 1.5em; color: #1a1a2e; margin: 48px 0 20px; padding-bottom: 10px; border-bottom: 2px solid #e0e6ed; }
+  h3 { font-size: 1.2em; color: #2d3748; margin: 28px 0 14px; }
+  h4 { font-size: 1em; color: #4a5568; margin: 20px 0 10px; }
+  p { margin-bottom: 12px; }
+  ul, ol { margin: 10px 0 16px 24px; }
+  li { margin-bottom: 6px; }
+  strong { color: #2d3748; }
+  hr { border: none; border-top: 1px dashed #e0e6ed; margin: 32px 0; }
+
+  /* Proto type cards */
+  .proto-section { margin: 24px 0; }
+  .proto-label { font-size: 0.85em; color: #888; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+  .proto-desc { font-size: 0.88em; color: #666; margin-bottom: 12px; }
+
+  /* Topbar prototype */
+  .topbar-proto { background: #1a1a2e; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+  .topbar-strip { display: flex; align-items: center; padding: 0 16px; height: 52px; background: #16213e; gap: 0; }
+  .topbar-logo { background: #e94560; color: #fff; font-weight: bold; padding: 6px 14px; border-radius: 5px; font-size: 13px; margin-right: 20px; white-space: nowrap; }
+  .topbar-tabs { display: flex; gap: 2px; flex: 1; }
+  .topbar-tab { color: #a0aec0; padding: 8px 16px; font-size: 14px; cursor: pointer; border-radius: 6px 6px 0 0; transition: all 0.2s; }
+  .topbar-tab:hover { color: #fff; background: rgba(255,255,255,0.08); }
+  .topbar-tab.active { color: #fff; background: rgba(255,255,255,0.12); border-bottom: 2px solid #e94560; }
+  .topbar-right { display: flex; align-items: center; gap: 10px; }
+  .topbar-search { background: rgba(255,255,255,0.1); border: none; border-radius: 6px; padding: 6px 14px; color: #fff; font-size: 13px; width: 180px; outline: none; }
+  .topbar-avatar { width: 32px; height: 32px; background: #e94560; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: bold; }
+  .topbar-body { display: flex; height: 220px; background: #f0f2f5; }
+  .sidebar { width: 160px; background: #fff; border-right: 1px solid #e0e6ed; padding: 16px 0; }
+  .sidebar-item { padding: 9px 18px; color: #4a5568; font-size: 13.5px; cursor: pointer; border-left: 3px solid transparent; display: flex; align-items: center; gap: 8px; }
+  .sidebar-item::before { content: '▸'; font-size: 10px; opacity: 0.4; }
+  .sidebar-item.active { color: #e94560; border-left-color: #e94560; background: #fff0f2; }
+  .sidebar-item.active::before { opacity: 1; }
+  .sidebar-item:hover { background: #f7fafc; }
+  .content-area { flex: 1; padding: 20px; display: flex; align-items: center; justify-content: center; }
+  .content-placeholder { background: #fff; border: 2px dashed #d0d7e0; border-radius: 8px; padding: 30px 50px; color: #a0aec0; font-size: 14px; text-align: center; }
+  .topbar-proto-label { color: #fff; font-size: 12px; margin-bottom: 6px; opacity: 0.7; }
+
+  /* Sidebar variants */
+  .sidebar-variants { display: flex; gap: 20px; margin: 20px 0; align-items: stretch; }
+  .sidebar-var { flex: 1; background: #fff; border: 1px solid #e0e6ed; border-radius: 8px; overflow: hidden; min-width: 0; }
+  .sidebar-var-header { padding: 8px 12px; background: #f7fafc; font-size: 12px; color: #888; border-bottom: 1px solid #e0e6ed; }
+  .sidebar-var-body { height: 100px; display: flex; align-items: center; justify-content: center; padding: 12px; }
+  .sidebar-wide { background: #fff; width: 180px; border-right: 1px solid #e0e6ed; padding: 12px 0; flex-shrink: 0; }
+  .sidebar-wide-item { display: flex; align-items: center; gap: 10px; padding: 8px 16px; color: #4a5568; font-size: 13px; cursor: pointer; }
+  .sidebar-wide-item.active { background: #e94560; color: #fff; }
+  .sidebar-icon-item { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px; cursor: pointer; }
+  .sidebar-icon-item.active .icon-circle { background: #e94560; }
+  .icon-circle { width: 28px; height: 28px; background: #e0e6ed; border-radius: 6px; }
+  .sidebar-icon-label { font-size: 10px; color: #a0aec0; }
+  .sidebar-icon-item.active .sidebar-icon-label { color: #e94560; }
+  .sidebar-narrow { background: #1a1a2e; width: 52px; padding: 10px 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .sidebar-collapse { background: #fff; border-right: 1px solid #e0e6ed; width: 44px; padding: 10px 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+
+  /* Breadcrumb + Tab */
+  .breadcrumb-proto { background: #fff; border: 1px solid #e0e6ed; border-radius: 8px; overflow: hidden; }
+  .breadcrumb-strip { padding: 10px 16px; border-bottom: 1px solid #e0e6ed; background: #f7fafc; display: flex; align-items: center; gap: 6px; font-size: 13px; color: #a0aec0; }
+  .breadcrumb-strip .crumb { color: #4a5568; cursor: pointer; }
+  .breadcrumb-strip .crumb:hover { color: #e94560; }
+  .breadcrumb-strip .sep { color: #d0d7e0; }
+  .breadcrumb-strip .crumb.active { color: #e94560; font-weight: 600; }
+  .tab-strip { display: flex; gap: 0; padding: 0 16px; border-bottom: 1px solid #e0e6ed; background: #fff; }
+  .tab-item { padding: 12px 18px; font-size: 13.5px; color: #718096; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s; }
+  .tab-item:hover { color: #2d3748; }
+  .tab-item.active { color: #e94560; border-bottom-color: #e94560; font-weight: 600; }
+  .tab-body { padding: 24px; min-height: 120px; color: #a0aec0; font-size: 13px; text-align: center; }
+
+  /* Command Palette */
+  .cmd-proto { background: #fff; border: 1px solid #e0e6ed; border-radius: 8px; overflow: hidden; }
+  .cmd-overlay { background: rgba(0,0,0,0.4); padding: 40px; display: flex; align-items: flex-start; justify-content: center; }
+  .cmd-box { background: #fff; border-radius: 10px; width: 520px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden; }
+  .cmd-input-strip { display: flex; align-items: center; padding: 14px 18px; gap: 12px; border-bottom: 1px solid #e0e6ed; }
+  .cmd-icon { color: #a0aec0; font-size: 16px; }
+  .cmd-input { border: none; outline: none; font-size: 15px; color: #2d3748; flex: 1; }
+  .cmd-shortcut { background: #f1f5f9; border: 1px solid #e0e6ed; border-radius: 4px; padding: 2px 7px; font-size: 11px; color: #718096; font-family: monospace; }
+  .cmd-results { padding: 8px; max-height: 260px; overflow-y: auto; }
+  .cmd-group-label { padding: 6px 12px; font-size: 11px; color: #a0aec0; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+  .cmd-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 6px; cursor: pointer; font-size: 13.5px; color: #4a5568; }
+  .cmd-item:hover, .cmd-item.highlight { background: #e94560; color: #fff; }
+  .cmd-item-icon { width: 24px; height: 24px; background: #f1f5f9; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #718096; flex-shrink: 0; }
+  .cmd-item.highlight .cmd-item-icon, .cmd-item:hover .cmd-item-icon { background: rgba(255,255,255,0.2); color: #fff; }
+  .cmd-item-text { flex: 1; }
+  .cmd-item-text small { display: block; font-size: 11px; opacity: 0.6; }
+  .cmd-item-shortcut { font-size: 11px; opacity: 0.5; font-family: monospace; }
+
+  /* Progressive disclosure */
+  .progressive-proto { background: #fff; border: 1px solid #e0e6ed; border-radius: 8px; overflow: hidden; }
+  .prog-step { padding: 18px 20px; border-bottom: 1px solid #f0f2f5; }
+  .prog-step-header { display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 600; color: #2d3748; margin-bottom: 12px; }
+  .prog-step-num { width: 24px; height: 24px; background: #e0e6ed; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #718096; flex-shrink: 0; }
+  .prog-step.active .prog-step-num { background: #e94560; color: #fff; }
+  .prog-form { display: grid; gap: 10px; }
+  .prog-field { display: flex; align-items: center; gap: 10px; }
+  .prog-label { width: 80px; font-size: 13px; color: #718096; flex-shrink: 0; }
+  .prog-input { flex: 1; border: 1px solid #e0e6ed; border-radius: 6px; padding: 7px 12px; font-size: 13px; outline: none; }
+  .prog-input:focus { border-color: #e94560; }
+  .prog-select { flex: 1; border: 1px solid #e0e6ed; border-radius: 6px; padding: 7px 12px; font-size: 13px; outline: none; color: #718096; }
+  .prog-expand-btn { display: flex; align-items: center; gap: 6px; color: #e94560; font-size: 13px; cursor: pointer; padding: 6px 0; }
+  .prog-expand-btn::before { content: '[+]'; }
+  .prog-expand-btn.expanded::before { content: '[-]'; }
+  .prog-extra { display: none; margin-top: 10px; }
+  .prog-extra.show { display: grid; gap: 10px; }
+
+  /* Tree nav */
+  .tree-proto { background: #fff; border: 1px solid #e0e6ed; border-radius: 8px; overflow: hidden; display: flex; }
+  .tree-nav { width: 200px; border-right: 1px solid #e0e6ed; padding: 12px 0; }
+  .tree-node { padding: 5px 0; }
+  .tree-item { display: flex; align-items: center; gap: 6px; padding: 6px 14px; font-size: 13px; color: #4a5568; cursor: pointer; border-radius: 0; }
+  .tree-item:hover { background: #f7fafc; }
+  .tree-item.active { background: #fff0f2; color: #e94560; }
+  .tree-toggle { width: 16px; text-align: center; font-size: 10px; color: #a0aec0; cursor: pointer; flex-shrink: 0; }
+  .tree-toggle.open { color: #e94560; }
+  .tree-content { flex: 1; padding: 20px; display: flex; align-items: center; justify-content: center; }
+  .tree-placeholder { border: 2px dashed #d0d7e0; border-radius: 8px; padding: 30px 50px; color: #a0aec0; font-size: 14px; text-align: center; width: 100%; }
+
+  /* CRM scenario */
+  .crm-proto { background: #fff; border: 1px solid #e0e6ed; border-radius: 8px; overflow: hidden; }
+  .crm-header { padding: 10px 16px; border-bottom: 1px solid #e0e6ed; background: #f7fafc; display: flex; align-items: center; gap: 10px; font-size: 13px; color: #4a5568; }
+  .crm-back { cursor: pointer; color: #e94560; }
+  .crm-title { font-weight: 600; color: #2d3748; }
+  .crm-body { display: flex; }
+  .crm-tabs { width: 140px; border-right: 1px solid #e0e6ed; }
+  .crm-tab-item { padding: 10px 14px; font-size: 13px; color: #718096; cursor: pointer; border-left: 3px solid transparent; }
+  .crm-tab-item:hover { background: #f7fafc; color: #2d3748; }
+  .crm-tab-item.active { color: #e94560; border-left-color: #e94560; background: #fff0f2; font-weight: 600; }
+  .crm-main { flex: 1; padding: 20px; }
+  .crm-drawer-btn { position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: #e94560; color: #fff; padding: 10px 8px; font-size: 13px; border-radius: 6px 0 0 6px; cursor: pointer; writing-mode: vertical-rl; }
+  .crm-main { position: relative; }
+  .crm-info-row { display: flex; gap: 30px; margin-bottom: 20px; }
+  .crm-info-item { flex: 1; }
+  .crm-info-label { font-size: 11px; color: #a0aec0; margin-bottom: 4px; }
+  .crm-info-value { font-size: 13px; color: #2d3748; font-weight: 600; }
+  .crm-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .crm-table th { background: #f7fafc; padding: 8px 12px; text-align: left; color: #718096; font-weight: 600; border-bottom: 1px solid #e0e6ed; }
+  .crm-table td { padding: 8px 12px; color: #4a5568; border-bottom: 1px solid #f0f2f5; }
+  .crm-table tr:hover td { background: #fafafa; }
+  .crm-action { color: #e94560; cursor: pointer; font-size: 12px; }
+
+  /* Dashboard scenario */
+  .dash-proto { background: #fff; border: 1px solid #e0e6ed; border-radius: 8px; overflow: hidden; }
+  .dash-topbar { display: flex; align-items: center; padding: 8px 16px; background: #f7fafc; border-bottom: 1px solid #e0e6ed; gap: 8px; }
+  .dash-tab { padding: 5px 14px; font-size: 13px; color: #718096; cursor: pointer; border-radius: 4px; }
+  .dash-tab.active { background: #e94560; color: #fff; }
+  .dash-toolbar { display: flex; align-items: center; gap: 10px; padding: 8px 16px; border-bottom: 1px solid #e0e6ed; }
+  .dash-tool { background: #f1f5f9; border: 1px solid #e0e6ed; border-radius: 4px; padding: 4px 12px; font-size: 12px; color: #4a5568; cursor: pointer; }
+  .dash-tool.active { border-color: #e94560; color: #e94560; }
+  .dash-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; padding: 16px; }
+  .dash-card { background: #f7fafc; border-radius: 8px; min-height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #a0aec0; font-size: 13px; padding: 16px; }
+  .dash-card .card-title { font-size: 11px; color: #718096; margin-bottom: 6px; }
+  .dash-card .card-val { font-size: 22px; font-weight: bold; color: #2d3748; }
+  .dash-card.wide { grid-column: span 2; }
+
+  /* Config scenario */
+  .config-proto { background: #fff; border: 1px solid #e0e6ed; border-radius: 8px; overflow: hidden; display: flex; }
+  .config-tree { width: 220px; border-right: 1px solid #e0e6ed; padding: 12px 0; }
+  .config-tree-node { }
+  .config-group { padding: 6px 0; }
+  .config-group-label { display: flex; align-items: center; gap: 6px; padding: 6px 14px; font-size: 12px; font-weight: 600; color: #2d3748; cursor: pointer; }
+  .config-group-label::before { content: '▾'; font-size: 10px; color: #718096; }
+  .config-group-label.collapsed::before { content: '▸'; }
+  .config-sub-item { padding: 5px 14px 5px 30px; font-size: 13px; color: #718096; cursor: pointer; }
+  .config-sub-item:hover { color: #2d3748; background: #f7fafc; }
+  .config-sub-item.active { color: #e94560; font-weight: 600; }
+  .config-content { flex: 1; padding: 20px; display: flex; align-items: center; justify-content: center; }
+  .config-form { width: 100%; }
+  .config-form-title { font-size: 15px; font-weight: 600; color: #2d3748; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #e0e6ed; }
+  .config-form-row { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 14px; }
+  .config-form-label { width: 100px; font-size: 13px; color: #718096; padding-top: 7px; flex-shrink: 0; }
+  .config-form-control { flex: 1; }
+  .config-form-input { width: 100%; border: 1px solid #e0e6ed; border-radius: 6px; padding: 7px 12px; font-size: 13px; outline: none; }
+  .config-form-input:focus { border-color: #e94560; }
+  .config-btn { background: #e94560; color: #fff; border: none; border-radius: 6px; padding: 8px 20px; font-size: 13px; cursor: pointer; }
+
+  /* Anti pattern cards */
+  .antipattern-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  .antipattern-card { background: #fff; border: 1px solid #e0e6ed; border-radius: 8px; overflow: hidden; }
+  .antipattern-card-header { padding: 10px 14px; background: #fff5f5; border-bottom: 1px solid #fed7d7; display: flex; align-items: center; gap: 8px; }
+  .antipattern-icon { font-size: 16px; }
+  .antipattern-title { font-size: 13px; font-weight: 600; color: #c53030; }
+  .antipattern-body { padding: 14px; }
+  .antipattern-flow { display: flex; flex-direction: column; gap: 4px; }
+  .antipattern-flow-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #718096; }
+  .antipattern-flow-item span { background: #fff0f0; border: 1px solid #fed7d7; border-radius: 4px; padding: 3px 10px; color: #c53030; white-space: nowrap; }
+  .antipattern-flow-item .arrow { color: #c53030; }
+  .antipattern-flow-item.good span { background: #f0fff4; border-color: #c6f6d5; color: #276749; }
+  .antipattern-flow-item.good .arrow { color: #276749; }
+
+  /* Hierarchy diagram */
+  .hier-diagram { background: #fff; border: 1px solid #e0e6ed; border-radius: 8px; padding: 24px; }
+  .hier-level { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
+  .hier-label { width: 100px; font-size: 12px; font-weight: 600; color: #718096; text-align: right; flex-shrink: 0; }
+  .hier-nodes { display: flex; gap: 10px; flex-wrap: wrap; }
+  .hier-node { background: #f1f5f9; border: 1px solid #e0e6ed; border-radius: 6px; padding: 8px 16px; font-size: 13px; color: #4a5568; }
+  .hier-node.highlight { background: #e94560; border-color: #e94560; color: #fff; }
+  .hier-node.light { background: #fff; border-color: #e0e6ed; color: #a0aec0; font-size: 11px; }
+
+  /* Btn style */
+  .btn { display: inline-block; padding: 8px 20px; border-radius: 6px; font-size: 14px; cursor: pointer; border: none; }
+  .btn-primary { background: #e94560; color: #fff; }
+
+  /* Info boxes */
+  .info-box { background: #f0f7ff; border-left: 4px solid #3182ce; border-radius: 0 6px 6px 0; padding: 14px 18px; margin: 16px 0; font-size: 14px; color: #2b6cb0; }
+  .warn-box { background: #fffaf0; border-left: 4px solid #dd6b20; border-radius: 0 6px 6px 0; padding: 14px 18px; margin: 16px 0; font-size: 14px; color: #c05621; }
+  .success-box { background: #f0fff4; border-left: 4px solid #38a169; border-radius: 0 6px 6px 0; padding: 14px 18px; margin: 16px 0; font-size: 14px; color: #276749; }
+
+  /* Section 10: UI as Aggregate Root Tree */
+  .tree-vs-proto { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 16px 0; }
+  .tree-vs-col { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; }
+  .tree-vs-title { font-size: 13px; font-weight: 600; color: #4a5568; margin-bottom: 12px; text-align: center; }
+
+  .tree-static { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .tree-static-root { background: #1a1a2e; color: #fff; padding: 6px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+  .tree-static-row { display: flex; gap: 12px; justify-content: center; }
+  .tree-static-node { background: #e2e8f0; border: 1px solid #cbd5e0; padding: 6px 14px; border-radius: 6px; font-size: 12px; color: #4a5568; }
+
+  .tree-dynamic { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .tree-dyn-root { background: #1a1a2e; color: #fff; padding: 6px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+  .tree-dyn-row { display: flex; gap: 10px; justify-content: center; align-items: flex-end; }
+  .tree-dyn-node { border-radius: 8px; padding: 10px 12px; font-size: 12px; text-align: center; }
+  .tree-dyn-node big, .tree-dyn-node.mid, .tree-dyn-node.small { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .tree-dyn-node.big { background: #e94560; color: #fff; min-width: 100px; min-height: 60px; }
+  .tree-dyn-node.mid { background: #3182ce; color: #fff; min-width: 80px; min-height: 50px; }
+  .tree-dyn-node.small { background: #f1f5f9; color: #a0aec0; border: 1px dashed #cbd5e0; min-width: 70px; min-height: 40px; }
+  .tree-dyn-node small { font-size: 10px; opacity: 0.8; margin-top: 4px; }
+
+  .motion-proto { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 16px 0; }
+  .motion-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; }
+  .motion-card-header { font-size: 14px; font-weight: 600; color: #2d3748; margin-bottom: 12px; }
+  .motion-flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .motion-flow-item { background: #fff; border: 1px solid #cbd5e0; border-radius: 6px; padding: 6px 12px; font-size: 12px; color: #4a5568; }
+  .motion-arrow { color: #a0aec0; font-size: 14px; }
+  .motion-desc { font-size: 12px; color: #718096; line-height: 1.6; }
+
+  .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 16px 0; }
+  .feature-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; }
+  .feature-num { font-size: 11px; font-weight: 700; color: #e94560; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+  .feature-title { font-size: 14px; font-weight: 600; color: #2d3748; margin-bottom: 10px; }
+  .feature-table { display: flex; flex-direction: column; gap: 6px; }
+  .feature-row { display: flex; gap: 8px; font-size: 12px; color: #4a5568; align-items: baseline; }
+  .feature-key { font-weight: 600; color: #2d3748; white-space: nowrap; min-width: 70px; }
+
+  .root-table { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 16px 0; }
+  .root-row { display: grid; grid-template-columns: 100px 1fr 1fr; }
+  .root-row:first-child .root-cell { background: #f7fafc; font-weight: 600; color: #2d3748; }
+  .root-cell { padding: 10px 14px; font-size: 13px; border-bottom: 1px solid #e2e8f0; color: #4a5568; }
+  .root-row:last-child .root-cell { border-bottom: none; }
+  .root-cell.head { font-size: 12px; }
+
+  .structure-proto { display: flex; flex-direction: column; gap: 10px; margin: 16px 0; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; }
+  .struct-item { display: flex; align-items: center; gap: 12px; }
+  .struct-label { background: #1a1a2e; color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; white-space: nowrap; min-width: 140px; text-align: center; }
+  .struct-arrow { color: #a0aec0; font-size: 16px; }
+  .struct-result { font-size: 13px; color: #4a5568; }
+
+  .prune-proto { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 16px 0; }
+  .prune-col { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; }
+  .prune-title { font-size: 13px; font-weight: 600; color: #4a5568; margin-bottom: 12px; text-align: center; }
+  .prune-tree { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .prune-root { background: #1a1a2e; color: #fff; padding: 6px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+  .prune-level1 { display: flex; gap: 12px; justify-content: center; }
+  .prune-node { background: #3182ce; color: #fff; padding: 8px 16px; border-radius: 6px; font-size: 12px; }
+  .prune-level2 { display: flex; gap: 12px; justify-content: center; }
+  .prune-sub { background: #e2e8f0; border: 1px solid #cbd5e0; padding: 6px 10px; border-radius: 4px; font-size: 11px; color: #718096; }
+  .prune-tree.pruned .prune-node { background: #3182ce; }
+  .prune-tree.pruned .prune-sub { background: #e2e8f0; }
+  .gray-cut { background: #f1f5f9 !important; color: #cbd5e0 !important; border-color: #e2e8f0 !important; text-decoration: line-through; }
+  .prune-note { font-size: 11px; color: #a0aec0; text-align: center; margin-top: 8px; }
+
+  /* Summary table */
+  .summary-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  .summary-table th { background: #1a1a2e; color: #fff; padding: 10px 16px; text-align: left; }
+  .summary-table td { padding: 10px 16px; border-bottom: 1px solid #e0e6ed; color: #4a5568; }
+  .summary-table tr:nth-child(even) td { background: #f7fafc; }
+
+  /* Code block */
+  .code-block { background: #1e2537; border-radius: 8px; padding: 18px 20px; margin: 14px 0; overflow-x: auto; }
+  .code-block code { color: #a8d8f0; font-family: 'Fira Code', 'Consolas', monospace; font-size: 13px; line-height: 1.7; white-space: pre; }
+
+  /* Tree text */
+  .tree-text { font-family: 'Fira Code', 'Consolas', monospace; font-size: 13px; color: #4a5568; background: #f7fafc; border: 1px solid #e0e6ed; border-radius: 6px; padding: 14px 18px; margin: 14px 0; line-height: 1.9; }
+  .tree-text .highlight { color: #e94560; font-weight: bold; }
+  .tree-text .dim { color: #a0aec0; }
+
+  /* Permission nav */
+  .perm-nav { background: #fff; border: 1px solid #e0e6ed; border-radius: 8px; overflow: hidden; padding: 20px; }
+  .perm-nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0f2f5; font-size: 14px; color: #4a5568; }
+  .perm-nav-item:last-child { border-bottom: none; }
+  .perm-badge { padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .perm-badge.red { background: #fff0f2; color: #e94560; }
+  .perm-badge.blue { background: #ebf8ff; color: #3182ce; }
+  .perm-badge.gray { background: #f7fafc; color: #718096; }
+  .perm-badge.orange { background: #fffaf0; color: #dd6b20; }
+
+  /* Workflow nav */
+  .workflow-proto { background: #fff; border: 1px solid #e0e6ed; border-radius: 8px; padding: 24px; }
+  .workflow-steps { display: flex; align-items: center; gap: 0; }
+  .workflow-step { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; }
+  .workflow-step-circle { width: 40px; height: 40px; border-radius: 50%; background: #e94560; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; }
+  .workflow-step-label { font-size: 12px; color: #4a5568; text-align: center; }
+  .workflow-arrow { flex: 0 0 40px; text-align: center; color: #a0aec0; font-size: 20px; }
+
+  /* Flat vs deep */
+  .flat-deep { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  .flat-deep-card { background: #fff; border: 1px solid #e0e6ed; border-radius: 8px; overflow: hidden; }
+  .flat-deep-header { padding: 8px 14px; font-size: 12px; font-weight: 600; }
+  .flat-deep-card.bad .flat-deep-header { background: #fff5f5; color: #c53030; border-bottom: 1px solid #fed7d7; }
+  .flat-deep-card.good .flat-deep-header { background: #f0fff4; color: #276749; border-bottom: 1px solid #c6f6d5; }
+  .flat-deep-body { padding: 14px; }
+  .flat-deep-flow { display: flex; flex-direction: column; gap: 6px; }
+  .flat-deep-node { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #718096; }
+  .flat-deep-node span { background: #f1f5f9; border: 1px solid #e0e6ed; border-radius: 4px; padding: 3px 10px; white-space: nowrap; }
+  .flat-deep-node.bad span { background: #fff0f0; border-color: #fed7d7; color: #c53030; }
+  .flat-deep-node.good span { background: #f0fff4; border-color: #c6f6d5; color: #276749; }
+  .flat-deep-node .arrow { color: #a0aec0; }
+  .flat-deep-card.bad .flat-deep-node .arrow { color: #c53030; }
+  .flat-deep-card.good .flat-deep-node .arrow { color: #276749; }
+
+  /* Context preservation */
+  .context-demo { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  .context-card { background: #fff; border: 1px solid #e0e6ed; border-radius: 8px; overflow: hidden; }
+  .context-header { padding: 8px 14px; background: #f7fafc; border-bottom: 1px solid #e0e6ed; font-size: 12px; color: #718096; }
+  .context-body { padding: 12px; }
+  .context-bar { background: #f7fafc; border-radius: 6px; padding: 8px 12px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .context-chip { background: #e0e6ed; border-radius: 4px; padding: 3px 10px; font-size: 12px; color: #4a5568; cursor: pointer; }
+  .context-chip.active { background: #e94560; color: #fff; }
+
+  /* Aggregate mapping */
+  .agg-proto { background: #fff; border: 1px solid #e0e6ed; border-radius: 8px; overflow: hidden; }
+  .agg-header { padding: 10px 16px; background: #f7fafc; border-bottom: 1px solid #e0e6ed; display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: #4a5568; }
+  .agg-root-badge { background: #e94560; color: #fff; padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .agg-body { display: flex; }
+  .agg-tabs { width: 130px; border-right: 1px solid #e0e6ed; background: #fafbfc; }
+  .agg-tab { padding: 9px 14px; font-size: 12.5px; color: #718096; cursor: pointer; border-left: 3px solid transparent; }
+  .agg-tab:hover { background: #f0f2f5; }
+  .agg-tab.active { color: #e94560; border-left-color: #e94560; background: #fff0f2; font-weight: 600; }
+  .agg-content { flex: 1; padding: 16px; }
+  .agg-entity-list { display: flex; flex-direction: column; gap: 8px; }
+  .agg-entity-item { display: flex; align-items: center; justify-content: space-between; background: #f7fafc; border: 1px solid #e0e6ed; border-radius: 6px; padding: 8px 12px; font-size: 13px; color: #4a5568; }
+  .agg-entity-tag { font-size: 10px; padding: 2px 8px; border-radius: 4px; background: #e0e6ed; color: #718096; }
+  .agg-actions { display: flex; gap: 8px; }
+  .agg-action-btn { font-size: 11px; padding: 3px 10px; border-radius: 4px; cursor: pointer; border: 1px solid #e0e6ed; background: #fff; color: #718096; }
+  .agg-action-btn:hover { border-color: #e94560; color: #e94560; }
+
+  /* Checkmark table */
+  .check-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  .check-table th { background: #1a1a2e; color: #fff; padding: 10px 14px; text-align: left; font-size: 13px; }
+  .check-table td { padding: 10px 14px; border-bottom: 1px solid #e0e6ed; font-size: 13px; color: #4a5568; }
+  .check-table tr:nth-child(even) td { background: #f7fafc; }
+  .check-pass { color: #38a169; }
+  .check-warn { color: #dd6b20; }
+  .check-fail { color: #c53030; }
+
+  /* Section label */
+  .section-label { display: inline-block; background: #e94560; color: #fff; padding: 2px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-bottom: 8px; }
+
+  /* Mental model table */
+  .mental-table { width: 100%; border-collapse: collapse; margin: 14px 0; }
+  .mental-table th { background: #f7fafc; padding: 10px 14px; text-align: left; font-size: 13px; color: #718096; border-bottom: 1px solid #e0e6ed; }
+  .mental-table td { padding: 10px 14px; border-bottom: 1px solid #f0f2f5; font-size: 13px; color: #4a5568; }
+  .mental-table td:first-child { color: #e94560; font-weight: 600; }
+
+  /* Hierarchy constraint */
+  .hierarchy-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  .hier-compare-card { background: #fff; border: 1px solid #e0e6ed; border-radius: 8px; overflow: hidden; }
+  .hier-compare-header { padding: 8px 14px; font-size: 12px; font-weight: 600; }
+  .hier-compare-card.bad .hier-compare-header { background: #fff5f5; color: #c53030; border-bottom: 1px solid #fed7d7; }
+  .hier-compare-card.good .hier-compare-header { background: #f0fff4; color: #276749; border-bottom: 1px solid #c6f6d5; }
+  .hier-compare-body { padding: 14px; }
+  .hier-compare-flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 12px; }
+  .hier-node-step { padding: 4px 12px; border-radius: 4px; }
+  .hier-node-step.root { background: #ebf8ff; border: 1px solid #bee3f8; color: #2b6cb0; }
+  .hier-node-step.l1 { background: #f0f7ff; border: 1px solid #c3dafe; color: #3182ce; }
+  .hier-node-step.l2 { background: #f7fafc; border: 1px solid #e0e6ed; color: #4a5568; }
+  .hier-node-step.l3 { background: #fff0f0; border: 1px solid #fed7d7; color: #c53030; }
+  .hier-node-step.l4 { background: #fff0f0; border: 1px solid #feb2b2; color: #9b2c2c; }
+  .hier-node-step.ok { background: #f0fff4; border: 1px solid #c6f6d5; color: #276749; }
+  .hier-arrow { color: #a0aec0; }
+  .hier-depth { font-size: 11px; color: #a0aec0; margin-top: 6px; }
+  .hier-compare-card.bad .hier-depth { color: #c53030; }
+  .hier-compare-card.good .hier-depth { color: #276749; }
+
+  /* Consistency table */
+  .consistency-flow { background: #fff; border: 1px solid #e0e6ed; border-radius: 8px; overflow: hidden; margin: 14px 0; }
+  .consistency-row { display: flex; border-bottom: 1px solid #f0f2f5; }
+  .consistency-row:last-child { border-bottom: none; }
+  .consistency-cell { padding: 10px 16px; font-size: 13px; flex: 1; }
+  .consistency-cell:first-child { color: #e94560; font-weight: 600; background: #fff0f2; }
+  .consistency-cell:nth-child(2) { color: #4a5568; }
+  .consistency-cell:nth-child(3) { color: #718096; }
+  .consistency-cell .nav-icon { display: inline-block; width: 20px; height: 20px; background: #e94560; border-radius: 4px; color: #fff; text-align: center; line-height: 20px; font-size: 11px; }
+
+  /* Progressive exposure levels */
+  .exposure-levels { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0; }
+  .exposure-card { background: #fff; border: 1px solid #e0e6ed; border-radius: 8px; overflow: hidden; text-align: center; }
+  .exposure-level { padding: 14px 8px 8px; font-size: 20px; font-weight: bold; color: #fff; }
+  .exposure-card:nth-child(1) .exposure-level { background: #e94560; }
+  .exposure-card:nth-child(2) .exposure-level { background: #3182ce; }
+  .exposure-card:nth-child(3) .exposure-level { background: #805ad5; }
+  .exposure-card:nth-child(4) .exposure-level { background: #718096; }
+  .exposure-label { padding: 6px 8px; font-size: 12px; font-weight: 600; color: #2d3748; border-bottom: 1px solid #f0f2f5; }
+  .exposure-desc { padding: 8px; font-size: 11px; color: #718096; background: #fafbfc; min-height: 60px; }
+
+  /* ERP prototypes */
+  .erp-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+  .erp-table th { background: #f7fafc; padding: 8px 12px; text-align: left; font-weight: 600; color: #4a5568; border-bottom: 2px solid #e0e6ed; }
+  .erp-table td { padding: 8px 12px; border-bottom: 1px solid #e8ecf0; color: #4a5568; vertical-align: top; }
+  .erp-arch-proto { border: 1px solid #e0e6ed; border-radius: 8px; overflow: hidden; margin: 16px 0; font-size: 13px; }
+  .erp-topbar { background: #1a1a2e; color: #fff; padding: 8px 16px; display: flex; align-items: center; gap: 20px; }
+  .erp-logo { font-weight: 700; font-size: 15px; color: #e94560; margin-right: 8px; }
+  .erp-topbar-item { font-size: 12px; color: #cbd5e0; cursor: pointer; }
+  .erp-body { display: flex; height: 200px; }
+  .erp-sidebar-tree { width: 130px; background: #f7fafc; border-right: 1px solid #e0e6ed; padding: 10px 8px; overflow: hidden; }
+  .erp-tree-node { margin-bottom: 6px; }
+  .erp-tree-parent { color: #4a5568; font-weight: 600; cursor: pointer; font-size: 12px; padding: 2px 4px; }
+  .erp-tree-parent.active { color: #e94560; }
+  .erp-tree-child { color: #a0aec0; font-size: 11px; padding: 2px 4px 2px 16px; cursor: pointer; }
+  .erp-tree-child:hover { color: #4a5568; }
+  .erp-tree-child.active { color: #e94560; font-weight: 600; }
+  .erp-content { flex: 1; display: flex; flex-direction: column; }
+  .erp-breadcrumb { padding: 6px 14px; background: #f7fafc; font-size: 12px; color: #718096; border-bottom: 1px solid #e0e6ed; }
+  .erp-tabs { display: flex; padding: 0 14px; border-bottom: 1px solid #e0e6ed; }
+  .erp-tab { padding: 7px 12px; font-size: 12px; color: #718096; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .erp-tab:hover { color: #4a5568; }
+  .erp-tab.active { color: #e94560; border-bottom-color: #e94560; font-weight: 600; }
+  .erp-form-area { flex: 1; padding: 14px; display: flex; align-items: center; justify-content: center; background: #fff; }
+  .erp-actionbar { padding: 6px 14px; border-top: 1px solid #e0e6ed; display: flex; gap: 14px; background: #f7fafc; }
+  .erp-action { font-size: 12px; color: #4a5568; cursor: pointer; }
+  .erp-矛盾-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  .erp-矛盾-card { background: #fff; border: 1px solid #e0e6ed; border-radius: 8px; overflow: hidden; }
+  .erp-矛盾-title { padding: 10px 14px; background: #f7fafc; font-size: 13px; font-weight: 600; color: #2d3748; border-bottom: 1px solid #e0e6ed; }
+  .erp-矛盾-body { padding: 14px; }
+  .erp-quicklaunch { background: #f7fafc; border: 1px solid #e0e6ed; border-radius: 6px; padding: 10px; margin-bottom: 10px; }
+  .erp-quick-title { font-size: 12px; color: #718096; margin-bottom: 8px; }
+  .erp-quick-items { display: flex; gap: 6px; flex-wrap: wrap; }
+  .erp-quick-item { background: #fff; border: 1px solid #e0e6ed; padding: 4px 10px; border-radius: 4px; font-size: 12px; color: #4a5568; cursor: pointer; }
+  .erp-quick-item:hover { border-color: #e94560; color: #e94560; }
+  .erp-todo { background: #fff5f6; border: 1px solid #fecdd3; border-radius: 6px; padding: 10px; }
+  .erp-todo-title { font-size: 12px; color: #e94560; margin-bottom: 6px; }
+  .erp-todo-item { font-size: 12px; color: #4a5568; line-height: 1.6; }
+  .erp-chain { border: 1px solid #e0e6ed; border-radius: 6px; overflow: hidden; font-size: 12px; }
+  .erp-chain-item { padding: 6px 10px; color: #718096; }
+  .erp-chain-item.top { background: #f7fafc; border-bottom: 1px solid #e0e6ed; }
+  .erp-chain-item.current { background: #fff0f2; color: #c7253e; font-weight: 600; border-bottom: 1px solid #fecdd3; }
+  .erp-chain-item.bottom { background: #f7fafc; }
+  .erp-perm-demo { display: flex; flex-direction: column; gap: 6px; }
+  .erp-perm-row { display: flex; align-items: center; gap: 10px; }
+  .erp-perm-role { width: 70px; font-size: 11px; color: #718096; }
+  .erp-perm-actions { display: flex; gap: 4px; }
+  .perm-btn { padding: 3px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; }
+  .perm-btn.primary { background: #e94560; color: #fff; }
+  .perm-btn { background: #f7fafc; color: #4a5568; border: 1px solid #e0e6ed; }
+  .perm-btn.disabled { background: #f7fafc; color: #cbd5e0; border-color: #e8ecf0; cursor: not-allowed; }
+  .comparison-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 24px; }
+  .comparison-table th { background: #1a1a2e; color: #fff; padding: 8px 10px; text-align: center; font-weight: 600; }
+  .comparison-table th:first-child { text-align: left; }
+  .comparison-table td { padding: 7px 10px; border-bottom: 1px solid #e8ecf0; color: #4a5568; text-align: center; vertical-align: middle; }
+  .comparison-table td:first-child { text-align: left; font-weight: 600; color: #2d3748; }
+  .comparison-table tr:nth-child(even) td { background: #fafbfc; }
+
+  /* Pro/Con boxes */
+  .pro-box { border-radius: 8px; padding: 14px 16px; border: 1px solid; }
+  .pro-box.pro { background: #f0fff4; border-color: #c6f6d5; }
+  .pro-box.con { background: #fff5f5; border-color: #fed7d7; }
+  .pro-box-title { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+  .pro-box.pro .pro-box-title { color: #276749; }
+  .pro-box.con .pro-box-title { color: #c53030; }
+  .pro-box ul { margin: 0; padding-left: 16px; }
+  .pro-box ul li { font-size: 13px; color: #4a5568; margin-bottom: 4px; line-height: 1.5; }
+
+  /* Quote box */
+  .quote-box { background: #fffaf0; border-left: 4px solid #ed8936; border-radius: 0 6px 6px 0; padding: 12px 16px; font-size: 14px; color: #744210; line-height: 1.8; margin: 12px 0; }
+
+  /* Tech diagram */
+  .tech-diagram { background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 14px 0; }
+  .tech-row { display: flex; }
+  .tech-zone { padding: 14px 18px; font-size: 13px; font-weight: 600; color: #2d3748; text-align: center; }
+  .header-zone { flex: 1; background: #1a1a2e; color: #fff; }
+  .side-zone { width: 160px; background: #e8f0fe; border-right: 1px solid #c3d9f6; border-top: 1px solid #c3d9f6; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .content-zone { flex: 1; background: #f0f4f8; border-top: 1px solid #c3d9f6; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .tech-z-label { font-size: 11px; font-weight: 400; color: #a0aec0; display: block; margin-top: 2px; }
+
+  /* Wayfinding model */
+  .wayfinding-diagram { display: flex; flex-direction: column; gap: 14px; margin: 14px 0; }
+  .wf-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 18px; }
+  .wf-card-title { font-size: 14px; font-weight: 700; color: #2d3748; margin-bottom: 8px; }
+  .wf-card-desc { font-size: 13px; color: #4a5568; line-height: 1.7; margin-bottom: 8px; }
+  .wf-card-mapping { font-size: 12px; color: #805ad5; background: #faf5ff; border-radius: 4px; padding: 4px 10px; display: inline-block; }
+
+  /* Navigation philosophy */
+  .nav-philosophy-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 14px 0; }
+  .nav-phil-item { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; }
+  .nav-phil-icon { font-size: 24px; margin-bottom: 10px; }
+  .nav-phil-title { font-size: 14px; font-weight: 700; color: #2d3748; margin-bottom: 8px; }
+  .nav-phil-desc { font-size: 13px; color: #4a5568; line-height: 1.7; margin-bottom: 10px; }
+  .nav-phil-examples { font-size: 12px; color: #718096; background: #f7fafc; border-radius: 4px; padding: 4px 10px; }
+
+  /* Dark code-style tree text */
+  .tree-code { background: #1e2537; border-radius: 8px; padding: 18px 22px; font-family: 'Fira Code', 'Consolas', monospace; font-size: 13px; line-height: 1.9; color: #a8d8f0; }
+  .tree-code .dim { color: #5a6b80; }
+  .tree-code .highlight { color: #e94560; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HEADER -->
+<div class="doc-header">
+  <h1>大型软件导航系统设计</h1>
+  <p class="meta">文档版本 v1.0 &nbsp;|&nbsp; 2026-07-13</p>
+</div>
+
+<!-- 概述 -->
+<div class="info-box">
+  <strong>本文档概述：</strong>大型软件的导航系统是用户体验的骨架。系统阐述导航的<strong>模式分类</strong>、<strong>设计原则</strong>、<strong>实现机制</strong>和<strong>领域模型映射</strong>，帮助理解从用户视角的「好导航」到工程实现的完整链路。
+</div>
+
+<hr>
+
+<!-- 一、导航的本质问题 -->
+<h2>一、导航的本质问题</h2>
+<p>导航要解决三个核心问题：</p>
+<ul>
+  <li><strong>我在哪里</strong>：当前位置感知</li>
+  <li><strong>我能去哪里</strong>：可访问路径展示</li>
+  <li><strong>我怎么到达</strong>：路径执行机制</li>
+</ul>
+
+<div class="proto-section">
+  <div class="proto-label">三种软件类型的导航重心</div>
+  <div class="hier-diagram">
+    <div class="hier-level">
+      <div class="hier-label">工具型软件</div>
+      <div class="hier-nodes">
+        <div class="hier-node">IDE / ERP</div>
+        <div class="hier-node light">重在「我能去哪里」+「怎么快速到达」</div>
+      </div>
+    </div>
+    <div class="hier-level">
+      <div class="hier-label">信息型软件</div>
+      <div class="hier-nodes">
+        <div class="hier-node">CMS / 报表</div>
+        <div class="hier-node light">重在「我在哪里」+ 内容探索</div>
+      </div>
+    </div>
+    <div class="hier-level">
+      <div class="hier-label">交易型软件</div>
+      <div class="hier-nodes">
+        <div class="hier-node">电商 / CRM</div>
+        <div class="hier-node light">平衡探索与效率</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>1.2 导航的认知科学基础：Wayfinding 模型</h3>
+<p>从认知科学角度，导航系统解决的是「<strong>Wayfinding</strong>」（寻路）问题。人类在信息空间中的寻路依赖三种心理模型：</p>
+<div class="proto-section">
+  <div class="proto-label">Wayfinding 三要素与导航设计的对应关系</div>
+  <div class="wayfinding-diagram">
+    <div class="wf-card">
+      <div class="wf-card-title">🧭 认知地图（Cognitive Map）</div>
+      <div class="wf-card-desc">用户在大脑中构建的「系统地形图」，包含位置、方向和距离的估计。导航的层级结构、面包屑路径帮助用户建立和维护这个地图。</div>
+      <div class="wf-card-mapping">→ 对应：导航层级深度、面包屑路径、可视化树结构</div>
+    </div>
+    <div class="wf-card">
+      <div class="wf-card-title">📍 空间锚点（Spatial Landmarks）</div>
+      <div class="wf-card-desc">用户在信息空间中识别出的「地标」节点，用于定位和方向判断。高亮当前页、侧边栏选中态都是空间锚点的实现。</div>
+      <div class="wf-card-mapping">→ 对应：当前选中高亮、Tab 激活态、面包屑当前位置</div>
+    </div>
+    <div class="wf-card">
+      <div class="wf-card-title">🔗 路径记忆（Path Memory）</div>
+      <div class="wf-card-desc">用户记住的到达路径。重复访问会强化路径记忆，但层级过深会导致回退困难。最近访问、最近搜索都是路径记忆的辅助工具。</div>
+      <div class="wf-card-mapping">→ 对应：最近访问记录、面包屑回溯、浏览器后退</div>
+    </div>
+  </div>
+</div>
+
+<h3>1.3 导航的三种交互哲学</h3>
+<p>导航模式的选择，本质上是对「用户如何认知系统结构」这一问题的不同回答：</p>
+<div class="nav-philosophy-grid">
+  <div class="nav-phil-item">
+    <div class="nav-phil-icon">🗺️</div>
+    <div class="nav-phil-title">空间隐喻（Space Metaphor）</div>
+    <div class="nav-phil-desc">将信息空间映射为物理空间，用户「走进」不同区域。典型：Sidebar、Top Bar + 子菜单。用户需要学习系统的空间布局。</div>
+    <div class="nav-phil-examples">典型产品：Figma、Notion、飞书</div>
+  </div>
+  <div class="nav-phil-item">
+    <div class="nav-phil-icon">🧵</div>
+    <div class="nav-phil-title">路径叙事（Path Narrative）</div>
+    <div class="nav-phil-desc">将信息空间理解为一条线性路径，用户沿路前进或折返。典型：面包屑、步骤条。强调「你从哪来」，适合层级深的结构。</div>
+    <div class="nav-phil-examples">典型产品：电商后台、文档站点</div>
+  </div>
+  <div class="nav-phil-item">
+    <div class="nav-phil-icon">🔍</div>
+    <div class="nav-phil-title">索引搜索（Index Search）</div>
+    <div class="nav-phil-desc">将系统内容理解为可被搜索的扁平化索引，用户通过关键词直达。典型：Command Palette、全局搜索。绕过层级，最快但需要用户有明确目标。</div>
+    <div class="nav-phil-examples">典型产品：VS Code、Alfred、Linear</div>
+  </div>
+</div>
+
+<h3>1.4 导航状态机：页面状态与跳转的数学描述</h3>
+<p>导航行为可以用状态机形式化描述。页面是状态，导航动作是状态转换：</p>
+<div class="code-block"><code>/* 导航状态机形式化定义 */
+interface NavState {
+  location: string;      // 当前路由路径
+  context: object;       // 上下文数据（筛选条件、选中的实体 ID 等）
+  history: string[];     // 浏览历史（用于后退）
+}
+
+/* 导航动作类型 */
+type NavAction =
+  | { type: 'PUSH', path: string, context?: object }      // 前进到新页面
+  | { type: 'REPLACE', path: string, context?: object }   // 替换当前页面
+  | { type: 'POP' }                                        // 后退
+  | { type: 'RELOAD' }                                     // 刷新
+  | { type: 'CROSS_CONTEXT', path: string, source: string }; // 跨上下文跳转（如从客户跳转订单）
+
+/* 状态转换规则 */
+const navReducer = (state: NavState, action: NavAction): NavState => {
+  switch (action.type) {
+    case 'PUSH':
+      return {
+        location: action.path,
+        context: action.context || {},
+        history: [...state.history, state.location],
+      };
+    case 'POP':
+      const prev = state.history[state.history.length - 1];
+      return {
+        location: prev,
+        context: {}, // 回退时清空上下文（按需可保留）
+        history: state.history.slice(0, -1),
+      };
+    case 'CROSS_CONTEXT':
+      // 跨上下文跳转时，保存来源以便回退
+      return {
+        location: action.path,
+        context: { sourceContext: action.source },
+        history: [...state.history, state.location],
+      };
+    // ...
+  }
+};</code></div>
+
+<h3>1.5 导航性能指标</h3>
+<p>量化评估导航系统健康度的关键指标：</p>
+<table class="check-table">
+  <tr>
+    <th style="width:180px;">指标</th>
+    <th>定义</th>
+    <th style="width:120px;">健康范围</th>
+  </tr>
+  <tr>
+    <td><strong>平均导航深度</strong></td>
+    <td>用户到达目标页面所需的平均点击次数</td>
+    <td>≤ 3 次点击</td>
+  </tr>
+  <tr>
+    <td><strong>迷失率（Lostness）</strong></td>
+    <td>用户在导航过程中表现出迷失行为的比例（Nielsen 定义）</td>
+    <td>&lt; 10%</td>
+  </tr>
+  <tr>
+    <td><strong>回退使用率</strong></td>
+    <td>用户使用「后退」操作占总导航操作的比例（过高说明层级过深）</td>
+    <td>10%-30%</td>
+  </tr>
+  <tr>
+    <td><strong>搜索渗透率</strong></td>
+    <td>用户通过搜索/命令面板到达目标的比例（过高可能说明层级导航失效）</td>
+    <td>20%-50%</td>
+  </tr>
+  <tr>
+    <td><strong>首屏可达时间</strong></td>
+    <td>用户打开系统到看到首个有意义内容的时间</td>
+    <td>&lt; 2 秒</td>
+  </tr>
+</table>
+
+<hr>
+
+<!-- 二、导航模式分类体系 -->
+<h2>二、导航模式分类体系</h2>
+
+<h3>2.1 按作用范围分类</h3>
+<div class="proto-section">
+  <div class="tree-text">
+<span class="dim">导航系统</span>
+<span class="dim">├──</span> <span class="highlight">全局导航</span> <span class="dim">（Global Navigation）</span>
+<span class="dim">│   ├──</span> 顶栏导航（Top Bar）
+<span class="dim">│   ├──</span> 侧边栏导航（Sidebar）
+<span class="dim">│   └──</span> 混合导航（Hamburger + Drawer）
+<span class="dim">├──</span> <span class="highlight">区域导航</span> <span class="dim">（Local Navigation）</span>
+<span class="dim">│   ├──</span> Tab 导航
+<span class="dim">│   ├──</span> 面包屑（Breadcrumb）
+<span class="dim">│   └──</span> 步骤条（Stepper）
+<span class="dim">├──</span> <span class="highlight">上下文导航</span> <span class="dim">（Contextual Navigation）</span>
+<span class="dim">│   ├──</span> 操作面板
+<span class="dim">│   ├──</span> 快捷操作栏
+<span class="dim">│   └──</span> 悬浮菜单
+<span class="dim">└──</span> <span class="highlight">辅助导航</span> <span class="dim">（Assisted Navigation）</span>
+<span class="dim">    ├──</span> 搜索（Search）
+<span class="dim">    ├──</span> 命令面板（Command Palette）
+<span class="dim">    └──</span> 最近访问（Recent / Favorites）</div>
+</div>
+
+<h3>2.2 五种核心导航模式</h3>
+<p>以下五种模式分别对应不同的交互哲学：</p>
+<ul>
+  <li><strong>模式 A/B（空间导航）</strong>：用户在二维布局中移动，视口空间即导航地图</li>
+  <li><strong>模式 C（路径导航）</strong>：用户沿路径前进与回退，强调空间定位感</li>
+  <li><strong>模式 D（搜索导航）</strong>：用户通过文本索引直达目标，完全绕过层级</li>
+  <li><strong>模式 E（时间导航）</strong>：用户分步推进状态，复杂度随时间展开</li>
+</ul>
+<p>详细内容与对比请参见 <strong>第三章「各模式优缺点拆解」</strong>。</p>
+
+<h4>2.2.1 模式 A：顶栏导航（Top Bar）</h4>
+
+<h4>适用场景</h4>
+<p>功能模块数量少（≤7 个）、需要最大化内容区域</p>
+
+<h4>原型演示</h4>
+<div class="proto-section">
+  <div class="proto-label">点击模块后展开侧边子菜单</div>
+  <div class="topbar-proto">
+    <div class="topbar-strip">
+      <div class="topbar-logo">Logo</div>
+      <div class="topbar-tabs">
+        <div class="topbar-tab">模块A</div>
+        <div class="topbar-tab">模块B</div>
+        <div class="topbar-tab active">模块C★</div>
+        <div class="topbar-tab">模块D★</div>
+      </div>
+      <div class="topbar-right">
+        <input class="topbar-search" placeholder="搜索">
+        <div class="topbar-avatar">U</div>
+      </div>
+    </div>
+    <div class="topbar-body">
+      <div class="sidebar">
+        <div class="sidebar-item">子模块1</div>
+        <div class="sidebar-item active">子模块2 ← 当前</div>
+        <div class="sidebar-item">子模块3</div>
+      </div>
+      <div class="content-area">
+        <div class="content-placeholder">主内容区</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h4>技术原理：顶栏固定 + 内容区可滚动</h4>
+<div class="tech-diagram">
+  <div class="tech-row">
+    <div class="tech-zone header-zone">Top Bar 固定<br><span class="tech-z-label">position: fixed; z-index: 100</span></div>
+  </div>
+  <div class="tech-row">
+    <div class="tech-zone side-zone">子导航<br><span class="tech-z-label">position: sticky / 固定</span></div>
+    <div class="tech-zone content-zone">主内容区<br><span class="tech-z-label">flex: 1; overflow-y: auto</span></div>
+  </div>
+</div>
+
+<h4>优缺点</h4>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0;">
+  <div class="pro-box pro">
+    <div class="pro-box-title">✅ 优点</div>
+    <ul>
+      <li>水平空间最小化，顶栏固定不占内容高度</li>
+      <li>响应式友好（桌面 ↔ 移动端顶栏）</li>
+      <li>学习成本最低，标签式心智模型符合直觉</li>
+      <li>快速切换一级模块，全局功能集成友好</li>
+      <li>框架组件库支持完善</li>
+    </ul>
+  </div>
+  <div class="pro-box con">
+    <div class="pro-box-title">❌ 缺点</div>
+    <ul>
+      <li>横向宽度有限，一般只能容纳 ≤7 个模块</li>
+      <li>移动端需收起为抽屉，需二次设计</li>
+      <li>子模块需额外侧边栏</li>
+      <li>深层页面 SEO 受限</li>
+    </ul>
+  </div>
+</div>
+<div class="proto-label" style="margin-top:10px;">最佳场景：功能模块 ≤7、桌面端、内容优先（ERP/BI 低频切换）</div>
+
+<h4>2.2.2 模式 B：侧边栏导航（Sidebar）</h4>
+
+<h4>适用场景</h4>
+<p>功能模块数量多（7-20 个）、需要快速切换</p>
+
+<h4>三种宽度变体原型</h4>
+<div class="sidebar-variants">
+  <div class="sidebar-var">
+    <div class="sidebar-var-header">① 图标+文字（宽 180px）</div>
+    <div class="sidebar-var-body">
+      <div class="sidebar-wide">
+        <div class="sidebar-wide-item active">📊 客户管理</div>
+        <div class="sidebar-wide-item">📦 订单管理</div>
+        <div class="sidebar-wide-item">🏪 商品管理</div>
+      </div>
+    </div>
+  </div>
+  <div class="sidebar-var">
+    <div class="sidebar-var-header">② 仅图标+悬浮文字（窄 52px）</div>
+    <div class="sidebar-var-body">
+      <div style="display:flex;gap:0;align-items:stretch;width:100%;height:100%;">
+        <div class="sidebar-narrow">
+          <div class="sidebar-icon-item active">
+            <div class="icon-circle">📊</div>
+          </div>
+          <div class="sidebar-icon-item">
+            <div class="icon-circle">📦</div>
+          </div>
+          <div class="sidebar-icon-item">
+            <div class="icon-circle">🏪</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sidebar-var">
+    <div class="sidebar-var-header">③ 可折叠侧边栏（宽→窄）</div>
+    <div class="sidebar-var-body">
+      <div style="display:flex;gap:0;align-items:stretch;width:100%;height:100%;">
+        <div class="sidebar-collapse">
+          <div style="font-size:14px;">≡</div>
+          <div style="width:18px;height:18px;background:#e0e6ed;border-radius:4px;margin-top:4px;"></div>
+          <div style="width:18px;height:18px;background:#e0e6ed;border-radius:4px;margin-top:4px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h4>技术原理：Flex 布局实现变体切换</h4>
+<div class="code-block"><code>/* 宽侧边栏 */
+.sidebar { width: 180px; flex-shrink: 0; }
+
+/* 窄侧边栏 */
+.sidebar-collapsed { width: 52px; }
+/* 图标在窄模式下居中 */
+.sidebar-collapsed .nav-item { justify-content: center; padding: 10px; }
+
+/* 展开/收起动画 */
+.sidebar { transition: width 0.3s ease; }</code></div>
+
+<h4>分层设计与聚合根映射</h4>
+<div class="hier-diagram" style="margin:12px 0;">
+  <div class="hier-level">
+    <div class="hier-label">侧边栏一级</div>
+    <div class="hier-nodes">
+      <div class="hier-node">客户管理</div>
+      <div class="hier-node">订单管理</div>
+      <div class="hier-node">商品管理</div>
+    </div>
+  </div>
+  <div class="hier-level">
+    <div class="hier-label">映射</div>
+    <div class="hier-nodes">
+      <div class="hier-node light">→ 聚合根：Customer</div>
+      <div class="hier-node light">→ 聚合根：Order</div>
+      <div class="hier-node light">→ 聚合根：Product</div>
+    </div>
+  </div>
+  <div class="hier-level">
+    <div class="hier-label">二级 Tab</div>
+    <div class="hier-nodes">
+      <div class="hier-node" style="font-size:12px;">列表 | 详情 | 统计</div>
+    </div>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0;">
+  <div class="pro-box pro">
+    <div class="pro-box-title">✅ 优点</div>
+    <ul>
+      <li>纵向列表不受横向宽度限制，可无限添加二级导航</li>
+      <li>鼠标运动距离短，适合频繁切换</li>
+      <li>二级导航可完全展开，SEO 友好</li>
+      <li>三种变体适应不同密度需求</li>
+    </ul>
+  </div>
+  <div class="pro-box con">
+    <div class="pro-box-title">❌ 缺点</div>
+    <ul>
+      <li>横向占用 220-280px，减少内容区宽度</li>
+      <li>收起时需要记忆/手势唤回</li>
+      <li>导航文字过长时换行或截断</li>
+      <li>实现成本较高（动画、响应式变体）</li>
+    </ul>
+  </div>
+</div>
+
+<h4>2.2.3 模式 C：面包屑 + Tab 组合</h4>
+
+<h4>适用场景</h4>
+<p>深层嵌套结构（3 层以上），电商管理后台、商品分类等</p>
+
+<h4>名称溯源</h4>
+<div class="quote-box">「面包屑」典出格林童话《糖果屋》：汉塞尔沿路撒下面包屑标记归途。互联网借喻用户在信息空间走过的路径——告诉用户「你从哪里来」，提供空间定位感和快速回溯能力。与导航菜单（告诉你「有哪些路可走」）互为补充。</div>
+
+<h4>原型演示</h4>
+<div class="proto-section">
+  <div class="proto-label">电商后台：首页 / 商品管理 / 数码整机 / MacBook Pro 详情</div>
+  <div class="breadcrumb-proto">
+    <div class="breadcrumb-strip">
+      <span class="crumb">首页</span>
+      <span class="sep">›</span>
+      <span class="crumb">商品管理</span>
+      <span class="sep">›</span>
+      <span class="crumb">数码整机</span>
+      <span class="sep">›</span>
+      <span class="crumb active">MacBook Pro 详情</span>
+    </div>
+    <div class="tab-strip">
+      <div class="tab-item active">基本信息</div>
+      <div class="tab-item">规格参数</div>
+      <div class="tab-item">价格体系</div>
+      <div class="tab-item">库存管理</div>
+      <div class="tab-item">销售记录</div>
+    </div>
+    <div class="tab-body">聚合根详情（Tab 内切换）</div>
+  </div>
+</div>
+
+<h4>技术原理：URL 即路径</h4>
+<div class="code-block"><code>/* URL 路由映射到面包屑节点 */
+路由: /product/category/12345/detail
+         ──── ─────── ────── ──────
+         首页  一级   二级    三级（聚合根详情）
+
+/* 面包屑数组结构 */
+const breadcrumbs = [
+  { label: '首页',    path: '/' },
+  { label: '商品管理', path: '/product' },
+  { label: '数码整机', path: '/product/category/123' },
+  { label: 'MacBook Pro', path: '/product/category/123/detail/12345' },
+]</code></div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0;">
+  <div class="pro-box pro">
+    <div class="pro-box-title">✅ 优点</div>
+    <ul>
+      <li>网页端标准，用户识别度高</li>
+      <li>精确的空间定位，减少迷路感</li>
+      <li>一键回溯任意中间级</li>
+      <li>层级路径可被搜索引擎索引</li>
+    </ul>
+  </div>
+  <div class="pro-box con">
+    <div class="pro-box-title">❌ 缺点</div>
+    <ul>
+      <li>Tab 条占用 28-32px 高度</li>
+      <li>深层嵌套时面包屑过长</li>
+      <li>需要与 Tab 联动保持状态同步</li>
+    </ul>
+  </div>
+</div>
+
+<h4>2.2.4 模式 D：命令面板（Command Palette）</h4>
+
+<h4>适用场景</h4>
+<p>功能点 >30、高频操作、键盘优先用户、专业工具</p>
+
+<h4>设计思想</h4>
+<p>将所有操作扁平化为「命令搜索」，绕过层级导航。典型快捷键：<code>Ctrl+K</code> / <code>Cmd+K</code> 打开面板，<code>Ctrl+/</code> 切换标签页。</p>
+
+<h4>原型演示</h4>
+<div class="cmd-proto">
+  <div class="cmd-overlay">
+    <div class="cmd-box">
+      <div class="cmd-input-strip">
+        <span class="cmd-icon">⌘</span>
+        <input class="cmd-input" placeholder="输入命令或搜索...">
+        <span class="cmd-shortcut">ESC</span>
+      </div>
+      <div class="cmd-results">
+        <div class="cmd-group-label">最近使用</div>
+        <div class="cmd-item highlight">
+          <div class="cmd-item-icon">📋</div>
+          <div class="cmd-item-text">客户列表<span>客户管理</span></div>
+          <div class="cmd-item-shortcut">↵</div>
+        </div>
+        <div class="cmd-item">
+          <div class="cmd-item-icon">📦</div>
+          <div class="cmd-item-text">订单详情 #20240615<span>订单管理</span></div>
+          <div class="cmd-item-shortcut">↵</div>
+        </div>
+        <div class="cmd-group-label">操作</div>
+        <div class="cmd-item">
+          <div class="cmd-item-icon">➕</div>
+          <div class="cmd-item-text">新建客户<span>客户管理 › 新增</span></div>
+          <div class="cmd-item-shortcut">↵</div>
+        </div>
+        <div class="cmd-item">
+          <div class="cmd-item-icon">📊</div>
+          <div class="cmd-item-text">销售报表<span>报表中心</span></div>
+          <div class="cmd-item-shortcut">↵</div>
+        </div>
+        <div class="cmd-group-label">页面导航</div>
+        <div class="cmd-item">
+          <div class="cmd-item-icon">🏠</div>
+          <div class="cmd-item-text">首页仪表盘<span>首页</span></div>
+          <div class="cmd-item-shortcut">↵</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h4>技术原理：模糊匹配算法</h4>
+<div class="code-block"><code>/* 命令面板核心数据结构 */
+class CommandItem {
+  id: string;
+  label: string;       // 显示文本
+  keywords: string[];  // 搜索关键词
+  category: string;    // 所属分类
+  shortcut?: string;   // 快捷键
+  action: () => void;  // 执行函数
+  permission?: string; // 权限约束
+}
+
+/* 模糊匹配算法（Fuzzy Search） */
+function fuzzyMatch(query: string, text: string): number {
+  // 返回匹配得分：0 = 不匹配，>0 = 匹配（分值越高越相关）
+  let score = 0;
+  let qi = 0; // query index
+  let consecutive = 0;
+
+  for (let i = 0; i < text.length && qi < query.length; i++) {
+    if (text[i] === query[qi]) {
+      score += 1 + consecutive * 2; // 连续匹配加分
+      consecutive++;
+      qi++;
+    } else {
+      consecutive = 0;
+    }
+  }
+  return qi === query.length ? score : 0;
+}
+
+/* 排序：得分 > 最近使用 > 频率 */
+commands.sort((a, b) => {
+  const scoreA = fuzzyMatch(input, a.label);
+  const scoreB = fuzzyMatch(input, b.label);
+  if (scoreA !== scoreB) return scoreB - scoreA;
+  return b.usageCount - a.usageCount;
+});</code></div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0;">
+  <div class="pro-box pro">
+    <div class="pro-box-title">✅ 优点</div>
+    <ul>
+      <li>扁平化所有导航，完全绕过层级</li>
+      <li>全键盘操作流畅</li>
+      <li>功能点 >30 时效率远超层级点击</li>
+      <li>记住后可极快直接到达任意位置</li>
+    </ul>
+  </div>
+  <div class="pro-box con">
+    <div class="pro-box-title">❌ 缺点</div>
+    <ul>
+      <li>新用户不知道此功能</li>
+      <li>无法提供视觉空间结构认知</li>
+      <li>中文输入法延迟</li>
+      <li>实现复杂度高（模糊匹配、权限过滤）</li>
+    </ul>
+  </div>
+</div>
+
+<h4>2.2.5 模式 E：渐进式导航（Progressive Disclosure）</h4>
+
+<h4>适用场景</h4>
+<p>复杂表单、设置页面、配置向导、新手引导</p>
+
+<h4>核心思想</h4>
+<p>分步骤展示，只在需要时显示更多选项。避免信息超载，降低首次使用门槛。</p>
+
+<h4>原型演示</h4>
+<div class="progressive-proto">
+  <div class="prog-step active">
+    <div class="prog-step-header">
+      <div class="prog-step-num">1</div>
+      基础信息
+    </div>
+    <div class="prog-form">
+      <div class="prog-field">
+        <div class="prog-label">名称</div>
+        <input class="prog-input" placeholder="请输入名称">
+      </div>
+      <div class="prog-field">
+        <div class="prog-label">类型</div>
+        <select class="prog-select"><option>请选择类型</option></select>
+      </div>
+    </div>
+  </div>
+  <div class="prog-step">
+    <div class="prog-step-header">
+      <div class="prog-step-num">2</div>
+      高级选项
+      <div class="prog-expand-btn">显示更多选项</div>
+    </div>
+    <div class="prog-extra">
+      <div class="prog-field">
+        <div class="prog-label">有效期</div>
+        <input class="prog-input" placeholder="如：2024-12-31">
+      </div>
+      <div class="prog-field">
+        <div class="prog-label">优先级</div>
+        <select class="prog-select"><option>请选择</option></select>
+      </div>
+      <div class="prog-field">
+        <div class="prog-label">标签</div>
+        <input class="prog-input" placeholder="多选标签">
+      </div>
+    </div>
+  </div>
+</div>
+
+<h4>技术原理：表单状态机</h4>
+<div class="code-block"><code>/* 渐进式表单状态机 */
+interface FormState {
+  currentStep: number;
+  completedSteps: Set<number>;
+  expandedSections: Set<string>;
+  savedData: Record<string, any>;
+}
+
+const formMachine = {
+  initial: 'step1',
+  states: {
+    step1: {
+      on: {
+        NEXT: 'step2',
+        SAVE_DRAFT: 'step1_draft',
+      }
+    },
+    step2: {
+      on: {
+        BACK: 'step1',
+        NEXT: 'step3',
+        TOGGLE_SECTION: 'step2_section_toggled',
+      }
+    },
+    // ...
+  }
+};
+
+/* 分步验证：只验证当前 step */
+function validateStep(step: number, data: any): ValidationResult {
+  const validators = {
+    1: [required('name'), required('type')],
+    2: [optional('expireDate'), optional('priority')],
+    // ...
+  };
+  return runValidators(validators[step], data);
+}</code></div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0;">
+  <div class="pro-box pro">
+    <div class="pro-box-title">✅ 优点</div>
+    <ul>
+      <li>首次加载只显示必填，降低门槛</li>
+      <li>避免信息超载</li>
+      <li>移动端天然适配分步展示</li>
+    </ul>
+  </div>
+  <div class="pro-box con">
+    <div class="pro-box-title">❌ 缺点</div>
+    <ul>
+      <li>需要状态/缓存管理</li>
+      <li>熟练用户可能觉得冗长</li>
+      <li>需要「返回上一步」机制</li>
+    </ul>
+  </div>
+</div>
+
+<hr>
+
+<!-- 四、导航与领域模型的映射 -->
+<h2>四、导航与领域模型的映射</h2>
+
+<h3>3.1 导航层级 vs 聚合根层级</h3>
+<div class="proto-label">导航层级应与业务聚合根层级保持一致</div>
+<div class="hier-diagram">
+  <div class="hier-level">
+    <div class="hier-label">一级导航</div>
+    <div class="hier-nodes">
+      <div class="hier-node highlight">限界上下文<br><small style="font-size:10px;font-weight:normal;color:rgba(255,255,255,0.7)">订单 · 库存 · 客户</small></div>
+    </div>
+  </div>
+  <div class="hier-level">
+    <div class="hier-label">二级导航</div>
+    <div class="hier-nodes">
+      <div class="hier-node">聚合根<br><small style="font-size:10px;font-weight:normal;color:#718096">订单详情 Tab</small></div>
+    </div>
+  </div>
+  <div class="hier-level">
+    <div class="hier-label">三级导航</div>
+    <div class="hier-nodes">
+      <div class="hier-node light">聚合根内实体操作<br><small style="font-size:10px;font-weight:normal">订单明细行操作</small></div>
+    </div>
+  </div>
+</div>
+
+<h3>3.2 聚合根导航设计规则</h3>
+
+<div class="proto-section">
+  <div class="proto-label">规则 1：聚合根是导航终点</div>
+  <div class="flat-deep">
+    <div class="flat-deep-card bad">
+      <div class="flat-deep-header">❌ 错误设计</div>
+      <div class="flat-deep-body">
+        <div class="flat-deep-flow">
+          <div class="flat-deep-node"><span>客户列表</span> <span class="arrow">→</span></div>
+          <div class="flat-deep-node bad"><span>客户卡片</span> <span class="arrow">→</span></div>
+          <div class="flat-deep-node bad"><span>联系人 Tab</span> <span class="arrow">→</span></div>
+          <div class="flat-deep-node bad"><span>联系人详情</span></div>
+        </div>
+        <div style="font-size:12px;color:#c53030;margin-top:8px">4 跳到达，过深的层级</div>
+      </div>
+    </div>
+    <div class="flat-deep-card good">
+      <div class="flat-deep-header">✓ 正确设计</div>
+      <div class="flat-deep-body">
+        <div class="flat-deep-flow">
+          <div class="flat-deep-node"><span>客户列表</span> <span class="arrow">→</span></div>
+          <div class="flat-deep-node good"><span>客户详情页</span></div>
+        </div>
+        <div style="font-size:12px;color:#276749;margin-top:8px">2 跳到达 · Tab 内展示联系人</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="proto-section">
+  <div class="proto-label">规则 2：聚合根内跨实体的操作入口应内聚</div>
+  <div class="agg-proto">
+    <div class="agg-header">
+      <span>订单详情页（聚合根）</span>
+      <span class="agg-root-badge">Order Aggregate</span>
+    </div>
+    <div class="agg-body">
+      <div class="agg-tabs">
+        <div class="agg-tab active">基本信息</div>
+        <div class="agg-tab">商品明细</div>
+        <div class="agg-tab">支付记录</div>
+        <div class="agg-tab">物流信息</div>
+      </div>
+      <div class="agg-content">
+        <div class="agg-entity-list">
+          <div class="agg-entity-item">
+            <span>Order 主信息（基本信息 Tab）</span>
+            <span class="agg-entity-tag">Order</span>
+          </div>
+          <div class="agg-entity-item">
+            <span>OrderItem 列表（商品明细 Tab）</span>
+            <span class="agg-entity-tag">OrderItem</span>
+          </div>
+          <div class="agg-entity-item">
+            <span>Payment 列表（支付记录 Tab）</span>
+            <span class="agg-entity-tag">Payment</span>
+          </div>
+        </div>
+        <div style="margin-top:14px;padding:10px;background:#fff0f2;border-radius:6px;border:1px solid #fed7d7;">
+          <div style="font-size:12px;font-weight:600;color:#e94560;margin-bottom:8px">操作区（统一操作按钮）</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div class="agg-action-btn">确认订单</div>
+            <div class="agg-action-btn">修改地址</div>
+            <div class="agg-action-btn">取消订单</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="proto-section">
+  <div class="proto-label">规则 3：跨聚合根跳转需明确来源上下文</div>
+  <div class="workflow-proto" style="margin-top:12px;">
+    <div style="font-size:13px;color:#718096;margin-bottom:14px">从「客户详情」跳转「订单列表」时的 URL 设计：</div>
+    <div class="workflow-steps">
+      <div class="workflow-step">
+        <div class="workflow-step-circle" style="background:#ebf8ff;color:#3182ce">1</div>
+        <div class="workflow-step-label">客户详情页</div>
+        <div style="font-size:11px;color:#718096;margin-top:4px">/customer/123</div>
+      </div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">
+        <div class="workflow-step-circle" style="background:#3182ce;color:#fff">2</div>
+        <div class="workflow-step-label">带上下文的订单列表</div>
+        <div style="font-size:11px;color:#e94560;font-weight:600;margin-top:4px">/customer/123/orders ✓</div>
+      </div>
+      <div class="workflow-arrow">vs</div>
+      <div class="workflow-step">
+        <div class="workflow-step-circle" style="background:#fff5f5;color:#c53030">3</div>
+        <div class="workflow-step-label">裸跳转（丢失上下文）</div>
+        <div style="font-size:11px;color:#c53030;margin-top:4px;text-decoration:line-through">/orders ✗</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- 五、核心原则 -->
+<h2>五、导航设计的核心原则</h2>
+
+<h3>4.1 层级克制原则（Hierarchy Control）</h3>
+<div class="proto-label">核心规则：单次导航层级差 ≤ 1，最多 3 跳到达目标</div>
+<div class="hierarchy-compare">
+  <div class="hier-compare-card bad">
+    <div class="hier-compare-header">❌ 违反：4 跳到达</div>
+    <div class="hier-compare-body">
+      <div class="hier-compare-flow">
+        <span class="hier-node-step root">首页</span>
+        <span class="hier-arrow">→</span>
+        <span class="hier-node-step l1">一级导航</span>
+        <span class="hier-arrow">→</span>
+        <span class="hier-node-step l2">二级导航</span>
+        <span class="hier-arrow">→</span>
+        <span class="hier-node-step l3">三级导航</span>
+        <span class="hier-arrow">→</span>
+        <span class="hier-node-step l4">详情页</span>
+      </div>
+      <div class="hier-depth">深度 4 · 用户难以「返回」</div>
+    </div>
+  </div>
+  <div class="hier-compare-card good">
+    <div class="hier-compare-header">✓ 正确：3 跳到达</div>
+    <div class="hier-compare-body">
+      <div class="hier-compare-flow">
+        <span class="hier-node-step root">首页</span>
+        <span class="hier-arrow">→</span>
+        <span class="hier-node-step l1">一级导航</span>
+        <span class="hier-arrow">→</span>
+        <span class="hier-node-step l2">二级导航</span>
+        <span class="hier-arrow">→</span>
+        <span class="hier-node-step ok">详情页</span>
+      </div>
+      <div class="hier-depth">深度 3 · 清晰可控</div>
+    </div>
+  </div>
+</div>
+
+<h3>4.2 上下文保留原则（Context Preservation）</h3>
+<div class="proto-label">核心规则：导航切换时保留合理的上下文</div>
+<div class="context-demo">
+  <div class="context-card">
+    <div class="context-header">场景：详情页返回列表</div>
+    <div class="context-body">
+      <div class="context-bar">
+        <span style="font-size:12px;color:#718096;margin-right:4px">筛选条件：</span>
+        <div class="context-chip active">待支付</div>
+        <div class="context-chip">本周</div>
+        <div class="context-chip">金额 &gt; 1000</div>
+        <span style="font-size:11px;color:#a0aec0;margin-left:8px">第 2 页</span>
+      </div>
+      <div style="font-size:12px;color:#38a169;margin-top:8px">✓ 应保留筛选条件和页码</div>
+    </div>
+  </div>
+  <div class="context-card">
+    <div class="context-header">场景：模块间切换</div>
+    <div class="context-body">
+      <div class="context-bar" style="background:#fff;justify-content:center;color:#a0aec0;font-size:12px;">
+        无上下文
+      </div>
+      <div style="font-size:12px;color:#718096;margin-top:8px">✓ 应清空（模块完全独立）</div>
+    </div>
+  </div>
+</div>
+
+<h3>4.3 扁平优先原则（Flat-First）</h3>
+<div class="proto-label">核心规则：能用平级切换解决的，不用层级深入</div>
+<div class="flat-deep">
+  <div class="flat-deep-card bad">
+    <div class="flat-deep-header">❌ 反例：深层钻取</div>
+    <div class="flat-deep-body">
+      <div class="flat-deep-flow">
+        <div class="flat-deep-node bad"><span>商品列表</span> <span class="arrow">→</span></div>
+        <div class="flat-deep-node bad"><span>商品详情</span> <span class="arrow">→</span></div>
+        <div class="flat-deep-node bad"><span>库存 Tab</span> <span class="arrow">→</span></div>
+        <div class="flat-deep-node bad"><span>批次列表</span> <span class="arrow">→</span></div>
+        <div class="flat-deep-node bad"><span>批次详情</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="flat-deep-card good">
+    <div class="flat-deep-header">✓ 正例：平级 Tab 切换</div>
+    <div class="flat-deep-body">
+      <div class="flat-deep-flow" style="flex-direction:row;flex-wrap:wrap;">
+        <div class="flat-deep-node good" style="flex-direction:column;align-items:center;">
+          <div style="display:flex;gap:6px;">
+            <span style="background:#e94560;color:#fff;border:none;padding:4px 12px;border-radius:4px;">商品</span>
+            <span style="background:#ebf8ff;color:#3182ce;border:1px solid #bee3f8;padding:4px 12px;border-radius:4px;">库存</span>
+            <span style="background:#ebf8ff;color:#3182ce;border:1px solid #bee3f8;padding:4px 12px;border-radius:4px;">评价</span>
+          </div>
+          <div style="font-size:10px;color:#718096;margin-top:6px">同级别 Tab 切换</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>4.4 一致性原则（Consistency）</h3>
+<div class="consistency-flow">
+  <div class="consistency-row">
+    <div class="consistency-cell">列表 → 详情</div>
+    <div class="consistency-cell">进入（push）</div>
+    <div class="consistency-cell">订单 → 订单详情</div>
+  </div>
+  <div class="consistency-row">
+    <div class="consistency-cell">详情 → 列表</div>
+    <div class="consistency-cell">返回（back）</div>
+    <div class="consistency-cell">订单详情 → 返回列表</div>
+  </div>
+  <div class="consistency-row">
+    <div class="consistency-cell">新增/编辑</div>
+    <div class="consistency-cell">弹窗或内嵌</div>
+    <div class="consistency-cell">新增订单 → 表单弹窗</div>
+  </div>
+  <div class="consistency-row">
+    <div class="consistency-cell">删除</div>
+    <div class="consistency-cell">确认后留在原处</div>
+    <div class="consistency-cell">删除后留在列表</div>
+  </div>
+  <div class="consistency-row">
+    <div class="consistency-cell">跨模块跳转</div>
+    <div class="consistency-cell">保留面包屑</div>
+    <div class="consistency-cell">从客户跳转订单</div>
+  </div>
+</div>
+
+<h3>4.5 渐进式暴露原则（Progressive Exposure）</h3>
+<div class="proto-label">核心规则：根据用户角色和使用频率，分层展示导航项</div>
+<div class="exposure-levels">
+  <div class="exposure-card">
+    <div class="exposure-level">L1</div>
+    <div class="exposure-label">默认展示</div>
+    <div class="exposure-desc">核心高频功能<br>全部用户可见</div>
+  </div>
+  <div class="exposure-card">
+    <div class="exposure-level">L2</div>
+    <div class="exposure-label">折叠展开</div>
+    <div class="exposure-desc">常用但非核心<br>点击展开</div>
+  </div>
+  <div class="exposure-card">
+    <div class="exposure-level">L3</div>
+    <div class="exposure-label">搜索/命令面板</div>
+    <div class="exposure-desc">长尾功能<br>通过搜索触达</div>
+  </div>
+  <div class="exposure-card">
+    <div class="exposure-level">L4</div>
+    <div class="exposure-label">管理后台可见</div>
+    <div class="exposure-desc">管理员专属<br>权限控制</div>
+  </div>
+</div>
+
+<hr>
+
+<!-- 五、技术实现 -->
+<h2>六、导航的技术实现</h2>
+
+<h3>5.1 路由层设计</h3>
+<div class="proto-label">核心要求：路由即状态，URL 是导航记忆的载体</div>
+<div class="code-block">
+<code>// RESTful 路由设计
+GET    /api/orders              → 订单列表
+GET    /api/orders/{id}         → 订单详情
+POST   /api/orders              → 创建订单
+PUT    /api/orders/{id}         → 更新订单
+DELETE /api/orders/{id}         → 删除订单
+
+// 带有上下文的路由（保留来源上下文）
+GET    /api/customers/{cid}/orders  → 某客户下的订单
+GET    /api/orders/{id}/items       → 某订单下的商品
+
+// 查询参数的导航状态
+GET /api/orders?status=pending&page=2&sort=createdAt,desc</code>
+</div>
+
+<h3>5.2 导航配置驱动化</h3>
+<div class="code-block">
+<code>navigation:
+  - id: "customer"
+    label: "客户管理"
+    icon: "team"
+    path: "/customer"
+    children:
+      - id: "customer-list"
+        label: "客户列表"
+        path: "/customer/list"
+        aggregate: "Customer"      # 关联聚合根
+      - id: "customer-group"
+        label: "客户分组"
+        path: "/customer/group"
+        aggregate: "CustomerGroup"</code>
+</div>
+
+<h3>5.3 导航上下文传递机制</h3>
+<p>跨页面跳转时，上下文（筛选条件、选中实体、来源路径）的传递方式决定了用户体验的连贯性。</p>
+
+<div class="proto-label">URL 状态 vs 内存状态的选择</div>
+<div class="summary-table" style="margin:14px 0;">
+  <table>
+    <tr><th>状态类型</th><th>存储方式</th><th>优点</th><th>缺点</th><th>典型场景</th></tr>
+    <tr><td>路由参数</td><td>URL path/query</td><td>可分享、可刷新后恢复</td><td>URL 过长、安全敏感数据</td><td>列表筛选条件、详情 ID</td></tr>
+    <tr><td>路由状态</td><td>Router store（内存）</td><td>灵活、无限复杂度</td><td>刷新丢失、跨标签页不同步</td><td>Tab 激活状态、展开折叠</td></tr>
+    <tr><td>持久状态</td><td>LocalStorage / 后端</td><td>跨会话保留</td><td>同步复杂度、存储限制</td><td>用户偏好、收藏、最近访问</td></tr>
+    <tr><td>上下文对象</td><td>导航 API 传递</td><td>类型安全、无 URL 暴露</td><td>刷新丢失、调试困难</td><td>详情页的关联实体、临时计算结果</td></tr>
+  </table>
+</div>
+
+<div class="proto-label">上下文传递的四种模式</div>
+<div class="wayfinding-diagram">
+  <div class="wf-card">
+    <div class="wf-card-title">模式 A：Query String 传递</div>
+    <div class="wf-card-desc">将上下文编码为 URL 参数，适合筛选条件、分页等可序列化的状态。</div>
+    <div class="wf-card-mapping">示例：<code>/orders?status=pending&customerId=123&page=1</code></div>
+  </div>
+  <div class="wf-card">
+    <div class="wf-card-title">模式 B：Router Store（内存）</div>
+    <div class="wf-card-desc">将上下文存在路由管理器的内存 store 中，适合临时状态。刷新页面会丢失。</div>
+    <div class="wf-card-mapping">示例：Vue Router <code>router.push({ path, query, state: { from: 'order-list' } })</code></div>
+  </div>
+  <div class="wf-card">
+    <div class="wf-card-title">模式 C：Navigation Context API</div>
+    <div class="wf-card-desc">React Router / TanStack Router 等框架提供的上下文传递机制，类型安全且可调试。</div>
+    <div class="wf-card-mapping">示例：<code>&lt;Link to="/orders" state={{ customerId: 123 }}&gt;</code></div>
+  </div>
+  <div class="wf-card">
+    <div class="wf-card-title">模式 D：全局状态管理器</div>
+    <div class="wf-card-desc">将上下文放在 Redux / Pinia / Zustand 等全局 store 中，适合跨多个页面共享的上下文。</div>
+    <div class="wf-card-mapping">示例：Pinia <code>navigationStore.setContext('currentCustomer', customer)</code></div>
+  </div>
+</div>
+
+<div class="quote-box">最佳实践：优先使用 URL 状态（模式 A/C）传递可序列化的上下文，刷新后自动恢复，体验最接近用户预期。只在必要时使用内存状态，避免上下文丢失。</div>
+
+<h3>5.4 导航状态的持久化</h3>
+<table class="summary-table">
+  <tr><th>状态类型</th><th>存储位置</th><th>过期策略</th></tr>
+  <tr><td>最近访问</td><td>LocalStorage + 后端同步</td><td>保留 20 条</td></tr>
+  <tr><td>收藏页面</td><td>后端用户配置</td><td>永久</td></tr>
+  <tr><td>UI 状态</td><td>LocalStorage</td><td>清缓存时丢失</td></tr>
+  <tr><td>列表状态</td><td>URL 参数</td><td>分享链接时生效</td></tr>
+</table>
+
+<h3>5.5 主流 ERP 厂商导航设计对照</h3>
+<p>各 ERP 厂商的导航设计体现了不同的产品哲学和历史演进路径。下表从导航风格、一级入口、二级导航、特色四个维度进行对照：</p>
+<table class="summary-table" style="font-size:13px;">
+  <tr>
+    <th style="width:120px;">厂商</th>
+    <th style="width:90px;">导航风格</th>
+    <th style="width:130px;">一级入口</th>
+    <th style="width:160px;">二级导航</th>
+    <th>特色</th>
+  </tr>
+  <tr>
+    <td><strong>SAP S/4HANA</strong></td>
+    <td>扁平化 + 命令优先</td>
+    <td>顶栏 + 全局搜索 (SAP Fiori)</td>
+    <td>Facet Filter 筛选侧边栏</td>
+    <td>角色首页（角色化配置）、搜索即导航、设计语言统一（Fiori）</td>
+  </tr>
+  <tr>
+    <td><strong>用友 NC/NCC</strong></td>
+    <td>树形 + 菜单驱动</td>
+    <td>左侧功能树</td>
+    <td>右键菜单 + 弹出面板</td>
+    <td>按业务线分组、菜单树层级深、功能密度高、适合 power user</td>
+  </tr>
+  <tr>
+    <td><strong>金蝶云星空</strong></td>
+    <td>桌面式 + 图标化</td>
+    <td>左侧图标模块（宽面板）</td>
+    <td>展开子菜单 + Tab 页签</td>
+    <td>轻量化、按角色推荐入口、多端适配（桌面/移动）、云原生</td>
+  </tr>
+  <tr>
+    <td><strong>Oracle EBS</strong></td>
+    <td>经典菜单 + 可配置</td>
+    <td>顶栏超链接导航</td>
+    <td>标签页 + 表单嵌套</td>
+    <td>高度可配置、学习曲线陡、适合复杂流程定制、功能成熟稳定</td>
+  </tr>
+  <tr>
+    <td><strong>鼎捷 / 管家婆</strong></td>
+    <td>极简工具栏</td>
+    <td>顶部图标工具栏</td>
+    <td>下拉菜单</td>
+    <td>密集操作型（适合老用户）、轻量、部署简单、快速上手</td>
+  </tr>
+</table>
+<div class="wf-card" style="margin-top:14px;">
+  <div class="wf-card-title">设计哲学的分化</div>
+  <div class="wf-card-desc">
+    <strong>命令优先型</strong>（SAP、金蝶）：以搜索和角色首页为核心，降低菜单层级深度，适合不熟悉系统的用户快速定位功能。<br>
+    <strong>菜单树型</strong>（用友、Oracle EBS）：层级深、功能全，适合 power user 和复杂业务流程，但初期学习成本高。<br>
+    <strong>工具栏型</strong>（鼎捷/管家婆）：极简 UI，密集操作，适合业务单一、操作频繁的中小企业场景。
+  </div>
+</div>
+
+<!-- SAP S/4HANA 原型 -->
+<style>
+/* SAP Fiori 原型样式 */
+.fiori-shell{font-family:'SAP Sans','Segoe UI',sans-serif;background:#f4f4f4;padding:20px;border-radius:8px;margin-bottom:12px;}
+.fiori-topbar{display:flex;align-items:center;background:#fff;padding:8px 20px;border-radius:6px 6px 0 0;box-shadow:0 1px 4px rgba(0,0,0,.1);gap:12px;}
+.fiori-logo{background:#0070f3;color:#fff;font-size:12px;font-weight:700;padding:5px 14px;border-radius:4px;letter-spacing:.5px;}
+.fiori-nav{background:#f0f0f0;padding:3px 4px;border-radius:4px;display:flex;gap:2px;}
+.fiori-nav-item{padding:5px 14px;font-size:13px;color:#444;border-radius:3px;cursor:pointer;}
+.fiori-nav-item.active{background:#0070f3;color:#fff;font-weight:600;}
+.fiori-search{flex:1;max-width:380px;margin:0 auto;}
+.fiori-search-box{background:#f0f0f0;border:1px solid #ddd;border-radius:20px;padding:7px 16px;font-size:13px;color:#999;display:flex;align-items:center;gap:8px;}
+.fiori-user{font-size:12px;color:#666;display:flex;align-items:center;gap:6px;}
+.fiori-home{padding:20px;}
+.fiori-welcome{font-size:14px;color:#222;margin-bottom:16px;}
+.fiori-welcome strong{color:#0070f3;}
+.fiori-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px;}
+.fiori-tile{background:#fff;border-radius:8px;padding:18px;box-shadow:0 2px 6px rgba(0,0,0,.06);cursor:pointer;transition:box-shadow .2s;}
+.fiori-tile:hover{box-shadow:0 4px 12px rgba(0,0,0,.12);}
+.fiori-tile-icon{font-size:28px;margin-bottom:8px;}
+.fiori-tile-title{font-size:13px;color:#222;font-weight:600;margin-bottom:2px;}
+.fiori-tile-sub{font-size:12px;color:#888;}
+.fiori-tile.kpi .fiori-tile-title{font-size:15px;}
+.fiori-panel{display:grid;grid-template-columns:1fr 240px;gap:14px;}
+.fiori-card{background:#fff;border-radius:8px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.06);}
+.fiori-card-title{font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;}
+.fiori-recent-item{font-size:12px;color:#0070f3;padding:5px 0;border-bottom:1px solid #f0f0f0;cursor:pointer;}
+.fiori-recent-item:last-child{border-bottom:none;}
+.fiori-recent-item span{color:#aaa;margin-left:8px;font-size:11px;}
+.fiori-action{background:#0070f3;color:#fff;font-size:12px;padding:8px 14px;border-radius:4px;text-align:center;margin-bottom:8px;cursor:pointer;}
+.fiori-action.secondary{background:#fff;color:#444;border:1px solid #ddd;}
+</style>
+
+<div class="proto-label" style="margin-top:20px;">原型 1：SAP S/4HANA — 扁平化 + 命令优先（Fiori 风格）</div>
+<div class="fiori-shell">
+  <div class="fiori-topbar">
+    <div class="fiori-logo">SAP</div>
+    <div class="fiori-nav">
+      <div class="fiori-nav-item">🏠 首页</div>
+      <div class="fiori-nav-item active">📊 报表</div>
+      <div class="fiori-nav-item">⚙️ 配置</div>
+      <div class="fiori-nav-item">👥 客户</div>
+    </div>
+    <div class="fiori-search">
+      <div class="fiori-search-box">🔍 搜索功能、应用、操作...</div>
+    </div>
+    <div class="fiori-user">👤 管理员 ▼</div>
+  </div>
+  <div class="fiori-home">
+    <div class="fiori-welcome">欢迎回来 — <strong>销售经理</strong></div>
+    <div class="fiori-tiles">
+      <div class="fiori-tile kpi">
+        <div class="fiori-tile-icon">📋</div>
+        <div class="fiori-tile-title">12</div>
+        <div class="fiori-tile-sub">我的任务</div>
+      </div>
+      <div class="fiori-tile kpi">
+        <div class="fiori-tile-icon">💰</div>
+        <div class="fiori-tile-title">¥328,000</div>
+        <div class="fiori-tile-sub">本月销售</div>
+      </div>
+      <div class="fiori-tile kpi">
+        <div class="fiori-tile-icon">👥</div>
+        <div class="fiori-tile-title">156 家</div>
+        <div class="fiori-tile-sub">客户总数</div>
+      </div>
+    </div>
+    <div class="fiori-panel">
+      <div class="fiori-card">
+        <div class="fiori-card-title">最近访问</div>
+        <div class="fiori-recent-item">› 客户列表 <span>2分钟前</span></div>
+        <div class="fiori-recent-item">› 销售订单 SO-2024-0891 <span>15分钟前</span></div>
+        <div class="fiori-recent-item">› 应收款报表 <span>1小时前</span></div>
+      </div>
+      <div>
+        <div class="fiori-action">+ 新建销售订单</div>
+        <div class="fiori-action secondary">新建客户</div>
+        <div class="fiori-action secondary">导出报表</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 用友 NC/NCC 原型 -->
+<style>
+/* 用友 NC 经典样式 */
+.yonyou-shell{font-family:'微软雅黑','Microsoft YaHei',sans-serif;background:#e8ecf0;padding:20px;border-radius:8px;margin-bottom:12px;}
+.yonyou-frame{border:1px solid #b8c4d0;border-radius:6px;overflow:hidden;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.1);}
+.yonyou-titlebar{background:linear-gradient(180deg,#3a6ea5 0%,#2a5a8a 100%);padding:6px 12px;display:flex;align-items:center;gap:8px;}
+.yonyou-title{color:#fff;font-size:12px;font-weight:bold;flex:1;}
+.yonyou-win-btn{width:20px;height:20px;border-radius:3px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;}
+.yonyou-body{display:flex;height:260px;}
+.yonyou-tree{width:200px;background:#f5f7fa;border-right:1px solid #dde3ed;padding:8px 0;overflow-y:auto;flex-shrink:0;}
+.yonyou-tree-node{padding:6px 14px;font-size:12px;color:#334155;cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.yonyou-tree-node:hover{background:#e8eef7;}
+.yonyou-tree-node.active{background:#dce8f9;color:#1d4ed8;font-weight:600;border-left:2px solid #1d4ed8;}
+.yonyou-tree-node.folder{color:#475569;}
+.yonyou-content{flex:1;padding:14px;overflow:hidden;}
+.yonyou-content-title{font-size:14px;font-weight:bold;color:#1e293b;padding-bottom:8px;border-bottom:2px solid #1d4ed8;margin-bottom:12px;}
+.yonyou-toolbar{display:flex;gap:6px;margin-bottom:10px;}
+.yonyou-btn{font-size:12px;padding:5px 12px;border-radius:3px;cursor:pointer;border:1px solid #cbd5e1;background:#fff;color:#475569;}
+.yonyou-btn.primary{background:#1d4ed8;color:#fff;border-color:#1d4ed8;}
+.yonyou-table{width:100%;border-collapse:collapse;font-size:12px;}
+.yonyou-table th{background:#f1f5f9;padding:6px 8px;border:1px solid #e2e8f0;text-align:left;color:#64748b;font-weight:600;}
+.yonyou-table td{padding:6px 8px;border:1px solid #e2e8f0;color:#334155;}
+.yonyou-table tr:hover td{background:#f8fafc;}
+.yonyou-table td a{color:#1d4ed8;text-decoration:none;}
+</style>
+
+<div class="proto-label">原型 2：用友 NC/NCC — 树形 + 菜单驱动</div>
+<div class="yonyou-shell">
+  <div class="yonyou-frame">
+    <div class="yonyou-titlebar">
+      <div class="yonyou-win-btn">☰</div>
+      <div class="yonyou-title">用友 NC 管理系统</div>
+      <div class="yonyou-win-btn">─</div>
+      <div class="yonyou-win-btn">□</div>
+      <div class="yonyou-win-btn">✕</div>
+    </div>
+    <div class="yonyou-body">
+      <div class="yonyou-tree">
+        <div class="yonyou-tree-node folder">📂 企业建模</div>
+        <div class="yonyou-tree-node folder">📁 组织架构</div>
+        <div class="yonyou-tree-node folder">📁 人员信息</div>
+        <div class="yonyou-tree-node active">📄 部门管理</div>
+        <div class="yonyou-tree-node">📄 岗位管理</div>
+        <div class="yonyou-tree-node">📄 人员档案</div>
+        <div class="yonyou-tree-node folder">📂 财务会计</div>
+        <div class="yonyou-tree-node">  📁 总账</div>
+        <div class="yonyou-tree-node">  📁 应收应付</div>
+        <div class="yonyou-tree-node">  📁 固定资产</div>
+        <div class="yonyou-tree-node folder">📂 供应链</div>
+        <div class="yonyou-tree-node folder">📂 客户关系</div>
+        <div class="yonyou-tree-node folder">📂 系统管理</div>
+      </div>
+      <div class="yonyou-content">
+        <div class="yonyou-content-title">部门管理</div>
+        <div class="yonyou-toolbar">
+          <div class="yonyou-btn primary">+ 新增</div>
+          <div class="yonyou-btn">修改</div>
+          <div class="yonyou-btn">删除</div>
+          <div class="yonyou-btn">导出</div>
+          <div class="yonyou-btn">刷新</div>
+        </div>
+        <table class="yonyou-table">
+          <tr>
+            <th style="width:80px;">编码</th>
+            <th>名称</th>
+            <th style="width:100px;">上级部门</th>
+            <th style="width:80px;">负责人</th>
+            <th style="width:60px;">状态</th>
+          </tr>
+          <tr>
+            <td>D001</td>
+            <td><a href="#">销售部</a></td>
+            <td>总公司</td>
+            <td>张明</td>
+            <td>有效</td>
+          </tr>
+          <tr>
+            <td>D002</td>
+            <td><a href="#">财务部</a></td>
+            <td>总公司</td>
+            <td>李华</td>
+            <td>有效</td>
+          </tr>
+          <tr>
+            <td>D003</td>
+            <td><a href="#">市场部</a></td>
+            <td>总公司</td>
+            <td>王芳</td>
+            <td>有效</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 金蝶云星空原型 -->
+<style>
+/* 金蝶云星空样式 */
+.kingdee-shell{font-family:'Microsoft YaHei',sans-serif;background:#eef1f6;padding:20px;border-radius:8px;margin-bottom:12px;}
+.kingdee-frame{display:flex;border:1px solid #c8d0dc;border-radius:6px;overflow:hidden;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);height:260px;}
+.kingdee-icons{width:64px;background:#1a2b4a;padding:10px 0;display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;}
+.kingdee-icon{width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;transition:background .15s;}
+.kingdee-icon:hover{background:#2d5a9e;}
+.kingdee-icon.active{background:#2d5a9e;box-shadow:0 0 0 2px rgba(45,90,158,.4);}
+.kingdee-submenu{width:160px;background:#f0f4ff;border-right:1px solid #dde4ef;padding:10px 0;flex-shrink:0;}
+.kingdee-submenu-title{color:#1a2b4a;font-size:13px;font-weight:bold;padding:6px 14px;border-left:3px solid #2d5a9e;background:#e8eef9;margin-bottom:4px;}
+.kingdee-submenu-item{padding:5px 14px;font-size:12px;color:#334155;cursor:pointer;}
+.kingdee-submenu-item:hover{background:#e8eef9;}
+.kingdee-submenu-item.active{color:#2d5a9e;background:#dce8f9;font-weight:600;}
+.kingdee-main{flex:1;padding:12px 16px;display:flex;flex-direction:column;overflow:hidden;}
+.kingdee-tabs{display:flex;border-bottom:1px solid #e8e8e8;margin-bottom:10px;}
+.kingdee-tab{padding:6px 16px;font-size:12px;color:#64748b;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;}
+.kingdee-tab.active{color:#2d5a9e;font-weight:bold;border-bottom-color:#2d5a9e;}
+.kingdee-toolbar{display:flex;gap:6px;margin-bottom:10px;}
+.kingdee-btn{font-size:12px;padding:5px 12px;border-radius:4px;cursor:pointer;border:1px solid #cbd5e1;background:#fff;color:#475569;}
+.kingdee-btn.primary{background:#2d5a9e;color:#fff;border-color:#2d5a9e;}
+.kingdee-grid{flex:1;background:#fafafa;border:1px solid #e8e8e8;border-radius:4px;padding:12px;font-size:12px;color:#c0ccd8;overflow:hidden;}
+</style>
+
+<div class="proto-label">原型 3：金蝶云星空 — 桌面式 + 图标化</div>
+<div class="kingdee-shell">
+  <div class="kingdee-frame">
+    <div class="kingdee-icons">
+      <div class="kingdee-icon active">🏠</div>
+      <div class="kingdee-icon">📊</div>
+      <div class="kingdee-icon">💰</div>
+      <div class="kingdee-icon">📦</div>
+      <div class="kingdee-icon">👥</div>
+      <div class="kingdee-icon">⚙️</div>
+    </div>
+    <div class="kingdee-submenu">
+      <div class="kingdee-submenu-title">财务会计</div>
+      <div class="kingdee-submenu-item active">▌总账</div>
+      <div class="kingdee-submenu-item">应收款管理</div>
+      <div class="kingdee-submenu-item">应付款管理</div>
+      <div class="kingdee-submenu-item">固定资产</div>
+      <div class="kingdee-submenu-item">出纳管理</div>
+      <div class="kingdee-submenu-item">费用报销</div>
+    </div>
+    <div class="kingdee-main">
+      <div class="kingdee-tabs">
+        <div class="kingdee-tab active">总账</div>
+        <div class="kingdee-tab">凭证</div>
+        <div class="kingdee-tab">账簿</div>
+        <div class="kingdee-tab">报表</div>
+      </div>
+      <div class="kingdee-toolbar">
+        <div class="kingdee-btn primary">+ 新增凭证</div>
+        <div class="kingdee-btn">审核</div>
+        <div class="kingdee-btn">记账</div>
+        <div class="kingdee-btn">过账</div>
+      </div>
+      <div class="kingdee-grid">
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <tr style="color:#94a3b8;">
+            <th style="padding:4px 8px;text-align:left;">凭证号</th>
+            <th style="padding:4px 8px;text-align:left;">日期</th>
+            <th style="padding:4px 8px;text-align:left;">摘要</th>
+            <th style="padding:4px 8px;text-align:right;">借方金额</th>
+            <th style="padding:4px 8px;text-align:right;">贷方金额</th>
+          </tr>
+          <tr style="color:#64748b;">
+            <td style="padding:6px 8px;">记-001</td>
+            <td style="padding:6px 8px;">2024-07-13</td>
+            <td style="padding:6px 8px;">收到客户货款</td>
+            <td style="padding:6px 8px;text-align:right;">¥12,800.00</td>
+            <td style="padding:6px 8px;text-align:right;">¥12,800.00</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Oracle EBS 原型 -->
+<style>
+/* Oracle EBS 经典样式 */
+.oracle-shell{font-family:'Arial',sans-serif;background:#dce3ea;padding:20px;border-radius:8px;margin-bottom:12px;}
+.oracle-frame{border:1px solid #8bacc0;border-radius:4px;overflow:hidden;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.15);height:260px;display:flex;flex-direction:column;}
+.oracle-titlebar{background:linear-gradient(180deg,#0d3c6e 0%,#0a3260 100%);padding:5px 12px;display:flex;align-items:center;gap:8px;}
+.oracle-title{color:#fff;font-size:12px;font-weight:bold;flex:1;}
+.oracle-menubar{background:#1a4971;padding:0 8px;display:flex;}
+.oracle-menu{color:#cce4f7;font-size:12px;padding:5px 10px;cursor:pointer;position:relative;}
+.oracle-menu:hover{background:#0d3c6e;}
+.oracle-content{flex:1;padding:10px 14px;display:flex;flex-direction:column;gap:8px;overflow:hidden;}
+.oracle-toolbar{display:flex;gap:4px;flex-wrap:wrap;}
+.oracle-tool-btn{background:#f4f4f4;border:1px solid #a0a0a0;border-radius:2px;padding:4px 10px;font-size:11px;color:#333;cursor:pointer;display:flex;align-items:center;gap:4px;background-image:linear-gradient(180deg,#fff 0%,#e8e8e8 100%);}
+.oracle-form{border:1px solid #a0a0a0;background:#fff;flex:1;border-radius:2px;padding:10px;overflow:hidden;}
+.oracle-form-header{background:#1a4971;color:#fff;font-size:11px;font-weight:bold;padding:4px 10px;margin:-10px -10px 10px -10px;}
+.oracle-form-row{display:flex;gap:16px;margin-bottom:6px;align-items:flex-start;}
+.oracle-form-label{font-size:11px;color:#555;font-weight:bold;min-width:80px;text-align:right;padding-top:2px;}
+.oracle-form-field{border:1px solid #a0a0a0;border-radius:2px;padding:3px 6px;font-size:11px;color:#333;background:#fff;min-width:160px;}
+.oracle-form-field:focus{border-color:#0d3c6e;outline:none;}
+.oracle-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:6px;}
+.oracle-table th{background:#dce3ea;padding:4px 6px;border:1px solid #a0a0a0;text-align:left;color:#333;font-weight:bold;}
+.oracle-table td{padding:4px 6px;border:1px solid #a0a0a0;color:#333;}
+</style>
+
+<div class="proto-label">原型 4：Oracle EBS — 经典菜单 + 可配置</div>
+<div class="oracle-shell">
+  <div class="oracle-frame">
+    <div class="oracle-titlebar">
+      <div class="oracle-title">Oracle Application</div>
+      <div style="color:#90b8d4;font-size:11px;">职责: 应收管理</div>
+    </div>
+    <div class="oracle-menubar">
+      <div class="oracle-menu">文件(F)</div>
+      <div class="oracle-menu">编辑(E)</div>
+      <div class="oracle-menu">视图(V)</div>
+      <div class="oracle-menu">应收(J)</div>
+      <div class="oracle-menu">报表(R)</div>
+      <div class="oracle-menu">工具(T)</div>
+      <div class="oracle-menu">帮助(H)</div>
+    </div>
+    <div class="oracle-content">
+      <div class="oracle-toolbar">
+        <div class="oracle-tool-btn">🔍 查询</div>
+        <div class="oracle-tool-btn">+ 新建</div>
+        <div class="oracle-tool-btn">✏️ 编辑</div>
+        <div class="oracle-tool-btn">💾 保存</div>
+        <div class="oracle-tool-btn">🗑️ 删除</div>
+        <div class="oracle-tool-btn">📋 明细</div>
+      </div>
+      <div class="oracle-form">
+        <div class="oracle-form-header">应收发票 — 查询条件</div>
+        <div class="oracle-form-row">
+          <div class="oracle-form-label">客户编号:</div>
+          <input class="oracle-form-field" value="CUST-001" style="flex:1;max-width:200px;">
+          <div class="oracle-form-label">发票日期:</div>
+          <input class="oracle-form-field" value="2024-01-01" style="width:120px;">
+          <div class="oracle-form-label">至</div>
+          <input class="oracle-form-field" value="2024-12-31" style="width:120px;">
+        </div>
+        <div class="oracle-form-row">
+          <div class="oracle-form-label">发票状态:</div>
+          <select class="oracle-form-field" style="width:140px;">
+            <option>全部</option>
+            <option>已确认</option>
+            <option>已核销</option>
+          </select>
+        </div>
+        <table class="oracle-table">
+          <tr>
+            <th style="width:90px;">发票编号</th>
+            <th style="width:80px;">客户编号</th>
+            <th>客户名称</th>
+            <th style="width:80px;text-align:right;">发票金额</th>
+            <th style="width:60px;">状态</th>
+          </tr>
+          <tr>
+            <td>INV-2024-001</td>
+            <td>CUST-001</td>
+            <td>北京华联商贸有限公司</td>
+            <td style="text-align:right;">¥12,800.00</td>
+            <td>已确认</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 鼎捷/管家婆原型 -->
+<style>
+/* 鼎捷/管家婆极简工具栏样式 */
+.dingjie-shell{font-family:'Microsoft YaHei',sans-serif;background:#dde2e8;padding:20px;border-radius:8px;margin-bottom:12px;}
+.dingjie-frame{border:1px solid #c0c8d4;border-radius:4px;overflow:hidden;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.1);height:260px;display:flex;flex-direction:column;}
+.dingjie-toolbar{background:#4a5568;padding:6px 12px;display:flex;align-items:center;gap:0;flex-shrink:0;}
+.dingjie-menu{color:#e2e8f0;font-size:12px;padding:5px 12px;cursor:pointer;border-radius:3px;}
+.dingjie-menu:hover{background:#2d3748;}
+.dingjie-menu.active{background:#2d3748;color:#60a5fa;font-weight:bold;}
+.dingjie-shortcuts{display:flex;gap:4px;margin-left:auto;}
+.dingjie-shortcut{background:#2d3748;color:#9ca3af;font-size:11px;padding:4px 8px;border-radius:3px;cursor:pointer;}
+.dingjie-filter{background:#edf2f7;padding:6px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #cbd5e0;flex-shrink:0;}
+.dingjie-filter label{font-size:12px;color:#4a5568;display:flex;align-items:center;gap:4px;}
+.dingjie-input{border:1px solid #cbd5e0;padding:4px 8px;border-radius:3px;font-size:12px;color:#4a5568;background:#fff;width:110px;}
+.dingjie-select{border:1px solid #cbd5e0;padding:4px 8px;border-radius:3px;font-size:12px;color:#4a5568;background:#fff;}
+.dingjie-btn{background:#4a5568;color:#fff;font-size:12px;padding:4px 12px;border-radius:3px;cursor:pointer;border:none;}
+.dingjie-grid{flex:1;overflow:hidden;padding:8px 14px;}
+.dingjie-table{width:100%;border-collapse:collapse;font-size:12px;}
+.dingjie-table th{background:#f7fafc;padding:5px 8px;border:1px solid #e2e8f0;text-align:left;color:#718096;font-weight:600;font-size:11px;text-transform:uppercase;}
+.dingjie-table td{padding:5px 8px;border:1px solid #e2e8f0;color:#4a5568;}
+.dingjie-table tr:hover td{background:#f7fafc;}
+.dingjie-table tr.selected td{background:#ebf4ff;}
+.dingjie-badge{display:inline-block;font-size:11px;padding:2px 6px;border-radius:3px;font-weight:600;}
+.dingjie-badge.done{background:#c6f6d5;color:#276749;}
+.dingjie-badge.pending{background:#fef3c7;color:#92400e;}
+</style>
+
+<div class="proto-label">原型 5：鼎捷 / 管家婆 — 极简工具栏</div>
+<div class="dingjie-shell">
+  <div class="dingjie-frame">
+    <div class="dingjie-toolbar">
+      <div class="dingjie-menu">📦 基础资料</div>
+      <div class="dingjie-menu">🧾 采购</div>
+      <div class="dingjie-menu active">💰 销售</div>
+      <div class="dingjie-menu">📊 库存</div>
+      <div class="dingjie-menu">📈 报表</div>
+      <div class="dingjie-menu">⚙️ 系统</div>
+      <div class="dingjie-shortcuts">
+        <div class="dingjie-shortcut">+ F2新增</div>
+        <div class="dingjie-shortcut">✏️ F3修改</div>
+        <div class="dingjie-shortcut">💾 F4保存</div>
+      </div>
+    </div>
+    <div class="dingjie-filter">
+      <label>单据日期: <input class="dingjie-input" value="2024-07-01"></label>
+      <label>至 <input class="dingjie-input" value="2024-07-13"></label>
+      <label>单据类型: <select class="dingjie-select"><option>全部</option><option>销售订单</option><option>销售出库</option></select></label>
+      <label>客户: <input class="dingjie-input" placeholder="输入客户名称..." style="width:130px;"></label>
+      <div class="dingjie-btn">查询</div>
+      <div style="margin-left:auto;font-size:11px;color:#718096;">共 2 条记录</div>
+    </div>
+    <div class="dingjie-grid">
+      <table class="dingjie-table">
+        <tr>
+          <th style="width:120px;">单据编号</th>
+          <th>客户</th>
+          <th style="width:100px;">业务员</th>
+          <th style="width:100px;text-align:right;">金额</th>
+          <th style="width:70px;text-align:center;">状态</th>
+          <th style="width:80px;">制单日期</th>
+        </tr>
+        <tr class="selected">
+          <td>XS-2024-071301</td>
+          <td>北京华联商贸有限公司</td>
+          <td>张明</td>
+          <td style="text-align:right;color:#e53e3e;">¥12,800.00</td>
+          <td style="text-align:center;"><span class="dingjie-badge done">已审核</span></td>
+          <td>2024-07-13</td>
+        </tr>
+        <tr>
+          <td>XS-2024-071300</td>
+          <td>上海明辉贸易有限公司</td>
+          <td>李华</td>
+          <td style="text-align:right;color:#e53e3e;">¥5,600.00</td>
+          <td style="text-align:center;"><span class="dingjie-badge pending">待审核</span></td>
+          <td>2024-07-12</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- 六、典型场景 -->
+<h2>七、典型场景导航设计</h2>
+
+<h3>场景 1：SaaS 管理后台</h3>
+<div class="proto-label">特征：模块多、层级深、角色复杂</div>
+<div class="topbar-proto" style="border-radius:8px;">
+  <div class="topbar-strip" style="padding:0 8px;">
+    <div class="topbar-logo" style="font-size:12px;padding:5px 10px;">Logo</div>
+    <div class="topbar-tabs" style="font-size:13px;">
+      <div class="topbar-tab active" style="font-size:13px;">首页</div>
+      <div class="topbar-tab" style="font-size:13px;">客户</div>
+      <div class="topbar-tab" style="font-size:13px;">订单</div>
+      <div class="topbar-tab" style="font-size:13px;">商品</div>
+      <div class="topbar-tab" style="font-size:13px;">库存</div>
+      <div class="topbar-tab" style="font-size:13px;">报表</div>
+      <div class="topbar-tab" style="font-size:13px;">设置</div>
+    </div>
+    <div class="topbar-right">
+      <input class="topbar-search" placeholder="搜索..." style="width:140px;">
+      <div class="topbar-avatar" style="width:28px;height:28px;font-size:11px;">Y</div>
+    </div>
+  </div>
+  <div class="topbar-body" style="height:180px;">
+    <div class="sidebar" style="width:140px;">
+      <div style="padding:6px 14px;font-size:11px;color:#a0aec0;font-weight:600;">快捷入口</div>
+      <div class="sidebar-item" style="font-size:12.5px;">🕐 最近访问</div>
+      <div class="sidebar-item" style="font-size:12.5px;">⭐ 紧急待办</div>
+      <div style="padding:6px 14px;font-size:11px;color:#a0aec0;font-weight:600;margin-top:6px;">功能</div>
+      <div class="sidebar-item active" style="font-size:12.5px;">👥 客户列表</div>
+      <div class="sidebar-item" style="font-size:12.5px;">📦 订单管理</div>
+      <div class="sidebar-item" style="font-size:12.5px;">🛒 商品列表</div>
+    </div>
+    <div class="content-area">
+      <div class="content-placeholder">内容区<br><small style="font-size:12px;color:#d0d7e0">首页仪表盘 / 客户列表 / 详情页</small></div>
+    </div>
+  </div>
+</div>
+<div class="proto-desc" style="margin-top:10px;">
+  设计要点：一级导航 ≤ 7 个（7±2 法则） · 二级通过侧边栏展开 · 右上角统一搜索 · 首页作为默认落地页
+</div>
+
+<h3>场景 2：业务流程型应用（CRM/ERP）</h3>
+<div class="proto-label">特征：以实体为中心，强调操作连贯性</div>
+<div class="crm-proto">
+  <div class="crm-header">
+    <span class="crm-back">← 返回</span>
+    <span style="color:#d0d7e0;">|</span>
+    <span>客户列表</span>
+    <span style="color:#d0d7e0;">→</span>
+    <span class="crm-title">客户详情：深圳市腾讯有限公司</span>
+  </div>
+  <div class="crm-body" style="position:relative;">
+    <div class="crm-tabs">
+      <div class="crm-tab-item active">基本信息</div>
+      <div class="crm-tab-item">跟进记录</div>
+      <div class="crm-tab-item">订单历史</div>
+      <div class="crm-tab-item">合同文档</div>
+    </div>
+    <div class="crm-main">
+      <div class="crm-drawer-btn">⚡ 操作</div>
+      <div class="crm-info-row">
+        <div class="crm-info-item">
+          <div class="crm-info-label">客户名称</div>
+          <div class="crm-info-value">深圳市腾讯有限公司</div>
+        </div>
+        <div class="crm-info-item">
+          <div class="crm-info-label">行业</div>
+          <div class="crm-info-value">互联网</div>
+        </div>
+        <div class="crm-info-item">
+          <div class="crm-info-label">客户等级</div>
+          <div class="crm-info-value" style="color:#e94560;">⭐ VIP</div>
+        </div>
+        <div class="crm-info-item">
+          <div class="crm-info-label">最近跟进</div>
+          <div class="crm-info-value">2026-07-10</div>
+        </div>
+      </div>
+      <table class="crm-table">
+        <tr><th>订单编号</th><th>金额</th><th>状态</th><th>下单时间</th><th>操作</th></tr>
+        <tr><td>ORD-20260701</td><td>¥128,000</td><td>已完成</td><td>2026-07-01</td><td><span class="crm-action">查看</span></td></tr>
+        <tr><td>ORD-20260708</td><td>¥56,000</td><td>进行中</td><td>2026-07-08</td><td><span class="crm-action">查看</span></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<h3>场景 3：数据可视化平台</h3>
+<div class="proto-label">特征：多视图切换，强调数据探索</div>
+<div class="dash-proto">
+  <div class="dash-topbar">
+    <div class="dash-tab active">仪表盘</div>
+    <div class="dash-tab">明细数据</div>
+    <div class="dash-tab">报表</div>
+    <div class="dash-tab">设置</div>
+  </div>
+  <div class="dash-toolbar">
+    <div class="dash-tool active">日</div>
+    <div class="dash-tool">周</div>
+    <div class="dash-tool">月</div>
+    <div class="dash-tool">年</div>
+    <div style="flex:1"></div>
+    <div class="dash-tool">↻ 刷新</div>
+    <div class="dash-tool">↓ 导出</div>
+    <div class="dash-tool">🔗 分享</div>
+  </div>
+  <div class="dash-grid">
+    <div class="dash-card">
+      <div class="card-title">今日订单</div>
+      <div class="card-val">1,284</div>
+    </div>
+    <div class="dash-card">
+      <div class="card-title">销售额</div>
+      <div class="card-val">¥328K</div>
+    </div>
+    <div class="dash-card">
+      <div class="card-title">新增客户</div>
+      <div class="card-val">86</div>
+    </div>
+    <div class="dash-card wide">
+      <div class="card-title">销售趋势</div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;color:#c0d0e0;font-size:24px;">📈 折线图区域</div>
+    </div>
+  </div>
+</div>
+
+<h3>场景 4：配置型系统</h3>
+<div class="proto-label">特征：树形层级、多级配置、分组管理</div>
+<div class="config-proto">
+  <div class="config-tree">
+    <div class="config-tree-node">
+      <div class="config-group-label">▾ 基础配置</div>
+      <div class="config-sub-item active">租户设置</div>
+      <div class="config-sub-item">权限配置</div>
+    </div>
+    <div class="config-tree-node">
+      <div class="config-group-label collapsed">▸ 业务配置</div>
+      <div class="config-sub-item" style="display:none;">订单流程</div>
+      <div class="config-sub-item" style="display:none;">支付渠道</div>
+    </div>
+    <div class="config-tree-node">
+      <div class="config-group-label collapsed">▸ 系统配置</div>
+    </div>
+  </div>
+  <div class="config-content">
+    <div class="config-form">
+      <div class="config-form-title">租户设置</div>
+      <div class="config-form-row">
+        <div class="config-form-label">租户名称</div>
+        <div class="config-form-control">
+          <input class="config-form-input" value="深圳市腾讯有限公司">
+        </div>
+      </div>
+      <div class="config-form-row">
+        <div class="config-form-label">租户编码</div>
+        <div class="config-form-control">
+          <input class="config-form-input" value="TENANT_001" style="background:#f7fafc;">
+        </div>
+      </div>
+      <div class="config-form-row">
+        <div class="config-form-label">状态</div>
+        <div class="config-form-control">
+          <select class="config-form-input" style="height:36px;">
+            <option selected>启用</option>
+            <option>禁用</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:16px;">
+        <button class="config-btn">保存配置</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 场景 5：大型 ERP -->
+<h3 style="margin-top:36px">场景 5：大型 ERP 系统导航模式深度分析</h3>
+
+<p style="margin:12px 0;">ERP（Enterprise Resource Planning）系统是信息系统导航复杂度最高的应用类型之一——模块众多（20-100+）、层级深（3-5 层）、角色差异大（管理员/财务/仓库/销售）、数据关联复杂（上下游单据）。理解 ERP 的导航设计，是理解所有复杂信息系统导航的范式参考。</p>
+
+<h4>5.1 ERP 导航复杂度来源</h4>
+<table class="erp-table">
+  <thead>
+    <tr><th>复杂度维度</th><th>ERP 表现</th><th>普通 SaaS 对比</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>模块数量</strong></td><td>20-100+ 个功能模块</td><td>通常 ≤20 个</td></tr>
+    <tr><td><strong>层级深度</strong></td><td>3-5 层（系统→模块→单据类型→单据→操作）</td><td>通常 ≤3 层</td></tr>
+    <tr><td><strong>角色差异</strong></td><td>10+ 种岗位角色，同一界面不同权限</td><td>通常 2-3 种角色</td></tr>
+    <tr><td><strong>数据关联</strong></td><td>上游单据→下游单据，树状/网状依赖</td><td>通常线性</td></tr>
+    <tr><td><strong>操作密度</strong></td><td>批处理、审核流、跨模块操作</td><td>通常单模块操作</td></tr>
+  </tbody>
+</table>
+
+<h4>5.2 典型 ERP 导航架构</h4>
+<p style="margin:8px 0 12px;">以用友 NC/SAP S/4HANA/金蝶云星空为参考，ERP 导航通常采用<strong>混合模式</strong>——顶栏 + 左侧模块树 + 面包屑 + Tab + 快捷操作栏，五层并存。</p>
+
+<div class="erp-arch-proto">
+  <div class="erp-topbar">
+    <span class="erp-logo">ERP</span>
+    <span class="erp-topbar-item">全局搜索 🔍</span>
+    <span class="erp-topbar-item">💬 消息 <em style="color:#e94560">3</em></span>
+    <span class="erp-topbar-item">🏢 切换组织 ▼</span>
+    <span class="erp-topbar-item">👤 张三 ▼</span>
+  </div>
+  <div class="erp-body">
+    <div class="erp-sidebar-tree">
+      <div class="erp-tree-node">
+        <div class="erp-tree-parent active">▸ 财务会计</div>
+        <div class="erp-tree-child active">总账</div>
+        <div class="erp-tree-child">应收</div>
+        <div class="erp-tree-child">应付</div>
+      </div>
+      <div class="erp-tree-node">
+        <div class="erp-tree-parent">▸ 供应链</div>
+      </div>
+      <div class="erp-tree-node">
+        <div class="erp-tree-parent">▸ 生产制造</div>
+      </div>
+      <div class="erp-tree-node">
+        <div class="erp-tree-parent">▸ 人力资源</div>
+      </div>
+    </div>
+    <div class="erp-content">
+      <div class="erp-breadcrumb">财务会计 / 总账 / 凭证管理 / <strong>新增凭证</strong></div>
+      <div class="erp-tabs">
+        <div class="erp-tab active">凭证录入</div>
+        <div class="erp-tab">凭证审核</div>
+        <div class="erp-tab">期末处理</div>
+      </div>
+      <div class="erp-form-area">
+        <div style="color:#a0aec0;font-size:13px;">凭证表单内容区</div>
+      </div>
+      <div class="erp-actionbar">
+        <span class="erp-action">📋 新增</span>
+        <span class="erp-action">💾 保存</span>
+        <span class="erp-action">✅ 审核</span>
+        <span class="erp-action">🖨️ 打印</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h4>5.3 主流 ERP 导航模式对比</h4>
+<table class="erp-table">
+  <thead>
+    <tr><th>厂商</th><th>导航风格</th><th>一级入口</th><th>二级导航</th><th>特色</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>SAP S/4HANA</strong></td><td>扁平化 + 命令优先</td><td>顶栏 + 全局搜索</td><td>Facet Filter</td><td>角色首页（Role-Based Launchpad）</td></tr>
+    <tr><td><strong>用友 NC/NCC</strong></td><td>树形 + 菜单</td><td>左侧功能树</td><td>右键菜单</td><td>按业务线分组，传统稳重</td></tr>
+    <tr><td><strong>金蝶云星空</strong></td><td>桌面式</td><td>左侧图标模块（宽）</td><td>展开子菜单 + Tab</td><td>轻量化，按角色推荐入口</td></tr>
+    <tr><td><strong>Oracle EBS</strong></td><td>经典菜单</td><td>顶栏超链接</td><td>标签页 + 表单</td><td>高度可配置，学习曲线陡</td></tr>
+    <tr><td><strong>鼎捷/管家婆</strong></td><td>极简工具栏</td><td>顶部图标工具栏</td><td>下拉菜单</td><td>密集操作型，适合老用户</td></tr>
+  </tbody>
+</table>
+
+<h4>5.4 ERP 导航四大核心矛盾与解法</h4>
+
+<div class="erp矛盾-grid">
+  <div class="erp矛盾-card">
+    <div class="erp矛盾-title">矛盾一：模块多 vs 界面简洁</div>
+    <div class="erp矛盾-body">
+      <div style="margin-bottom:8px;"><strong>解法：角色首页（Role-Based Launchpad）</strong></div>
+      <div class="erp-quicklaunch">
+        <div class="erp-quick-title">⭐ 快捷入口（用户自定义）</div>
+        <div class="erp-quick-items">
+          <div class="erp-quick-item">采购订单</div>
+          <div class="erp-quick-item">付款申请</div>
+          <div class="erp-quick-item">费用报销</div>
+          <div class="erp-quick-item">合同审批</div>
+        </div>
+      </div>
+      <div class="erp-todo">
+        <div class="erp-todo-title">📋 待办事项</div>
+        <div class="erp-todo-item">· 待审核采购订单（<strong>3</strong>）</div>
+        <div class="erp-todo-item">· 待付款费用单（<strong>1</strong>）</div>
+        <div class="erp-todo-item">· 待签收入库单（<strong>5</strong>）</div>
+      </div>
+      <div style="font-size:12px;color:#718096;margin-top:8px;">
+        渐进式发现：搜索优先，通过全局搜索覆盖 80% 导航需求<br>
+        收藏/常用：支持用户将高频功能加入快捷入口
+      </div>
+    </div>
+  </div>
+
+  <div class="erp矛盾-card">
+    <div class="erp矛盾-title">矛盾二：层级深 vs 操作效率</div>
+    <div class="erp矛盾-body">
+      <div style="margin-bottom:8px;"><strong>典型路径</strong></div>
+      <div style="font-size:13px;color:#718096;margin-bottom:12px;">选模块 → 选单据类型 → 列表页 → 打开单据 → 编辑 → 保存</div>
+      <div style="margin-bottom:8px;"><strong>解法</strong></div>
+      <div style="font-size:12px;color:#4a5568;line-height:1.8;">
+        · <strong>快捷键覆盖全流程</strong>（参考 SAP GUI 快捷键体系）<br>
+        · <strong>快速创建</strong>（Ctrl+N）：任何页面呼出上下文相关创建表单<br>
+        · <strong>单据穿透</strong>：双击列表行直接打开详情<br>
+        · <strong>批处理</strong>：列表页支持批量选择、批量审核
+      </div>
+    </div>
+  </div>
+
+  <div class="erp矛盾-card">
+    <div class="erp矛盾-title">矛盾三：权限复杂 vs 体验一致</div>
+    <div class="erp矛盾-body">
+      <div style="margin-bottom:8px;"><strong>同一单据，不同角色不同按钮</strong></div>
+      <div class="erp-perm-demo">
+        <div class="erp-perm-row">
+          <div class="erp-perm-role">财务角色</div>
+          <div class="erp-perm-actions"><span class="perm-btn primary">💾记账</span><span class="perm-btn">🖨️打印</span></div>
+        </div>
+        <div class="erp-perm-row">
+          <div class="erp-perm-role">仓库角色</div>
+          <div class="erp-perm-actions"><span class="perm-btn primary">📥入库</span><span class="perm-btn">📤出库</span></div>
+        </div>
+        <div class="erp-perm-row">
+          <div class="erp-perm-role">销售角色</div>
+          <div class="erp-perm-actions"><span class="perm-btn disabled" style="background:#f7fafc;color:#cbd5e0;">无操作权限</span></div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:#718096;margin-top:8px;">
+        功能级/按钮级权限控制；无权限时显示占位符并提示「请联系管理员开通」
+      </div>
+    </div>
+  </div>
+
+  <div class="erp矛盾-card">
+    <div class="erp矛盾-title">矛盾四：数据关联深 vs 上下文丢失</div>
+    <div class="erp矛盾-body">
+      <div style="margin-bottom:8px;"><strong>父子单据链（Side Panel 方案）</strong></div>
+      <div class="erp-chain">
+        <div class="erp-chain-item top">上游：供应商「华强电子」→ 采购申请单 #PR-2024-001</div>
+        <div class="erp-chain-item current">当前：采购订单 #PO-2024-089 <span style="background:#ffe4e8;color:#e94560;padding:1px 6px;border-radius:3px;font-size:11px;">待审核</span></div>
+        <div class="erp-chain-item bottom">下游：入库单 #RK-2024-015（待入库）→ 应付单 #YF-2024-007（待生成）</div>
+      </div>
+      <div style="font-size:12px;color:#718096;margin-top:8px;">
+        右侧抽屉（Side Panel）：不离开当前页面查看关联信息<br>
+        多标签页：新窗口打开关联单据，保留工作上下文
+      </div>
+    </div>
+  </div>
+</div>
+
+<h4>5.5 ERP 导航的技术实现要点</h4>
+<table class="erp-table">
+  <thead>
+    <tr><th>技术要点</th><th>说明</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>路由设计</strong></td><td>深层路由携带多级上下文：<code>/finance/gl/voucher/:id/edit</code></td></tr>
+    <tr><td><strong>权限中间件</strong></td><td>每个路由/按钮注册权限点，菜单由权限数据动态渲染</td></tr>
+    <tr><td><strong>状态持久化</strong></td><td>列表页筛选条件、分页状态持久化到 URL 或 LocalStorage</td></tr>
+    <tr><td><strong>多标签页</strong></td><td>ERP 通常需同时打开多个单据，需要 Tab 组管理</td></tr>
+    <tr><td><strong>操作拦截</strong></td><td>离开页面时检查表单是否修改，弹出确认提示</td></tr>
+    <tr><td><strong>操作日志</strong></td><td>每个操作记录操作人、时间、操作内容、修改前后值（审计追溯）</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- 八、常见反模式 -->
+<h2>八、导航设计的常见反模式</h2>
+<div class="antipattern-grid">
+  <div class="antipattern-card">
+    <div class="antipattern-card-header">
+      <span class="antipattern-icon">🌀</span>
+      <span class="antipattern-title">反模式 1：迷宫导航</span>
+    </div>
+    <div class="antipattern-body">
+      <div style="font-size:12px;color:#718096;margin-bottom:8px;">层级过深，用户找不到回去的路</div>
+      <div class="antipattern-flow">
+        <div class="antipattern-flow-item"><span>设置</span> <span class="arrow">→</span></div>
+        <div class="antipattern-flow-item"><span>高级设置</span> <span class="arrow">→</span></div>
+        <div class="antipattern-flow-item"><span>开发者选项</span> <span class="arrow">→</span></div>
+        <div class="antipattern-flow-item"><span>调试模式</span> <span class="arrow">→</span></div>
+        <div class="antipattern-flow-item"><span>启用日志</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="antipattern-card">
+    <div class="antipattern-card-header">
+      <span class="antipattern-icon">🏷️</span>
+      <span class="antipattern-title">反模式 2：标签云导航</span>
+    </div>
+    <div class="antipattern-body">
+      <div style="font-size:12px;color:#718096;margin-bottom:8px;">功能堆砌，没有层级，用户不知道从哪里开始</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        <span style="background:#f1f5f9;border:1px solid #e0e6ed;border-radius:4px;padding:4px 10px;font-size:12px;color:#4a5568;">首页</span>
+        <span style="background:#f1f5f9;border:1px solid #e0e6ed;border-radius:4px;padding:4px 10px;font-size:12px;color:#4a5568;">功能A</span>
+        <span style="background:#f1f5f9;border:1px solid #e0e6ed;border-radius:4px;padding:4px 10px;font-size:12px;color:#4a5568;">功能B</span>
+        <span style="background:#f1f5f9;border:1px solid #e0e6ed;border-radius:4px;padding:4px 10px;font-size:12px;color:#4a5568;">功能C</span>
+        <span style="background:#fff0f0;border:1px solid #fed7d7;border-radius:4px;padding:4px 10px;font-size:12px;color:#c53030;">...</span>
+      </div>
+      <div style="font-size:11px;color:#c53030;margin-top:8px;">20 个标签，无分组，无优先级</div>
+    </div>
+  </div>
+  <div class="antipattern-card">
+    <div class="antipattern-card-header">
+      <span class="antipattern-icon">👻</span>
+      <span class="antipattern-title">反模式 3：隐形导航</span>
+    </div>
+    <div class="antipattern-body">
+      <div style="font-size:12px;color:#718096;margin-bottom:8px;">重要功能藏在右键、悬浮、快捷键中</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:#718096;">
+          <span style="background:#f1f5f9;border:1px solid #e0e6ed;border-radius:4px;padding:3px 8px;">右键菜单</span>
+          <span>→</span>
+          <span style="color:#c53030;">隐藏的导出功能</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:#718096;">
+          <span style="background:#f1f5f9;border:1px solid #e0e6ed;border-radius:4px;padding:3px 8px;">悬浮触发</span>
+          <span>→</span>
+          <span style="color:#c53030;">新用户完全看不到</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:#718096;">
+          <span style="background:#f1f5f9;border:1px solid #e0e6ed;border-radius:4px;padding:3px 8px;">Ctrl+Shift+E</span>
+          <span>→</span>
+          <span style="color:#c53030;">键盘优先用户专属</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="antipattern-card">
+    <div class="antipattern-card-header">
+      <span class="antipattern-icon">🎭</span>
+      <span class="antipattern-title">反模式 4：双重地狱（Double Navigation）</span>
+    </div>
+    <div class="antipattern-body">
+      <div style="font-size:12px;color:#718096;margin-bottom:8px;">两套导航系统并存，用户不知道该用哪一套</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;gap:6px;align-items:flex-start;">
+          <div style="background:#fff0f0;border:1px solid #fed7d7;border-radius:4px;padding:6px 10px;min-width:120px;text-align:center;font-size:12px;color:#c53030;">侧边栏菜单</div>
+          <span style="font-size:12px;color:#718096;padding-top:8px;">+</span>
+          <div style="background:#fff0f0;border:1px solid #fed7d7;border-radius:4px;padding:6px 10px;min-width:120px;text-align:center;font-size:12px;color:#c53030;">顶部 Tab 切换</div>
+          <span style="font-size:12px;color:#718096;padding-top:8px;">+</span>
+          <div style="background:#fff0f0;border:1px solid #fed7d7;border-radius:4px;padding:6px 10px;min-width:120px;text-align:center;font-size:12px;color:#c53030;">页面内面包屑</div>
+        </div>
+        <div style="font-size:11px;color:#c53030;background:#fff5f5;padding:4px 10px;border-radius:4px;">三种导航指向不同层级，用户需要三套心智模型</div>
+      </div>
+    </div>
+  </div>
+  <div class="antipattern-card">
+    <div class="antipattern-card-header">
+      <span class="antipattern-icon">🔁</span>
+      <span class="antipattern-title">反模式 5：上下文丢失</span>
+    </div>
+    <div class="antipattern-body">
+      <div style="font-size:12px;color:#718096;margin-bottom:8px;">跳转后丢失来源上下文，无法返回原状态</div>
+      <div class="antipattern-flow">
+        <div class="antipattern-flow-item good"><span>订单列表</span> <span class="arrow">→</span></div>
+        <div class="antipattern-flow-item"><span>订单详情</span> <span class="arrow">→</span></div>
+        <div class="antipattern-flow-item"><span>编辑保存</span> <span class="arrow">→</span></div>
+        <div class="antipattern-flow-item" style="color:#c53030;"><span>返回列表</span> <span class="arrow" style="color:#c53030;">→</span> <span>筛选条件全丢了 ❌</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- 九、Checklist -->
+<h2>九、导航评估 Checklist</h2>
+
+<div class="proto-label">评分体系说明</div>
+<div style="display:flex;gap:14px;margin:14px 0;flex-wrap:wrap;">
+  <div class="pro-box pro" style="flex:1;min-width:180px;">
+    <div class="pro-box-title">✅ 通过（绿色）</div>
+    <ul><li>满足标准，无需改进</li></ul>
+  </div>
+  <div class="pro-box con" style="flex:1;min-width:180px;">
+    <div class="pro-box-title">❌ 不通过（红色）</div>
+    <ul><li>存在严重问题，需立即修复</li></ul>
+  </div>
+  <div style="flex:1.5;min-width:220px;background:#fffaf0;border:1px solid #ed8936;border-radius:8px;padding:14px 16px;">
+    <div style="font-size:13px;font-weight:700;color:#c05621;margin-bottom:8px;">⚠️ 需评估（橙色）</div>
+    <ul style="margin:0;padding-left:16px;"><li style="font-size:13px;color:#4a5568;margin-bottom:4px;">具体情况具体分析</li><li style="font-size:13px;color:#4a5568;">可能需要权衡利弊后决策</li></ul>
+  </div>
+</div>
+
+<table class="check-table">
+  <tr><th>检查项</th><th>阈值</th><th>问题</th><th>修复建议</th><th>优先级</th></tr>
+  <tr>
+    <td>一级导航项数量</td>
+    <td><strong>≤ 7</strong></td>
+    <td class="check-fail">过多导致认知过载</td>
+    <td>按业务域分组，核心功能提升到一级</td>
+    <td><span style="background:#fed7d7;color:#c53030;padding:2px 8px;border-radius:4px;font-size:11px;">P0</span></td>
+  </tr>
+  <tr>
+    <td>最长导航路径深度</td>
+    <td><strong>≤ 3 跳</strong></td>
+    <td class="check-fail">过深难以返回、迷失率高</td>
+    <td>扁平化、三级以内功能并入抽屉或 Tab</td>
+    <td><span style="background:#fed7d7;color:#c53030;padding:2px 8px;border-radius:4px;font-size:11px;">P0</span></td>
+  </tr>
+  <tr>
+    <td>搜索功能覆盖率</td>
+    <td><strong>≥ 80%</strong></td>
+    <td class="check-warn">功能不可发现</td>
+    <td>补充搜索索引，覆盖核心实体和操作</td>
+    <td><span style="background:#feebc8;color:#c05621;padding:2px 8px;border-radius:4px;font-size:11px;">P1</span></td>
+  </tr>
+  <tr>
+    <td>导航项可发现率</td>
+    <td><strong>≥ 90%</strong></td>
+    <td class="check-warn">存在孤岛页面</td>
+    <td>检查导航树完整性，确保所有页面有入口</td>
+    <td><span style="background:#feebc8;color:#c05621;padding:2px 8px;border-radius:4px;font-size:11px;">P1</span></td>
+  </tr>
+  <tr>
+    <td>返回操作符合预期</td>
+    <td><strong>100%</strong></td>
+    <td class="check-fail">用户迷路、丢失上下文</td>
+    <td>验证浏览器后退 / 面包屑 / 导航菜单的一致性</td>
+    <td><span style="background:#fed7d7;color:#c53030;padding:2px 8px;border-radius:4px;font-size:11px;">P0</span></td>
+  </tr>
+  <tr>
+    <td>权限过滤正确性</td>
+    <td><strong>100%</strong></td>
+    <td class="check-fail">未授权用户看到入口</td>
+    <td>前端菜单 + 后端路由双重鉴权，测试各角色权限</td>
+    <td><span style="background:#fed7d7;color:#c53030;padding:2px 8px;border-radius:4px;font-size:11px;">P0</span></td>
+  </tr>
+  <tr>
+    <td>移动端适配合理</td>
+    <td><strong>功能无缺失</strong></td>
+    <td class="check-warn">功能不可用或体验差</td>
+    <td>Bottom Tab / Drawer 替代侧边栏，核心操作保留</td>
+    <td><span style="background:#feebc8;color:#c05621;padding:2px 8px;border-radius:4px;font-size:11px;">P1</span></td>
+  </tr>
+  <tr>
+    <td>页面加载时间</td>
+    <td><strong>≤ 1.5s</strong></td>
+    <td class="check-warn">导航响应慢</td>
+    <td>懒加载非首屏菜单，骨架屏优化感知速度</td>
+    <td><span style="background:#feebc8;color:#c05621;padding:2px 8px;border-radius:4px;font-size:11px;">P1</span></td>
+  </tr>
+  <tr>
+    <td>导航状态可分享</td>
+    <td><strong>核心页面</strong></td>
+    <td class="check-warn">分享链接后状态丢失</td>
+    <td>列表筛选 / 排序条件编码进 URL</td>
+    <td><span style="background:#feebc8;color:#c05621;padding:2px 8px;border-radius:4px;font-size:11px;">P2</span></td>
+  </tr>
+</table>
+
+<div style="margin-top:12px;font-size:13px;color:#718096;">
+  <strong>评分方法：</strong>P0 项全部通过得 60%基础分；每通过一个 P1 项 +8%，每通过一个 P2 项 +4%。总分 ≥ 80% 为合格，≥ 95% 为优秀。
+</div>
+
+<hr>
+
+<!-- 十、导航设计体现了什么 -->
+<h2>十、导航设计体现了什么</h2>
+<p>导航设计的本质，是将<strong>信息架构</strong>、<strong>用户心智模型</strong>、<strong>业务语义</strong>三重约束投影到可见界面中的过程。</p>
+
+<h3>10.1 体现了信息架构</h3>
+<p>导航是对内容/功能的<strong>分类体系</strong>。它反映了设计者如何理解「什么和什么是同类的，什么和什么是不同的」。</p>
+<div class="success-box" style="margin-top:12px;">
+  <strong>导航是一张语义地图</strong> — 用户在导航中形成的印象，就是对整个产品结构的认知。
+</div>
+
+<h3>10.2 体现了用户心智模型</h3>
+<table class="mental-table">
+  <tr><th>设计选择</th><th>体现的心智假设</th></tr>
+  <tr><td>把「报表」放在顶栏</td><td>用户认为报表是独立功能</td></tr>
+  <tr><td>把「报表」放在「订单」下</td><td>用户认为报表是订单分析的子功能</td></tr>
+  <tr><td>搜索框覆盖全站</td><td>用户习惯用搜索找东西</td></tr>
+  <tr><td>命令面板（Ctrl+K）</td><td>用户习惯键盘操作</td></tr>
+</table>
+
+<h3>10.3 体现了权力与职责的分配</h3>
+<div class="perm-nav">
+  <div class="perm-nav-item">
+    <span>👥 客户管理</span>
+    <span class="perm-badge red">销售可见</span>
+  </div>
+  <div class="perm-nav-item">
+    <span>📊 报表分析</span>
+    <span class="perm-badge blue">经理可见</span>
+  </div>
+  <div class="perm-nav-item">
+    <span>⚙️ 系统设置</span>
+    <span class="perm-badge orange">管理员可见</span>
+  </div>
+  <div class="perm-nav-item">
+    <span>💰 财务对账</span>
+    <span class="perm-badge gray">财务可见</span>
+  </div>
+</div>
+<div class="success-box" style="margin-top:12px;">
+  <strong>导航是一张权限地图</strong> — 它无声地告诉用户：你在这个系统中的角色是什么。
+</div>
+
+<h3>10.4 体现了工作流与任务的抽象</h3>
+<div class="workflow-proto">
+  <div style="font-size:13px;color:#718096;margin-bottom:14px;">导航顺序是一种隐性的流程假设 — 以电商后台为例：</div>
+  <div class="workflow-steps">
+    <div class="workflow-step">
+      <div class="workflow-step-circle">1</div>
+      <div class="workflow-step-label">客户</div>
+    </div>
+    <div class="workflow-arrow">→</div>
+    <div class="workflow-step">
+      <div class="workflow-step-circle" style="background:#3182ce;">2</div>
+      <div class="workflow-step-label">订单</div>
+    </div>
+    <div class="workflow-arrow">→</div>
+    <div class="workflow-step">
+      <div class="workflow-step-circle" style="background:#3182ce;">3</div>
+      <div class="workflow-step-label">物流</div>
+    </div>
+    <div class="workflow-arrow">→</div>
+    <div class="workflow-step">
+      <div class="workflow-step-circle" style="background:#805ad5;">4</div>
+      <div class="workflow-step-label">报表</div>
+    </div>
+  </div>
+  <div style="font-size:12px;color:#a0aec0;margin-top:14px;">「按这个顺序使用系统，是最顺畅的」— 这是设计者对用户完成任务路径的理解。</div>
+</div>
+
+<h3>10.5 体现了复杂度的分层管理</h3>
+<div class="proto-section">
+  <div class="proto-label">导航层级 = 复杂度的分层策略</div>
+  <div class="hier-diagram">
+    <div class="hier-level">
+      <div class="hier-label">一级入口</div>
+      <div class="hier-nodes">
+        <div class="hier-node highlight">7 ± 2 个一级入口</div>
+        <div class="hier-node light">← 压缩到可接受认知范围</div>
+      </div>
+    </div>
+    <div class="hier-level">
+      <div class="hier-label">背后隐藏</div>
+      <div class="hier-nodes">
+        <div class="hier-node" style="font-size:12px;">客户 → 列表 | 分组 | 标签 | 导入 | 黑名单 | ...</div>
+        <div class="hier-node" style="font-size:12px;">订单 → 待支付 | 待发货 | 已发货 | 已完成 | 已取消 | ...</div>
+        <div class="hier-node" style="font-size:12px;">商品 → 列表 | 分类 | 品牌 | 规格 | 价格策略 | ...</div>
+      </div>
+    </div>
+    <div class="hier-level">
+      <div class="hier-label">暴露策略</div>
+      <div class="hier-nodes">
+        <div class="hier-node light">折叠/展开 = 按需暴露</div>
+        <div class="hier-node light">搜索 = 扁平化索引</div>
+        <div class="hier-node light">命令面板 = 绕过层级</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>10.6 体现了聚合根边界的空间表达</h3>
+<div class="proto-section">
+  <div class="proto-label">导航的空间布局，就是领域模型的空间布局</div>
+  <div class="tree-proto" style="margin-top:12px;">
+    <div class="tree-nav">
+      <div style="padding:4px 14px;font-size:11px;font-weight:600;color:#2d3748;margin-bottom:4px;">业务域 A</div>
+      <div class="tree-node">
+        <div class="tree-item active">
+          <span class="tree-toggle open">▾</span>
+          聚合根 A1
+        </div>
+        <div style="padding-left:30px;">
+          <div class="tree-item" style="font-size:12px;color:#718096;">基本信息</div>
+          <div class="tree-item" style="font-size:12px;color:#718096;">子实体 B</div>
+        </div>
+      </div>
+      <div class="tree-node">
+        <div class="tree-item">
+          <span class="tree-toggle">▸</span>
+          聚合根 A2
+        </div>
+      </div>
+      <div style="padding:8px 14px 4px;font-size:11px;font-weight:600;color:#2d3748;margin-top:8px;margin-bottom:4px;">业务域 B</div>
+      <div class="tree-node">
+        <div class="tree-item">
+          <span class="tree-toggle">▸</span>
+          聚合根 B1
+        </div>
+      </div>
+      <div class="tree-node">
+        <div class="tree-item">
+          <span class="tree-toggle">▸</span>
+          聚合根 B2
+        </div>
+      </div>
+    </div>
+    <div class="tree-content">
+      <div class="tree-placeholder">
+        <div>聚合根 A1 详情页</div>
+        <div style="font-size:11px;margin-top:6px;color:#d0d7e0;">Tab 承载子实体 · 右侧抽屉承载即时操作</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>9.7 本质总结</h3>
+<table class="summary-table">
+  <tr><th>本质</th><th>回答</th></tr>
+  <tr><td>体现了信息架构</td><td>如何分类和分组信息</td></tr>
+  <tr><td>体现了心智模型</td><td>如何符合用户已有认知</td></tr>
+  <tr><td>体现了权限体系</td><td>谁能看到什么、能做什么</td></tr>
+  <tr><td>体现了工作流</td><td>什么顺序是最合理的</td></tr>
+  <tr><td>体现了复杂度策略</td><td>如何分层控制认知负担</td></tr>
+  <tr><td>体现了领域模型</td><td>业务边界如何在空间上表达</td></tr>
+</table>
+<div class="success-box">
+  <strong>最终，导航设计体现了设计者对「用户如何在复杂系统中完成任务」的理解深度。</strong> 导航不是功能的索引表，而是业务语义和用户体验之间的翻译层。
+</div>
+
+<hr>
+
+<!-- 十一、UI 是一棵聚合根树 -->
+<h2>十一、UI 是一棵聚合根树</h2>
+
+<h3>11.1 核心认识</h3>
+<p>信息系统的 UI，本质上是一棵<strong>随用户角色动态剪枝的聚合根树</strong>。导航就是在这棵树上：</p>
+<ul>
+  <li><strong>横向跳转</strong>：同一层级的分支之间切换</li>
+  <li><strong>纵向深入</strong>：沿树干从根向叶节点深入</li>
+</ul>
+
+<div class="proto-label">普通树 vs UI 树的区别</div>
+<div class="tree-vs-proto">
+  <div class="tree-vs-col">
+    <div class="tree-vs-title">普通树（静态、整齐）</div>
+    <div class="tree-static">
+      <div class="tree-static-root">根</div>
+      <div class="tree-static-row">
+        <div class="tree-static-node">节点 A</div>
+        <div class="tree-static-node">节点 B</div>
+        <div class="tree-static-node">节点 C</div>
+      </div>
+    </div>
+  </div>
+  <div class="tree-vs-col">
+    <div class="tree-vs-title">UI 树（动态、不均匀、有状态）</div>
+    <div class="tree-dynamic">
+      <div class="tree-dyn-root">根（仪表盘 / 客户列表）</div>
+      <div class="tree-dyn-row">
+        <div class="tree-dyn-node big">客户管理<br><small>大节点：50+字段、10个Tab</small></div>
+        <div class="tree-dyn-node mid">订单管理<br><small>中节点</small></div>
+        <div class="tree-dyn-node small gray">系统设置<br><small>剪枝：某些角色不可见</small></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>11.2 两种运动的本质</h3>
+<div class="motion-proto">
+  <div class="motion-card">
+    <div class="motion-card-header">横向跳转（同一层级）</div>
+    <div class="motion-flow">
+      <div class="motion-flow-item">客户列表</div>
+      <div class="motion-arrow">→</div>
+      <div class="motion-flow-item">订单列表</div>
+    </div>
+    <div class="motion-desc">
+      <strong>含义：</strong>用户换了一个业务域，脑子里需要重新建立上下文<br>
+      <strong>成本：</strong>上下文切换的认知损耗
+    </div>
+  </div>
+  <div class="motion-card">
+    <div class="motion-card-header">纵向深入（沿树干）</div>
+    <div class="motion-flow">
+      <div class="motion-flow-item">订单列表</div>
+      <div class="motion-arrow">→</div>
+      <div class="motion-flow-item">订单详情</div>
+      <div class="motion-arrow">→</div>
+      <div class="motion-flow-item">订单明细</div>
+    </div>
+    <div class="motion-desc">
+      <strong>含义：</strong>用户沿着一条线往下走，任务越来越具体<br>
+      <strong>成本：</strong>层级越深，返回路径越长
+    </div>
+  </div>
+</div>
+
+<h3>11.3 这棵树的三个特征</h3>
+<div class="feature-grid">
+  <div class="feature-card">
+    <div class="feature-num">特征 1</div>
+    <div class="feature-title">节点大小不一</div>
+    <div class="feature-table">
+      <div class="feature-row"><span class="feature-key">开关切换</span><span>1 个字段，2 个选项</span></div>
+      <div class="feature-row"><span class="feature-key">客户详情页</span><span>50+ 字段、10 个 Tab、5 个关联列表</span></div>
+    </div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-num">特征 2</div>
+    <div class="feature-title">节点类型不同</div>
+    <div class="feature-table">
+      <div class="feature-row"><span class="feature-key">叶子节点</span><span>执行具体操作（新建、删除、导出）</span></div>
+      <div class="feature-row"><span class="feature-key">容器节点</span><span>承载子级（列表页、详情页）</span></div>
+      <div class="feature-row"><span class="feature-key">聚合节点</span><span>汇总统计（仪表盘、数据面板）</span></div>
+    </div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-num">特征 3</div>
+    <div class="feature-title">节点有状态</div>
+    <div class="feature-table">
+      <div class="feature-row"><span class="feature-key">当前节点</span><span>高亮显示</span></div>
+      <div class="feature-row"><span class="feature-key">路径节点</span><span>记住来路（面包屑）</span></div>
+      <div class="feature-row"><span class="feature-key">兄弟节点</span><span>可跳转</span></div>
+      <div class="feature-row"><span class="feature-key">剪枝节点</span><span>权限过滤后隐藏</span></div>
+    </div>
+  </div>
+</div>
+
+<h3>11.4 树的根是什么</h3>
+<div class="proto-label">不同系统的根节点不一样</div>
+<div class="root-table">
+  <div class="root-row">
+    <div class="root-cell head">系统类型</div>
+    <div class="root-cell head">根节点</div>
+    <div class="root-cell head">设计含义</div>
+  </div>
+  <div class="root-row">
+    <div class="root-cell">电商后台</div>
+    <div class="root-cell">仪表盘 / 首页</div>
+    <div class="root-cell">数据驱动，先看全局</div>
+  </div>
+  <div class="root-row">
+    <div class="root-cell">CRM</div>
+    <div class="root-cell">客户列表</div>
+    <div class="root-cell">资产优先，核心是客户</div>
+  </div>
+  <div class="root-row">
+    <div class="root-cell">ERP</div>
+    <div class="root-cell">多根并行</div>
+    <div class="root-cell">财务根、供应链根、人力根并列</div>
+  </div>
+  <div class="root-row">
+    <div class="root-cell">IDE</div>
+    <div class="root-cell">文件树 / 项目根</div>
+    <div class="root-cell">开发者视角，以文件为中心</div>
+  </div>
+  <div class="root-row">
+    <div class="root-cell">操作系统</div>
+    <div class="root-cell">桌面 / 开始菜单</div>
+    <div class="root-cell">以应用为单位</div>
+  </div>
+</div>
+<div class="success-box" style="margin-top:12px;">
+  <strong>根 = 用户的第一入口 = 系统认为最重要的东西</strong>
+</div>
+
+<h3>11.5 树的结构决定了什么</h3>
+<div class="structure-proto">
+  <div class="struct-item">
+    <div class="struct-label">树的深度</div>
+    <div class="struct-arrow">→</div>
+    <div class="struct-result">用户完成任务需要多少步</div>
+  </div>
+  <div class="struct-item">
+    <div class="struct-label">树的广度</div>
+    <div class="struct-arrow">→</div>
+    <div class="struct-result">用户面对多少选择（认知负担）</div>
+  </div>
+  <div class="struct-item">
+    <div class="struct-label">分支的分组</div>
+    <div class="struct-arrow">→</div>
+    <div class="struct-result">用户对业务边界的理解</div>
+  </div>
+  <div class="struct-item">
+    <div class="struct-label">节点的一致性</div>
+    <div class="struct-arrow">→</div>
+    <div class="struct-result">用户能否预测操作结果</div>
+  </div>
+  <div class="struct-item">
+    <div class="struct-label">剪枝策略（权限）</div>
+    <div class="struct-arrow">→</div>
+    <div class="struct-result">用户感受到的角色边界</div>
+  </div>
+</div>
+
+<h3>11.6 动态剪枝示例</h3>
+<div class="proto-label">同一棵树，在不同用户角色下，分支不同</div>
+<div class="prune-proto">
+  <div class="prune-col">
+    <div class="prune-title">系统完整结构（设计者视角）</div>
+    <div class="prune-tree">
+      <div class="prune-root">根</div>
+      <div class="prune-level1">
+        <div class="prune-node">客户管理</div>
+        <div class="prune-node">订单管理</div>
+        <div class="prune-node">系统设置</div>
+      </div>
+      <div class="prune-level2">
+        <div class="prune-sub">列表 | 分组 | 标签 | 黑名单</div>
+        <div class="prune-sub">待支付 | 已发货 | 已完成</div>
+        <div class="prune-sub">...</div>
+      </div>
+    </div>
+  </div>
+  <div class="prune-col">
+    <div class="prune-title">销售角色看到的树（剪枝后）</div>
+    <div class="prune-tree pruned">
+      <div class="prune-root">根</div>
+      <div class="prune-level1">
+        <div class="prune-node">客户管理</div>
+        <div class="prune-node">订单管理</div>
+        <div class="prune-node gray-cut">系统设置</div>
+      </div>
+      <div class="prune-level2">
+        <div class="prune-sub">列表 | 标签</div>
+        <div class="prune-sub">待支付</div>
+        <div class="prune-sub gray-cut">—</div>
+      </div>
+    </div>
+    <div class="prune-note">客户分组、黑名单、已完成等分支被剪枝</div>
+  </div>
+</div>
+
+<hr>
+
+<!-- 十二、总结 -->
+<h2>十二、总结</h2>
+<div class="success-box" style="font-size:14px;">
+  导航设计的核心思想：
+  <ul style="margin-top:10px;">
+    <li><strong>层级克制</strong>：层级越浅越好，过深的层级是架构问题</li>
+    <li><strong>上下文感知</strong>：导航行为应理解用户的当前位置和任务</li>
+    <li><strong>聚合根中心</strong>：以业务实体为中心组织导航，而非以功能为中心</li>
+    <li><strong>配置驱动</strong>：导航结构应与代码分离，支持动态调整</li>
+    <li><strong>权限一致</strong>：导航展示与实际操作权限必须一致</li>
+    <li><strong>渐进暴露</strong>：根据用户角色和场景逐步展示功能</li>
+  </ul>
+</div>
+<div class="info-box" style="margin-top:16px;">
+  最终，导航是用户体验的「脊椎」——用户通过导航理解产品结构，通过导航完成任务。好的导航让用户忘记导航的存在，专注于业务目标。
+</div>
+<div class="success-box" style="margin-top:16px; border-left:4px solid #48bb78;">
+  <strong>一句话总结：</strong>信息系统的 UI，是一棵随用户角色动态剪枝的聚合根树，导航就是在这棵树上横向切换分支、纵向深入叶节点。
+</div>
+
+<div style="margin-top:48px;padding-top:20px;border-top:1px solid #e0e6ed;text-align:center;font-size:13px;color:#a0aec0;">
+  文档版本 v1.0 &nbsp;|&nbsp; 创建日期 2026-07-13
+</div>
+
+</div>
+</body>
+</html>

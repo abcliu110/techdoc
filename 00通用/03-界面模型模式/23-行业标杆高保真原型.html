@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>界面模型模式 — 行业标杆高保真原型</title>
+<link rel="stylesheet" href="prototype-styles.css">
+</head>
+<body>
+<div class="nav">
+<h1>UI模式×标杆原型</h1>
+<a href="#m1">1.List Report</a><a href="#m2">2.Object Page</a><a href="#m3">3.Timeline</a>
+<a href="#m4">4.Related Lists</a><a href="#m5">5.Master-Detail</a><a href="#m6">6.Dashboard</a>
+<a href="#m7">7.Kanban</a><a href="#m8">8.Forms</a><a href="#m9">9.Wizard</a>
+<a href="#m10">10.Exception</a><a href="#m11">11.Permission</a><a href="#m12">12.Reconciliation</a>
+<a href="#m13">13.AI Copilot</a><a href="#m14">14.Drill-down</a><a href="#m15">15.Cust360</a>
+</div>
+<!-- M1: List Report (SAP Fiori) -->
+<div class="sec" id="m1"><h2>1. List Report — SAP Fiori</h2><p class="d">Smart Filter Bar + 批量操作栏 + Smart Table</p>
+<div class="mu">
+<div class="hdr sap"><b style="color:#0066cc">SAP</b><span style="flex:1;max-width:280px;height:26px;border:1px solid #d9d9d9;border-radius:13px;display:flex;align-items:center;padding:0 10px;color:#999;font-size:11px">🔍 搜索...</span><span style="margin-left:auto;width:24px;height:24px;border-radius:50%;background:#0066cc;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600">张</span></div>
+<div class="fb"><div class="fi"><label>销售组织</label><input value="1000 华东"></div><div class="fi"><label>渠道</label><input value="10 直销"></div><div class="fi"><label>日期</label><input value="07-01~07-15"></div><button class="btn bp">Go</button><span class="bl" style="margin-left:auto">▾ 高级筛选</span></div>
+<div style="background:#e6f7ff;padding:6px 14px;border-bottom:1px solid #91d5ff;font-size:12px"><b style="color:#1890ff">已选 3 项</b> <button class="btn bp" style="height:22px">批量审批</button> <button class="btn bd" style="height:22px">导出</button></div>
+<table class="t">
+<tr><th style="width:30px"><span class="ck on"></span></th><th>订单号</th><th>客户</th><th>金额</th><th>状态</th><th>交货日</th></tr>
+<tr><td><span class="ck on"></span></td><td>SO00100</td><td>Siemens AG</td><td><b>¥128,000</b></td><td><span class="bg">✓ 已确认</span></td><td>07-20</td></tr>
+<tr><td><span class="ck on"></span></td><td>SO00101</td><td>BMW Group</td><td><b>¥56,000</b></td><td><span class="bo">⏳ 待审批</span></td><td>07-22</td></tr>
+<tr><td><span class="ck on"></span></td><td>SO00102</td><td>BASF SE</td><td><b>¥89,500</b></td><td><span class="bb">📦 已交货</span></td><td>07-15</td></tr>
+<tr><td><span class="ck"></span></td><td>SO00103</td><td>Volkswagen</td><td><b>¥215,000</b></td><td><span class="bo">⏳ 待审批</span></td><td>07-25</td></tr>
+<tr><td><span class="ck"></span></td><td>SO00104</td><td>Bayer AG</td><td><b>¥43,200</b></td><td><span class="br">⚠ 信用冻结</span></td><td>07-18</td></tr>
+</table>
+<div class="pg"><span class="pb2">‹</span><span class="pb2 on">1</span><span class="pb2">2</span><span class="pb2">3</span><span class="pb2">›</span></div>
+</div></div>
+
+<!-- M2: Object Page (Salesforce) -->
+<div class="sec" id="m2"><h2>2. Object Page — Salesforce Lightning</h2><p class="d">三列：Highlights + Related Lists + AI侧栏</p>
+<div class="mu">
+<div class="hdr sf"><b>Salesforce</b><span style="margin-left:auto;width:22px;height:22px;border-radius:50%;background:#fff;color:#0b5cab;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600">张</span></div>
+<div class="sf3">
+<div class="sf3-l"><div style="font-size:11px;color:#8c8c8c;margin-bottom:6px">导航</div><div style="font-size:12px;padding:5px 0;color:#0b5cab;font-weight:600">📝 概览</div><div style="font-size:12px;padding:5px 0;color:#595959">💬 详情</div><div style="font-size:12px;padding:5px 0;color:#595959">📦 相关</div></div>
+<div class="sf3-m">
+<div class="sfh"><div class="nm">Siemens AG</div><div class="fl"><div><label>行业</label><span>制造业</span></div><div><label>年营收</label><span>¥8.5B</span></div><div><label>评分</label><span>⭐A级</span></div><div><label>销售</label><span>张三</span></div></div></div>
+<div style="font-size:13px;font-weight:600;margin:12px 0 8px">相关列表</div>
+<table class="t"><tr><th>订单号</th><th>金额</th><th>状态</th></tr><tr><td>SO00100</td><td>¥128,000</td><td><span class="bg">已确认</span></td></tr><tr><td>SO00101</td><td>¥56,000</td><td><span class="bo">待审批</span></td></tr></table>
+<div style="font-size:13px;font-weight:600;margin:12px 0 8px">活动时间线</div>
+<div style="font-size:11px;border-left:2px solid #e8e8e8;padding-left:12px"><div style="margin-bottom:8px"><b>📧 邮件</b> 今天14:30<br><span style="color:#8c8c8c">回复了客户关于报价的邮件</span></div><div><b>☎ 电话</b> 今天11:00 张三<br><span style="color:#8c8c8c">沟通合同条款</span></div></div>
+</div>
+<div class="sf3-r"><div style="font-size:12px;font-weight:600;margin-bottom:8px">🤖 Einstein 建议</div><div style="background:#e6f4ff;border:1px solid #91d5ff;border-radius:5px;padding:10px;font-size:11px"><b>流失风险：中</b><br>依据：近30天无活动<br>置信度：78%<br><button class="btn bp" style="height:22px;margin-top:5px">安排联系</button></div></div>
+</div></div></div>
+
+<!-- M3: Timeline -->
+<div class="sec" id="m3"><h2>3. Timeline — 三层事件</h2><p class="d">系统/人工/业务状态 三层区分</p>
+<div class="mu">
+<div class="hdr"><b style="color:#0066cc">订单 SO00100 状态历史</b></div>
+<div class="tl">
+<div class="ti"><div class="td2 bz">✓</div><div class="tc2"><div class="tt">07-12 14:30 · 业务状态</div><div class="tn">订单完成</div><div class="td3">系统自动确认收货</div><div class="tv">已发货 → <b>已完成</b></div></div></div>
+<div class="ti"><div class="td2 sys">📦</div><div class="tc2"><div class="tt">07-12 14:00 · 系统事件</div><div class="tn">物流推送成功</div><div class="td3">快递单号 SF123456789</div></div></div>
+<div class="ti"><div class="td2 sys">🔒</div><div class="tc2"><div class="tt">07-12 11:00 · 系统事件</div><div class="tn">库存锁定</div><div class="td3">SKU001 扣减2件</div></div></div>
+<div class="ti"><div class="td2 hu">👤</div><div class="tc2"><div class="tt">07-12 10:35 · 人工操作 · 张三</div><div class="tn">确认订单</div><div class="td3">信用检查通过</div><div class="tv">待审批 → <b>已确认</b></div></div></div>
+<div class="ti"><div class="td2 sys">💳</div><div class="tc2"><div class="tt">07-12 10:32 · 系统事件</div><div class="tn">支付成功</div><div class="td3">微信支付 ¥1,280</div></div></div>
+</div></div></div>
+
+<!-- M4: Related Lists -->
+<div class="sec" id="m4"><h2>4. Related Lists — Salesforce</h2><p class="d">默认5条，View All跳转完整列表</p>
+<div class="mu">
+<div class="hdr sf"><b>客户：Siemens AG</b></div>
+<div class="sc">
+<div style="font-size:13px;font-weight:600;margin-bottom:8px">关联订单 <span style="font-size:11px;color:#8c8c8c;font-weight:400">（显示最近5条）</span></div>
+<table class="t"><tr><th>订单号</th><th>金额</th><th>状态</th><th>日期</th></tr><tr><td>SO00100</td><td>¥128,000</td><td><span class="bg">已确认</span></td><td>07-12</td></tr><tr><td>SO00101</td><td>¥56,000</td><td><span class="bo">待审批</span></td><td>07-14</td></tr><tr><td>SO00098</td><td>¥89,500</td><td><span class="bg">已完成</span></td><td>07-10</td></tr></table>
+<div style="text-align:right;margin-top:8px"><a style="font-size:12px;color:#0b5cab;text-decoration:none">View All (12条) →</a></div>
+</div></div></div>
+
+<!-- M5: Master-Detail -->
+<div class="sec" id="m5"><h2>5. Master-Detail — SAP Flexible Column Layout</h2><p class="d">列表→详情 两栏并列</p>
+<div class="mu">
+<div class="hdr sap"><b style="color:#0066cc">SAP</b> <span style="font-size:12px;color:#595959">订单管理</span></div>
+<div class="md3">
+<div class="md3m">
+<div style="padding:8px 12px;font-size:11px;color:#8c8c8c;border-bottom:1px solid #e8e8e8">[搜索] [筛选:待发货▼]</div>
+<div class="mdi on"><b>SO00100</b> Siemens AG<br>¥128,000 <span class="bg" style="font-size:10px">待发货</span></div>
+<div class="mdi">SO00101 BMW ¥56,000 <span class="bo" style="font-size:10px">待审批</span></div>
+<div class="mdi">SO00102 BASF ¥89,500 <span class="bb" style="font-size:10px">已交货</span></div>
+<div class="mdi">SO00103 VW ¥215,000 <span class="bo" style="font-size:10px">待审批</span></div>
+</div>
+<div class="md3d">
+<div class="oh2" style="border:none;padding:0 0 12px"><div class="tt">订单 SO00100 <span class="bo">待发货</span></div><div class="mt"><span><label>客户：</label>Siemens AG</span><span><label>金额：</label><b>¥128,000</b></span><span><label>已支付：</label>✓</span></div><div class="ac2"><button class="btn bp">发货</button><button class="btn bd">打印</button><button class="btn bd">退款</button></div></div>
+<div style="font-size:13px;font-weight:600;margin-bottom:6px">商品明细</div>
+<table class="t"><tr><th>物料</th><th>数量</th><th>单价</th><th>金额</th></tr><tr><td>电机A型 M001</td><td>100</td><td>¥1,200</td><td>¥120,000</td></tr><tr><td>控制器B M002</td><td>20</td><td>¥400</td><td>¥8,000</td></tr></table>
+</div>
+</div></div></div>
+
+<!-- M6: Dashboard -->
+<div class="sec" id="m6"><h2>6. Dashboard — SAP Fiori Overview Page</h2><p class="d">KPI卡片+图表+异常入口，每个KPI可钻取</p>
+<div class="mu">
+<div class="hdr sap"><b style="color:#0066cc">SAP</b> <span style="font-size:12px;color:#595959">销售概览</span> <span style="margin-left:auto;font-size:11px;color:#8c8c8c">数据截止 07-15 14:00</span></div>
+<div class="fb"><div class="fi"><label>期间</label><input value="2026年7月"></div><div class="fi"><label>区域</label><input value="华东区"></div><button class="btn bp">查询</button></div>
+<div class="kg">
+<div class="kc2"><div class="kt">销售额</div><div class="kv">¥2.8M</div><div class="ktr up">▲ +12.3%</div><div class="ktg">目标¥3.3M 达成85%</div></div>
+<div class="kc2"><div class="kt">订单数</div><div class="kv">1,560</div><div class="ktr down">▼ -3%</div><div class="ktg">环比上月</div></div>
+<div class="kc2"><div class="kt">客单价</div><div class="kv">¥1,800</div><div class="ktr up">▲ +5.2%</div><div class="ktg">行业均值¥1,500</div></div>
+<div class="kc2"><div class="kt">异常订单</div><div class="kv" style="color:#ff4d4f">3</div><div class="ktr">⚠ 待处理</div><div class="ktg"><a style="color:#1890ff">查看异常→</a></div></div>
+</div>
+<div style="padding:0 14px 14px"><div style="background:#fff;border:1px solid #e8e8e8;border-radius:6px;padding:14px"><div style="font-size:13px;font-weight:600;margin-bottom:10px">门店销售趋势</div><div class="bc3"><div class="bar" style="height:60%"><b>¥12K</b><span>人民广场</span></div><div class="bar" style="height:48%"><b>¥9.5K</b><span>浦东店</span></div><div class="bar" style="height:35%"><b>¥6.9K</b><span>徐汇店</span></div><div class="bar" style="height:25%"><b>¥5K</b><span>静安店</span></div><div class="bar" style="height:20%"><b>¥4K</b><span>黄浦店</span></div></div></div></div>
+</div></div>
+
+<!-- M7: Kanban + Path -->
+<div class="sec" id="m7"><h2>7. Kanban + Path — Salesforce</h2><p class="d">Kanban拖拽阶段流转 + Path展示当前阶段关键字段</p>
+<div class="mu">
+<div class="hdr sf"><b>Salesforce</b> <span style="font-size:11px;padding:3px 8px;background:rgba(255,255,255,.2);border-radius:3px">Opportunities</span></div>
+<div class="pth"><div class="ps"><div class="psg done"><span class="psn">✓</span> 资格认定</div><span class="par">→</span><div class="psg done"><span class="psn">✓</span> 需求分析</div><span class="par">→</span><div class="psg cur"><span class="psn">3</span> 方案报价</div><span class="par">→</span><div class="psg"><span class="psn">4</span> 谈判</div><span class="par">→</span><div class="psg"><span class="psn">5</span> 成交</div></div></div>
+<div class="kan">
+<div class="kc"><div class="kch">资格认定 <span class="kan-sum">¥56K</span></div><div class="kcd"><div class="kt">BMW Group</div><div class="ka">¥56,000</div><div class="km"><span>张三</span><span>07-14</span></div></div></div>
+<div class="kc"><div class="kch">需求分析 <span class="kan-sum">¥89K</span></div><div class="kcd"><div class="kt">BASF SE</div><div class="ka">¥89,500</div><div class="km"><span>李四</span><span>07-12</span></div></div></div>
+<div class="kc"><div class="kch" style="color:#0b5cab">方案报价(当前) <span class="kan-sum">¥128K</span></div><div class="kcd" style="border-left-color:#0b5cab"><div class="kt">Siemens AG</div><div class="ka">¥128,000</div><div class="km"><span>张三</span><span>07-15</span></div></div></div>
+<div class="kc"><div class="kch">谈判 <span class="kan-sum">¥215K</span></div><div class="kcd"><div class="kt">Volkswagen</div><div class="ka">¥215,000</div><div class="km"><span>王五</span><span>07-10</span></div></div></div>
+<div class="kc"><div class="kch">成交 <span class="kan-sum">¥43K</span></div><div class="kcd"><div class="kt">Bayer AG</div><div class="ka">¥43,200</div><div class="km"><span>赵六</span><span>07-08</span></div></div></div>
+</div></div></div>
+
+<!-- M8: Forms (Modal + Drawer) -->
+<div class="sec" id="m8"><h2>8. 表单族 — Modal Form + Drawer Form</h2><p class="d">Modal(高风险确认) + Drawer(列表内快速编辑)</p>
+<div style="display:flex;gap:16px">
+<div style="flex:1"><div class="mu" style="margin:0">
+<div class="hdr"><b style="color:#ff4d4f">⚠ Modal Form — 退款确认</b></div>
+<div class="mo" style="padding:20px;justify-content:center">
+<div class="md2">
+<div class="mh2"><span class="mt">确认退款</span><span class="mx">×</span></div>
+<div class="mb2"><p><b>订单号：</b>SO00100</p><p><b>原支付金额：</b>¥1,280.00</p><p><b>退款金额：</b><span style="color:#ff4d4f;font-size:16px;font-weight:700">¥1,280.00</span> (原路退回)</p><p style="margin-top:8px"><b>退款原因 *</b></p><div style="border:1px solid #d9d9d9;border-radius:4px;padding:6px 8px;font-size:12px;color:#8c8c8c;min-height:50px">顾客误拍，已与顾客确认...</div><div class="mw2">⚠ 退款后将退回原支付方式，预计1-3个工作日到账</div></div>
+<div class="mf2"><button class="btn bd">取消</button><button class="btn bx">确认退款</button></div>
+</div></div>
+</div></div>
+<div style="flex:1"><div class="mu" style="margin:0">
+<div class="hdr"><b style="color:#1890ff">Drawer Form — 快速编辑备注</b></div>
+<div class="dr2">
+<div class="dr2-l"><div style="font-size:11px;color:#8c8c8c;margin-bottom:6px">订单列表</div><div style="background:#fff;padding:6px 10px;border-radius:4px;margin-bottom:4px;font-size:12px">SO00100 ¥1,280</div><div style="background:#e6f7ff;padding:6px 10px;border-radius:4px;margin-bottom:4px;font-size:12px;border-left:3px solid #1890ff">SO00101 ¥456 ← 编辑中</div><div style="background:#fff;padding:6px 10px;border-radius:4px;font-size:12px">SO00102 ¥89</div></div>
+<div class="dr2-p">
+<div class="mh2" style="padding:12px 16px"><span class="mt" style="font-size:13px">编辑备注 — SO00101</span><span class="mx">×</span></div>
+<div style="flex:1;padding:16px;overflow:auto"><p style="font-size:12px;margin-bottom:4px"><b>订单号</b></p><div style="border:1px solid #d9d9d9;border-radius:4px;padding:6px 8px;font-size:12px;margin-bottom:12px;background:#f5f5f5">SO00101</div><p style="font-size:12px;margin-bottom:4px"><b>备注</b></p><div style="border:1px solid #1890ff;border-radius:4px;padding:6px 8px;font-size:12px;min-height:60px;background:#fff">顾客要求下午配送，请在18:00前送达</div></div>
+<div style="padding:10px 16px;border-top:1px solid #e8e8e8;display:flex;justify-content:flex-end;gap:6px"><button class="btn bd">取消</button><button class="btn bp">保存</button></div>
+</div>
+</div></div></div>
+</div></div>
+
+<!-- M9: Wizard -->
+<div class="sec" id="m9"><h2>9. Wizard — 开店配置向导</h2><p class="d">分步表单：一步一任务，最后总览确认</p>
+<div class="mu">
+<div class="hdr ant"><b>Ant Design Pro</b> <span style="font-size:11px;color:rgba(255,255,255,.65)">开店配置</span></div>
+<div class="wz">
+<div class="wzs done"><span class="wzsn">✓</span> 基础信息</div><div class="wzc" style="background:#52c41a"></div>
+<div class="wzs cur"><span class="wzsn">2</span> 业务配置</div><div class="wzc"></div>
+<div class="wzs"><span class="wzsn">3</span> 硬件配置</div><div class="wzc"></div>
+<div class="wzs"><span class="wzsn">4</span> 预览确认</div>
+</div>
+<div class="wzb">
+<div style="font-size:14px;font-weight:600;margin-bottom:12px">步骤 2/4：业务配置</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div><label style="font-size:12px;color:#8c8c8c;display:block;margin-bottom:4px">营业时间 *</label><input style="width:100%;height:32px;border:1px solid #d9d9d9;border-radius:4px;padding:0 8px" value="09:00 - 22:00"></div>
+<div><label style="font-size:12px;color:#8c8c8c;display:block;margin-bottom:4px">主营类目 *</label><select style="width:100%;height:32px;border:1px solid #d9d9d9;border-radius:4px;padding:0 8px"><option>零售 > 食品</option></select></div>
+<div><label style="font-size:12px;color:#8c8c8c;display:block;margin-bottom:4px">税率 *</label><select style="width:100%;height:32px;border:1px solid #d9d9d9;border-radius:4px;padding:0 8px"><option>13%</option></select></div>
+<div><label style="font-size:12px;color:#8c8c8c;display:block;margin-bottom:4px">支付方式</label><select style="width:100%;height:32px;border:1px solid #d9d9d9;border-radius:4px;padding:0 8px"><option>微信+支付宝+现金</option></select></div>
+</div>
+</div>
+<div class="wzf"><button class="btn bd">上一步</button><button class="btn bp">下一步 →</button></div>
+</div></div>
+
+<!-- M10: Exception Center -->
+<div class="sec" id="m10"><h2>10. Exception Center — 异常中心</h2><p class="d">分级Tab + 绑定对象 + 受控处理动作</p>
+<div class="mu">
+<div class="hdr"><b style="color:#ff4d4f">⚠ 异常处理中心</b></div>
+<div class="ets">
+<div class="et on">全部 <span class="c">12</span></div>
+<div class="et">支付异常 <span class="c">3</span></div>
+<div class="et">库存异常 <span class="c">2</span></div>
+<div class="et">同步异常 <span class="c">7</span></div>
+</div>
+<div class="ei"><div class="eii">🔴</div><div class="eib"><div class="eit">支付回调超时</div><div class="eid">订单 SO00103 · ¥89 · 微信支付 · 10:32</div><div class="eia"><a>查询渠道结果</a><a>幂等补记</a><a>升级处理</a></div></div></div>
+<div class="ei"><div class="eii">🔴</div><div class="eib"><div class="eit">支付回调超时</div><div class="eid">订单 SO00104 · ¥200 · 支付宝 · 10:45</div><div class="eia"><a>查询渠道结果</a><a>幂等补记</a><a>升级处理</a></div></div></div>
+<div class="ei"><div class="eii">🟠</div><div class="eib"><div class="eit">库存扣减失败</div><div class="eid">SKU001 · 当前库存0 · 需求2 · 09:15</div><div class="eia"><a>核验可售库存</a><a>转人工分配</a></div></div></div>
+</div></div>
+
+<!-- M11: Permission Matrix -->
+<div class="sec" id="m11"><h2>11. Permission Matrix — 权限矩阵</h2><p class="d">角色×权限交叉矩阵 + ✓/✗/◐/继承 多状态</p>
+<div class="mu">
+<div class="hdr"><b style="color:#0066cc">权限配置</b> <span style="margin-left:auto;font-size:11px;color:#8c8c8c">本次变更将影响3个用户</span></div>
+<div style="padding:14px">
+<table class="ptbl">
+<tr><th>权限项</th><th>店长</th><th>收银员</th><th>财务</th><th>客服</th></tr>
+<tr><td>订单查看</td><td><span class="pck">✓</span></td><td><span class="pck">✓</span></td><td><span class="pck">✓</span></td><td><span class="pck">✓</span></td></tr>
+<tr><td>订单新增</td><td><span class="pck">✓</span></td><td><span class="pck">✓</span></td><td><span class="pcr">✗</span></td><td><span class="pcr">✗</span></td></tr>
+<tr><td>订单编辑</td><td><span class="pck">✓</span></td><td><span class="pmx">◐</span></td><td><span class="pcr">✗</span></td><td><span class="pcr">✗</span></td></tr>
+<tr><td>退款审核</td><td><span class="pck">✓</span></td><td><span class="pcr">✗</span></td><td><span class="pck">✓</span></td><td><span class="pcr">✗</span></td></tr>
+<tr><td>报表查看</td><td><span class="pck">✓</span></td><td><span class="pcr">✗</span></td><td><span class="pin">✓继承</span></td><td><span class="pck">✓</span></td></tr>
+<tr><td>退款>¥500</td><td><span class="pck">✓</span></td><td><span class="pcr">✗</span></td><td><span class="pck">✓</span></td><td><span class="pcr">✗</span></td></tr>
+</table>
+<div style="margin-top:10px;display:flex;justify-content:flex-end;gap:6px"><button class="btn bd">取消</button><button class="btn bp">保存配置</button></div>
+</div></div></div>
+
+<!-- M12: Reconciliation -->
+<div class="sec" id="m12"><h2>12. Reconciliation — 对账工作台</h2><p class="d">系统流水 vs 第三方流水 同屏对比 + 差异处理</p>
+<div class="mu">
+<div class="hdr"><b style="color:#0066cc">支付对账工作台</b> <span style="margin-left:auto;font-size:11px;color:#8c8c8c">对账日期 2026-07-14</span></div>
+<div class="rsum"><div class="rsum-it"><span class="rsum-l">系统流水</span><span class="rsum-v">¥28,450</span></div><div class="rsum-it"><span class="rsum-l">第三方流水</span><span class="rsum-v">¥28,430</span></div><div class="rsum-it"><span class="rsum-l">差异金额</span><span class="rsum-v" style="color:#ff4d4f">¥20 (2笔)</span></div></div>
+<table class="rtbl">
+<tr><th>状态</th><th>订单号</th><th>系统金额</th><th>第三方金额</th><th>差异</th><th>操作</th></tr>
+<tr class="ok"><td><span class="bg">✓一致</span></td><td>SO00100</td><td>¥1,280</td><td>¥1,280</td><td>¥0</td><td>—</td></tr>
+<tr class="ok"><td><span class="bg">✓一致</span></td><td>SO00101</td><td>¥456</td><td>¥456</td><td>¥0</td><td>—</td></tr>
+<tr class="diff"><td><span class="br">⚠差异</span></td><td>SO00103</td><td>¥89</td><td>¥79</td><td style="color:#ff4d4f"><b>¥10</b></td><td><a style="color:#1890ff;text-decoration:none;font-size:12px">生成调整单</a></td></tr>
+<tr class="diff"><td><span class="br">⚠差异</span></td><td>SO00104</td><td>¥200</td><td>¥210</td><td style="color:#ff4d4f"><b>¥10</b></td><td><a style="color:#1890ff;text-decoration:none;font-size:12px">升级复核</a></td></tr>
+</table>
+<div style="padding:10px 14px;border-top:1px solid #e8e8e8;display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px;color:#8c8c8c">对账结果：3笔一致，2笔差异待处理</span><button class="btn bd" style="opacity:.5" disabled>确认日结（不可用）</button></div>
+</div></div>
+
+<!-- M13: AI Copilot -->
+<div class="sec" id="m13"><h2>13. AI Copilot — Salesforce Einstein 风格</h2><p class="d">上下文感知 + 证据引用 + 置信度 + 人工确认</p>
+<div class="mu">
+<div class="hdr sf"><b>Salesforce Einstein</b> <span style="font-size:11px;color:rgba(255,255,255,.7)">订单 SO00100 上下文</span></div>
+<div style="display:flex;height:480px">
+<div style="flex:1;padding:14px;overflow:auto"><div style="font-size:13px;font-weight:600;margin-bottom:8px">订单 SO00100</div><div style="font-size:12px;color:#595959;margin-bottom:4px">客户：Siemens AG</div><div style="font-size:12px;color:#595959;margin-bottom:4px">金额：¥128,000</div><div style="font-size:12px;color:#595959;margin-bottom:4px">状态：<span class="bo">待审批</span></div><div style="font-size:12px;color:#595959;margin-bottom:4px">信用额度：¥200,000</div><div style="font-size:12px;color:#595959;margin-bottom:4px">历史逾期：2次</div></div>
+<div class="ap">
+<div class="aph">🤖 Einstein Copilot</div>
+<div class="apb">
+<div class="msg u">这个订单为什么延迟审批？</div>
+<div class="msg b">该订单延迟审批的原因是<strong>客户信用风险</strong>。<br><br>Siemens AG 当前信用额度 ¥200K，本订单 ¥128K 占用 64%。但该客户近6个月有<strong>2次逾期记录</strong>，系统自动触发了信用审查。<br><br>建议：<br>1. 联系财务确认信用状况<br>2. 考虑分期交付降低风险<div class="ev">📚 证据来源：信用审查记录 · 逾期历史 · 数据截止 07-15<div class="sg">💡 置信度：85% · <a style="color:#1890ff">查看详细依据</a></div></div></div>
+<div class="msg b">是否需要我起草一封给财务部的信用审查请求邮件？<br><button class="btn bp" style="height:24px;margin-top:6px">✓ 采纳建议</button> <button class="btn bd" style="height:24px;margin-top:6px">✗ 忽略</button></div>
+</div>
+<div class="apf"><input class="api" placeholder="输入问题..."><button class="btn bp">发送</button></div>
+</div>
+</div></div></div>
+
+<!-- M14: Drill-down Report -->
+<div class="sec" id="m14"><h2>14. Drill-down Report — SAP Analytical List Page</h2><p class="d">图表可点击筛选 → 明细表联动 → 钻取到 Object Page</p>
+<div class="mu">
+<div class="hdr sap"><b style="color:#0066cc">SAP</b> <span style="font-size:12px;color:#595959">销售分析</span></div>
+<div class="bc2"><span>📊 销售概览</span><span class="s">/</span><span>华东区</span><span class="s">/</span><span class="cur">人民广场店</span></div>
+<div class="fb"><div class="fi"><label>期间</label><input value="2026年7月"></div><div class="fi"><label>区域</label><input value="华东区"></div><button class="btn bp">查询</button></div>
+<div style="padding:14px"><div style="font-size:12px;color:#8c8c8c;margin-bottom:8px">指标摘要：销售额 ¥28,450 · 订单 156 · 客单价 ¥182</div>
+<div style="display:flex;gap:14px">
+<div style="flex:1;background:#fafafa;border-radius:6px;padding:14px"><div style="font-size:13px;font-weight:600;margin-bottom:10px">门店占比（可点击筛选）</div><div style="font-size:12px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;cursor:pointer;background:#e6f7ff;padding:4px 8px;border-radius:4px;border:1px solid #91d5ff"><span style="display:inline-block;width:60px;height:16px;background:#1890ff;border-radius:3px"></span><b>人民广场 42%</b> ¥12,000 ← 点击筛选</div><div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;cursor:pointer"><span style="display:inline-block;width:47px;height:16px;background:#69c0ff;border-radius:3px"></span>浦东店 33% ¥9,500</div><div style="display:flex;align-items:center;gap:6px;cursor:pointer"><span style="display:inline-block;width:35px;height:16px;background:#91d5ff;border-radius:3px"></span>徐汇店 25% ¥6,950</div></div></div>
+<div style="flex:1;background:#fafafa;border-radius:6px;padding:14px"><div style="font-size:13px;font-weight:600;margin-bottom:10px">明细表（已联动筛选：人民广场店）</div>
+<table class="t" style="font-size:11px"><tr><th>订单号</th><th>金额</th><th>状态</th></tr><tr><td>SO00100</td><td>¥1,280</td><td><span class="bg">完成</span></td></tr><tr><td>SO00103</td><td>¥1,200</td><td><span class="bo">待发</span></td></tr><tr><td>SO00107</td><td>¥980</td><td><span class="bg">完成</span></td></tr></table>
+</div></div></div>
+</div></div>
+
+<!-- M15: Customer 360 -->
+<div class="sec" id="m15"><h2>15. Customer 360 — Salesforce</h2><p class="d">多渠道数据归一 + 身份解析 + AI推荐</p>
+<div class="mu">
+<div class="hdr sf"><b>Salesforce</b> <span style="font-size:11px;padding:3px 8px;background:rgba(255,255,255,.2);border-radius:3px">Accounts</span></div>
+<div class="sf3">
+<div class="sf3-l"><div style="font-size:11px;color:#8c8c8c;margin-bottom:6px">渠道</div><div style="font-size:12px;padding:4px 0;color:#0b5cab;font-weight:600">📍 全部</div><div style="font-size:12px;padding:4px 0;color:#595959">🛒 门店</div><div style="font-size:12px;padding:4px 0;color:#595959">💬 微信</div><div style="font-size:12px;padding:4px 0;color:#595959">📧 邮件</div><div style="font-size:12px;padding:4px 0;color:#595959">🌐 官网</div></div>
+<div class="sf3-m">
+<div class="sfh"><div class="nm">周杰伦 138****8888</div><div class="fl"><div><label>会员等级</label><span>黄金</span></div><div><label>积分</label><span>2,000</span></div><div><label>累计消费</label><span>¥3,280</span></div><div><label>身份置信度</label><span>92%</span></div></div></div>
+<div style="font-size:11px;color:#8c8c8c;margin-bottom:6px">身份解析：手机号138xxxx8888 ↔ 微信OpenID wx_jay ↔ 会员卡 VIP001（置信度92%，手工确认）</div>
+<div style="font-size:13px;font-weight:600;margin:10px 0 6px">交互时间线</div>
+<div style="font-size:11px;border-left:2px solid #e8e8e8;padding-left:12px"><div style="margin-bottom:6px"><b>🛒 门店消费</b> 07-12 ¥156 人民广场店</div><div style="margin-bottom:6px"><b>💬 微信下单</b> 07-11 ¥89</div><div style="margin-bottom:6px"><b>📧 邮件</b> 07-10 询问退换货</div><div><b>🔄 退货</b> 07-05 ¥80 尺码问题</div></div>
+</div>
+<div class="sf3-r"><div style="font-size:12px;font-weight:600;margin-bottom:8px">🤖 Einstein 推荐</div><div style="background:#e6f4ff;border:1px solid #91d5ff;border-radius:5px;padding:10px;font-size:11px"><b>推荐：服饰类商品</b><br>依据：07-05 尺码问题退货<br>建议：下次推荐服饰时提醒核对尺码<br>置信度：中<br><button class="btn bp" style="height:22px;margin-top:5px">✓ 采用</button> <button class="btn bd" style="height:22px;margin-top:5px">✗ 忽略</button></div><div style="font-size:12px;font-weight:600;margin:12px 0 6px">⚡ 提醒</div><div style="font-size:11px;color:#595959;padding:3px 0">• 满100减20活动中</div><div style="font-size:11px;color:#595959;padding:3px 0">• 有效期至 07-31</div></div>
+</div></div></div>
+
+<div style="padding:20px;text-align:center;color:#8c8c8c;font-size:12px">
+<p>以上为 15 个核心界面模式在行业标杆系统中的高保真原型。</p>
+<p>覆盖 SAP Fiori / Salesforce Lightning / Ant Design Pro / 金蝶云苍穹 等标杆系统的典型页面。</p>
+<p style="margin-top:8px">所有原型为静态结构示例，不连接真实后端。</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>界面模型模式 × 行业标杆实践深度拆解</title>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--surface2:#222631;--border:#2d3142;--text:#e1e4ec;--text2:#9ca3b4;--text3:#6b7180;--accent:#5b8def;--accent2:#7c5cef;--green:#3dd68c;--orange:#f5a623;--red:#ef4444;--cyan:#06b6d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;line-height:1.7;font-size:15px}
+.wrap{max-width:1240px;margin:0 auto;padding:28px 20px}
+h1{font-size:26px;font-weight:700;margin-bottom:6px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.subtitle{color:var(--text2);font-size:14px;margin-bottom:28px}
+h2{font-size:20px;font-weight:700;margin:36px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--border)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:20px}
+.ph{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.pn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.pname{font-size:18px;font-weight:700}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-left:auto}
+.tag{font-size:11px;padding:2px 8px;border-radius:16px;background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
+.tag.sap{color:#5b8def;border-color:rgba(91,141,239,.3);background:rgba(91,141,239,.1)}
+.tag.sf{color:#00a1e0;border-color:rgba(0,161,224,.3);background:rgba(0,161,224,.1)}
+.tag.ant{color:#1890ff;border-color:rgba(24,144,255,.3);background:rgba(24,144,255,.1)}
+.tag.ibm{color:#5fafff;border-color:rgba(95,175,255,.3);background:rgba(95,175,255,.1)}
+.tag.ms{color:#0078d4;border-color:rgba(0,120,212,.3);background:rgba(0,120,212,.1)}
+.tag.kd{color:#00a0e9;border-color:rgba(0,160,233,.3);background:rgba(0,160,233,.1)}
+.tag.g{color:#4285f4;border-color:rgba(66,133,244,.3);background:rgba(66,133,244,.1)}
+.cp{background:var(--surface2);border-left:3px solid var(--orange);padding:10px 14px;border-radius:0 7px 7px 0;margin-bottom:12px;font-size:13px}
+.cp b{color:var(--orange);font-size:11px}
+.case{background:var(--surface2);border-radius:8px;padding:14px 18px;margin-bottom:12px;border:1px solid var(--border)}
+.ch{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.cs{font-weight:700;font-size:13px}.csc{font-size:11px;color:var(--text3)}
+.cb{font-size:13px;color:var(--text2)}.cb b{color:var(--text)}.cb strong{color:var(--accent)}
+.art{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:12px;margin:8px 0;font-family:'Courier New',monospace;font-size:11px;line-height:1.55;color:var(--text2);white-space:pre-wrap;overflow-x:auto}
+.ci{font-size:12px;color:var(--cyan);margin-top:6px;padding-top:6px;border-top:1px dashed var(--border)}.ci b{color:var(--cyan)}
+.ap{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15);border-radius:7px;padding:10px 14px;margin:10px 0;font-size:12px}
+.ap b{color:var(--red)}.apfix{color:var(--green);margin-top:4px}
+.tb{background:rgba(124,92,239,.06);border:1px solid rgba(124,92,239,.15);border-radius:7px;padding:10px 14px;margin:10px 0;font-size:12px}.tb b{color:var(--accent2)}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:12px}
+th{background:var(--surface2);color:var(--accent);padding:7px 10px;text-align:left;border-bottom:2px solid var(--border)}
+td{padding:7px 10px;border-bottom:1px solid var(--border);color:var(--text2)}
+.nav{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--border);padding:10px 20px;z-index:100;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.nav-brand{font-weight:700;font-size:14px;color:var(--accent)}
+.nav a{font-size:11px;color:var(--text3);text-decoration:none;padding:3px 7px;border-radius:4px}.nav a:hover{background:var(--surface2);color:var(--text)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin:20px 0}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center}
+.stat-n{font-size:24px;font-weight:700;color:var(--accent)}.stat-l{font-size:11px;color:var(--text2)}
+@media(max-width:768px){.wrap{padding:14px}h1{font-size:20px}.card{padding:14px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+<span class="nav-brand">UI模式×标杆实践</span>
+<a href="#p1">List Report</a><a href="#p2">Object Page</a><a href="#p3">Timeline</a>
+<a href="#p4">Related Lists</a><a href="#p5">Master-Detail</a><a href="#p6">Dashboard</a>
+<a href="#p7">Worklist</a><a href="#p8">Forms</a><a href="#p9">Wizard</a>
+<a href="#p10">Exception</a><a href="#p11">Config</a><a href="#p12">Reconciliation</a>
+<a href="#p13">Permission</a><a href="#p14">AI</a><a href="#p15">Drill-down</a>
+<a href="#p16">Cust360</a><a href="#summary">总结</a>
+</nav>
+<div class="wrap">
+<h1>界面模型模式 × 行业标杆实践深度拆解</h1>
+<p class="subtitle">基于 SAP Fiori / Salesforce Lightning / Ant Design Pro / IBM Carbon / Microsoft Fluent / Google Material / 金蝶云苍穹 等标杆系统的真实实践</p>
+<div class="stats">
+<div class="stat"><div class="stat-n">25</div><div class="stat-l">核心模式</div></div>
+<div class="stat"><div class="stat-n">7+</div><div class="stat-l">标杆系统</div></div>
+<div class="stat"><div class="stat-n">60+</div><div class="stat-l">实践案例</div></div>
+<div class="stat"><div class="stat-n">18</div><div class="stat-l">反模式对照</div></div>
+</div>
+<div id="content">
+
+<!-- P1 -->
+<a name="p1"></a>
+<div class="card">
+<div class="ph"><div class="pn">1</div><div class="pname">List Report — 列表报告</div>
+<div class="tags"><span class="tag sap">SAP Fiori</span><span class="tag ant">Ant Design Pro</span><span class="tag ibm">IBM Carbon</span><span class="tag kd">金蝶云苍穹</span></div></div>
+<div class="cp"><b>核心问题</b><br>大量对象中快速定位和批量处理。核心矛盾：列表可能有数万行，用户需在几秒内找到目标对象。</div>
+
+<h3>案例 1：SAP Fiori Elements — 销售订单 List Report（命名来源）</h3>
+<div class="case"><div class="ch"><span class="cs">SAP Fiori Elements</span><span class="csc">S/4HANA 销售订单管理</span></div>
+<div class="cb">SAP Fiori Elements 的 <b>List Report</b> 是这一模式的命名来源。通过 CDS View + OData 自动生成列表页。核心结构：顶部 <strong>Smart Filter Bar</strong> 默认展开核心字段、折叠高级筛选；中间 <strong>Smart Table</strong> 展示行摘要（订单号+客户+金额+状态+交货日期）；行末外露主操作；选中行后顶部出现批量操作栏。SAP 官方设计规范明确：列表窗格和对象详情窗格在大窗口并排显示，紧凑窗口则单窗格堆叠切换。</div>
+<div class="art">┌─ Smart Filter Bar ────────────────────────────────┐
+│ [销售组织▼] [渠道▼] [日期] [搜索__] [Go] [Hide Filters]│
+│ ▸ 高级筛选（折叠）                                │
+└──────────────────────────────────────────────────┘
+┌─ 批量操作栏（选中后出现）──────────────────────────┐
+│ 已选 3 项  [批量审批] [批量拒绝] [导出] [影响预览]  │
+└──────────────────────────────────────────────────┘
+┌─ Smart Table ──────────────────────────────────────┐
+│ ☑ 订单号    客户       金额     状态     交货日 操作│
+│ ☑ SO00100 Siemens  ¥128,000 [✓确认] 07-20 [查看] │
+│ ☑ SO00101 BMW     ¥56,000  [⏳审批] 07-22 [查看] │
+│ ☐ SO00102 BASF    ¥89,500  [📦交货] 07-15 [查看] │
+└──────────────────────────────────────────────────┘</div>
+<div class="ci"><b>标杆洞察：</b>Smart Filter Bar 实现"核心筛选默认展开+高级筛选折叠"信息分层，且筛选与表格共享同一 OData 上下文，保证图表和明细口径一致。状态徽章用图标+文本+颜色三重编码，不只靠颜色——这是 SAP Fiori Design Guidelines 的硬性要求。</div></div>
+
+<h3>案例 2：Ant Design Pro — ProTable 查询表格</h3>
+<div class="case"><div class="ch"><span class="cs">Ant Design Pro</span><span class="csc">中后台标准列表页</span></div>
+<div class="cb">ProTable 是 Ant Design Pro 对 List Report 的工程化实现。核心是 <strong>QueryFilter + ProTable + 工具栏</strong>三段式。QueryFilter 默认展示前 N 个字段，更多折叠；ProTable 支持行选择、排序、筛选、固定列、可编辑行；工具栏支持导出、密度、列设置、全屏。</div>
+<div class="ci"><b>标杆洞察：</b>ProTable 把"低频操作收敛到工具栏"做得很彻底——刷新、密度、列设置、全屏都放表格右上角图标组。这是 Hick-Hyman 定律的直接体现：选项收敛降低决策时间。</div></div>
+
+<h3>案例 3：金蝶云苍穹 — 应用管理列表</h3>
+<div class="case"><div class="ch"><span class="cs">金蝶云苍穹社区版</span><span class="csc">开发平台→应用管理</span></div>
+<div class="cb">采用 <strong>卡片式对象管理+分面筛选</strong>变体。顶部提供搜索、业务云筛选、来源分类（全部/金蝶/自建/第三方）；主体展示应用卡片，每张聚合名称、编码、启用状态、版本号和管理动作集（详情、脚本、菜单、导出、禁用、预览）。</div>
+<div class="ci"><b>标杆洞察：</b>金蝶选择卡片而非表格，因应用对象数量有限（几十个），卡片能在有限数量下提供更完整对象上下文。同时提供卡片/列表双视图切换应对数量增长——信息密度自适应的工程解法。</div></div>
+
+<h3>案例 4：IBM Carbon — Data Table + Batch Actions</h3>
+<div class="case"><div class="ch"><span class="cs">IBM Carbon Design System</span><span class="csc">企业数据密集型系统</span></div>
+<div class="cb">Carbon Data Table 定义了可访问性标杆：语义化 table 结构，支持键盘方向键导航、行展开、批量工具栏和分页。批量操作工具栏在选中行后从底部滑入，不遮挡数据。</div>
+<div class="ci"><b>标杆洞察：</b>Carbon 批量操作栏是"渐进出现"的——未选中不占空间，选中后底部滑入。渐进披露比常驻工具栏更节省认知负荷。</div></div>
+
+<div class="ap"><b>✗ 反模式：SAP GUI 传统 ALV 表格</b><br>传统 SAP GUI 的 ALV 所有筛选项平铺、所有按钮平铺，不符合"高频外露低频收敛"。用户面对 30+ 列和 20+ 按钮，认知负荷极高。<div class="apfix">✓ Fiori List Report 通过 Smart Filter Bar 和工具栏收敛解决。</div></div>
+<div class="tb"><b>理论桥接：</b>§2 信息分层（列表行是一级信息，详情是二级）；§3 状态轴（筛选本质是状态过滤器）；§13 信息-认知失配（高频外露低频收敛）。</div>
+</div>
+
+<!-- P2 Object Page -->
+<a name="p2"></a>
+<div class="card">
+<div class="ph"><div class="pn">2</div><div class="pname">Object Page — 对象详情页</div>
+<div class="tags"><span class="tag sap">SAP Fiori</span><span class="tag sf">Salesforce Lightning</span><span class="tag kd">金蝶云苍穹</span></div></div>
+<div class="cp"><b>核心问题</b><br>把散落在多个数据库表中的数据，聚合成用户能理解的业务对象。一个订单在数据库里涉及 8+ 张表。</div>
+
+<h3>案例 1：SAP Fiori — Object Page（命名来源）</h3>
+<div class="case"><div class="ch"><span class="cs">SAP Fiori Elements</span><span class="csc">S/4HANA 销售订单详情</span></div>
+<div class="cb">SAP Object Page 分为 <strong>对象头部（Object Header）+ 内容分区（Sections）</strong>。头部展示订单号、状态、金额、客户、主操作按钮；内容区按业务语义分区：概览、行项目、合作伙伴、定价、交货、状态历史。每个分区有锚点导航，支持快速跳转。</div>
+<div class="art">┌─ Object Header ────────────────────────────────┐
+│ 订单 SO00100              [创建交货] [打印]     │
+│ 状态：[✓已确认] 金额¥128,000 客户：Siemens AG  │
+│ 概览|行项目|合作伙伴|定价|交货|状态历史 ← 锚点  │
+└───────────────────────────────────────────────┘
+┌─ 行项目 ────────────────────────────────────────┐
+│ 物料   描述    数量  单价    金额     状态      │
+│ M001  电机A型  100  ¥1,200 ¥120,000 [可用]     │
+│ M002  控制器B  20   ¥400   ¥8,000   [可用]     │
+└───────────────────────────────────────────────┘</div>
+<div class="ci"><b>标杆洞察：</b>SAP Object Page 的关键设计是<strong>分区锚点导航与滚动联动</strong>——点击标签自动滚动到分区，滚动时高亮当前标签。比 Tab 切换更流畅，因为用户可以连续浏览所有分区而不丢失位置。SAP 官方规范明确：对象详情页由页眉、内容区域、操作区域三部分组成。</div></div>
+
+<h3>案例 2：Salesforce Lightning — Record Page</h3>
+<div class="case"><div class="ch"><span class="cs">Salesforce Lightning</span><span class="csc">CRM 客户/商机/合同记录页</span></div>
+<div class="cb">Salesforce Record Page 采用 <strong>三列布局</strong>：左列 Highlights Panel（客户名+评分+主要联系方式，只展示4-6个关键字段）；中列详情分区和 Related Lists；右列组件侧栏（关键提醒、推荐操作、AI 建议）。页面布局可按角色和记录类型通过 Lightning App Builder 动态调整。</div>
+<div class="ci"><b>标杆洞察：</b>Salesforce 的 Record Page 是"可组合"的——管理员拖拽组件定制不同角色布局。这是 Object Page 从"固定结构"到"可组合架构"的演进。Highlights Panel 只展示 4-6 个最关键字段，严格遵守信息分层。</div></div>
+
+<h3>案例 3：金蝶云苍穹 — 单据详情页</h3>
+<div class="case"><div class="ch"><span class="cs">金蝶云苍穹</span><span class="csc">办公用品领用申请单</span></div>
+<div class="cb">采用 <strong>单据头+明细分录+状态命令栏</strong>结构。单据头展示申请上下文；明细分录展示物品明细（可多行增删）；底部命令栏展示操作（暂存、提交、审批、打印）。状态变化时命令栏动态调整——草稿态显示"暂存+提交"，待审态显示"审批+驳回"。</div>
+<div class="ci"><b>标杆洞察：</b>金蝶"单据头+分录"是中国 ERP 经典结构，本质是 Object Page 领域化变体，比 SAP 分区式更强调"主从结构"。命令栏随状态动态调整操作，这是能力模型（CAP-1）的实践。</div></div>
+
+<div class="tb"><b>理论桥接：</b>§1 数据-心理失配（Object Page 是数据库语言到用户心理模型的"翻译器"）；§3.2 状态四问；§5 可追溯性。</div>
+</div>
+
+<!-- P3 Timeline -->
+<a name="p3"></a>
+<div class="card">
+<div class="ph"><div class="pn">3</div><div class="pname">Timeline — 时间线</div>
+<div class="tags"><span class="tag sf">Salesforce Lightning</span><span class="tag sap">SAP Fiori</span><span class="tag ant">Ant Design</span></div></div>
+<div class="cp"><b>核心问题</b><br>让用户理解"这个状态是怎么变成这样的"——业务事实的可追溯性。</div>
+
+<h3>案例 1：Salesforce Lightning — Activity Timeline</h3>
+<div class="case"><div class="ch"><span class="cs">Salesforce Lightning</span><span class="csc">客户/商机记录页活动时间线</span></div>
+<div class="cb">Salesforce Activity Timeline 在 Record Page 中列展示<strong>按时间倒序的活动流</strong>，区分邮件、电话、会议、任务、备注等不同类型事件，每种用不同图标标注。点击活动可展开详情不跳转页面。支持筛选（只看邮件/只看电话）和内联添加。</div>
+<div class="art">┌─ Activity Timeline ───────────────────────┐
+│ 📧 邮件  今天 14:30                      │
+│   回复了客户关于报价的邮件                │
+│ ☎ 电话  今天 11:00  张三                 │
+│   沟通合同条款，客户要求折扣              │
+│ 📅 会议  昨天 15:00  李四,王五           │
+│   产品演示会议，客户反馈积极              │
+│ ✓ 任务  07-13  完成  张三                │
+│   发送产品资料包                         │
+└─────────────────────────────────────────┘</div>
+<div class="ci"><b>标杆洞察：</b>Salesforce Timeline 把不同类型活动用<strong>图标+文本</strong>区分（不只靠颜色），符合可访问性。活动类型筛选器让用户在长时间线中快速聚焦——信息分层在时间维度的应用。</div></div>
+
+<h3>案例 2：SAP Fiori — 状态历史分区</h3>
+<div class="case"><div class="ch"><span class="cs">SAP Fiori</span><span class="csc">销售订单状态流转</span></div>
+<div class="cb">SAP Object Page 内嵌<strong>状态历史分区</strong>，展示业务状态机流转完整记录：每个节点含时间、操作人、前状态→后状态、触发条件。不同于 Salesforce 活动流（偏沟通记录），SAP 状态历史更偏<strong>业务状态机事件</strong>。</div>
+<div class="ci"><b>标杆洞察：</b>SAP 严格记录"前状态→后状态"，支持状态回溯审计。对应三层事件模型——系统自动事件（信用检查）、人工操作事件（确认订单）、业务状态事件（状态机流转）三层分开标注。</div></div>
+
+<h3>案例 3：Ant Design — Steps + Timeline 组件</h3>
+<div class="case"><div class="ch"><span class="cs">Ant Design</span><span class="csc">审批流程追踪</span></div>
+<div class="cb">用 <code>Steps</code> 展示审批进度（已通过/当前/待审批），用 <code>Timeline</code> 展示详细操作日志。常见组合：上半部分 Steps 概览，下半部分 Timeline 详情。</div>
+<div class="ci"><b>标杆洞察：</b>Ant Design 把 Timeline 拆成"进度概览+详细日志"两层，前者一眼看到流程走到哪，后者追踪每步细节。信息分层在时间线的应用。</div></div>
+
+<div class="tb"><b>理论桥接：</b>§5 可追溯性（三层事件：系统/人工/业务状态）；§5.3 状态流转完整表达（时间+事件类型+操作人+前后状态+原因）。</div>
+</div>
+
+<!-- P4 Related Lists -->
+<a name="p4"></a>
+<div class="card">
+<div class="ph"><div class="pn">4</div><div class="pname">Related Lists — 关联列表</div>
+<div class="tags"><span class="tag sf">Salesforce Lightning</span><span class="tag sap">SAP Fiori</span></div></div>
+<div class="cp"><b>核心问题</b><br>一个业务对象关联的其他对象，如何在不喧宾夺主的情况下完整呈现。</div>
+
+<h3>案例 1：Salesforce Lightning — Related Lists（命名来源）</h3>
+<div class="case"><div class="ch"><span class="cs">Salesforce Lightning</span><span class="csc">客户记录页关联订单/合同/案例</span></div>
+<div class="cb">在客户 Record Page 中列展示该客户关联的订单、合同、案例、活动等列表。每个 Related List 默认展示 5 条最近记录，可点击"View All"跳转独立页面查看完整列表。支持内联筛选、排序和快速新建。2025年 Salesforce 推出 <strong>Dynamic Related Lists</strong>，可按筛选条件动态过滤关联记录、自定义展示字段和顺序。</div>
+<div class="ci"><b>标杆洞察：</b>Salesforce Related Lists 三个关键约束：①默认只展示5条（避免喧宾夺主）；②只展示关键字段（完整跳转独立页）；③关联列表内只做查看和轻量操作（复杂操作跳转）。Dynamic Related Lists 进一步允许按上下文动态过滤——例如只展示"本年度金额>1万的订单"。</div></div>
+
+<h3>案例 2：SAP Fiori — Object Page Line Items</h3>
+<div class="case"><div class="ch"><span class="cs">SAP Fiori</span><span class="csc">订单详情中的交货单/发票关联</span></div>
+<div class="cb">SAP Object Page 每个分区本身就是一个 Related List——"交货"分区展示关联交货单，"定价"分区展示定价条件，"发票"分区展示关联发票。通过分区锚点导航而非独立 Tab。</div>
+<div class="ci"><b>标杆洞察：</b>SAP 把 Related Lists 融入 Object Page 分区结构，而非像 Salesforce 那样作为独立组件堆叠。优势是上下文连贯，劣势是当关联对象多时分区会很长——SAP 通过默认折叠次要分区解决。</div></div>
+
+<div class="tb"><b>理论桥接：</b>§1 信息聚合（Related Lists 把关联对象"聚"到主对象下）；§2 信息分层（关联列表是二级信息，不是详情页核心）。</div>
+</div>
+
+<!-- P5 Master-Detail -->
+<a name="p5"></a>
+<div class="card">
+<div class="ph"><div class="pn">5</div><div class="pname">Master-Detail — 主从布局</div>
+<div class="tags"><span class="tag ms">Microsoft Fluent</span><span class="tag sap">SAP Fiori</span><span class="tag ant">Ant Design</span></div></div>
+<div class="cp"><b>核心问题</b><br>连续处理多个对象时，减少页面跳转带来的上下文切换。</div>
+
+<h3>案例 1：SAP Fiori — Flexible Column Layout</h3>
+<div class="case"><div class="ch"><span class="cs">SAP Fiori</span><span class="csc">订单→支付→物流三级展开</span></div>
+<div class="cb">SAP 的 <strong>Flexible Column Layout</strong> 是 Master-Detail 的进阶版，支持最多三栏并列：列表→详情→子详情。用户在列表选中订单，中间展示订单详情，右侧可展开支付单或物流详情。栏宽可拖拽调整，窄屏自动退化为单栏。</div>
+<div class="art">┌─ 列表 ────┬─ 详情 ──────┬─ 子详情 ────┐
+│ [搜索]    │ 订单SO001   │ 支付单      │
+│ ●SO001    │ [✓确认]     │ PAY001      │
+│  SO002    │ ¥128,000    │ 微信¥128,000│
+│  SO003    │ Siemens AG  │ [✓已支付]   │
+│           │ [发货][退款]│ 10:32       │
+└──────────┴────────────┴────────────┘</div>
+<div class="ci"><b>标杆洞察：</b>SAP Flexible Column Layout 解决了"主从只有两层不够"的问题——订单关联支付单，支付单又关联银行流水，三级展开让用户追踪完整链路。窄屏退化时保留上下文（返回列表时筛选状态不变）。</div></div>
+
+<h3>案例 2：Microsoft Fluent UI — List Details</h3>
+<div class="case"><div class="ch"><span class="cs">Microsoft Fluent UI</span><span class="csc">Outlook 邮件列表+阅读窗格</span></div>
+<div class="cb">Microsoft 在 Outlook、Teams、SharePoint 中大量使用 Master-Detail。左侧列表选中项高亮，右侧详情区同步更新。Fluent UI 官方组件库提供 <code>DetailsList</code> 支持键盘方向键导航（↑↓切换项，Enter打开）。</div>
+<div class="ci"><b>标杆洞察：</b>Microsoft 特别强调键盘导航——↑↓键在主列对象间切换，Tab键进入从面板。这是技能型用户高频操作的效率保障。</div></div>
+
+<div class="tb"><b>理论桥接：</b>§2 认知负荷（减少跳转=减少上下文切换）；§3 状态轴（列表栏本质是状态过滤）。</div>
+</div>
+
+<!-- P6 Dashboard -->
+<a name="p6"></a>
+<div class="card">
+<div class="ph"><div class="pn">6</div><div class="pname">Dashboard — 角色工作台</div>
+<div class="tags"><span class="tag sap">SAP Fiori</span><span class="tag sf">Salesforce Lightning</span><span class="tag kd">金蝶云苍穹</span></div></div>
+<div class="cp"><b>核心问题</b><br>角色每天开始工作时，如何在几秒内了解全局状态、快速进入任务。</div>
+
+<h3>案例 1：SAP Fiori — Overview Page</h3>
+<div class="case"><div class="ch"><span class="cs">SAP Fiori Overview Page</span><span class="csc">管理者概览</span></div>
+<div class="cb">SAP <strong>Overview Page</strong> 顶部全局筛选（日期/组织），主体为 <strong>KPI 卡片+Smart Chart</strong> 网格。每张 KPI 卡片展示指标值、趋势箭头、目标达成率，点击可钻取到 Analytical List Page。卡片可拖拽重排，按角色配置。</div>
+<div class="ci"><b>标杆洞察：</b>每个 KPI 卡片都可钻取——点击"销售额"进入 Analytical List Page，再钻取到订单明细。实现了"指标→维度→明细→对象"完整钻取链。全局筛选控制所有卡片保证口径一致。</div></div>
+
+<h3>案例 2：Salesforce Lightning — Dashboard + Report Chart</h3>
+<div class="case"><div class="ch"><span class="cs">Salesforce Lightning</span><span class="csc">销售经理首页</span></div>
+<div class="cb">Salesforce Dashboard 由多个 <strong>Report Chart</strong> 组合，图表数据来自 Salesforce Report。点击图表自动跳转到对应 Report，再从 Report 钻取到具体记录。</div>
+<div class="ci"><b>标杆洞察：</b>每个图表直接关联一个 Report——"图表→报表→记录"完整钻取链，且数据口径一致（都来自同一 Report）。Dashboard 组件可拖拽组合，按角色定制。</div></div>
+
+<h3>案例 3：金蝶云苍穹 — 可配置工作台</h3>
+<div class="case"><div class="ch"><span class="cs">金蝶云苍穹社区版</span><span class="csc">办公用品领用工作台</span></div>
+<div class="cb">采用 <strong>可配置工作台+行动卡片</strong>。页面围绕业务主题组织，提供立即查看、忽略、调整布局和全屏。</div>
+<div class="ci"><b>标杆洞察：</b>"调整布局"让工作台从"固定首页"进化为"可个性化工作区"——Dashboard 从"千人一面"到"角色定制"的演进。</div></div>
+
+<div class="ap"><b>✗ 反模式：首页只堆图表不提供钻取</b><br>用户问"为什么销售额下降了"，页面无法回答。<div class="apfix">✓ SAP 每个卡片可钻取；Salesforce 每个图表关联 Report。</div></div>
+<div class="tb"><b>理论桥接：</b>§2 信息分层（KPI→图表→明细）；§7 钻取链路；§14.4 Goodhart 效应（KPI 需护栏指标）。</div>
+</div>
+
+<!-- P7 Worklist -->
+<a name="p7"></a>
+<div class="card">
+<div class="ph"><div class="pn">7</div><div class="pname">Worklist — 待办工作列表</div>
+<div class="tags"><span class="tag sap">SAP Fiori</span><span class="tag sf">Salesforce Lightning</span><span class="tag ant">Ant Design Pro</span></div></div>
+<div class="cp"><b>核心问题</b><br>把当前角色真正可处理的任务组织成队列，让用户看清责任、优先级、等待时间和下一步。</div>
+
+<h3>案例 1：SAP Fiori — My Inbox</h3>
+<div class="case"><div class="ch"><span class="cs">SAP Fiori My Inbox</span><span class="csc">S/4HANA 审批中心</span></div>
+<div class="cb">SAP My Inbox 是 Worklist 模式的标杆。它聚合来自 SAP Business Workflow 和外部系统的审批任务，按状态展示待审批/已审批/已委托。每个任务卡片展示任务标题、发起人、金额、提交时间、SLA 倒计时。支持批量审批、委托、拒绝（需填原因）。</div>
+<div class="ci"><b>标杆洞察：</b>My Inbox 聚合多来源审批任务到统一队列——这是 Worklist 的核心价值：不是"一个列表"，而是"按角色+状态计算出的可处理任务集合"。SLA 倒计时让老化可见，避免任务饥饿。</div></div>
+
+<h3>案例 2：Salesforce Lightning — List View + Kanban</h3>
+<div class="case"><div class="ch"><span class="cs">Salesforce Lightning</span><span class="csc">商机看板</span></div>
+<div class="cb">Salesforce 的 <strong>Kanban View</strong> 是 Worklist 的可视化变体。每一列代表一个销售阶段，卡片代表商机。用户可拖拽卡片在阶段间移动。每列顶部显示该阶段商机金额合计。支持按字段分组、汇总和筛选。Salesforce 官方文档明确：Kanban 几乎可在任何列表视图中查看，适用于大多数对象。</div>
+<div class="art">┌─ Kanban：商机按阶段 ────────────────────────┐
+│  资格认定      需求分析      方案报价      谈判  │
+│ ┌────────┐  ┌────────┐  ┌────────┐         │
+│ │ BMW    │  │ Siemens│  │ BASF   │         │
+│ │ ¥56K   │  │ ¥128K  │  │ ¥89K   │         │
+│ │ 张三   │  │ 李四   │  │ 王五   │         │
+│ └────────┘  └────────┘  └────────┘         │
+│ 合计¥56K     合计¥128K    合计¥89K          │
+│ ← 拖拽卡片在阶段间移动 →                      │
+└─────────────────────────────────────────────┘</div>
+<div class="ci"><b>标杆洞察：</b>Salesforce Kanban 把"阶段流转"从下拉框选择变成了<strong>拖拽操作</strong>——更直观地映射了"对象在阶段间推进"的心理模型。每列金额合计让销售经理一眼看到漏斗分布。结合 <strong>Path</strong> 组件（在 Record Page 顶部展示阶段进度+关键字段+指南），形成了完整的阶段流转工作台。</div></div>
+
+<h3>案例 3：Ant Design Pro — 待办列表</h3>
+<div class="case"><div class="ch"><span class="cs">Ant Design Pro</span><span class="csc">中后台审批中心</span></div>
+<div class="cb">Ant Design Pro 的待办列表通常用 ProTable 实现，通过筛选条件固定展示"待处理"状态的任务。常见组合：Tab 切换（待办/已办/全部）+ 表格（任务名/发起人/时间/优先级/操作）+ 批量审批。</div>
+<div class="ci"><b>标杆洞察：</b>Ant Design Pro 的 Tab 切换本质是"状态过滤器"——待办 Tab 只展示"待处理"状态，无需用户手动筛选。这是 Worklist 与 List Report 的关键区别。</div></div>
+
+<div class="tb"><b>理论桥接：</b>§3 状态与能力（Worklist 只呈现可执行任务）；§10.2 排队与流动（展示老化、SLA、WIP 限制）；§9 协作（责任分配+交接）。</div>
+</div>
+
+<!-- P8 Forms -->
+<a name="p8"></a>
+<div class="card">
+<div class="ph"><div class="pn">8</div><div class="pname">表单族 — Simple / Sectioned / Drawer / Modal Form</div>
+<div class="tags"><span class="tag ant">Ant Design Pro</span><span class="tag sap">SAP Fiori</span><span class="tag ms">Microsoft Fluent</span></div></div>
+<div class="cp"><b>核心问题</b><br>不同复杂度的业务录入如何选择合适的表单承载方式。</div>
+
+<h3>案例 1：Ant Design Pro — ModalForm / DrawerForm / QueryFilter / StepsForm</h3>
+<div class="case"><div class="ch"><span class="cs">Ant Design Pro Components</span><span class="csc">中后台表单全家桶</span></div>
+<div class="cb">Ant Design Pro 提供完整的表单族组件：<strong>ModalForm</strong>（弹窗表单，适合短任务）、<strong>DrawerForm</strong>（抽屉表单，保留列表上下文）、<strong>QueryFilter</strong>（查询筛选表单）、<strong>StepsForm</strong>（分步表单）、<strong>ProForm</strong>（配置化表单，支持分组、依赖联动）。</div>
+<table>
+<tr><th>组件</th><th>对应模式</th><th>适用场景</th></tr>
+<tr><td>ModalForm</td><td>Modal Form</td><td>短确认、1-3字段</td></tr>
+<tr><td>DrawerForm</td><td>Drawer Form</td><td>列表内快速编辑，保留上下文</td></tr>
+<tr><td>StepsForm</td><td>Wizard</td><td>多步骤、有顺序依赖</td></tr>
+<tr><td>ProForm(分组)</td><td>Sectioned Form</td><td>字段多、需分区</td></tr>
+</table>
+<div class="ci"><b>标杆洞察：</b>Ant Design Pro 把表单模式做成了一一对应的组件——开发者根据场景选组件即选模式。这是模式从"设计指导"到"工程组件"的落地。DrawerForm 的关键设计是"抽屉内不嵌套抽屉"，严格遵守 NEST-1 不变量。</div></div>
+
+<h3>案例 2：SAP Fiori — Object Page Edit Mode</h3>
+<div class="case"><div class="ch"><span class="cs">SAP Fiori</span><span class="csc">Object Page 编辑模式</span></div>
+<div class="cb">SAP Object Page 的编辑模式是 Sectioned Form 的高级实现。点击"编辑"后，Object Page 从只读切换为可编辑，每个分区变为可编辑表单组。字段按业务语义分组，互斥字段动态显示/隐藏。支持草稿自动保存（Draft Handling）。</div>
+<div class="ci"><b>标杆洞察：</b>SAP 的"编辑模式切换"比跳转独立编辑页更流畅——用户在同一个 Object Page 上切换只读/编辑，上下文完全保留。草稿自动保存是长流程保护的关键。</div></div>
+
+<h3>案例 3：Microsoft Fluent UI — Dialog + Panel</h3>
+<div class="case"><div class="ch"><span class="cs">Microsoft Fluent UI</span><span class="csc">Power Platform 表单</span></div>
+<div class="cb">Fluent UI 区分 <strong>Dialog</strong>（模态弹窗，阻断式）和 <strong>Panel</strong>（侧面板，非阻断式）。Dialog 用于必须确认的操作（删除/提交），Panel 用于需要参考当前页面的编辑任务。</div>
+<div class="ci"><b>标杆洞察：</b>Microsoft 明确区分 Dialog 和 Panel 的使用场景——Dialog 阻断（必须处理才能继续），Panel 非阻断（可忽略）。这是风险分层的体现：高风险用 Dialog 强制确认，中低风险用 Panel 保留上下文。</div></div>
+
+<div class="tb"><b>理论桥接：</b>§6 表单（业务承诺的界面）；§6.3 表单复杂度（字段数+依赖+风险+比较需求决定承载方式）；§4 操作风险（高风险用 Modal 确认）。</div>
+</div>
+
+<!-- P9 Wizard -->
+<a name="p9"></a>
+<div class="card">
+<div class="ph"><div class="pn">9</div><div class="pname">Wizard — 向导模型</div>
+<div class="tags"><span class="tag g">Google Material</span><span class="tag ant">Ant Design</span><span class="tag sap">SAP Fiori</span></div></div>
+<div class="cp"><b>核心问题</b><br>长流程多步骤，如何让用户每次只专注于当前步骤，降低整体认知负荷。</div>
+
+<h3>案例 1：Google Material Design — Stepper</h3>
+<div class="case"><div class="ch"><span class="cs">Google Material Design</span><span class="csc">多步骤表单</span></div>
+<div class="cb">Material Design 定义了 <strong>Stepper</strong> 组件，分水平 Stepper（步骤横向排列，适合≤5步）和垂直 Stepper（步骤纵向排列，适合移动端或>5步）。每步展示步骤名、状态图标（完成✓/当前●/待办○）。支持线性（必须按顺序）和非线性（可跳转）两种模式。</div>
+<div class="ci"><b>标杆洞察：</b>Material Design 明确区分线性/非线性 Stepper——线性强制顺序（适合有依赖的配置流程），非线性允许跳转（适合可并行填写的流程）。这是 Wizard 模式的一个关键分支。</div></div>
+
+<h3>案例 2：Ant Design — StepsForm</h3>
+<div class="case"><div class="ch"><span class="cs">Ant Design Pro</span><span class="csc">分步表单</span></div>
+<div class="cb">StepsForm 把表单拆为多个步骤，每步独立校验，最后一步总览确认。支持草稿保存和跨步骤跳转（当步骤已验证时）。</div>
+<div class="ci"><b>标杆洞察：</b>Ant Design StepsForm 的"最后一步总览确认"是 Wizard 的关键设计——用户提交前可看到所有步骤的填写结果，降低错误率。</div></div>
+
+<h3>案例 3：SAP Fiori — Wizard</h3>
+<div class="case"><div class="ch"><span class="cs">SAP Fiori</span><span class="csc">创建采购订单</span></div>
+<div class="cb">SAP Wizard 用于创建复杂业务对象（采购订单、生产订单）。每步有明确的业务任务（供应商选择→物料选择→数量和日期→价格条件→确认提交），步骤间有数据依赖（选了供应商才能选物料）。</div>
+<div class="ci"><b>标杆洞察：</b>SAP Wizard 的每步对应一个业务决策点，不只是"字段分组"。这是 Wizard 与 Sectioned Form 的关键区别——Wizard 按业务依赖拆步骤，Sectioned Form 按业务语义分区。</div></div>
+
+<div class="tb"><b>理论桥接：</b>§2 渐进披露；§6.3 表单复杂度（多步骤有顺序依赖→Wizard）；§6.2 表单七问（长流程支持草稿）。</div>
+</div>
+
+<!-- P10 Exception Center -->
+<a name="p10"></a>
+<div class="card">
+<div class="ph"><div class="pn">10</div><div class="pname">Exception Center — 异常中心</div>
+<div class="tags"><span class="tag sap">SAP Fiori</span><span class="tag ant">Ant Design Pro</span></div></div>
+<div class="cp"><b>核心问题</b><br>系统异常如何从"技术人员看日志"变成"业务人员可处理"。</div>
+
+<h3>案例 1：SAP Fiori — Exception Page / Message Toast</h3>
+<div class="case"><div class="ch"><span class="cs">SAP Fiori</span><span class="csc">S/4HANA 异常处理</span></div>
+<div class="cb">SAP Fiori 的异常处理分层：<strong>Message Toast</strong>（短暂操作反馈，3秒自动消失）、<strong>Message Strip</strong>（页面内消息条，需用户处理）、<strong>Dialog</strong>（阻断式错误确认）、<strong>Message Page</strong>（全页错误/空状态）。对于业务级异常，SAP 提供 <strong>Application Log</strong> 和 <strong>Business Exception</strong> 展示在 Object Page 的专门分区。</div>
+<div class="ci"><b>标杆洞察：</b>SAP 把异常按严重程度分层承载——Toast（轻提示）→Strip（页面内警告）→Dialog（阻断确认）→Page（全页错误）。不同级别用不同容器，避免"所有异常都弹窗"的疲劳。</div></div>
+
+<h3>案例 2：Ant Design Pro — Result + Alert + Notification</h3>
+<div class="case"><div class="ch"><span class="cs">Ant Design Pro</span><span class="csc">中后台异常处理</span></div>
+<div class="cb">Ant Design 提供 <strong>Result</strong>（页面级结果页，成功/失败/404/403/500）、<strong>Alert</strong>（页面内警告条）、<strong>Notification</strong>（右上角通知）、<strong>Message</strong>（顶部短暂提示）。后台任务异常通常通过 Notification 推送，用户点击跳转到异常详情。</div>
+<div class="ci"><b>标杆洞察：</b>Ant Design 的 Notification 是异常中心的轻量实现——后台任务失败时推送通知，用户可点击跳转处理。比 SAP 的 Application Log 更主动（推而非拉）。</div></div>
+
+<div class="ap"><b>✗ 反模式：异常只在 error.log 里</b><br>支付回调失败→写入 error.log→技术人员排查→业务人员完全不知道。用户投诉后客服无法解释。<div class="apfix">✓ 异常进入 Exception Center，业务人员看到"3笔支付异常待处理"→点击处理→重新发起支付。</div></div>
+<div class="tb"><b>理论桥接：</b>§8 异常闭环（五要素：分类分级+绑定对象+处理动作+过程留痕+重复聚合）；§8.1 技术 vs 业务异常。</div>
+</div>
+
+<!-- P11 Config -->
+<a name="p11"></a>
+<div class="card">
+<div class="ph"><div class="pn">11</div><div class="pname">配置页与规则治理</div>
+<div class="tags"><span class="tag sap">SAP Fiori</span><span class="tag sf">Salesforce Lightning</span><span class="tag kd">金蝶云苍穹</span></div></div>
+<div class="cp"><b>核心问题</b><br>配置变更如何做到"改规则，影响一批对象"，而不只是"改一个对象"。</div>
+
+<h3>案例 1：Salesforce Lightning — Flow Builder + Validation Rule</h3>
+<div class="case"><div class="ch"><span class="cs">Salesforce Lightning</span><span class="csc">自动化规则配置</span></div>
+<div class="cb">Salesforce <strong>Flow Builder</strong> 是可视化规则配置器，支持拖拽创建自动化流程（触发器→条件→动作）。<strong>Validation Rule</strong> 用公式语言定义字段约束。两者都支持版本管理和激活/停用。配置变更前可预览影响范围。</div>
+<div class="ci"><b>标杆洞察：</b>Salesforce Flow Builder 把"规则配置"从代码变成了可视化拖拽——降低了配置门槛。但这也带来风险：可视化不等于简单，复杂 Flow 的隐藏依赖和冲突需要专门的 Lint 检查。</div></div>
+
+<h3>案例 2：SAP Fiori — Customizing + Transport Management</h3>
+<div class="case"><div class="ch"><span class="cs">SAP S/4HANA</span><span class="csc">系统配置+传输管理</span></div>
+<div class="cb">SAP 的配置通过 <strong>SPRO（Implementation Guide）</strong> 树形导航完成，每个配置项有详细的文档说明。配置变更通过 <strong>Transport Request</strong> 管理——配置先在开发系统修改，通过传输请求迁移到测试系统验证，最终到生产系统。每次传输有版本记录。</div>
+<div class="ci"><b>标杆洞察：</b>SAP 的 Transport Management 是配置治理的标杆——配置变更不是直接在生产修改，而是经过开发→测试→生产的传输链路。每个传输请求记录了变更内容、操作人、时间和前后值。这是配置页 Version History + Audit Log 的完整实现。</div></div>
+
+<h3>案例 3：金蝶云苍穹 — 动态表单设计器</h3>
+<div class="case"><div class="ch"><span class="cs">金蝶云苍穹</span><span class="csc">低代码表单配置</span></div>
+<div class="cb">金蝶提供 <strong>动态表单设计器</strong>，支持拖拽配置表单字段、布局、规则和权限。设计器显示页面编码、类型、源页面和修改信息。配置后可预览和调试。</div>
+<div class="ci"><b>标杆洞察：</b>金蝶的动态表单设计器把"表单配置"从代码变成了元数据驱动——表单结构存储为 JSON 元数据，运行时渲染。这是低代码平台的核心能力，也是配置页模式在低代码领域的实现。</div></div>
+
+<div class="tb"><b>理论桥接：</b>§6.4 配置特殊性（改规则影响一批对象）；§4 操作风险（高风险配置→影响预览+审计）；§14.3 认知维度（Rule Builder 的隐藏依赖和黏滞性）。</div>
+</div>
+
+<!-- P12 Reconciliation -->
+<a name="p12"></a>
+<div class="card">
+<div class="ph"><div class="pn">12</div><div class="pname">Reconciliation Workbench — 对账工作台</div>
+<div class="tags"><span class="tag sap">SAP Fiori</span><span class="tag kd">金蝶云苍穹</span></div></div>
+<div class="cp"><b>核心问题</b><br>系统流水和第三方流水如何核对，差异如何闭环处理。</div>
+
+<h3>案例 1：SAP S/4HANA — Bank Reconciliation</h3>
+<div class="case"><div class="ch"><span class="cs">SAP S/4HANA</span><span class="csc">银行对账</span></div>
+<div class="cb">SAP 的银行对账是 Reconciliation 的标杆。系统流水（总账科目）和银行对账单（电子银行对账单导入）同屏展示，系统自动匹配（按金额、日期、参考号）。匹配成功的标记为"已清"；未匹配的展示在差异区。差异处理动作：创建调整分录、挂账待查、标记为不可达。全部差异处理后才能完成对账。</div>
+<div class="ci"><b>标杆洞察：</b>SAP 的对账遵循"借贷必平"不变量——未匹配差异必须全部处理（调整或挂账）后才能完成对账。这是 INV-FIN-001 不变量在 UI 层的强制执行。</div></div>
+
+<h3>案例 2：金蝶云苍穹 — 资金对账</h3>
+<div class="case"><div class="ch"><span class="cs">金蝶云苍穹</span><span class="csc">资金管理→银行对账</span></div>
+<div class="cb">金蝶提供银行对账功能，支持自动对账（按规则匹配）和手工对账。对账结果展示已达账和未达账，未达账需编制余额调节表。</div>
+<div class="ci"><b>标杆洞察：</b>金蝶的"余额调节表"是中国会计实践的特有产物——把企业和银行的未达账项分类为"企收银未收""企付银未付""银收企未收""银付企未付"四类。这是 Reconciliation 模式在中国会计准则下的领域化实现。</div></div>
+
+<div class="tb"><b>理论桥接：</b>§8 异常闭环（差异是另一种异常）；§10.4 分布式事务（跨系统局部成功必须通过补偿和对账收敛）；§9.5 商业完整性。</div>
+</div>
+
+<!-- P13 Permission -->
+<a name="p13"></a>
+<div class="card">
+<div class="ph"><div class="pn">13</div><div class="pname">Permission Matrix — 权限矩阵</div>
+<div class="tags"><span class="tag sf">Salesforce Lightning</span><span class="tag sap">SAP Fiori</span><span class="tag kd">金蝶云苍穹</span></div></div>
+<div class="cp"><b>核心问题</b><br>权限配置如何可视化，如何让管理员批量设置而不漏项。</div>
+
+<h3>案例 1：Salesforce Lightning — Profile + Permission Set</h3>
+<div class="case"><div class="ch"><span class="cs">Salesforce Lightning</span><span class="csc">权限配置体系</span></div>
+<div class="cb">Salesforce 权限体系分两层：<strong>Profile</strong>（配置文件，定义对象级权限——查看/创建/编辑/删除/-transfer）和 <strong>Permission Set</strong>（权限集，补充 Profile 之上的字段级权限）。Profile 是"角色基线"，Permission Set 是"增量授权"。管理员可查看用户的 Effective Access（合并后的实际权限）。</div>
+<div class="ci"><b>标杆洞察：</b>Salesforce 的 Profile+Permission Set 分离是职责分离的工程实现——Profile 由系统管理员控制基线，Permission Set 由业务主管控制增量。Effective Access View 展示合并后实际权限，避免"权限叠加后超出预期"的问题。</div></div>
+
+<h3>案例 2：SAP S/4HANA — PFCG 角色管理</h3>
+<div class="case"><div class="ch"><span class="cs">SAP S/4HANA</span><span class="csc">PFCG 角色配置</span></div>
+<div class="cb">SAP 通过 <strong>PFCG（Profile Generator）</strong> 管理角色权限。角色包含事务码权限、对象级权限和字段级权限。权限通过<strong>权限对象</strong>定义，每个权限对象有多个字段（如 ACTVT=活动类型、BUKRS=公司代码）。角色可继承和组合，支持<strong>组织级权限</strong>（数据范围控制）。PFCG 支持<strong>权限模拟</strong>——管理员可模拟某用户登录后看到的菜单和数据。</div>
+<div class="ci"><b>标杆洞察：</b>SAP 把"操作权限"和"数据范围"分离——ACTVT 控制能做什么，BUKRS 控制能看哪些公司的数据。权限模拟让管理员在配置后直接验证效果，不需要切换账号登录。</div></div>
+
+<h3>案例 3：金蝶云苍穹 — 权限配置</h3>
+<div class="case"><div class="ch"><span class="cs">金蝶云苍穹</span><span class="csc">角色+功能权限+数据权限</span></div>
+<div class="cb">金蝶提供基于角色的权限管理，支持功能权限（菜单/按钮/操作）和数据权限（数据范围控制）。权限配置以矩阵形式展示，支持批量设置和继承。</div>
+<div class="ci"><b>标杆洞察：</b>金蝶的"功能权限+数据权限"分离与 SAP 思路一致——操作权限和数据范围是两个独立维度，必须分别配置和校验。</div></div>
+
+<div class="ap"><b>✗ 反模式：权限只配置不审计</b><br>权限配置后无变更记录，出问题时无法追溯谁改了什么。<div class="apfix">✓ Salesforce 记录 Permission Set 变更审计；SAP PFCG 每次修改生成传输请求。</div></div>
+<div class="tb"><b>理论桥接：</b>§4 操作风险；§9.5 商业完整性（职责分离、禁止自批）；§6.4 配置特殊性（权限变更必须预览影响范围）。</div>
+</div>
+
+<!-- P14 AI -->
+<a name="p14"></a>
+<div class="card">
+<div class="ph"><div class="pn">14</div><div class="pname">AI 与 Agent-Native 模式</div>
+<div class="tags"><span class="tag sf">Salesforce Einstein</span><span class="tag sap">SAP Joule</span><span class="tag ms">Microsoft Copilot</span></div></div>
+<div class="cp"><b>核心问题</b><br>AI 从辅助变为主控时的界面模式：如何校准信任、展示证据、保留人工接管。</div>
+
+<h3>案例 1：Salesforce Einstein — AI 推荐 + Trust Layer</h3>
+<div class="case"><div class="ch"><span class="cs">Salesforce Einstein</span><span class="csc">商机评分+下一步最佳动作</span></div>
+<div class="cb">Salesforce Einstein 提供 <strong>Lead Scoring</strong>（线索评分）和 <strong>Next Best Action</strong>（下一步最佳动作推荐）。每个推荐展示<strong>置信度、依据因素和替代方案</strong>。用户可采纳、忽略或反馈"不准确"。<strong>Einstein Trust Layer</strong> 保证 AI 不泄露敏感数据——数据脱敏后发送给 LLM，返回结果经过审计。</div>
+<div class="ci"><b>标杆洞察：</b>"推荐+置信度+依据+替代方案"四要素是可解释推荐的标杆。Trust Layer 把"AI 不泄露数据"从口号变成技术架构。用户反馈"不准确"用于模型校准——这是 AGENT-10（拒绝后记录并校准）的实践。</div></div>
+
+<h3>案例 2：SAP Joule — AI Copilot 嵌入业务系统</h3>
+<div class="case"><div class="ch"><span class="cs">SAP Joule</span><span class="csc">S/4HANA AI 助手</span></div>
+<div class="cb">SAP Joule 是嵌入 S/4HANA 的 AI Copilot。它理解当前业务上下文（用户在哪个页面、选中了什么对象），支持自然语言查询（"这个订单为什么延迟了"）、操作建议和自动化执行。Joule 在执行高风险操作前必须获得用户确认。</div>
+<div class="ci"><b>标杆洞察：</b>SAP Joule 的关键设计是<strong>上下文感知</strong>——AI 知道用户当前在哪个页面、选中了什么对象。这对应 Copilot 模式的"AI 必须知道当前对象上下文"原则。</div></div>
+
+<h3>案例 3：Microsoft Copilot — 主动建议与自动生成</h3>
+<div class="case"><div class="ch"><span class="cs">Microsoft Copilot</span><span class="csc">Dynamics 365 / Power Platform</span></div>
+<div class="cb">Microsoft Copilot 在 Dynamics 365 中提供主动建议——例如发现某客户流失风险高时，主动建议"发送挽留邮件"。在 Power Platform 中，Copilot 可自动生成表单和流程，用户确认后部署。</div>
+<div class="ci"><b>标杆洞察：</b>Microsoft Copilot 的"主动建议"是 Proactive Proposal 模式（方向 6 AN-1）在真实产品中的雏形——AI 不等用户提问，主动发现异常并建议处理。</div></div>
+
+<div class="tb"><b>理论桥接：</b>§14.3 自动化功能分配；§3.5 韧性状态与控制权交接；方向 6 的 Agent-Native 不变量 AGENT-1 到 AGENT-10。</div>
+</div>
+
+<!-- P15 Drill-down -->
+<a name="p15"></a>
+<div class="card">
+<div class="ph"><div class="pn">15</div><div class="pname">Drill-down Report — 钻取报表</div>
+<div class="tags"><span class="tag sap">SAP Fiori</span><span class="tag sf">Salesforce</span><span class="tag ms">Microsoft Power BI</span></div></div>
+<div class="cp"><b>核心问题</b><br>汇总指标如何可解释——用户从数字能追到具体业务对象。</div>
+
+<h3>案例 1：SAP Fiori — Analytical List Page</h3>
+<div class="case"><div class="ch"><span class="cs">SAP Fiori Analytical List Page</span><span class="csc">销售分析</span></div>
+<div class="cb">SAP <strong>Analytical List Page</strong> 是 Drill-down 的标杆实现。顶部<strong>全局筛选</strong>控制图表和明细表；上部<strong>Visual Filter（可视化筛选）</strong>既是图表也是筛选器——点击图表中的某个维度（如"华东区"），明细表自动过滤到华东区。图表和明细表共享同一筛选上下文，保证数据口径一致。</div>
+<div class="art">┌─ 全局筛选 ─────────────────────────────────┐
+│ [公司代码▼] [期间▼] [产品线▼]     [Go]      │
+└────────────────────────────────────────────┘
+┌─ 指标摘要 ───────────────────────────────────┐
+│ 销售额 ¥2.8M ▲+12%  订单 1,560  客单价 ¥1,800 │
+└────────────────────────────────────────────┘
+┌─ Visual Filter（可点击筛选）─────────────────┐
+│ 按区域：华东 42%●●●●● 华南 33%●●● 华北 25%●●│
+│ ← 点击"华东"明细表自动过滤到华东              │
+└────────────────────────────────────────────┘
+┌─ 明细表（与图表同筛选上下文）─────────────────┐
+│ 订单号     客户     金额    状态     日期    │
+│ SO00100 Siemens ¥128K [✓确认] 07-20       │
+│ ← 点击订单进入 Object Page                    │
+└────────────────────────────────────────────┘</div>
+<div class="ci"><b>标杆洞察：</b>SAP Analytical List Page 的核心创新是<strong>Visual Filter</strong>——图表本身就是筛选器。点击图表中的某个维度，明细表自动过滤。这比传统的"图表+独立筛选器"更直观，因为用户看到的图表和明细始终是同一口径。钻取链路完整：指标→维度→明细→Object Page。</div></div>
+
+<h3>案例 2：Salesforce — Report + Dashboard 联动</h3>
+<div class="case"><div class="ch"><span class="cs">Salesforce Lightning</span><span class="csc">报表钻取</span></div>
+<div class="cb">Salesforce 的 Dashboard 图表点击后跳转到对应的 <strong>Report</strong>，Report 支持分组和筛选，点击 Report 中的记录行跳转到 Record Page。形成了"图表→报表→记录"的完整钻取链。</div>
+<div class="ci"><b>标杆洞察：</b>Salesforce 的钻取链每层都保留筛选上下文——从 Dashboard 到 Report 时，图表的筛选条件自动传递到 Report；从 Report 到 Record Page 时，可通过返回按钮回到 Report 且筛选状态不变。</div></div>
+
+<h3>案例 3：Microsoft Power BI — 钻取层级</h3>
+<div class="case"><div class="ch"><span class="cs">Microsoft Power BI</span><span class="csc">多层级钻取</span></div>
+<div class="cb">Power BI 支持配置<strong>钻取层级（Drill-down Hierarchy）</strong>：区域→国家→城市→门店。用户点击图表中的"下钻"按钮逐层展开。每层保留上级筛选上下文。Power BI 还支持<strong>跨页钻取</strong>——从一个报表页钻取到另一个报表页，传递筛选上下文。</div>
+<div class="ci"><b>标杆洞察：</b>Power BI 的钻取层级是显式配置的——开发者定义层级结构（区域→国家→城市→门店），用户按层级逐层下钻。这比"自由点击"更有结构感，避免用户迷失。</div></div>
+
+<div class="ap"><b>✗ 反模式：Dashboard 只展示大数字不提供钻取</b><br>"华东区销售额 ¥100万" → 用户问"哪类商品卖得好？哪个门店拖累了？" → 页面无法回答。<div class="apfix">✓ SAP 每个图表可点击筛选；Salesforce 图表关联 Report；Power BI 配置钻取层级。</div></div>
+<div class="tb"><b>理论桥接：</b>§7 钻取链路（四层：汇总→维度→明细→业务对象）；§7.3 Drill-down 五要求（每层保留上下文、汇总可对账、落到业务证据）。</div>
+</div>
+
+<!-- P16 Customer 360 -->
+<a name="p16"></a>
+<div class="card">
+<div class="ph"><div class="pn">16</div><div class="pname">Customer 360 — 客户全景视图</div>
+<div class="tags"><span class="tag sf">Salesforce Lightning</span><span class="tag ms">Microsoft Dynamics</span></div></div>
+<div class="cp"><b>核心问题</b><br>多渠道的客户数据如何归一呈现，让客服人员快速了解客户全貌。</div>
+
+<h3>案例 1：Salesforce Lightning — Customer 360</h3>
+<div class="case"><div class="ch"><span class="cs">Salesforce Lightning</span><span class="csc">CRM 客户全景</span></div>
+<div class="cb">Salesforce 的 Customer 360 是该模式的命名来源。在客户 Record Page 上聚合：基本信息、联系方式、交易历史（订单 Related List）、沟通记录（Activity Timeline）、服务工单（Cases）、合同（Contracts）、团队成员、AI 推荐（Einstein 建议）。三列布局：左列 Highlights，中列详情+Related Lists，右列组件+AI建议。</div>
+<div class="ci"><b>标杆洞察：</b>Salesforce Customer 360 的核心是<strong>身份归一</strong>——同一客户在不同渠道（门店/微信/邮件）的交互记录都关联到同一客户记录。Activity Timeline 按时间聚合所有渠道的沟通记录。Einstein 在此基础上提供 AI 推荐（"此客户流失风险高，建议联系"）。</div></div>
+
+<h3>案例 2：Microsoft Dynamics 365 — Customer Insights</h3>
+<div class="case"><div class="ch"><span class="cs">Microsoft Dynamics 365</span><span class="csc">Customer Insights 客户画像</span></div>
+<div class="cb">Microsoft Customer Insights 聚合多源数据（CRM/ERP/电商/社交媒体），通过<strong>身份解析（Identity Resolution）</strong>合并同一客户的不同标识。展示客户画像、交易历史、行为轨迹和预测评分（流失风险/生命周期价值）。</div>
+<div class="ci"><b>标杆洞察：</b>Microsoft Customer Insights 的身份解析展示<strong>置信度和匹配规则</strong>——当两个标识可能是同一客户时，展示匹配依据和置信度，而非自动合并。这对应 ID-1 不变量（身份映射必须展示置信度和冲突处理流程）。</div></div>
+
+<div class="tb"><b>理论桥接：</b>§1 数据聚合（多渠道数据→统一客户视图）；§10.5 边界对象（跨系统同名对象保留来源）；§9.6 上下文完整性（最小披露——按角色展示必要数据）；方向 8 INV-COM-002（敏感数据脱敏）。</div>
+</div>
+
+<!-- 总结 -->
+<a name="summary"></a>
+<h2>总结：标杆系统的共性规律</h2>
+
+<div class="card">
+<h3>1. 模式不是组件，是任务-对象-状态的映射</h3>
+<p>标杆系统不约而同地把"模式"作为设计语言的单位——SAP Fiori 直接命名了 List Report、Object Page、Overview Page、Worklist；Salesforce 命名了 Record Page、Related Lists、Path、Kanban。模式不是视觉组件，而是"特定任务×特定对象×特定状态"的解法。</p>
+
+<h3>2. 信息分层是所有模式的共同骨架</h3>
+<p>无论 SAP 的 Smart Filter Bar（核心筛选展开+高级折叠）、Salesforce 的 Highlights Panel（只展示4-6个关键字段）、还是 Ant Design Pro 的 QueryFilter（前N个字段默认展示），都在执行同一个原则：<strong>第一层（当前任务应看到的）→第二层（理解背景）→第三层（排查问题时才看）</strong>。</p>
+
+<h3>3. 状态驱动操作可用性</h3>
+<p>金蝶的命令栏随状态动态调整、SAP 的 Object Page 操作按状态机计算、Salesforce 的 Path 标注当前阶段可用动作——所有标杆系统都遵循<strong>能力模型</strong>：<code>availableActions = f(状态, 权限, 范围, 不变量, 锁, 时间窗, 策略)</code>。</p>
+
+<h3>4. 钻取链路必须完整</h3>
+<p>SAP 的 Visual Filter→明细表→Object Page、Salesforce 的 Dashboard→Report→Record、Power BI 的层级钻取——所有标杆系统都保证<strong>指标→维度→明细→业务对象</strong>的完整链路，且每层保留筛选上下文。</p>
+
+<h3>5. 风险分层决定承载方式</h3>
+<p>Microsoft 区分 Dialog（阻断）和 Panel（非阻断）、Ant Design 区分 ModalForm 和 DrawerForm、SAP 区分 Toast/Strip/Dialog/Page——所有系统都按风险级别选择不同承载容器。<strong>高风险用阻断式确认+影响预览，低风险用非阻断式反馈</strong>。</p>
+
+<h3>6. 协作状态必须显式</h3>
+<p>SAP My Inbox 展示审批任务的责任人和 SLA、Salesforce 的 Assignment + Queues 展示任务分配——所有系统都把<strong>"谁负责、等待谁、何时超时"</strong>显式化，而非依赖口头沟通。</p>
+
+<h3>7. AI 时代的共同方向</h3>
+<p>Salesforce Einstein、SAP Joule、Microsoft Copilot 都在向<strong>上下文感知+可解释推荐+人工确认+信任层</strong>方向演进。AI 推荐展示置信度和依据，高风险操作保留人工确认，敏感数据经过脱敏——这正是方向 6（Agent-Native UI）的产业实践。</p>
+
+<h3>8. 可访问性是内置而非补丁</h3>
+<p>IBM Carbon 的语义化表格、SAP Fiori 的三重状态编码、Microsoft Fluent 的键盘导航——所有标杆设计系统都把可访问性作为模式的内置契约，而非事后补丁。</p>
+</div>
+
+<div class="card">
+<h3>标杆系统 × 模式 覆盖矩阵</h3>
+<table>
+<tr><th>模式</th><th>SAP Fiori</th><th>Salesforce</th><th>Ant Design Pro</th><th>IBM Carbon</th><th>Microsoft Fluent</th><th>金蝶云苍穹</th></tr>
+<tr><td>List Report</td><td>✓ 命名来源</td><td>—</td><td>✓ ProTable</td><td>✓ Data Table</td><td>✓ DetailsList</td><td>✓ 卡片变体</td></tr>
+<tr><td>Object Page</td><td>✓ 命名来源</td><td>✓ Record Page</td><td>—</td><td>—</td><td>—</td><td>✓ 单据详情</td></tr>
+<tr><td>Timeline</td><td>✓ 状态历史</td><td>✓ Activity Timeline</td><td>✓ Timeline组件</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Related Lists</td><td>✓ 分区</td><td>✓ 命名来源</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Master-Detail</td><td>✓ Flexible Column</td><td>—</td><td>—</td><td>—</td><td>✓ List Details</td><td>—</td></tr>
+<tr><td>Dashboard</td><td>✓ Overview Page</td><td>✓ Dashboard</td><td>✓ Dashboard</td><td>✓ Dashboard</td><td>✓ Power BI</td><td>✓ 工作台</td></tr>
+<tr><td>Worklist</td><td>✓ My Inbox</td><td>✓ Kanban+Path</td><td>✓ 待办列表</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Forms</td><td>✓ Edit Mode</td><td>—</td><td>✓ 全家桶</td><td>—</td><td>✓ Dialog+Panel</td><td>✓ 动态表单</td></tr>
+<tr><td>Wizard</td><td>✓ Wizard</td><td>—</td><td>✓ StepsForm</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Exception</td><td>✓ 分层消息</td><td>—</td><td>✓ Result+Notification</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Config</td><td>✓ SPRO+Transport</td><td>✓ Flow Builder</td><td>—</td><td>—</td><td>—</td><td>✓ 表单设计器</td></tr>
+<tr><td>Reconciliation</td><td>✓ Bank Recon</td><td>—</td><td>—</td><td>—</td><td>—</td><td>✓ 资金对账</td></tr>
+<tr><td>Permission</td><td>✓ PFCG</td><td>✓ Profile+PermSet</td><td>—</td><td>—</td><td>—</td><td>✓ 角色+数据权限</td></tr>
+<tr><td>AI/Agent</td><td>✓ Joule</td><td>✓ Einstein</td><td>—</td><td>—</td><td>✓ Copilot</td><td>—</td></tr>
+<tr><td>Drill-down</td><td>✓ Analytical List</td><td>✓ Report联动</td><td>—</td><td>—</td><td>✓ Power BI</td><td>—</td></tr>
+<tr><td>Customer 360</td><td>—</td><td>✓ 命名来源</td><td>—</td><td>—</td><td>✓ Customer Insights</td><td>—</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h3>关键启示</h3>
+<div class="tb"><b>启示 1：</b>没有一种标杆系统覆盖了所有模式。SAP 在 ERP 页面范式最完整，Salesforce 在 CRM 对象页和销售流程最成熟，Ant Design Pro 在中后台工程落地最轻量，Microsoft 在 AI 集成最前沿。选型时应按行业和任务借鉴对应标杆。</div>
+<div class="tb"><b>启示 2：</b>模式不是"选一个用"，而是"组合使用"。真实页面通常是"核心模式+局部模式+风险/协作/恢复机制"的组合，如 <code>Worklist + Assignment + Aging + Handoff</code> 组合成"任务接力工作台"。</div>
+<div class="tb"><b>启示 3：</b>所有标杆系统都在向 AI 演进——但都遵循"上下文感知+可解释推荐+人工确认+信任层"的共同原则。AI 不是"放一个聊天框"，而是校准用户对自动化能力的信任。</div>
+<div class="tb"><b>启示 4：</b>反模式的修正往往就是下一个模式的引入——"异常只在日志"的修正就是 Exception Center；"首页堆图表"的修正就是 Dashboard+Drill-down；"权限只配置不审计"的修正就是 Audit Log。反模式识别是模式选型的第一步。</div>
+</div>
+
+</div>
+</div>
+</body>
+</html>

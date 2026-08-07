@@ -1,0 +1,1933 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="从业务规则理论到 UI 交互原型的映射说明与可操作示例">
+  <title>业务规则 → UI：从理论到交互原型</title>
+  <style>
+    :root {
+      --paper: #f4f1e9;
+      --surface: #fffdf8;
+      --surface-strong: #ffffff;
+      --ink: #17211e;
+      --muted: #5f6d68;
+      --line: #d7d8cf;
+      --line-strong: #afb8b2;
+      --brand: #0a6656;
+      --brand-dark: #07483e;
+      --brand-soft: #dceee8;
+      --accent: #c85b2a;
+      --accent-soft: #f7e5da;
+      --warning: #9a6500;
+      --warning-soft: #fff2cb;
+      --danger: #a43232;
+      --danger-soft: #f8dddd;
+      --success: #26704c;
+      --success-soft: #def0e5;
+      --info: #315f8d;
+      --info-soft: #e1ecf7;
+      --shadow-sm: 0 1px 2px rgba(23, 33, 30, .08);
+      --shadow-md: 0 12px 32px rgba(23, 33, 30, .10);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 22px;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 24px;
+      --space-6: 32px;
+      --space-7: 48px;
+      --space-8: 64px;
+      --text-xs: 12px;
+      --text-sm: 14px;
+      --text-md: 16px;
+      --text-lg: 20px;
+      --text-xl: 28px;
+      --text-hero: clamp(36px, 6vw, 68px);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(rgba(23, 33, 30, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(23, 33, 30, .035) 1px, transparent 1px),
+        var(--paper);
+      background-size: 28px 28px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+      font-size: var(--text-md);
+      line-height: 1.65;
+    }
+    button, select, input { font: inherit; }
+    button { color: inherit; }
+    a { color: var(--brand-dark); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    :focus-visible { outline: 3px solid rgba(10, 102, 86, .35); outline-offset: 3px; }
+    .skip-link {
+      position: fixed;
+      top: var(--space-3);
+      left: var(--space-3);
+      z-index: 100;
+      padding: var(--space-2) var(--space-4);
+      background: var(--ink);
+      color: white;
+      transform: translateY(-160%);
+    }
+    .skip-link:focus { transform: translateY(0); }
+    .shell { width: min(1440px, calc(100% - 40px)); margin: 0 auto; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      border-bottom: 1px solid rgba(175, 184, 178, .75);
+      background: rgba(244, 241, 233, .94);
+      backdrop-filter: blur(14px);
+    }
+    .topbar-inner {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--ink);
+      background: var(--brand);
+      color: white;
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+    .topnav { display: flex; align-items: center; gap: var(--space-2); }
+    .topnav a {
+      padding: 8px 12px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      font-weight: 700;
+    }
+    .topnav a:hover { color: var(--ink); background: var(--surface); }
+    main { overflow: clip; }
+    .hero {
+      min-height: 620px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(380px, .92fr);
+      align-items: center;
+      gap: var(--space-7);
+      padding: var(--space-8) 0;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 6px 10px;
+      border: 1px solid var(--line-strong);
+      background: var(--surface);
+      color: var(--brand-dark);
+      font-size: var(--text-xs);
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 920px;
+      margin: var(--space-5) 0;
+      font-family: Georgia, "Songti SC", serif;
+      font-size: var(--text-hero);
+      line-height: 1.02;
+      letter-spacing: -.055em;
+    }
+    h1 em { color: var(--brand); font-style: normal; }
+    .hero-copy { max-width: 760px; color: var(--muted); font-size: var(--text-lg); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-6); }
+    .btn {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      padding: 10px 16px;
+      border: 1px solid var(--ink);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      box-shadow: 3px 3px 0 var(--ink);
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 800;
+      transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+    }
+    .btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--ink); }
+    .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+    .btn.primary { background: var(--brand); color: white; }
+    .btn.ghost { border-color: var(--line-strong); box-shadow: none; }
+    .btn:disabled { opacity: .48; cursor: not-allowed; pointer-events: none; box-shadow: none; }
+    .hero-model {
+      position: relative;
+      padding: var(--space-5);
+      border: 1px solid var(--ink);
+      background: var(--surface);
+      box-shadow: 10px 10px 0 var(--ink);
+    }
+    .model-caption { color: var(--muted); font-size: var(--text-sm); font-weight: 700; }
+    .formula {
+      margin: var(--space-4) 0 var(--space-5);
+      padding: var(--space-4);
+      border-left: 4px solid var(--accent);
+      background: var(--accent-soft);
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: var(--text-sm);
+      overflow-wrap: anywhere;
+    }
+    .mini-pipeline { display: grid; gap: var(--space-2); }
+    .mini-node {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3);
+      border: 1px solid var(--line);
+      background: white;
+    }
+    .mini-node span:first-child {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      background: var(--ink);
+      color: white;
+      font-weight: 800;
+      font-size: var(--text-sm);
+    }
+    .mini-node strong { display: block; }
+    .mini-node small { color: var(--muted); }
+    .section { padding: var(--space-8) 0; }
+    .section-head {
+      max-width: 900px;
+      margin-bottom: var(--space-7);
+    }
+    .section-kicker { color: var(--accent); font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+    h2 { margin-bottom: var(--space-4); font-size: clamp(30px, 4vw, 48px); line-height: 1.12; letter-spacing: -.035em; }
+    h3 { margin-bottom: var(--space-2); font-size: var(--text-lg); line-height: 1.3; }
+    .lead { color: var(--muted); font-size: var(--text-lg); }
+    .theory-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+    .theory-card {
+      min-height: 220px;
+      padding: var(--space-5);
+      border: 1px solid var(--line-strong);
+      background: rgba(255, 253, 248, .9);
+      box-shadow: var(--shadow-sm);
+    }
+    .theory-card .index { color: var(--accent); font-family: Georgia, serif; font-size: var(--text-xl); font-weight: 800; }
+    .theory-card p { margin-bottom: 0; color: var(--muted); }
+    .mapping-flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(150px, 1fr));
+      gap: var(--space-3);
+      align-items: stretch;
+    }
+    .flow-card {
+      position: relative;
+      padding: var(--space-5) var(--space-4);
+      border-top: 4px solid var(--brand);
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+    }
+    .flow-card:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      top: 50%;
+      right: -18px;
+      z-index: 2;
+      color: var(--accent);
+      font-weight: 900;
+    }
+    .flow-card small { display: block; margin-bottom: var(--space-2); color: var(--muted); }
+    .flow-card p { margin: var(--space-2) 0 0; color: var(--muted); font-size: var(--text-sm); }
+    .obligation-band {
+      margin-top: var(--space-5);
+      padding: var(--space-4);
+      border: 1px solid var(--line-strong);
+      background: var(--ink);
+      color: white;
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 4px 10px;
+      border: 1px solid currentColor;
+      border-radius: 999px;
+      font-size: var(--text-xs);
+      font-weight: 800;
+    }
+    .compiler {
+      margin-bottom: var(--space-6);
+      display: grid;
+      grid-template-columns: minmax(320px, .72fr) minmax(0, 1.28fr);
+      border: 1px solid #56615d;
+      background: #111916;
+      box-shadow: 0 18px 54px rgba(0, 0, 0, .24);
+    }
+    .compiler-input, .compiler-output { min-width: 0; padding: var(--space-5); }
+    .compiler-output { border-left: 1px solid #46514c; background: #151f1b; }
+    .compiler h3 { color: white; }
+    .compiler-copy { color: #9daba5; font-size: var(--text-sm); }
+    .parser-mode { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); margin-top: var(--space-4); }
+    .mode-option {
+      min-height: 44px;
+      padding: 9px 12px;
+      border: 1px solid #56615d;
+      border-radius: var(--radius-sm);
+      background: #18211e;
+      color: #bfcac5;
+      cursor: pointer;
+      font-size: var(--text-sm);
+      font-weight: 800;
+    }
+    .mode-option.active { border-color: #8dd4c2; background: var(--brand); color: white; }
+    .ai-connection {
+      margin-top: var(--space-3);
+      padding: var(--space-3);
+      border-left: 3px solid var(--info);
+      background: #172536;
+      color: #c7d9eb;
+      font-size: var(--text-xs);
+    }
+    .ai-connection.success { border-color: var(--success); background: #162a21; color: #cde9d8; }
+    .ai-connection.warning { border-color: var(--warning); background: #2b2922; color: #ead7af; }
+    .ai-connection.error { border-color: var(--danger); background: #311d1d; color: #f1c8c8; }
+    .ai-connection strong { display: block; margin-bottom: 3px; }
+    .compiler-field { margin-top: var(--space-4); }
+    .compiler-field label { display: block; margin-bottom: var(--space-2); color: #dce6e1; font-size: var(--text-sm); font-weight: 800; }
+    .rule-textarea {
+      width: 100%;
+      min-height: 150px;
+      resize: vertical;
+      padding: var(--space-3);
+      border: 1px solid #6b7872;
+      border-radius: var(--radius-sm);
+      background: #202c28;
+      color: white;
+      line-height: 1.65;
+    }
+    .compiler-context { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+    .example-rules { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+    .example-rule {
+      padding: 6px 9px;
+      border: 1px solid #56615d;
+      border-radius: 999px;
+      background: transparent;
+      color: #bfcac5;
+      cursor: pointer;
+      font-size: var(--text-xs);
+    }
+    .example-rule:hover { border-color: #8dd4c2; color: white; }
+    .compile-action { width: 100%; margin-top: var(--space-4); }
+    .compile-empty { min-height: 420px; display: grid; place-items: center; border: 1px dashed #56615d; color: #8fa099; text-align: center; }
+    .compile-status { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-4); margin-bottom: var(--space-4); }
+    .compiled-rule-tabs { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-4); }
+    .compiled-rule-tab {
+      padding: 7px 10px;
+      border: 1px solid #56615d;
+      border-radius: var(--radius-sm);
+      background: #1c2824;
+      color: #bfcac5;
+      cursor: pointer;
+      font-size: var(--text-xs);
+      font-weight: 800;
+    }
+    .compiled-rule-tab.active { border-color: #8dd4c2; background: var(--brand); color: white; }
+    .compile-pipeline { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-2); }
+    .compile-card { min-width: 0; padding: var(--space-3); border: 1px solid #46514c; background: #1c2824; }
+    .compile-card h4 { margin: 0 0 var(--space-2); color: #8dd4c2; font-size: var(--text-xs); letter-spacing: .05em; text-transform: uppercase; }
+    .compile-card p, .compile-card li { color: #dce6e1; font-size: var(--text-xs); }
+    .compile-card ul { margin: 0; padding-left: 18px; }
+    .ir-json {
+      max-height: 240px;
+      margin: 0;
+      overflow: auto;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      color: #c9f1e6;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+    .ambiguity-box { margin-top: var(--space-3); padding: var(--space-3); border-left: 3px solid var(--warning); background: #2b2922; }
+    .ambiguity-box strong { color: #ffd787; font-size: var(--text-xs); }
+    .ambiguity-box ul { margin: 6px 0 0; padding-left: 18px; color: #e7d6bd; font-size: var(--text-xs); }
+    .generated-preview { margin-top: var(--space-3); padding: var(--space-4); border: 1px solid #46514c; background: #2a3732; }
+    .generated-preview .app-frame { margin: 0 auto; min-height: 0; }
+    .compiler-section-label { margin-bottom: var(--space-3); color: #92a39c; font-size: var(--text-xs); font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
+    .studio-section { background: var(--ink); color: white; }
+    .studio-section .lead { color: #bfcac5; }
+    .studio {
+      border: 1px solid #56615d;
+      background: #111916;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .28);
+    }
+    .derivation {
+      padding: var(--space-5);
+      border-bottom: 1px solid #46514c;
+      background: #151f1b;
+    }
+    .derivation-title {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+    .derivation-title h3 { margin: 0; color: white; }
+    .derivation-title p { margin: 4px 0 0; color: #9daba5; font-size: var(--text-sm); }
+    .derivation-grid {
+      display: grid;
+      grid-template-columns: 1.08fr .92fr .9fr 1.25fr .95fr;
+      gap: var(--space-2);
+    }
+    .derive-step {
+      position: relative;
+      min-width: 0;
+      padding: var(--space-4);
+      border: 1px solid #46514c;
+      background: #1c2824;
+    }
+    .derive-step:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      top: 50%;
+      right: -10px;
+      z-index: 4;
+      width: 18px;
+      height: 18px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      font-size: var(--text-xs);
+      font-weight: 900;
+    }
+    .derive-step-label { color: #8dd4c2; font-size: var(--text-xs); font-weight: 900; letter-spacing: .07em; text-transform: uppercase; }
+    .derive-step strong { display: block; margin: var(--space-2) 0; color: white; line-height: 1.35; }
+    .derive-step p { margin: 0; color: #aebbb5; font-size: var(--text-xs); line-height: 1.55; }
+    .rule-expression {
+      margin-top: var(--space-3);
+      padding: var(--space-3);
+      overflow-wrap: anywhere;
+      background: #0d1512;
+      color: #c9f1e6;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: var(--text-xs);
+    }
+    .delta-list, .target-list { display: grid; gap: 6px; margin-top: var(--space-3); }
+    .delta {
+      padding: 7px 8px;
+      border-left: 3px solid var(--accent);
+      background: #252f2b;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+    .delta-path { display: block; color: #f4bf9f; font-weight: 800; }
+    .delta-before { color: #9daba5; text-decoration: line-through; }
+    .delta-after { color: #bceadd; }
+    .target-item { display: flex; align-items: flex-start; gap: 7px; color: #dce6e1; font-size: var(--text-xs); }
+    .target-index {
+      flex: 0 0 20px;
+      height: 20px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      font-weight: 900;
+    }
+    .target-item.missing { color: #788781; }
+    .target-item.missing .target-index { background: #46514c; }
+    .proof-line {
+      margin-top: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border-left: 4px solid #8dd4c2;
+      background: #0d1512;
+      color: #dce6e1;
+      font-size: var(--text-sm);
+    }
+    .proof-line strong { color: #8dd4c2; }
+    .mapped-impact {
+      position: relative;
+      outline: 3px solid var(--accent) !important;
+      outline-offset: 3px;
+      box-shadow: 0 0 0 6px rgba(200, 91, 42, .14) !important;
+    }
+    .mapped-impact::after {
+      content: attr(data-map-label);
+      position: absolute;
+      top: -12px;
+      right: -10px;
+      z-index: 8;
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border: 2px solid white;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      font-size: 11px;
+      font-weight: 900;
+      box-shadow: var(--shadow-sm);
+    }
+    .offer-choice {
+      margin-top: var(--space-3);
+      padding: var(--space-3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      border: 1px dashed var(--line-strong);
+      background: #faf9f4;
+      font-size: var(--text-sm);
+    }
+    .offer-choice small { display: block; color: var(--muted); }
+    .offer-choice .blocked { color: var(--danger); font-size: var(--text-xs); font-weight: 900; }
+    .studio-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: var(--space-4);
+      border-bottom: 1px solid #46514c;
+      background: #1c2824;
+    }
+    .tabs { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    .tab {
+      padding: 9px 14px;
+      border: 1px solid #56615d;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: #dce6e1;
+      cursor: pointer;
+      font-weight: 800;
+    }
+    .tab[aria-selected="true"] { border-color: #8dd4c2; background: var(--brand); color: white; }
+    .toolbar-note { color: #9daba5; font-size: var(--text-xs); }
+    .studio-grid { display: grid; grid-template-columns: 320px minmax(0, 1fr) 340px; min-height: 690px; }
+    .studio-panel { min-width: 0; padding: var(--space-5); }
+    .studio-panel + .studio-panel { border-left: 1px solid #46514c; }
+    .panel-label {
+      margin-bottom: var(--space-4);
+      color: #92a39c;
+      font-size: var(--text-xs);
+      font-weight: 900;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .control-group { margin-bottom: var(--space-5); }
+    .control-group label { display: block; margin-bottom: var(--space-2); color: #c7d1cc; font-size: var(--text-sm); font-weight: 800; }
+    .select {
+      width: 100%;
+      min-height: 44px;
+      padding: 9px 12px;
+      border: 1px solid #6b7872;
+      border-radius: var(--radius-sm);
+      background: #202c28;
+      color: white;
+    }
+    .state-switcher { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); }
+    .state-btn {
+      min-height: 42px;
+      padding: 8px;
+      border: 1px solid #56615d;
+      border-radius: var(--radius-sm);
+      background: #18211e;
+      color: #c7d1cc;
+      cursor: pointer;
+      font-size: var(--text-xs);
+      font-weight: 800;
+    }
+    .state-btn.active { border-color: #8dd4c2; background: #164f44; color: white; }
+    .rule-list { display: grid; gap: var(--space-2); }
+    .rule-button {
+      width: 100%;
+      padding: var(--space-3);
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: var(--space-3);
+      text-align: left;
+      border: 1px solid #46514c;
+      border-radius: var(--radius-sm);
+      background: #18211e;
+      color: white;
+      cursor: pointer;
+    }
+    .rule-button:hover { border-color: #779087; background: #202c28; }
+    .rule-button.selected { border-color: #8dd4c2; box-shadow: inset 3px 0 0 #8dd4c2; }
+    .rule-id { color: #8dd4c2; font-family: ui-monospace, monospace; font-size: var(--text-xs); font-weight: 900; }
+    .rule-button strong { display: block; line-height: 1.35; }
+    .rule-button small { display: block; margin-top: var(--space-1); color: #91a19a; }
+    .preview-wrap {
+      min-height: 580px;
+      padding: var(--space-5);
+      display: grid;
+      place-items: center;
+      border-radius: var(--radius-md);
+      background:
+        linear-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px),
+        #2a3732;
+      background-size: 22px 22px;
+    }
+    .app-frame {
+      width: min(100%, 620px);
+      min-height: 520px;
+      overflow: hidden;
+      border: 1px solid #98a49f;
+      border-radius: 18px;
+      background: #f7f7f3;
+      color: var(--ink);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .34);
+    }
+    .app-top {
+      min-height: 56px;
+      padding: 0 var(--space-4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      background: white;
+    }
+    .app-top strong { font-size: var(--text-sm); }
+    .app-body { padding: var(--space-5); }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: var(--text-xs);
+      font-weight: 800;
+    }
+    .status-pill.success { background: var(--success-soft); color: var(--success); }
+    .status-pill.warning { background: var(--warning-soft); color: var(--warning); }
+    .status-pill.danger { background: var(--danger-soft); color: var(--danger); }
+    .status-pill.info { background: var(--info-soft); color: var(--info); }
+    .summary-card { padding: var(--space-4); border: 1px solid var(--line); background: white; }
+    .summary-row { display: flex; justify-content: space-between; gap: var(--space-4); padding: 9px 0; color: var(--muted); }
+    .summary-row + .summary-row { border-top: 1px dashed var(--line); }
+    .summary-row.total { margin-top: var(--space-2); color: var(--ink); font-size: var(--text-lg); font-weight: 900; }
+    .summary-row .minus { color: var(--success); font-weight: 800; }
+    .decision-box { margin-top: var(--space-4); padding: var(--space-4); border-left: 4px solid var(--brand); background: var(--brand-soft); }
+    .decision-box.warning { border-color: var(--warning); background: var(--warning-soft); }
+    .decision-box.danger { border-color: var(--danger); background: var(--danger-soft); }
+    .decision-box h4 { margin: 0 0 var(--space-2); }
+    .decision-box p { margin: 0; color: #46514c; font-size: var(--text-sm); }
+    .decision-list { margin: var(--space-3) 0 0; padding: 0; list-style: none; }
+    .decision-list li { padding: 5px 0; font-size: var(--text-sm); }
+    .app-actions { display: flex; gap: var(--space-3); margin-top: var(--space-5); }
+    .app-actions .btn { flex: 1; box-shadow: none; }
+    .form-row { margin-bottom: var(--space-4); }
+    .form-row label { display: flex; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-2); font-size: var(--text-sm); font-weight: 800; }
+    .field {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-sm);
+      background: white;
+      color: var(--ink);
+    }
+    .field.invalid { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(164, 50, 50, .12); }
+    .field-help { margin-top: 6px; color: var(--muted); font-size: var(--text-xs); }
+    .field-error { margin-top: 6px; color: var(--danger); font-size: var(--text-xs); font-weight: 800; }
+    .timeline { margin: var(--space-4) 0 0; padding: 0; list-style: none; }
+    .timeline li { position: relative; padding: 0 0 var(--space-4) 28px; color: var(--muted); font-size: var(--text-sm); }
+    .timeline li::before { content: ""; position: absolute; left: 4px; top: 7px; width: 10px; height: 10px; border: 2px solid var(--line-strong); border-radius: 50%; background: white; }
+    .timeline li::after { content: ""; position: absolute; left: 9px; top: 19px; bottom: 0; width: 1px; background: var(--line); }
+    .timeline li:last-child::after { display: none; }
+    .timeline li.done::before { border-color: var(--success); background: var(--success); }
+    .timeline li.current { color: var(--ink); font-weight: 800; }
+    .timeline li.current::before { border-color: var(--brand); box-shadow: 0 0 0 4px var(--brand-soft); }
+    .contract-card {
+      padding: var(--space-4);
+      border: 1px solid #56615d;
+      background: #18211e;
+    }
+    .contract-card + .contract-card { margin-top: var(--space-3); }
+    .contract-card h3 { color: white; font-size: var(--text-md); }
+    .contract-row {
+      display: grid;
+      grid-template-columns: 94px 1fr;
+      gap: var(--space-3);
+      padding: 8px 0;
+      border-top: 1px solid #3e4945;
+      font-size: var(--text-sm);
+    }
+    .contract-row dt { color: #8fa099; }
+    .contract-row dd { margin: 0; color: #eef4f1; }
+    .obligation-chip { margin: 3px 4px 3px 0; border-color: #8dd4c2; color: #bceadd; }
+    .authority-note { padding: var(--space-3); border-left: 3px solid var(--accent); background: #2b2922; color: #f2dfd0; font-size: var(--text-sm); }
+    .trace-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--space-2); }
+    .trace-node { min-height: 150px; padding: var(--space-4); border: 1px solid var(--line-strong); background: var(--surface); }
+    .trace-node code { color: var(--brand-dark); font-size: var(--text-xs); font-weight: 900; }
+    .trace-node p { margin: var(--space-3) 0 0; color: var(--muted); font-size: var(--text-sm); }
+    .matrix-wrap { overflow-x: auto; border: 1px solid var(--line-strong); background: var(--surface); }
+    table { width: 100%; border-collapse: collapse; min-width: 820px; }
+    th, td { padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { position: sticky; top: 67px; background: var(--ink); color: white; font-size: var(--text-xs); letter-spacing: .04em; }
+    td { font-size: var(--text-sm); }
+    tbody tr:hover { background: var(--brand-soft); }
+    .principles { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+    .principle { padding: var(--space-5); border-left: 5px solid var(--brand); background: var(--surface); }
+    .principle p { color: var(--muted); }
+    .principle dl { margin-bottom: 0; display: grid; grid-template-columns: 86px 1fr; gap: 7px var(--space-3); font-size: var(--text-sm); }
+    .principle dt { color: var(--accent); font-weight: 900; }
+    .principle dd { margin: 0; }
+    .footer { padding: var(--space-7) 0; border-top: 1px solid var(--line-strong); color: var(--muted); }
+    .footer-grid { display: flex; justify-content: space-between; gap: var(--space-5); }
+    .mt-3 { margin-top: var(--space-3); }
+    .mt-4 { margin-top: var(--space-4); }
+    .mt-8 { margin-top: var(--space-8); }
+    .noscript-note { padding: var(--space-5); background: var(--warning-soft); }
+    .live-region { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    @media (max-width: 1180px) {
+      .compile-pipeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .derivation-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .derive-step:not(:last-child)::after { display: none; }
+      .studio-grid { grid-template-columns: 280px minmax(0, 1fr); }
+      .studio-panel.contract-panel { grid-column: 1 / -1; border-left: 0; border-top: 1px solid #46514c; }
+      .contract-panel .contract-stack { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+      .contract-panel .contract-card + .contract-card { margin-top: 0; }
+      .mapping-flow { grid-template-columns: repeat(3, 1fr); }
+      .flow-card::after { display: none; }
+      .trace-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 840px) {
+      .shell { width: min(100% - 24px, 1440px); }
+      .compiler { grid-template-columns: 1fr; }
+      .compiler-output { border-left: 0; border-top: 1px solid #46514c; }
+      .derivation { padding: var(--space-4); }
+      .derivation-title { flex-direction: column; }
+      .derivation-grid { grid-template-columns: 1fr; }
+      .topnav { display: none; }
+      .hero { min-height: auto; grid-template-columns: 1fr; padding: var(--space-7) 0; }
+      .hero-model { box-shadow: 6px 6px 0 var(--ink); }
+      .theory-grid, .principles { grid-template-columns: 1fr; }
+      .mapping-flow { grid-template-columns: 1fr 1fr; }
+      .studio-toolbar { align-items: flex-start; flex-direction: column; }
+      .studio-grid { display: block; }
+      .studio-panel + .studio-panel { border-left: 0; border-top: 1px solid #46514c; }
+      .contract-panel .contract-stack { grid-template-columns: 1fr; }
+      .trace-grid { grid-template-columns: 1fr 1fr; }
+      .footer-grid { flex-direction: column; }
+    }
+    @media (max-width: 560px) {
+      .section { padding: var(--space-7) 0; }
+      .compiler-input, .compiler-output { padding: var(--space-4); }
+      .compiler-context, .compile-pipeline { grid-template-columns: 1fr; }
+      .mapping-flow, .trace-grid { grid-template-columns: 1fr; }
+      .studio-panel { padding: var(--space-4); }
+      .preview-wrap { padding: var(--space-3); }
+      .app-body { padding: var(--space-4); }
+      .app-actions { flex-direction: column; }
+      .state-switcher { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+    @media print {
+      .topbar, .hero-actions, .studio-toolbar, .studio-panel:first-of-type { display: none !important; }
+      body { background: white; }
+      .hero { min-height: auto; grid-template-columns: 1fr; }
+      .studio-grid { display: block; }
+      .studio-panel { border: 0 !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">R→UI</span><span>规则到交互映射</span></div>
+      <nav class="topnav" aria-label="页面导航">
+        <a href="#theory">理论</a>
+        <a href="#mapping">映射链</a>
+        <a href="#studio">原型工作台</a>
+        <a href="#trace">追踪验证</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main">
+    <section class="shell hero" aria-labelledby="hero-title">
+      <div>
+        <span class="eyebrow">Theory → Contract → Interface</span>
+        <h1 id="hero-title">业务规则不会直接变成按钮，<em>它先改变人的行动空间。</em></h1>
+        <p class="hero-copy">这是一份可操作的理论说明书：把 Fact、Invariant、Policy、Decision、State 转换成角色在特定任务下必须看到的信息、可以执行的命令、必须遵守的约束，以及失败后的恢复路径。</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#studio">打开交互原型 <span aria-hidden="true">↓</span></a>
+          <a class="btn ghost" href="#mapping">查看五级映射</a>
+        </div>
+      </div>
+      <aside class="hero-model" aria-label="交互契约核心公式">
+        <div class="model-caption">核心映射单位不是控件，而是 Interaction Contract</div>
+        <div class="formula">IC = Project(BusinessSemantics, Actor, Task, Context, State, PolicyVersion, Authority, Risk, Device)</div>
+        <div class="mini-pipeline">
+          <div class="mini-node"><span>01</span><div><strong>业务语义</strong><small>事实、不变量、政策、规则与状态</small></div></div>
+          <div class="mini-node"><span>02</span><div><strong>交互义务</strong><small>告知、约束、决策、解释与恢复</small></div></div>
+          <div class="mini-node"><span>03</span><div><strong>交互契约</strong><small>允许命令、字段策略、反馈与权威</small></div></div>
+          <div class="mini-node"><span>04</span><div><strong>UI 投影</strong><small>页面、状态、控件与视觉层级</small></div></div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="theory" class="section">
+      <div class="shell">
+        <header class="section-head">
+          <div class="section-kicker">01 / 理论底座</div>
+          <h2>UI 是业务规则约束下的任务工作面</h2>
+          <p class="lead">同一条规则对顾客、操作员、审批人和审计人员会产生不同的界面责任；同一个界面也会组合多条规则。理论的作用，是在选择控件之前先把责任和权威说清楚。</p>
+        </header>
+        <div class="theory-grid">
+          <article class="theory-card"><div class="index">A</div><h3>活动与任务</h3><p>规则必须落到“谁为了什么结果执行什么任务”。数据库字段和页面菜单都不是业务目标。</p></article>
+          <article class="theory-card"><div class="index">B</div><h3>行动与评价闭环</h3><p>既要让用户发现合法动作，也要让用户理解系统发生了什么、为什么，以及下一步怎么办。</p></article>
+          <article class="theory-card"><div class="index">C</div><h3>状态与命令</h3><p>按钮不是权限清单，而是当前状态、资格、数据范围和风险控制共同求交后的合法命令。</p></article>
+          <article class="theory-card"><div class="index">D</div><h3>决策权</h3><p>事实输入、用户选择、系统裁决和审批决定必须分离，避免把系统结论伪装成用户选择。</p></article>
+          <article class="theory-card"><div class="index">E</div><h3>控制与恢复</h3><p>提交不是终点。异步和高风险业务必须形成“操作—反馈—判断—修正”的闭环。</p></article>
+          <article class="theory-card"><div class="index">F</div><h3>渐进披露</h3><p>重要后果必须提前展示；复杂依据可以按需展开；审计细节只向承担相应责任的角色开放。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="mapping" class="section">
+      <div class="shell">
+        <header class="section-head">
+          <div class="section-kicker">02 / 五级映射</div>
+          <h2>从规则语义到具体界面，中间经过五次转换</h2>
+          <p class="lead">任何一步被跳过，都会出现“按钮为什么禁用说不清”“前后端规则漂移”“用户只看到失败却不知道如何恢复”等问题。</p>
+        </header>
+        <div class="mapping-flow" aria-label="五级映射流程">
+          <article class="flow-card"><small>Level 1</small><strong>规范规则语义</strong><p>区分事实、不变量、资格、计算、状态、权限、时间和例外。</p></article>
+          <article class="flow-card"><small>Level 2</small><strong>定位角色任务</strong><p>谁提供事实、谁选择、谁审批、谁承担错误结果。</p></article>
+          <article class="flow-card"><small>Level 3</small><strong>推导交互义务</strong><p>规则要求界面收集、告知、约束、解释还是恢复。</p></article>
+          <article class="flow-card"><small>Level 4</small><strong>合成交互契约</strong><p>形成字段策略、允许命令、决策投影和失败语义。</p></article>
+          <article class="flow-card"><small>Level 5</small><strong>选择 UI 表现</strong><p>再选择页面、表单、按钮、状态、时间线和消息。</p></article>
+        </div>
+        <div class="obligation-band">
+          <strong>九类交互义务</strong>
+          <div class="chips mt-3">
+            <span class="chip">Acquire 收集</span><span class="chip">Inform 告知</span><span class="chip">Constrain 约束</span><span class="chip">Guide 引导</span><span class="chip">Decide 决策</span><span class="chip">Confirm 确认</span><span class="chip">Explain 解释</span><span class="chip">Recover 恢复</span><span class="chip">Audit 审计</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="studio" class="section studio-section">
+      <div class="shell">
+        <header class="section-head">
+          <div class="section-kicker">03 / 映射推导器</div>
+          <h2>选择一条规则，查看它如何一步步改变 UI</h2>
+          <p class="lead">先拆解规则的条件与结果，再投影到当前角色和任务，推导交互义务，计算交互契约属性差异，最后把差异定位到具体 UI 元素。橙色编号表示当前规则真正影响的位置。</p>
+        </header>
+
+        <section class="compiler" aria-labelledby="compiler-title">
+          <div class="compiler-input">
+            <div class="compiler-section-label">V2 · Local + AI Candidate Compiler</div>
+            <h3 id="compiler-title">输入自然语言业务规则</h3>
+            <p class="compiler-copy">本地模式使用受控语法；AI 模式只生成待审核 Rule IR，后续交互义务、契约差异和 UI 仍由本地确定性编译器产生。</p>
+            <div class="parser-mode" role="group" aria-label="规则解析模式">
+              <button class="mode-option active" type="button" data-parser-mode="local" aria-pressed="true">本地确定性解析</button>
+              <button class="mode-option" type="button" data-parser-mode="ai" aria-pressed="false">AI 语义解析</button>
+            </div>
+            <div id="ai-connection" class="ai-connection">AI 模式需要通过本地代理打开本页面；API Key 只保存在服务端环境变量中。</div>
+            <div class="compiler-field">
+              <label for="natural-rule">业务规则</label>
+              <textarea id="natural-rule" class="rule-textarea">退款金额超过 500 元时，需要门店经理审批；申请人不能审批自己提交的退款。</textarea>
+              <div class="example-rules" aria-label="规则示例">
+                <button class="example-rule" type="button" data-example="0">退款审批</button>
+                <button class="example-rule" type="button" data-example="1">优惠互斥</button>
+                <button class="example-rule" type="button" data-example="2">异步未知</button>
+                <button class="example-rule" type="button" data-example="3">历史版本</button>
+              </div>
+            </div>
+            <div class="compiler-context">
+              <div class="compiler-field"><label for="compiler-role">当前角色</label><input id="compiler-role" class="select" value="退款申请人"></div>
+              <div class="compiler-field"><label for="compiler-task">当前任务</label><input id="compiler-task" class="select" value="发起退款"></div>
+              <div class="compiler-field"><label for="compiler-state">业务状态</label><input id="compiler-state" class="select" value="订单已支付"></div>
+              <div class="compiler-field"><label for="compiler-owner">规则 Owner</label><input id="compiler-owner" class="select" value="财务负责人"></div>
+            </div>
+            <button id="compile-rule" class="btn primary compile-action" type="button">编译规则并生成 UI</button>
+          </div>
+          <div class="compiler-output">
+            <div class="compiler-section-label">Compilation Result</div>
+            <div id="compiler-result" class="compile-empty">输入规则后点击“编译规则并生成 UI”<br>结果会显示 Rule IR、歧义、契约差异和原型。</div>
+          </div>
+        </section>
+
+        <div class="studio">
+          <div class="studio-toolbar">
+            <div class="tabs" role="tablist" aria-label="业务场景">
+              <button class="tab" type="button" role="tab" aria-selected="true" data-scenario="pricing">价格与优惠</button>
+              <button class="tab" type="button" role="tab" aria-selected="false" data-scenario="refund">退款与审批</button>
+            </div>
+            <div class="toolbar-note">操作顺序：选角色与状态 → 选规则 → 沿推导链查看 UI 落点</div>
+          </div>
+          <div id="derivation" class="derivation" aria-live="polite"></div>
+          <div class="studio-grid">
+            <aside class="studio-panel" aria-label="业务上下文控制">
+              <div class="panel-label">Business Context</div>
+              <div class="control-group">
+                <label for="role-select">当前角色</label>
+                <select id="role-select" class="select"></select>
+              </div>
+              <div class="control-group">
+                <label>业务状态</label>
+                <div id="state-switcher" class="state-switcher" role="group" aria-label="业务状态选择"></div>
+              </div>
+              <div class="control-group">
+                <label>适用规则 · 点击查看映射</label>
+                <div id="rule-list" class="rule-list"></div>
+              </div>
+            </aside>
+
+            <section class="studio-panel" aria-label="UI 原型预览">
+              <div class="panel-label">Task UI Projection</div>
+              <div id="preview" class="preview-wrap"></div>
+            </section>
+
+            <aside class="studio-panel contract-panel" aria-label="交互契约">
+              <div class="panel-label">Interaction Contract</div>
+              <div id="contract" class="contract-stack"></div>
+            </aside>
+          </div>
+        </div>
+      </div>
+      <div id="live-region" class="live-region" aria-live="polite"></div>
+    </section>
+    <section id="trace" class="section">
+      <div class="shell">
+        <header class="section-head">
+          <div class="section-kicker">04 / 双向追踪</div>
+          <h2>每一个 UI 约束都能反查业务依据</h2>
+          <p class="lead">规则到 UI 的映射不是设计师个人判断，而是一条可验证、可回归、可审计的证据链。</p>
+        </header>
+        <div class="trace-grid" aria-label="双向追踪链">
+          <article class="trace-node"><code>BR-*</code><h3>业务规则</h3><p>含义、来源、作用域、版本与关系。</p></article>
+          <article class="trace-node"><code>IO-*</code><h3>交互义务</h3><p>收集、告知、约束、解释与恢复。</p></article>
+          <article class="trace-node"><code>IC-*</code><h3>交互契约</h3><p>角色、任务、命令、字段和反馈。</p></article>
+          <article class="trace-node"><code>UI-*</code><h3>页面状态</h3><p>可见、只读、阻断、审批和未知。</p></article>
+          <article class="trace-node"><code>API/GUARD-*</code><h3>权威守卫</h3><p>服务端裁决、状态转换和不变量。</p></article>
+          <article class="trace-node"><code>TEST-*</code><h3>场景验证</h3><p>正常、边界、冲突、并发和恢复。</p></article>
+        </div>
+
+        <div class="section-head mt-8">
+          <div class="section-kicker">05 / 规则类型速查</div>
+          <h2>不同规则，产生不同的 UI 责任</h2>
+        </div>
+        <div class="matrix-wrap" tabindex="0" aria-label="规则类型映射矩阵，可横向滚动">
+          <table>
+            <thead><tr><th>规则类型</th><th>核心问题</th><th>UI 责任</th><th>服务端权威</th><th>典型错误</th></tr></thead>
+            <tbody>
+              <tr><td>不变量</td><td>什么绝不能发生</td><td>提前提示、输入约束、阻断与恢复</td><td>领域守卫、并发控制、数据约束</td><td>只设置前端 max</td></tr>
+              <tr><td>资格</td><td>当前是否适用</td><td>资格状态、缺失条件、可恢复动作</td><td>Specification / 决策表</td><td>直接隐藏且不解释</td></tr>
+              <tr><td>选择/裁决</td><td>谁决定采用哪个结果</td><td>候选、决策权、最终结果和理由</td><td>Policy / DMN</td><td>把系统裁决伪装成用户选择</td></tr>
+              <tr><td>计算</td><td>金额或数量如何形成</td><td>输入、基准、预估、明细和失效条件</td><td>精度、舍入、分摊和最终值</td><td>前后端结果不同但无提示</td></tr>
+              <tr><td>状态</td><td>哪些转换合法</td><td>当前状态、允许命令、处理中和历史</td><td>状态机和 Guard</td><td>任意状态下拉框</td></tr>
+              <tr><td>权限</td><td>谁能看、做和批准</td><td>隐藏、只读、禁用或审批</td><td>RBAC/ABAC 和数据范围</td><td>隐藏按钮代替授权</td></tr>
+              <tr><td>时间/版本</td><td>何时适用、历史如何解释</td><td>有效期、版本、历史快照和比较</td><td>Effective Dating</td><td>用当前规则重算历史</td></tr>
+              <tr><td>异步/流程</td><td>何时真正完成</td><td>已接受、处理中、未知、补偿和人工</td><td>任务状态、幂等、对账</td><td>HTTP 200 即显示业务完成</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="section-head mt-8">
+          <div class="section-kicker">06 / 使用护栏</div>
+          <h2>理论不是把每条规则都做成复杂界面</h2>
+        </div>
+        <div class="principles">
+          <article class="principle"><h3>UI 预检 ≠ 最终裁决</h3><p>即时反馈提升体验，但动态政策、权限、并发资源和高风险结果必须由服务端重新判断。</p><dl><dt>适用</dt><dd>格式、局部依赖、低成本预估</dd><dt>边界</dt><dd>金额、库存、状态、权限和不可逆副作用</dd><dt>反例</dt><dd>两个终端同时看到“库存 1”并各自在前端扣减</dd></dl></article>
+          <article class="principle"><h3>解释 ≠ 暴露内部代码</h3><p>解释应来自实际决策结果，使用规范业务词汇，并根据角色分层展示。</p><dl><dt>适用</dt><dd>高影响、易质疑或需恢复的决策</dd><dt>边界</dt><dd>敏感风控只给最低必要解释和申诉路径</dd><dt>反例</dt><dd>向顾客展示类名、SQL 或内部风险阈值</dd></dl></article>
+          <article class="principle"><h3>禁用 ≠ 隐藏 ≠ 只读</h3><p>三者表达完全不同的业务语义，必须先定义用户是否需要发现能力、理解原因和查看事实。</p><dl><dt>适用</dt><dd>状态、资格和权限共同影响动作</dd><dt>边界</dt><dd>安全信息不能因“解释”而过度泄露</dd><dt>反例</dt><dd>优惠券消失，用户无法区分过期、无资格或系统故障</dd></dl></article>
+          <article class="principle"><h3>复杂度必须与风险匹配</h3><p>低风险、即时可逆的操作可以轻量表达；资金、权限和长流程需要状态、解释和恢复闭环。</p><dl><dt>适用</dt><dd>按影响、可逆性和失败成本分级</dd><dt>边界</dt><dd>不是所有规则都需要规则平台</dd><dt>反例</dt><dd>标签重命名也要求完整审批和决策快照</dd></dl></article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell footer-grid">
+      <div><strong>业务规则到 UI 交互映射</strong><br><span>理论来源：13-方法论-业务规则到UI交互映射理论.md</span></div>
+      <div>单文件交互原型 · 无外部依赖 · 2026-07-31</div>
+    </div>
+  </footer>
+
+  <noscript><div class="shell noscript-note">此文档的理论内容仍可阅读；启用 JavaScript 后可操作规则映射工作台。</div></noscript>
+  <script>
+    (() => {
+      'use strict';
+
+      const scenarios = {
+        pricing: {
+          title: '价格与优惠',
+          roles: [
+            ['customer', '顾客 · 确认结算'],
+            ['cashier', '收银员 · 协助结算'],
+            ['operator', '运营人员 · 配置政策'],
+            ['auditor', '审计人员 · 复核决策']
+          ],
+          states: [
+            ['normal', '正常命中'],
+            ['conflict', '规则冲突'],
+            ['expired', '优惠失效'],
+            ['processing', '提交处理中']
+          ],
+          rules: [
+            { id: 'BR-P01', type: '资格', title: '有效合同产生合同价候选', meaning: '客户、商品与时间均落在有效合同范围时，形成合同价格候选。', obligations: ['Inform', 'Explain'], ui: '标识合同价、有效范围和命中原因；失效时说明缺失条件。', authority: '服务端校验合同、商品、门店和时间，UI 不自行认定。', timing: '商品进入结算时、订单提交时重新评估。' },
+            { id: 'BR-P02', type: '优先', title: '合同价优先于会员价', meaning: '两种基础价同时有效时，按批准的政策采用合同价。', obligations: ['Constrain', 'Explain'], ui: '展示最终采用的合同价，同时保留会员价未采用的原因。', authority: 'Policy/决策表形成唯一基础价结果。', timing: '候选价格生成后、优惠组合前。' },
+            { id: 'BR-P03', type: '互斥', title: '合同价不能叠加商家满减', meaning: '合同价格与商家出资的满减处于禁止组合关系。', obligations: ['Constrain', 'Explain', 'Recover'], ui: '满减不可选择并展示原因；允许用户移除合同权益或更换合法优惠。', authority: '发布期检查配置，运行期再次阻断非法组合。', timing: '优惠选择时即时提示，提交时权威校验。' },
+            { id: 'BR-P04', type: '组合', title: '平台补贴允许与合同价叠加', meaning: '平台补贴资金责任明确时，可在合同价之后叠加。', obligations: ['Guide', 'Inform', 'Audit'], ui: '显示合法候选、叠加顺序、最终应付与资金来源。', authority: '服务端验证补贴额度、有效期和资金分摊。', timing: '候选组合和最终分摊阶段。' },
+            { id: 'INV-P01', type: '不变量', title: '客户应付不得小于零', meaning: '任何合法优惠组合都不能产生负应付金额。', obligations: ['Constrain', 'Audit'], ui: '预估阶段限制结果；异常配置在发布期阻断。', authority: '服务端金额守卫和分摊守恒校验。', timing: '配置模拟、结算预估和订单提交。' }
+          ]
+        },
+        refund: {
+          title: '退款与审批',
+          roles: [
+            ['applicant', '发起人 · 申请退款'],
+            ['manager', '门店经理 · 审批退款'],
+            ['auditor', '审计人员 · 查看历史']
+          ],
+          states: [
+            ['entry', '填写申请'],
+            ['approval', '等待审批'],
+            ['processing', '机构处理中'],
+            ['unknown', '结果未知']
+          ],
+          rules: [
+            { id: 'INV-R01', type: '不变量', title: '累计退款不得超过有效支付', meaning: '本次退款加历史有效退款不得超过原有效支付。', obligations: ['Inform', 'Constrain', 'Recover'], ui: '展示已付、已退、最大可退；超额时定位输入并提供修正。', authority: '服务端基于最新账本原子校验，不依赖前端 max。', timing: '输入中预检，提交时重新计算。' },
+            { id: 'BR-R02', type: '阈值', title: '超过 500 元进入经理审批', meaning: '退款金额大于 500 元时，当前命令从立即退款变为提交审批。', obligations: ['Inform', 'Guide', 'Confirm'], ui: '按钮文案、流程预期和材料要求随金额改变。', authority: '服务端根据政策版本决定审批路径。', timing: '金额变化后预览，提交时冻结申请。' },
+            { id: 'AUTH-R03', type: '权限', title: '发起人与审批人职责分离', meaning: '同一主体不能批准自己发起的高额退款。', obligations: ['Constrain', 'Explain', 'Audit'], ui: '发起人页面不提供批准命令；审批页显示责任主体。', authority: '服务端执行主体、角色和对象范围授权。', timing: '加载允许命令和执行审批时。' },
+            { id: 'BR-R04', type: '异步', title: '结果未知时禁止重复发起', meaning: '支付机构超时不等于失败；确认结果前不得再次产生同一退款。', obligations: ['Inform', 'Constrain', 'Recover'], ui: '显示结果未知、查询进度和转人工入口，隐藏重复发起。', authority: '幂等键、机构查询、对账和任务状态共同收敛。', timing: '外部超时后直到获得权威结果。' },
+            { id: 'BR-R05', type: '解释', title: '历史退款绑定原政策版本', meaning: '审计、撤销和对账使用申请时的规则与决策快照。', obligations: ['Explain', 'Audit'], ui: '详情展示原规则版本、命中依据、审批人与处理时间线。', authority: '服务端保存不可覆盖的决策快照和审计事实。', timing: '审批、结果查询和历史复核。' }
+          ]
+        }
+      };
+
+      const mappingCatalog = {
+        'BR-P01': {
+          expression: 'IF contract.active ∧ covers(customer, product, store, time) THEN priceCandidates += CONTRACT_PRICE',
+          condition: '存在有效合同，并覆盖当前顾客、商品、门店与业务时间',
+          effect: '生成合同价候选，并要求用户能够识别价格来源',
+          why: '用户需要知道价格为何变化，客服与审计需要追溯资格依据',
+          deltas: [
+            ['visibleInformation.contractPrice', 'hidden', 'visible + source + validPeriod'],
+            ['decision.explanations', '[]', '+ CONTRACT_ELIGIBLE']
+          ],
+          targets: [['.map-contract-price', '合同价金额与来源'], ['.map-decision', '合同资格解释']]
+        },
+        'BR-P02': {
+          expression: 'IF CONTRACT_PRICE ∈ candidates ∧ MEMBER_PRICE ∈ candidates THEN selectedBasePrice = CONTRACT_PRICE',
+          condition: '合同价和会员价同时成为合法候选',
+          effect: '系统拥有基础价裁决权，用户只查看结果与排除原因',
+          why: '避免把组织政策伪装成用户自由选择，同时保持结果可解释',
+          deltas: [
+            ['decision.selectedBasePrice', 'undetermined', 'CONTRACT_PRICE'],
+            ['decision.rejectedCandidates', '[]', '+ MEMBER_PRICE: LOWER_PRIORITY']
+          ],
+          targets: [['.map-contract-price', '被采用的基础价格'], ['.map-decision', '会员价被排除原因']]
+        },
+        'BR-P03': {
+          expression: 'IF selectedBasePrice = CONTRACT_PRICE ∧ benefit.funder = MERCHANT THEN combination = FORBIDDEN',
+          condition: '合同价已被采用，并同时存在商家出资优惠',
+          effect: '移除叠加命令，但保留查看原因和更换优惠的恢复路径',
+          why: '互斥规则不仅要阻止错误，还要让用户理解为何不可用以及如何继续',
+          deltas: [
+            ['allowedCommands', 'includes APPLY_MERCHANT_PROMO', 'remove APPLY_MERCHANT_PROMO'],
+            ['decision.reasonCode', 'null', 'CONTRACT_EXCLUDES_MERCHANT_PROMO'],
+            ['recoveryActions', '[]', '+ CHANGE_OFFER / CHANGE_BASE_PRICE']
+          ],
+          targets: [['.map-promo-choice', '商家满减不可选状态'], ['.map-decision', '互斥原因说明'], ['.map-change-offer', '更换优惠恢复入口']]
+        },
+        'BR-P04': {
+          expression: 'IF benefit.funder = PLATFORM ∧ quota.available THEN composition += PLATFORM_SUBSIDY',
+          condition: '平台补贴有效、额度可用且资金责任完整',
+          effect: '把补贴加入合法组合，并更新金额、分摊与解释',
+          why: '允许组合会同时改变结果值、信息披露与审计责任',
+          deltas: [
+            ['decision.appliedBenefits', '[]', '+ PLATFORM_SUBSIDY'],
+            ['visibleInformation.funding', 'hidden', 'platform-funded'],
+            ['calculation.payable', '80.00', '75.00']
+          ],
+          targets: [['.map-platform-benefit', '平台补贴金额'], ['.map-total', '最终应付'], ['.map-decision', '组合依据']]
+        },
+        'INV-P01': {
+          expression: 'FOR ALL legalCombinations: payableAmount ≥ 0',
+          condition: '任意价格和优惠组合完成计算',
+          effect: '形成不可绕过的金额底线，并禁止发布或提交非法结果',
+          why: '不变量必须同时产生 UI 预防和服务端权威守卫',
+          deltas: [
+            ['fieldPolicies.payable.min', 'undefined', '0'],
+            ['allowedCommands.SUBMIT', 'enabled', 'disabled WHEN payable < 0'],
+            ['invariantResults', '[]', '+ PAYABLE_NON_NEGATIVE']
+          ],
+          targets: [['.map-total', '最终应付结果'], ['.map-submit-order', '订单提交命令']]
+        },
+        'INV-R01': {
+          expression: 'requestedRefund + effectiveRefunded ≤ effectivePaid',
+          condition: '用户输入退款金额，且历史退款可能并发变化',
+          effect: '展示可退事实、约束输入，并在提交时重新原子校验',
+          why: '前端 max 只能减少误操作，不能保护并发下的资金不变量',
+          deltas: [
+            ['visibleInformation.refundCapacity', 'hidden', 'paid + refunded + available'],
+            ['fieldPolicies.refundAmount.max', 'undefined', 'latestAvailableAmount'],
+            ['recoveryActions', '[]', '+ REFRESH_AND_ADJUST']
+          ],
+          targets: [['.map-refund-balance', '已付/已退/最大可退'], ['.map-refund-input', '退款金额约束']]
+        },
+        'BR-R02': {
+          expression: 'IF refundAmount > 500 CNY THEN command = SUBMIT_FOR_APPROVAL ELSE command = EXECUTE_REFUND',
+          condition: '退款金额跨越 500 元审批阈值',
+          effect: '改变命令语义、按钮文案、流程预期和责任主体',
+          why: '阈值规则不是一个提示，它会把同步操作改造成多角色流程',
+          deltas: [
+            ['allowedCommands', 'EXECUTE_REFUND', 'SUBMIT_FOR_APPROVAL'],
+            ['workflow.nextActor', 'PAYMENT_GATEWAY', 'STORE_MANAGER'],
+            ['visibleInformation', 'instant refund', 'approval reason + expected steps']
+          ],
+          targets: [['.map-refund-mode', '阈值与流程提示'], ['.map-refund-decision', '命令变化解释'], ['.map-refund-submit', '提交按钮语义']]
+        },
+        'AUTH-R03': {
+          expression: 'approver.id ≠ applicant.id ∧ approver.hasRole(STORE_MANAGER)',
+          condition: '高额退款进入人工审批',
+          effect: '从发起人的命令集中移除批准，从经理任务中增加审批命令',
+          why: '职责分离同时改变两个角色的动作面，并要求留下责任证据',
+          deltas: [
+            ['applicant.allowedCommands', 'may approve', 'SUBMIT / WITHDRAW only'],
+            ['manager.allowedCommands', '[]', '+ APPROVE / REJECT / RETURN'],
+            ['audit.responsibility', 'implicit', 'applicantId + approverId']
+          ],
+          targets: [['.map-approval-actor', '申请人与审批责任'], ['.map-approval-actions', '审批命令集合']]
+        },
+        'BR-R04': {
+          expression: 'IF gatewayResult = UNKNOWN THEN forbid NEW_REFUND(idempotencyKey) UNTIL reconciled',
+          condition: '支付机构超时，最终结果尚未确认',
+          effect: '把失败页转换成未知状态页，关闭重复发起并开放查询与人工核查',
+          why: '技术超时不能被误译成业务失败，否则可能诱发重复退款',
+          deltas: [
+            ['operationState', 'FAILED', 'RESULT_UNKNOWN'],
+            ['allowedCommands', 'RETRY_REFUND', 'QUERY_STATUS / ESCALATE'],
+            ['feedback', 'retry later', 'do not retry + reconciliation progress']
+          ],
+          targets: [['.map-async-status', '结果未知状态'], ['.map-timeline', '机构查询进度'], ['.map-async-actions', '查询与人工恢复命令']]
+        },
+        'BR-R05': {
+          expression: 'historicalExplanation = evaluate(decisionSnapshot.policyVersion, originalFacts)',
+          condition: '查看、撤销、退款或审计历史业务对象',
+          effect: '固定原规则版本、事实、裁决与责任时间线，不使用当前政策重算',
+          why: '历史可解释性要求界面展示原决策，而不是当前系统的推测',
+          deltas: [
+            ['explanation.policyVersion', 'currentVersion', 'snapshot.policyVersion'],
+            ['visibleInformation.auditTrail', 'summary only', 'facts + decisions + actors + timestamps']
+          ],
+          targets: [['.map-snapshot', '原规则与决策快照'], ['.map-timeline', '不可覆盖的责任时间线']]
+        }
+      };
+
+      const viewState = {
+        scenario: 'pricing',
+        role: 'customer',
+        businessState: 'normal',
+        selectedRule: 'BR-P03'
+      };
+
+      const roleSelect = document.querySelector('#role-select');
+      const stateSwitcher = document.querySelector('#state-switcher');
+      const ruleList = document.querySelector('#rule-list');
+      const derivation = document.querySelector('#derivation');
+      const preview = document.querySelector('#preview');
+      const contract = document.querySelector('#contract');
+      const liveRegion = document.querySelector('#live-region');
+      const naturalRuleInput = document.querySelector('#natural-rule');
+      const compilerRole = document.querySelector('#compiler-role');
+      const compilerTask = document.querySelector('#compiler-task');
+      const compilerStateInput = document.querySelector('#compiler-state');
+      const compilerOwner = document.querySelector('#compiler-owner');
+      const compileRuleButton = document.querySelector('#compile-rule');
+      const compilerResult = document.querySelector('#compiler-result');
+      const aiConnection = document.querySelector('#ai-connection');
+
+      const ruleExamples = [
+        { text: '退款金额超过 500 元时，需要门店经理审批；申请人不能审批自己提交的退款。', role: '退款申请人', task: '发起退款', state: '订单已支付', owner: '财务负责人' },
+        { text: '采用合同价时，不能叠加商家满减，但允许叠加平台补贴。', role: '顾客', task: '确认结算', state: '合同价已命中', owner: '价格政策负责人' },
+        { text: '支付机构返回结果未知时，不能重复发起退款，必须查询结果或转人工核查。', role: '退款申请人', task: '查询退款结果', state: '支付机构响应超时', owner: '支付运营负责人' },
+        { text: '历史退款必须使用申请时的原政策版本和决策快照进行解释。', role: '审计人员', task: '复核历史退款', state: '退款已完成', owner: '财务负责人' }
+      ];
+
+      const compilerState = { rules: [], selectedIndex: 0, mode: 'local', parserUsed: 'LOCAL' };
+
+      const escapeHtml = (value) => String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+
+      function classifyClause(clause) {
+        if (/(结果未知|响应超时|机构超时)/.test(clause)) return 'ASYNC_UNKNOWN';
+        if (/(历史|原政策|原规则|决策快照)/.test(clause)) return 'VERSIONED_POLICY';
+        if (/(申请人|发起人).*(不能|不得).*(审批|批准).*自己/.test(clause)) return 'SEPARATION_OF_DUTIES';
+        if (/超过\s*\d+(?:\.\d+)?\s*元.*审批/.test(clause)) return 'THRESHOLD_APPROVAL';
+        if (/(不能|不得|禁止).*叠加/.test(clause)) return 'MUTUAL_EXCLUSION';
+        if (/(允许|可以).*叠加/.test(clause)) return 'ALLOWED_COMPOSITION';
+        if (/(不得超过|不能超过|不大于)/.test(clause)) return 'INVARIANT';
+        return 'GENERIC_CONSTRAINT';
+      }
+
+      function compileClause(clause, index, context) {
+        const type = classifyClause(clause);
+        const id = `CUSTOM-${String(index + 1).padStart(3, '0')}`;
+        const amountMatch = clause.match(/超过\s*(\d+(?:\.\d+)?)\s*元/);
+        const approverMatch = clause.match(/需要\s*([^，；。]+?)审批/);
+        const threshold = amountMatch ? Number(amountMatch[1]) : null;
+        const approver = approverMatch ? approverMatch[1].replace(/时，?$/, '').trim() : '待确认审批角色';
+        const common = {
+          ruleId: id,
+          originalStatement: clause,
+          ruleType: type,
+          scope: { actor: context.role, task: context.task, businessState: context.state },
+          owner: context.owner || '未指定',
+          source: '用户输入',
+          authority: 'SERVER',
+          lifecycleStatus: 'CANDIDATE'
+        };
+        const catalog = {
+          THRESHOLD_APPROVAL: {
+            meaning: `退款金额超过 ${threshold} 元时进入${approver}审批`,
+            facts: ['refundAmount', 'currency', 'policyVersion'],
+            expression: `refundAmount > ${threshold} CNY`,
+            decision: `command = SUBMIT_FOR_APPROVAL; nextActor = ${approver}`,
+            obligations: ['Inform', 'Guide', 'Confirm', 'Audit'],
+            deltas: [
+              ['allowedCommands', 'EXECUTE_REFUND', 'SUBMIT_FOR_APPROVAL'],
+              ['workflow.nextActor', 'PAYMENT_GATEWAY', approver],
+              ['visibleInformation', 'refund result', '+ threshold + approval path']
+            ],
+            uiPatterns: ['金额旁显示审批阈值', '按钮改为“提交审批”', '展示下一责任人与流程预期'],
+            guards: ['服务端重新比较退款金额与生效阈值', '冻结申请时的政策版本'],
+            questions: ['恰好等于阈值时是否仍可自动退款？原文“超过”暂解释为严格大于。', '审批人不可用时的代理和升级路径未说明。'],
+            tests: [`${threshold - 0.01} 元：直接退款`, `${threshold} 元：按边界语义处理`, `${threshold + 0.01} 元：提交审批`]
+          },
+          SEPARATION_OF_DUTIES: {
+            meaning: '退款申请人与审批人必须是不同主体',
+            facts: ['applicantId', 'approverId', 'approverRole'],
+            expression: 'approverId != applicantId',
+            decision: 'selfApproval = FORBIDDEN',
+            obligations: ['Constrain', 'Explain', 'Audit', 'Recover'],
+            deltas: [
+              ['applicant.allowedCommands', 'may include APPROVE', 'remove APPROVE'],
+              ['manager.allowedCommands', '[]', '+ APPROVE / REJECT / RETURN'],
+              ['auditFields', 'implicit', '+ applicantId + approverId']
+            ],
+            uiPatterns: ['发起人页面不呈现批准动作', '审批页显示申请人与责任', '自审时说明拒绝原因'],
+            guards: ['服务端比较申请人与当前审批主体', '校验审批角色和数据范围'],
+            questions: ['代理审批、上级审批和紧急覆盖机制未说明。'],
+            tests: ['申请人审批自己的申请：拒绝', '经理审批他人申请：允许', '无审批数据范围：拒绝']
+          },
+          MUTUAL_EXCLUSION: {
+            meaning: '当前两个业务权益不能同时采用',
+            facts: ['selectedBasePrice', 'selectedBenefit', 'fundingParty'],
+            expression: 'selectedBasePrice = CONTRACT_PRICE AND benefit = MERCHANT_PROMO => FORBIDDEN',
+            decision: 'remove APPLY_MERCHANT_PROMO',
+            obligations: ['Constrain', 'Explain', 'Recover'],
+            deltas: [
+              ['allowedCommands', 'APPLY_MERCHANT_PROMO', 'removed'],
+              ['decision.reasonCode', 'null', 'BENEFIT_COMBINATION_FORBIDDEN'],
+              ['recoveryActions', '[]', '+ CHANGE_OFFER / CHANGE_BASE_PRICE']
+            ],
+            uiPatterns: ['互斥优惠显示不可选', '展示不能叠加的原因', '提供更换优惠恢复入口'],
+            guards: ['发布期检查非法组合', '结算提交时重新裁决'],
+            questions: ['被排除权益的优先级和资金责任需要确认。'],
+            tests: ['仅合同价：允许', '合同价 + 商家满减：阻断', '移除合同价后重新评估']
+          },
+          ALLOWED_COMPOSITION: {
+            meaning: '指定权益在满足条件时允许共同计算',
+            facts: ['selectedBasePrice', 'benefitType', 'quota', 'fundingParty'],
+            expression: 'benefit = PLATFORM_SUBSIDY AND quota.available => ALLOW_COMPOSITION',
+            decision: 'appliedBenefits += PLATFORM_SUBSIDY',
+            obligations: ['Guide', 'Inform', 'Audit'],
+            deltas: [
+              ['decision.appliedBenefits', '[]', '+ PLATFORM_SUBSIDY'],
+              ['calculation.payable', 'basePrice', 'basePrice - subsidy'],
+              ['audit.funding', 'hidden', 'platform-funded']
+            ],
+            uiPatterns: ['显示合法补贴候选', '更新最终应付', '解释补贴来源和分摊'],
+            guards: ['校验补贴有效期、额度和资金责任'],
+            questions: ['叠加顺序、上限和舍入方式未说明。'],
+            tests: ['额度可用：叠加', '额度不足：排除并解释', '提交前额度变化：重新确认']
+          },
+          ASYNC_UNKNOWN: {
+            meaning: '外部结果未知时禁止重复产生同一业务副作用',
+            facts: ['idempotencyKey', 'gatewayResult', 'queryStatus'],
+            expression: 'gatewayResult = UNKNOWN => forbid NEW_REQUEST until reconciled',
+            decision: 'state = RESULT_UNKNOWN; commands = QUERY_STATUS / ESCALATE',
+            obligations: ['Inform', 'Constrain', 'Recover', 'Audit'],
+            deltas: [
+              ['operationState', 'FAILED', 'RESULT_UNKNOWN'],
+              ['allowedCommands', 'RETRY', 'QUERY_STATUS / ESCALATE'],
+              ['feedback', 'please retry', 'do not retry + reconciliation progress']
+            ],
+            uiPatterns: ['显示“结果未知”而非失败', '关闭重复提交', '提供查询和转人工路径'],
+            guards: ['使用原幂等键查询', '对账前禁止新请求'],
+            questions: ['自动查询频率、人工升级 SLA 和最终超时边界未说明。'],
+            tests: ['明确失败：允许按政策重试', '结果未知：禁止重试', '对账成功：进入完成态']
+          },
+          VERSIONED_POLICY: {
+            meaning: '历史对象使用发生时的规则版本和决策快照解释',
+            facts: ['businessOccurredAt', 'policyVersion', 'decisionSnapshot'],
+            expression: 'historicalExplanation = evaluate(snapshot.policyVersion, originalFacts)',
+            decision: 'use ORIGINAL_POLICY_VERSION',
+            obligations: ['Explain', 'Audit'],
+            deltas: [
+              ['explanation.policyVersion', 'currentVersion', 'snapshot.policyVersion'],
+              ['visibleInformation', 'current result', '+ original facts + decision + actors']
+            ],
+            uiPatterns: ['显示原政策版本', '展示原始命中与排除依据', '显示责任时间线'],
+            guards: ['决策快照不可被当前配置覆盖'],
+            questions: ['原版本不可访问时的长期归档策略未说明。'],
+            tests: ['政策升级后历史结果不变', '退款使用原决策快照', '审计可追溯原版本']
+          },
+          INVARIANT: {
+            meaning: '所有合法路径都必须满足的业务底线',
+            facts: ['inputValue', 'authoritativeLimit'],
+            expression: 'inputValue <= authoritativeLimit',
+            decision: 'violation => REJECT',
+            obligations: ['Inform', 'Constrain', 'Explain', 'Recover'],
+            deltas: [
+              ['fieldPolicies.max', 'undefined', 'authoritativeLimit'],
+              ['allowedCommands.SUBMIT', 'enabled', 'disabled WHEN violation'],
+              ['recoveryActions', '[]', '+ ADJUST_INPUT / REFRESH']
+            ],
+            uiPatterns: ['展示权威上限', '定位非法输入', '提供调整和刷新'],
+            guards: ['服务端基于最新事实原子校验'],
+            questions: ['当前语句未完整提取权威值来源和并发语义。'],
+            tests: ['小于上限：允许', '等于上限：允许', '超过上限：阻断']
+          },
+          GENERIC_CONSTRAINT: {
+            meaning: '尚未识别为受支持规则类型的候选约束',
+            facts: [],
+            expression: 'UNPARSED',
+            decision: 'EVIDENCE_INSUFFICIENT',
+            obligations: ['Explain'],
+            deltas: [['compilation.status', 'unknown', 'NEEDS_CLARIFICATION']],
+            uiPatterns: ['不生成确定性业务操作，只展示待澄清问题'],
+            guards: ['未澄清前不得发布或作为服务端规则'],
+            questions: ['缺少可识别的条件、结果或规则类型。请改写为“当……时，必须/禁止/允许……”结构。'],
+            tests: []
+          }
+        };
+        const compiled = catalog[type];
+        return {
+          ...common,
+          businessMeaning: compiled.meaning,
+          facts: compiled.facts,
+          conditionExpression: compiled.expression,
+          decision: compiled.decision,
+          obligations: compiled.obligations,
+          contractDeltas: compiled.deltas,
+          uiPatterns: compiled.uiPatterns,
+          guards: compiled.guards,
+          ambiguities: compiled.questions,
+          testCases: compiled.tests,
+          confidence: type === 'GENERIC_CONSTRAINT' ? 0.35 : 0.9
+        };
+      }
+
+      function compileNaturalRule(text, context) {
+        const normalized = text.replace(/[，,]\s*但/g, '；但');
+        const clauses = normalized.split(/[。；;\n]+/).map((item) => item.trim()).filter(Boolean);
+        return clauses.map((clause, index) => compileClause(clause, index, context));
+      }
+
+      function aiSeedClause(rule) {
+        const parameters = rule.parameters || {};
+        const threshold = Number.isFinite(Number(parameters.threshold)) ? Number(parameters.threshold) : 500;
+        const approver = String(parameters.approver || '门店经理');
+        const seeds = {
+          THRESHOLD_APPROVAL: `退款金额超过 ${threshold} 元时，需要${approver}审批`,
+          SEPARATION_OF_DUTIES: '申请人不能审批自己提交的退款',
+          MUTUAL_EXCLUSION: '采用合同价时不能叠加商家满减',
+          ALLOWED_COMPOSITION: '允许叠加平台补贴',
+          ASYNC_UNKNOWN: '支付机构结果未知时不能重复发起退款',
+          VERSIONED_POLICY: '历史退款使用原政策版本和决策快照解释',
+          INVARIANT: '业务数值不得超过权威上限',
+          GENERIC_CONSTRAINT: rule.originalStatement || '待澄清规则'
+        };
+        return seeds[rule.ruleType] || seeds.GENERIC_CONSTRAINT;
+      }
+
+      function enrichAiRule(aiRule, index, context) {
+        const base = compileClause(aiSeedClause(aiRule), index, context);
+        const aiAmbiguities = Array.isArray(aiRule.ambiguities) ? aiRule.ambiguities : [];
+        const ambiguities = [...new Set([...aiAmbiguities, ...base.ambiguities])];
+        return {
+          ...base,
+          originalStatement: aiRule.originalStatement || base.originalStatement,
+          businessMeaning: aiRule.businessMeaning || base.businessMeaning,
+          ruleType: aiRule.ruleType || base.ruleType,
+          facts: Array.isArray(aiRule.facts) && aiRule.facts.length ? aiRule.facts : base.facts,
+          conditionExpression: aiRule.conditionExpression || base.conditionExpression,
+          decision: aiRule.decision || base.decision,
+          parameters: aiRule.parameters || {},
+          ambiguities,
+          confidence: Number.isFinite(Number(aiRule.confidence)) ? Number(aiRule.confidence) : 0.5,
+          source: 'AI_CANDIDATE',
+          lifecycleStatus: 'CANDIDATE_REVIEW'
+        };
+      }
+
+      function setAiConnection(kind, title, detail) {
+        aiConnection.className = `ai-connection ${kind}`;
+        aiConnection.innerHTML = `<strong>${escapeHtml(title)}</strong>${escapeHtml(detail)}`;
+      }
+
+      async function checkAiHealth() {
+        if (window.location.protocol === 'file:') {
+          setAiConnection('warning', '当前以文件方式打开', 'AI 模式需运行本地代理并访问 http://127.0.0.1:8787。');
+          return false;
+        }
+        try {
+          const response = await fetch('/api/health', { headers: { Accept: 'application/json' } });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const health = await response.json();
+          if (compilerState.mode !== 'ai') return false;
+          if (!health.aiConfigured) {
+            setAiConnection('warning', '本地代理已连接，但 AI 未配置', '请在启动代理前设置 AI_CHAT_COMPLETIONS_URL、AI_API_KEY 和 AI_MODEL。');
+            return false;
+          }
+          setAiConnection('success', 'AI 代理已就绪', `模型：${health.model || '服务端配置'}。只有点击编译时才发送当前规则和四项上下文。`);
+          return true;
+        } catch (error) {
+          if (compilerState.mode !== 'ai') return false;
+          setAiConnection('error', '无法连接本地 AI 代理', `${error.message}。本地确定性模式仍可使用。`);
+          return false;
+        }
+      }
+
+      async function compileWithAi(text, context) {
+        const response = await fetch('/api/rule-ir/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ text, context })
+        });
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(payload.message || `AI 请求失败：HTTP ${response.status}`);
+        if (!Array.isArray(payload.rules) || payload.rules.length === 0) throw new Error('AI 未返回候选规则');
+        return payload.rules.map((rule, index) => enrichAiRule(rule, index, context));
+      }
+
+      function announce(message) {
+        liveRegion.textContent = '';
+        window.setTimeout(() => { liveRegion.textContent = message; }, 30);
+      }
+
+      function currentScenario() {
+        return scenarios[viewState.scenario];
+      }
+
+      function selectedRule() {
+        return currentScenario().rules.find((rule) => rule.id === viewState.selectedRule) || currentScenario().rules[0];
+      }
+
+      function generatedPrototype(rule) {
+        const type = rule.ruleType;
+        if (type === 'THRESHOLD_APPROVAL') {
+          const amount = rule.conditionExpression.match(/>\s*(\d+(?:\.\d+)?)/)?.[1] || '500';
+          return appFrame('发起退款 · 规则生成预览', '<span class="status-pill warning">需要审批</span>',
+            `<div class="summary-card"><div class="summary-row"><span>退款金额</span><strong>¥${escapeHtml(String(Number(amount) + 180))}.00</strong></div><div class="summary-row"><span>自动退款阈值</span><strong>¥${escapeHtml(amount)}</strong></div></div><div class="decision-box warning"><h4>此金额需要审批</h4><p>提交后由门店经理审批；批准后才会向支付机构发起退款。</p></div><div class="app-actions"><button class="btn ghost" type="button">修改金额</button><button class="btn primary" type="button">提交审批</button></div>`);
+        }
+        if (type === 'SEPARATION_OF_DUTIES') {
+          return appFrame('退款审批 · 规则生成预览', '<span class="status-pill danger">不能自审</span>',
+            '<div class="summary-card"><div class="summary-row"><span>申请人</span><strong>当前用户</strong></div><div class="summary-row"><span>审批人</span><strong>当前用户</strong></div></div><div class="decision-box danger"><h4>不能审批自己提交的退款</h4><p>请选择其他有权限的门店经理，或按组织规则升级审批。</p></div><div class="app-actions"><button class="btn ghost" type="button">转交审批</button><button class="btn primary" type="button" disabled>批准</button></div>');
+        }
+        if (type === 'MUTUAL_EXCLUSION') {
+          return appFrame('确认结算 · 规则生成预览', '<span class="status-pill warning">存在互斥</span>',
+            '<div class="summary-card"><div class="summary-row"><span>合同价格</span><strong>已采用</strong></div></div><div class="offer-choice mapped-impact" data-map-label="1"><div><strong>商家满减</strong><small>与合同价格互斥</small></div><span class="blocked">不可叠加</span></div><div class="decision-box"><h4>为什么不可用？</h4><p>当前合同政策禁止与商家出资优惠共同使用。</p></div><div class="app-actions"><button class="btn ghost" type="button">更换价格方案</button><button class="btn primary" type="button">按当前价格结算</button></div>');
+        }
+        if (type === 'ALLOWED_COMPOSITION') {
+          return appFrame('确认结算 · 规则生成预览', '<span class="status-pill success">允许组合</span>',
+            '<div class="summary-card"><div class="summary-row"><span>合同价格</span><strong>¥80.00</strong></div><div class="summary-row"><span>平台补贴</span><span class="minus">− ¥5.00</span></div><div class="summary-row total"><span>最终应付</span><strong>¥75.00</strong></div></div><div class="decision-box"><h4>组合依据</h4><p>平台补贴额度有效，且资金责任属于平台。</p></div>');
+        }
+        if (type === 'ASYNC_UNKNOWN') {
+          return appFrame('退款进度 · 规则生成预览', '<span class="status-pill danger">结果未知</span>',
+            '<div class="decision-box danger"><h4>不要重复发起</h4><p>机构超时不等于退款失败。系统正在使用原幂等键查询权威结果。</p></div><ol class="timeline"><li class="done">请求已发送</li><li class="current">查询机构结果</li><li>自动对账或转人工</li></ol><div class="app-actions"><button class="btn ghost" type="button">刷新进度</button><button class="btn primary" type="button">转人工核查</button></div>');
+        }
+        if (type === 'VERSIONED_POLICY') {
+          return appFrame('历史决策快照 · 规则生成预览', '<span class="status-pill info">原版本</span>',
+            '<div class="summary-card"><div class="summary-row"><span>业务发生时间</span><strong>2026-07-31 09:14</strong></div><div class="summary-row"><span>原政策版本</span><strong>refund-policy-v7</strong></div><div class="summary-row"><span>当前版本</span><strong>v8 · 不用于重算</strong></div></div><div class="decision-box"><h4>历史解释依据</h4><p>使用申请时的事实、规则版本、审批人与原决策结果。</p></div>');
+        }
+        if (type === 'INVARIANT') {
+          return appFrame('业务输入 · 规则生成预览', '<span class="status-pill danger">超过上限</span>',
+            '<div class="form-row"><label>业务数值 <span>最大 860</span></label><input class="field invalid" value="900" readonly><div class="field-error">输入不能超过当前权威上限 860。</div></div><div class="app-actions"><button class="btn ghost" type="button">刷新上限</button><button class="btn primary" type="button" disabled>提交</button></div>');
+        }
+        return appFrame('规则候选 · 尚不能生成', '<span class="status-pill warning">需要澄清</span>',
+          '<div class="decision-box warning"><h4>未形成确定性 Rule IR</h4><p>请把规则改写成“当……时，必须/禁止/允许……”并补充角色、结果和例外边界。</p></div>');
+      }
+
+      function renderCompilerResult() {
+        if (!compilerState.rules.length) return;
+        const rule = compilerState.rules[compilerState.selectedIndex];
+        const parserMeta = {
+          LOCAL: ['LOCAL · 本地确定性解析', '规则语义和后续映射均由本地受控编译器产生。'],
+          AI_CANDIDATE: ['AI_CANDIDATE · AI 候选 IR', 'AI 只提供待审核语义；交互义务、Contract Δ、UI、守卫和测试仍由本地编译器产生。'],
+          LOCAL_FALLBACK: ['LOCAL_FALLBACK · 本地回退', 'AI 请求失败，本次结果来自本地确定性解析；失败原因保留在待确认项中。']
+        }[compilerState.parserUsed] || ['UNKNOWN', '解析来源未知，不能直接发布。'];
+        const needsReview = rule.ruleType === 'GENERIC_CONSTRAINT' || compilerState.parserUsed !== 'LOCAL';
+        const status = rule.ruleType === 'GENERIC_CONSTRAINT'
+          ? '需要澄清'
+          : compilerState.parserUsed === 'AI_CANDIDATE'
+            ? 'AI 候选 · 待人工审核'
+            : compilerState.parserUsed === 'LOCAL_FALLBACK'
+              ? '本地回退 · 待确认'
+              : '已形成候选 IR';
+        const statusClass = needsReview ? 'warning' : 'success';
+        const ir = {
+          ruleId: rule.ruleId,
+          parserSource: compilerState.parserUsed,
+          source: rule.source,
+          businessMeaning: rule.businessMeaning,
+          ruleType: rule.ruleType,
+          facts: rule.facts,
+          condition: rule.conditionExpression,
+          decision: rule.decision,
+          scope: rule.scope,
+          owner: rule.owner,
+          authority: rule.authority,
+          lifecycleStatus: rule.lifecycleStatus,
+          confidence: rule.confidence
+        };
+        const tabs = compilerState.rules.map((item, index) => `<button type="button" class="compiled-rule-tab${index === compilerState.selectedIndex ? ' active' : ''}" data-compiled-index="${index}">${escapeHtml(item.ruleId)} · ${escapeHtml(item.ruleType)}</button>`).join('');
+        const deltas = rule.contractDeltas.map(([path, before, after]) => `<li><strong>${escapeHtml(path)}</strong><br><span class="delta-before">${escapeHtml(before)}</span> → <span class="delta-after">${escapeHtml(after)}</span></li>`).join('');
+        compilerResult.className = '';
+        compilerResult.innerHTML = `
+          <div class="compile-status"><div><h3>${escapeHtml(rule.businessMeaning)}</h3><p class="compiler-copy">原文：${escapeHtml(rule.originalStatement)}</p><p class="compiler-copy"><strong>${escapeHtml(parserMeta[0])}</strong><br>${escapeHtml(parserMeta[1])}</p></div><span class="status-pill ${statusClass}">${status}</span></div>
+          <div class="compiled-rule-tabs" role="tablist" aria-label="拆分后的规则">${tabs}</div>
+          <div class="compile-pipeline">
+            <article class="compile-card"><h4>1 · Rule IR</h4><pre class="ir-json">${escapeHtml(JSON.stringify(ir, null, 2))}</pre></article>
+            <article class="compile-card"><h4>2 · 交互义务</h4><ul>${rule.obligations.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul><h4 class="mt-3">服务端守卫</h4><ul>${rule.guards.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></article>
+            <article class="compile-card"><h4>3 · Contract Δ</h4><ul>${deltas}</ul></article>
+            <article class="compile-card"><h4>4 · UI 规格</h4><ul>${rule.uiPatterns.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul><h4 class="mt-3">生成测试</h4><ul>${rule.testCases.map((item) => `<li>${escapeHtml(item)}</li>`).join('') || '<li>需澄清后生成</li>'}</ul></article>
+          </div>
+          <div class="ambiguity-box"><strong>歧义与待确认项 · 不自动补全</strong><ul>${rule.ambiguities.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></div>
+          <div class="generated-preview"><div class="compiler-section-label">Generated Task UI</div>${generatedPrototype(rule)}</div>`;
+        compilerResult.querySelectorAll('[data-compiled-index]').forEach((button) => {
+          button.addEventListener('click', () => {
+            compilerState.selectedIndex = Number(button.dataset.compiledIndex);
+            renderCompilerResult();
+            announce(`正在查看拆分规则 ${compilerState.selectedIndex + 1}`);
+          });
+        });
+      }
+
+      function updateCompileButtonLabel() {
+        compileRuleButton.textContent = compilerState.mode === 'ai' ? '由 AI 解析候选 IR 并生成 UI' : '编译规则并生成 UI';
+      }
+
+      function selectParserMode(mode) {
+        compilerState.mode = mode === 'ai' ? 'ai' : 'local';
+        document.querySelectorAll('[data-parser-mode]').forEach((button) => {
+          const selected = button.dataset.parserMode === compilerState.mode;
+          button.classList.toggle('active', selected);
+          button.setAttribute('aria-pressed', String(selected));
+        });
+        updateCompileButtonLabel();
+        if (compilerState.mode === 'ai') {
+          setAiConnection('warning', '正在检查本地 AI 代理', '健康检查不会发送规则文本或业务上下文。');
+          void checkAiHealth();
+        } else {
+          aiConnection.className = 'ai-connection';
+          aiConnection.textContent = '当前使用本地确定性解析，不会发送任何数据。';
+        }
+        announce(`已切换为${compilerState.mode === 'ai' ? 'AI 语义解析' : '本地确定性解析'}模式`);
+      }
+
+      async function compileFromInput() {
+        if (compileRuleButton.disabled) return;
+        const text = naturalRuleInput.value.trim();
+        if (!text) {
+          naturalRuleInput.focus();
+          compilerResult.className = 'compile-empty';
+          compilerResult.textContent = '请先输入一条业务规则。';
+          return;
+        }
+        const context = { role: compilerRole.value.trim(), task: compilerTask.value.trim(), state: compilerStateInput.value.trim(), owner: compilerOwner.value.trim() };
+        const requestedMode = compilerState.mode;
+        const modeButtons = [...document.querySelectorAll('[data-parser-mode]')];
+        compileRuleButton.disabled = true;
+        compileRuleButton.textContent = requestedMode === 'ai' ? 'AI 正在解析候选 IR…' : '正在编译…';
+        modeButtons.forEach((button) => { button.disabled = true; });
+        try {
+          if (requestedMode === 'ai') {
+            try {
+              compilerState.rules = await compileWithAi(text, context);
+              compilerState.parserUsed = 'AI_CANDIDATE';
+              setAiConnection('success', 'AI 候选 IR 已返回', '候选语义需要人工审核；后续映射已经由本地确定性编译器生成。');
+            } catch (error) {
+              const failure = `AI 解析失败：${error.message}。已使用本地确定性解析，结果未经过 AI。`;
+              compilerState.rules = compileNaturalRule(text, context).map((rule) => ({
+                ...rule,
+                source: 'LOCAL_FALLBACK',
+                lifecycleStatus: 'CANDIDATE_REVIEW',
+                ambiguities: [failure, ...rule.ambiguities]
+              }));
+              compilerState.parserUsed = 'LOCAL_FALLBACK';
+              setAiConnection('error', 'AI 解析失败，已本地回退', `${error.message}。当前结果已明确标记为 LOCAL_FALLBACK。`);
+            }
+          } else {
+            compilerState.rules = compileNaturalRule(text, context);
+            compilerState.parserUsed = 'LOCAL';
+          }
+          compilerState.selectedIndex = 0;
+          renderCompilerResult();
+          announce(`编译完成，使用 ${compilerState.parserUsed}，规则被拆分为 ${compilerState.rules.length} 条候选规则`);
+        } catch (error) {
+          compilerResult.className = 'compile-empty';
+          compilerResult.textContent = `编译失败：${error.message}`;
+          announce('编译失败，请检查规则后重试');
+        } finally {
+          compileRuleButton.disabled = false;
+          modeButtons.forEach((button) => { button.disabled = false; });
+          updateCompileButtonLabel();
+        }
+      }
+
+      function renderDerivation() {
+        const rule = selectedRule();
+        const mapping = mappingCatalog[rule.id];
+        const roleLabel = currentScenario().roles.find(([value]) => value === viewState.role)?.[1] || viewState.role;
+        const stateLabel = currentScenario().states.find(([value]) => value === viewState.businessState)?.[1] || viewState.businessState;
+        const deltas = mapping.deltas.map(([path, before, after]) => `
+          <div class="delta"><span class="delta-path">${escapeHtml(path)}</span><span class="delta-before">${escapeHtml(before)}</span> → <span class="delta-after">${escapeHtml(after)}</span></div>`).join('');
+        const targets = mapping.targets.map(([selector, label], index) => {
+          const present = Boolean(preview.querySelector(selector));
+          return `<div class="target-item${present ? '' : ' missing'}"><span class="target-index">${index + 1}</span><span>${escapeHtml(label)}${present ? '' : '<br><small>当前角色/状态下不呈现</small>'}</span></div>`;
+        }).join('');
+        derivation.innerHTML = `
+          <div class="derivation-title">
+            <div><h3>${escapeHtml(rule.id)} 的完整映射推导</h3><p>不是“规则对应哪个控件”，而是逐层计算交互契约差异。</p></div>
+            <span class="status-pill info">当前：${escapeHtml(roleLabel)} / ${escapeHtml(stateLabel)}</span>
+          </div>
+          <div class="derivation-grid">
+            <article class="derive-step"><span class="derive-step-label">1 · 规则语义</span><strong>${escapeHtml(rule.title)}</strong><p>${escapeHtml(mapping.condition)}</p><div class="rule-expression">${escapeHtml(mapping.expression)}</div></article>
+            <article class="derive-step"><span class="derive-step-label">2 · 上下文投影</span><strong>${escapeHtml(roleLabel)}</strong><p>在“${escapeHtml(stateLabel)}”状态下，规则产生的业务效果是：</p><div class="rule-expression">${escapeHtml(mapping.effect)}</div></article>
+            <article class="derive-step"><span class="derive-step-label">3 · 交互义务</span><strong>${rule.obligations.map((item) => escapeHtml(item)).join(' + ')}</strong><p>${escapeHtml(mapping.why)}</p></article>
+            <article class="derive-step"><span class="derive-step-label">4 · 契约属性差异</span><strong>Interaction Contract Δ</strong><div class="delta-list">${deltas}</div></article>
+            <article class="derive-step"><span class="derive-step-label">5 · UI 落点</span><strong>原型中的实际元素</strong><div class="target-list">${targets}</div></article>
+          </div>
+          <div class="proof-line"><strong>映射结论：</strong>因为“${escapeHtml(mapping.condition)}”，对“${escapeHtml(roleLabel)}”产生 <strong>${rule.obligations.map((item) => escapeHtml(item)).join(' / ')}</strong> 义务；这些义务改变上述交互契约属性，因此 UI 必须呈现右侧编号元素，而不是任意选择一个控件。</div>`;
+      }
+
+      function highlightMappingTargets() {
+        const mapping = mappingCatalog[selectedRule().id];
+        mapping.targets.forEach(([selector, label], index) => {
+          preview.querySelectorAll(selector).forEach((element) => {
+            element.classList.add('mapped-impact');
+            element.dataset.mapLabel = String(index + 1);
+            element.title = `映射落点 ${index + 1}：${label}`;
+          });
+        });
+      }
+
+      function renderControls() {
+        const scenario = currentScenario();
+        roleSelect.innerHTML = scenario.roles
+          .map(([value, label]) => `<option value="${escapeHtml(value)}"${value === viewState.role ? ' selected' : ''}>${escapeHtml(label)}</option>`)
+          .join('');
+
+        stateSwitcher.innerHTML = scenario.states
+          .map(([value, label]) => `<button type="button" class="state-btn${value === viewState.businessState ? ' active' : ''}" data-state="${escapeHtml(value)}" aria-pressed="${value === viewState.businessState}">${escapeHtml(label)}</button>`)
+          .join('');
+
+        ruleList.innerHTML = scenario.rules
+          .map((rule) => `
+            <button type="button" class="rule-button${rule.id === viewState.selectedRule ? ' selected' : ''}" data-rule="${escapeHtml(rule.id)}" aria-pressed="${rule.id === viewState.selectedRule}">
+              <span class="rule-id">${escapeHtml(rule.id)}</span>
+              <span><strong>${escapeHtml(rule.title)}</strong><small>${escapeHtml(rule.type)}</small></span>
+            </button>`)
+          .join('');
+
+        stateSwitcher.querySelectorAll('[data-state]').forEach((button) => {
+          button.addEventListener('click', () => {
+            viewState.businessState = button.dataset.state;
+            render();
+            announce(`业务状态已切换为${button.textContent}`);
+          });
+        });
+
+        ruleList.querySelectorAll('[data-rule]').forEach((button) => {
+          button.addEventListener('click', () => {
+            viewState.selectedRule = button.dataset.rule;
+            renderControls();
+            renderPreview();
+            renderDerivation();
+            renderContract();
+            announce(`已选择规则${button.dataset.rule}，原型中已高亮对应 UI 落点`);
+          });
+        });
+      }
+
+      function renderContract() {
+        const rule = selectedRule();
+        const roleLabel = currentScenario().roles.find(([value]) => value === viewState.role)?.[1] || viewState.role;
+        const stateLabel = currentScenario().states.find(([value]) => value === viewState.businessState)?.[1] || viewState.businessState;
+        contract.innerHTML = `
+          <article class="contract-card">
+            <h3>${escapeHtml(rule.id)} · ${escapeHtml(rule.title)}</h3>
+            <dl>
+              <div class="contract-row"><dt>业务含义</dt><dd>${escapeHtml(rule.meaning)}</dd></div>
+              <div class="contract-row"><dt>交互义务</dt><dd>${rule.obligations.map((item) => `<span class="chip obligation-chip">${escapeHtml(item)}</span>`).join('')}</dd></div>
+              <div class="contract-row"><dt>UI 投影</dt><dd>${escapeHtml(rule.ui)}</dd></div>
+              <div class="contract-row"><dt>表达时机</dt><dd>${escapeHtml(rule.timing)}</dd></div>
+            </dl>
+          </article>
+          <article class="contract-card">
+            <h3>当前任务契约</h3>
+            <dl>
+              <div class="contract-row"><dt>Actor</dt><dd>${escapeHtml(roleLabel)}</dd></div>
+              <div class="contract-row"><dt>State</dt><dd>${escapeHtml(stateLabel)}</dd></div>
+              <div class="contract-row"><dt>Scenario</dt><dd>${escapeHtml(currentScenario().title)}</dd></div>
+              <div class="contract-row"><dt>Version</dt><dd>${viewState.scenario === 'pricing' ? 'pricing-policy-v12' : 'refund-policy-v7'}</dd></div>
+            </dl>
+          </article>
+          <div class="authority-note"><strong>权威边界：</strong>${escapeHtml(rule.authority)}</div>`;
+      }
+
+      function appFrame(title, meta, body) {
+        return `<div class="app-frame"><div class="app-top"><strong>${title}</strong>${meta}</div><div class="app-body">${body}</div></div>`;
+      }
+
+      function pricingPreview() {
+        const state = viewState.businessState;
+        const role = viewState.role;
+
+        if (role === 'operator') {
+          const conflict = state === 'conflict';
+          return appFrame(
+            '组合政策 · 草稿 v13',
+            `<span class="status-pill ${conflict ? 'danger' : 'warning'}">${conflict ? '存在冲突' : '待模拟'}</span>`,
+            `<div class="form-row"><label for="policy-scope">适用范围 <span>客户合同</span></label><input id="policy-scope" class="field" value="合同客户 / 华东门店" readonly></div>
+             <div class="form-row"><label for="base-policy">基础价关系</label><select id="base-policy" class="field"><option>合同价优先于会员价</option><option>两者择优</option></select></div>
+             <div class="form-row map-promo-choice"><label for="promo-policy">商家优惠关系</label><select id="promo-policy" class="field${conflict ? ' invalid' : ''}"><option>${conflict ? '允许叠加（与已批准政策冲突）' : '禁止与合同价叠加'}</option></select>${conflict ? '<div class="field-error">BR-P03：合同价与商家满减处于禁止组合关系</div>' : '<div class="field-help">发布前将检查互斥、依赖、有效期和资金责任。</div>'}</div>
+             <div class="decision-box map-decision ${conflict ? 'danger' : ''}"><h4>${conflict ? '不能发布此版本' : '影响模拟尚未执行'}</h4><p>${conflict ? '先解决规则冲突，或由有权业务负责人修改组合政策。' : '使用历史订单样本比较 v12 与草稿 v13 的结果差异。'}</p></div>
+             <div class="app-actions"><button class="btn ghost" type="button">运行模拟</button><button class="btn primary" type="button" ${conflict ? 'disabled' : ''}>提交评审</button></div>`
+          );
+        }
+
+        if (role === 'auditor') {
+          return appFrame(
+            '订单决策快照 · ORD-20260731-018',
+            '<span class="status-pill success">已冻结</span>',
+            `<div class="summary-card map-snapshot"><div class="summary-row"><span>规则版本</span><strong>pricing-policy-v12</strong></div><div class="summary-row"><span>业务发生时间</span><strong>2026-07-31 14:28</strong></div><div class="summary-row map-contract-price map-platform-benefit"><span>采用结果</span><strong>合同价 + 平台补贴</strong></div><div class="summary-row map-total"><span>最终应付</span><strong>¥75.00</strong></div></div>
+             <div class="decision-box map-decision"><h4>裁决依据</h4><ul class="decision-list"><li>✓ BR-P01：合同、商品与时间均有效</li><li>✓ BR-P02：合同价优先于会员价</li><li>✓ BR-P04：平台补贴允许叠加</li><li>− BR-P03：商家满减被排除</li></ul></div>
+             <div class="app-actions"><button class="btn ghost" type="button">查看资金分摊</button><button class="btn ghost" type="button">查看审计链</button></div>`
+          );
+        }
+
+        if (state === 'processing') {
+          return appFrame(
+            '确认订单',
+            '<span class="status-pill info">提交处理中</span>',
+            `<div class="decision-box"><h4>已接受订单请求</h4><p>正在重新校验价格、优惠额度和库存。此状态不代表订单已经完成。</p></div>
+             <ol class="timeline"><li class="done">请求已接受 · 14:28:06</li><li class="current">校验政策与可用额度</li><li>形成订单与决策快照</li><li>返回最终结果</li></ol>
+             <div class="app-actions"><button class="btn ghost" type="button">返回继续浏览</button><button class="btn primary" type="button" disabled>处理中…</button></div>`
+          );
+        }
+
+        const conflict = state === 'conflict';
+        const expired = state === 'expired';
+        const meta = conflict
+          ? '<span class="status-pill danger">需要处理</span>'
+          : expired
+            ? '<span class="status-pill warning">预估已变化</span>'
+            : '<span class="status-pill success">政策已评估</span>';
+        const detail = conflict
+          ? `<div class="decision-box danger map-decision"><h4>发现未定义的优惠组合</h4><p>合同价与新引入的门店折扣同时命中，但尚无批准的裁决。为避免错误收费，本次结算已阻断。</p></div>`
+          : expired
+            ? `<div class="decision-box warning map-decision"><h4>平台补贴已失效</h4><p>优惠额度在提交前已用完，应付金额由 ¥75.00 更新为 ¥80.00。请重新确认。</p></div>`
+            : `<div class="decision-box map-decision"><h4>为什么是 ¥75.00？</h4><ul class="decision-list"><li>✓ 采用客户合同价</li><li>✓ 叠加平台补贴</li><li>− 会员价优先级较低</li><li>− 商家满减不可与合同价叠加</li></ul></div>`;
+        return appFrame(
+          role === 'cashier' ? '收银结算 · 桌台 A08' : '确认订单',
+          meta,
+          `<div class="summary-card"><div class="summary-row"><span>商品原价</span><strong>¥100.00</strong></div><div class="summary-row map-contract-price"><span>客户合同价</span><span class="minus">− ¥20.00</span></div><div class="summary-row map-platform-benefit"><span>平台补贴</span><span class="minus">${expired ? '已失效' : '− ¥5.00'}</span></div><div class="summary-row total map-total"><span>最终应付</span><strong>${expired ? '¥80.00' : '¥75.00'}</strong></div></div>
+           <div class="offer-choice map-promo-choice"><div><strong>商家满 100 减 10</strong><small>与当前合同价互斥</small></div><span class="blocked">不可叠加</span></div>${detail}
+           <div class="app-actions"><button class="btn ghost map-change-offer" type="button">更换优惠</button><button class="btn primary map-submit-order" type="button" ${conflict ? 'disabled' : ''}>${expired ? '确认新金额' : '提交订单'}</button></div>`
+        );
+      }
+      function refundPreview() {
+        const state = viewState.businessState;
+        const role = viewState.role;
+
+        if (role === 'auditor') {
+          return appFrame(
+            '退款审计 · RF-20260731-006',
+            '<span class="status-pill info">历史快照</span>',
+            `<div class="summary-card map-snapshot"><div class="summary-row"><span>原有效支付</span><strong>¥860.00</strong></div><div class="summary-row"><span>本次退款</span><strong>¥680.00</strong></div><div class="summary-row"><span>政策版本</span><strong>refund-policy-v7</strong></div><div class="summary-row"><span>审批关系</span><strong>发起人与审批人分离</strong></div></div>
+             <ol class="timeline map-timeline"><li class="done">申请人 林晓提交 · 09:14</li><li class="done">经理 周明批准 · 09:21</li><li class="done">支付机构受理 · 09:22</li><li class="current">等待最终对账</li></ol>
+             <div class="decision-box"><h4>历史解释使用原政策</h4><p>当前政策已升级到 v8，但该退款继续绑定申请时的 v7 与原支付决策快照。</p></div>`
+          );
+        }
+
+        if (role === 'manager' || state === 'approval') {
+          return appFrame(
+            '高额退款审批 · RF-006',
+            '<span class="status-pill warning">等待你的决定</span>',
+            `<div class="summary-card"><div class="summary-row"><span>退款申请</span><strong>¥680.00</strong></div><div class="summary-row"><span>最大可退</span><strong>¥860.00</strong></div><div class="summary-row"><span>触发政策</span><strong>超过 ¥500 需经理审批</strong></div><div class="summary-row map-approval-actor"><span>申请人</span><strong>林晓 · 收银员</strong></div></div>
+             <div class="decision-box warning"><h4>审批责任</h4><p>批准后将向支付机构发起退款，但机构处理完成前不得向顾客承诺到账。</p></div>
+             <div class="form-row mt-4"><label for="approval-note">审批意见</label><textarea id="approval-note" class="field" rows="3" placeholder="拒绝或退回时必须填写原因"></textarea></div>
+             <div class="app-actions map-approval-actions"><button class="btn ghost" type="button">退回补充材料</button><button class="btn primary" type="button">批准并执行</button></div>`
+          );
+        }
+
+        if (state === 'processing') {
+          return appFrame(
+            '退款进度 · RF-006',
+            '<span class="status-pill info map-async-status">机构处理中</span>',
+            `<div class="decision-box"><h4>退款申请已被批准</h4><p>支付机构已受理 ¥680.00 退款，预计 1–3 个工作日返回最终结果。</p></div>
+             <ol class="timeline map-timeline"><li class="done">申请已提交</li><li class="done">经理已批准</li><li class="current">支付机构处理中</li><li>到账并完成对账</li></ol>
+             <div class="app-actions map-async-actions"><button class="btn ghost" type="button">查看申请详情</button><button class="btn primary" type="button" disabled>不能重复发起</button></div>`
+          );
+        }
+
+        if (state === 'unknown') {
+          return appFrame(
+            '退款进度 · RF-006',
+            '<span class="status-pill danger map-async-status">结果未知</span>',
+            `<div class="decision-box danger"><h4>暂时无法确认支付机构结果</h4><p>网络超时不等于退款失败。系统正在按原幂等键查询，请勿再次发起。</p></div>
+             <ol class="timeline map-timeline"><li class="done">申请已批准</li><li class="done">请求已发送</li><li class="current">查询机构权威结果</li><li>自动对账或转人工</li></ol>
+             <div class="app-actions map-async-actions"><button class="btn ghost" type="button">刷新进度</button><button class="btn primary" type="button">联系人工核查</button></div>`
+          );
+        }
+
+        return appFrame(
+          '发起退款 · ORD-018',
+          '<span class="status-pill success">可申请</span>',
+          `<div class="summary-card map-refund-balance"><div class="summary-row"><span>原有效支付</span><strong>¥860.00</strong></div><div class="summary-row"><span>历史已退</span><strong>¥0.00</strong></div><div class="summary-row"><span>最大可退</span><strong>¥860.00</strong></div></div>
+           <div class="form-row mt-4 map-refund-input"><label for="refund-amount">退款金额 <span id="amount-mode" class="map-refund-mode">≤ ¥500 自动批准</span></label><input id="refund-amount" class="field" type="number" min="0.01" max="860" step="0.01" value="380" aria-describedby="refund-help"><div id="refund-help" class="field-help">超过 ¥500 后将改为提交经理审批。</div></div>
+           <div class="form-row"><label for="refund-reason">退款原因</label><select id="refund-reason" class="field"><option>顾客取消</option><option>商品质量问题</option><option>服务异常</option></select></div>
+           <div class="decision-box map-refund-decision"><h4 id="refund-decision-title">可直接发起退款</h4><p id="refund-decision-copy">当前金额未超过审批阈值；提交后仍需等待支付机构最终结果。</p></div>
+           <div class="app-actions"><button class="btn ghost" type="button">取消</button><button id="refund-submit" class="btn primary map-refund-submit" type="button">立即退款</button></div>`
+        );
+      }
+
+      function bindPreviewInteractions() {
+        const amountInput = preview.querySelector('#refund-amount');
+        if (!amountInput) return;
+        const mode = preview.querySelector('#amount-mode');
+        const title = preview.querySelector('#refund-decision-title');
+        const copy = preview.querySelector('#refund-decision-copy');
+        const submit = preview.querySelector('#refund-submit');
+
+        amountInput.addEventListener('input', () => {
+          const amount = Number(amountInput.value);
+          const invalid = !Number.isFinite(amount) || amount <= 0 || amount > 860;
+          amountInput.classList.toggle('invalid', invalid);
+          amountInput.setAttribute('aria-invalid', String(invalid));
+          if (invalid) {
+            mode.textContent = '输入超出可退范围';
+            title.textContent = '当前金额不能提交';
+            copy.textContent = '退款金额必须大于 0 且不超过最大可退金额 ¥860.00。';
+            submit.disabled = true;
+            submit.textContent = '修正金额后提交';
+            return;
+          }
+          const approval = amount > 500;
+          mode.textContent = approval ? '> ¥500 需要经理审批' : '≤ ¥500 自动批准';
+          title.textContent = approval ? '提交后进入经理审批' : '可直接发起退款';
+          copy.textContent = approval
+            ? '高额退款需要职责分离审批；当前发起人不能批准自己的申请。'
+            : '当前金额未超过审批阈值；提交后仍需等待支付机构最终结果。';
+          submit.disabled = false;
+          submit.textContent = approval ? '提交审批' : '立即退款';
+        });
+      }
+
+      function renderPreview() {
+        preview.innerHTML = viewState.scenario === 'pricing' ? pricingPreview() : refundPreview();
+        bindPreviewInteractions();
+        highlightMappingTargets();
+      }
+
+      function render() {
+        renderControls();
+        renderPreview();
+        renderDerivation();
+        renderContract();
+      }
+
+      document.querySelectorAll('[data-parser-mode]').forEach((button) => {
+        button.addEventListener('click', () => selectParserMode(button.dataset.parserMode));
+      });
+      compileRuleButton.addEventListener('click', compileFromInput);
+      naturalRuleInput.addEventListener('keydown', (event) => {
+        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') compileFromInput();
+      });
+      document.querySelectorAll('[data-example]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const example = ruleExamples[Number(button.dataset.example)];
+          naturalRuleInput.value = example.text;
+          compilerRole.value = example.role;
+          compilerTask.value = example.task;
+          compilerStateInput.value = example.state;
+          compilerOwner.value = example.owner;
+          if (compilerState.mode === 'ai') {
+            setAiConnection('warning', '示例已填入，尚未发送', '请显式点击“由 AI 解析候选 IR 并生成 UI”后才会发送当前规则和四项上下文。');
+            announce('AI 模式下示例只会填入输入框，请点击编译按钮后再发送');
+          } else {
+            compileFromInput();
+          }
+        });
+      });
+
+      roleSelect.addEventListener('change', (event) => {
+        viewState.role = event.target.value;
+        renderPreview();
+        renderDerivation();
+        renderContract();
+        announce(`当前角色已切换为${event.target.selectedOptions[0].textContent}，映射落点已重新计算`);
+      });
+
+      document.querySelectorAll('[data-scenario]').forEach((tab) => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('[data-scenario]').forEach((item) => item.setAttribute('aria-selected', 'false'));
+          tab.setAttribute('aria-selected', 'true');
+          viewState.scenario = tab.dataset.scenario;
+          if (viewState.scenario === 'pricing') {
+            viewState.role = 'customer';
+            viewState.businessState = 'normal';
+            viewState.selectedRule = 'BR-P03';
+          } else {
+            viewState.role = 'applicant';
+            viewState.businessState = 'entry';
+            viewState.selectedRule = 'BR-R02';
+          }
+          render();
+          announce(`已切换到${currentScenario().title}场景`);
+        });
+      });
+
+      compileFromInput();
+      render();
+    })();
+  </script>
+</body>
+</html>

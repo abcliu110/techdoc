@@ -1,0 +1,49 @@
+{
+  "generatedAt": "2026-07-15T04:34:33.361661+00:00",
+  "url": "http://127.0.0.1:8765",
+  "browserPath": "Python Playwright with system Chrome; in-app Browser returned No browser is available",
+  "screenshots": [
+    {
+      "case": "index",
+      "path": "D:\\mywork\\techdoc\\00通用\\数据模型界面模式映射\\prototype-suite\\evidence\\index-desktop.png",
+      "viewport": "1440x900",
+      "state": "initial"
+    },
+    {
+      "case": "01:grid-layout",
+      "path": "D:\\mywork\\techdoc\\00通用\\数据模型界面模式映射\\prototype-suite\\evidence\\01-grid-layout-initial-1440x900.png",
+      "viewport": "1440x900",
+      "state": "initial"
+    },
+    {
+      "case": "02:data-grid",
+      "path": "D:\\mywork\\techdoc\\00通用\\数据模型界面模式映射\\prototype-suite\\evidence\\02-data-grid-primary-1440x900.png",
+      "viewport": "1440x900",
+      "state": "primary"
+    },
+    {
+      "case": "02:data-grid",
+      "path": "D:\\mywork\\techdoc\\00通用\\数据模型界面模式映射\\prototype-suite\\evidence\\02-data-grid-exception-1440x900.png",
+      "viewport": "1440x900",
+      "state": "exception"
+    },
+    {
+      "case": "16:permission-matrix",
+      "path": "D:\\mywork\\techdoc\\00通用\\数据模型界面模式映射\\prototype-suite\\evidence\\16-permission-matrix-recovery-1440x900.png",
+      "viewport": "1440x900",
+      "state": "recovery"
+    },
+    {
+      "case": "18:stock-allocation",
+      "path": "D:\\mywork\\techdoc\\00通用\\数据模型界面模式映射\\prototype-suite\\evidence\\18-stock-allocation-initial-1440x900.png",
+      "viewport": "1440x900",
+      "state": "initial"
+    },
+    {
+      "case": "18:stock-allocation",
+      "path": "D:\\mywork\\techdoc\\00通用\\数据模型界面模式映射\\prototype-suite\\evidence\\18-stock-allocation-exception-390x844.png",
+      "viewport": "390x844",
+      "state": "exception"
+    }
+  ]
+}

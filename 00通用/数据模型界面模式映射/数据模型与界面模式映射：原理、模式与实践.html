@@ -1,0 +1,2088 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="数据模型与界面模式映射大型交互手册：从业务事实、任务视图到低代码运行时与工程治理。">
+  <title>数据模型与界面模式映射大型手册</title>
+  <style>
+:root{color-scheme:light;--ink:#202732;--muted:#667180;--paper:#fff;--canvas:#edf1f4;--nav:#1c2732;--nav-2:#24313e;--line:#c8d0d8;--line-strong:#9ba8b5;--accent:#e2aa26;--accent-2:#16796f;--blue:#346d9b;--red:#a94949;--code:#19232d;--shadow:0 18px 44px rgba(24,35,46,.12);--top:58px;--side:316px;--rail:54px;font-family:"Microsoft YaHei UI","Noto Sans SC",sans-serif;font-size:16px;line-height:1.78}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:80px}body{margin:0;background:var(--canvas);color:var(--ink);letter-spacing:0}button,input,select,textarea{font:inherit;letter-spacing:0}button{cursor:pointer}a{color:inherit}.app{min-height:100vh}.topbar{position:fixed;z-index:50;inset:0 0 auto 0;height:var(--top);display:flex;align-items:center;gap:12px;padding:0 18px;color:#fff;background:#19232d;border-bottom:3px solid var(--accent)}.brand-mark{width:7px;height:28px;background:var(--accent)}.brand{font:700 15px/1.2 Bahnschrift,"Microsoft YaHei UI"}.brand small{display:block;margin-top:3px;color:#aab6c2;font-size:10px;font-weight:500}.top-actions{margin-left:auto;display:flex;align-items:center;gap:8px}.search-box{position:relative;width:min(360px,34vw)}.search-box input{width:100%;height:34px;padding:6px 72px 6px 34px;border:1px solid #485867;border-radius:4px;color:#fff;background:#111a23;outline:0}.search-box input:focus{border-color:var(--accent)}.search-box svg{position:absolute;left:10px;top:8px;width:17px;height:17px;color:#91a0af}.search-count{position:absolute;right:8px;top:7px;color:#8f9dac;font:11px/20px Consolas}.icon-button{display:inline-grid;place-items:center;width:34px;height:34px;border:1px solid var(--line-strong);border-radius:4px;color:var(--ink);background:#fff}.topbar .icon-button{border-color:#4c5a68;color:#fff;background:transparent}.icon-button:hover{border-color:var(--accent);color:#7c5700}.topbar .icon-button:hover{color:var(--accent)}.reading-meter{width:110px;height:4px;background:#41505e;overflow:hidden}.reading-meter i{display:block;width:0;height:100%;background:var(--accent);transition:width .12s linear}.shell{display:grid;grid-template-columns:var(--side) minmax(0,1fr) var(--rail);padding-top:var(--top);min-height:100vh}.sidebar{position:fixed;z-index:40;left:0;top:var(--top);bottom:0;width:var(--side);display:grid;grid-template-rows:auto minmax(0,1fr) auto;color:#c9d2dc;background:var(--nav);border-right:1px solid #344251}.side-head{padding:16px 16px 12px;border-bottom:1px solid #374553}.side-overline{color:#7f90a2;font:700 10px/1.3 Consolas}.side-title{margin:5px 0 0;color:#fff;font-size:14px}.toc{overflow:auto;padding:8px}.toc-part{border-bottom:1px solid #303e4c}.toc-part-link{display:grid;grid-template-columns:31px 1fr;gap:3px;padding:10px 9px;text-decoration:none;color:#f1f4f7;font-size:12px;font-weight:700}.toc-part-link span{color:var(--accent);font:11px Consolas}.toc-chapters{display:grid;padding:0 0 8px 31px}.toc-chapters a{position:relative;padding:5px 9px;border-left:2px solid transparent;text-decoration:none;color:#9eacba;font-size:11px;line-height:1.45}.toc-chapters a:hover,.toc-chapters a.active{color:#fff;background:#2a3947;border-left-color:var(--accent)}.toc-chapters a.search-hidden,.toc-part.search-hidden{display:none}.side-foot{padding:11px 16px;border-top:1px solid #374553;color:#8796a5;font-size:10px}.main{grid-column:2;min-width:0;padding:44px 28px 100px}.article{width:min(980px,100%);margin:0 auto;background:var(--paper);border:1px solid var(--line);box-shadow:var(--shadow);padding:60px clamp(28px,6vw,78px) 90px}.document-title{margin:0 0 12px;font:800 clamp(30px,4vw,48px)/1.22 Bahnschrift,"Microsoft YaHei UI";color:#17212b}.part-title{margin:90px -20px 34px;padding:28px 20px 21px;border-top:5px solid var(--accent);border-bottom:1px solid var(--line);background:#f2f5f7;font:800 clamp(24px,3vw,34px)/1.32 Bahnschrift,"Microsoft YaHei UI"}.chapter-title{margin:58px 0 20px;padding-top:6px;font:800 22px/1.45 Bahnschrift,"Microsoft YaHei UI";color:#17212b}.heading-anchor{margin-left:8px;text-decoration:none;color:transparent;font-weight:400}.document-title:hover .heading-anchor,.part-title:hover .heading-anchor,.chapter-title:hover .heading-anchor{color:#a6b0ba}p{margin:13px 0}strong{color:#111a22}blockquote{margin:22px 0;padding:17px 20px;border-left:5px solid var(--accent);background:#fff9e8;color:#3f4852;font-size:16px}blockquote p{margin:0 0 6px}blockquote p:last-child{margin-bottom:0}hr{height:1px;border:0;background:var(--line);margin:38px 0}ul,ol{padding-left:24px}li{margin:6px 0}code{padding:1px 5px;border:1px solid #d8dee4;border-radius:3px;background:#f2f5f7;font:13px/1.5 Consolas,"Microsoft YaHei UI"}pre{position:relative;margin:20px 0;padding:20px;overflow:auto;border-left:5px solid var(--accent-2);background:var(--code);color:#d9e2eb;line-height:1.62}pre::before{content:attr(data-language);position:absolute;right:10px;top:7px;color:#6f8294;font:10px Consolas}pre code{padding:0;border:0;background:transparent;color:inherit;font-size:13px}.table-scroll{margin:22px 0;overflow:auto;border:1px solid var(--line)}table{width:100%;border-collapse:collapse;background:#fff;font-size:13px}th,td{padding:10px 12px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th:last-child,td:last-child{border-right:0}tr:last-child td{border-bottom:0}th{position:sticky;top:0;color:#fff;background:#283746;white-space:nowrap}tbody tr:nth-child(even){background:#f7f9fa}tbody tr:hover{background:#fff6d8}.utility-rail{position:fixed;z-index:30;right:0;top:var(--top);bottom:0;width:var(--rail);display:flex;flex-direction:column;align-items:center;gap:9px;padding-top:16px;background:#dfe5ea;border-left:1px solid var(--line)}.utility-rail .icon-button{background:#f8fafb}.rail-label{writing-mode:vertical-rl;color:#778492;font:10px Consolas;margin-top:4px}.back-top{margin-top:auto;margin-bottom:16px}.mobile-menu{display:none}.search-panel{position:fixed;z-index:60;right:65px;top:52px;width:min(560px,calc(100vw - 30px));max-height:62vh;display:none;overflow:auto;border:1px solid var(--line-strong);background:#fff;box-shadow:var(--shadow)}.search-panel.open{display:block}.search-result{display:block;padding:11px 14px;border-bottom:1px solid var(--line);text-decoration:none}.search-result:hover{background:#fff5d5}.search-result small{display:block;color:var(--muted)}.search-empty{padding:24px;color:var(--muted)}mark{padding:0 2px;background:#ffe18a}.prototype{margin:34px 0 42px;border:1px solid #aeb9c4;background:#fff;box-shadow:0 16px 34px rgba(25,38,51,.13)}.prototype-head{min-height:76px;display:flex;align-items:center;gap:16px;padding:13px 15px 13px 18px;border-bottom:1px solid var(--line);background:#f6f8fa}.prototype-head>div{min-width:0}.prototype-kicker{color:#8a6100;font:700 10px Consolas}.prototype h4{margin:2px 0 1px;font-size:15px}.prototype-head p{margin:0;color:var(--muted);font-size:11px}.prototype-reset{flex:0 0 auto;margin-left:auto}.prototype-body{min-height:340px;padding:18px;overflow:auto;background:#e8edf1;background-image:linear-gradient(#dce3e8 1px,transparent 1px),linear-gradient(90deg,#dce3e8 1px,transparent 1px);background-size:20px 20px}.prototype-foot{min-height:45px;display:flex;align-items:center;gap:12px;padding:8px 14px;border-top:1px solid var(--line);background:#f8fafb;font-size:11px}.prototype-foot strong{color:#165f58}.prototype-foot span{margin-left:auto;color:var(--muted);font-family:Consolas}.demo-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}.demo-toolbar label{display:flex;align-items:center;gap:6px;color:#4d5966;font-size:11px}.demo-toolbar select,.demo-toolbar input[type="text"],.demo-toolbar input[type="number"]{height:33px;padding:5px 8px;border:1px solid #aeb9c5;background:#fff}.demo-button{min-height:33px;padding:5px 10px;border:1px solid #9facb8;background:#fff;color:#27333f}.demo-button:hover,.demo-button.active{border-color:#a97b09;background:var(--accent);color:#1d2731;font-weight:700}.demo-button.danger{border-color:#bc7777;color:#842c2c}.segmented{display:inline-flex;border:1px solid #aab6c1}.segmented .demo-button{border:0;border-right:1px solid #aab6c1}.segmented .demo-button:last-child{border-right:0}.demo-panel{border:1px solid #9eacb9;background:#fff}.demo-panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;color:#fff;background:#293745;font-size:12px}.demo-panel-body{padding:14px}.demo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.demo-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.metric{padding:11px;border-left:4px solid var(--accent);background:#fff}.metric small{display:block;color:var(--muted);font-size:10px}.metric strong{display:block;font:800 18px Bahnschrift}.badge{display:inline-block;padding:2px 7px;border:1px solid #b9a45b;background:#fff4c9;color:#725000;font-size:10px}.badge.green{border-color:#86b5a8;background:#e5f3ee;color:#14685f}.badge.red{border-color:#c99494;background:#f8e6e6;color:#8b3232}.formula-strip{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:13px;border:1px solid #a9b6c2;background:#17222d;color:#e8eef4;font:13px Consolas}.formula-strip .token{padding:5px 7px;border:1px solid #455564;background:#23313e}.formula-strip .context{border-color:#a87e18;color:#ffdc7e}.order-table{width:100%;border-collapse:collapse}.order-table th{position:static}.order-card{display:grid;grid-template-columns:1fr auto;gap:8px;padding:13px;border:1px solid var(--line);background:#fff}.order-card p{grid-column:1/-1;margin:0;color:var(--muted);font-size:11px}.timeline{display:grid;gap:0}.timeline-item{position:relative;margin-left:8px;padding:0 0 17px 22px;border-left:2px solid #a6b2bd}.timeline-item::before{content:"";position:absolute;left:-7px;top:4px;width:11px;height:11px;background:var(--accent);border:2px solid #fff}.field{display:grid;gap:4px}.field label{color:var(--muted);font-size:10px}.field input,.field select,.field textarea{width:100%;padding:8px;border:1px solid #a9b6c2;background:#fff}.field input:disabled{background:#e9edf1;color:#7a8692}.command-box{padding:12px;border:1px dashed #7f8f9e;background:#f7f9fb;font:12px Consolas;white-space:pre-wrap}.set-diagram{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.set-box{min-height:105px;padding:9px;border:1px solid #a6b3bf;background:#fff}.set-box.active{border:3px solid var(--accent-2);background:#e9f5f1}.set-box h5{margin:0 0 6px;font-size:11px}.set-box span{display:block;color:var(--muted);font-size:10px}.rule-list{display:grid;gap:7px}.rule-row{display:grid;grid-template-columns:30px minmax(0,1fr) auto;align-items:center;gap:8px;padding:9px;border:1px solid #b2bdc8;background:#fff}.rule-order{display:grid;place-items:center;width:26px;height:26px;background:#293745;color:#fff;font:11px Consolas}.rule-row select{max-width:150px;padding:5px}.graph{position:relative;min-width:700px;height:310px;background:#f8fafb}.graph svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.graph line{stroke:#8b99a7;stroke-width:2}.graph line.active{stroke:var(--accent-2);stroke-width:4}.graph-node{position:absolute;width:130px;min-height:52px;padding:8px;border:1px solid #93a2b1;background:#fff;box-shadow:0 5px 13px rgba(24,35,46,.1);font-size:11px;text-align:left}.graph-node.active{border:3px solid var(--accent);background:#fff7d9;font-weight:700}.null-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.null-card{padding:12px;border:1px solid #a9b6c2;background:#fff}.null-card.active{border-top:5px solid var(--accent)}.null-card h5{margin:0 0 5px}.null-card p{min-height:56px;margin:0;color:var(--muted);font-size:10px}.nav-demo{min-width:650px;display:grid;grid-template-columns:165px 1fr;min-height:290px;border:1px solid #8f9eac;background:#fff}.nav-demo aside{padding:10px;color:#d5dee7;background:#263442}.nav-demo aside button{width:100%;padding:8px;border:0;border-left:3px solid transparent;color:inherit;background:transparent;text-align:left;font-size:11px}.nav-demo aside button.active{border-left-color:var(--accent);background:#344657;color:#fff}.nav-content{padding:15px}.crumb{color:var(--muted);font-size:10px}.pipeline{min-width:700px;display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.pipe-stage{position:relative;min-height:120px;padding:10px;border:1px solid #9eacb8;background:#fff;font-size:10px}.pipe-stage::after{content:"→";position:absolute;right:-13px;top:43px;z-index:2;font-size:20px}.pipe-stage:last-child::after{display:none}.pipe-stage.active{border:4px solid var(--accent-2);background:#e8f4f0}.version-track{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.version-node{min-height:110px;padding:10px;border:1px solid #a6b3bf;background:#fff}.version-node.active{border-top:5px solid var(--accent)}.test-matrix{border-collapse:collapse}.test-matrix th{position:static}.test-matrix td{text-align:center}.coverage-hit{background:#dcefe8;color:#12665d;font-weight:700}.coverage-gap{background:#f8dddd;color:#8c2e2e;font-weight:700}.ai-boundary{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ai-zone{padding:14px;border:1px solid #a5b2bf;background:#fff}.ai-zone.safe{border-top:5px solid var(--accent-2)}.ai-zone.locked{border-top:5px solid var(--red)}.ai-option{display:flex;align-items:center;gap:7px;margin:7px 0;font-size:11px}.explanation{margin-top:10px;padding:10px;border-left:4px solid var(--blue);background:#e8f0f7;color:#314b61;font-size:11px}.toast{position:fixed;z-index:100;right:70px;bottom:20px;max-width:360px;padding:11px 14px;color:#fff;background:#1e2a35;border-left:5px solid var(--accent);box-shadow:var(--shadow);transform:translateY(18px);opacity:0;pointer-events:none;transition:.2s}.toast.show{transform:translateY(0);opacity:1}.focus-mode .sidebar,.focus-mode .utility-rail{display:none}.focus-mode .shell{grid-template-columns:1fr}.focus-mode .main{grid-column:1;padding-inline:22px}.focus-mode .article{width:min(900px,100%)}.focus-mode .topbar .search-box{display:none}@media(max-width:1050px){:root{--side:280px}.shell{grid-template-columns:var(--side) minmax(0,1fr)}.utility-rail{display:none}.main{padding-right:20px}.demo-grid.three{grid-template-columns:1fr 1fr}.null-cards{grid-template-columns:1fr 1fr}}@media(max-width:760px){:root{--top:54px}.topbar{height:var(--top);padding:0 10px}.brand small,.reading-meter{display:none}.brand{max-width:42vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mobile-menu{display:inline-grid}.search-box{width:min(43vw,250px)}.search-box input{padding-right:8px}.search-count{display:none}.shell{display:block;padding-top:var(--top)}.sidebar{top:var(--top);width:min(88vw,320px);transform:translateX(-102%);transition:transform .22s;box-shadow:none}.sidebar.open{transform:translateX(0);box-shadow:18px 0 40px rgba(0,0,0,.3)}.main{padding:18px 8px 70px}.article{padding:32px 18px 60px}.part-title{margin-left:-9px;margin-right:-9px;padding-left:12px;padding-right:12px}.chapter-title{font-size:20px}.prototype{margin-left:-10px;margin-right:-10px}.prototype-head{align-items:flex-start}.prototype-body{padding:10px;min-height:320px}.prototype-foot{align-items:flex-start;flex-direction:column}.prototype-foot span{margin-left:0}.demo-grid,.demo-grid.three,.set-diagram,.version-track,.ai-boundary{grid-template-columns:1fr}.null-cards{grid-template-columns:1fr 1fr}.search-panel{right:8px;top:50px}.toast{right:10px;left:10px}.focus-mode .main{padding-inline:8px}}@media print{.topbar,.sidebar,.utility-rail,.prototype,.search-panel,.toast{display:none!important}.shell{display:block;padding:0}.main{padding:0}.article{width:auto;border:0;box-shadow:none;padding:0}.part-title{break-before:page;background:#fff}.chapter-title{break-after:avoid}pre,.table-scroll{break-inside:avoid}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <button class="icon-button mobile-menu" id="mobileMenu" type="button" title="打开目录" aria-label="打开目录">☰</button>
+    <span class="brand-mark" aria-hidden="true"></span>
+    <div class="brand">数据模型 × 界面模式<small>大型交互手册 · 10 篇 / 84 章 / 12 组原型</small></div>
+    <div class="top-actions">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="m16.5 16.5 4 4" fill="none" stroke="currentColor" stroke-width="2"></path></svg>
+        <input id="searchInput" type="search" placeholder="搜索 84 章正文" aria-label="搜索手册">
+        <span class="search-count" id="searchCount"></span>
+      </div>
+      <div class="reading-meter" aria-label="阅读进度"><i id="readingBar"></i></div>
+      <span id="readingPercent" style="font:11px Consolas;color:#aeb9c4">0%</span>
+    </div>
+  </header>
+  <div class="search-panel" id="searchPanel" role="region" aria-live="polite"></div>
+  <div class="shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="side-head"><div class="side-overline">CONTENTS / HANDBOOK</div><h2 class="side-title">十篇知识地图</h2></div>
+      <nav class="toc" aria-label="章节目录"><section class="toc-part"><a class="toc-part-link" href="#手册导读-2"><span>01</span>手册导读</a><div class="toc-chapters"><a href="#这本手册解决什么问题-3" data-search-text="这本手册解决什么问题">这本手册解决什么问题</a><a href="#全书核心命题-4" data-search-text="全书核心命题">全书核心命题</a><a href="#十篇结构-5" data-search-text="十篇结构">十篇结构</a><a href="#两条建议阅读路径-6" data-search-text="两条建议阅读路径">两条建议阅读路径</a><a href="#证据与适用边界-7" data-search-text="证据与适用边界">证据与适用边界</a><a href="#符号约定-8" data-search-text="符号约定">符号约定</a></div></section><section class="toc-part"><a class="toc-part-link" href="#第一篇-从直觉到本质-数据为什么会变成不同界面-9"><span>02</span>从直觉到本质：数据为什么会变成不同界面</a><div class="toc-chapters"><a href="#开篇-同一张订单-为什么会长出五种完全不同的界面-10" data-search-text="开篇：同一张订单，为什么会长出五种完全不同的界面">开篇：同一张订单，为什么会长出五种完全不同的界面</a><a href="#1-数据库与-ui-回答的不是同一个问题-11" data-search-text="1. 数据库与 UI 回答的不是同一个问题">1. 数据库与 UI 回答的不是同一个问题</a><a href="#2-为什么一个模型可以映射出多个-ui-12" data-search-text="2. 为什么一个模型可以映射出多个 UI">2. 为什么一个模型可以映射出多个 UI</a><a href="#3-不要把四种模型混成一个模型-13" data-search-text="3. 不要把四种模型混成一个模型">3. 不要把四种模型混成一个模型</a><a href="#4-同一个数据模型映射到不同-ui-到底-不同-在哪里-14" data-search-text="4. 同一个数据模型映射到不同 UI，到底“不同”在哪里">4. 同一个数据模型映射到不同 UI，到底“不同”在哪里</a></div></section><section class="toc-part"><a class="toc-part-link" href="#第二篇-映射操作与读写机制-数据如何成为交互-15"><span>03</span>映射操作与读写机制：数据如何成为交互</a><div class="toc-chapters"><a href="#5-映射不是只有-字段到控件-16" data-search-text="5. 映射不是只有“字段到控件”">5. 映射不是只有“字段到控件”</a><a href="#6-读取映射与写入映射不是互为镜像-17" data-search-text="6. 读取映射与写入映射不是互为镜像">6. 读取映射与写入映射不是互为镜像</a></div></section><section class="toc-part"><a class="toc-part-link" href="#第三篇-架构模式与落地方法-如何选择而不是套用-18"><span>04</span>架构模式与落地方法：如何选择而不是套用</a><div class="toc-chapters"><a href="#7-常见模式-它们不是一条升级路线-而是在解决不同问题-19" data-search-text="7. 常见模式：它们不是一条升级路线，而是在解决不同问题">7. 常见模式：它们不是一条升级路线，而是在解决不同问题</a><a href="#8-同一模型映射多个-ui-的优点与代价-20" data-search-text="8. 同一模型映射多个 UI 的优点与代价">8. 同一模型映射多个 UI 的优点与代价</a><a href="#9-低代码平台应该怎样做这种映射-21" data-search-text="9. 低代码平台应该怎样做这种映射">9. 低代码平台应该怎样做这种映射</a><a href="#10-如何设计一个新的数据模型到-ui-映射-22" data-search-text="10. 如何设计一个新的数据模型到 UI 映射">10. 如何设计一个新的数据模型到 UI 映射</a><a href="#11-选型判据-23" data-search-text="11. 选型判据">11. 选型判据</a><a href="#12-必须守住的十条底线-24" data-search-text="12. 必须守住的十条底线">12. 必须守住的十条底线</a><a href="#13-产品-低代码与研发如何形成共同语言-25" data-search-text="13. 产品、低代码与研发如何形成共同语言">13. 产品、低代码与研发如何形成共同语言</a><a href="#14-基础篇小结-26" data-search-text="14. 基础篇小结">14. 基础篇小结</a></div></section><section class="toc-part"><a class="toc-part-link" href="#第四篇-形式化模型-把-映射-说清楚-27"><span>05</span>形式化模型：把“映射”说清楚</a><div class="toc-chapters"><a href="#15-映射函数的完整输入与输出-28" data-search-text="15. 映射函数的完整输入与输出">15. 映射函数的完整输入与输出</a><a href="#16-一个-ui-映射函数内部做了什么-29" data-search-text="16. 一个 UI 映射函数内部做了什么">16. 一个 UI 映射函数内部做了什么</a><a href="#17-用关系代数理解读取映射-30" data-search-text="17. 用关系代数理解读取映射">17. 用关系代数理解读取映射</a><a href="#18-映射的基数-一对一不是唯一关系-31" data-search-text="18. 映射的基数：一对一不是唯一关系">18. 映射的基数：一对一不是唯一关系</a><a href="#19-映射的可逆性与信息损失-32" data-search-text="19. 映射的可逆性与信息损失">19. 映射的可逆性与信息损失</a><a href="#20-一个-ui-也可以组合多个模型-33" data-search-text="20. 一个 UI 也可以组合多个模型">20. 一个 UI 也可以组合多个模型</a><a href="#21-规则如何组合-冲突时谁优先-34" data-search-text="21. 规则如何组合，冲突时谁优先">21. 规则如何组合，冲突时谁优先</a><a href="#22-依赖图-一个字段变化会影响什么-35" data-search-text="22. 依赖图：一个字段变化会影响什么">22. 依赖图：一个字段变化会影响什么</a><a href="#23-空值不是一个含义-36" data-search-text="23. 空值不是一个含义">23. 空值不是一个含义</a><a href="#24-对象身份-显示值变化-关联不能漂移-37" data-search-text="24. 对象身份：显示值变化，关联不能漂移">24. 对象身份：显示值变化，关联不能漂移</a><a href="#25-时间是映射的一等输入-38" data-search-text="25. 时间是映射的一等输入">25. 时间是映射的一等输入</a><a href="#26-映射正确性的四个层次-39" data-search-text="26. 映射正确性的四个层次">26. 映射正确性的四个层次</a></div></section><section class="toc-part"><a class="toc-part-link" href="#第五篇-交互模型-ui-不只是数据的终点-40"><span>06</span>交互模型：UI 不只是数据的终点</a><div class="toc-chapters"><a href="#27-三种状态不能混在一起-41" data-search-text="27. 三种状态不能混在一起">27. 三种状态不能混在一起</a><a href="#28-草稿是一条分支-不是业务真相-42" data-search-text="28. 草稿是一条分支，不是业务真相">28. 草稿是一条分支，不是业务真相</a><a href="#29-校验不是一层-而是一条责任链-43" data-search-text="29. 校验不是一层，而是一条责任链">29. 校验不是一层，而是一条责任链</a><a href="#30-命令-事件和字段更新的边界-44" data-search-text="30. 命令、事件和字段更新的边界">30. 命令、事件和字段更新的边界</a><a href="#31-动作是状态机-权限和任务的交集-45" data-search-text="31. 动作是状态机、权限和任务的交集">31. 动作是状态机、权限和任务的交集</a><a href="#32-错误也是-ui-模型的一部分-46" data-search-text="32. 错误也是 UI 模型的一部分">32. 错误也是 UI 模型的一部分</a><a href="#33-加载-空白和无权限不是同一状态-47" data-search-text="33. 加载、空白和无权限不是同一状态">33. 加载、空白和无权限不是同一状态</a><a href="#34-导航也是数据与任务的映射-48" data-search-text="34. 导航也是数据与任务的映射">34. 导航也是数据与任务的映射</a><a href="#35-上下文恢复属于正确性-不只是体验优化-49" data-search-text="35. 上下文恢复属于正确性，不只是体验优化">35. 上下文恢复属于正确性，不只是体验优化</a><a href="#36-多端映射-共享语义-不强求共享页面结构-50" data-search-text="36. 多端映射：共享语义，不强求共享页面结构">36. 多端映射：共享语义，不强求共享页面结构</a><a href="#37-可访问性也是映射上下文-51" data-search-text="37. 可访问性也是映射上下文">37. 可访问性也是映射上下文</a></div></section><section class="toc-part"><a class="toc-part-link" href="#第六篇-低代码与动态-ui-从元数据到可执行界面-52"><span>07</span>低代码与动态 UI：从元数据到可执行界面</a><div class="toc-chapters"><a href="#38-低代码平台真正编译的不是页面-而是任务解释契约-53" data-search-text="38. 低代码平台真正编译的不是页面，而是任务解释契约">38. 低代码平台真正编译的不是页面，而是任务解释契约</a><a href="#39-设计态-发布态与运行态必须分离-54" data-search-text="39. 设计态、发布态与运行态必须分离">39. 设计态、发布态与运行态必须分离</a><a href="#40-元数据编译流水线-55" data-search-text="40. 元数据编译流水线">40. 元数据编译流水线</a><a href="#41-组件解析不是一个-if-else-而是一项可解释决策-56" data-search-text="41. 组件解析不是一个 if-else，而是一项可解释决策">41. 组件解析不是一个 if-else，而是一项可解释决策</a><a href="#42-规则系统-优先级只是最后手段-57" data-search-text="42. 规则系统：优先级只是最后手段">42. 规则系统：优先级只是最后手段</a><a href="#43-数据获取-先生成页面查询计划-再请求数据-58" data-search-text="43. 数据获取：先生成页面查询计划，再请求数据">43. 数据获取：先生成页面查询计划，再请求数据</a><a href="#44-动作运行时-按钮背后必须是受控命令-59" data-search-text="44. 动作运行时：按钮背后必须是受控命令">44. 动作运行时：按钮背后必须是受控命令</a><a href="#45-版本-发布-迁移与回滚-60" data-search-text="45. 版本、发布、迁移与回滚">45. 版本、发布、迁移与回滚</a><a href="#46-插件与扩展-能力要开放-故障域要封闭-61" data-search-text="46. 插件与扩展：能力要开放，故障域要封闭">46. 插件与扩展：能力要开放，故障域要封闭</a><a href="#47-缓存与性能-缓存的是计划-不是权限结论-62" data-search-text="47. 缓存与性能：缓存的是计划，不是权限结论">47. 缓存与性能：缓存的是计划，不是权限结论</a><a href="#48-可观测性-必须能回答-为什么这个用户看到这个页面-63" data-search-text="48. 可观测性：必须能回答“为什么这个用户看到这个页面”">48. 可观测性：必须能回答“为什么这个用户看到这个页面”</a><a href="#49-测试策略-测试的是解释结果-而不只是-schema-能否解析-64" data-search-text="49. 测试策略：测试的是解释结果，而不只是 Schema 能否解析">49. 测试策略：测试的是解释结果，而不只是 Schema 能否解析</a><a href="#50-一个订单审批页怎样被编译出来-65" data-search-text="50. 一个订单审批页怎样被编译出来">50. 一个订单审批页怎样被编译出来</a><a href="#51-平台建设的最小可行分层-66" data-search-text="51. 平台建设的最小可行分层">51. 平台建设的最小可行分层</a><a href="#52-低代码运行时的十二条底线-67" data-search-text="52. 低代码运行时的十二条底线">52. 低代码运行时的十二条底线</a><a href="#53-一句话总结-68" data-search-text="53. 一句话总结">53. 一句话总结</a></div></section><section class="toc-part"><a class="toc-part-link" href="#第七篇-工程治理-让映射长期保持正确-69"><span>08</span>工程治理：让映射长期保持正确</a><div class="toc-chapters"><a href="#54-真值来源-同一个概念由谁说了算-70" data-search-text="54. 真值来源：同一个概念由谁说了算">54. 真值来源：同一个概念由谁说了算</a><a href="#55-权限模型-先限制数据-再决定表现-71" data-search-text="55. 权限模型：先限制数据，再决定表现">55. 权限模型：先限制数据，再决定表现</a><a href="#56-时间与一致性-页面显示的是哪个时刻的事实-72" data-search-text="56. 时间与一致性：页面显示的是哪个时刻的事实">56. 时间与一致性：页面显示的是哪个时刻的事实</a><a href="#57-查询计划与性能预算-73" data-search-text="57. 查询计划与性能预算">57. 查询计划与性能预算</a><a href="#58-并发-版本与幂等-74" data-search-text="58. 并发、版本与幂等">58. 并发、版本与幂等</a><a href="#59-失败隔离与恢复协议-75" data-search-text="59. 失败隔离与恢复协议">59. 失败隔离与恢复协议</a><a href="#60-可观测性-观察一次解释是怎样形成的-76" data-search-text="60. 可观测性：观察一次解释是怎样形成的">60. 可观测性：观察一次解释是怎样形成的</a><a href="#61-测试模型-从结构到业务行为-77" data-search-text="61. 测试模型：从结构到业务行为">61. 测试模型：从结构到业务行为</a><a href="#62-版本模型-哪些变化是兼容的-78" data-search-text="62. 版本模型：哪些变化是兼容的">62. 版本模型：哪些变化是兼容的</a><a href="#63-迁移-灰度与回滚-79" data-search-text="63. 迁移、灰度与回滚">63. 迁移、灰度与回滚</a><a href="#64-影响分析-一个字段变化会波及哪里-80" data-search-text="64. 影响分析：一个字段变化会波及哪里">64. 影响分析：一个字段变化会波及哪里</a><a href="#65-设计-发布与运行的职责边界-81" data-search-text="65. 设计、发布与运行的职责边界">65. 设计、发布与运行的职责边界</a><a href="#66-质量指标与门禁-82" data-search-text="66. 质量指标与门禁">66. 质量指标与门禁</a><a href="#67-安全-隐私与审计-83" data-search-text="67. 安全、隐私与审计">67. 安全、隐私与审计</a><a href="#68-失败模式与预演-84" data-search-text="68. 失败模式与预演">68. 失败模式与预演</a></div></section><section class="toc-part"><a class="toc-part-link" href="#第八篇-完整案例-一张订单如何变成五种任务视图-85"><span>09</span>完整案例：一张订单如何变成五种任务视图</a><div class="toc-chapters"><a href="#69-第一步-识别事实-规则和上下文-86" data-search-text="69. 第一步：识别事实、规则和上下文">69. 第一步：识别事实、规则和上下文</a><a href="#70-列表-ui-为-找-而投影-87" data-search-text="70. 列表 UI：为“找”而投影">70. 列表 UI：为“找”而投影</a><a href="#71-详情-ui-为-看懂-而组合-88" data-search-text="71. 详情 UI：为“看懂”而组合">71. 详情 UI：为“看懂”而组合</a><a href="#72-编辑-ui-为-形成合法草稿-而映射-89" data-search-text="72. 编辑 UI：为“形成合法草稿”而映射">72. 编辑 UI：为“形成合法草稿”而映射</a><a href="#73-审批-ui-为-作出可追溯决策-而映射-90" data-search-text="73. 审批 UI：为“作出可追溯决策”而映射">73. 审批 UI：为“作出可追溯决策”而映射</a><a href="#74-报表-ui-为-发现规律-而聚合-91" data-search-text="74. 报表 UI：为“发现规律”而聚合">74. 报表 UI：为“发现规律”而聚合</a><a href="#75-五种-ui-的完整映射矩阵-92" data-search-text="75. 五种 UI 的完整映射矩阵">75. 五种 UI 的完整映射矩阵</a><a href="#76-从案例得出的设计原则-93" data-search-text="76. 从案例得出的设计原则">76. 从案例得出的设计原则</a></div></section><section class="toc-part"><a class="toc-part-link" href="#第九篇-深层问题库-继续追问-直到边界清楚-94"><span>10</span>深层问题库：继续追问，直到边界清楚</a><div class="toc-chapters"><a href="#77-本质与边界-95" data-search-text="77. 本质与边界">77. 本质与边界</a><a href="#78-语义与真值-96" data-search-text="78. 语义与真值">78. 语义与真值</a><a href="#79-映射与可逆性-97" data-search-text="79. 映射与可逆性">79. 映射与可逆性</a><a href="#80-规则与冲突-98" data-search-text="80. 规则与冲突">80. 规则与冲突</a><a href="#81-状态与写入-99" data-search-text="81. 状态与写入">81. 状态与写入</a><a href="#82-性能与一致性-100" data-search-text="82. 性能与一致性">82. 性能与一致性</a><a href="#83-测试与演化-101" data-search-text="83. 测试与演化">83. 测试与演化</a><a href="#84-ai-动态生成-ui-102" data-search-text="84. AI 动态生成 UI">84. AI 动态生成 UI</a></div></section><section class="toc-part"><a class="toc-part-link" href="#第十篇-结论-从字段绑定走向任务解释系统-103"><span>11</span>结论：从字段绑定走向任务解释系统</a><div class="toc-chapters"></div></section></nav>
+      <div class="side-foot">全文来自对应 Markdown 定稿。交互原型用于解释概念，不替代正文。</div>
+    </aside>
+    <main class="main">
+      <article class="article"><h1 id="数据模型与界面模式映射大型手册-1" class="document-title">数据模型与界面模式映射大型手册<a class="heading-anchor" href="#数据模型与界面模式映射大型手册-1" aria-label="链接到本节">#</a></h1>
+<blockquote><p>副标题：从业务事实、任务视图到低代码运行时与工程治理</p><p></p><p>面向产品经理、业务分析师、交互设计师、低代码平台设计人员、架构师和开发人员。</p></blockquote>
+<h2 id="手册导读-2" class="part-title">手册导读<a class="heading-anchor" href="#手册导读-2" aria-label="链接到本节">#</a></h2>
+<h3 id="这本手册解决什么问题-3" class="chapter-title">这本手册解决什么问题<a class="heading-anchor" href="#这本手册解决什么问题-3" aria-label="链接到本节">#</a></h3>
+<p>当人们谈论“数据模型生成 UI”，最容易想到的是：字符串生成输入框、枚举生成下拉框、日期生成日期选择器。这种类型映射有用，但只触及问题最浅的一层。</p>
+<p>真正困难的问题是：</p>
+<pre data-language="text"><code>为什么同一张订单会形成列表、详情、编辑、审批和报表五种界面？
+为什么同一个字段在一个页面可编辑，在另一个页面只能查看？
+为什么读取时可以组合和聚合，写入时却不能把结果直接改回去？
+当页面配置、业务状态和权限规则冲突时，谁拥有最终决定权？
+低代码平台如何把多组 Schema 变成可执行、可解释、可迁移的页面？
+数据、接口、组件和规则持续演化时，如何保证旧页面仍然正确？
+AI 能否根据模型动态生成 UI，它可以决定什么，又不能决定什么？</code></pre>
+<p>本手册从一个订单案例出发，逐层回答这些问题。核心不是教人堆叠更多模型和框架，而是建立一套判断方法：在什么约束下，需要哪种映射；映射产生了什么信息损失；谁维护业务真相；怎样验证结果正确；何时复杂架构是不必要的。</p>
+<h3 id="全书核心命题-4" class="chapter-title">全书核心命题<a class="heading-anchor" href="#全书核心命题-4" aria-label="链接到本节">#</a></h3>
+<blockquote><p>UI 不是数据的复制品，而是业务事实在任务上下文中的可交互投影；读取组织事实，写入表达意图，治理保证多种表达仍指向同一业务真相。</p></blockquote>
+<p>可以用一组逐步深化的公式表达：</p>
+<pre data-language="text"><code>最简映射：数据类型 → 默认组件
+
+场景映射：业务数据 + 页面场景 → 任务视图
+
+完整映射：业务事实 × 任务 × 权限 × 状态 × 环境 × 时间 → 可交互UI
+
+交互闭环：读取投影 → UI草稿 → 用户意图 → 业务校验 → 新业务事实</code></pre>
+<p>这四层不是一条必须逐级采用的技术路线。简单 CRUD 可能只需要前两层；订单、支付、审批、低代码平台等复杂场景，需要根据风险覆盖更多层次。</p>
+<h3 id="十篇结构-5" class="chapter-title">十篇结构<a class="heading-anchor" href="#十篇结构-5" aria-label="链接到本节">#</a></h3>
+<div class="table-scroll"><table><thead><tr><th>篇</th><th>主题</th><th>主要回答的问题</th></tr></thead><tbody><tr><td>第一篇</td><td>从直觉到本质</td><td>为什么同一模型可以映射多个 UI</td></tr><tr><td>第二篇</td><td>映射操作与读写机制</td><td>数据如何被选择、组合、展示和写回</td></tr><tr><td>第三篇</td><td>架构模式与落地方法</td><td>有哪些实现模式，什么时候选择哪一种</td></tr><tr><td>第四篇</td><td>形式化模型</td><td>如何描述组合、冲突、可逆性与信息损失</td></tr><tr><td>第五篇</td><td>交互模型</td><td>草稿、命令、状态、错误和导航怎样进入模型</td></tr><tr><td>第六篇</td><td>低代码运行时</td><td>多组 Schema 如何编译成可执行界面</td></tr><tr><td>第七篇</td><td>工程治理</td><td>如何保证权限、性能、一致性、测试与演化</td></tr><tr><td>第八篇</td><td>完整订单案例</td><td>五种 UI 如何端到端落地</td></tr><tr><td>第九篇</td><td>深层问题库</td><td>设计和评审时还应继续追问什么</td></tr><tr><td>第十篇</td><td>结论</td><td>如何把整套方法压缩成可迁移原则</td></tr></tbody></table></div>
+<h3 id="两条建议阅读路径-6" class="chapter-title">两条建议阅读路径<a class="heading-anchor" href="#两条建议阅读路径-6" aria-label="链接到本节">#</a></h3>
+<p><strong>产品、业务与低代码设计路径：</strong></p>
+<pre data-language="text"><code>第一篇 → 第二篇 → 第三篇第9章 → 第六篇 → 第八篇 → 第九篇</code></pre>
+<p>重点理解任务视图、业务语义、配置边界、平台运行过程和完整案例。</p>
+<p><strong>架构与开发路径：</strong></p>
+<pre data-language="text"><code>第一篇 → 第二篇 → 第三篇 → 第四篇 → 第五篇 → 第六篇 → 第七篇 → 第八篇</code></pre>
+<p>重点理解读写分离、形式化映射、运行时状态、规则系统、工程治理和演化。</p>
+<h3 id="证据与适用边界-7" class="chapter-title">证据与适用边界<a class="heading-anchor" href="#证据与适用边界-7" aria-label="链接到本节">#</a></h3>
+<p>本文区分三类内容：</p>
+<p>具体采用哪种模式属于场景化设计判断，不能脱离现有系统、业务风险和数据规模直接套用。</p>
+<ul><li><strong>通用原理</strong>：数据投影、权限边界、读写非对称、并发和版本等稳定工程原理。</li><li><strong>设计判断</strong>：ViewModel、BFF、CQRS、Schema 运行时等模式的选择，依赖具体约束。</li><li><strong>平台观察</strong>：低代码部分参考了本地竞品知识库中的官方资料和源码初证，但不把跨产品归纳写成任何单个产品的既成事实。</li></ul>
+<p>文中出现的公式用于澄清关系与边界，不意味着实现必须采用函数式语言、关系数据库、DDD、CQRS 或某种特定框架。</p>
+<h3 id="符号约定-8" class="chapter-title">符号约定<a class="heading-anchor" href="#符号约定-8" aria-label="链接到本节">#</a></h3>
+<div class="table-scroll"><table><thead><tr><th>符号</th><th>含义</th></tr></thead><tbody><tr><td><code>D</code></td><td>业务数据或可用事实集合</td></tr><tr><td><code>C</code></td><td>任务、权限、状态、环境、时间等上下文</td></tr><tr><td><code>U</code></td><td>生成的可交互 UI</td></tr><tr><td><code>M</code> / <code>F</code></td><td>从事实和上下文到 UI 的映射函数</td></tr><tr><td><code>W</code></td><td>用户尚未提交的界面草稿</td></tr><tr><td><code>Σ</code></td><td>加载、错误、选中、展开等交互状态</td></tr><tr><td><code>Command</code></td><td>用户希望系统完成的业务意图</td></tr><tr><td><code>Schema</code></td><td>描述数据、语义、页面、动作或权限的元数据</td></tr></tbody></table></div>
+<hr>
+<h2 id="第一篇-从直觉到本质-数据为什么会变成不同界面-9" class="part-title">第一篇　从直觉到本质：数据为什么会变成不同界面<a class="heading-anchor" href="#第一篇-从直觉到本质-数据为什么会变成不同界面-9" aria-label="链接到本节">#</a></h2>
+<section class="prototype" id="prototype-five-views" data-prototype="fiveViews">
+    <header class="prototype-head">
+      <div><span class="prototype-kicker">INTERACTIVE MODEL</span><h4>原型 01 · 一张订单，五种任务视图</h4><p>改变任务，观察同一事实怎样重新组织</p></div>
+      <button class="icon-button prototype-reset" type="button" title="重置原型" aria-label="重置原型"><span aria-hidden="true">↻</span></button>
+    </header>
+    <div class="prototype-body" data-prototype-stage></div>
+    <footer class="prototype-foot"><strong data-prototype-insight>等待交互</strong><span data-prototype-state>初始状态</span></footer>
+  </section>
+<h3 id="开篇-同一张订单-为什么会长出五种完全不同的界面-10" class="chapter-title">开篇：同一张订单，为什么会长出五种完全不同的界面<a class="heading-anchor" href="#开篇-同一张订单-为什么会长出五种完全不同的界面-10" aria-label="链接到本节">#</a></h3>
+<p>假设数据库里有一张订单：</p>
+<pre data-language="text"><code>order_id    = O202607130001
+customer_id = 1001
+status      = PAID
+amount      = 1288.00
+paid_at     = 2026-07-13 10:25:16
+items       = 5条商品明细</code></pre>
+<p>如果“数据库字段决定 UI”，这张订单应该只有一种界面：把这些字段逐个摆到页面上。</p>
+<p>但真实系统不是这样工作的。</p>
+<div class="table-scroll"><table><thead><tr><th>使用者</th><th>他真正想知道什么</th><th>界面会变成什么</th></tr></thead><tbody><tr><td>客户</td><td>我的订单到哪一步了</td><td>商品卡片、金额、物流进度、退款入口</td></tr><tr><td>客服</td><td>客户遇到了什么问题</td><td>客户资料、订单时间线、异常记录、补救动作</td></tr><tr><td>仓库</td><td>现在要拣什么、发什么</td><td>SKU、数量、库位、拣货状态、发货按钮</td></tr><tr><td>财务</td><td>钱是否收到、账是否对上</td><td>实付金额、支付渠道、退款、对账状态</td></tr><tr><td>管理者</td><td>这批订单说明了什么</td><td>销售额、转化率、异常率、趋势图</td></tr></tbody></table></div>
+<p>五个界面使用的是同一批业务事实，却几乎没有相同的页面结构。</p>
+<p>原因在于：</p>
+<blockquote><p>数据库模型描述“系统保存了什么事实”，UI 描述“某个人此刻要借助这些事实完成什么任务”。</p></blockquote>
+<p>所以，UI 不是数据库模型换了一层皮肤，而是数据库事实在特定任务、角色、状态和终端下的一次<strong>有目的的投影</strong>。</p>
+<p>这也是全文最重要的结论：</p>
+<blockquote><p>同一个数据模型可以映射多个 UI，是因为数据事实相对稳定，而用户任务天然是多样的。多个 UI 的价值，是让同一批事实服务不同任务；它的代价，是系统必须治理这些不同表达之间的语义一致性。</p></blockquote>
+<hr>
+<h3 id="1-数据库与-ui-回答的不是同一个问题-11" class="chapter-title">1. 数据库与 UI 回答的不是同一个问题<a class="heading-anchor" href="#1-数据库与-ui-回答的不是同一个问题-11" aria-label="链接到本节">#</a></h3>
+<p>#### 1.1 数据库模型回答“事实怎样保存”</p>
+<p>数据库主要关心：</p>
+<ul><li>有哪些实体、字段和关系。</li><li>哪些数据必须持久化。</li><li>主键、外键和唯一约束是什么。</li><li>如何保证查询、事务和数据一致性。</li></ul>
+<p>它倾向于稳定、完整、适合机器处理。</p>
+<p>#### 1.2 UI 回答“用户怎样完成任务”</p>
+<p>UI 主要关心：</p>
+<ul><li>用户此刻要解决什么问题。</li><li>哪些信息最重要，哪些信息应该暂时隐藏。</li><li>数据应以文本、标签、表格、时间线还是图表表达。</li><li>当前允许查看、编辑或执行哪些动作。</li><li>操作失败后，用户如何理解和恢复。</li></ul>
+<p>它倾向于选择性、场景化、适合人理解。</p>
+<p>#### 1.3 两者的根本差异</p>
+<div class="table-scroll"><table><thead><tr><th>维度</th><th>数据库模型</th><th>UI 模型</th></tr></thead><tbody><tr><td>中心</td><td>事实与存储</td><td>用户与任务</td></tr><tr><td>主要对象</td><td>表、列、关系、约束</td><td>页面、区块、字段、组件、动作</td></tr><tr><td>数据范围</td><td>尽量保存完整事实</td><td>只使用当前任务需要的事实</td></tr><tr><td>数据粒度</td><td>原始记录</td><td>摘要、组合、明细、聚合</td></tr><tr><td>变化原因</td><td>业务事实和存储策略变化</td><td>角色、流程、体验和终端变化</td></tr><tr><td>写入表达</td><td>插入、更新、删除</td><td>保存草稿、支付、审批、发货、退款</td></tr><tr><td>安全方式</td><td>查询范围与写入约束</td><td>隐藏、只读、脱敏、禁用、动作入口</td></tr></tbody></table></div>
+<p>因此，“一张表生成一个固定页面”只是最简单的一种实现，并不是数据与 UI 的天然关系。</p>
+<hr>
+<h3 id="2-为什么一个模型可以映射出多个-ui-12" class="chapter-title">2. 为什么一个模型可以映射出多个 UI<a class="heading-anchor" href="#2-为什么一个模型可以映射出多个-ui-12" aria-label="链接到本节">#</a></h3>
+<p>#### 2.1 UI 是一个带上下文的投影函数</p>
+<p>可以把页面理解为下面的函数：</p>
+<pre data-language="text"><code>UI视图 = Project(
+  业务事实，
+  用户任务，
+  用户角色与权限，
+  当前业务状态，
+  终端与交互环境，
+  时间与数据新鲜度要求
+)</code></pre>
+<p>同一份订单数据没有变化，只要函数的其他输入发生变化，输出的 UI 就会变化。</p>
+<p>例如：</p>
+<pre data-language="text"><code>订单 + “快速查找”       → 订单列表
+订单 + “全面理解”       → 订单详情
+订单 + “修改草稿”       → 编辑表单
+订单 + “进行业务决策”   → 审批页面
+订单集合 + “分析趋势”   → 经营报表</code></pre>
+<p>用更直观的数学形式表示，就是同一个订单模型经过不同的映射函数，形成不同的 UI：</p>
+<pre data-language="text"><code>列表UI = f₁(订单数据)
+详情UI = f₂(订单数据)
+编辑UI = f₃(订单数据)
+审批UI = f₄(订单数据, 用户权限, 订单状态)
+报表UI = f₅(一组订单数据)</code></pre>
+<p>这里的 <code>f₁～f₅</code> 代表不同的选择、关联、计算、格式化、权限过滤和交互组织规则。只要映射函数不同，同一份订单数据就可以形成不同的 UI。</p>
+<p>上面的写法是为了突出“同一数据、不同投影”的简化模型。严格来说，列表、详情和编辑页面同样会受到任务、权限、状态、展示规则和设备环境影响，因此可以进一步统一为：</p>
+<pre data-language="text"><code>第 i 个UI = F(
+  订单数据或订单集合,
+  第 i 个页面场景,
+  当前任务,
+  用户权限,
+  业务状态,
+  展示规则,
+  设备环境
+)</code></pre>
+<p>两种表达的作用不同：</p>
+<ul><li><code>f₁～f₅</code> 强调一个数据模型可以产生多个不同的任务视图，直观易懂。</li><li><code>F(数据, 上下文)</code> 强调这些视图背后共享一套统一的映射机制，更完整严谨。</li></ul>
+<p>这与一组原始数据可以生成明细表、统计表和图表是同一个原理：<strong>数据源没有限定唯一表达方式，使用目的才决定表达方式。</strong></p>
+<p>#### 2.2 映射保持的是业务含义，不是字段形状</p>
+<p>数据库中保存：</p>
+<pre data-language="text"><code>customer_id = 1001</code></pre>
+<p>不同 UI 可以表达为：</p>
+<pre data-language="text"><code>列表：星海商贸
+详情：星海商贸 / VIP客户 / 上海
+编辑：客户选择器，实际提交 customer_id
+审批：客户等级、信用额度和风险记录
+报表：华东区客户群体</code></pre>
+<p>它们的结构不同，但都能追溯到同一个“订单所属客户”业务概念。</p>
+<p>因此，映射的核心不是：</p>
+<pre data-language="text"><code>varchar → Input</code></pre>
+<p>而是：</p>
+<pre data-language="text"><code>这个值代表什么业务概念？
+当前任务需要如何理解它？
+用户可以对它做什么？</code></pre>
+<p>一个 <code>varchar</code> 可以是姓名、手机号、状态码、URL、颜色、身份证号或物流单号。物理类型相同，业务语义不同，UI、校验、脱敏和操作方式就完全不同。</p>
+<p>#### 2.3 一个对象天然存在多种观察尺度</p>
+<p>同一对象可以从不同粒度观察：</p>
+<pre data-language="text"><code>一条订单记录       → 详情或编辑表单
+多条订单摘要       → 列表
+订单与关联对象组合 → 客服工作台
+订单状态变化       → 时间线或流程图
+大量订单聚合       → 报表和经营大屏</code></pre>
+<p>所以“同一个模型对应多个 UI”不但合理，而且是复杂系统从“数据管理”走向“任务支持”时常见的演进结果。</p>
+<hr>
+<h3 id="3-不要把四种模型混成一个模型-13" class="chapter-title">3. 不要把四种模型混成一个模型<a class="heading-anchor" href="#3-不要把四种模型混成一个模型-13" aria-label="链接到本节">#</a></h3>
+<p>在小型 CRUD 系统中，一个对象可能同时被用于数据库、接口和页面，看起来很省事。但业务复杂之后，四个问题会逐渐分开。</p>
+<div class="table-scroll"><table><thead><tr><th>模型</th><th>它回答的问题</th><th>订单示例</th></tr></thead><tbody><tr><td>持久化模型</td><td>数据怎样存</td><td>订单表、明细表、客户外键</td></tr><tr><td>领域模型或业务逻辑</td><td>什么变化是合法的</td><td>待支付订单才能支付，已发货订单不能直接删除</td></tr><tr><td>读取模型 / ViewModel</td><td>页面要怎样看</td><td>客户名称、商品数、格式化金额、可用动作</td></tr><tr><td>写入模型 / Command</td><td>用户想做什么</td><td>创建订单、支付订单、取消订单、批准退款</td></tr></tbody></table></div>
+<p>这四种模型不是所有项目都必须建立的四层框架，也不是一条不可改变的顺序流水线。它们首先是四个不同的设计问题。</p>
+<p>简单数据维护可以采用：</p>
+<pre data-language="text"><code>数据库实体 → DTO → 表单</code></pre>
+<p>复杂业务则更适合：</p>
+<pre data-language="text"><code>读取：数据源 → 页面专用投影 → UI
+写入：用户意图 → 业务命令 → 规则校验 → 数据变化</code></pre>
+<p>是否拆分，取决于页面与存储结构的差异、业务风险和维护成本，而不是为了套用某个架构名词。</p>
+<hr>
+<h3 id="4-同一个数据模型映射到不同-ui-到底-不同-在哪里-14" class="chapter-title">4. 同一个数据模型映射到不同 UI，到底“不同”在哪里<a class="heading-anchor" href="#4-同一个数据模型映射到不同-ui-到底-不同-在哪里-14" aria-label="链接到本节">#</a></h3>
+<p>差异不只是组件不同，至少包含以下八个维度。</p>
+<p>#### 4.1 数据选择不同：看哪些事实</p>
+<p>订单列表只需要订单号、客户、金额、状态和时间；订单详情还要商品、支付、物流和操作记录；审批页面可能只强调金额、风险和历史决策。</p>
+<p>这叫<strong>选择投影</strong>：从完整对象中选择当前任务需要的数据。</p>
+<p>#### 4.2 信息粒度不同：看原始值还是摘要</p>
+<pre data-language="text"><code>商品明细 → 5件商品
+多次支付 → 已支付 ¥1,288.00
+多个状态事件 → 当前“待发货”
+一批订单 → 今日销售额 ¥368,420</code></pre>
+<p>列表偏摘要，详情偏展开，报表偏聚合。</p>
+<p>#### 4.3 语义表达不同：机器值怎样变成人能理解的含义</p>
+<pre data-language="text"><code>customer_id = 1001 → 星海商贸
+status = PAID      → 已支付
+amount = 128800    → ¥1,288.00</code></pre>
+<p>这里发生了引用查找、字典解释、单位换算和格式化。</p>
+<p>#### 4.4 视觉形态不同：同一语义怎样表达</p>
+<p>同一个 <code>status</code> 可以是：</p>
+<div class="table-scroll"><table><thead><tr><th>场景</th><th>表达形式</th></tr></thead><tbody><tr><td>列表</td><td>彩色 Badge</td></tr><tr><td>查询区</td><td>多选下拉框</td></tr><tr><td>详情页</td><td>状态说明和步骤条</td></tr><tr><td>工作台</td><td>按状态划分的任务泳道</td></tr><tr><td>报表</td><td>状态分布图</td></tr></tbody></table></div>
+<p>数据没有改变，改变的是用户理解它的方式。</p>
+<p>#### 4.5 可编辑性不同：看得到不等于改得了</p>
+<p>订单金额可以在创建草稿时由商品明细计算；在详情页只读；在审批页作为判断依据；在报表中作为聚合指标。</p>
+<p>同一个字段是否可编辑，通常由以下条件共同决定：</p>
+<pre data-language="text"><code>业务状态 + 用户权限 + 字段来源 + 当前任务</code></pre>
+<p>#### 4.6 动作集合不同：页面允许用户做什么</p>
+<pre data-language="text"><code>待支付 → 支付、取消
+已支付 → 发货、申请退款
+已发货 → 确认收货、查看物流
+已完成 → 售后、评价</code></pre>
+<p>动作不是字段的装饰，而是业务状态和用户权限在 UI 上的投影。</p>
+<p>#### 4.7 权限与敏感度不同：同一事实能显示到什么程度</p>
+<pre data-language="text"><code>财务：13812341234
+客服：138****1234
+仓库：可能完全不返回手机号</code></pre>
+<p>这里不只是 UI 样式不同，接口返回的数据范围本身也应不同。不能先把完整敏感信息发送到浏览器，再依赖前端隐藏。</p>
+<p>#### 4.8 时间语义不同：看到的是实时值、快照还是聚合结果</p>
+<p>订单详情通常希望接近实时；经营报表可能按小时刷新；审批页面可能必须保留“提交审批时的快照”；大屏可能接受几分钟延迟。</p>
+<p>因此，不同 UI 还会选择不同的数据新鲜度、一致性和缓存策略。</p>
+<p>#### 4.9 用订单把这些差异放在一起</p>
+<div class="table-scroll"><table><thead><tr><th>维度</th><th>列表</th><th>详情</th><th>编辑</th><th>审批</th><th>报表</th></tr></thead><tbody><tr><td>核心任务</td><td>找</td><td>看懂</td><td>修改</td><td>决策</td><td>分析</td></tr><tr><td>数据范围</td><td>少量摘要</td><td>完整关联信息</td><td>可修改部分</td><td>决策证据</td><td>聚合指标</td></tr><tr><td>粒度</td><td>一行一个订单</td><td>一个订单完整展开</td><td>表单和子表</td><td>关键事实加历史</td><td>一批订单</td></tr><tr><td><code>customerId</code></td><td>客户名称</td><td>客户摘要卡片</td><td>客户选择器</td><td>客户风险信息</td><td>客户分类维度</td></tr><tr><td><code>status</code></td><td>Badge</td><td>步骤条</td><td>通常只读</td><td>决定可用动作</td><td>状态分布</td></tr><tr><td><code>amount</code></td><td>格式化金额</td><td>金额构成</td><td>输入或自动计算</td><td>风险阈值提示</td><td>SUM、AVG</td></tr><tr><td>允许动作</td><td>查看</td><td>按状态执行动作</td><td>保存草稿</td><td>通过或驳回</td><td>筛选、下钻、导出</td></tr><tr><td>时间要求</td><td>较新</td><td>接近实时</td><td>必须防并发覆盖</td><td>可能需要决策快照</td><td>可接受统计延迟</td></tr></tbody></table></div>
+<p>这张表揭示了一个关键事实：</p>
+<blockquote><p>不同 UI 的差异，本质上是“同一对象在不同任务中的解释契约不同”，而不是简单换了几种组件。</p></blockquote>
+<hr>
+<h2 id="第二篇-映射操作与读写机制-数据如何成为交互-15" class="part-title">第二篇　映射操作与读写机制：数据如何成为交互<a class="heading-anchor" href="#第二篇-映射操作与读写机制-数据如何成为交互-15" aria-label="链接到本节">#</a></h2>
+<h3 id="5-映射不是只有-字段到控件-16" class="chapter-title">5. 映射不是只有“字段到控件”<a class="heading-anchor" href="#5-映射不是只有-字段到控件-16" aria-label="链接到本节">#</a></h3>
+<p>#### 5.1 常见映射操作</p>
+<div class="table-scroll"><table><thead><tr><th>映射操作</th><th>示例</th><th>特点</th></tr></thead><tbody><tr><td>直接映射</td><td><code>remark → TextArea</code></td><td>结构基本不变</td></tr><tr><td>格式转换</td><td><code>128800分 → ¥1,288.00</code></td><td>改变表达，不改变含义</td></tr><tr><td>引用查找</td><td><code>customerId → 客户名称</code></td><td>显示值与稳定标识分离</td></tr><tr><td>选择投影</td><td>完整订单 → 列表摘要</td><td>丢弃当前任务不需要的数据</td></tr><tr><td>组合</td><td>省、市、地址 → 完整地址</td><td>多个值组合成一个展示值</td></tr><tr><td>拆分</td><td>日期区间 → 开始时间、结束时间</td><td>一个输入形成多个值</td></tr><tr><td>派生</td><td>出生日期 → 年龄</td><td>由原始事实计算，不应独立写回</td></tr><tr><td>聚合</td><td>明细金额 → 订单总额</td><td>多条数据归约成一个结果</td></tr><tr><td>条件映射</td><td>状态为草稿时允许编辑</td><td>依赖上下文，不只是字段值</td></tr><tr><td>动作映射</td><td>“支付”按钮 → <code>PayOrder</code></td><td>映射的是意图，不是字段</td></tr></tbody></table></div>
+<p>#### 5.2 数据类型只能提供默认值，不能决定最终 UI</p>
+<p>低代码或代码生成工具通常会建立默认规则：</p>
+<pre data-language="text"><code>string   → Input
+boolean  → Switch
+date     → DatePicker
+enum     → Select</code></pre>
+<p>这只能解决“没有更多信息时用什么组件”的问题。</p>
+<p>更可靠的解析顺序是：</p>
+<pre data-language="text"><code>页面显式配置
+  &gt; 当前场景与业务语义的映射
+  &gt; 逻辑数据类型默认值
+  &gt; 物理数据类型默认值
+  &gt; 通用兜底组件</code></pre>
+<p>例如金额字段：</p>
+<pre data-language="text"><code>decimal + money + list   → MoneyCell
+decimal + money + edit   → MoneyInput
+decimal + money + report → Statistic / ChartMeasure</code></pre>
+<p>真正决定 UI 的不是 <code>decimal</code>，而是 <code>money + 当前场景</code>。</p>
+<hr>
+<section class="prototype" id="prototype-read-write" data-prototype="readWrite">
+    <header class="prototype-head">
+      <div><span class="prototype-kicker">INTERACTIVE MODEL</span><h4>原型 03 · 读取有损，写入有意图</h4><p>对比 ViewModel 与 Command，理解为什么不能镜像写回</p></div>
+      <button class="icon-button prototype-reset" type="button" title="重置原型" aria-label="重置原型"><span aria-hidden="true">↻</span></button>
+    </header>
+    <div class="prototype-body" data-prototype-stage></div>
+    <footer class="prototype-foot"><strong data-prototype-insight>等待交互</strong><span data-prototype-state>初始状态</span></footer>
+  </section>
+<h3 id="6-读取映射与写入映射不是互为镜像-17" class="chapter-title">6. 读取映射与写入映射不是互为镜像<a class="heading-anchor" href="#6-读取映射与写入映射不是互为镜像-17" aria-label="链接到本节">#</a></h3>
+<p>这是数据模型与 UI 设计中最容易被忽略、也最容易制造缺陷的地方。</p>
+<p>#### 6.1 读取可以有损，写回不能靠猜</p>
+<p>读取时可以把多个值组合起来：</p>
+<pre data-language="text"><code>province + city + detailAddress → 上海市浦东新区……</code></pre>
+<p>但用户修改“完整地址”后，系统未必能可靠拆回省、市和详细地址。</p>
+<p>读取时也可以聚合：</p>
+<pre data-language="text"><code>订单明细 → 总金额</code></pre>
+<p>但修改总金额，不能反推出每条明细应怎样改变。</p>
+<p>因此：</p>
+<blockquote><p>读取模型可以是有损投影；任何可编辑 UI 都必须单独定义写入结构和写回规则。</p></blockquote>
+<p>#### 6.2 用户提交的最好是“意图”，不一定是完整对象</p>
+<p>简单数据维护可以直接提交字段变化：</p>
+<pre data-language="text"><code>PATCH /customer/1001
+{ &quot;remark&quot;: &quot;重点客户&quot; }</code></pre>
+<p>如果字段修改本身就是完整业务语义，这种方式最简单，也完全合理。</p>
+<p>但支付、审批、库存、退款等操作不只是改一个字段，它们通常还伴随权限、前置条件、副作用、审计和并发控制。这时更适合提交业务命令：</p>
+<pre data-language="json"><code>{
+  &quot;command&quot;: &quot;PayOrder&quot;,
+  &quot;orderId&quot;: &quot;O202607130001&quot;,
+  &quot;paymentMethod&quot;: &quot;WECHAT_PAY&quot;,
+  &quot;requestId&quot;: &quot;unique-request-id&quot;
+}</code></pre>
+<p>而不是：</p>
+<pre data-language="json"><code>{
+  &quot;status&quot;: &quot;PAID&quot;
+}</code></pre>
+<p>两者的区别是：</p>
+<pre data-language="text"><code>字段更新：告诉系统“结果改成什么”
+业务命令：告诉系统“用户想完成什么”</code></pre>
+<p>服务端再根据当前状态、权限、金额、幂等和并发条件决定这个意图能否成立。</p>
+<p>#### 6.3 写回链路</p>
+<pre data-language="text"><code>界面草稿
+  ↓ 基础输入校验
+用户意图 / Command
+  ↓ 身份、数据范围、业务状态与并发校验
+合法业务变化
+  ↓ 事务和持久化
+新的业务事实
+  ↓ 重新投影
+更新后的 UI</code></pre>
+<p>UI 校验用于及时反馈；服务端校验用于保证正确性。二者可以复用规则定义，但不能只保留前者。</p>
+<hr>
+<h2 id="第三篇-架构模式与落地方法-如何选择而不是套用-18" class="part-title">第三篇　架构模式与落地方法：如何选择而不是套用<a class="heading-anchor" href="#第三篇-架构模式与落地方法-如何选择而不是套用-18" aria-label="链接到本节">#</a></h2>
+<h3 id="7-常见模式-它们不是一条升级路线-而是在解决不同问题-19" class="chapter-title">7. 常见模式：它们不是一条升级路线，而是在解决不同问题<a class="heading-anchor" href="#7-常见模式-它们不是一条升级路线-而是在解决不同问题-19" aria-label="链接到本节">#</a></h3>
+<p>“直接映射、ViewModel、Schema、BFF、CQRS、状态机”经常被放在一张列表里比较，但它们并不是同一维度的互斥选项。</p>
+<p>它们分别回答不同的问题：</p>
+<div class="table-scroll"><table><thead><tr><th>设计问题</th><th>常见选择</th></tr></thead><tbody><tr><td>UI 结构由谁定义</td><td>手写页面、注解约定、UI Schema</td></tr><tr><td>页面读取什么数据形状</td><td>实体 DTO、页面 ViewModel、专用查询投影</td></tr><tr><td>多个数据源在哪里组合</td><td>前端、页面 API/BFF、后端查询服务</td></tr><tr><td>用户怎样写入</td><td>通用 CRUD、表单命令、状态/流程命令</td></tr><tr><td>查询与写入是否使用同一模型</td><td>共享模型、分离 ReadModel、CQRS 投影</td></tr></tbody></table></div>
+<p>实际系统通常是这些选择的组合，而不是只能选择一个架构标签。</p>
+<p>#### 7.1 直接 CRUD 映射</p>
+<pre data-language="text"><code>实体/DTO → 表格和表单 → 字段更新</code></pre>
+<p><strong>优点</strong>：路径短、开发快、模型少、容易理解。</p>
+<p><strong>缺点</strong>：页面容易被存储结构绑住；跨对象任务、复杂权限和状态动作表达较弱。</p>
+<p><strong>适合</strong>：低风险内部数据维护、字典配置、简单主数据管理。</p>
+<p><strong>不适合</strong>：把支付、退款、库存、审批等高风险行为简化成任意字段修改。</p>
+<p>#### 7.2 注解或约定驱动</p>
+<pre data-language="text"><code>字段类型 + 业务注解 + 命名约定 → 默认组件、标签和校验</code></pre>
+<p><strong>优点</strong>：比完全手写高效，可以生成标准化页面。</p>
+<p><strong>缺点</strong>：复杂场景会积累大量例外；同一字段在多个页面中的差异不容易表达。</p>
+<p><strong>适合</strong>：脚手架、标准中后台和默认页面生成。</p>
+<p>#### 7.3 页面专用 ViewModel / ReadModel</p>
+<pre data-language="text"><code>Order
+├── OrderListItemViewModel
+├── OrderDetailViewModel
+├── OrderEditViewModel
+└── OrderApprovalViewModel</code></pre>
+<p><strong>优点</strong>：数据形状与用户任务高度匹配，页面契约清晰，可以组合关联数据和派生信息。</p>
+<p><strong>缺点</strong>：模型和映射代码增加；如果公共业务语义没有集中维护，容易重复和漂移。</p>
+<p><strong>适合</strong>：复杂业务页面、核心用户流程、多对象组合页面。</p>
+<p>#### 7.4 Schema / 元数据驱动 UI</p>
+<pre data-language="text"><code>字段语义 + View Schema + 组件注册表 + 上下文规则 → 页面</code></pre>
+<p><strong>优点</strong>：页面可配置、可生成、可规模化复用，特别适合动态表单和低代码平台。</p>
+<p><strong>缺点</strong>：配置本身会演变成一门语言；调试链路变长；复杂交互可能迫使 Schema 不断膨胀。</p>
+<p><strong>适合</strong>：页面重复度高、租户差异明显、需要业务人员配置的场景。</p>
+<p><strong>边界</strong>：标准能力配置化，独特交互和高风险业务保留代码扩展点，不追求“任何东西都能配置”。</p>
+<p>#### 7.5 BFF / 页面 API</p>
+<pre data-language="text"><code>页面需求 → 页面API/BFF → 组合多个服务或数据源 → 页面模型</code></pre>
+<p><strong>优点</strong>：前端取数简单，可以针对 Web、移动端等终端优化数据形状。</p>
+<p><strong>缺点</strong>：接口数量和组合逻辑增加；跨服务调用可能带来延迟和数据时间点不一致。</p>
+<p><strong>适合</strong>：多终端、跨服务聚合、页面需要多个后端能力的系统。</p>
+<p><strong>边界</strong>：BFF 负责页面适配，不应偷偷成为核心业务规则的唯一所在地。</p>
+<p>#### 7.6 专用查询投影 / CQRS</p>
+<pre data-language="text"><code>业务写入 → 同步或事件传播 → 面向查询的投影 → 列表、搜索、报表</code></pre>
+<p><strong>优点</strong>：读取结构可以完全按查询和展示优化，适合搜索、聚合和高读取负载。</p>
+<p><strong>缺点</strong>：需要处理投影更新、失败恢复、数据延迟和一致性问题。</p>
+<p><strong>适合</strong>：读写结构差异显著，且查询规模、性能或聚合复杂度已经提供足够证据的系统。</p>
+<p><strong>边界</strong>：普通 CRUD 不应为了架构形式而默认引入 CQRS。</p>
+<p>#### 7.7 任务 / 状态驱动 UI</p>
+<pre data-language="text"><code>业务状态 + 用户角色 + 当前任务 → 信息、动作和流程反馈</code></pre>
+<p><strong>优点</strong>：页面直接服务业务过程，合法动作和状态关系清晰。</p>
+<p><strong>缺点</strong>：状态、动作和权限如果分散在多端，会迅速失去一致性；过度细化的状态机也会增加维护成本。</p>
+<p><strong>适合</strong>：订单、工单、审批、售后等有明确状态转换的领域。</p>
+<p><strong>边界</strong>：需要集中维护合法转换，但不等于所有简单流程都必须引入状态机框架。</p>
+<hr>
+<h3 id="8-同一模型映射多个-ui-的优点与代价-20" class="chapter-title">8. 同一模型映射多个 UI 的优点与代价<a class="heading-anchor" href="#8-同一模型映射多个-ui-的优点与代价-20" aria-label="链接到本节">#</a></h3>
+<p>#### 8.1 它带来的价值</p>
+<p>##### 价值一：页面真正服务用户任务</p>
+<p>用户不需要理解表结构、外键和内部状态码，只需要完成“找到订单”“判断风险”“发出商品”等任务。</p>
+<p>##### 价值二：降低认知负担</p>
+<pre data-language="text"><code>列表负责找
+详情负责看懂
+表单负责录入和修改
+审批页负责决策
+报表负责发现规律</code></pre>
+<p>一个万能页面同时承担这些职责，通常意味着每个职责都做得不好。</p>
+<p>##### 价值三：让同一批数据服务多个角色和终端</p>
+<p>不必为客服、财务、仓库和管理层复制多套业务数据，只需提供不同视图和操作边界。</p>
+<p>##### 价值四：存储结构和产品体验可以相对独立演进</p>
+<p>数据库可以为了一致性和查询进行设计；UI 可以为了理解和操作重新分组、组合和布局。</p>
+<p>##### 价值五：可以为不同查询目标做性能优化</p>
+<p>列表只取摘要，详情按需加载关联数据，报表使用聚合投影，各自不必搬运完整实体。</p>
+<p>#### 8.2 它引入的成本</p>
+<p>##### 成本一：视图模型会增加</p>
+<pre data-language="text"><code>OrderListView
+OrderDetailView
+OrderEditView
+OrderApprovalView
+OrderReportView</code></pre>
+<p>更多模型不一定是坏事；真正的问题是它们有没有清晰边界、命名和测试。</p>
+<p>##### 成本二：同一业务概念可能产生语义漂移</p>
+<p>如果列表叫“已完成”、详情叫“已签收”、报表又统计为“已关闭”，用户看到的是三个互相冲突的系统。</p>
+<p>##### 成本三：查询和组合链路更复杂</p>
+<p>页面可能需要关联多个表或调用多个服务，带来 N+1 查询、瀑布调用、缓存和数据新鲜度问题。</p>
+<p>##### 成本四：写回不再天然简单</p>
+<p>组合值、派生值和聚合值通常不可逆，需要单独设计编辑模型和 Command。</p>
+<p>##### 成本五：权限与测试矩阵变大</p>
+<pre data-language="text"><code>页面 × 角色 × 业务状态 × 动作 × 终端</code></pre>
+<p>组合数量增加后，必须用集中规则和自动化测试控制，而不能依靠人工记忆。</p>
+<p>#### 8.3 核心张力</p>
+<p>这套设计最大的张力是：</p>
+<pre data-language="text"><code>页面表达自由度
+        ↕
+业务语义一致性与治理成本</code></pre>
+<p>如果所有 UI 都直接复制数据库，治理简单但体验僵硬；如果每个 UI 都自由解释数据，体验灵活但系统容易语义分裂。</p>
+<p>正确方向不是选择一个极端，而是：</p>
+<blockquote><p>共享稳定的业务语义、状态、权限和指标口径；允许每个页面独立选择数据、布局、组件、信息密度和交互方式。</p></blockquote>
+<p>每增加一个 UI，本质上都增加了一个新的“任务解释契约”。它需要被定义、测试和演进，而不是只多画一个页面。</p>
+<hr>
+<h3 id="9-低代码平台应该怎样做这种映射-21" class="chapter-title">9. 低代码平台应该怎样做这种映射<a class="heading-anchor" href="#9-低代码平台应该怎样做这种映射-21" aria-label="链接到本节">#</a></h3>
+<p>低代码平台的核心难题并不是“根据字段类型生成输入框”，而是：</p>
+<blockquote><p>如何既提供可预测的默认映射，又允许同一业务语义在不同任务场景中有不同表达，同时不让配置失去控制。</p></blockquote>
+<p>#### 9.1 建议区分五类元数据</p>
+<div class="table-scroll"><table><thead><tr><th>元数据</th><th>回答的问题</th><th>示例</th></tr></thead><tbody><tr><td>Data Schema</td><td>数据是什么、怎样存</td><td>decimal、是否为空、关联对象</td></tr><tr><td>Semantic Schema</td><td>它在业务上代表什么</td><td>money、phone、orderStatus</td></tr><tr><td>View Schema</td><td>当前页面怎样表达</td><td>列表列、详情卡片、编辑组件</td></tr><tr><td>Action Schema</td><td>用户可以做什么</td><td>支付、审批、发货、退款</td></tr><tr><td>Permission Schema</td><td>谁能看、改、执行</td><td>记录范围、字段权限、动作权限</td></tr></tbody></table></div>
+<p>它们不是五个必须顺序经过的技术层，而是运行时共同决定 UI 的五组信息。</p>
+<p>#### 9.2 组件解析公式</p>
+<pre data-language="text"><code>Component = Resolve(
+  字段业务语义，
+  页面类型，
+  查看或编辑模式，
+  业务状态，
+  用户权限，
+  终端环境，
+  页面显式覆盖
+)</code></pre>
+<p>推荐的覆盖优先级：</p>
+<pre data-language="text"><code>页面显式配置
+  &gt; 场景级映射规则
+  &gt; 业务语义默认组件
+  &gt; 逻辑类型默认组件
+  &gt; 物理类型默认组件
+  &gt; 通用兜底组件</code></pre>
+<p>#### 9.3 金额字段示例</p>
+<pre data-language="json"><code>{
+  &quot;field&quot;: &quot;amount&quot;,
+  &quot;dataType&quot;: &quot;decimal&quot;,
+  &quot;semanticType&quot;: &quot;money&quot;,
+  &quot;currency&quot;: &quot;CNY&quot;,
+  &quot;scale&quot;: 2,
+  &quot;views&quot;: {
+    &quot;list&quot;:   { &quot;component&quot;: &quot;MoneyCell&quot; },
+    &quot;detail&quot;: { &quot;component&quot;: &quot;MoneyDisplay&quot; },
+    &quot;edit&quot;:   { &quot;component&quot;: &quot;MoneyInput&quot; },
+    &quot;report&quot;: { &quot;component&quot;: &quot;Metric&quot;, &quot;aggregations&quot;: [&quot;SUM&quot;, &quot;AVG&quot;] }
+  }
+}</code></pre>
+<p>这份定义不是说一个字段拥有四个固定组件，而是提供四种场景默认值；具体页面仍可以在受控范围内覆盖。</p>
+<p>#### 9.4 什么适合配置，什么应留在代码或服务端</p>
+<p>适合配置化：</p>
+<ul><li>字段选择、排序、分组和布局。</li><li>标签、帮助文本和标准格式。</li><li>标准组件选择。</li><li>简单显隐、只读和基础校验。</li><li>常规筛选、排序和聚合。</li></ul>
+<p>更适合代码或受控扩展点：</p>
+<ul><li>复杂跨对象业务规则。</li><li>金额、库存、支付等高风险变化。</li><li>复杂异步流程和失败恢复。</li><li>高度定制的交互体验。</li><li>需要事务、幂等和并发控制的动作。</li></ul>
+<p>低代码平台成熟的标志不是“所有东西都能配置”，而是知道：</p>
+<pre data-language="text"><code>哪些变化高度重复，值得配置化；
+哪些变化具有业务风险，必须保留受控边界。</code></pre>
+<hr>
+<h3 id="10-如何设计一个新的数据模型到-ui-映射-22" class="chapter-title">10. 如何设计一个新的数据模型到 UI 映射<a class="heading-anchor" href="#10-如何设计一个新的数据模型到-ui-映射-22" aria-label="链接到本节">#</a></h3>
+<p>#### 第一步：先写任务，不要先画字段</p>
+<p>先回答：</p>
+<pre data-language="text"><code>谁在使用？
+他为什么进入这个页面？
+离开页面时，什么结果代表任务完成？</code></pre>
+<p>如果答不清这三问，页面通常只能退化成数据库字段陈列。</p>
+<p>#### 第二步：列出业务事实与不变量</p>
+<p>明确：</p>
+<ul><li>核心对象和关系。</li><li>状态与合法转换。</li><li>金额、数量、权限等不能被破坏的规则。</li><li>哪些值是原始事实，哪些值是计算结果。</li></ul>
+<p>#### 第三步：定义页面的“问题—答案契约”</p>
+<p>每个页面都应该回答一个核心问题：</p>
+<pre data-language="text"><code>列表：我要找的对象在哪里？
+详情：这个对象到底发生了什么？
+编辑：哪些内容现在可以合法修改？
+审批：我依据什么作出决定？
+报表：一组对象呈现出什么规律？</code></pre>
+<p>然后再决定所需数据和组件。</p>
+<p>#### 第四步：建立映射矩阵</p>
+<div class="table-scroll"><table><thead><tr><th>UI 元素</th><th>业务含义</th><th>数据来源</th><th>转换规则</th><th>显示条件</th><th>编辑条件</th><th>写入目标</th></tr></thead><tbody><tr><td>客户选择器</td><td>订单所属客户</td><td>Customer</td><td>ID 与名称查找</td><td>始终显示</td><td>仅草稿</td><td><code>customerId</code></td></tr><tr><td>订单金额</td><td>应付总额</td><td>Items</td><td>明细求和</td><td>始终显示</td><td>通常只读</td><td>服务端重算</td></tr><tr><td>支付按钮</td><td>支付订单</td><td>Order</td><td>状态与权限判断</td><td>待支付且有权限</td><td>不适用</td><td><code>PayOrder</code></td></tr></tbody></table></div>
+<p>这张表把产品语义、数据来源和工程实现放进同一个可检查的契约中。</p>
+<p>#### 第五步：分别设计读取与写入</p>
+<p>读取侧回答：</p>
+<ul><li>页面需要什么数据形状。</li><li>由谁关联、计算和格式化。</li><li>数据允许多旧。</li><li>空值和异常怎样表达。</li></ul>
+<p>写入侧回答：</p>
+<ul><li>用户提交字段变化还是业务命令。</li><li>谁负责最终校验和计算。</li><li>怎样防止重复提交和并发覆盖。</li><li>失败后用户怎样恢复。</li></ul>
+<p>#### 第六步：明确共享与独立的边界</p>
+<p>应该共享：</p>
+<ul><li>业务概念和稳定标识。</li><li>枚举 code 与状态语义。</li><li>金额、指标和派生值的计算口径。</li><li>服务端权限与合法状态转换。</li><li>基础组件和格式化能力。</li></ul>
+<p>允许页面独立：</p>
+<ul><li>展示哪些字段。</li><li>信息顺序和分组。</li><li>使用何种组件。</li><li>信息密度和交互方式。</li><li>页面级草稿、加载和错误状态。</li></ul>
+<hr>
+<h3 id="11-选型判据-23" class="chapter-title">11. 选型判据<a class="heading-anchor" href="#11-选型判据-23" aria-label="链接到本节">#</a></h3>
+<div class="table-scroll"><table><thead><tr><th>场景</th><th>优先考虑</th><th>原因</th></tr></thead><tbody><tr><td>简单、稳定、内部 CRUD</td><td>实体 DTO + 标准表单</td><td>最低成本已经足够</td></tr><tr><td>页面围绕复杂业务任务</td><td>页面 ViewModel / ReadModel</td><td>数据形状与任务匹配</td></tr><tr><td>大量标准页面需动态配置</td><td>Schema + 组件注册表</td><td>复用默认映射和配置能力</td></tr><tr><td>多终端或多服务组合</td><td>页面 API / BFF</td><td>统一页面取数与终端适配</td></tr><tr><td>报表、搜索、复杂聚合</td><td>专用查询模型</td><td>按读取目标优化结构</td></tr><tr><td>读写差异和规模已显著</td><td>CQRS 投影</td><td>用同步复杂度换查询自由度</td></tr><tr><td>动作强依赖角色与状态</td><td>任务/状态驱动 UI + Command</td><td>集中控制合法动作</td></tr></tbody></table></div>
+<p>一个可靠的原则是：</p>
+<blockquote><p>从满足当前约束的最小模式开始，只有当页面差异、配置规模、查询性能或业务风险提供了证据时，才增加新的模型和层次。</p></blockquote>
+<p>不要因为系统里有表单就建立通用低代码引擎，也不要因为有报表就默认引入 CQRS。</p>
+<hr>
+<h3 id="12-必须守住的十条底线-24" class="chapter-title">12. 必须守住的十条底线<a class="heading-anchor" href="#12-必须守住的十条底线-24" aria-label="链接到本节">#</a></h3>
+<ol><li><strong>数据库字段不是 UI 语义的全部来源。</strong>物理类型只能提供默认映射。</li><li><strong>同一业务概念必须保持同一口径。</strong>列表、详情和报表不能各算各的。</li><li><strong>稳定标识与显示值必须分离。</strong>显示名称可以变化，关联不能依赖名称。</li><li><strong>读取可以有损，写回必须明确。</strong>组合和聚合结果不能靠猜测反向修改。</li><li><strong>UI 隐藏不是安全边界。</strong>记录、字段和动作权限必须由服务端保证。</li><li><strong>高风险状态变化不能退化为任意字段修改。</strong>支付、库存、退款等操作要经过业务规则。</li><li><strong>派生值必须明确唯一计算来源。</strong>避免前端、后端和报表各有一套算法。</li><li><strong>不同 UI 必须明确时间语义。</strong>实时、快照、缓存和统计延迟不能混为一谈。</li><li><strong>并发和重复提交必须有处理策略。</strong>尤其是编辑、支付、审批和库存操作。</li><li><strong>不要追求万能模型或万能 Schema。</strong>复用稳定语义，允许任务视图保持差异。</li></ol>
+<hr>
+<h3 id="13-产品-低代码与研发如何形成共同语言-25" class="chapter-title">13. 产品、低代码与研发如何形成共同语言<a class="heading-anchor" href="#13-产品-低代码与研发如何形成共同语言-25" aria-label="链接到本节">#</a></h3>
+<p>#### 产品和业务人员负责说明</p>
+<ul><li>谁在什么场景下完成什么任务。</li><li>页面必须回答什么问题。</li><li>信息优先级和业务口径是什么。</li><li>什么状态下允许什么动作。</li><li>空数据、异常和失败时用户应该怎样继续。</li></ul>
+<p>#### 低代码或平台设计人员负责说明</p>
+<ul><li>哪些能力可以形成元数据和默认映射。</li><li>组件注册、覆盖优先级和扩展点怎样工作。</li><li>配置怎样版本化、测试和迁移。</li><li>哪些复杂度不能继续塞进 Schema。</li></ul>
+<p>#### 架构和开发人员负责说明</p>
+<ul><li>数据来自哪里，由谁关联、计算和聚合。</li><li>页面使用实体 DTO、ViewModel 还是专用投影。</li><li>用户操作提交字段变化还是 Command。</li><li>权限、状态、并发、一致性和性能怎样保证。</li><li>映射规则和接口怎样被测试、监控和演进。</li></ul>
+<p>三方必须共同确认的是：</p>
+<pre data-language="text"><code>这个页面在解释哪个业务事实？
+它为什么这样解释？
+它允许用户做什么？
+最终由谁保证解释和操作是正确的？</code></pre>
+<hr>
+<h3 id="14-基础篇小结-26" class="chapter-title">14. 基础篇小结<a class="heading-anchor" href="#14-基础篇小结-26" aria-label="链接到本节">#</a></h3>
+<p>数据模型与 UI 的映射，不是：</p>
+<pre data-language="text"><code>字段 → 控件</code></pre>
+<p>而是：</p>
+<pre data-language="text"><code>业务事实
+  × 用户任务
+  × 角色与权限
+  × 业务状态
+  × 终端与时间要求
+  → 任务视图</code></pre>
+<p>数据库模型回答“这个世界有哪些事实”；UI 回答“此刻是谁，要借助哪些事实，完成什么事情”。</p>
+<p>同一个数据库模型之所以可以映射到不同 UI，是因为页面不是数据的复制品，而是数据面向任务的一次解释。它的优势是让体验、角色和终端得到精准适配；它的代价是每一种解释都需要维护语义、权限、写回、一致性和测试。</p>
+<p>一句话压缩：</p>
+<blockquote><p>共享事实与语义，分离任务与表达；读取用投影，写入传真正意图，最终由服务端守住业务不变量。</p></blockquote>
+<h2 id="第四篇-形式化模型-把-映射-说清楚-27" class="part-title">第四篇　形式化模型：把“映射”说清楚<a class="heading-anchor" href="#第四篇-形式化模型-把-映射-说清楚-27" aria-label="链接到本节">#</a></h2>
+<p>前面的订单案例建立了直觉：同一批事实可以形成多个任务视图。但如果要设计低代码平台、Schema 引擎或大型业务系统，只靠“根据场景生成页面”还不够。还需要回答：映射的输入到底有哪些，输出是什么，规则怎样组合，哪些转换可以写回，发生冲突时谁优先，以及如何证明多个 UI 仍在解释同一个业务事实。</p>
+<p>形式化的目的不是制造数学感，而是消除模糊边界。</p>
+<section class="prototype" id="prototype-mapping-function" data-prototype="mappingFunction">
+    <header class="prototype-head">
+      <div><span class="prototype-kicker">INTERACTIVE MODEL</span><h4>原型 02 · 映射函数实验室</h4><p>改变角色、状态与终端，观察 F(D,C) 的输出</p></div>
+      <button class="icon-button prototype-reset" type="button" title="重置原型" aria-label="重置原型"><span aria-hidden="true">↻</span></button>
+    </header>
+    <div class="prototype-body" data-prototype-stage></div>
+    <footer class="prototype-foot"><strong data-prototype-insight>等待交互</strong><span data-prototype-state>初始状态</span></footer>
+  </section>
+<h3 id="15-映射函数的完整输入与输出-28" class="chapter-title">15. 映射函数的完整输入与输出<a class="heading-anchor" href="#15-映射函数的完整输入与输出-28" aria-label="链接到本节">#</a></h3>
+<p>#### 15.1 从 <code>fᵢ(D)</code> 到 <code>M(D, C)</code></p>
+<p>前文的简化公式是：</p>
+<pre data-language="text"><code>列表UI = f₁(订单数据)
+详情UI = f₂(订单数据)
+编辑UI = f₃(订单数据)
+审批UI = f₄(订单数据, 用户权限, 订单状态)
+报表UI = f₅(一组订单数据)</code></pre>
+<p>这组公式擅长解释“同一数据可以产生不同 UI”。进一步抽象，可以把所有 <code>fᵢ</code> 看成同一个映射机制在不同上下文中的实例：</p>
+<pre data-language="text"><code>M : D × C → U</code></pre>
+<p>其中：</p>
+<pre data-language="text"><code>D = 可用的业务事实和数据集合
+C = 当前上下文
+U = 生成的可交互界面</code></pre>
+<p>上下文 <code>C</code> 可以继续展开：</p>
+<pre data-language="text"><code>C = (T, R, P, S, E, L, Q, τ)
+
+T = Task，当前任务
+R = Role，用户角色与职责
+P = Permission，记录、字段和动作权限
+S = State，业务对象状态
+E = Environment，设备、终端和交互环境
+L = Locale，语言、地区、币种和单位
+Q = Quality，性能、实时性和数据质量要求
+τ = Time，当前时刻、业务时间或快照时间</code></pre>
+<p>因此，更完整的表达是：</p>
+<pre data-language="text"><code>U = M(D, T, R, P, S, E, L, Q, τ)</code></pre>
+<p>这里有一个重要结论：页面差异不一定来自数据差异。即使 <code>D</code> 完全相同，只要任务、权限、状态、终端或时间语义不同，UI 就可以不同。</p>
+<p>#### 15.2 UI 输出也不是一棵静态组件树</p>
+<p>如果把 <code>U</code> 只理解成“组件树”，就会遗漏动作、导航和运行时状态。更完整的 UI 输出可以表示为：</p>
+<pre data-language="text"><code>U = (V, I, A, N, Σ, X)
+
+V = View，展示结构和组件树
+I = Interaction，输入、选择、拖拽等交互规则
+A = Action，当前允许发出的业务动作
+N = Navigation，可到达的页面、对象和返回路径
+Σ = UI State，加载、草稿、错误、选中、展开等界面状态
+X = Explanation，为什么显示、隐藏、只读或禁用的解释信息</code></pre>
+<p>这能解释为什么两个页面即使显示相同字段，也可能不是同一个 UI：它们允许的动作、导航路径、局部状态和解释责任可能完全不同。</p>
+<h3 id="16-一个-ui-映射函数内部做了什么-29" class="chapter-title">16. 一个 UI 映射函数内部做了什么<a class="heading-anchor" href="#16-一个-ui-映射函数内部做了什么-29" aria-label="链接到本节">#</a></h3>
+<p>一个典型映射可以分解为若干操作：</p>
+<pre data-language="text"><code>U = Render ∘ Layout ∘ Interact ∘ Bind ∘ Policy ∘ Interpret ∘ Query (D, C)</code></pre>
+<p>从右向左理解：</p>
+<pre data-language="text"><code>Query      从数据源选择、关联、聚合所需事实
+Interpret  把物理值解释成业务语义
+Policy     应用记录、字段、动作和状态规则
+Bind       将业务语义绑定到展示值、输入值和动作
+Interact   定义编辑、选择、提交和反馈方式
+Layout     按任务组织信息层级和空间结构
+Render     在具体终端上渲染组件</code></pre>
+<p>这不是要求所有系统都实现七层框架，而是一张责任检查图。实际项目可以合并其中若干步骤，但不能因为代码放在一起，就认为这些责任不存在。</p>
+<p>#### 16.1 为什么顺序很重要</p>
+<p>如果在权限过滤之前就把完整手机号发送给前端，再由组件显示为 <code>138****1234</code>，展示结果看似正确，但数据已经越过安全边界。</p>
+<p>如果在业务语义解释之前只根据数据库类型选组件，<code>varchar</code> 就无法区分手机号、状态码和物流单号。</p>
+<p>如果在数据聚合之后仍允许直接写回聚合值，系统就无法知道应该修改哪些原始记录。</p>
+<p>因此，映射不是任意拼装。某些约束必须在数据越过边界之前执行，某些派生值必须标为只读，某些动作必须回到服务端重新判定。</p>
+<h3 id="17-用关系代数理解读取映射-30" class="chapter-title">17. 用关系代数理解读取映射<a class="heading-anchor" href="#17-用关系代数理解读取映射-30" aria-label="链接到本节">#</a></h3>
+<p>很多 UI 读取映射都可以用几类基础操作解释。这里借用关系代数符号，不要求实现必须使用关系数据库。</p>
+<p>#### 17.1 选择：<code>σ</code></p>
+<p>从一组记录中选择满足条件的部分：</p>
+<pre data-language="text"><code>待发货订单 = σ(status = PAID ∧ shipment = PENDING)(Orders)</code></pre>
+<p>对应 UI：保存视图、任务列表、筛选结果、异常队列。</p>
+<p>#### 17.2 投影：<code>π</code></p>
+<p>只取当前任务所需字段：</p>
+<pre data-language="text"><code>订单列表行 = π(orderId, customerId, amount, status, createdAt)(Order)</code></pre>
+<p>对应 UI：列表摘要、搜索结果、选择器选项。</p>
+<p>#### 17.3 连接：<code>⋈</code></p>
+<p>组合来自不同对象或来源的事实：</p>
+<pre data-language="text"><code>订单详情 = Order ⋈ Customer ⋈ Payment ⋈ Shipment</code></pre>
+<p>对应 UI：详情页、客服工作台、审批上下文。</p>
+<p>#### 17.4 分组与聚合：<code>γ</code></p>
+<p>把多条事实归约为统计结果：</p>
+<pre data-language="text"><code>门店日销售额 = γ(storeId, businessDate; SUM(paidAmount))(Orders)</code></pre>
+<p>对应 UI：报表、指标卡、趋势图。</p>
+<p>#### 17.5 排序、分页与窗口</p>
+<pre data-language="text"><code>最近异常订单 = TopN(按异常时间倒序, 20)</code></pre>
+<p>对应 UI：工作台、无限列表、排行榜。</p>
+<p>这些操作揭示了为什么报表 UI 不能被理解成“订单实体换了一种组件”：它面对的已经不是一条订单，而是由选择、连接和聚合产生的新读取模型。</p>
+<h3 id="18-映射的基数-一对一不是唯一关系-31" class="chapter-title">18. 映射的基数：一对一不是唯一关系<a class="heading-anchor" href="#18-映射的基数-一对一不是唯一关系-31" aria-label="链接到本节">#</a></h3>
+<p>#### 18.1 一对一：一个值对应一个 UI 值</p>
+<pre data-language="text"><code>remark ↔ TextArea</code></pre>
+<p>如果没有额外格式化和业务限制，这类映射最接近直接绑定。</p>
+<p>#### 18.2 多对一：多个事实形成一个 UI 值</p>
+<pre data-language="text"><code>province + city + detailAddress → 完整地址
+items[] → 商品数量
+payments[] → 已支付总额</code></pre>
+<p>多对一映射通常会丢失信息，不能假设可以直接反向写回。</p>
+<p>#### 18.3 一对多：一个事实形成多个 UI 表达</p>
+<pre data-language="text"><code>orderStatus → Badge + 步骤条当前位置 + 动作可用性 + 帮助文案</code></pre>
+<p>这说明一个字段不必只绑定一个组件。一个业务事实可以同时影响视觉、交互和动作。</p>
+<p>#### 18.4 多对多：多个对象共同决定一组界面元素</p>
+<pre data-language="text"><code>订单 + 客户信用 + 用户权限 + 风险规则
+  → 风险提示 + 审批字段 + 可用动作 + 审批说明</code></pre>
+<p>复杂审批页、工作台和跨域页面通常属于这一类。</p>
+<h3 id="19-映射的可逆性与信息损失-32" class="chapter-title">19. 映射的可逆性与信息损失<a class="heading-anchor" href="#19-映射的可逆性与信息损失-32" aria-label="链接到本节">#</a></h3>
+<p>#### 19.1 什么叫可逆</p>
+<p>设读取函数为 <code>get</code>，把业务数据映射到 UI；写入函数为 <code>put</code>，把用户修改解释回业务输入。</p>
+<p>理想的可逆关系至少希望满足：</p>
+<pre data-language="text"><code>put(D, get(D)) = D</code></pre>
+<p>意思是：用户不修改界面，把读取到的值原样提交，不应意外改变业务数据。</p>
+<p>还希望满足：</p>
+<pre data-language="text"><code>get(put(D, U新)) = U新</code></pre>
+<p>意思是：合法保存用户输入后，再读取应看到相同的有效结果。</p>
+<p>这类思想在双向变换中常被称为 <code>Lens</code>。它不是要求项目引入某个 Lens 框架，而是提供两个有用的正确性判据。</p>
+<p>#### 19.2 哪些映射通常可逆</p>
+<pre data-language="text"><code>字符串字段 ↔ 文本输入
+稳定ID ↔ 选择器的选中值
+开始/结束时间 ↔ 日期区间控件
+整数分值 ↔ 受控小数金额输入</code></pre>
+<p>即使形式上可逆，仍要处理精度、时区、单位和空值语义。</p>
+<p>#### 19.3 哪些映射天然有损</p>
+<pre data-language="text"><code>多条明细 → 总金额
+出生日期 → 年龄
+状态历史 → 当前状态
+完整手机号 → 脱敏手机号
+多个地址字段 → 一段不可结构化文本</code></pre>
+<p>有损值可以展示，但通常应该只读，或者提供独立、结构化的编辑入口。</p>
+<p>#### 19.4 信息损失要显式标注</p>
+<p>建议为派生字段记录：</p>
+<div class="table-scroll"><table><thead><tr><th>属性</th><th>需要回答的问题</th></tr></thead><tbody><tr><td>来源</td><td>它由哪些事实产生</td></tr><tr><td>算法</td><td>计算规则和版本是什么</td></tr><tr><td>新鲜度</td><td>实时、缓存还是快照</td></tr><tr><td>可逆性</td><td>是否允许从该值写回</td></tr><tr><td>权威方</td><td>谁拥有最终计算权</td></tr><tr><td>失败语义</td><td>无法计算时显示什么</td></tr></tbody></table></div>
+<p>“页面显示得出来”不代表“这个值已经被正确建模”。</p>
+<h3 id="20-一个-ui-也可以组合多个模型-33" class="chapter-title">20. 一个 UI 也可以组合多个模型<a class="heading-anchor" href="#20-一个-ui-也可以组合多个模型-33" aria-label="链接到本节">#</a></h3>
+<p>前文主要讨论“一种数据模型生成多个 UI”，反方向同样重要：一个 UI 经常由多个模型共同构成。</p>
+<pre data-language="text"><code>客服订单工作台 = h(
+  订单,
+  客户,
+  支付,
+  物流,
+  售后工单,
+  当前用户任务
+)</code></pre>
+<p>这类组合带来四个设计问题：</p>
+<ol><li><strong>组合边界在哪里</strong>：由前端、页面 API、BFF、查询服务还是数据库视图完成。</li><li><strong>失败是否独立</strong>：物流服务失败时，订单主体是否仍然可用。</li><li><strong>时间点是否一致</strong>：订单、支付和物流是否代表同一业务时刻。</li><li><strong>动作归谁处理</strong>：页面可以组合读取，但写入命令仍要交给拥有业务规则的服务。</li></ol>
+<p>可以把组合 UI 表示为：</p>
+<pre data-language="text"><code>U = Compose(U订单, U客户, U支付, U物流, U任务)</code></pre>
+<p>但 <code>Compose</code> 不是简单把卡片拼在一起。它还需要统一对象身份、错误策略、加载策略、权限和信息优先级。</p>
+<section class="prototype" id="prototype-rule-conflict" data-prototype="rules">
+    <header class="prototype-head">
+      <div><span class="prototype-kicker">INTERACTIVE MODEL</span><h4>原型 05 · 规则冲突解释器</h4><p>调换规则优先级，观察结论与解释链怎样变化</p></div>
+      <button class="icon-button prototype-reset" type="button" title="重置原型" aria-label="重置原型"><span aria-hidden="true">↻</span></button>
+    </header>
+    <div class="prototype-body" data-prototype-stage></div>
+    <footer class="prototype-foot"><strong data-prototype-insight>等待交互</strong><span data-prototype-state>初始状态</span></footer>
+  </section>
+<h3 id="21-规则如何组合-冲突时谁优先-34" class="chapter-title">21. 规则如何组合，冲突时谁优先<a class="heading-anchor" href="#21-规则如何组合-冲突时谁优先-34" aria-label="链接到本节">#</a></h3>
+<p>低代码和动态 UI 中，组件配置往往来自多个来源：</p>
+<pre data-language="text"><code>平台默认值
+数据类型规则
+业务语义规则
+页面场景规则
+角色或租户规则
+页面实例配置
+运行时状态规则</code></pre>
+<p>如果只说“后配置覆盖前配置”，很快就会遇到安全和可解释性问题。</p>
+<p>#### 21.1 展示类规则可以按特异性覆盖</p>
+<p>一个可用的默认顺序是：</p>
+<pre data-language="text"><code>页面实例
+  &gt; 页面场景
+  &gt; 业务语义
+  &gt; 逻辑类型
+  &gt; 物理类型
+  &gt; 平台兜底</code></pre>
+<p>越具体的规则越优先。例如订单编辑页对金额的显式配置，可以覆盖通用 <code>money</code> 的默认布局。</p>
+<p>#### 21.2 安全规则不能被普通展示配置覆盖</p>
+<p>权限和安全通常采用收紧原则：</p>
+<pre data-language="text"><code>最终可见 = 页面希望显示 ∩ 用户允许读取
+最终可编辑 = 页面希望编辑 ∩ 用户允许修改 ∩ 状态允许修改
+最终可执行 = 页面声明动作 ∩ 动作权限 ∩ 当前状态合法动作</code></pre>
+<p>可以理解为“允许条件取交集，拒绝优先”。租户配置不能用 <code>visible: true</code> 绕过服务端字段权限。</p>
+<p>#### 21.3 冲突结果必须可解释</p>
+<p>运行时最好能回答：</p>
+<pre data-language="text"><code>为什么这个字段使用 MoneyInput？
+为什么这个字段只读？
+为什么“退款”按钮没有出现？
+哪条规则覆盖了哪条默认值？</code></pre>
+<p>否则平台配置越灵活，排查成本越高。</p>
+<section class="prototype" id="prototype-dependency-graph" data-prototype="dependency">
+    <header class="prototype-head">
+      <div><span class="prototype-kicker">INTERACTIVE MODEL</span><h4>原型 06 · 字段影响图</h4><p>点击字段，追踪它对页面、命令、报表与缓存的传播</p></div>
+      <button class="icon-button prototype-reset" type="button" title="重置原型" aria-label="重置原型"><span aria-hidden="true">↻</span></button>
+    </header>
+    <div class="prototype-body" data-prototype-stage></div>
+    <footer class="prototype-foot"><strong data-prototype-insight>等待交互</strong><span data-prototype-state>初始状态</span></footer>
+  </section>
+<h3 id="22-依赖图-一个字段变化会影响什么-35" class="chapter-title">22. 依赖图：一个字段变化会影响什么<a class="heading-anchor" href="#22-依赖图-一个字段变化会影响什么-35" aria-label="链接到本节">#</a></h3>
+<p>动态表单经常存在依赖：</p>
+<pre data-language="text"><code>商品数量 × 单价 → 明细金额
+明细金额之和 → 订单总额
+订单总额 + 客户等级 → 审批路径
+订单状态 + 用户权限 → 可用动作</code></pre>
+<p>可以表示为有向图：</p>
+<pre data-language="text"><code>G = (V, E)
+
+V = 字段、派生值、规则、组件、动作
+E = “变化会影响”的依赖关系</code></pre>
+<p>依赖图用于决定：</p>
+<ul><li>哪些值需要重新计算。</li><li>哪些校验需要重新执行。</li><li>哪些组件需要重新渲染。</li><li>哪些动作需要重新判定。</li></ul>
+<p>必须防止循环依赖：</p>
+<pre data-language="text"><code>A依赖B，B又依赖A</code></pre>
+<p>可采取的策略包括：禁止循环、要求显式计算顺序、使用稳定点计算，或者将其中一个值改为命令触发而不是自动派生。默认应优先选择禁止或消除循环，因为它最容易解释和测试。</p>
+<section class="prototype" id="prototype-null-semantics" data-prototype="nulls">
+    <header class="prototype-head">
+      <div><span class="prototype-kicker">INTERACTIVE MODEL</span><h4>原型 07 · 空值语义解码器</h4><p>同一个 null，在不同语义下必须生成不同界面</p></div>
+      <button class="icon-button prototype-reset" type="button" title="重置原型" aria-label="重置原型"><span aria-hidden="true">↻</span></button>
+    </header>
+    <div class="prototype-body" data-prototype-stage></div>
+    <footer class="prototype-foot"><strong data-prototype-insight>等待交互</strong><span data-prototype-state>初始状态</span></footer>
+  </section>
+<h3 id="23-空值不是一个含义-36" class="chapter-title">23. 空值不是一个含义<a class="heading-anchor" href="#23-空值不是一个含义-36" aria-label="链接到本节">#</a></h3>
+<p>UI 中的“没有值”至少可能表示：</p>
+<pre data-language="text"><code>不存在：该对象没有这个属性
+未知：业务上存在，但目前不知道
+未加载：数据尚未获取
+无权限：数据存在，但当前用户不能看
+不适用：该字段在当前场景没有意义
+已清空：用户主动删除了原值
+计算失败：派生值无法得到</code></pre>
+<p>如果都压成 <code>null</code> 或空字符串，界面就无法给出正确反馈，写回时也无法区分“保持不变”和“清空字段”。</p>
+<p>建议在接口或 ViewModel 中明确区分：</p>
+<pre data-language="text"><code>value       真实值
+presence    present / absent / unknown / notApplicable
+loading     是否正在加载
+masked      是否已脱敏
+editable    是否可编辑
+error       获取或计算失败原因</code></pre>
+<p>不是每个字段都要返回一个复杂包装对象，但高风险或强语义字段必须有表达这些状态的能力。</p>
+<h3 id="24-对象身份-显示值变化-关联不能漂移-37" class="chapter-title">24. 对象身份：显示值变化，关联不能漂移<a class="heading-anchor" href="#24-对象身份-显示值变化-关联不能漂移-37" aria-label="链接到本节">#</a></h3>
+<p>UI 经常显示名称，业务关联依赖稳定标识：</p>
+<pre data-language="text"><code>显示：星海商贸
+身份：customerId = 1001</code></pre>
+<p>如果名称改变，历史订单仍应关联同一个客户；如果两个客户同名，选择器也必须能区分。</p>
+<p>对象身份设计需要回答：</p>
+<ul><li>使用数据库主键、业务编号还是全局 ID。</li><li>ID 在租户、区域和系统之间是否唯一。</li><li>对象被合并、迁移或删除后，旧链接如何处理。</li><li>UI 深链接和收藏是否仍能定位对象。</li><li>列表刷新后，选中状态是否按身份而不是行号恢复。</li></ul>
+<p>身份是跨 UI 保持同一业务对象语义的锚点。</p>
+<h3 id="25-时间是映射的一等输入-38" class="chapter-title">25. 时间是映射的一等输入<a class="heading-anchor" href="#25-时间是映射的一等输入-38" aria-label="链接到本节">#</a></h3>
+<p>同一个字段可能有多个时间版本：</p>
+<pre data-language="text"><code>当前客户等级
+下单时客户等级
+审批时风险快照
+报表统计口径下的历史等级</code></pre>
+<p>因此 UI 显示的值不只取决于“哪个对象”，还取决于“哪个时间语义”：</p>
+<pre data-language="text"><code>Value = Read(objectId, field, effectiveTime, version)</code></pre>
+<p>常见时间语义：</p>
+<div class="table-scroll"><table><thead><tr><th>类型</th><th>含义</th><th>适用场景</th></tr></thead><tbody><tr><td>当前值</td><td>此刻最新事实</td><td>日常详情和操作页</td></tr><tr><td>业务生效时间</td><td>规则在何时有效</td><td>价格、合同、组织关系</td></tr><tr><td>系统记录时间</td><td>系统何时知道</td><td>审计、追溯和纠错</td></tr><tr><td>快照</td><td>某次决策时冻结的事实</td><td>审批、结算、对账</td></tr><tr><td>聚合窗口</td><td>一段时间的统计</td><td>报表和指标</td></tr></tbody></table></div>
+<p>如果时间语义没有标明，用户看到的两个“客户等级”可能都正确，却属于不同时间，从而产生表面矛盾。</p>
+<h3 id="26-映射正确性的四个层次-39" class="chapter-title">26. 映射正确性的四个层次<a class="heading-anchor" href="#26-映射正确性的四个层次-39" aria-label="链接到本节">#</a></h3>
+<p>一个页面“能显示”只证明了最浅的一层。</p>
+<p>#### 层次一：结构正确</p>
+<p>字段、组件、布局和数据绑定符合 Schema。</p>
+<p>#### 层次二：语义正确</p>
+<p>金额、状态、单位、指标和对象身份解释一致。</p>
+<p>#### 层次三：行为正确</p>
+<p>编辑、校验、提交、权限和状态转换符合业务规则。</p>
+<p>#### 层次四：时间与运行正确</p>
+<p>在并发、缓存、服务失败、权限变化和版本升级下仍能给出可解释结果。</p>
+<p>大型系统真正难的是后三层。只做字段到控件的映射，解决的是结构正确；一个可持续的映射体系还必须治理语义、行为和运行时正确性。</p>
+<h2 id="第五篇-交互模型-ui-不只是数据的终点-40" class="part-title">第五篇　交互模型：UI 不只是数据的终点<a class="heading-anchor" href="#第五篇-交互模型-ui-不只是数据的终点-40" aria-label="链接到本节">#</a></h2>
+<p>把业务数据投影成页面，只解释了读取方向。真正的界面还要承载用户意图、局部草稿、校验反馈、异步结果和导航上下文。UI 既是业务事实的观察窗口，也是用户发起业务变化的入口。</p>
+<h3 id="27-三种状态不能混在一起-41" class="chapter-title">27. 三种状态不能混在一起<a class="heading-anchor" href="#27-三种状态不能混在一起-41" aria-label="链接到本节">#</a></h3>
+<p>一个编辑页面至少同时存在三种状态：</p>
+<pre data-language="text"><code>业务状态 D    服务端已经确认的事实
+界面草稿 W    用户尚未提交的工作副本
+交互状态 Σ    加载、选中、展开、错误、焦点等临时状态</code></pre>
+<p>例如编辑订单：</p>
+<pre data-language="text"><code>D.status       = DRAFT
+D.quantity     = 2
+W.quantity     = 3
+Σ.quantityDirty = true
+Σ.saving        = false</code></pre>
+<p>用户输入 <code>3</code> 后，数据库中的数量仍然是 <code>2</code>。如果系统把草稿状态直接当成业务事实，就会在自动保存、多人协作、离开页面和失败恢复时产生混乱。</p>
+<p>#### 27.1 业务状态</p>
+<p>由服务端或权威数据源确认，能够被其他用户和系统观察到，需要遵守事务、权限和业务不变量。</p>
+<p>#### 27.2 草稿状态</p>
+<p>由当前用户在当前编辑会话中持有。它可能不完整、暂时非法，也可能依赖尚未提交的其他字段。</p>
+<p>#### 27.3 交互状态</p>
+<p>只服务当前界面体验，例如某个区块是否展开、列表选中了哪一行、请求是否正在加载。这些状态通常不属于业务模型。</p>
+<p>设计 ViewModel 时，必须知道某个属性属于哪一种状态，不能因为它们都出现在前端对象中就混为一谈。</p>
+<h3 id="28-草稿是一条分支-不是业务真相-42" class="chapter-title">28. 草稿是一条分支，不是业务真相<a class="heading-anchor" href="#28-草稿是一条分支-不是业务真相-42" aria-label="链接到本节">#</a></h3>
+<p>可以把编辑过程理解为从业务事实分出一条临时分支：</p>
+<pre data-language="text"><code>D₀ ──创建草稿──&gt; W₀ ──用户编辑──&gt; W₁ ──校验──&gt; W₂
+ │                                           │
+ └────────其他人修改────────&gt; D₁             │
+                                             ↓
+                                     提交并尝试合并</code></pre>
+<p>提交时需要比较：</p>
+<pre data-language="text"><code>基线版本 D₀
+当前服务端版本 D₁
+用户草稿 W₂</code></pre>
+<p>如果 <code>D₁ = D₀</code>，通常可以直接提交；如果不同，需要判断冲突字段、重新计算规则，或者要求用户刷新。</p>
+<p>#### 28.1 常见草稿策略</p>
+<div class="table-scroll"><table><thead><tr><th>策略</th><th>优点</th><th>代价</th><th>适用场景</th></tr></thead><tbody><tr><td>本地临时草稿</td><td>快、实现简单</td><td>换设备和清缓存会丢失</td><td>短表单、低风险编辑</td></tr><tr><td>服务端草稿记录</td><td>可跨设备、可恢复</td><td>需要草稿生命周期和清理</td><td>长流程、复杂单据</td></tr><tr><td>自动保存</td><td>降低丢失风险</td><td>需要节流、冲突和失败提示</td><td>内容创作、低冲突对象</td></tr><tr><td>显式保存</td><td>边界清晰、便于事务校验</td><td>用户可能忘记保存</td><td>核心业务表单</td></tr><tr><td>协同编辑</td><td>多人实时协作</td><td>合并、身份和冲突成本高</td><td>文档、设计协作</td></tr></tbody></table></div>
+<p>自动保存不是天然更好。金额、库存或状态敏感的业务单据，频繁把半成品写成正式事实可能比丢草稿更危险。</p>
+<h3 id="29-校验不是一层-而是一条责任链-43" class="chapter-title">29. 校验不是一层，而是一条责任链<a class="heading-anchor" href="#29-校验不是一层-而是一条责任链-43" aria-label="链接到本节">#</a></h3>
+<pre data-language="text"><code>输入级校验
+  ↓
+字段级校验
+  ↓
+跨字段校验
+  ↓
+对象业务规则
+  ↓
+跨对象约束
+  ↓
+权限、并发和外部系统校验</code></pre>
+<p>#### 29.1 UI 适合承担什么</p>
+<ul><li>必填、长度、格式和明显范围错误。</li><li>用户输入后的即时反馈。</li><li>跨字段的本地可计算提示。</li><li>在提交前整理完整错误列表。</li></ul>
+<p>#### 29.2 服务端必须承担什么</p>
+<ul><li>权限和数据范围。</li><li>最新业务状态下的合法性。</li><li>唯一性、库存、额度、金额等共享约束。</li><li>并发、事务和外部系统结果。</li><li>任何不能信任客户端自行保证的规则。</li></ul>
+<p>同一规则可以在 UI 复制一份用于体验，但服务端仍然是权威执行者。规则共享可以通过统一 Schema、生成代码或共享库实现，但不能把“前端已经校验”当成服务端省略校验的理由。</p>
+<h3 id="30-命令-事件和字段更新的边界-44" class="chapter-title">30. 命令、事件和字段更新的边界<a class="heading-anchor" href="#30-命令-事件和字段更新的边界-44" aria-label="链接到本节">#</a></h3>
+<p>#### 30.1 字段更新适合表达局部事实变化</p>
+<pre data-language="text"><code>修改客户备注
+更新联系人称呼
+调整草稿显示顺序</code></pre>
+<p>如果变化局部、低风险、没有复杂副作用，通用 <code>PATCH</code> 往往是最小且清晰的方案。</p>
+<p>#### 30.2 命令适合表达业务意图</p>
+<pre data-language="text"><code>提交订单
+批准退款
+确认发货
+取消合同</code></pre>
+<p>命令通常包含：</p>
+<pre data-language="text"><code>目标对象
+期望执行的动作
+动作所需参数
+基线版本或条件
+请求唯一标识</code></pre>
+<p>#### 30.3 事件描述已经发生的事实</p>
+<pre data-language="text"><code>OrderPaid
+ShipmentCreated
+RefundApproved</code></pre>
+<p>UI 通常发出命令，不应伪造领域事件。事件由拥有业务规则的服务在命令成功后产生，用于通知其他投影或系统。</p>
+<section class="prototype" id="prototype-permission-intersection" data-prototype="permission">
+    <header class="prototype-head">
+      <div><span class="prototype-kicker">INTERACTIVE MODEL</span><h4>原型 04 · 动作可用性交集</h4><p>动作 = 状态允许 ∩ 角色允许 ∩ 数据范围 ∩ 风险约束</p></div>
+      <button class="icon-button prototype-reset" type="button" title="重置原型" aria-label="重置原型"><span aria-hidden="true">↻</span></button>
+    </header>
+    <div class="prototype-body" data-prototype-stage></div>
+    <footer class="prototype-foot"><strong data-prototype-insight>等待交互</strong><span data-prototype-state>初始状态</span></footer>
+  </section>
+<h3 id="31-动作是状态机-权限和任务的交集-45" class="chapter-title">31. 动作是状态机、权限和任务的交集<a class="heading-anchor" href="#31-动作是状态机-权限和任务的交集-45" aria-label="链接到本节">#</a></h3>
+<p>可用动作可以形式化为：</p>
+<pre data-language="text"><code>AvailableActions =
+  DeclaredActions(page)
+  ∩ AllowedByState(object)
+  ∩ AllowedByPermission(user, object)
+  ∩ RelevantToTask(task)</code></pre>
+<p>例如订单状态为 <code>PAID</code>：</p>
+<pre data-language="text"><code>状态允许：发货、退款
+用户权限允许：发货
+当前任务相关：处理待发货订单
+最终显示：发货</code></pre>
+<p>即使 UI 已经计算出可用动作，提交后服务端仍要使用最新状态重新判定。页面打开后到用户点击之间，状态和权限都可能变化。</p>
+<h3 id="32-错误也是-ui-模型的一部分-46" class="chapter-title">32. 错误也是 UI 模型的一部分<a class="heading-anchor" href="#32-错误也是-ui-模型的一部分-46" aria-label="链接到本节">#</a></h3>
+<p>一个成熟的页面不能只定义成功状态，还应定义失败如何被理解和恢复。</p>
+<div class="table-scroll"><table><thead><tr><th>错误类型</th><th>UI 应回答的问题</th><th>常见恢复方式</th></tr></thead><tbody><tr><td>输入错误</td><td>哪个值不合法，怎样改</td><td>定位字段并保留草稿</td></tr><tr><td>权限变化</td><td>为什么现在不能操作</td><td>刷新权限、返回或申请权限</td></tr><tr><td>并发冲突</td><td>哪些数据已被别人修改</td><td>对比、刷新、合并或重试</td></tr><tr><td>部分数据失败</td><td>哪个区块不可用</td><td>局部重试，不阻断主体</td></tr><tr><td>业务拒绝</td><td>哪条规则阻止了动作</td><td>展示业务原因和可行下一步</td></tr><tr><td>网络未知结果</td><td>请求是否可能已经成功</td><td>查询最终状态，避免盲目重试</td></tr><tr><td>系统故障</td><td>用户应做什么</td><td>保留草稿、提供追踪编号</td></tr></tbody></table></div>
+<p>错误不应只映射成一个统一 Toast。错误发生的位置、影响范围和恢复方式不同，UI 表达也应该不同。</p>
+<h3 id="33-加载-空白和无权限不是同一状态-47" class="chapter-title">33. 加载、空白和无权限不是同一状态<a class="heading-anchor" href="#33-加载-空白和无权限不是同一状态-47" aria-label="链接到本节">#</a></h3>
+<p>对于一个关联区块：</p>
+<pre data-language="text"><code>Loading     正在获取
+Empty       已成功获取，但没有数据
+Forbidden   当前用户无权读取
+Failed      获取失败
+Stale       有旧数据，但刷新失败
+Partial     只获取到部分数据</code></pre>
+<p>如果全部显示为“暂无数据”，用户无法判断应该等待、创建数据、申请权限还是联系支持。</p>
+<p>一个页面的状态空间可以表示为：</p>
+<pre data-language="text"><code>Σ = Σdata × Σdraft × Σrequest × Σpermission × Σnavigation</code></pre>
+<p>实际实现不应穷举所有组合，而应为关键区块定义独立、可组合的状态边界，避免一个次要服务失败导致整页不可用。</p>
+<section class="prototype" id="prototype-navigation-projection" data-prototype="navigation">
+    <header class="prototype-head">
+      <div><span class="prototype-kicker">INTERACTIVE MODEL</span><h4>原型 08 · 导航是任务投影</h4><p>切换任务与角色，观察入口、层级和当前位置如何变化</p></div>
+      <button class="icon-button prototype-reset" type="button" title="重置原型" aria-label="重置原型"><span aria-hidden="true">↻</span></button>
+    </header>
+    <div class="prototype-body" data-prototype-stage></div>
+    <footer class="prototype-foot"><strong data-prototype-insight>等待交互</strong><span data-prototype-state>初始状态</span></footer>
+  </section>
+<h3 id="34-导航也是数据与任务的映射-48" class="chapter-title">34. 导航也是数据与任务的映射<a class="heading-anchor" href="#34-导航也是数据与任务的映射-48" aria-label="链接到本节">#</a></h3>
+<p>页面映射解决“当前怎样看”，导航映射解决“下一步可以去哪里”。大型软件的导航可以表达为：</p>
+<pre data-language="text"><code>Navigation = N(
+  业务能力图,
+  当前用户与权限,
+  当前工作空间,
+  当前任务,
+  当前对象及状态,
+  历史和收藏,
+  设备环境
+)</code></pre>
+<p>完整导航更接近图，而不是一棵树：</p>
+<pre data-language="text"><code>G = (V, E)
+
+V = 领域、模块、页面、对象、任务、动作
+E = 包含、关联、跳转、返回、搜索命中、状态转换</code></pre>
+<p>左侧菜单是图中的稳定主干；搜索、待办、对象关联、最近访问和状态动作是其他边。当前用户看到的是完整导航图在权限、空间和任务条件下的子图。</p>
+<p>这与数据模型到 UI 的映射是同一种思想：</p>
+<pre data-language="text"><code>完整业务图 + 当前上下文 → 当前可见、可达、可操作的导航子图
+完整业务事实 + 当前上下文 → 当前可见、可理解、可操作的任务视图</code></pre>
+<h3 id="35-上下文恢复属于正确性-不只是体验优化-49" class="chapter-title">35. 上下文恢复属于正确性，不只是体验优化<a class="heading-anchor" href="#35-上下文恢复属于正确性-不只是体验优化-49" aria-label="链接到本节">#</a></h3>
+<p>用户从“上海门店、待发货、第 3 页”进入订单详情，返回后如果回到默认订单列表，他需要重新构造刚才的工作上下文。</p>
+<p>导航状态至少可能包括：</p>
+<pre data-language="text"><code>当前工作空间
+查询与筛选条件
+排序和分页
+滚动位置
+选中对象
+打开来源
+未提交草稿</code></pre>
+<p>状态转换可以表示为：</p>
+<pre data-language="text"><code>Sₜ₊₁ = δ(Sₜ, Aₜ)</code></pre>
+<p>其中 <code>Sₜ</code> 是当前上下文，<code>Aₜ</code> 是点击、搜索、切换空间或执行业务动作，<code>Sₜ₊₁</code> 是操作后的新状态。</p>
+<p>对高频工作流来说，上下文丢失会直接增加任务成本和误操作风险，因此应作为导航契约的一部分测试。</p>
+<h3 id="36-多端映射-共享语义-不强求共享页面结构-50" class="chapter-title">36. 多端映射：共享语义，不强求共享页面结构<a class="heading-anchor" href="#36-多端映射-共享语义-不强求共享页面结构-50" aria-label="链接到本节">#</a></h3>
+<p>桌面端、移动端、大屏和语音界面可以共享：</p>
+<ul><li>业务概念和稳定标识。</li><li>状态、权限和动作语义。</li><li>指标、金额和派生值口径。</li><li>接口契约或读取模型的一部分。</li></ul>
+<p>但不应强求共享：</p>
+<ul><li>组件树。</li><li>信息密度。</li><li>导航结构。</li><li>操作节奏。</li><li>错误反馈形式。</li></ul>
+<p>例如订单列表在桌面端可以是十二列表格，在移动端可能是三行摘要卡片，在语音界面中则可能变成“朗读三个异常订单”。它们共享任务和业务语义，不共享具体视觉结构。</p>
+<h3 id="37-可访问性也是映射上下文-51" class="chapter-title">37. 可访问性也是映射上下文<a class="heading-anchor" href="#37-可访问性也是映射上下文-51" aria-label="链接到本节">#</a></h3>
+<p>设备环境不只包括屏幕尺寸，还包括用户的感知与操作能力：</p>
+<pre data-language="text"><code>键盘操作
+屏幕阅读器
+高对比度
+缩放与大字号
+减少动画
+触控目标尺寸</code></pre>
+<p>如果状态只通过颜色表达，<code>PAID → 绿色</code> 的映射对色觉障碍用户是不完整的。正确映射应同时提供文本、语义标签和程序可访问名称。</p>
+<p>因此：</p>
+<pre data-language="text"><code>表现形式 = Resolve(业务语义, 任务, 终端, 可访问性需求)</code></pre>
+<p>可访问性不是生成 UI 后再补的样式，而是映射函数的一项输入约束。</p>
+<h2 id="第六篇-低代码与动态-ui-从元数据到可执行界面-52" class="part-title">第六篇　低代码与动态 UI：从元数据到可执行界面<a class="heading-anchor" href="#第六篇-低代码与动态-ui-从元数据到可执行界面-52" aria-label="链接到本节">#</a></h2>
+<p>第三篇已经说明低代码平台需要区分 Data、Semantic、View、Action 和 Permission 五类元数据。本篇继续追问：这些元数据如何经过设计、发布、编译和运行，最终成为一次确定、可解释、可迁移的界面决策。</p>
+<p>本篇关注单次发布与运行如何发生；第七篇则关注多版本、多租户和长期演化中，如何持续证明这些运行结果仍然正确。</p>
+<p>本篇关于运行时分层、规则治理和版本机制的内容属于通用架构判断。节点化 UI Schema、字段响应式状态等具体观察参考了本地低代码竞品知识库中的官方资料或源码初证；这些证据不代表所有产品都采用同一种内部实现。</p>
+<h3 id="38-低代码平台真正编译的不是页面-而是任务解释契约-53" class="chapter-title">38. 低代码平台真正编译的不是页面，而是任务解释契约<a class="heading-anchor" href="#38-低代码平台真正编译的不是页面-而是任务解释契约-53" aria-label="链接到本节">#</a></h3>
+<p>最初级的低代码生成器做的是：</p>
+<pre data-language="text"><code>数据库字段 -&gt; 默认控件 -&gt; CRUD 页面</code></pre>
+<p>成熟的业务低代码平台要处理的则是：</p>
+<pre data-language="text"><code>稳定的业务事实
+  + 业务语义
+  + 页面任务
+  + 角色与数据范围
+  + 当前业务状态
+  + 终端能力
+  + 页面显式覆盖
+  -&gt; 当前用户此刻可见、可理解、可执行的任务视图</code></pre>
+<p>因此，低代码运行时不是一个“读 JSON 并递归渲染组件”的工具，而是一台受约束的解释器。它接收多组元数据和运行时上下文，执行选择、合并、校验、权限收敛、组件解析、数据绑定与动作绑定，最后产生 UI。</p>
+<p>可以把这个过程形式化为：</p>
+<pre data-language="text"><code>RuntimeUI = Render(
+  Compile(
+    DataSchema,
+    SemanticSchema,
+    ViewSchema,
+    ActionSchema,
+    PermissionSchema,
+    Context,
+    Registry
+  ),
+  RuntimeData,
+  RuntimeState
+)</code></pre>
+<p>这里至少存在两个阶段：</p>
+<ul><li><strong>编译阶段</strong>：检查引用、合并默认规则、解析依赖、收敛权限、生成稳定的运行计划。</li><li><strong>执行阶段</strong>：取数、求值、绑定状态、渲染组件、响应用户操作并重新计算受影响部分。</li></ul>
+<p>如果平台没有这层区分，所有逻辑都会挤进组件渲染过程。结果通常是错误晚发现、性能难定位、规则无法解释、历史版本不可稳定回放。</p>
+<p>这一章的核心张力是：</p>
+<pre data-language="text"><code>配置自由度
+      &lt;-&gt;
+运行时的确定性、可解释性与安全性</code></pre>
+<p>平台不应追求无限表达力，而应追求：在明确边界内，任何一个运行结果都能解释“它由哪组规则、哪个版本、什么上下文共同决定”。</p>
+<hr>
+<h3 id="39-设计态-发布态与运行态必须分离-54" class="chapter-title">39. 设计态、发布态与运行态必须分离<a class="heading-anchor" href="#39-设计态-发布态与运行态必须分离-54" aria-label="链接到本节">#</a></h3>
+<p>一个页面配置在生命周期中并不是同一个对象。</p>
+<div class="table-scroll"><table><thead><tr><th>形态</th><th>服务对象</th><th>应包含的内容</th><th>不应泄露到下一阶段的内容</th></tr></thead><tbody><tr><td>设计态模型</td><td>页面设计者</td><td>选中状态、拖拽位置、物料信息、属性面板、草稿、辅助标记</td><td>设计器临时状态</td></tr><tr><td>发布态模型</td><td>审核、版本与部署系统</td><td>稳定标识、组件声明、规则、绑定、权限引用、依赖版本</td><td>未校验引用、临时草稿</td></tr><tr><td>运行态计划</td><td>渲染器与规则引擎</td><td>已解析组件、依赖图、查询计划、权限结果、表达式计划</td><td>设计器协议、无关配置</td></tr><tr><td>实例态状态</td><td>当前用户会话</td><td>字段值、脏状态、校验结果、加载状态、展开状态</td><td>不应持久化的瞬时 UI 状态</td></tr></tbody></table></div>
+<p>转换链路是：</p>
+<pre data-language="text"><code>DesignerTree
+  -&gt; normalize
+  -&gt; validate
+  -&gt; publish snapshot
+  -&gt; compile
+  -&gt; RuntimePlan
+  -&gt; instantiate(context, data)
+  -&gt; RuntimeUI</code></pre>
+<p>这条链路中有三个必须守住的不变量：</p>
+<ol><li><strong>已发布快照不可被草稿直接覆盖。</strong>线上页面必须指向明确版本，而不是“当前最新配置”。</li><li><strong>相同版本与相同上下文应产生确定的运行计划。</strong>动态数据会变化，但规则解析结果不能随机漂移。</li><li><strong>每次转换都必须保留稳定标识和来源信息。</strong>否则无法做差异比较、错误定位、迁移和回滚。</li></ol>
+<p>本地知识库中的 Designable 与 Formily 资料也支持这种边界划分：设计器节点树服务拖拽和属性编辑，发布或运行结构服务渲染与校验。这个分离不是框架偏好，而是版本治理和运行稳定性的前提。</p>
+<p>#### 39.1 为什么不能只保存整页大 JSON</p>
+<p>整页 JSON 适合原型，但当页面需要局部修改、插件插槽、模板复用、多人编辑和版本迁移时，它会暴露几个问题：</p>
+<ul><li>一个小改动造成整页 diff，难以审查。</li><li>节点没有稳定身份，引用和权限难以绑定。</li><li>插入、移动、复制只能重写大对象。</li><li>局部迁移和依赖分析困难。</li><li>冲突通常在最后保存时才暴露。</li></ul>
+<p>更可维护的抽象是带稳定 ID 的节点图或节点树：</p>
+<pre data-language="text"><code>Page
+  -&gt; SchemaNode(id, type, props, parentId, order)
+  -&gt; Binding(sourceId, targetId, expression)
+  -&gt; Rule(ruleId, dependencies, effect)
+  -&gt; PermissionRef(subject, resource, operation)
+  -&gt; Version(versionId, parentVersionId, status)</code></pre>
+<p>NocoBase 的 UI Schema 存储源码初证展示了 <code>schema -&gt; nodes</code>、<code>nodes -&gt; schema</code>、<code>patch</code>、<code>insertAdjacent</code>、<code>duplicate</code> 和 <code>remove</code> 等操作。这说明“节点化”不仅是存储形式，更决定平台能否支持局部演进。</p>
+<p>但节点化也不是目的本身。页面很小、没有局部协作与迁移需求时，版本化整页文档更简单。选型判据是变更和治理需求，不是节点表看起来更专业。</p>
+<hr>
+<section class="prototype" id="prototype-schema-compiler" data-prototype="compiler">
+    <header class="prototype-head">
+      <div><span class="prototype-kicker">INTERACTIVE MODEL</span><h4>原型 09 · Schema 编译流水线</h4><p>逐步执行编译阶段，观察元数据怎样变成可执行页面</p></div>
+      <button class="icon-button prototype-reset" type="button" title="重置原型" aria-label="重置原型"><span aria-hidden="true">↻</span></button>
+    </header>
+    <div class="prototype-body" data-prototype-stage></div>
+    <footer class="prototype-foot"><strong data-prototype-insight>等待交互</strong><span data-prototype-state>初始状态</span></footer>
+  </section>
+<h3 id="40-元数据编译流水线-55" class="chapter-title">40. 元数据编译流水线<a class="heading-anchor" href="#40-元数据编译流水线-55" aria-label="链接到本节">#</a></h3>
+<p>低代码平台可以把发布过程设计成一条显式流水线。每一步只回答一种问题，失败时返回可定位的诊断，而不是让运行时白屏。</p>
+<pre data-language="text"><code>草稿配置
+  -&gt; 1. 语法与结构校验
+  -&gt; 2. 标识与引用解析
+  -&gt; 3. 默认值和继承合并
+  -&gt; 4. 语义类型与组件解析
+  -&gt; 5. 数据依赖和规则图构建
+  -&gt; 6. 权限与动作收敛
+  -&gt; 7. 查询与加载计划生成
+  -&gt; 8. 静态风险检查
+  -&gt; 9. 生成不可变发布快照
+  -&gt; 10. 生成运行时计划与缓存</code></pre>
+<p>#### 40.1 语法与结构校验</p>
+<p>检查 Schema 自身是否合法，例如：</p>
+<ul><li>节点类型是否存在。</li><li>必填属性是否齐全。</li><li>子节点类型是否允许放在当前父节点下。</li><li>标识是否重复。</li><li>配置值是否满足属性约束。</li></ul>
+<p>这一阶段只判断“配置是否是一段合法语言”，不判断它是否满足业务语义。</p>
+<p>#### 40.2 标识与引用解析</p>
+<p>低代码 Schema 中的字段、查询、动作、组件、表达式和权限策略彼此引用。发布前应把所有引用解析为稳定标识，并检测：</p>
+<ul><li>字段已删除或改名。</li><li>组件插件未安装或版本不兼容。</li><li>动作引用了不存在的命令。</li><li>表达式引用了不可达的数据节点。</li><li>循环依赖或跨边界依赖。</li></ul>
+<p>名称用于显示，稳定 ID 用于关联。只用字段名连接规则，会让重命名变成破坏性变更。</p>
+<p>#### 40.3 默认值与继承合并</p>
+<p>一个字段的最终配置通常来自多层来源：</p>
+<pre data-language="text"><code>物理类型默认值
+  &lt;- 逻辑类型默认值
+  &lt;- 业务语义默认值
+  &lt;- 场景模板
+  &lt;- 页面配置
+  &lt;- 租户配置
+  &lt;- 当前实例的运行时限制</code></pre>
+<p>“后者一定覆盖前者”并不总是安全。布局、标签和组件样式可以覆盖；权限和数据范围只能收窄，不能由页面配置放宽。平台必须为每类属性定义不同的合并代数。</p>
+<p>#### 40.4 依赖图构建</p>
+<p>规则和绑定不是孤立字符串，而是一张依赖图：</p>
+<pre data-language="text"><code>country -&gt; provinceOptions
+province -&gt; cityOptions
+items[*].price, items[*].quantity -&gt; totalAmount
+status, currentRole -&gt; availableActions</code></pre>
+<p>发布前构建依赖图，可以检测环路、计算影响范围，并让运行时只重新计算受影响的节点。Formily 的字段级状态和响应式机制提供了一条重要启发：复杂表单的性能瓶颈往往不是字段总数，而是一次变化触发了多少无关计算与渲染。</p>
+<p>#### 40.5 静态风险检查</p>
+<p>编译阶段还应检查无法仅靠类型系统发现的问题：</p>
+<ul><li>隐藏字段是否仍可由客户端提交。</li><li>金额或库存计算是否只存在于前端。</li><li>动作是否缺少服务端权限与状态校验。</li><li>表达式是否访问敏感数据。</li><li>远程数据源是否会形成 N+1 请求。</li><li>页面是否引用非确定的“最新版本”资产。</li><li>规则是否存在永远无法到达的分支。</li></ul>
+<p>静态检查不能替代运行验证，但能把大量错误从用户操作时前移到发布时。</p>
+<hr>
+<h3 id="41-组件解析不是一个-if-else-而是一项可解释决策-56" class="chapter-title">41. 组件解析不是一个 if-else，而是一项可解释决策<a class="heading-anchor" href="#41-组件解析不是一个-if-else-而是一项可解释决策-56" aria-label="链接到本节">#</a></h3>
+<p>原文给出了组件解析公式：</p>
+<pre data-language="text"><code>Component = Resolve(
+  字段业务语义，
+  页面类型，
+  查看或编辑模式，
+  业务状态，
+  用户权限，
+  终端环境，
+  页面显式覆盖
+)</code></pre>
+<p>大型平台还需要回答两个问题：解析规则如何组织，以及冲突时为什么选中了这个组件。</p>
+<p>推荐把候选选择拆成“过滤、评分、覆盖、验证”四步：</p>
+<pre data-language="text"><code>候选组件集合
+  -&gt; 按能力与安全约束过滤
+  -&gt; 按语义和场景匹配度评分
+  -&gt; 应用允许的显式覆盖
+  -&gt; 验证最终组件契约</code></pre>
+<p>例如 <code>amount</code> 字段在编辑页解析为 <code>MoneyInput</code>，诊断信息不应只返回组件名，还应返回决策轨迹：</p>
+<pre data-language="text"><code>field: amount
+selected: MoneyInput
+because:
+  semanticType = money
+  view = edit
+  mode = editable
+  currency = CNY
+overriddenBy: page.node.orderAmount
+rejected:
+  NumberInput: semantic match lower
+  MoneyDisplay: does not support edit capability</code></pre>
+<p>这样的“解释计划”能同时服务设计器预览、线上诊断和自动化测试。</p>
+<p>#### 41.1 组件必须声明契约</p>
+<p>组件注册表不能只有 <code>name -&gt; ReactComponent</code>。一个可治理的组件至少应声明：</p>
+<pre data-language="text"><code>ComponentContract {
+  id
+  version
+  supportedSemanticTypes
+  supportedModes
+  valueShape
+  eventContract
+  requiredCapabilities
+  allowedChildren
+  accessibilityContract
+  migrationHandlers
+}</code></pre>
+<p>其中最容易被忽略的是 <code>valueShape</code> 与 <code>eventContract</code>。同样是选择器，有的提交稳定 ID，有的提交完整对象，有的提交标签字符串；如果注册表没有明确契约，页面看起来正常，写回时却会产生隐蔽错误。</p>
+<p>#### 41.2 显式覆盖不等于无限覆盖</p>
+<p>页面设计者可以把金额的列表展示由 <code>MoneyCell</code> 改为 <code>MoneyWithTrend</code>，但不应把一个受保护的服务端动作替换成任意脚本，也不应通过配置绕过字段权限。</p>
+<p>可以把属性分为三类：</p>
+<div class="table-scroll"><table><thead><tr><th>类别</th><th>示例</th><th>合并原则</th></tr></thead><tbody><tr><td>表达属性</td><td>标签、顺序、布局、提示文案</td><td>页面可覆盖</td></tr><tr><td>能力属性</td><td>是否可编辑、可导出、可批量操作</td><td>上下文与权限共同收敛</td></tr><tr><td>安全属性</td><td>数据范围、字段读取权、动作授权</td><td>只能由可信边界决定，客户端配置不能放宽</td></tr></tbody></table></div>
+<hr>
+<h3 id="42-规则系统-优先级只是最后手段-57" class="chapter-title">42. 规则系统：优先级只是最后手段<a class="heading-anchor" href="#42-规则系统-优先级只是最后手段-57" aria-label="链接到本节">#</a></h3>
+<p>当平台同时支持显隐、必填、只读、计算、联动、权限和流程状态时，规则冲突一定会出现。例如：</p>
+<pre data-language="text"><code>页面配置：amount 可编辑
+业务状态：已支付订单不可修改 amount
+字段权限：财务角色可修改 amount
+合规策略：已开票订单任何人不可修改 amount</code></pre>
+<p>如果只给规则配置一个数字优先级，系统虽然能算出结果，却难以解释，也容易让高优先级配置意外突破安全边界。</p>
+<p>更稳妥的办法是先按规则性质分层：</p>
+<pre data-language="text"><code>最终能力 = 页面期望能力
+         ∩ 组件支持能力
+         ∩ 业务状态允许能力
+         ∩ 角色与数据权限允许能力
+         ∩ 平台安全策略允许能力</code></pre>
+<p>对于 <code>visible</code>、<code>editable</code>、<code>executable</code> 等安全相关能力，合并通常采用“最小权限”原则：任一可信约束拒绝，最终就拒绝。对于标签、布局等表达属性，才采用覆盖或优先级。</p>
+<p>#### 42.1 建议的冲突决策顺序</p>
+<ol><li><strong>先分域。</strong>安全、业务、交互和视觉规则不能混在同一优先级空间。</li><li><strong>再定合并算子。</strong>布尔能力用交集，数值范围用收窄，集合权限用交集，样式和标签可覆盖。</li><li><strong>同域内再比较特异性。</strong>页面节点规则通常比全局默认更具体。</li><li><strong>特异性相同才使用显式优先级。</strong>优先级是消歧工具，不是全部治理模型。</li><li><strong>仍无法确定就阻止发布。</strong>静默挑选一个结果会把配置错误带到生产。</li></ol>
+<p>#### 42.2 规则执行需要确定性</p>
+<p>至少要明确：</p>
+<ul><li>同一轮中规则以什么顺序求值。</li><li>一个规则修改另一个规则的输入时是否再次传播。</li><li>如何检测循环联动。</li><li>异步数据返回晚于用户新输入时如何丢弃过期结果。</li><li>规则异常时使用上一次值、默认值、禁用状态还是阻止提交。</li></ul>
+<p>对计算规则，最好要求纯函数式输入输出；对通知、Webhook、启动审批等副作用，必须离开字段联动引擎，进入有幂等、重试和审计能力的动作执行系统。</p>
+<p>#### 42.3 规则解释与模拟</p>
+<p>设计器应能回答：</p>
+<pre data-language="text"><code>当前字段为什么隐藏？
+哪条规则令它只读？
+如果角色变为财务、状态变为草稿，结果是什么？
+修改这条规则会影响哪些字段、页面和动作？</code></pre>
+<p>因此每次求值最好生成结构化轨迹：</p>
+<pre data-language="text"><code>RuleTrace {
+  inputSnapshot
+  matchedRules
+  skippedRules
+  conflictResolution
+  finalEffects
+  duration
+  errors
+}</code></pre>
+<p>轨迹中的敏感数据必须脱敏，并设置采样和保留期限，不能为了可观测性复制整份业务对象。</p>
+<hr>
+<h3 id="43-数据获取-先生成页面查询计划-再请求数据-58" class="chapter-title">43. 数据获取：先生成页面查询计划，再请求数据<a class="heading-anchor" href="#43-数据获取-先生成页面查询计划-再请求数据-58" aria-label="链接到本节">#</a></h3>
+<p>动态页面常见的失败方式，是每个组件各自取数：客户选择器查客户、地址组件查地区、明细表查商品，最终形成瀑布请求和 N+1 查询。</p>
+<p>运行时应先从页面依赖图生成查询计划：</p>
+<pre data-language="text"><code>ViewSchema + Bindings + PermissionScope
+  -&gt; RequiredDataGraph
+  -&gt; QueryPlan
+  -&gt; execute
+  -&gt; PageReadModel</code></pre>
+<p>查询计划至少要处理：</p>
+<ul><li>当前首屏真正需要哪些字段。</li><li>哪些关联可批量加载。</li><li>哪些区块可以延迟加载。</li><li>相同查询能否合并和去重。</li><li>权限过滤应在哪个数据源执行。</li><li>数据的时间点与新鲜度要求是什么。</li><li>部分数据源失败时页面如何降级。</li></ul>
+<p>这里的关键边界是：页面 Schema 可以声明“需要什么”，但不能决定“有权读取什么”。数据范围必须进入服务端查询，而不是先取回全量数据再由前端隐藏。</p>
+<p>#### 43.1 空值、无权限和加载失败不是同一种状态</p>
+<p>低代码组件不能把以下情况都显示成 <code>--</code>：</p>
+<pre data-language="text"><code>真实值为空
+字段无权查看
+数据仍在加载
+远程数据源失败
+字段不适用于当前对象
+数据已被脱敏</code></pre>
+<p>运行时值应携带最小状态信息：</p>
+<pre data-language="text"><code>RuntimeValue&lt;T&gt; =
+  | { state: &quot;ready&quot;, value: T | null }
+  | { state: &quot;loading&quot; }
+  | { state: &quot;forbidden&quot; }
+  | { state: &quot;masked&quot;, display: string }
+  | { state: &quot;error&quot;, errorCode: string, retryable: boolean }
+  | { state: &quot;not-applicable&quot; }</code></pre>
+<p>具体实现可以不同，但语义必须区分，否则用户无法判断“没有数据”还是“系统坏了”，开发人员也无法准确监控。</p>
+<hr>
+<h3 id="44-动作运行时-按钮背后必须是受控命令-59" class="chapter-title">44. 动作运行时：按钮背后必须是受控命令<a class="heading-anchor" href="#44-动作运行时-按钮背后必须是受控命令-59" aria-label="链接到本节">#</a></h3>
+<p>低代码页面的危险不在显示错一个标签，而在把高风险业务动作退化成通用字段更新或任意客户端脚本。</p>
+<p>动作 Schema 应描述用户意图及其契约：</p>
+<pre data-language="text"><code>ActionDefinition {
+  actionId
+  commandType
+  inputSchema
+  visibleWhen
+  enabledWhen
+  requiredPermission
+  allowedStates
+  confirmationPolicy
+  idempotencyPolicy
+  resultHandling
+}</code></pre>
+<p>运行链路应是：</p>
+<pre data-language="text"><code>点击动作
+  -&gt; 客户端基础校验与确认
+  -&gt; 生成 Command + requestId + expectedVersion
+  -&gt; 服务端重新检查身份、数据范围、业务状态
+  -&gt; 执行业务事务与副作用协调
+  -&gt; 返回新事实或处理状态
+  -&gt; 失效相关投影并重新加载</code></pre>
+<p><code>visibleWhen</code> 与 <code>enabledWhen</code> 用于体验，不是授权。即使攻击者绕过 UI 直接调用命令，服务端仍必须拒绝非法状态、越权数据和重复请求。</p>
+<p>#### 44.1 动作失败后的恢复协议</p>
+<p>动作不只有成功和失败。运行时还需区分：</p>
+<ul><li>校验失败：保留输入并定位字段。</li><li>版本冲突：展示差异，允许刷新、合并或放弃。</li><li>网络超时且结果未知：用 <code>requestId</code> 查询结果，不能直接重试制造重复副作用。</li><li>异步处理中：显示可追踪的任务状态。</li><li>部分副作用失败：核心事务状态与补偿状态必须可查询。</li></ul>
+<p>通用 Toast 无法承担这些语义。动作契约应声明结果类型，页面再选择合适的恢复方式。</p>
+<hr>
+<section class="prototype" id="prototype-version-migration" data-prototype="migration">
+    <header class="prototype-head">
+      <div><span class="prototype-kicker">INTERACTIVE MODEL</span><h4>原型 10 · 版本迁移与回滚</h4><p>模拟破坏性变更，选择兼容、迁移、灰度与回滚策略</p></div>
+      <button class="icon-button prototype-reset" type="button" title="重置原型" aria-label="重置原型"><span aria-hidden="true">↻</span></button>
+    </header>
+    <div class="prototype-body" data-prototype-stage></div>
+    <footer class="prototype-foot"><strong data-prototype-insight>等待交互</strong><span data-prototype-state>初始状态</span></footer>
+  </section>
+<h3 id="45-版本-发布-迁移与回滚-60" class="chapter-title">45. 版本、发布、迁移与回滚<a class="heading-anchor" href="#45-版本-发布-迁移与回滚-60" aria-label="链接到本节">#</a></h3>
+<p>低代码配置一旦进入生产，就成为与代码、接口同样真实的运行契约。平台至少需要区分：</p>
+<pre data-language="text"><code>Draft -&gt; Validated -&gt; Published -&gt; Deprecated -&gt; Retired</code></pre>
+<p>#### 45.1 发布快照</p>
+<p>一次发布应固定：</p>
+<ul><li>页面 Schema 版本。</li><li>依赖的数据模型版本。</li><li>组件和插件兼容范围。</li><li>规则与表达式版本。</li><li>权限策略引用方式。</li><li>编译器版本和编译结果摘要。</li></ul>
+<p>运行时不能无条件绑定“最新组件”或“最新字段定义”，否则未修改页面也可能因依赖升级而改变行为。</p>
+<p>#### 45.2 兼容性分类</p>
+<div class="table-scroll"><table><thead><tr><th>变更</th><th>常见风险</th><th>建议处理</th></tr></thead><tbody><tr><td>增加可选字段</td><td>旧页面通常可继续运行</td><td>新版本可按需采用</td></tr><tr><td>字段显示名改变</td><td>关联通常不受影响</td><td>使用稳定 ID，刷新文案</td></tr><tr><td>字段类型改变</td><td>组件、校验和历史数据都可能不兼容</td><td>新版本字段或显式迁移</td></tr><tr><td>删除字段</td><td>规则、绑定、报表可能断链</td><td>先标记弃用，完成引用扫描</td></tr><tr><td>组件值契约改变</td><td>写回可能静默损坏</td><td>提升主版本并提供迁移器</td></tr><tr><td>权限规则收紧</td><td>页面功能减少</td><td>允许即时收紧并提供影响报告</td></tr><tr><td>权限规则放宽</td><td>数据暴露风险</td><td>单独审核，不随页面迁移自动放宽</td></tr></tbody></table></div>
+<p>#### 45.3 迁移器</p>
+<p>Schema 迁移应是显式、幂等、可审计的转换：</p>
+<pre data-language="text"><code>migrate(schema, fromVersion, toVersion) -&gt; migratedSchema + diagnostics</code></pre>
+<p>迁移前后应检查：</p>
+<ul><li>节点稳定 ID 是否保留。</li><li>引用是否仍可解析。</li><li>行为是否发生有意变化。</li><li>未识别配置是保留、隔离还是阻止发布。</li><li>能否用旧快照回滚。</li></ul>
+<p>不要用“读取时顺手修一下”替代版本迁移。隐式修复使同一份快照在不同时间产生不同结果，也无法审计谁改变了生产行为。</p>
+<p>#### 45.4 回滚的真实边界</p>
+<p>页面配置回滚是双向门，业务数据迁移通常不是。若新页面已经写入旧版本无法理解的数据，仅回滚 Schema 可能让页面无法读取历史记录。</p>
+<p>因此发布前要区分：</p>
+<pre data-language="text"><code>仅表达变更 -&gt; 通常可直接回滚页面快照
+契约变更 -&gt; 需要兼容窗口或双读双写
+数据变更 -&gt; 需要数据迁移与逆向方案
+权限变更 -&gt; 回滚前还要重新评估暴露风险</code></pre>
+<hr>
+<h3 id="46-插件与扩展-能力要开放-故障域要封闭-61" class="chapter-title">46. 插件与扩展：能力要开放，故障域要封闭<a class="heading-anchor" href="#46-插件与扩展-能力要开放-故障域要封闭-61" aria-label="链接到本节">#</a></h3>
+<p>组件、数据源、规则操作符和动作处理器通常都需要扩展。但扩展点越强，平台运行时越容易失去确定性。</p>
+<p>建议把扩展分为声明式和命令式两类：</p>
+<ul><li><strong>声明式扩展</strong>：组件契约、字段语义、校验器、格式化器、查询适配器。优先使用，容易检查和缓存。</li><li><strong>命令式扩展</strong>：自定义脚本、复杂动作、生命周期钩子。能力更强，应进入受控执行边界。</li></ul>
+<p>插件生命周期至少包括：</p>
+<pre data-language="text"><code>install -&gt; validate -&gt; enable -&gt; migrate -&gt; observe -&gt; disable -&gt; uninstall</code></pre>
+<p>每个插件需要声明：</p>
+<ul><li>插件 ID 与版本。</li><li>平台兼容范围。</li><li>提供和依赖的能力。</li><li>所需数据与网络权限。</li><li>安装、升级和卸载迁移。</li><li>禁用后的页面降级方式。</li></ul>
+<p>#### 46.1 自定义脚本的边界</p>
+<p>允许任意脚本直接访问页面上下文、浏览器全局对象和内部 API，会让 Schema 变成无法治理的代码分发渠道。更稳妥的原则是：</p>
+<ol><li>能用声明式规则表达的，不开放脚本。</li><li>脚本只获得最小能力对象，不获得平台内部对象。</li><li>网络、数据源和敏感字段访问需要显式授权。</li><li>执行设置时间、内存和调用次数上限。</li><li>脚本版本随发布快照固定，执行结果可追踪。</li><li>涉及核心业务不变量的逻辑必须在服务端领域边界重新验证。</li></ol>
+<p>“脚本沙箱”不是绝对安全承诺。真正的安全来自能力最小化、隔离、审计与服务端不变量共同作用。</p>
+<hr>
+<h3 id="47-缓存与性能-缓存的是计划-不是权限结论-62" class="chapter-title">47. 缓存与性能：缓存的是计划，不是权限结论<a class="heading-anchor" href="#47-缓存与性能-缓存的是计划-不是权限结论-62" aria-label="链接到本节">#</a></h3>
+<p>低代码运行时可缓存的对象包括：</p>
+<ul><li>解析后的发布快照。</li><li>组件注册表索引。</li><li>表达式编译结果。</li><li>依赖图和查询模板。</li><li>与用户无关的静态格式配置。</li></ul>
+<p>需要谨慎缓存的是：</p>
+<ul><li>记录级权限结果。</li><li>依赖业务状态的动作集合。</li><li>包含租户、用户、地区或时间上下文的规则结果。</li><li>敏感数据的投影。</li></ul>
+<p>缓存键必须包含所有会影响结果的上下文。若无法完整列出上下文，就不应缓存最终结果，而应缓存与上下文无关的中间计划。</p>
+<p>推荐把性能预算拆成：</p>
+<pre data-language="text"><code>T_total = T_schema_load
+        + T_compile_or_cache
+        + T_data_fetch
+        + T_rule_eval
+        + T_render
+        + T_interaction_update</code></pre>
+<p>只测首屏总时间无法判断慢在 Schema、数据源、规则还是组件。运行时应分别采集这些阶段的时延和命中率。</p>
+<p>#### 47.1 局部更新</p>
+<p>当字段 <code>quantity</code> 变化时，应从依赖图定位 <code>lineAmount</code>、<code>totalAmount</code> 和相关校验，而不是重新执行整页规则并渲染整棵组件树。</p>
+<p>但局部响应也有边界：如果规则允许动态读任意字段，平台无法静态知道依赖范围。此时要么要求显式声明依赖，要么接受更保守的重算成本，并在设计器中显示性能警告。</p>
+<hr>
+<h3 id="48-可观测性-必须能回答-为什么这个用户看到这个页面-63" class="chapter-title">48. 可观测性：必须能回答“为什么这个用户看到这个页面”<a class="heading-anchor" href="#48-可观测性-必须能回答-为什么这个用户看到这个页面-63" aria-label="链接到本节">#</a></h3>
+<p>传统前端日志通常只记录组件报错。动态 UI 还需要观察“配置决定过程”。建议建立以下关联标识：</p>
+<pre data-language="text"><code>requestId
+tenantId
+appId
+pageId
+releaseVersion
+runtimePlanHash
+userRoleSnapshot
+dataSnapshotVersion
+actionId</code></pre>
+<p>平台应能查询：</p>
+<ul><li>当前页面使用了哪个发布版本。</li><li>哪个组件或规则来自哪个插件版本。</li><li>某字段为何隐藏、只读或脱敏。</li><li>某动作为何不可见、禁用或被服务端拒绝。</li><li>一次字段变化触发了哪些规则和查询。</li><li>页面慢在编译、取数、求值还是渲染。</li></ul>
+<p>#### 48.1 诊断信息分层</p>
+<div class="table-scroll"><table><thead><tr><th>使用者</th><th>需要的信息</th></tr></thead><tbody><tr><td>最终用户</td><td>可理解的状态、失败原因和恢复动作</td></tr><tr><td>页面设计者</td><td>节点、规则、绑定、版本与影响范围</td></tr><tr><td>平台运维</td><td>请求链路、阶段耗时、缓存、数据源与错误码</td></tr><tr><td>安全审计</td><td>谁在何时以何版本读取或执行了什么</td></tr></tbody></table></div>
+<p>不要把内部堆栈、表达式源码和敏感数据直接展示给最终用户；也不要只给平台设计者一个“渲染失败”的黑箱提示。</p>
+<hr>
+<section class="prototype" id="prototype-test-matrix" data-prototype="testing">
+    <header class="prototype-head">
+      <div><span class="prototype-kicker">INTERACTIVE MODEL</span><h4>原型 11 · 映射测试矩阵</h4><p>组合角色、状态、终端与数据条件，找出未覆盖的解释路径</p></div>
+      <button class="icon-button prototype-reset" type="button" title="重置原型" aria-label="重置原型"><span aria-hidden="true">↻</span></button>
+    </header>
+    <div class="prototype-body" data-prototype-stage></div>
+    <footer class="prototype-foot"><strong data-prototype-insight>等待交互</strong><span data-prototype-state>初始状态</span></footer>
+  </section>
+<h3 id="49-测试策略-测试的是解释结果-而不只是-schema-能否解析-64" class="chapter-title">49. 测试策略：测试的是解释结果，而不只是 Schema 能否解析<a class="heading-anchor" href="#49-测试策略-测试的是解释结果-而不只是-schema-能否解析-64" aria-label="链接到本节">#</a></h3>
+<p>动态 UI 的测试对象可以分成五层：</p>
+<p>#### 49.1 Schema 合约测试</p>
+<ul><li>节点类型与属性是否合法。</li><li>引用是否可解析。</li><li>组件值契约是否匹配字段和命令输入。</li><li>旧版本是否能通过迁移器转换。</li></ul>
+<p>#### 49.2 规则决策表测试</p>
+<p>用代表性上下文验证最终能力：</p>
+<div class="table-scroll"><table><thead><tr><th>角色</th><th>订单状态</th><th>开票状态</th><th>amount 可见</th><th>amount 可编辑</th></tr></thead><tbody><tr><td>客服</td><td>草稿</td><td>未开票</td><td>是</td><td>否</td></tr><tr><td>财务</td><td>草稿</td><td>未开票</td><td>是</td><td>是</td></tr><tr><td>财务</td><td>已支付</td><td>未开票</td><td>是</td><td>否</td></tr><tr><td>财务</td><td>已支付</td><td>已开票</td><td>是</td><td>否</td></tr></tbody></table></div>
+<p>测试应断言最终结果和解释轨迹中的关键规则，而不只比较一大段脆弱的页面快照。</p>
+<p>#### 49.3 投影与写回契约测试</p>
+<ul><li>页面读取模型是否保持业务口径。</li><li>组件输出是否能生成合法 Command。</li><li>派生值是否不会被当成原始事实写回。</li><li>服务端是否拒绝越权、过期版本和非法状态命令。</li></ul>
+<p>#### 49.4 迁移与回滚测试</p>
+<ul><li>历史发布快照是否仍可编译。</li><li>迁移是否幂等。</li><li>插件升级后旧页面是否进入兼容或明确阻断状态。</li><li>回滚后是否仍能读取新版本产生的数据。</li></ul>
+<p>#### 49.5 性能与稳定性测试</p>
+<ul><li>大表单字段变化的影响范围。</li><li>规则环路和异步竞态。</li><li>数据源超时与部分失败。</li><li>插件缺失、禁用或升级失败时的降级。</li><li>缓存是否跨租户或跨权限上下文污染。</li></ul>
+<hr>
+<h3 id="50-一个订单审批页怎样被编译出来-65" class="chapter-title">50. 一个订单审批页怎样被编译出来<a class="heading-anchor" href="#50-一个订单审批页怎样被编译出来-65" aria-label="链接到本节">#</a></h3>
+<p>下面把前面的机制放回订单案例。</p>
+<p>#### 50.1 输入</p>
+<pre data-language="text"><code>DataSchema:
+  Order(id, customerId, status, amount, revision)
+
+SemanticSchema:
+  amount = money(CNY)
+  status = orderStatus
+
+ViewSchema:
+  approval page
+  amount node requests MoneyDisplay
+  action area requests Approve / Reject
+
+PermissionSchema:
+  approver can read assigned orders
+  senior approver required when amount &gt; 10000
+
+Context:
+  userRole = approver
+  orderStatus = PENDING_APPROVAL
+  amount = 1288
+  device = desktop</code></pre>
+<p>#### 50.2 编译结果</p>
+<pre data-language="text"><code>1. amount 解析为 MoneyDisplay，而不是 MoneyInput。
+2. 客户信息和风险信息进入页面查询计划。
+3. Approve / Reject 组件通过状态与角色能力过滤。
+4. amount &gt; 10000 的高级审批规则未命中。
+5. 两个动作绑定到 ApproveOrder / RejectOrder Command。
+6. Command 自动携带 orderId、requestId 与 expectedRevision。</code></pre>
+<p>#### 50.3 用户点击“通过”</p>
+<pre data-language="text"><code>UI -&gt; ApproveOrder(orderId, comment, expectedRevision, requestId)
+   -&gt; 服务端重新检查任务归属、状态、金额规则与 revision
+   -&gt; 写入审批事实与审计记录
+   -&gt; 返回新的订单状态
+   -&gt; 失效审批页和相关列表投影
+   -&gt; 页面重新编译动作集合，“通过/驳回”消失</code></pre>
+<p>这说明动态 UI 的“动态”并不是客户端任意改变页面，而是页面根据新的业务事实和上下文重新得到一个受规则约束的解释结果。</p>
+<hr>
+<h3 id="51-平台建设的最小可行分层-66" class="chapter-title">51. 平台建设的最小可行分层<a class="heading-anchor" href="#51-平台建设的最小可行分层-66" aria-label="链接到本节">#</a></h3>
+<p>不要一开始建设万能低代码引擎。可按风险和证据逐步扩展。</p>
+<p>#### 第一阶段：标准页面生成</p>
+<pre data-language="text"><code>Data Schema
++ Semantic Type
++ Component Registry
++ View Schema
++ 基础服务端权限</code></pre>
+<p>目标是稳定生成列表、详情和简单表单，守住稳定 ID、读写契约和服务端安全边界。</p>
+<p>#### 第二阶段：发布与规则治理</p>
+<pre data-language="text"><code>Draft / Published Version
++ 规则依赖图
++ 冲突解析
++ 发布前检查
++ 诊断轨迹</code></pre>
+<p>目标是让配置可测试、可解释、可回滚，而不是继续堆组件数量。</p>
+<p>#### 第三阶段：任务与动作运行时</p>
+<pre data-language="text"><code>Action Schema
++ Command Contract
++ 状态与权限收敛
++ 幂等和并发
++ 异步结果恢复</code></pre>
+<p>目标是支持订单、工单和审批等任务界面，而不是把业务过程伪装成 CRUD。</p>
+<p>#### 第四阶段：生态与规模化</p>
+<pre data-language="text"><code>插件生命周期
++ Schema 迁移
++ 多租户覆盖策略
++ 查询计划优化
++ 可观测性与容量治理</code></pre>
+<p>只有当复用规模、团队协作或外部扩展需求出现证据时，才进入这一阶段。</p>
+<hr>
+<h3 id="52-低代码运行时的十二条底线-67" class="chapter-title">52. 低代码运行时的十二条底线<a class="heading-anchor" href="#52-低代码运行时的十二条底线-67" aria-label="链接到本节">#</a></h3>
+<ol><li>设计态、发布态、运行态和实例态不能混成一份可变 JSON。</li><li>发布版本必须不可变，并能追溯依赖、编译器和插件版本。</li><li>字段、节点、规则和动作之间使用稳定 ID 关联，显示名不能充当主键。</li><li>权限、业务状态和安全策略只能收窄能力，页面配置不能放宽它们。</li><li>每类属性必须定义自己的合并算子，不能用一个通用优先级解决全部冲突。</li><li>规则需要依赖图、循环检测、确定执行语义和可解释轨迹。</li><li>字段联动只处理可控计算；通知、Webhook、支付和审批启动进入幂等动作系统。</li><li>页面 Schema 声明需要什么数据，服务端权限决定允许读取什么数据。</li><li>组件必须声明值、事件、能力和版本契约，不能只注册一个渲染函数。</li><li>缓存优先保存与用户无关的编译计划，不能遗漏权限上下文缓存最终页面结果。</li><li>Schema、组件和数据契约变更必须有兼容分类、迁移器和回滚边界。</li><li>平台必须能解释：在某个版本和上下文下，为什么这个用户看到了这个字段和动作。</li></ol>
+<hr>
+<h3 id="53-一句话总结-68" class="chapter-title">53. 一句话总结<a class="heading-anchor" href="#53-一句话总结-68" aria-label="链接到本节">#</a></h3>
+<blockquote><p>低代码平台不是把字段自动换成组件，而是把业务事实、任务、权限、状态和版本编译成一份可执行、可解释、可迁移的界面契约；真正的成熟度不在“能配置多少”，而在“配置发生变化后仍能保证正确、安全和可治理”。</p></blockquote>
+<h2 id="第七篇-工程治理-让映射长期保持正确-69" class="part-title">第七篇　工程治理：让映射长期保持正确<a class="heading-anchor" href="#第七篇-工程治理-让映射长期保持正确-69" aria-label="链接到本节">#</a></h2>
+<p>前面的形式化模型和低代码运行时说明了“页面怎样生成”。工程治理回答另一个更难的问题：当数据、权限、组件、规则、用户和组织不断变化时，如何保证页面没有悄悄改变业务含义，没有越权，没有把旧数据解释错，也没有在高并发和部分故障下给出错误行动建议。</p>
+<p>因此，本篇不重复定义运行时组件，而是把第六篇的运行机制转化为真值责任、权限边界、质量门禁、测试证据、迁移流程和可观测指标。</p>
+<p>治理不是在架构图外围增加审批流程，而是把映射的关键性质变成可验证、可观测、可迁移和可回滚的契约。</p>
+<h3 id="54-真值来源-同一个概念由谁说了算-70" class="chapter-title">54. 真值来源：同一个概念由谁说了算<a class="heading-anchor" href="#54-真值来源-同一个概念由谁说了算-70" aria-label="链接到本节">#</a></h3>
+<p>一个大型系统里，同一个值可能出现在多个位置：</p>
+<pre data-language="text"><code>订单服务中的实付金额
+支付服务中的成功交易金额
+列表投影中的格式化金额
+报表仓库中的销售额
+浏览器草稿中的预估金额</code></pre>
+<p>它们不应该都被称为“真值”。建议为重要业务概念建立语义登记：</p>
+<div class="table-scroll"><table><thead><tr><th>属性</th><th>要回答的问题</th></tr></thead><tbody><tr><td>业务名称</td><td>这个概念叫什么</td></tr><tr><td>精确定义</td><td>包含和排除什么</td></tr><tr><td>稳定标识</td><td>跨接口和页面怎样引用</td></tr><tr><td>权威来源</td><td>哪个服务或数据集拥有最终解释权</td></tr><tr><td>计算版本</td><td>算法、舍入和口径版本是什么</td></tr><tr><td>时间语义</td><td>当前值、业务生效值还是快照</td></tr><tr><td>更新方式</td><td>同步写入、事件投影还是批处理</td></tr><tr><td>消费方</td><td>哪些 UI、API、报表和规则依赖它</td></tr></tbody></table></div>
+<p>例如“销售额”如果没有说明使用支付时间还是下单时间、退款如何扣减、跨币种如何折算，图表即使计算无误也没有稳定业务含义。</p>
+<p>#### 54.1 权威来源不等于唯一副本</p>
+<p>为了性能和分析，可以存在列表投影、缓存和数据仓库副本。关键是明确：</p>
+<pre data-language="text"><code>谁产生权威事实
+副本如何更新
+允许延迟多久
+冲突时以谁为准
+如何发现和修复漂移</code></pre>
+<p>“最后更新时间更新的副本”不一定更正确；它可能使用了旧口径重新计算。</p>
+<h3 id="55-权限模型-先限制数据-再决定表现-71" class="chapter-title">55. 权限模型：先限制数据，再决定表现<a class="heading-anchor" href="#55-权限模型-先限制数据-再决定表现-71" aria-label="链接到本节">#</a></h3>
+<p>权限至少包含：</p>
+<pre data-language="text"><code>租户或工作空间范围
+对象类型权限
+记录或数据范围
+字段读取与修改权限
+动作与流程权限
+设计、发布和运维权限</code></pre>
+<p>可以形式化为：</p>
+<pre data-language="text"><code>ReadableData = QueryNeed ∩ TenantScope ∩ RecordScope ∩ FieldScope
+
+EditableFields = PageEditable
+               ∩ FieldWritePermission
+               ∩ AllowedByBusinessState
+
+ExecutableActions = DeclaredActions
+                  ∩ ActionPermission
+                  ∩ AllowedByBusinessState
+                  ∩ CurrentTaskScope</code></pre>
+<p>这里的交集应尽量在可信服务端边界计算。前端拿到的数据应当已经最小化，而不是先获得完整对象再隐藏字段。</p>
+<p>#### 55.1 隐藏、禁用和只读表达不同语义</p>
+<div class="table-scroll"><table><thead><tr><th>表现</th><th>含义</th><th>典型场景</th></tr></thead><tbody><tr><td>隐藏</td><td>用户不需要知道或无权知道</td><td>敏感字段、无关功能</td></tr><tr><td>禁用</td><td>用户知道功能存在，但当前条件不满足</td><td>状态未到、依赖未完成</td></tr><tr><td>只读</td><td>可以查看，但不能修改</td><td>已确认金额、审计信息</td></tr><tr><td>脱敏</td><td>可以知道部分事实</td><td>客服查看手机号</td></tr></tbody></table></div>
+<p>是否隐藏属于产品与安全共同判断，不能机械地把所有无权限项都隐藏，也不能用禁用状态泄露敏感能力。</p>
+<p>#### 55.2 多租户边界不能在映射中丢失</p>
+<p>页面查询、选择器、关联查找、导出、搜索、缓存键和异步事件都必须保留租户或业务范围。最危险的错误往往不是主页面越权，而是：</p>
+<ul><li>客户选择器搜索到其他租户客户。</li><li>关联名称批量查询遗漏租户条件。</li><li>页面缓存没有把租户加入键。</li><li>导出或报表使用了全局数据集。</li><li>后台投影恢复时丢失租户上下文。</li></ul>
+<h3 id="56-时间与一致性-页面显示的是哪个时刻的事实-72" class="chapter-title">56. 时间与一致性：页面显示的是哪个时刻的事实<a class="heading-anchor" href="#56-时间与一致性-页面显示的是哪个时刻的事实-72" aria-label="链接到本节">#</a></h3>
+<p>不同 UI 可以接受不同新鲜度，但必须明确声明：</p>
+<div class="table-scroll"><table><thead><tr><th>页面</th><th>常见要求</th><th>主要风险</th></tr></thead><tbody><tr><td>编辑页</td><td>基线版本 + 提交时最新校验</td><td>覆盖别人修改</td></tr><tr><td>详情页</td><td>接近实时或标明缓存时间</td><td>基于旧状态执行动作</td></tr><tr><td>审批页</td><td>决策快照 + 必要当前值</td><td>混淆历史证据和当前事实</td></tr><tr><td>列表</td><td>可接受短缓存</td><td>状态标签短暂滞后</td></tr><tr><td>报表</td><td>明确统计截止时间</td><td>把延迟数据当实时数据</td></tr></tbody></table></div>
+<p>#### 56.1 最终一致性需要用户可理解</p>
+<p>如果订单支付成功后，列表投影需要数秒更新，UI 可以：</p>
+<ul><li>立即使用命令结果更新当前对象。</li><li>标记后台仍在同步。</li><li>让列表刷新时以新版本覆盖临时状态。</li><li>超过预期延迟后提供查询与诊断入口。</li></ul>
+<p>不能一边采用最终一致性，一边向用户承诺所有页面瞬间完全一致。</p>
+<p>#### 56.2 快照需要记录形成条件</p>
+<p>一个审批快照至少应能追溯：</p>
+<pre data-language="text"><code>快照时间
+业务对象版本
+规则或口径版本
+创建原因
+关键来源版本</code></pre>
+<p>否则事后无法判断审批人当时看到的是什么。</p>
+<h3 id="57-查询计划与性能预算-73" class="chapter-title">57. 查询计划与性能预算<a class="heading-anchor" href="#57-查询计划与性能预算-73" aria-label="链接到本节">#</a></h3>
+<p>页面性能问题通常不是组件渲染单独造成的，而是整条映射链路共同作用：</p>
+<pre data-language="text"><code>T总 = T加载Schema
+    + T解析规则
+    + T鉴权
+    + T查询与组合
+    + T传输
+    + T渲染
+    + T交互重算</code></pre>
+<p>每类页面应有不同预算和策略：</p>
+<ul><li>列表限制字段、关系和行数，批量获取显示值。</li><li>详情区分首屏核心区块和延迟区块。</li><li>选择器使用服务端搜索、分页和稳定身份。</li><li>报表限制时间范围、维度基数和下钻深度。</li><li>大表单根据依赖图局部重算，而不是全页求值。</li></ul>
+<p>#### 57.1 识别 N+1 和瀑布调用</p>
+<p>典型危险路径：</p>
+<pre data-language="text"><code>查询20条订单
+→ 每条查询1次客户
+→ 每条查询1次支付状态
+→ 每条再计算1次权限</code></pre>
+<p>应优先改为面向页面的批量查询或读取投影。BFF、查询服务、数据库连接或批量接口只是不同实现选择，关键是让页面依赖形成可见查询计划。</p>
+<p>#### 57.2 缓存键必须包含所有决定结果的上下文</p>
+<p>可能影响结果的维度包括：</p>
+<pre data-language="text"><code>tenantId, user/role, dataScope, objectState,
+locale, currency, schemaVersion, componentVersion,
+businessRuleVersion, snapshotTime</code></pre>
+<p>如果无法完整列出影响维度，优先缓存与用户无关的中间计划，而不是缓存最终页面或权限结果。</p>
+<h3 id="58-并发-版本与幂等-74" class="chapter-title">58. 并发、版本与幂等<a class="heading-anchor" href="#58-并发-版本与幂等-74" aria-label="链接到本节">#</a></h3>
+<p>#### 58.1 防止静默覆盖</p>
+<p>编辑命令建议携带基线版本：</p>
+<pre data-language="json"><code>{
+  &quot;orderId&quot;: &quot;O202607130001&quot;,
+  &quot;expectedVersion&quot;: 7,
+  &quot;changes&quot;: { &quot;remark&quot;: &quot;工作日送货&quot; }
+}</code></pre>
+<p>服务端发现当前版本为 <code>8</code> 时，应返回冲突，而不是静默覆盖。是否允许自动合并取决于字段语义：不同用户修改互不相干的备注可能可合并，订单明细、金额和状态通常需要更谨慎。</p>
+<p>#### 58.2 防止重复副作用</p>
+<p>支付、审批、退款、发货等命令应有稳定的请求唯一标识或等价幂等机制：</p>
+<pre data-language="text"><code>同一个业务意图 + 同一个请求ID
+→ 多次到达仍只产生一次业务效果</code></pre>
+<p>幂等不等于吞掉所有重复请求。系统应能返回第一次执行的结果，或者明确说明仍在处理中。</p>
+<p>#### 58.3 未知结果需要查询，不是盲目重试</p>
+<p>客户端超时并不证明服务端失败。高风险动作应允许通过 <code>requestId</code> 或业务对象查询最终状态，避免重复扣款、重复审批和重复发货。</p>
+<h3 id="59-失败隔离与恢复协议-75" class="chapter-title">59. 失败隔离与恢复协议<a class="heading-anchor" href="#59-失败隔离与恢复协议-75" aria-label="链接到本节">#</a></h3>
+<p>页面组合多个来源后，失败边界应与任务关键性对齐：</p>
+<pre data-language="text"><code>订单主体失败       → 详情任务无法继续，整页阻断
+物流摘要失败       → 物流区块降级，订单主体仍可看
+推荐信息失败       → 静默降级或稍后重试
+权限服务不确定     → 对敏感能力默认拒绝
+提交结果未知       → 查询状态，不直接重复命令</code></pre>
+<p>#### 59.1 错误模型应携带恢复信息</p>
+<pre data-language="text"><code>errorCode      稳定错误分类
+userMessage    面向用户的说明
+fieldPath      可定位的字段或区块
+retryable      是否适合重试
+requestId      查询与支持追踪标识
+nextActions    刷新、申请权限、重新登录、联系支持等</code></pre>
+<p>技术堆栈和敏感对象不应直接暴露给用户，运维侧仍应能用追踪标识找到完整链路。</p>
+<h3 id="60-可观测性-观察一次解释是怎样形成的-76" class="chapter-title">60. 可观测性：观察一次解释是怎样形成的<a class="heading-anchor" href="#60-可观测性-观察一次解释是怎样形成的-76" aria-label="链接到本节">#</a></h3>
+<p>动态 UI 除了记录请求成功率，还需要回答：</p>
+<pre data-language="text"><code>页面使用了哪个 Schema、组件和规则版本？
+当前用户为什么看见或看不见这个字段？
+哪个数据源、权限或规则导致页面变慢？
+一次字段变化触发了哪些派生值和查询？
+动作被 UI 禁用还是被服务端拒绝？</code></pre>
+<p>建议关联：</p>
+<pre data-language="text"><code>requestId, tenantId, userContextHash,
+pageId, schemaVersion, runtimePlanHash,
+objectId, objectVersion, actionId</code></pre>
+<p>#### 60.1 解释轨迹不是复制完整业务对象</p>
+<p>记录匹配规则、版本、决策结果和耗时即可；敏感输入应脱敏或摘要化。可观测性不能成为第二条数据泄露通道。</p>
+<p>#### 60.2 不同角色需要不同解释</p>
+<ul><li>用户需要知道发生了什么、怎样继续。</li><li>页面设计者需要知道规则、绑定和版本。</li><li>开发运维需要调用链、耗时和错误码。</li><li>安全审计需要谁在何时读取或执行了什么。</li></ul>
+<h3 id="61-测试模型-从结构到业务行为-77" class="chapter-title">61. 测试模型：从结构到业务行为<a class="heading-anchor" href="#61-测试模型-从结构到业务行为-77" aria-label="链接到本节">#</a></h3>
+<p>#### 61.1 Schema 和静态检查</p>
+<ul><li>节点、字段和属性是否合法。</li><li>引用和稳定 ID 是否存在。</li><li>组件值契约是否匹配数据与命令输入。</li><li>依赖图是否存在循环。</li><li>敏感字段是否被不安全组件引用。</li></ul>
+<p>#### 61.2 映射单元测试</p>
+<ul><li>状态 code 是否映射正确文案和语义。</li><li>金额、单位、时区和空值是否正确转换。</li><li>派生字段是否使用权威口径。</li><li>有损映射是否被标为不可写。</li></ul>
+<p>#### 61.3 双向与属性测试</p>
+<p>对于可逆映射验证：</p>
+<pre data-language="text"><code>put(D, get(D)) = D
+get(put(D, U新)) = normalize(U新)</code></pre>
+<p>对金额、日期区间、选择器等输入，可以生成大量边界值验证精度、时区、空值和非法输入。</p>
+<p>#### 61.4 权限与状态决策表</p>
+<div class="table-scroll"><table><thead><tr><th>角色</th><th>数据范围</th><th>对象状态</th><th>字段可见</th><th>字段可写</th><th>动作可执行</th></tr></thead><tbody><tr><td>客服</td><td>所属客户</td><td>草稿</td><td>是</td><td>否</td><td>查看</td></tr><tr><td>财务</td><td>所属组织</td><td>草稿</td><td>是</td><td>是</td><td>调整</td></tr><tr><td>财务</td><td>所属组织</td><td>已支付</td><td>是</td><td>否</td><td>退款申请</td></tr><tr><td>仓库</td><td>所属门店</td><td>已支付</td><td>部分</td><td>否</td><td>发货</td></tr></tbody></table></div>
+<p>应测试允许路径和拒绝路径，也要测试深链接、搜索、导出和直接 API，而不只是菜单是否出现。</p>
+<p>#### 61.5 契约与端到端测试</p>
+<ul><li>页面读取模型与 API 契约兼容。</li><li>Command 输入与组件输出一致。</li><li>服务端拒绝越权、过期版本和非法状态。</li><li>用户从任务入口进入、执行动作并返回原上下文。</li><li>部分服务失败时按预期降级。</li></ul>
+<p>#### 61.6 视觉和可访问性测试</p>
+<p>映射正确不等于视觉可用。还需要检查长文本、极值、空态、错误态、不同语言、缩放、键盘和屏幕阅读器语义。</p>
+<h3 id="62-版本模型-哪些变化是兼容的-78" class="chapter-title">62. 版本模型：哪些变化是兼容的<a class="heading-anchor" href="#62-版本模型-哪些变化是兼容的-78" aria-label="链接到本节">#</a></h3>
+<p>至少需要区分：</p>
+<pre data-language="text"><code>数据 Schema 版本
+业务语义或规则版本
+接口契约版本
+View Schema 版本
+组件契约版本
+插件版本
+发布快照版本</code></pre>
+<p>#### 62.1 变更分类</p>
+<div class="table-scroll"><table><thead><tr><th>变更</th><th>常见兼容性</th><th>主要动作</th></tr></thead><tbody><tr><td>增加可选字段</td><td>通常向后兼容</td><td>旧页面忽略，新页面采用</td></tr><tr><td>改显示标签</td><td>结构兼容</td><td>更新文案和翻译</td></tr><tr><td>改稳定标识</td><td>高风险</td><td>建映射、扫描引用、迁移</td></tr><tr><td>改字段类型</td><td>高风险</td><td>迁移数据、组件和校验</td></tr><tr><td>删除字段</td><td>破坏性</td><td>先弃用、扫描依赖、分阶段删除</td></tr><tr><td>改金额口径</td><td>语义破坏性</td><td>新版本、回算与对账</td></tr><tr><td>改组件值形状</td><td>契约破坏性</td><td>主版本和迁移器</td></tr><tr><td>收紧权限</td><td>功能减少</td><td>影响报告、立即安全生效</td></tr><tr><td>放宽权限</td><td>数据暴露风险</td><td>单独安全审核</td></tr></tbody></table></div>
+<p>版本号本身不会带来兼容性。真正有价值的是变更分类、依赖扫描、迁移函数和兼容窗口。</p>
+<h3 id="63-迁移-灰度与回滚-79" class="chapter-title">63. 迁移、灰度与回滚<a class="heading-anchor" href="#63-迁移-灰度与回滚-79" aria-label="链接到本节">#</a></h3>
+<p>#### 63.1 迁移必须显式</p>
+<pre data-language="text"><code>migrate(oldSchema, fromVersion, toVersion)
+  → newSchema + diagnostics</code></pre>
+<p>迁移需要幂等、可审计，并能报告无法自动处理的配置。不要在运行时悄悄修改历史 Schema，否则同一发布版本在不同时间会产生不同页面。</p>
+<p>#### 63.2 先验证存量，再切换生产</p>
+<p>推荐流程：</p>
+<pre data-language="text"><code>扫描存量页面与依赖
+→ 离线迁移副本
+→ 编译和契约测试
+→ 代表性数据回放
+→ 灰度用户或租户
+→ 观察错误、性能和业务指标
+→ 扩大范围</code></pre>
+<p>#### 63.3 回滚要区分表达和数据</p>
+<p>页面布局回滚通常容易；如果新页面已经写入旧模型不认识的数据，回滚 UI 并不能恢复兼容。涉及数据和对外契约的变更，需要双读、双写、适配或反向迁移方案。</p>
+<h3 id="64-影响分析-一个字段变化会波及哪里-80" class="chapter-title">64. 影响分析：一个字段变化会波及哪里<a class="heading-anchor" href="#64-影响分析-一个字段变化会波及哪里-80" aria-label="链接到本节">#</a></h3>
+<p>大型映射系统应维护依赖图：</p>
+<pre data-language="text"><code>字段
+→ 语义类型
+→ 读取模型
+→ 页面节点
+→ 公式和规则
+→ 权限策略
+→ 动作输入
+→ 报表指标
+→ 导出模板</code></pre>
+<p>删除或改名之前，先回答：</p>
+<ul><li>哪些页面读取它。</li><li>哪些公式和显隐规则依赖它。</li><li>哪些 Command 接收它。</li><li>哪些报表使用它作为维度或度量。</li><li>哪些历史版本仍然引用它。</li><li>哪些外部接口或自动化依赖它。</li></ul>
+<p>没有依赖图时，只能靠全局文本搜索和人工记忆，配置规模越大越不可靠。</p>
+<h3 id="65-设计-发布与运行的职责边界-81" class="chapter-title">65. 设计、发布与运行的职责边界<a class="heading-anchor" href="#65-设计-发布与运行的职责边界-81" aria-label="链接到本节">#</a></h3>
+<div class="table-scroll"><table><thead><tr><th>角色</th><th>主要责任</th><th>不应独自决定的内容</th></tr></thead><tbody><tr><td>产品/业务</td><td>任务、信息优先级、口径和异常路径</td><td>服务端授权和并发策略</td></tr><tr><td>交互/页面设计</td><td>结构、组件、反馈和可访问性</td><td>改写业务不变量</td></tr><tr><td>平台团队</td><td>Schema、组件契约、规则与发布系统</td><td>每个业务域的最终口径</td></tr><tr><td>领域团队</td><td>权威事实、Command、状态和不变量</td><td>任意控制所有页面布局</td></tr><tr><td>安全团队</td><td>数据范围、敏感等级和审计要求</td><td>用安全规则替代任务设计</td></tr><tr><td>运维/质量</td><td>门禁、监控、故障恢复</td><td>临时修改业务语义掩盖故障</td></tr></tbody></table></div>
+<p>重点不是组织名称，而是决策责任必须明确。一个规则如果没人拥有，就会在前端、后端和报表中各出现一份。</p>
+<h3 id="66-质量指标与门禁-82" class="chapter-title">66. 质量指标与门禁<a class="heading-anchor" href="#66-质量指标与门禁-82" aria-label="链接到本节">#</a></h3>
+<p>可以观察的指标包括：</p>
+<pre data-language="text"><code>Schema 编译成功率
+历史版本兼容通过率
+规则冲突和循环依赖数量
+页面查询数、P95 加载时间和局部重算时间
+权限拒绝与异常放行审计
+Command 重复率、冲突率和未知结果率
+投影延迟和对账差异
+页面错误恢复成功率
+无障碍检查通过率
+关键任务完成率和耗时</code></pre>
+<p>#### 66.1 不要把指标变成唯一目标</p>
+<p>页面加载快不代表业务解释正确；配置项多不代表低代码能力成熟；自动生成率高也可能意味着页面同质化。质量门禁应同时覆盖正确性、安全、性能和任务效果。</p>
+<p>#### 66.2 建议的发布门禁</p>
+<pre data-language="text"><code>结构合法
+→ 引用完整
+→ 权限不放宽
+→ 规则无循环和未决冲突
+→ 历史配置可迁移
+→ 关键契约与决策表通过
+→ 性能预算不过线
+→ 高风险变更完成人工评审</code></pre>
+<h3 id="67-安全-隐私与审计-83" class="chapter-title">67. 安全、隐私与审计<a class="heading-anchor" href="#67-安全-隐私与审计-83" aria-label="链接到本节">#</a></h3>
+<p>数据最小化原则应贯穿映射链：</p>
+<pre data-language="text"><code>查询时限制记录和字段
+→ 传输时只发送所需数据
+→ UI 中按任务最小展示
+→ 日志和轨迹脱敏
+→ 导出再次鉴权
+→ 缓存按租户和权限隔离</code></pre>
+<p>#### 67.1 敏感数据分类</p>
+<p>字段元数据可以声明：</p>
+<pre data-language="text"><code>sensitivity       敏感等级
+maskingPolicy     脱敏策略
+exportPolicy      导出限制
+retentionPolicy   保留期限
+auditPolicy       访问是否审计
+purposePolicy     允许使用目的</code></pre>
+<p>页面显示权限不自动等于导出权限；单条查看和批量下载的风险不同。</p>
+<p>#### 67.2 审计记录业务意图</p>
+<p>比起只记录 <code>status: PENDING → APPROVED</code>，审计更应记录：</p>
+<pre data-language="text"><code>谁在什么租户和角色上下文
+基于哪个对象版本和页面版本
+执行了什么业务命令
+服务端应用了哪些关键规则
+结果和追踪标识是什么</code></pre>
+<h3 id="68-失败模式与预演-84" class="chapter-title">68. 失败模式与预演<a class="heading-anchor" href="#68-失败模式与预演-84" aria-label="链接到本节">#</a></h3>
+<p>大型手册最后仍需要回到一个朴素问题：这套方案最可能怎样失败？</p>
+<p>#### 68.1 万能实体泄露到所有页面</p>
+<p>表现：接口返回完整实体，页面自行解释权限和状态。</p>
+<p>后果：耦合、过度暴露、查询浪费和业务规则分散。</p>
+<p>预防：按任务设计读取模型，服务端先收敛权限。</p>
+<p>#### 68.2 万能 Schema 吞掉全部业务逻辑</p>
+<p>表现：支付、审批、重试和补偿都塞进表达式或脚本。</p>
+<p>后果：无法事务化、无法审计、难以测试和迁移。</p>
+<p>预防：配置标准表达，Command 和领域服务守住高风险变化。</p>
+<p>#### 68.3 同一概念多套口径</p>
+<p>表现：列表、详情和报表分别计算金额和状态。</p>
+<p>后果：用户看到互相冲突的系统。</p>
+<p>预防：语义登记、权威来源、契约测试和对账监控。</p>
+<p>#### 68.4 权限只做菜单和按钮</p>
+<p>表现：入口隐藏，但搜索、接口、导出或选择器仍可访问。</p>
+<p>后果：跨租户和敏感数据泄露。</p>
+<p>预防：记录、字段、动作和数据源各层服务端鉴权。</p>
+<p>#### 68.5 读取投影被错误当成写入模型</p>
+<p>表现：直接提交格式化、组合或聚合后的页面对象。</p>
+<p>后果：掩码写回、金额漂移、关联身份丢失。</p>
+<p>预防：单独设计编辑模型和 Command，标注可逆性。</p>
+<p>#### 68.6 动态平台无法解释结果</p>
+<p>表现：只能看到最终组件，无法知道哪条规则生效。</p>
+<p>后果：配置越多，排障和审计越困难。</p>
+<p>预防：稳定版本、解析轨迹、依赖图和影响分析。</p>
+<p>#### 68.7 为了“大而全”提前引入全部架构</p>
+<p>表现：简单 CRUD 同时引入 BFF、CQRS、规则引擎和通用状态机。</p>
+<p>后果：维护成本先于业务价值到来。</p>
+<p>预防：从满足当前约束的最小模式开始，用页面差异、规模、风险和性能证据推动演进。</p>
+<p>#### 68.8 三个月后失败的预演问题</p>
+<p>在落地前主动回答：</p>
+<pre data-language="text"><code>哪个业务概念最容易产生两套口径？
+哪个权限入口最容易遗漏租户范围？
+哪个组合页面会先出现 N+1 或部分失败？
+哪个 Schema 变更最难迁移？
+哪个派生字段最可能被误写回？
+哪个高风险动作可能被重复执行？
+如果平台团队离开，谁还能解释运行结果？</code></pre>
+<p>这些问题比增加更多抽象层更能提前暴露真实风险。</p>
+<h2 id="第八篇-完整案例-一张订单如何变成五种任务视图-85" class="part-title">第八篇　完整案例：一张订单如何变成五种任务视图<a class="heading-anchor" href="#第八篇-完整案例-一张订单如何变成五种任务视图-85" aria-label="链接到本节">#</a></h2>
+<p>这一篇把前面的概念放回一个端到端案例。目的不是提供可直接复制的订单系统设计，而是展示从业务事实、读取投影、UI 状态到写入命令的完整推理过程。</p>
+<h3 id="69-第一步-识别事实-规则和上下文-86" class="chapter-title">69. 第一步：识别事实、规则和上下文<a class="heading-anchor" href="#69-第一步-识别事实-规则和上下文-86" aria-label="链接到本节">#</a></h3>
+<p>#### 69.1 核心业务事实</p>
+<pre data-language="text"><code>Order
+├── orderId
+├── tenantId
+├── customerId
+├── status
+├── currency
+├── paidAmount
+├── version
+├── createdAt
+├── paidAt
+└── items[]
+
+OrderItem
+├── productId
+├── skuId
+├── quantity
+├── unitPrice
+└── lineAmount</code></pre>
+<p>这里没有假定数据库必须按这个对象结构建表。它只是案例中需要持续追踪的业务事实集合。</p>
+<p>#### 69.2 关键业务语义</p>
+<pre data-language="text"><code>orderId       订单的稳定身份
+customerId    订单所属客户的稳定身份
+status        订单当前所处业务阶段
+paidAmount    按统一金额口径得到的实付金额
+version       用于识别并发修改的版本
+items[]       决定订单内容和金额构成的明细</code></pre>
+<p>#### 69.3 映射上下文</p>
+<pre data-language="text"><code>Context
+├── task              查找 / 理解 / 编辑 / 审批 / 分析
+├── user              当前用户
+├── permissions       记录、字段和动作权限
+├── workspace         当前租户、组织或门店
+├── businessState     订单状态
+├── device            桌面、移动或大屏
+├── locale            语言、币种和时区
+└── freshness         实时、快照或统计窗口</code></pre>
+<p>同一订单事实与不同上下文组合，产生五种任务视图。</p>
+<h3 id="70-列表-ui-为-找-而投影-87" class="chapter-title">70. 列表 UI：为“找”而投影<a class="heading-anchor" href="#70-列表-ui-为-找-而投影-87" aria-label="链接到本节">#</a></h3>
+<p>#### 70.1 页面问题—答案契约</p>
+<pre data-language="text"><code>问题：我要处理的订单在哪里？
+答案：用少量可比较字段展示一组订单，并提供筛选、排序和进入详情的路径。</code></pre>
+<p>#### 70.2 读取投影</p>
+<pre data-language="text"><code>OrderListItem = π(
+  orderId,
+  customerDisplayName,
+  itemCount,
+  paidAmount,
+  status,
+  createdAt,
+  availableActions
+)</code></pre>
+<p>示例：</p>
+<pre data-language="json"><code>{
+  &quot;orderId&quot;: &quot;O202607130001&quot;,
+  &quot;customer&quot;: {
+    &quot;id&quot;: 1001,
+    &quot;displayName&quot;: &quot;星海商贸&quot;
+  },
+  &quot;itemCount&quot;: 5,
+  &quot;paidAmount&quot;: {
+    &quot;minorUnits&quot;: 128800,
+    &quot;currency&quot;: &quot;CNY&quot;
+  },
+  &quot;status&quot;: {
+    &quot;code&quot;: &quot;PAID&quot;,
+    &quot;label&quot;: &quot;已支付&quot;,
+    &quot;tone&quot;: &quot;success&quot;
+  },
+  &quot;createdAt&quot;: &quot;2026-07-13T10:15:00+08:00&quot;,
+  &quot;availableActions&quot;: [&quot;VIEW&quot;, &quot;SHIP&quot;]
+}</code></pre>
+<p>#### 70.3 为什么不返回完整订单</p>
+<ul><li>列表的任务是扫描和比较，不是理解全部明细。</li><li>完整明细增加传输、查询和渲染成本。</li><li>列表中不需要的敏感字段不应被返回。</li><li>每行携带大量关联对象容易造成 N+1 或过度组合。</li></ul>
+<p>#### 70.4 列表状态</p>
+<pre data-language="text"><code>查询条件：门店、状态、时间范围
+结果状态：加载、空、失败、部分刷新
+导航状态：页码、排序、滚动位置、选中行</code></pre>
+<p>从列表进入详情再返回，应恢复这些上下文。</p>
+<h3 id="71-详情-ui-为-看懂-而组合-88" class="chapter-title">71. 详情 UI：为“看懂”而组合<a class="heading-anchor" href="#71-详情-ui-为-看懂-而组合-88" aria-label="链接到本节">#</a></h3>
+<p>#### 71.1 页面问题—答案契约</p>
+<pre data-language="text"><code>问题：这张订单发生了什么，现在处于什么状态，我可以继续做什么？
+答案：组合订单、客户、支付、物流和历史信息，按重要性分区，并给出合法下一步动作。</code></pre>
+<p>#### 71.2 读取组合</p>
+<pre data-language="text"><code>OrderDetail = Compose(
+  OrderSummary,
+  CustomerSummary,
+  OrderItems,
+  PaymentSummary,
+  ShipmentSummary,
+  Timeline,
+  AvailableActions
+)</code></pre>
+<p>这里不是“加载所有实体”。每个区块仍然是面向详情任务的读取投影。</p>
+<p>#### 71.3 局部失败策略</p>
+<pre data-language="text"><code>订单主体成功 + 物流失败
+→ 保留订单详情
+→ 物流区块显示失败和重试
+→ 不把整页替换成统一错误页</code></pre>
+<p>但如果订单主体本身不存在、越权或无法读取，则应停止展示依赖它的其余区块。</p>
+<p>#### 71.4 动作计算</p>
+<pre data-language="text"><code>详情页声明动作：取消、支付、发货、退款
+订单状态允许：发货、退款
+用户权限允许：发货
+最终动作：发货</code></pre>
+<p>页面显示动作是服务端判断的提示或投影，不是最终授权凭证。</p>
+<h3 id="72-编辑-ui-为-形成合法草稿-而映射-89" class="chapter-title">72. 编辑 UI：为“形成合法草稿”而映射<a class="heading-anchor" href="#72-编辑-ui-为-形成合法草稿-而映射-89" aria-label="链接到本节">#</a></h3>
+<p>#### 72.1 页面问题—答案契约</p>
+<pre data-language="text"><code>问题：当前有哪些内容可以修改，修改后是否构成一张可提交订单？
+答案：只暴露当前状态允许编辑的字段，维护独立草稿并持续反馈校验结果。</code></pre>
+<p>#### 72.2 编辑模型</p>
+<pre data-language="json"><code>{
+  &quot;orderId&quot;: &quot;O202607130001&quot;,
+  &quot;baseVersion&quot;: 7,
+  &quot;customerId&quot;: 1001,
+  &quot;items&quot;: [
+    {
+      &quot;itemId&quot;: &quot;I001&quot;,
+      &quot;skuId&quot;: 2001,
+      &quot;quantity&quot;: 2
+    }
+  ],
+  &quot;remark&quot;: &quot;工作日送货&quot;
+}</code></pre>
+<p>编辑模型没有直接接收 <code>paidAmount</code> 和任意 <code>status</code>，因为它们不是当前任务可以自由改写的事实。</p>
+<p>#### 72.3 草稿与派生值</p>
+<pre data-language="text"><code>W.items[].quantity  用户草稿
+W.estimatedAmount   本地即时预估
+D.authoritativeAmount 服务端最终计算</code></pre>
+<p>UI 可以立即给出金额预估，但提交后必须使用服务端商品价格、促销和精度规则重新计算。若最终金额不同，应按业务风险决定提示确认还是直接拒绝。</p>
+<p>#### 72.4 并发冲突</p>
+<pre data-language="text"><code>用户打开时 baseVersion = 7
+提交时服务端 version = 8
+→ 不能静默覆盖
+→ 返回冲突字段或要求刷新</code></pre>
+<p>订单明细这类结构化集合通常不能只用“最后写入者获胜”解决。</p>
+<h3 id="73-审批-ui-为-作出可追溯决策-而映射-90" class="chapter-title">73. 审批 UI：为“作出可追溯决策”而映射<a class="heading-anchor" href="#73-审批-ui-为-作出可追溯决策-而映射-90" aria-label="链接到本节">#</a></h3>
+<p>#### 73.1 页面问题—答案契约</p>
+<pre data-language="text"><code>问题：我依据哪些事实决定通过或驳回，决定会产生什么后果？
+答案：突出决策所需证据、风险、历史和规则，并把审批表达成明确命令。</code></pre>
+<p>#### 73.2 决策快照</p>
+<p>审批页面可能既需要当前事实，也需要提交审批时的快照：</p>
+<pre data-language="text"><code>当前客户等级：VIP
+提交审批时等级：普通</code></pre>
+<p>两者都可能正确。UI 必须标明时间语义，不能把历史快照伪装成当前值。</p>
+<p>#### 73.3 审批命令</p>
+<pre data-language="json"><code>{
+  &quot;command&quot;: &quot;ApproveOrder&quot;,
+  &quot;orderId&quot;: &quot;O202607130001&quot;,
+  &quot;approvalTaskId&quot;: &quot;A9001&quot;,
+  &quot;decision&quot;: &quot;APPROVE&quot;,
+  &quot;comment&quot;: &quot;资料完整&quot;,
+  &quot;baseVersion&quot;: 8,
+  &quot;requestId&quot;: &quot;approval-unique-id&quot;
+}</code></pre>
+<p>审批不是 <code>approvalStatus = APPROVED</code> 的普通字段更新。服务端还要验证审批任务归属、流程版本、订单状态、权限和重复提交。</p>
+<h3 id="74-报表-ui-为-发现规律-而聚合-91" class="chapter-title">74. 报表 UI：为“发现规律”而聚合<a class="heading-anchor" href="#74-报表-ui-为-发现规律-而聚合-91" aria-label="链接到本节">#</a></h3>
+<p>#### 74.1 页面问题—答案契约</p>
+<pre data-language="text"><code>问题：一组订单在某个时间、组织和业务口径下呈现什么规律？
+答案：使用明确维度、度量、过滤和统计窗口生成指标与图形。</code></pre>
+<p>#### 74.2 聚合模型</p>
+<pre data-language="text"><code>SalesMetric = γ(
+  dimension = storeId, businessDate,
+  measures  = SUM(paidAmount), COUNT(orderId),
+  filter    = status ∈ PaidStates
+)</code></pre>
+<p>报表中的“销售额”必须明确：</p>
+<ul><li>使用下单时间、支付时间还是业务日期。</li><li>是否排除取消和全额退款。</li><li>部分退款如何计算。</li><li>跨币种如何折算。</li><li>数据刷新到什么时间点。</li></ul>
+<p>图表只是聚合结果的表现，指标口径才是核心模型。</p>
+<h3 id="75-五种-ui-的完整映射矩阵-92" class="chapter-title">75. 五种 UI 的完整映射矩阵<a class="heading-anchor" href="#75-五种-ui-的完整映射矩阵-92" aria-label="链接到本节">#</a></h3>
+<div class="table-scroll"><table><thead><tr><th>维度</th><th>列表</th><th>详情</th><th>编辑</th><th>审批</th><th>报表</th></tr></thead><tbody><tr><td>核心任务</td><td>查找</td><td>理解</td><td>形成合法修改</td><td>作出决策</td><td>发现规律</td></tr><tr><td>输入基数</td><td>订单集合</td><td>一个订单及关联摘要</td><td>一个订单基线</td><td>订单 + 审批任务 + 快照</td><td>订单集合/投影</td></tr><tr><td>主要操作</td><td>选择、排序、筛选</td><td>连接、组合、解释</td><td>草稿、校验、命令</td><td>证据组织、命令</td><td>分组、聚合、下钻</td></tr><tr><td>数据新鲜度</td><td>较新</td><td>接近实时</td><td>基线 + 最新校验</td><td>快照与当前值并存</td><td>统计延迟可声明</td></tr><tr><td>可编辑性</td><td>通常无</td><td>通常无</td><td>受状态和权限约束</td><td>只编辑决策输入</td><td>通常无</td></tr><tr><td>写入方式</td><td>批量动作可选</td><td>上下文命令</td><td>更新草稿/提交订单</td><td>审批命令</td><td>保存视图或订阅</td></tr><tr><td>主要风险</td><td>过量查询、上下文丢失</td><td>跨服务部分失败</td><td>覆盖、半成品、派生值权威</td><td>快照混淆、重复审批</td><td>指标口径漂移、延迟</td></tr><tr><td>验证重点</td><td>查询和权限</td><td>组合与动作</td><td>双向规则和并发</td><td>状态/权限/审计</td><td>聚合口径和对账</td></tr></tbody></table></div>
+<h3 id="76-从案例得出的设计原则-93" class="chapter-title">76. 从案例得出的设计原则<a class="heading-anchor" href="#76-从案例得出的设计原则-93" aria-label="链接到本节">#</a></h3>
+<ol><li>同一个业务对象可以拥有多个读取模型，不等于复制多套业务真相。</li><li>每个页面先定义问题—答案契约，再选择数据和组件。</li><li>详情组合多个模型，不代表它应该加载完整实体图。</li><li>编辑 UI 操作的是草稿，服务端持有权威业务事实。</li><li>审批需要明确当前值与决策快照的区别。</li><li>报表首先是指标口径和聚合模型，其次才是图表。</li><li>每种视图都需要声明权限、时间语义、失败策略和写入边界。</li></ol>
+<hr>
+<h2 id="第九篇-深层问题库-继续追问-直到边界清楚-94" class="part-title">第九篇　深层问题库：继续追问，直到边界清楚<a class="heading-anchor" href="#第九篇-深层问题库-继续追问-直到边界清楚-94" aria-label="链接到本节">#</a></h2>
+<p>这些问题可以用于产品评审、架构设计、低代码平台能力规划和代码审查。答案给出判断原则，不替代具体项目证据。</p>
+<p>本篇是速查入口。遇到需要落地的判断，应回到前八篇对应的模型、机制和案例，而不是只引用一段简答作为架构依据。</p>
+<h3 id="77-本质与边界-95" class="chapter-title">77. 本质与边界<a class="heading-anchor" href="#77-本质与边界-95" aria-label="链接到本节">#</a></h3>
+<p>#### 77.1 UI 是数据模型的一部分吗？</p>
+<p>不是同一个模型，但 UI 会引用并解释数据模型中的业务概念。数据库模型决定可用事实，UI 模型决定当前任务如何组织这些事实。两者共享语义，不必共享结构。</p>
+<p>#### 77.2 是否每个页面都要单独建立 ViewModel？</p>
+<p>不需要。页面与接口结构接近、风险低、变化少时，复用 DTO 更简单。只有当数据形状、权限、组合、性能或演进需求产生实际差异时，专用 ViewModel 才有价值。</p>
+<p>#### 77.3 一个字段应该只有一个 UI 组件吗？</p>
+<p>不应该这样假设。同一个状态字段可以同时决定 Badge、步骤条、筛选项和动作可用性。组件由业务语义与场景共同决定，而不是字段永久绑定一个组件。</p>
+<p>#### 77.4 一个页面能否组合多个领域的数据？</p>
+<p>可以，工作台和详情页经常如此。但读取组合不等于写入归属改变。页面发出的命令仍应交给拥有相应业务规则的边界处理。</p>
+<p>#### 77.5 UI 模型能否反过来决定数据库模型？</p>
+<p>UI 可以暴露业务事实缺失和查询需求，但不应仅为了某个布局就把展示结构永久写进核心数据库。需要区分真正业务事实、读取优化投影和纯界面状态。</p>
+<h3 id="78-语义与真值-96" class="chapter-title">78. 语义与真值<a class="heading-anchor" href="#78-语义与真值-96" aria-label="链接到本节">#</a></h3>
+<p>#### 78.1 谁决定“实付金额”的含义？</p>
+<p>应由明确的业务口径和权威服务决定，而不是由某个页面临时相加。所有 UI 和报表引用同一语义定义或可验证的等价实现。</p>
+<p>#### 78.2 多个服务都能计算同一个值时，谁是真值来源？</p>
+<p>要指定权威来源、计算版本和同步方式。其他副本是缓存或投影，不应在冲突时凭“更新时间较新”自动成为真值。</p>
+<p>#### 78.3 显示值和身份值为什么要分开？</p>
+<p>名称可重复、可修改、可本地化；稳定身份用于关联、深链接和写入。选择器显示名称但提交 ID，就是这一原则的具体表现。</p>
+<p>#### 78.4 <code>null</code> 为什么不够？</p>
+<p>因为空值可能表示未知、不存在、未加载、无权限、不适用、已清空或计算失败。这些状态对应不同文案、动作和写回语义。</p>
+<p>#### 78.5 当前值和历史快照冲突时哪个正确？</p>
+<p>两者可能都正确，只是时间语义不同。关键是明确页面任务需要当前事实还是决策当时的事实，并清楚标注。</p>
+<h3 id="79-映射与可逆性-97" class="chapter-title">79. 映射与可逆性<a class="heading-anchor" href="#79-映射与可逆性-97" aria-label="链接到本节">#</a></h3>
+<p>#### 79.1 为什么读取映射通常不是写入映射的逆函数？</p>
+<p>因为读取会选择、组合、聚合、脱敏和格式化，常常丢失信息。写入必须单独表达用户意图、目标字段、基线版本和业务命令。</p>
+<p>#### 79.2 如何判断一个派生字段能否编辑？</p>
+<p>检查是否存在唯一、无歧义且符合业务规则的反向转换。如果没有，就应只读或提供编辑原始构成项的入口。</p>
+<p>#### 79.3 修改完整地址为何有风险？</p>
+<p>完整地址可能由结构化省市区和详细地址组合而成。自由文本无法可靠拆回结构化字段。应使用结构化编辑器或明确的解析与确认流程。</p>
+<p>#### 79.4 格式化金额一定可逆吗？</p>
+<p>不一定。还涉及币种、精度、舍入、千位分隔和地区格式。写回应解析为明确的最小单位或精确数值，并由服务端再次校验。</p>
+<p>#### 79.5 脱敏值可以参与编辑吗？</p>
+<p>通常不能直接把 <code>138****1234</code> 写回手机号。若允许修改，应要求输入完整新值；若不修改，提交协议必须区分“保持原值”和“把字段改成掩码字符串”。</p>
+<h3 id="80-规则与冲突-98" class="chapter-title">80. 规则与冲突<a class="heading-anchor" href="#80-规则与冲突-98" aria-label="链接到本节">#</a></h3>
+<p>#### 80.1 页面配置和字段权限冲突时谁优先？</p>
+<p>权限优先。展示配置可以在允许范围内选择表达，不能扩大可读取或可修改范围。</p>
+<p>#### 80.2 两条显隐规则冲突怎么办？</p>
+<p>先明确它们属于安全约束还是展示偏好。安全约束通常取更严格结果；展示规则按特异性和显式优先级合并，并提供冲突诊断。</p>
+<p>#### 80.3 “最后配置覆盖”为什么不够？</p>
+<p>它无法表达拒绝优先、安全不可覆盖和多来源规则，也很难解释结果。平台需要区分配置类别，并记录解析轨迹。</p>
+<p>#### 80.4 字段依赖形成循环怎么办？</p>
+<p>默认应阻止发布并给出依赖路径。只有确实存在稳定点语义时才引入迭代求解，而且必须定义终止条件和不可收敛处理。</p>
+<p>#### 80.5 租户能否覆盖平台默认组件？</p>
+<p>可以在平台允许的扩展点和安全边界内覆盖。覆盖需要版本、兼容性和回滚策略，不能替换服务端业务规则。</p>
+<h3 id="81-状态与写入-99" class="chapter-title">81. 状态与写入<a class="heading-anchor" href="#81-状态与写入-99" aria-label="链接到本节">#</a></h3>
+<p>#### 81.1 页面上的值何时才成为业务事实？</p>
+<p>当用户意图通过服务端权限、规则、并发和事务校验，并被权威数据源确认之后。输入框中的值只是草稿。</p>
+<p>#### 81.2 自动保存是否总比显式保存好？</p>
+<p>不是。自动保存适合低风险、可频繁合并的内容；对金额、库存和状态敏感单据，半成品持久化和未知结果可能增加风险。</p>
+<p>#### 81.3 什么时候用 <code>PATCH</code>，什么时候用 Command？</p>
+<p>局部、低风险、语义就是字段变化时优先 <code>PATCH</code>；涉及状态转换、跨对象不变量、审计或副作用时使用表达业务意图的 Command。</p>
+<p>#### 81.4 UI 已隐藏按钮，服务端为什么还要鉴权？</p>
+<p>因为请求可以绕开 UI，且权限可能在页面打开后变化。UI 隐藏改善体验，服务端鉴权保证安全。</p>
+<p>#### 81.5 提交后网络断开，用户应该直接重试吗？</p>
+<p>不能盲目重试。结果可能已经成功。高风险命令应使用请求唯一标识，并提供按请求或对象查询最终状态的方式。</p>
+<h3 id="82-性能与一致性-100" class="chapter-title">82. 性能与一致性<a class="heading-anchor" href="#82-性能与一致性-100" aria-label="链接到本节">#</a></h3>
+<p>#### 82.1 详情页是否应该一次返回全部数据？</p>
+<p>取决于任务关键路径、数据规模和失败边界。主体信息可一次返回，低优先级或重数据区块可以独立加载；不能默认加载完整实体图。</p>
+<p>#### 82.2 BFF 是否是复杂页面的必选项？</p>
+<p>不是。单体服务、查询服务、GraphQL 或前端组合都可能合适。只有当终端适配、跨服务组合和治理收益大于新增层成本时才引入 BFF。</p>
+<p>#### 82.3 报表为什么可以接受延迟，操作页却不一定可以？</p>
+<p>报表回答一段时间内的规律，常能声明统计截止时间；操作页会基于当前状态发出命令，过旧数据可能导致错误决策。</p>
+<p>#### 82.4 缓存的 UI 需要显示“更新时间”吗？</p>
+<p>当数据新鲜度会影响用户判断时需要。例如库存、价格、风险和经营指标；纯静态字典则通常不必强调。</p>
+<p>#### 82.5 如何避免列表 N+1？</p>
+<p>建立面向列表的批量查询或投影，批量获取关联显示值，限制每行关联内容；不要逐行调用客户、商品和权限服务。</p>
+<h3 id="83-测试与演化-101" class="chapter-title">83. 测试与演化<a class="heading-anchor" href="#83-测试与演化-101" aria-label="链接到本节">#</a></h3>
+<p>#### 83.1 映射测试只测组件是否出现够吗？</p>
+<p>不够。还要测业务语义、权限矩阵、状态动作、派生口径、可逆规则、并发冲突、时间语义和版本兼容。</p>
+<p>#### 83.2 Schema 变更后历史页面怎么办？</p>
+<p>需要 Schema 版本、迁移函数和兼容窗口。不可原地假设旧配置符合新语义；发布前应对存量配置进行批量验证。</p>
+<p>#### 83.3 字段改名是 UI 小改动吗？</p>
+<p>显示标签改名通常是双向门；字段标识或业务语义改名可能影响 API、公式、权限、报表和历史配置，是高成本变更。</p>
+<p>#### 83.4 如何发现多个 UI 口径漂移？</p>
+<p>集中登记语义和计算版本，用契约测试、对账指标和跨视图抽样比较发现差异；不要等用户截图举报。</p>
+<p>#### 83.5 如何回滚一版 UI Schema？</p>
+<p>发布物应不可变并带版本，运行时能选择上一稳定版本；若新版本伴随不可逆数据迁移，还需要兼容读取或明确反向迁移方案。</p>
+<section class="prototype" id="prototype-ai-dynamic-ui" data-prototype="ai">
+    <header class="prototype-head">
+      <div><span class="prototype-kicker">INTERACTIVE MODEL</span><h4>原型 12 · AI 动态 UI 安全边界</h4><p>允许 AI 选择表达，不允许它改写真值、权限与命令</p></div>
+      <button class="icon-button prototype-reset" type="button" title="重置原型" aria-label="重置原型"><span aria-hidden="true">↻</span></button>
+    </header>
+    <div class="prototype-body" data-prototype-stage></div>
+    <footer class="prototype-foot"><strong data-prototype-insight>等待交互</strong><span data-prototype-state>初始状态</span></footer>
+  </section>
+<h3 id="84-ai-动态生成-ui-102" class="chapter-title">84. AI 动态生成 UI<a class="heading-anchor" href="#84-ai-动态生成-ui-102" aria-label="链接到本节">#</a></h3>
+<p>#### 84.1 AI 可以根据数据模型直接生成生产 UI 吗？</p>
+<p>可以生成初稿，但仅有数据模型缺少任务、权限、状态、口径和风险信息。没有这些上下文，生成结果最多是字段陈列，不应直接进入高风险生产流程。</p>
+<p>#### 84.2 AI 最适合生成什么？</p>
+<p>标准 CRUD 初稿、字段分组建议、组件候选、帮助文案、测试用例和 Schema 迁移建议。其输出应受组件白名单、权限边界和 Schema 校验约束。</p>
+<p>#### 84.3 哪些内容不应交给 AI 自由决定？</p>
+<p>服务端授权、金额与库存不变量、合法状态转换、跨租户范围、最终指标口径和高风险命令。AI 可以辅助解释和建议，不能成为未经治理的权威规则来源。</p>
+<p>#### 84.4 如何验证 AI 生成的 UI？</p>
+<pre data-language="text"><code>结构校验
+→ 组件和属性白名单
+→ 数据与权限契约校验
+→ 状态/动作模型检查
+→ 自动测试与视觉检查
+→ 高风险场景人工评审
+→ 受控发布和监控</code></pre>
+<p>#### 84.5 AI 个性化 UI 会破坏一致性吗？</p>
+<p>会有这种风险。适合个性化的是排序、密度、推荐入口和非关键布局；稳定名称、对象身份、权限反馈、关键动作位置和业务口径应保持可预测。</p>
+<p>#### 84.6 AI 动态 UI 的长期方向是什么？</p>
+<p>不是让模型任意画页面，而是让模型在受约束的语义和组件系统中，针对任务生成可验证的视图。核心能力将从“生成像页面的代码”转向“理解任务、引用权威语义、给出映射解释并通过机器校验”。</p>
+<hr>
+<h2 id="第十篇-结论-从字段绑定走向任务解释系统-103" class="part-title">第十篇　结论：从字段绑定走向任务解释系统<a class="heading-anchor" href="#第十篇-结论-从字段绑定走向任务解释系统-103" aria-label="链接到本节">#</a></h2>
+<p>数据模型与 UI 映射可以分成五个成熟度层次：</p>
+<pre data-language="text"><code>层次1  类型映射：string → Input
+层次2  语义映射：money + edit → MoneyInput
+层次3  场景投影：订单 + 审批任务 → 审批视图
+层次4  交互闭环：读取投影 + 草稿 + Command + 反馈
+层次5  治理系统：权限、时间、版本、测试、解释和演化</code></pre>
+<p>层次越高，不代表项目必须采用越复杂的架构。它表示设计者开始回答更多真实问题。简单 CRUD 可以停在前两层；核心订单、支付、审批和低代码平台需要根据风险逐步覆盖后续层次。</p>
+<p>这本手册最终要守住的主线是：</p>
+<blockquote><p>UI 不是数据的复制品，而是业务事实在任务上下文中的可交互投影；读取组织事实，写入表达意图，治理保证多种表达仍指向同一业务真相。</p></blockquote>
+<p>最后用三句话压缩：</p>
+<pre data-language="text"><code>数据库回答：有哪些事实。
+UI回答：谁在何时，为了什么任务，需要怎样理解和改变这些事实。
+映射体系回答：如何让不同表达保持语义一致、行为正确，并能够安全演化。</code></pre></article>
+    </main>
+    <aside class="utility-rail" aria-label="阅读工具">
+      <button class="icon-button" id="focusButton" type="button" title="专注阅读" aria-label="专注阅读">◫</button>
+      <button class="icon-button" id="printButton" type="button" title="打印或导出 PDF" aria-label="打印或导出 PDF">↧</button>
+      <span class="rail-label">READING TOOLS</span>
+      <button class="icon-button back-top" id="backTop" type="button" title="回到顶部" aria-label="回到顶部">↑</button>
+    </aside>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(() => {
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+  const escapeText = (value) => String(value).replace(/[&<>"']/g, (char) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
+  const order = { id: "SO-2026-0714", customer: "远航科技", amount: 128800, status: "待审批", owner: "林经理", items: 4, risk: "中", paid: true };
+  let toastTimer;
+  function toast(message) { const node = $("#toast"); node.textContent = message; node.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => node.classList.remove("show"), 1800); }
+  function setFoot(root, insight, state) { $("[data-prototype-insight]", root).textContent = insight; $("[data-prototype-state]", root).textContent = state; }
+  function money(value) { return `¥${Number(value).toLocaleString("zh-CN", { minimumFractionDigits: 2 })}`; }
+
+  const renderers = {
+    fiveViews(root) {
+      const stage = $("[data-prototype-stage]", root);
+      const views = {
+        list: { label: "列表", task: "找", html: `<div class="demo-panel"><div class="demo-panel-head"><span>订单列表</span><span>共 1 条</span></div><table class="order-table"><tr><th>订单号</th><th>客户</th><th>金额</th><th>状态</th></tr><tr><td>${order.id}</td><td>${order.customer}</td><td>${money(order.amount)}</td><td><span class="badge">${order.status}</span></td></tr></table></div>` },
+        detail: { label: "详情", task: "看懂", html: `<div class="demo-grid"><div class="demo-panel"><div class="demo-panel-head"><span>${order.id}</span><span class="badge">${order.status}</span></div><div class="demo-panel-body"><h5>客户</h5><strong>${order.customer}</strong><p>负责人：${order.owner}</p><p>商品明细：${order.items} 项</p></div></div><div class="timeline"><div class="timeline-item"><b>订单创建</b><small>事实形成</small></div><div class="timeline-item"><b>支付完成</b><small>金额已确认</small></div><div class="timeline-item"><b>等待审批</b><small>当前任务</small></div></div></div>` },
+        edit: { label: "编辑", task: "修改", html: `<div class="demo-panel"><div class="demo-panel-head"><span>编辑订单草稿</span><span>W ≠ D</span></div><div class="demo-panel-body demo-grid"><div class="field"><label>客户</label><input value="${order.customer}"></div><div class="field"><label>业务状态</label><input value="${order.status}" disabled></div><div class="field"><label>金额</label><input type="number" value="${order.amount}"></div><div class="field"><label>备注</label><input value="等待业务确认"></div></div></div>` },
+        approve: { label: "审批", task: "决策", html: `<div class="demo-grid"><div class="metric"><small>申请金额</small><strong>${money(order.amount)}</strong></div><div class="metric"><small>风险等级</small><strong>${order.risk}</strong></div></div><div class="explanation">证据：客户 ${order.customer} · 已支付 · ${order.items} 项明细。审批动作受当前状态、角色权限和风险阈值共同约束。</div><div class="demo-toolbar" style="margin-top:12px"><button class="demo-button active" data-action="approve">通过</button><button class="demo-button danger" data-action="reject">驳回</button></div>` },
+        report: { label: "报表", task: "分析", html: `<div class="demo-grid three"><div class="metric"><small>订单数</small><strong>1</strong></div><div class="metric"><small>销售额</small><strong>${money(order.amount)}</strong></div><div class="metric"><small>待审批占比</small><strong>100%</strong></div></div><div style="height:150px;display:flex;align-items:flex-end;gap:18px;padding:20px 35px 0;background:#fff;border:1px solid #a7b3bf"><div style="height:55%;flex:1;background:#346d9b"></div><div style="height:82%;flex:1;background:#16796f"></div><div style="height:100%;flex:1;background:#e2aa26"></div><div style="height:42%;flex:1;background:#a94949"></div></div>` }
+      };
+      stage.innerHTML = `<div class="demo-toolbar"><div class="segmented">${Object.entries(views).map(([key, view]) => `<button class="demo-button" data-view="${key}">${view.label}</button>`).join("")}</div></div><div data-view-stage></div>`;
+      const show = (key) => { const view = views[key]; $$('[data-view]', stage).forEach((button) => button.classList.toggle("active", button.dataset.view === key)); $("[data-view-stage]", stage).innerHTML = view.html; setFoot(root, `同一事实被组织成“${view.task}”的任务界面`, `${view.label}UI = f(${order.id})`); };
+      stage.addEventListener("click", (event) => { const button = event.target.closest("[data-view]"); if (button) show(button.dataset.view); const action = event.target.closest("[data-action]")?.dataset.action; if (action) toast(action === "approve" ? "已形成 ApproveOrder 命令" : "已形成 RejectOrder 命令"); });
+      show("list");
+    },
+    mappingFunction(root) {
+      const stage = $("[data-prototype-stage]", root);
+      stage.innerHTML = `<div class="demo-toolbar"><label>角色<select data-input="role"><option>客户</option><option>客服</option><option>仓库</option><option>财务</option><option>管理者</option></select></label><label>状态<select data-input="status"><option>待审批</option><option>待发货</option><option>已完成</option><option>已取消</option></select></label><label>终端<select data-input="device"><option>桌面端</option><option>移动端</option></select></label></div><div class="formula-strip"><span>U = F(</span><span class="token">D: ${order.id}</span><span>,</span><span class="token context" data-context></span><span>)</span><span>→</span><span class="token" data-output></span></div><div class="demo-panel" style="margin-top:12px"><div class="demo-panel-head"><span data-title></span><span data-density></span></div><div class="demo-panel-body" data-fields></div></div>`;
+      const map = { 客户:["商品摘要","金额","物流进度","退款入口"], 客服:["客户资料","订单时间线","异常记录","补救动作"], 仓库:["SKU","数量","库位","发货动作"], 财务:["实付金额","支付渠道","退款","对账状态"], 管理者:["销售额","转化率","异常率","趋势"] };
+      const update = () => { const role = $('[data-input="role"]',stage).value; const status = $('[data-input="status"]',stage).value; const device = $('[data-input="device"]',stage).value; const fields = map[role]; $('[data-context]',stage).textContent = `C: ${role} · ${status} · ${device}`; $('[data-output]',stage).textContent = `${role}${device === "移动端" ? "任务流" : "工作台"}`; $('[data-title]',stage).textContent = `${role} · ${status}`; $('[data-density]',stage).textContent = device === "移动端" ? "单列 / 低密度" : "双列 / 高密度"; $('[data-fields]',stage).innerHTML = `<div class="demo-grid ${device === "桌面端" ? "" : "mobile-output"}">${fields.map((field,index) => `<div class="metric"><small>投影字段 ${index+1}</small><strong>${field}</strong></div>`).join("")}</div>`; setFoot(root,"数据不变，任务上下文改变了选择、布局与动作",`F(D, ${role}, ${status}, ${device})`); };
+      stage.addEventListener("change", update); update();
+    },
+    readWrite(root) {
+      const stage = $("[data-prototype-stage]", root);
+      stage.innerHTML = `<div class="demo-grid"><div class="demo-panel"><div class="demo-panel-head"><span>读取模型 · ViewModel</span><span>允许有损</span></div><div class="demo-panel-body"><div class="field"><label>客户名称（由 customerId 查找）</label><input value="${order.customer}"></div><div class="field"><label>格式化金额（由 amount 派生）</label><input value="${money(order.amount)}"></div><div class="field"><label>状态说明（由 status 解释）</label><input value="正在等待有权限的负责人审批"></div></div></div><div class="demo-panel"><div class="demo-panel-head"><span>写入模型 · Command</span><span>表达意图</span></div><div class="demo-panel-body"><div class="field"><label>新金额</label><input data-amount type="number" value="${order.amount}"></div><div class="field"><label>变更原因</label><input data-reason value="客户补充采购项"></div><button class="demo-button active" data-submit>生成命令</button><div class="command-box" data-command style="margin-top:10px">尚未生成</div></div></div></div>`;
+      $('[data-submit]',stage).addEventListener("click",()=>{const amount=$('[data-amount]',stage).value;const reason=$('[data-reason]',stage).value.trim();if(!reason){toast("写入必须说明业务意图");setFoot(root,"读取值无法直接安全地镜像写回","缺少变更原因");return}$('[data-command]',stage).textContent=`ChangeOrderAmount {\n  orderId: "${order.id}",\n  expectedVersion: 7,\n  newAmount: ${amount},\n  reason: "${reason}"\n}`;setFoot(root,"写入携带身份、版本、目标值与原因","Command 已形成");});
+      setFoot(root,"左侧为解释后的读取投影，右侧为受约束的业务意图","ViewModel ≠ Command");
+    },
+    permission(root) {
+      const stage=$("[data-prototype-stage]",root);const groups={"状态允许":["查看","编辑","通过","驳回"],"角色允许":["查看","通过","驳回"],"数据范围":["查看","通过"],"风险约束":["查看","通过"]};
+      stage.innerHTML=`<div class="demo-toolbar"><label>订单状态<select data-status><option>待审批</option><option>已完成</option><option>已取消</option></select></label><label>角色<select data-role><option>审批人</option><option>客服</option><option>访客</option></select></label><label>金额阈值<input data-limit type="number" value="200000"></label></div><div class="set-diagram" data-sets></div><div class="explanation" data-result></div>`;
+      const update=()=>{const status=$('[data-status]',stage).value,role=$('[data-role]',stage).value,limit=Number($('[data-limit]',stage).value);groups["状态允许"]=status==="待审批"?["查看","编辑","通过","驳回"]:["查看"];groups["角色允许"]=role==="审批人"?["查看","通过","驳回"]:role==="客服"?["查看","编辑"]:["查看"];groups["风险约束"]=order.amount<=limit?["查看","通过"]:["查看"];const result=Object.values(groups).reduce((a,b)=>a.filter(x=>b.includes(x)));$('[data-sets]',stage).innerHTML=Object.entries(groups).map(([name,items])=>`<div class="set-box ${items.includes("通过")?"active":""}"><h5>${name}</h5>${items.map(x=>`<span>${x}</span>`).join("")}</div>`).join("");$('[data-result]',stage).innerHTML=`最终可用动作：<strong>${result.join("、")||"无"}</strong>。任何一个集合拒绝，动作就不能出现。`;setFoot(root,"UI 动作不是按钮配置，而是多项业务约束的交集",`Actions = { ${result.join(", ")} }`)};stage.addEventListener("change",update);stage.addEventListener("input",update);update();
+    },
+    rules(root) {
+      const stage=$("[data-prototype-stage]",root);const rules=[{name:"字段级显式配置",result:"TextArea",weight:100},{name:"页面角色规则",result:"只读文本",weight:80},{name:"语义类型默认",result:"MoneyInput",weight:60},{name:"数据类型兜底",result:"NumberInput",weight:20}];
+      stage.innerHTML=`<div class="demo-grid"><div><div class="rule-list" data-rules></div></div><div class="demo-panel"><div class="demo-panel-head"><span>解析结果</span><span data-winner></span></div><div class="demo-panel-body"><div class="metric"><small>最终组件</small><strong data-component></strong></div><div class="explanation" data-chain></div></div></div></div>`;
+      const update=()=>{rules.sort((a,b)=>b.weight-a.weight);$('[data-rules]',stage).innerHTML=rules.map((rule,index)=>`<div class="rule-row"><span class="rule-order">${index+1}</span><div><b>${rule.name}</b><small style="display:block;color:#667180">命中 → ${rule.result}</small></div><select data-rule="${escapeText(rule.name)}">${[100,80,60,20].map(v=>`<option ${v===rule.weight?"selected":""}>${v}</option>`).join("")}</select></div>`).join("");const winner=rules[0];$('[data-winner]',stage).textContent=`权重 ${winner.weight}`;$('[data-component]',stage).textContent=winner.result;$('[data-chain]',stage).innerHTML=`解释链：${rules.map((r,i)=>`${i?" → ":""}${r.name}(${r.weight})`).join("")}。<br>首个最高优先级规则胜出，但冲突仍被保留用于诊断。`;setFoot(root,"优先级解决冲突，但可解释性负责让冲突可诊断",`${winner.name} → ${winner.result}`)};stage.addEventListener("change",e=>{if(e.target.dataset.rule){const rule=rules.find(r=>r.name===e.target.dataset.rule);rule.weight=Number(e.target.value);update()}});update();
+    },
+    dependency(root) {
+      const stage=$("[data-prototype-stage]",root);const nodes=[{id:"amount",label:"amount 金额",x:20,y:125,targets:["formatted","approval","report","cache"]},{id:"status",label:"status 状态",x:20,y:35,targets:["badge","actions","nav"]},{id:"formatted",label:"格式化金额",x:230,y:175},{id:"approval",label:"审批阈值",x:230,y:105},{id:"report",label:"销售额指标",x:450,y:175},{id:"cache",label:"查询计划缓存",x:450,y:245},{id:"badge",label:"状态 Badge",x:230,y:5},{id:"actions",label:"可用动作",x:230,y:65},{id:"nav",label:"任务入口",x:450,y:35}];const edges=[["status","badge"],["status","actions"],["status","nav"],["amount","formatted"],["amount","approval"],["amount","report"],["amount","cache"],["approval","actions"]];
+      stage.innerHTML=`<div class="graph"><svg viewBox="0 0 700 310" preserveAspectRatio="none">${edges.map(([a,b])=>{const s=nodes.find(n=>n.id===a),t=nodes.find(n=>n.id===b);return`<line data-from="${a}" data-to="${b}" x1="${s.x+65}" y1="${s.y+26}" x2="${t.x+65}" y2="${t.y+26}"/>`}).join("")}</svg>${nodes.map(n=>`<button class="graph-node" data-node="${n.id}" style="left:${n.x}px;top:${n.y}px">${n.label}</button>`).join("")}</div>`;
+      stage.addEventListener("click",e=>{const button=e.target.closest("[data-node]");if(!button)return;const id=button.dataset.node;const start=nodes.find(n=>n.id===id);const affected=new Set([id]);let changed=true;while(changed){changed=false;edges.forEach(([a,b])=>{if(affected.has(a)&&!affected.has(b)){affected.add(b);changed=true}})};$$('[data-node]',stage).forEach(n=>n.classList.toggle("active",affected.has(n.dataset.node)));$$('line',stage).forEach(l=>l.classList.toggle("active",affected.has(l.dataset.from)&&affected.has(l.dataset.to)));setFoot(root,`${start.label} 变化会影响 ${affected.size-1} 个下游节点`,`影响集 = { ${[...affected].join(", ")} }`)});$('[data-node="amount"]',stage).click();
+    },
+    nulls(root) {
+      const stage=$("[data-prototype-stage]",root);const meanings=[{id:"unknown",title:"未知",copy:"事实尚未获得",ui:"显示“待补充”，允许稍后填写"},{id:"not-applicable",title:"不适用",copy:"该字段对当前对象无意义",ui:"隐藏输入，保留“不适用”说明"},{id:"not-authorized",title:"无权查看",copy:"事实存在，但当前主体不可见",ui:"显示脱敏或权限占位，不暴露存在性"},{id:"not-yet",title:"尚未发生",copy:"流程还没到该阶段",ui:"显示时间线未来节点，不允许输入"}];
+      stage.innerHTML=`<div class="demo-toolbar"><span class="badge">数据库值：null</span></div><div class="null-cards">${meanings.map(m=>`<button class="null-card" data-null="${m.id}"><h5>${m.title}</h5><p>${m.copy}</p></button>`).join("")}</div><div class="demo-panel" style="margin-top:12px"><div class="demo-panel-head"><span>界面解释</span><span data-null-title></span></div><div class="demo-panel-body" data-null-ui></div></div>`;const show=id=>{const m=meanings.find(x=>x.id===id);$$('[data-null]',stage).forEach(x=>x.classList.toggle("active",x.dataset.null===id));$('[data-null-title]',stage).textContent=m.title;$('[data-null-ui]',stage).innerHTML=`<div class="explanation">${m.ui}</div>`;setFoot(root,"存储值相同，语义不同，界面行为就不能相同",`null ≠ ${m.title}`)};stage.addEventListener("click",e=>{const b=e.target.closest("[data-null]");if(b)show(b.dataset.null)});show("unknown");
+    },
+    navigation(root) {
+      const stage=$("[data-prototype-stage]",root);stage.innerHTML=`<div class="demo-toolbar"><label>任务<select data-task><option>处理异常订单</option><option>完成发货</option><option>查看经营趋势</option></select></label><label>角色<select data-nav-role><option>客服</option><option>仓库</option><option>管理者</option></select></label></div><div class="nav-demo"><aside data-nav-items></aside><div class="nav-content"><div class="crumb" data-crumb></div><h4 data-nav-title></h4><p data-nav-copy></p><div class="demo-grid" data-nav-widgets></div></div></div>`;const configs={"处理异常订单":{items:["待办","异常订单","客户档案","补救记录"],title:"异常订单处理",copy:"导航突出任务队列和上下文恢复。",widgets:["异常原因","客户影响","可用补救动作"]},"完成发货":{items:["拣货任务","待发货","库存位置","物流交接"],title:"发货工作台",copy:"导航压缩探索层级，突出连续操作。",widgets:["SKU 与数量","库位","交接状态"]},"查看经营趋势":{items:["经营总览","销售分析","异常率","指标口径"],title:"经营分析",copy:"导航围绕指标维度与下钻路径组织。",widgets:["销售额","转化率","异常率"]}};const update=()=>{const task=$('[data-task]',stage).value,role=$('[data-nav-role]',stage).value,c=configs[task];$('[data-nav-items]',stage).innerHTML=c.items.map((x,i)=>`<button class="${i===0?"active":""}">${x}</button>`).join("");$('[data-crumb]',stage).textContent=`${role}工作区 / ${c.items[0]} / ${c.title}`;$('[data-nav-title]',stage).textContent=c.title;$('[data-nav-copy]',stage).textContent=c.copy;$('[data-nav-widgets]',stage).innerHTML=c.widgets.map(x=>`<div class="metric"><small>任务信息</small><strong>${x}</strong></div>`).join("");setFoot(root,"导航把信息空间投影成当前角色最短的任务路径",`${role} → ${task}`)};stage.addEventListener("change",update);update();
+    },
+    compiler(root) {
+      const stage=$("[data-prototype-stage]",root);const steps=["读取 Schema","规范化","合并权限","生成查询计划","解析组件","绑定命令"];let current=0;stage.innerHTML=`<div class="demo-toolbar"><button class="demo-button active" data-next>执行下一阶段</button><button class="demo-button" data-all>全部编译</button></div><div class="pipeline">${steps.map((x,i)=>`<div class="pipe-stage" data-step="${i}"><b>${i+1}. ${x}</b><p data-step-copy>等待执行</p></div>`).join("")}</div><div class="explanation" data-compile-result>输入：Order Data Schema + View Schema + Permission Schema + Action Schema</div>`;const copies=["解析订单、字段、关系与语义类型","补齐默认值并验证引用","裁剪记录、字段和动作范围","选择字段、关联、聚合与分页","把语义映射为 Table / Badge / Money","连接 ApproveOrder 与审计上下文"];const update=()=>{$$('[data-step]',stage).forEach((node,i)=>{node.classList.toggle("active",i<current);$('p',node).textContent=i<current?copies[i]:"等待执行"});$('[data-compile-result]',stage).textContent=current===steps.length?"输出：可执行审批页计划。运行时仍要重新验证数据范围与动作权限。":`当前完成 ${current} / ${steps.length} 阶段`;setFoot(root,current===steps.length?"Schema 已成为受约束、可解释的执行计划":"编译将不同元数据分阶段消歧",`pipeline ${current}/${steps.length}`)};$('[data-next]',stage).addEventListener("click",()=>{current=Math.min(steps.length,current+1);update()});$('[data-all]',stage).addEventListener("click",()=>{current=steps.length;update()});update();
+    },
+    migration(root) {
+      const stage=$("[data-prototype-stage]",root);stage.innerHTML=`<div class="demo-toolbar"><label>变更类型<select data-change><option value="rename">字段重命名：amount → totalAmount</option><option value="remove">删除字段：legacyCode</option><option value="semantic">语义变化：status 枚举重构</option></select></label><button class="demo-button active" data-evaluate>评估变更</button></div><div class="version-track" data-track></div><div class="explanation" data-plan></div>`;const plans={rename:{risk:"中",nodes:["v7 旧 Schema","兼容别名层","v8 双读验证","v8 正式切换"],plan:"先保留 amount 别名，发布双读版本；监控旧客户端后再移除。"},remove:{risk:"高",nodes:["依赖扫描","弃用公告","灰度拒绝写入","延迟删除"],plan:"删除是单向门。先证明没有读取、写入、报表和导出依赖，再进入延迟删除。"},semantic:{risk:"高",nodes:["冻结旧口径","定义映射表","回放历史数据","双口径对账"],plan:"枚举名称相似不代表语义相同。需要显式迁移函数和可回滚快照。"}};const update=()=>{const p=plans[$('[data-change]',stage).value];$('[data-track]',stage).innerHTML=p.nodes.map((x,i)=>`<div class="version-node ${i===0?"active":""}"><span class="badge ${p.risk==="高"?"red":""}">风险 ${p.risk}</span><h5>${i+1}. ${x}</h5></div>`).join("");$('[data-plan]',stage).innerHTML=`<strong>策略：</strong>${p.plan}<br><strong>回滚点：</strong>保持旧 Schema 和转换器，直到双读结果一致。`;setFoot(root,"版本治理的目标不是让新版本能跑，而是让旧事实和旧客户端仍可解释",`risk=${p.risk}`)};$('[data-evaluate]',stage).addEventListener("click",update);stage.addEventListener("change",update);update();
+    },
+    testing(root) {
+      const stage=$("[data-prototype-stage]",root);const roles=["客户","审批人","访客"],statuses=["草稿","待审批","已完成"],devices=["桌面","移动"];let covered=new Set(["客户|草稿|桌面","客户|待审批|移动","审批人|待审批|桌面","访客|已完成|移动"]);stage.innerHTML=`<div class="demo-toolbar"><button class="demo-button active" data-add-test>补齐一个缺口</button><span class="badge" data-coverage></span></div><div class="table-scroll"><table class="test-matrix"><thead><tr><th>角色 / 状态</th>${statuses.map(s=>`<th>${s} · 桌面</th><th>${s} · 移动</th>`).join("")}</tr></thead><tbody data-test-body></tbody></table></div>`;const all=roles.flatMap(r=>statuses.flatMap(s=>devices.map(d=>`${r}|${s}|${d}`)));const update=()=>{$('[data-test-body]',stage).innerHTML=roles.map(r=>`<tr><th>${r}</th>${statuses.flatMap(s=>devices.map(d=>{const k=`${r}|${s}|${d}`,hit=covered.has(k);return`<td class="${hit?"coverage-hit":"coverage-gap"}" data-case="${k}">${hit?"已测":"缺口"}</td>`})).join("")}</tr>`).join("");const pct=Math.round(covered.size/all.length*100);$('[data-coverage]',stage).textContent=`组合覆盖 ${covered.size}/${all.length} · ${pct}%`;setFoot(root,"Schema 可解析只是起点，真正的测试对象是上下文组合后的解释结果",`coverage=${pct}%`)};$('[data-add-test]',stage).addEventListener("click",()=>{const gap=all.find(x=>!covered.has(x));if(gap){covered.add(gap);toast(`已覆盖 ${gap}`);update()}});update();
+    },
+    ai(root) {
+      const stage=$("[data-prototype-stage]",root);stage.innerHTML=`<div class="demo-toolbar"><label>任务<select data-ai-task><option>快速找异常订单</option><option>解释单笔订单</option><option>分析趋势</option></select></label><button class="demo-button active" data-generate>让 AI 生成视图计划</button></div><div class="ai-boundary"><div class="ai-zone safe"><h5>AI 可决定 · 表达层</h5><label class="ai-option"><input type="checkbox" checked> 字段排序</label><label class="ai-option"><input type="checkbox" checked> 表格 / 卡片 / 图表</label><label class="ai-option"><input type="checkbox" checked> 信息密度与摘要</label><label class="ai-option"><input type="checkbox" checked> 辅助解释文本</label></div><div class="ai-zone locked"><h5>AI 不可改 · 真值与约束</h5><label class="ai-option"><input type="checkbox" checked disabled> 数据范围权限</label><label class="ai-option"><input type="checkbox" checked disabled> 字段语义与指标口径</label><label class="ai-option"><input type="checkbox" checked disabled> 状态机合法转移</label><label class="ai-option"><input type="checkbox" checked disabled> 命令校验与审计</label></div></div><div class="explanation" data-ai-result>尚未生成。</div>`;const plans={"快速找异常订单":"使用高密度表格；置顶异常原因、金额和负责人；隐藏非任务字段；动作仍由权限引擎返回。","解释单笔订单":"使用摘要卡 + 时间线；显示事实来源和更新时间；不推测缺失事实。","分析趋势":"使用聚合图表 + 指标口径；允许下钻到授权范围内的事实记录。"};$('[data-generate]',stage).addEventListener("click",()=>{const task=$('[data-ai-task]',stage).value;$('[data-ai-result]',stage).innerHTML=`<strong>生成计划：</strong>${plans[task]}<br><strong>约束证明：</strong>AI 输出只包含 ViewPlan；QueryScope、Command 与 StateMachine 由确定性运行时提供。`;setFoot(root,"AI 可以生成表达方案，但不能成为权限、真值和业务合法性的来源",`AI → ViewPlan(${task})`)});setFoot(root,"安全边界先于动态能力","AI controls presentation only");
+    }
+  };
+
+  function initializePrototype(root) { const kind=root.dataset.prototype; const renderer=renderers[kind]; if(!renderer)return; const reset=()=>{const stage=$("[data-prototype-stage]",root);stage.replaceWith(stage.cloneNode(false));renderer(root)};$('.prototype-reset',root).addEventListener("click",()=>{reset();toast("原型已重置")});renderer(root); }
+  $$('.prototype').forEach(initializePrototype);
+
+  const searchInput=$("#searchInput"),searchPanel=$("#searchPanel"),searchCount=$("#searchCount");
+  const searchable=$$('.article h2,.article h3,.article p,.article li,.article blockquote,.article td');
+  function runSearch(){const query=searchInput.value.trim().toLowerCase();if(!query){searchPanel.classList.remove("open");searchCount.textContent="";return}const hits=searchable.filter(n=>n.textContent.toLowerCase().includes(query)).slice(0,30);searchCount.textContent=`${hits.length} 条`;searchPanel.innerHTML=hits.length?hits.map(n=>{const heading=n.matches('h2,h3')?n:n.closest('section')?.querySelector('h3')||[...n.parentElement.querySelectorAll('h2,h3')].at(-1);const id=heading?.id||n.closest('[id]')?.id||'';const text=n.textContent.trim().replace(/\s+/g,' ').slice(0,100);return`<a class="search-result" href="#${id}"><b>${escapeText(heading?.textContent.replace('#','').trim()||'正文')}</b><small>${escapeText(text)}</small></a>`}).join(''):'<div class="search-empty">没有找到匹配内容</div>';searchPanel.classList.add('open')}
+  searchInput.addEventListener('input',runSearch);searchInput.addEventListener('keydown',e=>{if(e.key==='Escape'){searchInput.value='';runSearch()}if(e.key==='Enter'){searchPanel.querySelector('a')?.click()}});searchPanel.addEventListener('click',()=>{searchPanel.classList.remove('open')});document.addEventListener('click',e=>{if(!e.target.closest('.search-box')&&!e.target.closest('.search-panel'))searchPanel.classList.remove('open')});
+
+  const sidebar=$("#sidebar");$("#mobileMenu").addEventListener('click',()=>sidebar.classList.toggle('open'));$$('.toc a').forEach(a=>a.addEventListener('click',()=>sidebar.classList.remove('open')));
+  $("#focusButton").addEventListener('click',()=>{document.body.classList.toggle('focus-mode');toast(document.body.classList.contains('focus-mode')?'已进入专注阅读':'已恢复完整导航')});
+  $("#printButton").addEventListener('click',()=>window.print());$("#backTop").addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+  document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();searchInput.focus()}if(e.key==='Escape')sidebar.classList.remove('open')});
+
+  const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){const id=entry.target.id;$$('.toc a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')===`#${id}`));history.replaceState(null,'',`#${id}`)}})},{rootMargin:'-15% 0px -75% 0px',threshold:0});$$('.article h2,.article h3').forEach(h=>observer.observe(h));
+  function progress(){const max=document.documentElement.scrollHeight-innerHeight;const pct=max>0?Math.min(100,scrollY/max*100):0;$("#readingBar").style.width=`${pct}%`;$("#readingPercent").textContent=`${Math.round(pct)}%`}
+  addEventListener('scroll',progress,{passive:true});addEventListener('resize',progress);progress();
+})();
+</script>
+</body>
+</html>
