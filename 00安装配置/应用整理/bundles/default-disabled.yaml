@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../base/business/nms4cloud-coupon-mock.yaml
+- ../base/business/nms4cloud-pos11report.yaml
+- ../base/business/nms4cloud-pos5sync.yaml
+- ../base/business/nms4cloud-pos8book.yaml
+- ../base/business/nms4cloud-pos9cash.yaml
+- ../base/business/yd4cloud-capital.yaml
+- ../base/business/yd4cloud-nms.yaml

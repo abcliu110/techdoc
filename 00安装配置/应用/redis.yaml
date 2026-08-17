@@ -1,0 +1,191 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: '4'
+    field.cattle.io/publicEndpoints: >-
+      [{"nodeName":":jjtestserver","addresses":["192.168.1.119"],"port":6379,"protocol":"TCP","podName":"nms4cloud:redis-6fdfd9d68b-xdvkl","allNodes":false}]
+    objectset.rio.cattle.io/applied: >-
+      H4sIAAAAAAAA/3xSTW8bIRD9L3NmnYU13l3OlXpppZ56iXKYZccxDV8FHNWK+O8Vm8ayVbU33sybN48Hb4DRfKeUTfCgAGPMD68cGLwYv4KCTxRtuDjyBRg4KrhiQVBvgN6HgsUEnxsMyw/SJVPZJRN2GkuxtDPhwTSRZZBcinXpOA5jt+fz2M3DYd9N42HmWvRi3q9QGVhcyP5X7oT5BAomOc6ChvWIk1zGvj8eScqxl3ISOIhpmGhdxSKWJurREShItJoM7zBH1K3mXd5rG87b8hxJt9WJojUaMyjOIJMlXUJqDYdFn75cLWKMV9laGRRy0WKhjXoTlP3nxMdGHXxB4yllUI8NOoct/Md3bpcpvVICBl2HMZJfg7cXYHChvBUT/TybRBFzw1wMe3nYGg5/OXIhNTJ/Xu5rXQzW6NZCa1/okjubzvDEwDh8viamxl0Pf4UYQyofZv94/xZSAXUYxpnBKeRyi++m6xODRDmck6YtFmucKdtJxzMokH3vts+2OVfAP5v2Pu2WlG+JQt4TJRdfDdRan2qt9XcAAAD//wMKkTfaAgAA
+    objectset.rio.cattle.io/id: b35152db-1a37-4197-9364-87691c20294d
+  creationTimestamp: '2026-02-03T06:23:01Z'
+  generation: 22
+  labels:
+    objectset.rio.cattle.io/hash: 85792e3dfa85b700ffe55705582a32838edd2b2b
+  managedFields:
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:field.cattle.io/publicEndpoints: {}
+            f:objectset.rio.cattle.io/applied: {}
+            f:objectset.rio.cattle.io/id: {}
+          f:labels:
+            .: {}
+            f:objectset.rio.cattle.io/hash: {}
+        f:spec:
+          f:progressDeadlineSeconds: {}
+          f:replicas: {}
+          f:revisionHistoryLimit: {}
+          f:selector: {}
+          f:strategy:
+            f:rollingUpdate:
+              .: {}
+              f:maxSurge: {}
+              f:maxUnavailable: {}
+            f:type: {}
+          f:template:
+            f:metadata:
+              f:annotations:
+                .: {}
+                f:cattle.io/timestamp: {}
+              f:labels:
+                .: {}
+                f:app: {}
+            f:spec:
+              f:containers:
+                k:{"name":"redis"}:
+                  .: {}
+                  f:command: {}
+                  f:image: {}
+                  f:imagePullPolicy: {}
+                  f:name: {}
+                  f:ports:
+                    .: {}
+                    k:{"containerPort":6379,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:hostPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                  f:resources:
+                    .: {}
+                    f:limits:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                    f:requests:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+              f:dnsPolicy: {}
+              f:restartPolicy: {}
+              f:schedulerName: {}
+              f:securityContext: {}
+              f:terminationGracePeriodSeconds: {}
+      manager: rancher
+      operation: Update
+      time: '2026-06-22T02:51:25Z'
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:deployment.kubernetes.io/revision: {}
+        f:status:
+          f:availableReplicas: {}
+          f:conditions:
+            .: {}
+            k:{"type":"Available"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Progressing"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+          f:observedGeneration: {}
+          f:readyReplicas: {}
+          f:replicas: {}
+          f:updatedReplicas: {}
+      manager: kube-controller-manager
+      operation: Update
+      subresource: status
+      time: '2026-08-11T06:09:08Z'
+  name: redis
+  namespace: nms4cloud
+  resourceVersion: '27628481'
+  uid: e2a058cb-100d-43c9-aad7-4c2c6eb1bb02
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: redis
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        cattle.io/timestamp: '2026-06-22T02:50:58Z'
+      labels:
+        app: redis
+    spec:
+      containers:
+        - command:
+            - redis-server
+            - '--appendonly'
+            - 'yes'
+            - '--requirepass'
+            - '123456'
+            - '--maxmemory'
+            - 1gb
+            - '--maxmemory-policy'
+            - allkeys-lru
+          image: redis:7.0
+          imagePullPolicy: IfNotPresent
+          name: redis
+          ports:
+            - containerPort: 6379
+              hostPort: 6379
+              name: redis
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+    - lastTransitionTime: '2026-05-21T01:44:25Z'
+      lastUpdateTime: '2026-06-22T02:51:18Z'
+      message: ReplicaSet "redis-6fdfd9d68b" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: 'True'
+      type: Progressing
+    - lastTransitionTime: '2026-08-11T06:09:08Z'
+      lastUpdateTime: '2026-08-11T06:09:08Z'
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: 'True'
+      type: Available
+  observedGeneration: 22
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

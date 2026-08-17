@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nms4cloud-wechat
+  namespace: nms4cloud
+  labels:
+    app: nms4cloud-wechat
+spec:
+  selector:
+    matchLabels:
+      app: nms4cloud-wechat
+  template:
+    metadata:
+      namespace: nms4cloud
+      labels:
+        app: nms4cloud-wechat
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: nacos
+        image: 10.43.92.252/library/nms4cloud-wechat:latest
+        imagePullPolicy: Always
+        name: nms4cloud-wechat
+        ports:
+        - containerPort: 18121
+          name: 18121tcp
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 768Mi
+      initContainers:
+      - command:
+        - sh
+        - -c
+        - "echo \"Waiting for Nacos to be ready...\"\nuntil curl -sf http://nacos:8848/nacos/v1/console/health/readiness;\
+          \ do\n  echo \"Nacos is not ready yet, retrying in 5 seconds...\"\n  sleep\
+          \ 5\ndone\necho \"Nacos is ready!\"\n"
+        image: curlimages/curl:7.85.0
+        imagePullPolicy: IfNotPresent
+        name: wait-for-nacos
+        resources:
+          requests:
+            cpu: 10m
+            memory: 16Mi
+          limits:
+            cpu: 50m
+            memory: 64Mi

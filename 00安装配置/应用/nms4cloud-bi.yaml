@@ -1,0 +1,183 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: '40'
+    field.cattle.io/publicEndpoints: >-
+      [{"port":30131,"protocol":"TCP","serviceName":"nms4cloud:nms4cloud-bi","allNodes":true}]
+    objectset.rio.cattle.io/applied: >-
+      H4sIAAAAAAAA/3yST2vbQBDFv8ucJTmyZUveW6H01IJpoZcSwmg0irfZf+yOXYzZ715WdULaktykmTfv/WbYK2DQ3zkm7R0owBDS6txCBU/aTaDgIwfjL5adQAWWBScUBHUFdM4LivYulV8//mSSxNJE7RtCEcON9itdTO5wt573w1APfT/X3b4f6mEa+3rbUY/T3XYzbWfIFRgc2Sx2GAIocDZ1ZPxpqkcN1ZsZR0xHUNC1E+2Z1+O8nidsaZrHbU/dSMxju8Fdu7ubkXFTkhxa/j+gVFNA+qtV5CkwFazIwWjCBKqtILFhEh9Lw6LQ8fN7+DlXIGyDQeFl4tUt3907v8on7wS145hA/bgCu/On6O3yTd7N+vELhq88F+nzhkg+Qc73FWiLj6VEFBui1Ag7YieXk2vI25Vh651E5tWTnNULwsOoHwpzKg9gsTicjDl4o+kCCj6YX3hJ8NZFg4+Snvn+oB98FFDt0G7afP/CVUy/MUW+yW92N8aaKNZpaUMZiZwEo/xLkXPOvwMAAP//DBCgRtECAAA
+    objectset.rio.cattle.io/id: 0a62f988-877f-4978-8db7-54c7ad053d5f
+  creationTimestamp: '2026-02-04T09:37:40Z'
+  generation: 43
+  labels:
+    app: nms4cloud-bi
+    objectset.rio.cattle.io/hash: 41dc9ee2bf2fda1cdfb57c4bceeb13a6160faea3
+  managedFields:
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:spec:
+          f:template:
+            f:metadata:
+              f:annotations:
+                .: {}
+                f:kubectl.kubernetes.io/restartedAt: {}
+      manager: kubectl-rollout
+      operation: Update
+      time: '2026-04-03T09:49:13Z'
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:field.cattle.io/publicEndpoints: {}
+            f:objectset.rio.cattle.io/applied: {}
+            f:objectset.rio.cattle.io/id: {}
+          f:labels:
+            .: {}
+            f:app: {}
+            f:objectset.rio.cattle.io/hash: {}
+        f:spec:
+          f:progressDeadlineSeconds: {}
+          f:replicas: {}
+          f:revisionHistoryLimit: {}
+          f:selector: {}
+          f:strategy:
+            f:rollingUpdate:
+              .: {}
+              f:maxSurge: {}
+              f:maxUnavailable: {}
+            f:type: {}
+          f:template:
+            f:metadata:
+              f:annotations:
+                f:cattle.io/timestamp: {}
+              f:labels:
+                .: {}
+                f:app: {}
+              f:namespace: {}
+            f:spec:
+              f:containers:
+                k:{"name":"nms4cloud-bi"}:
+                  .: {}
+                  f:envFrom: {}
+                  f:image: {}
+                  f:imagePullPolicy: {}
+                  f:name: {}
+                  f:ports:
+                    .: {}
+                    k:{"containerPort":18131,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                  f:resources: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+              f:dnsPolicy: {}
+              f:restartPolicy: {}
+              f:schedulerName: {}
+              f:securityContext: {}
+              f:terminationGracePeriodSeconds: {}
+      manager: rancher
+      operation: Update
+      time: '2026-08-05T03:49:26Z'
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:deployment.kubernetes.io/revision: {}
+        f:status:
+          f:availableReplicas: {}
+          f:conditions:
+            .: {}
+            k:{"type":"Available"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Progressing"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+          f:observedGeneration: {}
+          f:readyReplicas: {}
+          f:replicas: {}
+          f:updatedReplicas: {}
+      manager: kube-controller-manager
+      operation: Update
+      subresource: status
+      time: '2026-08-12T05:52:41Z'
+  name: nms4cloud-bi
+  namespace: nms4cloud
+  resourceVersion: '27782144'
+  uid: 7722b60d-f988-4825-8c93-13c5bee1986c
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: nms4cloud-bi
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        cattle.io/timestamp: '2026-08-05T03:49:26Z'
+        kubectl.kubernetes.io/restartedAt: '2026-04-03T17:49:13+08:00'
+      labels:
+        app: nms4cloud-bi
+      namespace: nms4cloud
+    spec:
+      containers:
+        - envFrom:
+            - configMapRef:
+                name: nacos
+          image: 10.43.92.252/library/nms4cloud-bi:latest
+          imagePullPolicy: Always
+          name: nms4cloud-bi
+          ports:
+            - containerPort: 18131
+              name: 18131tcp
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+    - lastTransitionTime: '2026-03-30T06:54:30Z'
+      lastUpdateTime: '2026-08-05T03:50:29Z'
+      message: ReplicaSet "nms4cloud-bi-6b6d9c67d4" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: 'True'
+      type: Progressing
+    - lastTransitionTime: '2026-08-12T05:52:41Z'
+      lastUpdateTime: '2026-08-12T05:52:41Z'
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: 'True'
+      type: Available
+  observedGeneration: 43
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

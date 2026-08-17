@@ -1,0 +1,35 @@
+server:
+  port: 80
+  
+
+wx:
+  app:
+    platformMaAppId: wxf31a142c93e74ed4
+    # instMaAppId: wx2189aef546c1fc71
+#   open:
+#     componentAppId: wx18ba482f622130ff
+#     componentSecret: 70f67d81634c91e67ebece96171f98be
+#     componentToken: 7SP20ZOVD4E9DLELLGOWQEBT2RHYOEC57AAMKVIN9AOF3RUDDPIJQA6GZTDKGOERXEUP5UESUMHJJM7OOJ1YI2GZFNW1QK9R
+#     componentAesKey: GFFWJRRFQXLONRUAMQOK5F4GSLHDTUQ0XJFLEIS4QWX
+
+
+yd:
+  mybatis:
+    logEnabled: true
+
+
+mybatis-flex:
+  datasource:
+    yd:
+      url: jdbc:mysql://192.168.1.119:3306/a_ams?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+      username: root
+      password: st11338
+    nms:
+      url: jdbc:mysql://192.168.1.119:3306/gylregdb?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+      username: root
+      password: st11338
+    pos:
+      url: jdbc:mysql://192.168.1.119:3306/a_pos?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+      username: root
+      password: st11338
+

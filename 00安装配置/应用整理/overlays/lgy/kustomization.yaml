@@ -1,0 +1,36 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: lgy
+
+resources:
+- namespace.yaml
+- nacos-client-config.yaml
+- redis.yaml
+- clickhouse.yaml
+- emqx.yaml
+- rocketmq-nameserver.yaml
+- rocketmq-broker.yaml
+- rocketmq-console.yaml
+- nginx.yaml
+- gateway.yaml
+- nms4cloud-platform.yaml
+- nms4cloud-biz.yaml
+- nms4cloud-crm.yaml
+- nms4cloud-mq.yaml
+- nms4cloud-netty.yaml
+- nms4cloud-order.yaml
+- nms4cloud-payment.yaml
+- nms4cloud-pos4cloud.yaml
+- nms4cloud-product.yaml
+- nms4cloud-wechat.yaml
+- nms4cloud-mall.yaml
+- nms4cloud-pos11report.yaml
+
+patches:
+- path: nacos-client-auth-env.yaml
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: nms4cloud-.*

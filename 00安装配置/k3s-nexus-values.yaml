@@ -1,0 +1,62 @@
+# This file manages the Nexus Kubernetes deployment only. Repository, role,
+# user, blob-store, and cleanup-policy configuration belongs to an idempotent
+# Nexus REST API initialization task; see VMware+K8s安装配置.md.
+image:
+  repository: docker.io/sonatype/nexus3
+  tag: "3.94.1"
+  pullPolicy: IfNotPresent
+
+bashImage:
+  repository: docker.io/library/bash
+  tag: "5.2.37"
+  pullPolicy: IfNotPresent
+
+fullnameOverride: nexus
+
+service:
+  type: ClusterIP
+  port: 8081
+
+ingress:
+  enabled: false
+
+httpRoute:
+  enabled: false
+
+persistence:
+  enabled: true
+  storageClass: local-path
+  size: 30Gi
+  retainDeleted: true
+  retainScaled: true
+
+install4jAddVmParams: >-
+  -Xms384m -Xmx1536m -XX:MaxDirectMemorySize=512m
+
+resources:
+  requests:
+    cpu: "250m"
+    memory: "1Gi"
+  limits:
+    cpu: "2000m"
+    memory: "3Gi"
+
+initResources:
+  requests:
+    cpu: "25m"
+    memory: "32Mi"
+  limits:
+    cpu: "100m"
+    memory: "128Mi"
+
+# The chart injects this existing Secret as NEXUS_SECURITY_INITIAL_PASSWORD.
+# Application repositories and users are configured after Nexus is Ready.
+rootPassword:
+  secret: nexus-admin
+  key: password
+
+config:
+  enabled: false
+
+metrics:
+  enabled: false

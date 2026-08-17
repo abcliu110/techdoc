@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../base/messaging/emqx-54.yaml
+- ../base/messaging/rocketmq-broker.yaml
+- ../base/messaging/rocketmq-console.yaml
+- ../base/messaging/rocketmq-nameserver.yaml
+- ../base/messaging/zookeeper.yaml

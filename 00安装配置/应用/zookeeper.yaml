@@ -1,0 +1,209 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: '8'
+    objectset.rio.cattle.io/applied: >-
+      H4sIAAAAAAAA/5xUyW7bPBB+lzlLsjYrMm8//gK9NIXRILkUOYyokcOaW0gqjRvo3QvSSZA9QG/U8OO3kfYdoBUX5LwwGhigtX51U0EGe6FHYPCFrDQHRTpABooCjhgQ2B2g1iZgEEb7+GmGX8SDp1A4YQqOIUgqhFmJSNL0VVn2Q503dVfm7cibHLtNn6+p7aep6aa6G2DJQOJAMtHte5+jtcDgjzF7IksOsndFrtBfAYOyrYh4O5zwum36ruuw6dYDr8Z13WDL6WSiqZv4BBlcc2nm8ZXEkoFGRS9k48hb5HGulW/T2Yj1lnh068hKwdEDqzLwJIkH4+KGwsCvvn2S6j0vUSA4DLQ7JBEjpdC7cztioCP57dnsdpRUFd6ea7xBIXGQBKxcMggHGy3/eHYwzklZ+UDy5Eo/q/8jo/dNcKMDCk3OA/t5B0Jh9AfVpi6qri+qoqo2rCnLulxJMTh0h9UjEWuKTdFAdjy1naXcGin4ARj8J3/jwcObt+PIm9lxSsalUCKkFbczMKjXpUoPVxkXidZVfSpiB46uZ/IfQet1F6FLBjdGzopOzazDMZaKyy2G+OhWqb1HZ+lryd7ASLN7DouD5XK5fBL4jLije5EHpOF7crlPOxDRjnxAF16XE8gpodNv8qtDTltywoxnxI0ePbCmfIjyXODo38b/AB9Ih4uE+V+iUKmduPj+ovf8mDMGfZHon5hSFcvlsizL3wAAAP///sPef5EEAAA
+    objectset.rio.cattle.io/id: 381008b2-3260-4dc3-a698-5e48ff36f26b
+  creationTimestamp: '2026-04-03T07:01:38Z'
+  generation: 8
+  labels:
+    k8s-app: zookeeper
+    objectset.rio.cattle.io/hash: 041eec4b7c2438666a365bc1d523a4ce7fef6fcf
+    qcloud-app: zookeeper
+  managedFields:
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:objectset.rio.cattle.io/applied: {}
+            f:objectset.rio.cattle.io/id: {}
+          f:labels:
+            .: {}
+            f:k8s-app: {}
+            f:objectset.rio.cattle.io/hash: {}
+            f:qcloud-app: {}
+        f:spec:
+          f:progressDeadlineSeconds: {}
+          f:replicas: {}
+          f:revisionHistoryLimit: {}
+          f:selector: {}
+          f:strategy:
+            f:rollingUpdate:
+              .: {}
+              f:maxSurge: {}
+              f:maxUnavailable: {}
+            f:type: {}
+          f:template:
+            f:metadata:
+              f:annotations:
+                .: {}
+                f:cattle.io/timestamp: {}
+              f:labels:
+                .: {}
+                f:k8s-app: {}
+                f:qcloud-app: {}
+              f:namespace: {}
+            f:spec:
+              f:containers:
+                k:{"name":"zookeeper"}:
+                  .: {}
+                  f:image: {}
+                  f:imagePullPolicy: {}
+                  f:name: {}
+                  f:resources:
+                    .: {}
+                    f:limits:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                    f:requests:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+                  f:volumeMounts:
+                    .: {}
+                    k:{"mountPath":"/data"}:
+                      .: {}
+                      f:mountPath: {}
+                      f:name: {}
+                    k:{"mountPath":"/datalog"}:
+                      .: {}
+                      f:mountPath: {}
+                      f:name: {}
+              f:dnsPolicy: {}
+              f:restartPolicy: {}
+              f:schedulerName: {}
+              f:securityContext: {}
+              f:terminationGracePeriodSeconds: {}
+              f:volumes:
+                .: {}
+                k:{"name":"data"}:
+                  .: {}
+                  f:name: {}
+                  f:persistentVolumeClaim:
+                    .: {}
+                    f:claimName: {}
+                k:{"name":"datalog"}:
+                  .: {}
+                  f:name: {}
+                  f:persistentVolumeClaim:
+                    .: {}
+                    f:claimName: {}
+      manager: rancher
+      operation: Update
+      time: '2026-05-23T11:38:23Z'
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:deployment.kubernetes.io/revision: {}
+        f:status:
+          f:availableReplicas: {}
+          f:conditions:
+            .: {}
+            k:{"type":"Available"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Progressing"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+          f:observedGeneration: {}
+          f:readyReplicas: {}
+          f:replicas: {}
+          f:updatedReplicas: {}
+      manager: kube-controller-manager
+      operation: Update
+      subresource: status
+      time: '2026-08-12T05:51:02Z'
+  name: zookeeper
+  namespace: nms4cloud
+  resourceVersion: '27781258'
+  uid: 51808962-0e05-49d9-a36d-e590fef3a32d
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      k8s-app: zookeeper
+      qcloud-app: zookeeper
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        cattle.io/timestamp: '2026-05-23T11:38:23Z'
+      labels:
+        k8s-app: zookeeper
+        qcloud-app: zookeeper
+      namespace: nms4cloud
+    spec:
+      containers:
+        - image: 10.43.92.252/library/zookeeper:3.9.3
+          imagePullPolicy: Always
+          name: zookeeper
+          resources:
+            limits:
+              cpu: 250m
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /data
+              name: data
+            - mountPath: /datalog
+              name: datalog
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: zookeeper-data
+        - name: datalog
+          persistentVolumeClaim:
+            claimName: zookeeper-datalog
+status:
+  availableReplicas: 1
+  conditions:
+    - lastTransitionTime: '2026-04-03T07:01:38Z'
+      lastUpdateTime: '2026-05-23T11:38:55Z'
+      message: ReplicaSet "zookeeper-8698f778f" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: 'True'
+      type: Progressing
+    - lastTransitionTime: '2026-08-12T05:51:02Z'
+      lastUpdateTime: '2026-08-12T05:51:02Z'
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: 'True'
+      type: Available
+  observedGeneration: 8
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

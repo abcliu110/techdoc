@@ -1,0 +1,2 @@
+coupon-mock:
+  upstream-wechat-url: http://nms4cloud-wechat.nms4cloud.svc.cluster.local:8080

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rocketmq-nameserver
+  namespace: nms4cloud
+  labels: {}
+spec:
+  selector:
+    matchLabels:
+      app: rocketmq-nameserver
+  template:
+    metadata:
+      labels:
+        app: rocketmq-nameserver
+    spec:
+      containers:
+      - command:
+        - sh
+        - mqnamesrv
+        env:
+        - name: JAVA_OPT_EXT
+          value: -Xms128m -Xmx128m
+        image: apache/rocketmq:5.1.0
+        imagePullPolicy: IfNotPresent
+        name: nameserver
+        ports:
+        - containerPort: 9876
+          hostPort: 9876
+          name: nameserver
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 300m
+            memory: 512Mi

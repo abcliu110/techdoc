@@ -1,0 +1,145 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nacos
+  namespace: nms4cloud
+  labels: {}
+spec:
+  selector:
+    matchLabels:
+      app: nacos
+  template:
+    metadata:
+      labels:
+        app: nacos
+    spec:
+      containers:
+      - env:
+        - name: MODE
+          value: standalone
+        - name: PREFER_HOST_MODE
+          value: hostname
+        - name: SPRING_DATASOURCE_PLATFORM
+          value: mysql
+        - name: MYSQL_SERVICE_HOST
+          value: mysql
+        - name: MYSQL_SERVICE_PORT
+          value: '3306'
+        - name: MYSQL_SERVICE_DB_NAME
+          value: nacos
+        - name: MYSQL_SERVICE_USER
+          value: root
+        - name: MYSQL_SERVICE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: nacos-secrets
+              key: MYSQL_SERVICE_PASSWORD
+        - name: MYSQL_SERVICE_JDBC_PARAM
+          value: characterEncoding=utf8&connectTimeout=3000&socketTimeout=10000&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
+        - name: NACOS_AUTH_IDENTITY_KEY
+          value: nacos_server
+        - name: NACOS_AUTH_IDENTITY_VALUE
+          value: nacos_server
+        - name: NACOS_AUTH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: nacos-secrets
+              key: NACOS_AUTH_TOKEN
+        - name: JVM_XMS
+          value: 384m
+        - name: JVM_XMX
+          value: 384m
+        - name: JVM_XMN
+          value: 128m
+        - name: JVM_MS
+          value: 64m
+        - name: JVM_MMS
+          value: 128m
+        image: nacos/nacos-server:v2.2.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /nacos/index.html
+            port: 8848
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: nacos
+        ports:
+        - containerPort: 8848
+          hostPort: 8848
+          name: client
+          protocol: TCP
+        - containerPort: 9848
+          hostPort: 9848
+          name: client-rpc
+          protocol: TCP
+        - containerPort: 9849
+          hostPort: 9849
+          name: raft-rpc
+          protocol: TCP
+        - containerPort: 7848
+          hostPort: 7848
+          name: old-raft-rpc
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /nacos/index.html
+            port: 8848
+            scheme: HTTP
+          initialDelaySeconds: 40
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          requests:
+            cpu: 200m
+            memory: 768Mi
+          limits:
+            cpu: 750m
+            memory: 1Gi
+        startupProbe:
+          failureThreshold: 30
+          httpGet:
+            path: /nacos/index.html
+            port: 8848
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+      initContainers:
+      - command:
+        - sh
+        - -c
+        - "echo \"\u7B49\u5F85 MySQL \u5B8C\u5168\u5C31\u7EEA...\"\nuntil mysql -h\
+          \ mysql -P 3306 -u root -e \"SELECT 1\" > /dev/null 2>&1; do\n  echo \"\
+          MySQL \u5C1A\u672A\u5C31\u7EEA\uFF0C\u7B49\u5F85 5 \u79D2\u540E\u91CD\u8BD5\
+          ...\"\n  sleep 5\ndone\necho \"MySQL \u5DF2\u5B8C\u5168\u5C31\u7EEA\"\n\n\
+          echo \"\u9A8C\u8BC1 nacos \u6570\u636E\u5E93\u662F\u5426\u5B58\u5728...\"\
+          \nuntil mysql -h mysql -P 3306 -u root -e \"USE nacos; SELECT count(*) FROM\
+          \ config_info;\" > /dev/null 2>&1; do\n  echo \"\u8B66\u544A: nacos \u6570\
+          \u636E\u5E93\u4E0D\u5B58\u5728\u6216\u8868\u7ED3\u6784\u672A\u521D\u59CB\
+          \u5316\uFF0C\u8BF7\u6267\u884C SQL \u811A\u672C\uFF01\"\n  echo \"\u7B49\
+          \u5F85 10 \u79D2\u540E\u91CD\u8BD5...\"\n  sleep 10\ndone\necho \"nacos\
+          \ \u6570\u636E\u5E93\u9A8C\u8BC1\u6210\u529F\"\n"
+        env:
+        - name: MYSQL_PWD
+          valueFrom:
+            secretKeyRef:
+              name: nacos-secrets
+              key: MYSQL_PWD
+        image: mysql:8.0
+        imagePullPolicy: IfNotPresent
+        name: wait-for-mysql
+        resources:
+          requests:
+            cpu: 10m
+            memory: 16Mi
+          limits:
+            cpu: 50m
+            memory: 64Mi

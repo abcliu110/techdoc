@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: jenkins-pvc-repair
+  namespace: jenkins
+  labels:
+    app.kubernetes.io/name: jenkins-pvc-repair
+    app.kubernetes.io/component: maintenance
+spec:
+  restartPolicy: Never
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+    runAsNonRoot: true
+  containers:
+    - name: repair
+      image: docker.io/jenkins/jenkins:2.568.2-jdk21
+      imagePullPolicy: IfNotPresent
+      command:
+        - sh
+        - -ec
+        - |
+          test -f /var/jenkins_home/secrets/master.key
+          test -d /var/jenkins_home/plugins
+          touch /var/jenkins_home/initialization-completed
+          test -f /var/jenkins_home/initialization-completed
+      resources:
+        requests:
+          cpu: 25m
+          memory: 128Mi
+        limits:
+          cpu: 250m
+          memory: 256Mi
+      volumeMounts:
+        - name: jenkins-home
+          mountPath: /var/jenkins_home
+  volumes:
+    - name: jenkins-home
+      persistentVolumeClaim:
+        claimName: jenkins

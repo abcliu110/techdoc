@@ -1,0 +1,1 @@
+kubectl -n nacos get secret nacos-admin -o json | jq '{apiVersion:"v1",kind:"Secret",metadata:{name:"nacos-client-env",namespace:"lgy"},type:"Opaque",data:{SPRING_CLOUD_NACOS_USERNAME:.data.username,SPRING_CLOUD_NACOS_PASSWORD:.data.password}}' | kubectl apply -f -

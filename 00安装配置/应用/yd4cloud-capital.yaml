@@ -1,0 +1,207 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: '18'
+    field.cattle.io/publicEndpoints: >-
+      [{"port":30005,"protocol":"TCP","serviceName":"nms4cloud:yd4cloud-capital","allNodes":true}]
+    objectset.rio.cattle.io/applied: >-
+      H4sIAAAAAAAA/4RSTW/cOAz9K1qe/TFe2BmP97TYxZ62RdAC7SETBDRNx2pkyZA4ExiB/3shj9OmQdvcaD/xvcdHPgFO+hP7oJ2FBnCaQn4uIIEHbTto4F+ejJtHtgIJjCzYoSA0T4DWOkHRzob46dovTBJYMq9dRihiONMu15Gk5OqqqssqLasDpWWLfdp2dZ+2f5bt/oB7xD3DkoDBls1Kh9MEDcxdScadupRw0oIGkl/qDBgGaKAqCmz37X5XIVOBXBZ4tWtb7Ouu5KLu921NVdsdoprFkX8uEpEwIUXYjuGCx5YwMUV7niejCQM0RQKBDZM4H4ERhYb/3xpjWRIQHieDwmvXi1zfzGB54YOcFdSWfYDm5gnYnv/zblxrcrbX9+9w+sB9fLpNa5FcgGW5TUCPeB9/EfmMKGTCltjKfLIZuTE3PDornjl/kHPzbONus3EXvYd4FCvN9cmYa2c0zdDA3+YR5wC/S3hyXsKzz8sI184LNIfdrlpuv9mLvB+ZPG+vN8bNakrk07DCsLZYLf/8GAm5ccR4yTcQBkggJUiAaXDqCJ9Ri7b3qndevY+5KHGqZeUZuznLsiMc7cmKNopO3qg09GoQmZo8X1Ns6rqsL2V+LnJyNjjD+cBoZMgjibYcwl+qc0er1CZ6EdJBWScXJTWzJMqz+Dm60VZVKjA524XNhFLBME+qOtrOWT7a11wrzx/xKbxc7MmbtQ55LJt9VlfZ7vteHlFL2jufbkdxm4DnIOjl9SqXZVm+BgAA///RBYyIKgQAAA
+    objectset.rio.cattle.io/id: 4e565845-459c-4baf-bd8f-b24b79a7aa7e
+  creationTimestamp: '2026-02-10T11:05:08Z'
+  generation: 19
+  labels:
+    app: yd4cloud-capital
+    objectset.rio.cattle.io/hash: 511ab7b705aec1ae41a60bbaf8d4e18f7b8c5bd9
+  managedFields:
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:field.cattle.io/publicEndpoints: {}
+            f:objectset.rio.cattle.io/applied: {}
+            f:objectset.rio.cattle.io/id: {}
+          f:labels:
+            .: {}
+            f:app: {}
+            f:objectset.rio.cattle.io/hash: {}
+        f:spec:
+          f:progressDeadlineSeconds: {}
+          f:replicas: {}
+          f:revisionHistoryLimit: {}
+          f:selector: {}
+          f:strategy:
+            f:rollingUpdate:
+              .: {}
+              f:maxSurge: {}
+              f:maxUnavailable: {}
+            f:type: {}
+          f:template:
+            f:metadata:
+              f:annotations:
+                .: {}
+                f:cattle.io/timestamp: {}
+              f:labels:
+                .: {}
+                f:app: {}
+              f:namespace: {}
+            f:spec:
+              f:containers:
+                k:{"name":"yd4cloud-capital"}:
+                  .: {}
+                  f:envFrom: {}
+                  f:image: {}
+                  f:imagePullPolicy: {}
+                  f:name: {}
+                  f:ports:
+                    .: {}
+                    k:{"containerPort":9005,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                  f:resources: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+              f:dnsPolicy: {}
+              f:imagePullSecrets:
+                .: {}
+                k:{"name":"tencent-ccr-secret"}: {}
+              f:initContainers:
+                .: {}
+                k:{"name":"wait-for-nacos"}:
+                  .: {}
+                  f:command: {}
+                  f:image: {}
+                  f:imagePullPolicy: {}
+                  f:name: {}
+                  f:resources: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+              f:restartPolicy: {}
+              f:schedulerName: {}
+              f:securityContext: {}
+              f:terminationGracePeriodSeconds: {}
+      manager: rancher
+      operation: Update
+      time: '2026-06-22T02:39:17Z'
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:deployment.kubernetes.io/revision: {}
+        f:status:
+          f:availableReplicas: {}
+          f:conditions:
+            .: {}
+            k:{"type":"Available"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Progressing"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+          f:observedGeneration: {}
+          f:readyReplicas: {}
+          f:replicas: {}
+          f:updatedReplicas: {}
+      manager: kube-controller-manager
+      operation: Update
+      subresource: status
+      time: '2026-08-12T05:51:25Z'
+  name: yd4cloud-capital
+  namespace: nms4cloud
+  resourceVersion: '27781548'
+  uid: f19bf0d0-3a73-4486-9643-b4b4f8e5457d
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: yd4cloud-capital
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        cattle.io/timestamp: '2026-06-22T02:39:16Z'
+      labels:
+        app: yd4cloud-capital
+      namespace: nms4cloud
+    spec:
+      containers:
+        - envFrom:
+            - configMapRef:
+                name: nacos
+          image: ccr.ccs.tencentyun.com/lemontree/ktv:yd4cloud_capital_latest
+          imagePullPolicy: Always
+          name: yd4cloud-capital
+          ports:
+            - containerPort: 9005
+              name: 9005tcp
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+        - name: tencent-ccr-secret
+      initContainers:
+        - command:
+            - sh
+            - '-c'
+            - >
+              echo "Waiting for Nacos to be ready..."
+
+              until curl -sf
+              http://nacos:8848/nacos/v1/console/health/readiness; do
+                echo "Nacos is not ready yet, retrying in 5 seconds..."
+                sleep 5
+              done
+
+              echo "Nacos is ready!"
+          image: curlimages/curl:7.85.0
+          imagePullPolicy: IfNotPresent
+          name: wait-for-nacos
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+    - lastTransitionTime: '2026-06-02T06:29:08Z'
+      lastUpdateTime: '2026-06-22T02:39:19Z'
+      message: ReplicaSet "yd4cloud-capital-76c9646b6f" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: 'True'
+      type: Progressing
+    - lastTransitionTime: '2026-08-12T05:51:25Z'
+      lastUpdateTime: '2026-08-12T05:51:25Z'
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: 'True'
+      type: Available
+  observedGeneration: 19
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

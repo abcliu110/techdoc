@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emqx-54
+  namespace: nms4cloud
+  labels:
+    app: emqx-54
+spec:
+  selector:
+    matchLabels:
+      app: emqx-54
+  template:
+    metadata:
+      namespace: nms4cloud
+      labels:
+        app: emqx-54
+    spec:
+      containers:
+      - env:
+        - name: EMQX_NAME
+          value: emqx
+        - name: EMQX_HOST
+          value: 127.0.0.1
+        image: 10.43.92.252/library/emqx:5.4.1
+        imagePullPolicy: Always
+        name: emqx
+        ports:
+        - containerPort: 1883
+          name: mqtt
+          protocol: TCP
+        - containerPort: 8883
+          name: mqtts
+          protocol: TCP
+        - containerPort: 8083
+          name: ws
+          protocol: TCP
+        - containerPort: 8084
+          name: wss
+          protocol: TCP
+        - containerPort: 18083
+          name: dashboard
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 768Mi

@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins
+  namespace: jenkins
+  labels: {}
+spec:
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      namespace: jenkins
+      labels:
+        app: jenkins
+    spec:
+      containers:
+      - env:
+        - name: JAVA_OPTS
+          value: -Xmx768m -Xms256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200
+        - name: JENKINS_OPTS
+          value: --sessionTimeout=1440
+        - name: TZ
+          value: Asia/Shanghai
+        image: jenkins/jenkins:lts-jdk21
+        imagePullPolicy: IfNotPresent
+        name: jenkins
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 50000
+          name: agent
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: '1'
+            memory: 1536Mi
+        volumeMounts:
+        - mountPath: /var/jenkins_home
+          name: jenkins-storage
+      serviceAccount: jenkins
+      serviceAccountName: jenkins
+      volumes:
+      - name: jenkins-storage
+        persistentVolumeClaim:
+          claimName: jenkins-pvc

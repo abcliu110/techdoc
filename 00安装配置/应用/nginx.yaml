@@ -1,0 +1,218 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: '6'
+    field.cattle.io/publicEndpoints: >-
+      [{"port":30080,"protocol":"TCP","serviceName":"nms4cloud:nginx","allNodes":true},{"addresses":["192.168.1.119"],"port":80,"protocol":"HTTP","serviceName":"nms4cloud:nginx","ingressName":"nms4cloud:nginx-pay","hostname":"p.clovia.top","path":"/","allNodes":false}]
+    objectset.rio.cattle.io/applied: >-
+      H4sIAAAAAAAA/5RTy27bMBD8lz3L1styVd6KFOilKYy2yaXIYUWtLLZ8lVylMQL9e0E5CRw3PvS2XM3MzqzIR0CvbilE5SwIQO9jfl9CBr+U7UHAR/LaHQxZhgwMMfbICOIR0FrHyMrZmI6u+0mSI/E6KLeWyKxprVyukgjV79qmqusVDk252mx6XHUtDisq654IC1mVNcwZaOxIL3LoPQiwe2UfILsoPmIcQUAri6qgbdFiVfbU0oYGlB21fbMd2m1BVdFtGnq/TSMsGjpRTsfoUS49EzdSu6lPuOhJJiOBvFYSI4gyg0iaJLuQPhhkOX5+0/Cc+ByQaX9YNJzWyu5vfI9MR+7DtynsaRE1+HBj8R6Vxk4TiGLOgA8+Ofr6ipj6ZLx+Fjn5GW8vbj7JIZ1lVJZCBPHjEZTB/cseRLmumnUN2bG9m7TeOa3kAQR80H/wEOGfxXkX+Cj1orxzgUG0xQt2ZPYJGhw76TQI+H61g/kug0DRTUHSYlkro3ippJ9AQFMUZrlsxoVkofykUvZAvyeKp8CqeQ2smu21WlLfOz0ZunaTfTJpUrlDTtclJ5b5kiOXzg7r/izdKnVXg9IUYc7OuFMMeRwx0JPCyEaf81PvmX+X4h7tHJ1cmpSBT68wMlm+XfBXGpVZ0qbiyyWHyeKl8f8lemp7vpvnef4bAAD//9wOghodBAAA
+    objectset.rio.cattle.io/id: e3785233-af51-44da-b8af-e13deea0c213
+  creationTimestamp: '2026-04-27T01:21:41Z'
+  generation: 175
+  labels:
+    app: nginx
+    objectset.rio.cattle.io/hash: 8c020e608a21de8e4efacbe8d56f860e20b45e96
+  managedFields:
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:field.cattle.io/publicEndpoints: {}
+            f:objectset.rio.cattle.io/applied: {}
+            f:objectset.rio.cattle.io/id: {}
+          f:labels:
+            .: {}
+            f:app: {}
+            f:objectset.rio.cattle.io/hash: {}
+        f:spec:
+          f:progressDeadlineSeconds: {}
+          f:replicas: {}
+          f:revisionHistoryLimit: {}
+          f:selector: {}
+          f:strategy:
+            f:rollingUpdate:
+              .: {}
+              f:maxSurge: {}
+              f:maxUnavailable: {}
+            f:type: {}
+          f:template:
+            f:metadata:
+              f:annotations:
+                .: {}
+                f:cattle.io/timestamp: {}
+              f:labels:
+                .: {}
+                f:app: {}
+              f:namespace: {}
+            f:spec:
+              f:containers:
+                k:{"name":"nginx"}:
+                  .: {}
+                  f:image: {}
+                  f:imagePullPolicy: {}
+                  f:name: {}
+                  f:ports:
+                    .: {}
+                    k:{"containerPort":80,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                  f:resources:
+                    .: {}
+                    f:limits:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                    f:requests:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+                  f:volumeMounts:
+                    .: {}
+                    k:{"mountPath":"/etc/nginx/conf.d"}:
+                      .: {}
+                      f:mountPath: {}
+                      f:name: {}
+                    k:{"mountPath":"/usr/share/nginx/html"}:
+                      .: {}
+                      f:mountPath: {}
+                      f:name: {}
+              f:dnsPolicy: {}
+              f:restartPolicy: {}
+              f:schedulerName: {}
+              f:securityContext: {}
+              f:terminationGracePeriodSeconds: {}
+              f:volumes:
+                .: {}
+                k:{"name":"nginx-conf-files"}:
+                  .: {}
+                  f:name: {}
+                  f:persistentVolumeClaim:
+                    .: {}
+                    f:claimName: {}
+                k:{"name":"nginx-html-files"}:
+                  .: {}
+                  f:name: {}
+                  f:persistentVolumeClaim:
+                    .: {}
+                    f:claimName: {}
+      manager: rancher
+      operation: Update
+      time: '2026-08-12T05:50:23Z'
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:deployment.kubernetes.io/revision: {}
+        f:status:
+          f:availableReplicas: {}
+          f:conditions:
+            .: {}
+            k:{"type":"Available"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Progressing"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+          f:observedGeneration: {}
+          f:readyReplicas: {}
+          f:replicas: {}
+          f:updatedReplicas: {}
+      manager: kube-controller-manager
+      operation: Update
+      subresource: status
+      time: '2026-08-12T05:51:04Z'
+  name: nginx
+  namespace: nms4cloud
+  resourceVersion: '27781313'
+  uid: 97a80bfa-085a-4aab-ba04-e7de2b6eb743
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: nginx
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        cattle.io/timestamp: '2026-05-25T08:39:20Z'
+      labels:
+        app: nginx
+      namespace: nms4cloud
+    spec:
+      containers:
+        - image: 10.43.92.252/library/nginx:1.25.3
+          imagePullPolicy: Always
+          name: nginx
+          ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /etc/nginx/conf.d
+              name: nginx-conf-files
+            - mountPath: /usr/share/nginx/html
+              name: nginx-html-files
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: nginx-conf-files
+          persistentVolumeClaim:
+            claimName: nginx-conf-files
+        - name: nginx-html-files
+          persistentVolumeClaim:
+            claimName: nginx-html-files
+status:
+  availableReplicas: 1
+  conditions:
+    - lastTransitionTime: '2026-04-27T01:59:00Z'
+      lastUpdateTime: '2026-05-25T08:39:53Z'
+      message: ReplicaSet "nginx-8496bb9f76" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: 'True'
+      type: Progressing
+    - lastTransitionTime: '2026-08-12T05:51:04Z'
+      lastUpdateTime: '2026-08-12T05:51:04Z'
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: 'True'
+      type: Available
+  observedGeneration: 175
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

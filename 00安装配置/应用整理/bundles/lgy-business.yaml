@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: lgy
+
+# Candidate business workloads for the shared lgy namespace.
+# Existing Nacos/MySQL and deferred gateway are intentionally excluded.
+resources:
+- ../base/business/nginx.yaml
+- ../base/business/nms4cloud-biz.yaml
+- ../base/business/nms4cloud-crm.yaml
+- ../base/business/nms4cloud-mq.yaml
+- ../base/business/nms4cloud-netty.yaml
+- ../base/business/nms4cloud-order.yaml
+- ../base/business/nms4cloud-payment.yaml
+- ../base/business/nms4cloud-platform.yaml
+- ../base/business/nms4cloud-pos4cloud.yaml
+- ../base/data/redis.yaml

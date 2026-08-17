@@ -1,0 +1,31 @@
+hostname: 192.168.253.128
+
+replicas: 1
+
+networkExposure:
+  type: none
+
+ingress:
+  enabled: false
+
+service:
+  type: ClusterIP
+
+tls: external
+
+resources:
+  requests:
+    cpu: "500m"
+    memory: "1Gi"
+  limits:
+    cpu: "1500m"
+    memory: "2Gi"
+
+auditLog:
+  level: 0
+
+# Rancher chart 2.15.0 has no existingSecret setting for bootstrapPassword.
+# Keep bootstrapPassword unset. After Rancher is Ready,
+# rancher-admin-password-sync.sh reads the pre-created rancher-admin Secret,
+# updates the administrator through the Rancher API, verifies it, and removes
+# the one-time bootstrap-secret.

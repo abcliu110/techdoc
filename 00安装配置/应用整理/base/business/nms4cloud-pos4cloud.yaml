@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nms4cloud-pos4cloud
+  namespace: nms4cloud
+  labels:
+    app: nms4cloud-pos4cloud
+spec:
+  selector:
+    matchLabels:
+      app: nms4cloud-pos4cloud
+  template:
+    metadata:
+      namespace: nms4cloud
+      labels:
+        app: nms4cloud-pos4cloud
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: nacos
+        image: 10.43.92.252/library/nms4cloud-pos4cloud:latest
+        imagePullPolicy: Always
+        name: nms4cloud-pos4cloud
+        ports:
+        - containerPort: 9722
+          name: 9722tcp
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 768Mi
+      imagePullSecrets:
+      - name: tencent-ccr-secret

@@ -1,0 +1,229 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: '5'
+    field.cattle.io/publicEndpoints: >-
+      [{"port":31883,"protocol":"TCP","serviceName":"nms4cloud:emqx-54","allNodes":true},{"port":30883,"protocol":"TCP","serviceName":"nms4cloud:emqx-54","allNodes":true},{"port":30083,"protocol":"TCP","serviceName":"nms4cloud:emqx-54","allNodes":true},{"port":30084,"protocol":"TCP","serviceName":"nms4cloud:emqx-54","allNodes":true},{"port":30183,"protocol":"TCP","serviceName":"nms4cloud:emqx-54","allNodes":true}]
+    objectset.rio.cattle.io/applied: >-
+      H4sIAAAAAAAA/4xTX0/cPhD8LvucBDvx8fPlDf2K1IfSXgWqKlWo2jhLz61jG9uBIuTvXjkFlENFupf88c7MjnfsR0Cvv1CI2lnoAb2PJ3ccKvil7Qg9vCNv3MNENkEFEyUcMSH0j4DWuoRJOxvLrxt+kkqRUhO0axSmZKjR7kQXka7bInGxqZkYsRYMsUbseD1wOWxbcXOzHQXkCgwOZBY59B56oOn2d70RUL0pv8e4hx5O2ZbdtEyOsmtbKVvednyzlYNot4Ix0XXqlHeSydLE4kQH2mUhelRl1U5RKOPmsSCjJ1XMBPJGK4zQ8woiGVLJhVKYMKn9hzdM51xBoskbTLSAV8N7a6N51VU5m1BbChH6b49A9m55P9k/v/j89fvHs4tzqOAOzfy8JcjVIeb9p8urFYa3/zWsYQ2HfF2BnvDHM/OkPPpNI5oS/1LZzcbsnNHqAXo4M/f4EOFggFCBdyH9dfhieOdCgp5L2b2Ap9tUDpAPLjnlDPRw9f9u8fqKJV+z4nE0tqLdH80RK85xJH7QacS4HxyG8R/c6woCRTcHRUvSRk86LV/KzyWJ5UJNLpThtkzIC10OXaDbmeIayJrNGspZKwo0vwRYYrokFegpiCdziawim2qlQh2XMuTrnHP+EwAA//9BFD8v9AMAAA
+    objectset.rio.cattle.io/id: 339ae145-04da-40aa-aa31-b18b924ff9d4
+  creationTimestamp: '2026-02-03T06:44:22Z'
+  generation: 6
+  labels:
+    app: emqx-54
+    objectset.rio.cattle.io/hash: 6090f208d83228821231598b429400433c613808
+  managedFields:
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:field.cattle.io/publicEndpoints: {}
+            f:objectset.rio.cattle.io/applied: {}
+            f:objectset.rio.cattle.io/id: {}
+          f:labels:
+            .: {}
+            f:app: {}
+            f:objectset.rio.cattle.io/hash: {}
+        f:spec:
+          f:progressDeadlineSeconds: {}
+          f:replicas: {}
+          f:revisionHistoryLimit: {}
+          f:selector: {}
+          f:strategy:
+            f:rollingUpdate:
+              .: {}
+              f:maxSurge: {}
+              f:maxUnavailable: {}
+            f:type: {}
+          f:template:
+            f:metadata:
+              f:annotations:
+                .: {}
+                f:cattle.io/timestamp: {}
+              f:labels:
+                .: {}
+                f:app: {}
+              f:namespace: {}
+            f:spec:
+              f:containers:
+                k:{"name":"emqx"}:
+                  .: {}
+                  f:env:
+                    .: {}
+                    k:{"name":"EMQX_HOST"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"EMQX_NAME"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                  f:image: {}
+                  f:imagePullPolicy: {}
+                  f:name: {}
+                  f:ports:
+                    .: {}
+                    k:{"containerPort":1883,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                    k:{"containerPort":8083,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                    k:{"containerPort":8084,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                    k:{"containerPort":8883,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                    k:{"containerPort":18083,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                  f:resources:
+                    .: {}
+                    f:limits:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                    f:requests:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+              f:dnsPolicy: {}
+              f:restartPolicy: {}
+              f:schedulerName: {}
+              f:securityContext: {}
+              f:terminationGracePeriodSeconds: {}
+      manager: rancher
+      operation: Update
+      time: '2026-05-21T01:33:39Z'
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:deployment.kubernetes.io/revision: {}
+        f:status:
+          f:availableReplicas: {}
+          f:conditions:
+            .: {}
+            k:{"type":"Available"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Progressing"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+          f:observedGeneration: {}
+          f:readyReplicas: {}
+          f:replicas: {}
+          f:updatedReplicas: {}
+      manager: kube-controller-manager
+      operation: Update
+      subresource: status
+      time: '2026-08-12T05:51:06Z'
+  name: emqx-54
+  namespace: nms4cloud
+  resourceVersion: '27781340'
+  uid: 776c7228-2c9a-4b10-a99d-bd507bf46b03
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: emqx-54
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        cattle.io/timestamp: '2026-05-21T01:33:37Z'
+      labels:
+        app: emqx-54
+      namespace: nms4cloud
+    spec:
+      containers:
+        - env:
+            - name: EMQX_NAME
+              value: emqx
+            - name: EMQX_HOST
+              value: 127.0.0.1
+          image: 10.43.92.252/library/emqx:5.4.1
+          imagePullPolicy: Always
+          name: emqx
+          ports:
+            - containerPort: 1883
+              name: mqtt
+              protocol: TCP
+            - containerPort: 8883
+              name: mqtts
+              protocol: TCP
+            - containerPort: 8083
+              name: ws
+              protocol: TCP
+            - containerPort: 8084
+              name: wss
+              protocol: TCP
+            - containerPort: 18083
+              name: dashboard
+              protocol: TCP
+          resources:
+            limits:
+              cpu: '1'
+              memory: 2Gi
+            requests:
+              cpu: 500m
+              memory: 1Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+    - lastTransitionTime: '2026-02-03T06:44:22Z'
+      lastUpdateTime: '2026-05-21T01:34:10Z'
+      message: ReplicaSet "emqx-54-6d59bff66" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: 'True'
+      type: Progressing
+    - lastTransitionTime: '2026-08-12T05:51:06Z'
+      lastUpdateTime: '2026-08-12T05:51:06Z'
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: 'True'
+      type: Available
+  observedGeneration: 6
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

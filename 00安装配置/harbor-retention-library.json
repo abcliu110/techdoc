@@ -1,0 +1,38 @@
+{
+  "algorithm": "or",
+  "rules": [
+    {
+      "action": "retain",
+      "template": "latestPushedK",
+      "params": {
+        "latestPushedK": 1
+      },
+      "tag_selectors": [
+        {
+          "kind": "doublestar",
+          "decoration": "matches",
+          "pattern": "**"
+        }
+      ],
+      "scope_selectors": {
+        "repository": [
+          {
+            "kind": "doublestar",
+            "decoration": "repoMatches",
+            "pattern": "**"
+          }
+        ]
+      }
+    }
+  ],
+  "scope": {
+    "level": "project",
+    "ref": 1
+  },
+  "trigger": {
+    "kind": "Schedule",
+    "settings": {
+      "cron": "0 0 0 * * *"
+    }
+  }
+}

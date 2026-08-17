@@ -1,0 +1,234 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: '3'
+    field.cattle.io/publicEndpoints: >-
+      [{"port":30090,"protocol":"TCP","serviceName":"jenkins:jenkins","allNodes":true},{"port":30050,"protocol":"TCP","serviceName":"jenkins:jenkins","allNodes":true}]
+    objectset.rio.cattle.io/applied: >-
+      H4sIAAAAAAAA/3xTW0/jPBD9K5/m9UuonZamROIBsatqL7CVYBHSCqGJM6UG39Z2IhDyf1853LplxZPH09Mz5xxPHgGdvCAfpDXQADoXJgOHAu6k6aCBT+SUfdBkIhSgKWKHEaF5BDTGRozSmpCvtr0lEQPFPS/tnsAYFe1JO5GZRKwX6w6r/XI6XbflrJuLcnFwgOV0fTBta9HiYs4hFaCwJfUh3QbDBhrg2PLFbL9m6wqJzQWvaU6dWItqVvMKa952vGO1yKQGNUEDt2TupAnw1AgOxXY3FRAciTzak1NSYICGFxBIkYjW5x80RrH5/ioRndsmSAVE0k5hpBG8FZX64D8vU4U1EaUhH6D59QhkhvF8Fv/16OLo+sfq/AwKGFD1uVde6vspqyv9X3mpA2fVLFeXzf8/Ay358ni8nOD98niFfaATqZQMhxVjkIo34s+n376cnr3jLgOFvBLnUpPt4yGfzRikqwKkxput4CbPZ6NiKG+7u4rDPxJ31scnX682V9ZHaBZswV7xmxjdqG0HtM8Ye0PhTd7FLMVTsL0XNCarpJZxrITroYEpY0yPK6utf4AGZkuZX9nT757CNpLvIquMTAUMVvWaTmxvnsXrXK4w5g2cDOhfzF9vrKZ3vssQrc9hpausNpAfpKAjITLL6W5ET8PC9qPv8hTg8ncaIpl4McKPFUo9OsnF35ylGwSkdJVSSn8CAAD//x97VvflAwAA
+    objectset.rio.cattle.io/id: cf8fda25-33fb-4d6c-899a-3f93b7cba861
+  creationTimestamp: '2026-02-25T06:34:04Z'
+  generation: 4
+  labels:
+    objectset.rio.cattle.io/hash: 1ab184570f2ae06c17e6edcfc24712a71bd1d07c
+  managedFields:
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:field.cattle.io/publicEndpoints: {}
+            f:objectset.rio.cattle.io/applied: {}
+            f:objectset.rio.cattle.io/id: {}
+          f:labels:
+            .: {}
+            f:objectset.rio.cattle.io/hash: {}
+        f:spec:
+          f:progressDeadlineSeconds: {}
+          f:replicas: {}
+          f:revisionHistoryLimit: {}
+          f:selector: {}
+          f:strategy:
+            f:rollingUpdate:
+              .: {}
+              f:maxSurge: {}
+              f:maxUnavailable: {}
+            f:type: {}
+          f:template:
+            f:metadata:
+              f:annotations:
+                .: {}
+                f:cattle.io/timestamp: {}
+              f:labels:
+                .: {}
+                f:app: {}
+              f:namespace: {}
+            f:spec:
+              f:containers:
+                k:{"name":"jenkins"}:
+                  .: {}
+                  f:env:
+                    .: {}
+                    k:{"name":"JAVA_OPTS"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"JENKINS_OPTS"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"TZ"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                  f:image: {}
+                  f:imagePullPolicy: {}
+                  f:name: {}
+                  f:ports:
+                    .: {}
+                    k:{"containerPort":8080,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                    k:{"containerPort":50000,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                  f:resources:
+                    .: {}
+                    f:limits:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                    f:requests:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+                  f:volumeMounts:
+                    .: {}
+                    k:{"mountPath":"/var/jenkins_home"}:
+                      .: {}
+                      f:mountPath: {}
+                      f:name: {}
+              f:dnsPolicy: {}
+              f:restartPolicy: {}
+              f:schedulerName: {}
+              f:securityContext: {}
+              f:serviceAccount: {}
+              f:serviceAccountName: {}
+              f:terminationGracePeriodSeconds: {}
+              f:volumes:
+                .: {}
+                k:{"name":"jenkins-storage"}:
+                  .: {}
+                  f:name: {}
+                  f:persistentVolumeClaim:
+                    .: {}
+                    f:claimName: {}
+      manager: rancher
+      operation: Update
+      time: '2026-04-25T10:47:03Z'
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:deployment.kubernetes.io/revision: {}
+        f:status:
+          f:availableReplicas: {}
+          f:conditions:
+            .: {}
+            k:{"type":"Available"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Progressing"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+          f:observedGeneration: {}
+          f:readyReplicas: {}
+          f:replicas: {}
+          f:updatedReplicas: {}
+      manager: kube-controller-manager
+      operation: Update
+      subresource: status
+      time: '2026-08-11T06:09:15Z'
+  name: jenkins
+  namespace: jenkins
+  resourceVersion: '27628947'
+  uid: b7875790-f0f8-4160-92b6-babe3dc36142
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: jenkins
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        cattle.io/timestamp: '2026-02-25T07:36:22Z'
+      labels:
+        app: jenkins
+      namespace: jenkins
+    spec:
+      containers:
+        - env:
+            - name: JAVA_OPTS
+              value: '-Xmx3072m -Xms1024m -XX:+UseG1GC -XX:MaxGCPauseMillis=200'
+            - name: JENKINS_OPTS
+              value: '--sessionTimeout=1440'
+            - name: TZ
+              value: Asia/Shanghai
+          image: jenkins/jenkins:lts-jdk21
+          imagePullPolicy: IfNotPresent
+          name: jenkins
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+            - containerPort: 50000
+              name: agent
+              protocol: TCP
+          resources:
+            limits:
+              cpu: '3'
+              memory: 4Gi
+            requests:
+              cpu: '1'
+              memory: 2Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /var/jenkins_home
+              name: jenkins-storage
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: jenkins
+      serviceAccountName: jenkins
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: jenkins-storage
+          persistentVolumeClaim:
+            claimName: jenkins-pvc
+status:
+  availableReplicas: 1
+  conditions:
+    - lastTransitionTime: '2026-02-25T06:34:04Z'
+      lastUpdateTime: '2026-04-25T10:47:04Z'
+      message: ReplicaSet "jenkins-845846444f" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: 'True'
+      type: Progressing
+    - lastTransitionTime: '2026-08-11T06:09:15Z'
+      lastUpdateTime: '2026-08-11T06:09:15Z'
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: 'True'
+      type: Available
+  observedGeneration: 4
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nms4cloud-pos4cloud
+  labels:
+    app: nms4cloud-pos4cloud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nms4cloud-pos4cloud
+  template:
+    metadata:
+      labels:
+        app: nms4cloud-pos4cloud
+    spec:
+      containers:
+      - name: nms4cloud-pos4cloud
+        image: 192.168.253.128:30083/library/nms4pos-cloud:5302a14f10e0-11
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: nacos-client
+        - secretRef:
+            name: nacos-client-auth
+        env:
+        - name: JAVA_TOOL_OPTIONS
+          value: -Xms128m -Xmx512m -XX:MaxMetaspaceSize=256m
+        ports:
+        - name: http
+          containerPort: 9722
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 1280Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nms4cloud-pos4cloud
+spec:
+  selector:
+    app: nms4cloud-pos4cloud
+  ports:
+  - name: http
+    port: 9722
+    targetPort: http

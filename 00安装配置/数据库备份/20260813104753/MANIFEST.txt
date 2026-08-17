@@ -1,0 +1,23 @@
+timestamp=20260813104753
+4230c488735ae20fb84169d7ac21fd922dbed41ffadcf5d507ca1bc728606fd6  /tmp/mysql-business-backup/20260813104753/a_ams.sql.gz
+914102032ffd1e2548eb0a2ba27e121337daf213d5dfcc80c01dfaf7833a5b0d  /tmp/mysql-business-backup/20260813104753/a_biz.sql.gz
+05c715b19b94dd8b3db7eb50afecbb2fd0c00b8926ba2fcd4627e0e875806320  /tmp/mysql-business-backup/20260813104753/a_book.sql.gz
+a92423d80e007395dc4032da49ee0cd7e5f726360bd2d8a54f652b92c7d8eea8  /tmp/mysql-business-backup/20260813104753/a_captail.sql.gz
+8d99e301c1ee0b80fa6ef918cd096470316071cbce6d07f713f2d5c4a9d6c9fb  /tmp/mysql-business-backup/20260813104753/a_crm.sql.gz
+f8a5b82a7823716e6106b86237d63915d49a6d7d6c3501d0376098e6d818fd22  /tmp/mysql-business-backup/20260813104753/a_mall.sql.gz
+966f54fba23a598870a2838793859d5896b47fd73c03ead17b66151410b21644  /tmp/mysql-business-backup/20260813104753/a_mq.sql.gz
+7af01abe3e44729611c95095472e3021ea5424ff0d0ef8d69785c6ed36d3484a  /tmp/mysql-business-backup/20260813104753/a_order.sql.gz
+670eb7d88863decb5d7a4f85172d8be5db098bad6366bf90eb5cd586285b5559  /tmp/mysql-business-backup/20260813104753/a_payment.sql.gz
+4a1af2b6d760b9e73051a58ededf83ecb6c434eb0047e2386cccbbaf5cce6d57  /tmp/mysql-business-backup/20260813104753/a_platform.sql.gz
+30178433b7429f345868f79fb5222c3fa7ba5329d1e7434f050c1a5e1b4b2f18  /tmp/mysql-business-backup/20260813104753/a_pos.sql.gz
+98f90c1782864c5cb43f3362e24c96d5ef3a518a712177a33816e6324745284b  /tmp/mysql-business-backup/20260813104753/a_product.sql.gz
+c2ce410f248cf59dd24ba8617fe9f56c08a6e309fcce533a4840c65455c71835  /tmp/mysql-business-backup/20260813104753/a_sync.sql.gz
+8b9de67d92d8c55d46bd888a82dedb931a8d81b4f9e87133853c0c817e0afebe  /tmp/mysql-business-backup/20260813104753/a_weachat.sql.gz
+206cfcbf34bfbd177c837387b20b3dff1d7a7e9457e3decd8b1792f163945b2e  /tmp/mysql-business-backup/20260813104753/a_wechat.sql.gz
+53ec7df1ada96e322bc741edfbcac957d41cdd59aa3f18bad0e8da474d617c05  /tmp/mysql-business-backup/20260813104753/a_wms.sql.gz
+f47548c7f3c2725426c588fba495b767bc5464a09f073ac2bd87e75d777b3254  /tmp/mysql-business-backup/20260813104753/app.sql.gz
+5a8d969e10b817cea0c788dd66a7ef67117b36f07eab9ed68d7fd679dcec060c  /tmp/mysql-business-backup/20260813104753/gylregdb.sql.gz
+f32992fbdf70393ee6fef905e8af6ea19b2e5f3190ffec9443707b68f3b2d216  /tmp/mysql-business-backup/20260813104753/nacos.sql.gz
+f89f6b655dc5f3e0495750b4f37c28a4851c9064a555da2ed4192f6cd90afb00  /tmp/mysql-business-backup/20260813104753/xxl_job.sql.gz
+databases=20
+backup_dir=/tmp/mysql-business-backup/20260813104753

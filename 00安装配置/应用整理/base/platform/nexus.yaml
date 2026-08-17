@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexus
+  namespace: nexus
+  labels: {}
+spec:
+  selector:
+    matchLabels:
+      app: nexus
+  template:
+    metadata:
+      labels:
+        app: nexus
+    spec:
+      containers:
+      - env:
+        - name: INSTALL4J_ADD_VM_PARAMS
+          value: -Xms384m -Xmx768m -XX:MaxDirectMemorySize=384m
+        image: docker.io/sonatype/nexus3:3.68.1
+        imagePullPolicy: IfNotPresent
+        name: nexus
+        ports:
+        - containerPort: 8081
+          name: web
+          protocol: TCP
+        - containerPort: 5000
+          name: docker
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 250m
+            memory: 768Mi
+          limits:
+            cpu: '1'
+            memory: 1536Mi
+        volumeMounts:
+        - mountPath: /nexus-data
+          name: data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: nexus-data

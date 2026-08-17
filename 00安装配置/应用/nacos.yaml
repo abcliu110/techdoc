@@ -1,0 +1,434 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: '3'
+    field.cattle.io/publicEndpoints: >-
+      [{"nodeName":":jjtestserver","addresses":["192.168.1.119"],"port":8848,"protocol":"TCP","podName":"nms4cloud:nacos-866f775fc9-47jt7","allNodes":false},{"nodeName":":jjtestserver","addresses":["192.168.1.119"],"port":9848,"protocol":"TCP","podName":"nms4cloud:nacos-866f775fc9-47jt7","allNodes":false},{"nodeName":":jjtestserver","addresses":["192.168.1.119"],"port":9849,"protocol":"TCP","podName":"nms4cloud:nacos-866f775fc9-47jt7","allNodes":false},{"nodeName":":jjtestserver","addresses":["192.168.1.119"],"port":7848,"protocol":"TCP","podName":"nms4cloud:nacos-866f775fc9-47jt7","allNodes":false}]
+    objectset.rio.cattle.io/applied: >-
+      H4sIAAAAAAAA/7RWXW8TRxv9K6O5et9q7ezaTvyBuDDxAoH4A69jiHBkjWdn4wmzM8vurCEgXyCBCjRUtAiEEG3FDSBUCO0NVUH9NbVjrvgL1ayNu7FJKFJ7k+zMnPN8nF2fZ65C5NEm8QMqOCxA5HnBQs+AGrxAuQ0LsEQ8JrZdwiXUoEskspFEsHAVIs6FRJIKHqil6GwRLAMikz4VSYykZCRJxQJVQfS0k03hvJNwdEQSGYSdRM5J5xLZDjYMhHKGnc3CvgYZ6hB2aLguCrqwAPOZbHrRwZ3FDsZ5out5ZxHlcrad6WQ69lIHI5J1Oh2MVFCOXAILkCMsAjheBh7C0Z4bZDAToa1wgUewSu0Tj1GMAlgwNBgQRrAUvjpwkcTd1WmJyPOmYft9DUriegxJEkFjQrEDGR8zYsElopz4ASycvwoJ70X/J4WXqyUTarCHWKiWgUTcRkxwAvvaFFSrm8fNevtk1Wq0ZwhdEcgIFYNbtfpK5US7VGwUrepafdls11aLjePVejlGdLeDiyzOKq9bZ1bblllvriybUa5/jq5V63F0Oq0vHQwuHWtXiuV4ExPRDiKsWWY9hvaFkIeUUrSss9V6aZ+ohpFO5w7mnCodW27XivViXCDcRT7Ckvgmx8KmfPNoKJ1cK9T11BIWnBMsG9QlIpRH07qujw8CgS+Q6b6hTw9QPHuluFy12sW1xsn2SsmsNFYa6+3T5vqsIu2A+D3if47ZLK6uzal5OLdRPW1WYpS1VHMLu03dSjUXyyVzu3zljFHZwplqo3i5vFXWK431dLV04VK5sXKlUlpLVa5sKtzRePhTzXL7XNmKRU1tzp+f+8x5vCpj7nxfeCOVc+cA+xDplO7C/oYGqYs2p9IsRH8TY4EKvVQyldThBFMLGasJRvE2LMAVpyJkzSfB2B8Z7RFOgqDmi07kA10pvRNEqkcPSeVc49ALlNvkcrIrXQY16AlfwkIul8n1NUg5lRSxEmFo2yJYcDuAhSVdgx7xqbCnW2l93ttUoLGHTC2lNo2tRU4QX0/YmFFVvtJphpafoeXnaQnfwwdQ8zPU/JTqI+dAYnYmZzaeUzA78Td5Q4M+QTb9TyTPzEtuKMl9EojQxyRydEZdKqMn7IXqe9V13Y0GpSt89YFkTlAYkS6GJIgjF2eAKQVUM0EiX4betB0HURb6pNH1SdAVzFYvXvvXmkx/ssno98CpXN4/l7BwXaQuBedh0IUaTGCoQYK7ArTg3stbgz9ugPK2dWYVDF7tDG48H7z+Ze/ti2Qy2YItHnJJGYhmBEh0Pz7UgJoDIBEC5dggQUALWuaqudwARgsC5YtpAhZs0lvgIWMgNd4Z+6VxBNiixQGYlDDJ/frR8PGLce4P73YmdS2CvWffD+5++/7rO6Pd+5OaAAgYIR5YbHFbcNLi+wO9+TXehyJMEe9f7Ix2r4FIcjC8/3p459Xg93vDh7uDu08HLx8OHj//4rbXLHMc7wiYKIBFyOX/vvo/OF6vlgEW3KGbbcodceSLpRm9fDr47nZhtuA/f7szrnZ488HoyfO9t/eGP15X6t38YfDsm8HOgw/vdka7b4a3no2e7AAlyuj6o+Hjnz+8uzbWb//LN/TDVDb0GZlnihlrOrx5d3D7J8WDG9rcTSgaybWzn5zcMQ+PZC7kIs+eUC8hKhOO8BOTa8pGv9/v/xUAAP//T2q0aPwKAAA
+    objectset.rio.cattle.io/id: 03f72c9f-f0ae-4acf-8f38-7bc11aa81d77
+  creationTimestamp: '2026-02-10T09:17:32Z'
+  generation: 106
+  labels:
+    objectset.rio.cattle.io/hash: 94735fcb5bcc9e009f5a88dd4b4bd6bcae7fbbca
+  managedFields:
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:field.cattle.io/publicEndpoints: {}
+            f:objectset.rio.cattle.io/applied: {}
+            f:objectset.rio.cattle.io/id: {}
+          f:labels:
+            .: {}
+            f:objectset.rio.cattle.io/hash: {}
+        f:spec:
+          f:progressDeadlineSeconds: {}
+          f:replicas: {}
+          f:revisionHistoryLimit: {}
+          f:selector: {}
+          f:strategy:
+            f:rollingUpdate:
+              .: {}
+              f:maxSurge: {}
+              f:maxUnavailable: {}
+            f:type: {}
+          f:template:
+            f:metadata:
+              f:annotations:
+                .: {}
+                f:cattle.io/timestamp: {}
+              f:labels:
+                .: {}
+                f:app: {}
+            f:spec:
+              f:containers:
+                k:{"name":"nacos"}:
+                  .: {}
+                  f:env:
+                    .: {}
+                    k:{"name":"JVM_MMS"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"JVM_MS"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"JVM_XMN"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"JVM_XMS"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"JVM_XMX"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"MODE"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"MYSQL_SERVICE_DB_NAME"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"MYSQL_SERVICE_HOST"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"MYSQL_SERVICE_JDBC_PARAM"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"MYSQL_SERVICE_PASSWORD"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"MYSQL_SERVICE_PORT"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"MYSQL_SERVICE_USER"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"NACOS_AUTH_IDENTITY_KEY"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"NACOS_AUTH_IDENTITY_VALUE"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"NACOS_AUTH_TOKEN"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"PREFER_HOST_MODE"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"SPRING_DATASOURCE_PLATFORM"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                  f:image: {}
+                  f:imagePullPolicy: {}
+                  f:livenessProbe:
+                    .: {}
+                    f:failureThreshold: {}
+                    f:httpGet:
+                      .: {}
+                      f:path: {}
+                      f:port: {}
+                      f:scheme: {}
+                    f:initialDelaySeconds: {}
+                    f:periodSeconds: {}
+                    f:successThreshold: {}
+                    f:timeoutSeconds: {}
+                  f:name: {}
+                  f:ports:
+                    .: {}
+                    k:{"containerPort":7848,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:hostPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                    k:{"containerPort":8848,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:hostPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                    k:{"containerPort":9848,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:hostPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                    k:{"containerPort":9849,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:hostPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                  f:readinessProbe:
+                    .: {}
+                    f:failureThreshold: {}
+                    f:httpGet:
+                      .: {}
+                      f:path: {}
+                      f:port: {}
+                      f:scheme: {}
+                    f:initialDelaySeconds: {}
+                    f:periodSeconds: {}
+                    f:successThreshold: {}
+                    f:timeoutSeconds: {}
+                  f:resources:
+                    .: {}
+                    f:limits:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                    f:requests:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                  f:startupProbe:
+                    .: {}
+                    f:failureThreshold: {}
+                    f:httpGet:
+                      .: {}
+                      f:path: {}
+                      f:port: {}
+                      f:scheme: {}
+                    f:initialDelaySeconds: {}
+                    f:periodSeconds: {}
+                    f:successThreshold: {}
+                    f:timeoutSeconds: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+              f:dnsPolicy: {}
+              f:initContainers:
+                .: {}
+                k:{"name":"wait-for-mysql"}:
+                  .: {}
+                  f:command: {}
+                  f:env:
+                    .: {}
+                    k:{"name":"MYSQL_PWD"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                  f:image: {}
+                  f:imagePullPolicy: {}
+                  f:name: {}
+                  f:resources: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+              f:restartPolicy: {}
+              f:schedulerName: {}
+              f:securityContext: {}
+              f:terminationGracePeriodSeconds: {}
+      manager: rancher
+      operation: Update
+      time: '2026-08-12T05:50:23Z'
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:deployment.kubernetes.io/revision: {}
+        f:status:
+          f:availableReplicas: {}
+          f:conditions:
+            .: {}
+            k:{"type":"Available"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Progressing"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+          f:observedGeneration: {}
+          f:readyReplicas: {}
+          f:replicas: {}
+          f:updatedReplicas: {}
+      manager: kube-controller-manager
+      operation: Update
+      subresource: status
+      time: '2026-08-12T05:51:11Z'
+  name: nacos
+  namespace: nms4cloud
+  resourceVersion: '27781378'
+  uid: 64d6c37b-0f6b-4085-b3d9-5199ddc0a0f6
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: nacos
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        cattle.io/timestamp: '2026-06-22T02:46:33Z'
+      labels:
+        app: nacos
+    spec:
+      containers:
+        - env:
+            - name: MODE
+              value: standalone
+            - name: PREFER_HOST_MODE
+              value: hostname
+            - name: SPRING_DATASOURCE_PLATFORM
+              value: mysql
+            - name: MYSQL_SERVICE_HOST
+              value: mysql
+            - name: MYSQL_SERVICE_PORT
+              value: '3306'
+            - name: MYSQL_SERVICE_DB_NAME
+              value: nacos
+            - name: MYSQL_SERVICE_USER
+              value: root
+            - name: MYSQL_SERVICE_PASSWORD
+              value: st11338
+            - name: MYSQL_SERVICE_JDBC_PARAM
+              value: >-
+                characterEncoding=utf8&connectTimeout=3000&socketTimeout=10000&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
+            - name: NACOS_AUTH_IDENTITY_KEY
+              value: nacos_server
+            - name: NACOS_AUTH_IDENTITY_VALUE
+              value: nacos_server
+            - name: NACOS_AUTH_TOKEN
+              value: U2VjcmV0S2V5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDE=
+            - name: JVM_XMS
+              value: 2g
+            - name: JVM_XMX
+              value: 2g
+            - name: JVM_XMN
+              value: 1g
+            - name: JVM_MS
+              value: 128m
+            - name: JVM_MMS
+              value: 320m
+          image: nacos/nacos-server:v2.2.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /nacos/index.html
+              port: 8848
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: nacos
+          ports:
+            - containerPort: 8848
+              hostPort: 8848
+              name: client
+              protocol: TCP
+            - containerPort: 9848
+              hostPort: 9848
+              name: client-rpc
+              protocol: TCP
+            - containerPort: 9849
+              hostPort: 9849
+              name: raft-rpc
+              protocol: TCP
+            - containerPort: 7848
+              hostPort: 7848
+              name: old-raft-rpc
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /nacos/index.html
+              port: 8848
+              scheme: HTTP
+            initialDelaySeconds: 40
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: '2'
+              memory: 4Gi
+            requests:
+              cpu: 500m
+              memory: 2Gi
+          startupProbe:
+            failureThreshold: 30
+            httpGet:
+              path: /nacos/index.html
+              port: 8848
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      initContainers:
+        - command:
+            - sh
+            - '-c'
+            - >
+              echo "等待 MySQL 完全就绪..."
+
+              until mysql -h mysql -P 3306 -u root -e "SELECT 1" > /dev/null
+              2>&1; do
+                echo "MySQL 尚未就绪，等待 5 秒后重试..."
+                sleep 5
+              done
+
+              echo "MySQL 已完全就绪"
+
+
+              echo "验证 nacos 数据库是否存在..."
+
+              until mysql -h mysql -P 3306 -u root -e "USE nacos; SELECT
+              count(*) FROM config_info;" > /dev/null 2>&1; do
+                echo "警告: nacos 数据库不存在或表结构未初始化，请执行 SQL 脚本！"
+                echo "等待 10 秒后重试..."
+                sleep 10
+              done
+
+              echo "nacos 数据库验证成功"
+          env:
+            - name: MYSQL_PWD
+              value: st11338
+          image: mysql:8.0
+          imagePullPolicy: IfNotPresent
+          name: wait-for-mysql
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+    - lastTransitionTime: '2026-02-10T09:17:32Z'
+      lastUpdateTime: '2026-06-22T02:47:37Z'
+      message: ReplicaSet "nacos-866f775fc9" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: 'True'
+      type: Progressing
+    - lastTransitionTime: '2026-08-12T05:51:11Z'
+      lastUpdateTime: '2026-08-12T05:51:11Z'
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: 'True'
+      type: Available
+  observedGeneration: 106
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

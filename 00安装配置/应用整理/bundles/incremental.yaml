@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../base/business/gateway.yaml
+- ../base/business/nginx.yaml
+- ../base/business/nms4cloud-bi.yaml
+- ../base/business/nms4cloud-biz.yaml
+- ../base/business/nms4cloud-crm.yaml
+- ../base/business/nms4cloud-mall.yaml
+- ../base/business/nms4cloud-mq.yaml
+- ../base/business/nms4cloud-netty.yaml
+- ../base/business/nms4cloud-order.yaml
+- ../base/business/nms4cloud-payment.yaml
+- ../base/business/nms4cloud-platform.yaml
+- ../base/business/nms4cloud-pos4cloud.yaml
+- ../base/business/nms4cloud-product.yaml
+- ../base/business/nms4cloud-wechat.yaml
+- ../base/business/nms4cloud-wms.yaml
+- ../base/data/clickhouse.yaml
+- ../base/data/redis.yaml
+- ../base/messaging/emqx-54.yaml
+- ../base/messaging/rocketmq-broker.yaml
+- ../base/messaging/rocketmq-console.yaml
+- ../base/messaging/rocketmq-nameserver.yaml
+- ../base/messaging/zookeeper.yaml
+- ../base/platform/xxl-job.yaml

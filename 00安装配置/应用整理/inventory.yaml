@@ -1,0 +1,380 @@
+apiVersion: codex.nms4cloud/v1
+kind: ApplicationInventory
+applications:
+- name: clickhouse
+  namespace: nms4cloud
+  source: clickhouse.yaml
+  group: data
+  replicas: 1
+  images:
+  - clickhouse/clickhouse-server:23.3
+  pvcRefs:
+  - clickhouse-pvc
+  secretRefs: []
+- name: emqx-54
+  namespace: nms4cloud
+  source: emqx-54.yaml
+  group: messaging
+  replicas: 1
+  images:
+  - 10.43.92.252/library/emqx:5.4.1
+  pvcRefs: []
+  secretRefs: []
+- name: gateway
+  namespace: nms4cloud
+  source: gateway.yaml
+  group: business
+  replicas: 1
+  images:
+  - ccr.ccs.tencentyun.com/lemontree/ktv:yd4cloud_gateway_latest
+  pvcRefs: []
+  secretRefs: []
+- name: harbor-core
+  namespace: harbor
+  source: harbor-core.yaml
+  group: platform
+  replicas: 1
+  images:
+  - goharbor/harbor-core:v2.10.0
+  pvcRefs: []
+  secretRefs:
+  - harbor-core
+  - harbor-jobservice
+- name: harbor-jobservice
+  namespace: harbor
+  source: harbor-jobservice.yaml
+  group: platform
+  replicas: 1
+  images:
+  - goharbor/harbor-jobservice:v2.10.0
+  pvcRefs:
+  - harbor-jobservice
+  secretRefs:
+  - harbor-core
+- name: harbor-nginx
+  namespace: harbor
+  source: harbor-nginx.yaml
+  group: platform
+  replicas: 1
+  images:
+  - goharbor/nginx-photon:v2.10.0
+  pvcRefs: []
+  secretRefs: []
+- name: harbor-portal
+  namespace: harbor
+  source: harbor-portal.yaml
+  group: platform
+  replicas: 1
+  images:
+  - goharbor/harbor-portal:v2.10.0
+  pvcRefs: []
+  secretRefs: []
+- name: harbor-registry
+  namespace: harbor
+  source: harbor-registry.yaml
+  group: platform
+  replicas: 1
+  images:
+  - goharbor/registry-photon:v2.10.0
+  - goharbor/harbor-registryctl:v2.10.0
+  pvcRefs:
+  - harbor-registry
+  secretRefs:
+  - harbor-core
+  - harbor-jobservice
+- name: jenkins
+  namespace: jenkins
+  source: jenkins.yaml
+  group: platform
+  replicas: 1
+  images:
+  - jenkins/jenkins:lts-jdk21
+  pvcRefs:
+  - jenkins-pvc
+  secretRefs: []
+- name: local-path-provisioner
+  namespace: local-path-storage
+  source: local-path-provisioner.yaml
+  group: cluster
+  replicas: 1
+  images:
+  - rancher/local-path-provisioner:v0.0.30
+  pvcRefs: []
+  secretRefs: []
+- name: mysql
+  namespace: nms4cloud
+  source: mysql.yaml
+  group: data
+  replicas: 1
+  images:
+  - mysql:8.0
+  pvcRefs:
+  - mysql-pvc
+  secretRefs: []
+- name: nacos
+  namespace: nms4cloud
+  source: nacos.yaml
+  group: business
+  replicas: 1
+  images:
+  - nacos/nacos-server:v2.2.0
+  pvcRefs: []
+  secretRefs: []
+- name: nexus
+  namespace: nexus
+  source: nexus.yaml
+  group: platform
+  replicas: 1
+  images:
+  - docker.io/sonatype/nexus3:3.68.1
+  pvcRefs:
+  - nexus-data
+  secretRefs: []
+- name: nginx
+  namespace: nms4cloud
+  source: nginx.yaml
+  group: business
+  replicas: 1
+  images:
+  - 10.43.92.252/library/nginx:1.25.3
+  pvcRefs:
+  - nginx-conf-files
+  - nginx-html-files
+  secretRefs: []
+- name: nms4cloud-bi
+  namespace: nms4cloud
+  source: nms4cloud-bi.yaml
+  group: business
+  replicas: 1
+  images:
+  - 10.43.92.252/library/nms4cloud-bi:latest
+  pvcRefs: []
+  secretRefs: []
+- name: nms4cloud-biz
+  namespace: nms4cloud
+  source: nms4cloud-biz.yaml
+  group: business
+  replicas: 1
+  images:
+  - 10.43.92.252/library/nms4cloud-biz:latest
+  pvcRefs: []
+  secretRefs: []
+- name: nms4cloud-coupon-mock
+  namespace: nms4cloud
+  source: nms4cloud-coupon-mock.yaml
+  group: business
+  replicas: 0
+  images:
+  - 10.43.92.252/library/nms4cloud-coupon-mock:latest
+  pvcRefs: []
+  secretRefs: []
+- name: nms4cloud-crm
+  namespace: nms4cloud
+  source: nms4cloud-crm.yaml
+  group: business
+  replicas: 1
+  images:
+  - 10.43.92.252/library/nms4cloud-crm:latest
+  pvcRefs: []
+  secretRefs: []
+- name: nms4cloud-mall
+  namespace: nms4cloud
+  source: nms4cloud-mall.yaml
+  group: business
+  replicas: 1
+  images:
+  - 10.43.92.252/library/nms4cloud-mall:latest
+  pvcRefs: []
+  secretRefs: []
+- name: nms4cloud-mq
+  namespace: nms4cloud
+  source: nms4cloud-mq.yaml
+  group: business
+  replicas: 1
+  images:
+  - ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_mq_latest
+  pvcRefs: []
+  secretRefs: []
+- name: nms4cloud-netty
+  namespace: nms4cloud
+  source: nms4cloud-netty.yaml
+  group: business
+  replicas: 1
+  images:
+  - ccr.ccs.tencentyun.com/lemontree/ktv:nms4cloud_netty_latest
+  pvcRefs: []
+  secretRefs: []
+- name: nms4cloud-order
+  namespace: nms4cloud
+  source: nms4cloud-order.yaml
+  group: business
+  replicas: 1
+  images:
+  - 10.43.92.252/library/nms4cloud-order:latest
+  pvcRefs: []
+  secretRefs: []
+- name: nms4cloud-payment
+  namespace: nms4cloud
+  source: nms4cloud-payment.yaml
+  group: business
+  replicas: 1
+  images:
+  - 10.43.92.252/library/nms4cloud-payment:latest
+  pvcRefs: []
+  secretRefs: []
+- name: nms4cloud-platform
+  namespace: nms4cloud
+  source: nms4cloud-platform.yaml
+  group: business
+  replicas: 1
+  images:
+  - 10.43.92.252/library/nms4cloud-platform:latest
+  pvcRefs: []
+  secretRefs: []
+- name: nms4cloud-pos11report
+  namespace: nms4cloud
+  source: nms4cloud-pos11report.yaml
+  group: business
+  replicas: 0
+  images:
+  - 10.43.92.252/library/nms4cloud-pos11report:latest
+  pvcRefs: []
+  secretRefs: []
+- name: nms4cloud-pos4cloud
+  namespace: nms4cloud
+  source: nms4cloud-pos4cloud.yaml
+  group: business
+  replicas: 1
+  images:
+  - 10.43.92.252/library/nms4cloud-pos4cloud:latest
+  pvcRefs: []
+  secretRefs: []
+- name: nms4cloud-pos5sync
+  namespace: nms4cloud
+  source: nms4cloud-pos5sync.yaml
+  group: business
+  replicas: 0
+  images:
+  - 10.43.92.252/library/nms4cloud-pos5sync:latest
+  pvcRefs: []
+  secretRefs: []
+- name: nms4cloud-pos8book
+  namespace: nms4cloud
+  source: nms4cloud-pos8book.yaml
+  group: business
+  replicas: 0
+  images:
+  - 10.43.92.252/library/nms4cloud-pos8book:latest
+  pvcRefs: []
+  secretRefs: []
+- name: nms4cloud-pos9cash
+  namespace: nms4cloud
+  source: nms4cloud-pos9cash.yaml
+  group: business
+  replicas: 0
+  images:
+  - 10.43.92.252/library/nms4cloud-pos9cash:latest
+  pvcRefs: []
+  secretRefs: []
+- name: nms4cloud-product
+  namespace: nms4cloud
+  source: nms4cloud-product.yaml
+  group: business
+  replicas: 1
+  images:
+  - 10.43.92.252/library/nms4cloud-product:latest
+  pvcRefs: []
+  secretRefs: []
+- name: nms4cloud-wechat
+  namespace: nms4cloud
+  source: nms4cloud-wechat.yaml
+  group: business
+  replicas: 1
+  images:
+  - 10.43.92.252/library/nms4cloud-wechat:latest
+  pvcRefs: []
+  secretRefs: []
+- name: nms4cloud-wms
+  namespace: nms4cloud
+  source: nms4cloud-wms.yaml
+  group: business
+  replicas: 1
+  images:
+  - 10.43.92.252/library/nms4cloud-wms:latest
+  pvcRefs: []
+  secretRefs: []
+- name: redis
+  namespace: nms4cloud
+  source: redis.yaml
+  group: data
+  replicas: 1
+  images:
+  - redis:7.0
+  pvcRefs: []
+  secretRefs: []
+- name: rocketmq-broker
+  namespace: nms4cloud
+  source: rocketmq-broker.yaml
+  group: messaging
+  replicas: 1
+  images:
+  - apache/rocketmq:5.1.0
+  pvcRefs: []
+  secretRefs: []
+- name: rocketmq-console
+  namespace: nms4cloud
+  source: rocketmq-console.yaml
+  group: messaging
+  replicas: 1
+  images:
+  - apacherocketmq/rocketmq-console:2.0.0
+  pvcRefs: []
+  secretRefs: []
+- name: rocketmq-nameserver
+  namespace: nms4cloud
+  source: rocketmq-nameserver.yaml
+  group: messaging
+  replicas: 1
+  images:
+  - apache/rocketmq:5.1.0
+  pvcRefs: []
+  secretRefs: []
+- name: xxl-job
+  namespace: nms4cloud
+  source: xxl-job.yaml
+  group: platform
+  replicas: 1
+  images:
+  - 10.43.92.252/library/xxl-job-admin:2.4.1
+  pvcRefs: []
+  secretRefs:
+  - xxl-job-secret
+- name: yd4cloud-capital
+  namespace: nms4cloud
+  source: yd4cloud-capital.yaml
+  group: business
+  replicas: 0
+  images:
+  - ccr.ccs.tencentyun.com/lemontree/ktv:yd4cloud_capital_latest
+  pvcRefs: []
+  secretRefs: []
+- name: yd4cloud-nms
+  namespace: nms4cloud
+  source: yd4cloud-nms.yaml
+  group: business
+  replicas: 0
+  images:
+  - ccr.ccs.tencentyun.com/lemontree/ktv:yd4cloud_nms_latest
+  pvcRefs: []
+  secretRefs: []
+- name: zookeeper
+  namespace: nms4cloud
+  source: zookeeper.yaml
+  group: messaging
+  replicas: 1
+  images:
+  - 10.43.92.252/library/zookeeper:3.9.3
+  pvcRefs:
+  - zookeeper-data
+  - zookeeper-datalog
+  secretRefs: []

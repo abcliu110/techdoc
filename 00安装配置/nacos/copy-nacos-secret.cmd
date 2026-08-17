@@ -1,0 +1,1 @@
+kubectl -n nacos get secret nacos-admin -o json | jq '.metadata.namespace="lgy" | .metadata.name="nacos-client-auth" | del(.metadata.uid,.metadata.resourceVersion,.metadata.creationTimestamp,.metadata.managedFields,.metadata.ownerReferences)' | kubectl apply -f -

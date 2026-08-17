@@ -1,0 +1,245 @@
+pipeline {
+    agent {
+        kubernetes {
+            inheritFrom 'enterprise-maven-kaniko'
+            defaultContainer 'maven'
+        }
+    }
+
+    parameters {
+        booleanParam(name: 'SKIP_TESTS', defaultValue: true, description: 'Skip Maven tests for development builds.')
+    }
+
+    options {
+        skipDefaultCheckout(true)
+        disableConcurrentBuilds()
+        buildDiscarder(logRotator(numToKeepStr: '1', artifactNumToKeepStr: '1'))
+        timeout(time: 30, unit: 'MINUTES')
+    }
+
+    environment {
+        APP_NAME = 'demo-springboot'
+        MAVEN_GROUP_ID = 'com.example'
+        MAVEN_ARTIFACT_ID = 'demo-springboot'
+        NEXUS_URL = 'http://nexus.nexus.svc.cluster.local:8081'
+        NEXUS_RELEASE_REPO = 'maven-releases'
+        NEXUS_SNAPSHOT_REPO = 'maven-snapshots'
+        NEXUS_CREDENTIAL_ID = 'nexus-deployer'
+        HARBOR_REGISTRY = '192.168.253.128:30083'
+        HARBOR_PROJECT = 'library'
+        HARBOR_CREDENTIAL_ID = 'harbor-robot'
+        DOCKERFILE = 'Dockerfile'
+        BUILD_CONTEXT = '.'
+    }
+
+    stages {
+        stage('Checkout Application') {
+            steps {
+                dir('app') {
+                    script {
+                        def checkoutInfo = checkout scm
+                        env.GIT_COMMIT = checkoutInfo.GIT_COMMIT
+                    }
+                }
+            }
+        }
+
+        stage('Build Policy') {
+            steps {
+                script {
+                    def branchName = env.BRANCH_NAME ?: 'unknown'
+                    def isChangeRequest = env.CHANGE_ID?.trim()
+                    def isFeature = branchName ==~ /^feature\/.+/
+                    def isMain = branchName in ['main', 'master']
+                    def isRelease = branchName ==~ /^release\/.+/
+
+                    if (isRelease && params.SKIP_TESTS) {
+                        error 'Release branches cannot skip tests'
+                    }
+
+                    env.PIPELINE_BRANCH = branchName
+                    env.SKIP_TESTS = params.SKIP_TESTS.toString()
+                    env.PUBLISH_ALLOWED = (!isChangeRequest && !isFeature && (isMain || isRelease)).toString()
+                    env.GIT_SHORT_SHA = env.GIT_COMMIT.take(12)
+                    env.IMAGE_TAG = "${env.GIT_SHORT_SHA}-${env.BUILD_NUMBER}"
+                    env.IMAGE_REF = "${env.HARBOR_REGISTRY}/${env.HARBOR_PROJECT}/${env.APP_NAME}:${env.IMAGE_TAG}"
+                    currentBuild.displayName = "#${env.BUILD_NUMBER} ${branchName} ${env.GIT_SHORT_SHA}"
+
+                    echo "BRANCH=${branchName} PUBLISH=${env.PUBLISH_ALLOWED} TEST_GATE=${params.SKIP_TESTS ? 'SKIPPED_BY_CONFIGURATION' : 'ENABLED'}"
+                }
+            }
+        }
+
+        stage('Build And Test') {
+            steps {
+                container('maven') {
+                    dir('app') {
+                        sh '''
+                        set -eu
+                        mkdir -p .ci-tmp
+                        cat > .ci-tmp/settings.xml <<EOF
+<settings>
+  <mirrors>
+    <mirror>
+      <id>nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>${NEXUS_URL}/repository/maven-public/</url>
+    </mirror>
+  </mirrors>
+</settings>
+EOF
+                        TEST_FLAG=''
+                        if [ "${SKIP_TESTS}" = 'true' ]; then TEST_FLAG='-DskipTests'; fi
+                        mvn -B -ntp clean package ${TEST_FLAG} \
+                          -s .ci-tmp/settings.xml \
+                          -Dmaven.repo.local=.ci-tmp/m2
+                        ARTIFACT=$(find . -path '*/target/*.jar' -type f \
+                          ! -name '*-sources.jar' ! -name '*-javadoc.jar' -print -quit)
+                        test -n "$ARTIFACT"
+                        cp "$ARTIFACT" .ci-tmp/artifact.jar
+                        cp pom.xml .ci-tmp/pom.xml
+                        awk '
+                          /<artifactId>[[:space:]]*demo-springboot[[:space:]]*<\\/artifactId>/ { found=1; next }
+                          found && /<version>/ {
+                            line=$0
+                            sub(/^.*<version>[[:space:]]*/, "", line)
+                            sub(/[[:space:]]*<\\/version>.*$/, "", line)
+                            print line
+                            exit
+                          }
+                        ' pom.xml > .ci-tmp/version.txt
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Validate Artifact Policy') {
+            steps {
+                script {
+                    def version = readFile('app/.ci-tmp/version.txt').trim()
+                    if (!version || version.readLines().size() != 1) {
+                        error 'Unable to determine a single Maven project version'
+                    }
+                    def snapshot = version.endsWith('-SNAPSHOT')
+                    if (env.PIPELINE_BRANCH in ['main', 'master'] && !snapshot) {
+                        error 'main/master may publish Snapshot artifacts only'
+                    }
+                    if ((env.PIPELINE_BRANCH ==~ /^release\/.+/) && snapshot) {
+                        error 'release branches require a non-Snapshot Maven version'
+                    }
+                    env.MAVEN_VERSION = version
+                    env.MAVEN_REPOSITORY_ID = snapshot ? 'nexus-snapshots' : 'nexus-releases'
+                    env.MAVEN_REPOSITORY_NAME = snapshot ? env.NEXUS_SNAPSHOT_REPO : env.NEXUS_RELEASE_REPO
+                }
+            }
+        }
+
+        stage('Publish Maven Artifact') {
+            when {
+                expression { env.PUBLISH_ALLOWED == 'true' }
+            }
+            steps {
+                container('maven') {
+                    dir('publish') {
+                        withCredentials([usernamePassword(
+                            credentialsId: env.NEXUS_CREDENTIAL_ID,
+                            usernameVariable: 'NEXUS_USER',
+                            passwordVariable: 'NEXUS_PASSWORD'
+                        )]) {
+                            sh '''
+                            set +x
+                            cp ../app/.ci-tmp/artifact.jar .
+                            trap 'rm -f publish-settings.xml artifact.jar' EXIT
+                            xml_escape() {
+                              sed -e 's/&/\\&amp;/g' -e 's/</\\&lt;/g' -e 's/>/\\&gt;/g'
+                            }
+                            NEXUS_USER_XML="$(printf '%s' "$NEXUS_USER" | xml_escape)"
+                            NEXUS_PASSWORD_XML="$(printf '%s' "$NEXUS_PASSWORD" | xml_escape)"
+                            cat > publish-settings.xml <<EOF
+<settings>
+<mirrors><mirror><id>nexus</id><mirrorOf>*</mirrorOf><url>${NEXUS_URL}/repository/maven-public/</url></mirror></mirrors>
+<servers>
+  <server><id>nexus-releases</id><username>${NEXUS_USER_XML}</username><password>${NEXUS_PASSWORD_XML}</password></server>
+  <server><id>nexus-snapshots</id><username>${NEXUS_USER_XML}</username><password>${NEXUS_PASSWORD_XML}</password></server>
+</servers></settings>
+EOF
+                            mvn -B -ntp org.apache.maven.plugins:maven-deploy-plugin:3.1.4:deploy-file \
+                              -s publish-settings.xml \
+                              -Dmaven.repo.local=.m2 \
+                              -Dfile=artifact.jar \
+                              -DgroupId="${MAVEN_GROUP_ID}" \
+                              -DartifactId="${MAVEN_ARTIFACT_ID}" \
+                              -Dversion="${MAVEN_VERSION}" \
+                              -Dpackaging=jar \
+                              -DgeneratePom=false \
+                              -DrepositoryId="${MAVEN_REPOSITORY_ID}" \
+                              -Durl="${NEXUS_URL}/repository/${MAVEN_REPOSITORY_NAME}/"
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Build And Publish Image') {
+            when {
+                expression { env.PUBLISH_ALLOWED == 'true' }
+            }
+            steps {
+                container('kaniko') {
+                    dir('app') {
+                        script {
+                            if (!fileExists(env.DOCKERFILE)) {
+                                error "Dockerfile not found: ${env.DOCKERFILE}"
+                            }
+                        }
+                        withCredentials([usernamePassword(
+                            credentialsId: env.HARBOR_CREDENTIAL_ID,
+                            usernameVariable: 'HARBOR_USER',
+                            passwordVariable: 'HARBOR_PASSWORD'
+                        )]) {
+                            sh '''
+                            set +x
+                            mkdir -p /kaniko/.docker
+                            trap 'rm -f /kaniko/.docker/config.json' EXIT
+                            AUTH=$(printf '%s' "${HARBOR_USER}:${HARBOR_PASSWORD}" | base64 | tr -d '\n')
+                            printf '{"auths":{"%s":{"auth":"%s"}}}' "$HARBOR_REGISTRY" "$AUTH" > /kaniko/.docker/config.json
+                            /kaniko/executor \
+                              --context="${WORKSPACE}/app/${BUILD_CONTEXT}" \
+                              --dockerfile="${WORKSPACE}/app/${DOCKERFILE}" \
+                              --destination="${IMAGE_REF}" \
+                              --skip-tls-verify-registry="${HARBOR_REGISTRY}" \
+                              --cache=false \
+                              --verbosity=info
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Archive Metadata') {
+            steps {
+                script {
+                    writeFile file: 'build-metadata.properties', text: """\
+build.number=${env.BUILD_NUMBER}
+git.commit=${env.GIT_COMMIT}
+image.ref=${env.PUBLISH_ALLOWED == 'true' ? env.IMAGE_REF : ''}
+branch=${env.PIPELINE_BRANCH}
+publish=${env.PUBLISH_ALLOWED}
+test.gate=${params.SKIP_TESTS ? 'SKIPPED_BY_CONFIGURATION' : 'ENABLED'}
+"""
+                    archiveArtifacts artifacts: 'build-metadata.properties', fingerprint: true
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            sh 'rm -rf app/.ci-tmp /kaniko/.docker/config.json || true'
+            deleteDir()
+        }
+    }
+}

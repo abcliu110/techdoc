@@ -1,0 +1,86 @@
+replicaCount: 1
+
+image:
+  registry: docker.gitea.com
+  repository: gitea
+  tag: "1.27.0"
+  pullPolicy: IfNotPresent
+  rootless: true
+
+service:
+  http:
+    type: NodePort
+    port: 3000
+    nodePort: 30087
+  ssh:
+    type: NodePort
+    port: 22
+    nodePort: 30088
+
+ingress:
+  enabled: false
+
+serviceAccount:
+  create: false
+  automountServiceAccountToken: false
+
+persistence:
+  enabled: true
+  create: true
+  mount: true
+  claimName: gitea-shared-storage
+  size: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClass: local-path
+  annotations:
+    helm.sh/resource-policy: keep
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 768Mi
+
+gitea:
+  admin:
+    existingSecret: gitea-admin
+    username: admin
+    email: "gitea@local.domain"
+    passwordMode: initialOnlyNoReset
+  config:
+    server:
+      PROTOCOL: http
+      DOMAIN: 192.168.253.128
+      ROOT_URL: http://192.168.253.128:30087/
+      SSH_DOMAIN: 192.168.253.128
+      SSH_PORT: 30088
+      SSH_LISTEN_PORT: 2222
+    database:
+      DB_TYPE: sqlite3
+    service:
+      DISABLE_REGISTRATION: true
+      REQUIRE_SIGNIN_VIEW: true
+    actions:
+      ENABLED: false
+    packages:
+      ENABLED: false
+    security:
+      PASSWORD_COMPLEXITY: lower,upper,digit
+
+valkey-cluster:
+  enabled: false
+
+valkey:
+  enabled: false
+
+postgresql-ha:
+  enabled: false
+
+postgresql:
+  enabled: false
+
+test:
+  enabled: false

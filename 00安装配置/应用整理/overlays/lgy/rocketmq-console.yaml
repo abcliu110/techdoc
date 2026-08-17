@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rocketmq-console
+  labels:
+    app: rocketmq-console
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: rocketmq-console
+  template:
+    metadata:
+      labels:
+        app: rocketmq-console
+    spec:
+      containers:
+      - name: console
+        image: 192.168.253.128:30083/dockerhub/apacherocketmq/rocketmq-console:2.0.0
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: JAVA_OPTS
+          value: -Xms128m -Xmx192m -Drocketmq.namesrv.addr=rocketmq-nameserver:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false
+        ports:
+        - name: http
+          containerPort: 8080
+        resources:
+          requests:
+            cpu: 75m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 384Mi
+        readinessProbe:
+          tcpSocket:
+            port: http
+          initialDelaySeconds: 25
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: http
+          initialDelaySeconds: 60
+          periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rocketmq-console
+spec:
+  selector:
+    app: rocketmq-console
+  ports:
+  - name: http
+    port: 8080
+    targetPort: http

@@ -1,0 +1,216 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: '2'
+    field.cattle.io/publicEndpoints: >-
+      [{"port":30002,"protocol":"TCP","serviceName":"nexus:nexus","allNodes":true},{"port":30055,"protocol":"TCP","serviceName":"nexus:nexus","allNodes":true}]
+    objectset.rio.cattle.io/applied: >-
+      H4sIAAAAAAAA/3yTb2vbMBDGv8q413ZqJ47tCvYiLDA2mlLWUQqjlLN8brXq3yQ5a1f03YfsLg0r2yvdJc/d/fSc/AxoxRU5L4wGBmitP9mXkMGD0D0w2JKV5kmRDpCBooA9BgT2DKi1CRiE0T6lpvtOPHgKCyfMgmMIkhbCnIjUpKmGal3ydb4uTqu8qnmXIw59PnQdEfJVs65biBlI7Ej+t909+ntg0BbNsFqfVlVRrvp6WVenQ9v0A+fY9Cusy6qp+qbs69RUoyJgoOlx9DCn3iJ//S1m4C3xNNaRlYKjB1Zm4EkSD8alPxQGfn92wENrX8tjBoGUlRhokh6ZJP9Z8WciNzqg0OQ8sG/PQHo/nS/Qn84vv27OzqrPt5vt9vZqd3ux+bLZXUIGe5RjUuTXypd37/Jr9bhMxzXb4eNWOOJhR8q4p0vxi94v7yDeZCAU3qWi3vAHcslPbzSGJ0snE9mKrRZ1uyjhjWvWuDATHoAvjAvA2qItD+qf1EHM3mjWRVEcNPPsCceRN6PjNBkkhRJhirgdgcGyKAo1vbl0C2BQfRRpVY5+jOSPleXfymVSxgz2Ro6KdmbUL+wqhRcY0hOab5xPm3qFS1m8SXBzsT/exovWpq/FB9LhatJ8kCjUhJOC8yPj5u4x3sQY4+8AAAD//4iNiItqAwAA
+    objectset.rio.cattle.io/id: 74f451c5-5094-46cb-aafd-fbbeeac37568
+  creationTimestamp: '2026-02-26T06:51:43Z'
+  generation: 4
+  labels:
+    objectset.rio.cattle.io/hash: 807f35944013d62649f87dfcca7d3a61474d71d6
+  managedFields:
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:field.cattle.io/publicEndpoints: {}
+            f:objectset.rio.cattle.io/applied: {}
+            f:objectset.rio.cattle.io/id: {}
+          f:labels:
+            .: {}
+            f:objectset.rio.cattle.io/hash: {}
+        f:spec:
+          f:progressDeadlineSeconds: {}
+          f:replicas: {}
+          f:revisionHistoryLimit: {}
+          f:selector: {}
+          f:strategy:
+            f:rollingUpdate:
+              .: {}
+              f:maxSurge: {}
+              f:maxUnavailable: {}
+            f:type: {}
+          f:template:
+            f:metadata:
+              f:annotations:
+                .: {}
+                f:cattle.io/timestamp: {}
+              f:labels:
+                .: {}
+                f:app: {}
+            f:spec:
+              f:containers:
+                k:{"name":"nexus"}:
+                  .: {}
+                  f:env:
+                    .: {}
+                    k:{"name":"INSTALL4J_ADD_VM_PARAMS"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                  f:image: {}
+                  f:imagePullPolicy: {}
+                  f:name: {}
+                  f:ports:
+                    .: {}
+                    k:{"containerPort":5000,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                    k:{"containerPort":8081,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                  f:resources:
+                    .: {}
+                    f:limits:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                    f:requests:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+                  f:volumeMounts:
+                    .: {}
+                    k:{"mountPath":"/nexus-data"}:
+                      .: {}
+                      f:mountPath: {}
+                      f:name: {}
+              f:dnsPolicy: {}
+              f:restartPolicy: {}
+              f:schedulerName: {}
+              f:securityContext: {}
+              f:terminationGracePeriodSeconds: {}
+              f:volumes:
+                .: {}
+                k:{"name":"data"}:
+                  .: {}
+                  f:name: {}
+                  f:persistentVolumeClaim:
+                    .: {}
+                    f:claimName: {}
+      manager: rancher
+      operation: Update
+      time: '2026-02-26T06:53:06Z'
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:deployment.kubernetes.io/revision: {}
+        f:status:
+          f:availableReplicas: {}
+          f:conditions:
+            .: {}
+            k:{"type":"Available"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Progressing"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+          f:observedGeneration: {}
+          f:readyReplicas: {}
+          f:replicas: {}
+          f:updatedReplicas: {}
+      manager: kube-controller-manager
+      operation: Update
+      subresource: status
+      time: '2026-08-11T06:09:06Z'
+  name: nexus
+  namespace: nexus
+  resourceVersion: '27628364'
+  uid: 38d76ce2-b203-42d1-a2f8-19553bb25c0f
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: nexus
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        cattle.io/timestamp: '2026-02-26T06:53:07Z'
+      labels:
+        app: nexus
+    spec:
+      containers:
+        - env:
+            - name: INSTALL4J_ADD_VM_PARAMS
+              value: '-Xms1g -Xmx2g -XX:MaxDirectMemorySize=2g'
+          image: docker.io/sonatype/nexus3:3.68.1
+          imagePullPolicy: IfNotPresent
+          name: nexus
+          ports:
+            - containerPort: 8081
+              name: web
+              protocol: TCP
+            - containerPort: 5000
+              name: docker
+              protocol: TCP
+          resources:
+            limits:
+              cpu: '2'
+              memory: 4Gi
+            requests:
+              cpu: '1'
+              memory: 2Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /nexus-data
+              name: data
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: nexus-data
+status:
+  availableReplicas: 1
+  conditions:
+    - lastTransitionTime: '2026-02-26T06:51:43Z'
+      lastUpdateTime: '2026-02-26T06:53:45Z'
+      message: ReplicaSet "nexus-69d9958f5c" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: 'True'
+      type: Progressing
+    - lastTransitionTime: '2026-08-11T06:09:06Z'
+      lastUpdateTime: '2026-08-11T06:09:06Z'
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: 'True'
+      type: Available
+  observedGeneration: 4
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

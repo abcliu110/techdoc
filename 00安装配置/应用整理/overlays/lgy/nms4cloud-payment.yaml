@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nms4cloud-payment
+  labels:
+    app: nms4cloud-payment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nms4cloud-payment
+  template:
+    metadata:
+      labels:
+        app: nms4cloud-payment
+    spec:
+      containers:
+      - name: nms4cloud-payment
+        image: 192.168.253.128:30083/library/nms4cloud-payment:c5b4beb12158-10
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: nacos-client
+        env:
+        - name: JAVA_TOOL_OPTIONS
+          value: -Xms128m -Xmx512m -XX:MaxMetaspaceSize=256m
+        ports:
+        - name: http
+          containerPort: 18138
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 1280Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nms4cloud-payment
+spec:
+  selector:
+    app: nms4cloud-payment
+  ports:
+  - name: http
+    port: 18138
+    targetPort: http

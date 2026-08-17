@@ -1,0 +1,106 @@
+server:
+  port: 18119
+spring:
+  shardingsphere:
+    props:
+      sql-show: false
+    mode:
+      # type: Memory
+      type: Standalone
+      # overwrite: true
+    datasource:
+      names: platform,mycat,pos
+      platform:
+        driverClassName: com.mysql.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://192.168.253.128:30306/a_platform?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+        username: __K3S_MYSQL_USERNAME__
+        password: __K3S_MYSQL_PASSWORD__
+      mycat:
+        driverClassName: com.mysql.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://192.168.253.128:30306/gylregdb?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+        username: __K3S_MYSQL_USERNAME__
+        password: __K3S_MYSQL_PASSWORD__
+      pos:
+        driverClassName: com.mysql.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://192.168.253.128:30306/a_pos?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+        username: __K3S_MYSQL_USERNAME__
+        password: __K3S_MYSQL_PASSWORD__
+    rules:
+      sharding:
+        tables:
+          sys_inst:
+            actual-data-nodes: mycat.sc_inst
+          sys_merchant:
+            actual-data-nodes: mycat.sc_merchant
+          sys_store:
+            actual-data-nodes: mycat.sc_store
+          inst_user:
+            actual-data-nodes: mycat.sc_inst_adm
+          biz_user:
+            actual-data-nodes: mycat.sc_usr
+          sys_config_data:
+            actual-data-nodes: mycat.sc_config_of_shop
+          sys_user_data_scope:
+            actual-data-nodes: mycat.sc_permission
+          sc_product_price:
+            actual-data-nodes: mycat.sc_product_price
+          sc_product_price_set:
+            actual-data-nodes: mycat.sc_product_price_set
+          sc_reg_dog:
+            actual-data-nodes: mycat.sc_reg_dog
+          sc_reg_dog_recharge_record:
+            actual-data-nodes: mycat.sc_reg_dog_recharge_record
+          sc_store_and_product:
+            actual-data-nodes: mycat.sc_store_and_product
+          sc_store_and_product_flow:
+            actual-data-nodes: mycat.sc_store_and_product_flow
+          sc_inst_and_product:
+            actual-data-nodes: mycat.sc_inst_and_product
+          sc_inst_finance_bill:
+            actual-data-nodes: mycat.sc_inst_finance_bill
+          sc_inst_op_log:
+            actual-data-nodes: mycat.sc_inst_op_log
+          sc_inst_recharge_set:
+            actual-data-nodes: mycat.sc_inst_recharge_set
+
+          permission_package:
+            actual-data-nodes: pos.permission_package   
+          permission_view:
+            actual-data-nodes: pos.permission_view   
+          permission_module:
+            actual-data-nodes: pos.permission_module   
+          permission_page:
+            actual-data-nodes: pos.permission_page   
+          permission_right:
+            actual-data-nodes: pos.permission_right
+
+
+  cloud:
+    config:
+      enabled: false
+    nacos:
+      config:
+        file-extension: yaml 
+        shared-configs:
+          - data-id: nms4cloud-shared.yaml
+  
+nms:
+  wx:
+    app:
+      instAppId: wxdb6057471db53182
+      platformAppId: wxdb6057471db53182
+      scmAppId: wxdb6057471db53182
+  common:
+    mybatis-flex-enabled: false    
+
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logstash:
+  destination: 172.16.0.14:35044
+

@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nms4cloud-mall
+  labels:
+    app: nms4cloud-mall
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nms4cloud-mall
+  template:
+    metadata:
+      labels:
+        app: nms4cloud-mall
+    spec:
+      containers:
+      - name: nms4cloud-mall
+        image: 192.168.253.128:30083/library/nms4cloud-mall:c5b4beb12158-12
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: nacos-client
+        env:
+        - name: JAVA_TOOL_OPTIONS
+          value: -Xms128m -Xmx512m -XX:MaxMetaspaceSize=256m
+        - secretRef:
+            name: nacos-client-auth
+        ports:
+        - name: http
+          containerPort: 80
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 1280Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nms4cloud-mall
+spec:
+  selector:
+    app: nms4cloud-mall
+  ports:
+  - name: http
+    port: 80
+    targetPort: http

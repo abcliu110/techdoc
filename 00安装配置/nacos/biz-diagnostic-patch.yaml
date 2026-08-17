@@ -1,0 +1,9 @@
+spec:
+  template:
+    spec:
+      containers:
+      - name: nms4cloud-biz
+        command:
+        - /bin/sh
+        - -c
+        - java -jar /app.jar > /tmp/startup.log 2>&1; tail -f /tmp/startup.log

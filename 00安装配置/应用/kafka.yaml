@@ -1,0 +1,240 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: '10'
+    objectset.rio.cattle.io/applied: >-
+      H4sIAAAAAAAA/3yUXVPrOA/Hv4uu05f0Bdrc9Sk5TIfSdtLAc3Z3mIzqCPDWLzm206XL5Lvv2IVSBk6vYjvS7y/Jsl4BK35PxnKtIAGsKtvZxRDBlqsSEriiSui9JOUgAkkOS3QIySugUtqh41pZv9Wbv4k5S65tuG4zdE5Qm+sO9xDq97rU68atIY3K1uCCUWvTHw9aNNiMR704LrvDR2giELghEXDbkW1hVUECW3zcIkS/FXhG+wwJXHTHWI5jerzE0Si+HF70x3HZY0O83JTlkAbjctgve8MRRPCLCV2Xn/BNBAolncj5ra2Q+TMl7SD4eDtbEfMRGqoEZ2ghiSOwJIg5bfwPiY49z89k8p2+BzuDjp72Aa6F4OrprirR0QH6sq7NEwU1iS93CnfIBW4EQdJtInD7yoeafXL05yQr8Q45ub5zpf5dgG+ZM60cckXGQvLXK5Dahe9bAW8mP24mxfTHdfHncnmTpqs0K6bLxSKd5hDBDkXtrf7VektUkUl68SiGJjr6T+bz5f+L1XwyW+Tpz7yYz9Z5ukizE+c92VOPD8V322KdTu+yWf5HscqW+XK6nBe3k9UJYTqfpYs8OapE6c88zRaT+cfReYX1V1ink4y7494H6nDQ/x40ubpPs3y2Tq/OM0P5v4CFZiietXVnFHwaWfG/bHmTZh+VWUxu0y860DxEwCX6/gLGTJsx23akGCm3r1WbadkRJLVyhqizdbtkw51CyYsQXuEbzPoBERirWoiVFpzt/XWKf3Bv4fi+NkZvyUAEhqyuDaPQg4JL7sKKVTUkMOx2ZZg3UhtP6V1z38yGftVkTw17w28Mfa8Sqw13+6lWjl6cd6gM33FBT1RC4kxNEZhaTeydJXN4Qjstakm3ulbu0NnSL1fo/HzpvGV8uJBOeEbHpMKueThW0VdgTczQG+jdTLMtmZYNf0LNDVmHxn2tliMjuQrj9dogoxUZrss1Ma1KC0m/+x7uZ4FDVJUf59aRcvfBZiqQy1Azv1icDLrWIfLmoWma5r8AAAD//6oomM4LBgAA
+    objectset.rio.cattle.io/id: e320e201-5e8d-46ce-b394-e4b98211d05f
+  creationTimestamp: '2026-04-03T03:32:54Z'
+  generation: 10
+  labels:
+    k8s-app: kafka
+    objectset.rio.cattle.io/hash: 609ad91ef7a881756391d2c5a7bdd5e49d53d258
+    qcloud-app: kafka
+  managedFields:
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:objectset.rio.cattle.io/applied: {}
+            f:objectset.rio.cattle.io/id: {}
+          f:labels:
+            .: {}
+            f:k8s-app: {}
+            f:objectset.rio.cattle.io/hash: {}
+            f:qcloud-app: {}
+        f:spec:
+          f:progressDeadlineSeconds: {}
+          f:replicas: {}
+          f:revisionHistoryLimit: {}
+          f:selector: {}
+          f:strategy:
+            f:rollingUpdate:
+              .: {}
+              f:maxSurge: {}
+              f:maxUnavailable: {}
+            f:type: {}
+          f:template:
+            f:metadata:
+              f:annotations:
+                .: {}
+                f:cattle.io/timestamp: {}
+              f:labels:
+                .: {}
+                f:k8s-app: {}
+                f:qcloud-app: {}
+              f:namespace: {}
+            f:spec:
+              f:containers:
+                k:{"name":"broker"}:
+                  .: {}
+                  f:env:
+                    .: {}
+                    k:{"name":"ALLOW_PLAINTEXT_LISTENER"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"KAFKA_CFG_ADVERTISED_LISTENERS"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"KAFKA_CFG_INTER_BROKER_LISTENER_NAME"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"KAFKA_CFG_LISTENERS"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"KAFKA_CFG_ZOOKEEPER_CONNECT"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                  f:image: {}
+                  f:imagePullPolicy: {}
+                  f:name: {}
+                  f:resources:
+                    .: {}
+                    f:limits:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                    f:requests:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                  f:securityContext:
+                    .: {}
+                    f:privileged: {}
+                    f:runAsUser: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+                  f:volumeMounts:
+                    .: {}
+                    k:{"mountPath":"/bitnami/kafka/data"}:
+                      .: {}
+                      f:mountPath: {}
+                      f:name: {}
+              f:dnsPolicy: {}
+              f:restartPolicy: {}
+              f:schedulerName: {}
+              f:securityContext: {}
+              f:terminationGracePeriodSeconds: {}
+              f:volumes:
+                .: {}
+                k:{"name":"data"}:
+                  .: {}
+                  f:name: {}
+                  f:persistentVolumeClaim:
+                    .: {}
+                    f:claimName: {}
+      manager: rancher
+      operation: Update
+      time: '2026-05-21T01:33:39Z'
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:deployment.kubernetes.io/revision: {}
+        f:status:
+          f:availableReplicas: {}
+          f:conditions:
+            .: {}
+            k:{"type":"Available"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Progressing"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+          f:observedGeneration: {}
+          f:readyReplicas: {}
+          f:replicas: {}
+          f:updatedReplicas: {}
+      manager: kube-controller-manager
+      operation: Update
+      subresource: status
+      time: '2026-08-12T05:52:33Z'
+  name: kafka
+  namespace: nms4cloud
+  resourceVersion: '27782082'
+  uid: 5b222ce8-2fc7-4216-ab1c-d9dd03200487
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      k8s-app: kafka
+      qcloud-app: kafka
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        cattle.io/timestamp: '2026-05-21T01:33:37Z'
+      labels:
+        k8s-app: kafka
+        qcloud-app: kafka
+      namespace: nms4cloud
+    spec:
+      containers:
+        - env:
+            - name: KAFKA_CFG_ZOOKEEPER_CONNECT
+              value: zookeeper:2181
+            - name: ALLOW_PLAINTEXT_LISTENER
+              value: 'yes'
+            - name: KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
+              value: CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+            - name: KAFKA_CFG_LISTENERS
+              value: CLIENT://:9092,EXTERNAL://:9093
+            - name: KAFKA_CFG_ADVERTISED_LISTENERS
+              value: CLIENT://kafka:9092,EXTERNAL://localhost:9093
+            - name: KAFKA_CFG_INTER_BROKER_LISTENER_NAME
+              value: CLIENT
+          image: 10.43.92.252/library/kafka:3.3.2
+          imagePullPolicy: Always
+          name: broker
+          resources:
+            limits:
+              cpu: 500m
+              memory: 2Gi
+            requests:
+              cpu: 250m
+              memory: 2Gi
+          securityContext:
+            privileged: true
+            runAsUser: 0
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /bitnami/kafka/data
+              name: data
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: kafka-data
+status:
+  availableReplicas: 1
+  conditions:
+    - lastTransitionTime: '2026-04-03T03:32:54Z'
+      lastUpdateTime: '2026-05-21T01:34:10Z'
+      message: ReplicaSet "kafka-7bd75fdf7" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: 'True'
+      type: Progressing
+    - lastTransitionTime: '2026-08-12T05:52:33Z'
+      lastUpdateTime: '2026-08-12T05:52:33Z'
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: 'True'
+      type: Available
+  observedGeneration: 10
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

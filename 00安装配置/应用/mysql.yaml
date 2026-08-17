@@ -1,0 +1,233 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: '4'
+    field.cattle.io/publicEndpoints: >-
+      [{"nodeName":":jjtestserver","addresses":["192.168.1.119"],"port":3306,"protocol":"TCP","podName":"nms4cloud:mysql-cd94c649d-29tfq","allNodes":false}]
+    objectset.rio.cattle.io/applied: >-
+      H4sIAAAAAAAA/3xTXW/bMAz8L3x2Ejt2asdvQRtsA9KmS4IOw1AEtMIs2vRVSTZQFPrvg9w2cLt1Tyatu+ORop4ADb8j67hWUAMa4yZdBgn85uoANVyREfpRkvKQgCSPB/QI9ROgUtqj51q5mOrmFzHvyI8t12OG3gsacz3hUWSW59NjSuVojmUxKoiqER6rclQeWDpP5002pSOEBAQ2JP4rd0J3ijarJp/PGmJNlaYMi6acXrCKNVlVpNNiVk5n1YHlJUVRhZKgBvnoHgQ8p84gi/+UdAUTuj1EnDPEYmlLRnCGDuosAUeCmNc2Hkj07LQ6W0RjzrIhJOBJGoGeeuhgUOJDxmtFppVHrsg6qH88Aamu/74Yv/6+/brab9br3f52sd1+W2+uIIEORRtPnc+yPK8gJO8Il58Xm8XlbrnZb5e7/Xa5uVtuBrzWHyvZFP/grVerxe7L+uZDzr5VnOkD7RmHcJ8Al/jzPOG6Gqfw19CNtv65uXOvt9p6qPM8vUjgpJ0f5m/YsYQlp1vLqB+j4JL7PmKmhRqyNE1lv51S20eoYfqJxwu19NCSGyJn74BZBIYEOi1aSde6VS8uZQxv0cddm3RoJ4I3k+EGvbobOa9tbD/cR5/PQm54fW9hCZj41pwn5e968KVALnuLMbgZkkzHIIT7EEL4EwAA//8LLJDSpwMAAA
+    objectset.rio.cattle.io/id: 5332f0e7-9a74-4ee8-af87-7dc0909b12ef
+  creationTimestamp: '2026-02-03T03:49:55Z'
+  generation: 20
+  labels:
+    objectset.rio.cattle.io/hash: a8b395becb800ca4b726c8cb18402457258dc37e
+  managedFields:
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:field.cattle.io/publicEndpoints: {}
+            f:objectset.rio.cattle.io/applied: {}
+            f:objectset.rio.cattle.io/id: {}
+          f:labels:
+            .: {}
+            f:objectset.rio.cattle.io/hash: {}
+        f:spec:
+          f:progressDeadlineSeconds: {}
+          f:replicas: {}
+          f:revisionHistoryLimit: {}
+          f:selector: {}
+          f:strategy:
+            f:rollingUpdate:
+              .: {}
+              f:maxSurge: {}
+              f:maxUnavailable: {}
+            f:type: {}
+          f:template:
+            f:metadata:
+              f:annotations:
+                .: {}
+                f:cattle.io/timestamp: {}
+              f:labels:
+                .: {}
+                f:app: {}
+              f:namespace: {}
+            f:spec:
+              f:containers:
+                k:{"name":"mysql"}:
+                  .: {}
+                  f:args: {}
+                  f:env:
+                    .: {}
+                    k:{"name":"MYSQL_CHARACTER_SET_SERVER"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"MYSQL_COLLATION_SERVER"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"MYSQL_ROOT_PASSWORD"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                    k:{"name":"TZ"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                  f:image: {}
+                  f:imagePullPolicy: {}
+                  f:name: {}
+                  f:ports:
+                    .: {}
+                    k:{"containerPort":3306,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:hostPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                  f:resources:
+                    .: {}
+                    f:limits:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                    f:requests:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+                  f:volumeMounts:
+                    .: {}
+                    k:{"mountPath":"/var/lib/mysql"}:
+                      .: {}
+                      f:mountPath: {}
+                      f:name: {}
+              f:dnsPolicy: {}
+              f:restartPolicy: {}
+              f:schedulerName: {}
+              f:securityContext: {}
+              f:terminationGracePeriodSeconds: {}
+              f:volumes:
+                .: {}
+                k:{"name":"mysql-storage"}:
+                  .: {}
+                  f:name: {}
+                  f:persistentVolumeClaim:
+                    .: {}
+                    f:claimName: {}
+      manager: rancher
+      operation: Update
+      time: '2026-05-21T06:23:33Z'
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:deployment.kubernetes.io/revision: {}
+        f:status:
+          f:availableReplicas: {}
+          f:conditions:
+            .: {}
+            k:{"type":"Available"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Progressing"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+          f:observedGeneration: {}
+          f:readyReplicas: {}
+          f:replicas: {}
+          f:updatedReplicas: {}
+      manager: kube-controller-manager
+      operation: Update
+      subresource: status
+      time: '2026-08-12T01:31:28Z'
+  name: mysql
+  namespace: nms4cloud
+  resourceVersion: '27719299'
+  uid: 71e7bed2-2fa6-49b0-9c54-080432dcc27c
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        cattle.io/timestamp: '2026-05-21T01:33:37Z'
+      labels:
+        app: mysql
+      namespace: nms4cloud
+    spec:
+      containers:
+        - args:
+            - '--default-time-zone=+08:00'
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: st11338
+            - name: MYSQL_CHARACTER_SET_SERVER
+              value: utf8mb4
+            - name: MYSQL_COLLATION_SERVER
+              value: utf8mb4_unicode_ci
+            - name: TZ
+              value: Asia/Shanghai
+          image: mysql:8.0
+          imagePullPolicy: IfNotPresent
+          name: mysql
+          ports:
+            - containerPort: 3306
+              hostPort: 3306
+              name: mysql
+              protocol: TCP
+          resources:
+            limits:
+              cpu: '1'
+              memory: 2Gi
+            requests:
+              cpu: 500m
+              memory: 1Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-storage
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: mysql-storage
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+status:
+  availableReplicas: 1
+  conditions:
+    - lastTransitionTime: '2026-02-03T03:49:55Z'
+      lastUpdateTime: '2026-05-21T06:23:26Z'
+      message: ReplicaSet "mysql-cd94c649d" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: 'True'
+      type: Progressing
+    - lastTransitionTime: '2026-08-12T01:31:28Z'
+      lastUpdateTime: '2026-08-12T01:31:28Z'
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: 'True'
+      type: Available
+  observedGeneration: 20
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

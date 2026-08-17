@@ -1,0 +1,215 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: '3'
+    field.cattle.io/publicEndpoints: >-
+      [{"nodeName":":jjtestserver","addresses":["192.168.1.119"],"port":10909,"protocol":"TCP","podName":"nms4cloud:rocketmq-broker-f855847b6-gj27k","allNodes":false},{"nodeName":":jjtestserver","addresses":["192.168.1.119"],"port":10911,"protocol":"TCP","podName":"nms4cloud:rocketmq-broker-f855847b6-gj27k","allNodes":false},{"nodeName":":jjtestserver","addresses":["192.168.1.119"],"port":10912,"protocol":"TCP","podName":"nms4cloud:rocketmq-broker-f855847b6-gj27k","allNodes":false}]
+    objectset.rio.cattle.io/applied: >-
+      H4sIAAAAAAAA/4yS22rbQBCGX6XMteRoZR2svQu0FEqhuQjBEEwYrSbW1tqDd9emIey7l1VtNzVp6Z00M9+//xxeAa18IOel0cABrfU3RwYZ7KQegMNHspN5UaQDZKAo4IABgb8Cam0CBmm0T7+m/04ieAoLJ81CYAgTLaS5kUmk6QV1ZVPmrKjqvBp6lq8Eo5zapm1INPWyXELMYMKepn/KjehH4DDUS+xWy6IbsK1YUaxKVrRIVdU89yXWTCzLvn1mfRLVqAg4OCN2FNQ+753ZkYNfCW9RpKxWvhKTOQyJ8JZEMuHITlKgB84y8DSRCMalhMIgxq8Xs2jtOw/EmEEgZScMNENvhjf9B3t2IYwOKDU5D/wx/SqFaTWP4Me0k/2loVxD9ltqbo/ckRzvVm0DmwxIH2eN00i+3D7cPn27u3/6tL6HDI44HVI4XyvPth/ytfrBthA3GUiFW5qvA8VIN+cneL1giwIuI74YscaFs9uT+TvjAnBWdEWXwWh8+CNwEjhKCzF7j2LsikqBE6VQ6r9h5TVWXrAR594ceXNwguZtTFLJMH8JewAOrCgKNR++Mu4FOJSfZboQR/sD+beV9VUhS4UxbmKM8WcAAAD//6iosY5kAwAA
+    objectset.rio.cattle.io/id: 6bce9262-1045-4db1-8c1e-e7676ec65323
+  creationTimestamp: '2026-02-03T04:05:34Z'
+  generation: 17
+  labels:
+    objectset.rio.cattle.io/hash: d53a98309da7410082107ae446fb2a51c32b7f1b
+  managedFields:
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:field.cattle.io/publicEndpoints: {}
+            f:objectset.rio.cattle.io/applied: {}
+            f:objectset.rio.cattle.io/id: {}
+          f:labels:
+            .: {}
+            f:objectset.rio.cattle.io/hash: {}
+        f:spec:
+          f:progressDeadlineSeconds: {}
+          f:replicas: {}
+          f:revisionHistoryLimit: {}
+          f:selector: {}
+          f:strategy:
+            f:rollingUpdate:
+              .: {}
+              f:maxSurge: {}
+              f:maxUnavailable: {}
+            f:type: {}
+          f:template:
+            f:metadata:
+              f:annotations:
+                .: {}
+                f:cattle.io/timestamp: {}
+              f:labels:
+                .: {}
+                f:app: {}
+            f:spec:
+              f:containers:
+                k:{"name":"broker"}:
+                  .: {}
+                  f:command: {}
+                  f:env:
+                    .: {}
+                    k:{"name":"JAVA_OPT_EXT"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                  f:image: {}
+                  f:imagePullPolicy: {}
+                  f:name: {}
+                  f:ports:
+                    .: {}
+                    k:{"containerPort":10909,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:hostPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                    k:{"containerPort":10911,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:hostPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                    k:{"containerPort":10912,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:hostPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                  f:resources:
+                    .: {}
+                    f:limits:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                    f:requests:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+              f:dnsPolicy: {}
+              f:restartPolicy: {}
+              f:schedulerName: {}
+              f:securityContext: {}
+              f:terminationGracePeriodSeconds: {}
+      manager: rancher
+      operation: Update
+      time: '2026-05-21T06:29:17Z'
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:deployment.kubernetes.io/revision: {}
+        f:status:
+          f:availableReplicas: {}
+          f:conditions:
+            .: {}
+            k:{"type":"Available"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Progressing"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+          f:observedGeneration: {}
+          f:readyReplicas: {}
+          f:replicas: {}
+          f:updatedReplicas: {}
+      manager: kube-controller-manager
+      operation: Update
+      subresource: status
+      time: '2026-08-12T01:31:22Z'
+  name: rocketmq-broker
+  namespace: nms4cloud
+  resourceVersion: '27719171'
+  uid: b4d24ea9-3d15-44e5-b747-2b8cefdf4a03
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: rocketmq-broker
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        cattle.io/timestamp: '2026-05-21T06:26:56Z'
+      labels:
+        app: rocketmq-broker
+    spec:
+      containers:
+        - command:
+            - sh
+            - mqbroker
+            - '-n'
+            - rocketmq-nameserver:9876
+          env:
+            - name: JAVA_OPT_EXT
+              value: '-Xms1g -Xmx1g'
+          image: apache/rocketmq:5.1.0
+          imagePullPolicy: IfNotPresent
+          name: broker
+          ports:
+            - containerPort: 10909
+              hostPort: 10909
+              name: vip
+              protocol: TCP
+            - containerPort: 10911
+              hostPort: 10911
+              name: main
+              protocol: TCP
+            - containerPort: 10912
+              hostPort: 10912
+              name: ha
+              protocol: TCP
+          resources:
+            limits:
+              cpu: '1'
+              memory: 2Gi
+            requests:
+              cpu: 500m
+              memory: 1Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+    - lastTransitionTime: '2026-05-21T01:45:45Z'
+      lastUpdateTime: '2026-05-21T06:28:41Z'
+      message: ReplicaSet "rocketmq-broker-f855847b6" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: 'True'
+      type: Progressing
+    - lastTransitionTime: '2026-08-12T01:31:22Z'
+      lastUpdateTime: '2026-08-12T01:31:22Z'
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: 'True'
+      type: Available
+  observedGeneration: 17
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

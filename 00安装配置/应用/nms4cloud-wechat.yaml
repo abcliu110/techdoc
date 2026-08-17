@@ -1,0 +1,202 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: '28'
+    field.cattle.io/publicEndpoints: >-
+      [{"port":30121,"protocol":"TCP","serviceName":"nms4cloud:nms4cloud-wechat","allNodes":true}]
+    objectset.rio.cattle.io/applied: >-
+      H4sIAAAAAAAA/4SST2/bPAzGv4penv0nTuLE9XsaNuy0DcUGbIemKGiaqbXKkiExKYzC332Qk3Ztsa032pSe58eHegAc9Hf2QTsLNeAwhPxYQAJ32rZQwwcejBt7tgIJ9CzYoiDUD4DWOkHRzob46ZqfTBJYMq9dRihiONMu11GkuUAs15siLcptk66xoBS53KZVu9msq2XVbosFTAkYbNjMcjgMUIPtw5qMO7TpPVOHEeFvPh2GDmqots2y2C82C1qVTcPbixWWy1W5XTa8XzW8Xi0XtMFlG90s9vxnk9gJA9KLdrwSBqaI53kwmjBAXSQQ2DCJ87HRo1D36a0xpikB4X4wKDzfepbrmxlMzzjIWUFt2Qeorx6A7fGjd/1ck7N7ffsZh6+8j0cfp0VyAabpOgHd4238ReQzopAJW2Ir48Fm5PrccO+seOb8To71E8bNCeMmsocY1ixzeTDm0hlNI9TwztzjGOBfCQ/OS3jkPI1w6bxAXVTFspiun/ii8Dcmz+fjZ8kza0rk0zC3Yb5itbx/mQm5vsf4lK8gdJBASpAAU+fUDn6gFm1v1d559SUGo8SphpVnbMcsy3awswcr2ig6eKPSsFedyFDn+RxjXVXr6lTmxyInZ4MznHeMRro8imjLIfyvWrezSp1NT0Y6KOvk5KRGlkR5Fj9GGm1VqQKTs204QygVDPOgyp1tneWdfa016/wXj8LzzR68meuQx7LeZlWZLX4v5h61pHvn0/OruE7AcxD08nqX0zRNvwIAAP//G7+19isEAAA
+    objectset.rio.cattle.io/id: b9aa5461-157b-4a1c-ae57-8d664828d710
+  creationTimestamp: '2026-02-10T02:49:16Z'
+  generation: 29
+  labels:
+    app: nms4cloud-wechat
+    objectset.rio.cattle.io/hash: 87b21f060c35bbe793a523572bef3be4320c6a2d
+  managedFields:
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:field.cattle.io/publicEndpoints: {}
+            f:objectset.rio.cattle.io/applied: {}
+            f:objectset.rio.cattle.io/id: {}
+          f:labels:
+            .: {}
+            f:app: {}
+            f:objectset.rio.cattle.io/hash: {}
+        f:spec:
+          f:progressDeadlineSeconds: {}
+          f:replicas: {}
+          f:revisionHistoryLimit: {}
+          f:selector: {}
+          f:strategy:
+            f:rollingUpdate:
+              .: {}
+              f:maxSurge: {}
+              f:maxUnavailable: {}
+            f:type: {}
+          f:template:
+            f:metadata:
+              f:annotations:
+                .: {}
+                f:cattle.io/timestamp: {}
+              f:labels:
+                .: {}
+                f:app: {}
+              f:namespace: {}
+            f:spec:
+              f:containers:
+                k:{"name":"nms4cloud-wechat"}:
+                  .: {}
+                  f:envFrom: {}
+                  f:image: {}
+                  f:imagePullPolicy: {}
+                  f:name: {}
+                  f:ports:
+                    .: {}
+                    k:{"containerPort":18121,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                  f:resources: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+              f:dnsPolicy: {}
+              f:initContainers:
+                .: {}
+                k:{"name":"wait-for-nacos"}:
+                  .: {}
+                  f:command: {}
+                  f:image: {}
+                  f:imagePullPolicy: {}
+                  f:name: {}
+                  f:resources: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+              f:restartPolicy: {}
+              f:schedulerName: {}
+              f:securityContext: {}
+              f:terminationGracePeriodSeconds: {}
+      manager: rancher
+      operation: Update
+      time: '2026-07-27T06:41:32Z'
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:deployment.kubernetes.io/revision: {}
+        f:status:
+          f:availableReplicas: {}
+          f:conditions:
+            .: {}
+            k:{"type":"Available"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Progressing"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+          f:observedGeneration: {}
+          f:readyReplicas: {}
+          f:replicas: {}
+          f:updatedReplicas: {}
+      manager: kube-controller-manager
+      operation: Update
+      subresource: status
+      time: '2026-08-12T05:51:43Z'
+  name: nms4cloud-wechat
+  namespace: nms4cloud
+  resourceVersion: '27781687'
+  uid: 2c0dd800-40f7-42b3-997f-9d9e217be0f5
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: nms4cloud-wechat
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        cattle.io/timestamp: '2026-07-27T06:41:30Z'
+      labels:
+        app: nms4cloud-wechat
+      namespace: nms4cloud
+    spec:
+      containers:
+        - envFrom:
+            - configMapRef:
+                name: nacos
+          image: 10.43.92.252/library/nms4cloud-wechat:latest
+          imagePullPolicy: Always
+          name: nms4cloud-wechat
+          ports:
+            - containerPort: 18121
+              name: 18121tcp
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      initContainers:
+        - command:
+            - sh
+            - '-c'
+            - >
+              echo "Waiting for Nacos to be ready..."
+
+              until curl -sf
+              http://nacos:8848/nacos/v1/console/health/readiness; do
+                echo "Nacos is not ready yet, retrying in 5 seconds..."
+                sleep 5
+              done
+
+              echo "Nacos is ready!"
+          image: curlimages/curl:7.85.0
+          imagePullPolicy: IfNotPresent
+          name: wait-for-nacos
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+    - lastTransitionTime: '2026-02-10T02:49:16Z'
+      lastUpdateTime: '2026-07-27T06:42:03Z'
+      message: ReplicaSet "nms4cloud-wechat-58cf7bdd7" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: 'True'
+      type: Progressing
+    - lastTransitionTime: '2026-08-12T05:51:43Z'
+      lastUpdateTime: '2026-08-12T05:51:43Z'
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: 'True'
+      type: Available
+  observedGeneration: 29
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

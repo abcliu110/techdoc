@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: report-image-build
+  namespace: jenkins
+spec:
+  restartPolicy: Never
+  containers:
+  - name: kaniko
+    image: gcr.io/kaniko-project/executor:v1.23.2-debug
+    command: ["/busybox/sh", "-c", "sleep 3600"]
+    volumeMounts:
+    - name: harbor-auth
+      mountPath: /kaniko/.docker
+    - name: build-context
+      mountPath: /workspace
+  volumes:
+  - name: harbor-auth
+    secret:
+      secretName: harbor-service-registry-secret
+      items:
+      - key: .dockerconfigjson
+        path: config.json
+  - name: build-context
+    emptyDir: {}

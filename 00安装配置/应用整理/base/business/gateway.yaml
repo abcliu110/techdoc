@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+  namespace: nms4cloud
+  labels:
+    app: gateway
+spec:
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      namespace: nms4cloud
+      labels:
+        app: gateway
+    spec:
+      containers:
+      - env:
+        - name: JAVA_OPTS
+          value: -Xms128m -Xmx384m
+        envFrom:
+        - configMapRef:
+            name: nacos
+        image: ccr.ccs.tencentyun.com/lemontree/ktv:yd4cloud_gateway_latest
+        imagePullPolicy: Always
+        name: gateway
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        volumeMounts:
+        - mountPath: /app/config/application.yml
+          name: config-volume
+          subPath: application.yml
+      imagePullSecrets:
+      - name: tencent-ccr-secret
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: gateway-config
+        name: config-volume

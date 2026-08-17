@@ -1,0 +1,28 @@
+server:
+  port: 80
+spring:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://10.0.1.18:3306/a_doctor?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+    username: nms4cloud
+    password: Rm_.qwdNdQV3w64ijMAWbmjZu
+  cloud:
+    config:
+      enabled: false
+    nacos:
+      config:
+        file-extension: yaml 
+        shared-configs:
+          - data-id: nms4cloud-shared.yaml
+  
+
+nms:
+  common:
+    mybatis-flex-enabled: true
+    show_sql_for_debug: true
+
+
+logstash:
+  destination: 172.16.0.14:35044
+

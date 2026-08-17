@@ -1,0 +1,8 @@
+mirrors:
+  "192.168.253.128:30083":
+    endpoint:
+      - "https://192.168.253.128:30083"
+configs:
+  "192.168.253.128:30083":
+    tls:
+      insecure_skip_verify: true

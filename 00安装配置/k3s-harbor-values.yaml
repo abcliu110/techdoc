@@ -1,0 +1,130 @@
+# This file manages the Harbor Kubernetes deployment only. Project, robot
+# account, quota, proxy-cache, and retention configuration belongs to an
+# idempotent Harbor API initialization task; see VMware+K8s安装配置.md.
+expose:
+  type: nodePort
+  tls:
+    enabled: true
+    certSource: auto
+    auto:
+      commonName: 192.168.253.128
+  nodePort:
+    ports:
+      http:
+        port: 80
+        nodePort: 30082
+      https:
+        port: 443
+        nodePort: 30083
+
+externalURL: https://192.168.253.128:30083
+existingSecretAdminPassword: harbor-admin
+existingSecretAdminPasswordKey: HARBOR_ADMIN_PASSWORD
+
+# Harbor Proxy Cache checks and fetches Docker Hub images through the physical
+# host's explicit proxy. Restrict this to Harbor Core; internal endpoints stay
+# on the K3s network.
+proxy:
+  components:
+    - core
+  httpProxy: http://192.168.253.1:7897
+  httpsProxy: http://192.168.253.1:7897
+  noProxy: 127.0.0.1,localhost,.cluster.local,.svc,10.42.0.0/16,10.43.0.0/16,192.168.253.128,harbor-core,harbor-core.harbor.svc.cluster.local,nexus.nexus.svc.cluster.local
+
+persistence:
+  enabled: true
+  resourcePolicy: keep
+  persistentVolumeClaim:
+    registry:
+      storageClass: local-path
+      size: 50Gi
+    jobservice:
+      jobLog:
+        storageClass: local-path
+        size: 1Gi
+    database:
+      storageClass: local-path
+      size: 2Gi
+    redis:
+      storageClass: local-path
+      size: 1Gi
+
+trivy:
+  enabled: false
+
+nginx:
+  resources:
+    requests:
+      cpu: "25m"
+      memory: "64Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+
+portal:
+  resources:
+    requests:
+      cpu: "25m"
+      memory: "64Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+
+core:
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+jobservice:
+  maxJobWorkers: 2
+  resources:
+    requests:
+      cpu: "25m"
+      memory: "64Mi"
+    limits:
+      cpu: "300m"
+      memory: "256Mi"
+
+registry:
+  registry:
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "128Mi"
+      limits:
+        cpu: "500m"
+        memory: "512Mi"
+  controller:
+    resources:
+      requests:
+        cpu: "25m"
+        memory: "64Mi"
+      limits:
+        cpu: "200m"
+        memory: "256Mi"
+
+database:
+  type: internal
+  internal:
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "256Mi"
+      limits:
+        cpu: "500m"
+        memory: "768Mi"
+
+redis:
+  type: internal
+  internal:
+    resources:
+      requests:
+        cpu: "25m"
+        memory: "64Mi"
+      limits:
+        cpu: "200m"
+        memory: "256Mi"

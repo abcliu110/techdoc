@@ -1,0 +1,202 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: '31'
+    field.cattle.io/publicEndpoints: >-
+      [{"port":30191,"protocol":"TCP","serviceName":"nms4cloud:nms4cloud-mall","allNodes":true}]
+    objectset.rio.cattle.io/applied: >-
+      H4sIAAAAAAAA/4SSTW/bPAzHv4oenv2aOKnj5zRs2Gkbig3YDk1RMDJTa5VFQ2JSGIW/+yAn7dpi3W60Rf7/P748AA7mO/lg2EEDOAwhP5aQwJ1xLTTwgQbLY09OIIGeBFsUhOYB0DkWFMMuxE/e/SQtgSTzhjONIpYyw7mJIu0FbnbLTZGWi0WbVquiTnG12KX1xWbZLtqqKDcLmBKwuCM7y+EwQAOuD5W2fGjTHq2F5E2XDkMHDWzW1booNyVW5b5YLGosllVd7cqSluWG9uV6vWuX6/Xs5bCnP1nE/2FA/eIxFoSBdETzNFijMUBTJhDIkhb28aFH0d2nv7cwTQkI9YNFobnm2UT/0f30jEGzEzSOfIDm6gHIHT967udYs9ub2884fKV9TH3sEzUHmKbrBEyPt/GX1j7TOmRCTpOT8eAyzX1uqWcnnii/k2PzBHETIW4id4inMItcHqy9ZGv0CA28s/c4Bnh7sgN7CY+MJ/xL9gJNXUzXT2BR8xtpT+fcs9oZMtXap2F+hrnEGXn/chia+x7j7V5B6CCBVEMCpDtWW/iBRoy7VXv26kuciBJWO1KesB2zLNvC1h2cGKv0wVuVhr3qRIYmz+f5NXVd1acwP5a5ZhfYUt4RWunyKGIchfC/annrlDqbnoxMUI7l5KRGkkR5Ej9GGuPUSgXS7NpwhlAqWKJBrbauZUdb91pr1vkvpsLzlR68neOQx7C5yOpVVvzeyT0aSffs0/M5XCfgKQh6eb3GaZqmXwEAAP//5REAeBwEAAA
+    objectset.rio.cattle.io/id: d7a9b390-122d-4508-a52b-8793d2d40192
+  creationTimestamp: '2026-04-01T02:29:28Z'
+  generation: 32
+  labels:
+    app: nms4cloud-mall
+    objectset.rio.cattle.io/hash: 96460191a41f0228a03484b11e319ef166bd3662
+  managedFields:
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:field.cattle.io/publicEndpoints: {}
+            f:objectset.rio.cattle.io/applied: {}
+            f:objectset.rio.cattle.io/id: {}
+          f:labels:
+            .: {}
+            f:app: {}
+            f:objectset.rio.cattle.io/hash: {}
+        f:spec:
+          f:progressDeadlineSeconds: {}
+          f:replicas: {}
+          f:revisionHistoryLimit: {}
+          f:selector: {}
+          f:strategy:
+            f:rollingUpdate:
+              .: {}
+              f:maxSurge: {}
+              f:maxUnavailable: {}
+            f:type: {}
+          f:template:
+            f:metadata:
+              f:annotations:
+                .: {}
+                f:cattle.io/timestamp: {}
+              f:labels:
+                .: {}
+                f:app: {}
+              f:namespace: {}
+            f:spec:
+              f:containers:
+                k:{"name":"nms4cloud-mall"}:
+                  .: {}
+                  f:envFrom: {}
+                  f:image: {}
+                  f:imagePullPolicy: {}
+                  f:name: {}
+                  f:ports:
+                    .: {}
+                    k:{"containerPort":80,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                  f:resources: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+              f:dnsPolicy: {}
+              f:initContainers:
+                .: {}
+                k:{"name":"wait-for-nacos"}:
+                  .: {}
+                  f:command: {}
+                  f:image: {}
+                  f:imagePullPolicy: {}
+                  f:name: {}
+                  f:resources: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+              f:restartPolicy: {}
+              f:schedulerName: {}
+              f:securityContext: {}
+              f:terminationGracePeriodSeconds: {}
+      manager: rancher
+      operation: Update
+      time: '2026-07-27T06:41:31Z'
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:deployment.kubernetes.io/revision: {}
+        f:status:
+          f:availableReplicas: {}
+          f:conditions:
+            .: {}
+            k:{"type":"Available"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Progressing"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+          f:observedGeneration: {}
+          f:readyReplicas: {}
+          f:replicas: {}
+          f:updatedReplicas: {}
+      manager: kube-controller-manager
+      operation: Update
+      subresource: status
+      time: '2026-08-12T05:51:47Z'
+  name: nms4cloud-mall
+  namespace: nms4cloud
+  resourceVersion: '27781784'
+  uid: 99c3b841-f9eb-4ae7-a866-793b33fb5a94
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: nms4cloud-mall
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        cattle.io/timestamp: '2026-07-27T06:41:30Z'
+      labels:
+        app: nms4cloud-mall
+      namespace: nms4cloud
+    spec:
+      containers:
+        - envFrom:
+            - configMapRef:
+                name: nacos
+          image: 10.43.92.252/library/nms4cloud-mall:latest
+          imagePullPolicy: Always
+          name: nms4cloud-mall
+          ports:
+            - containerPort: 80
+              name: 80tcp
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      initContainers:
+        - command:
+            - sh
+            - '-c'
+            - >
+              echo "Waiting for Nacos to be ready..."
+
+              until curl -sf
+              http://nacos:8848/nacos/v1/console/health/readiness; do
+                echo "Nacos is not ready yet, retrying in 5 seconds..."
+                sleep 5
+              done
+
+              echo "Nacos is ready!"
+          image: curlimages/curl:7.85.0
+          imagePullPolicy: IfNotPresent
+          name: wait-for-nacos
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+    - lastTransitionTime: '2026-04-01T02:29:28Z'
+      lastUpdateTime: '2026-07-27T06:42:04Z'
+      message: ReplicaSet "nms4cloud-mall-788bb455dc" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: 'True'
+      type: Progressing
+    - lastTransitionTime: '2026-08-12T05:51:47Z'
+      lastUpdateTime: '2026-08-12T05:51:47Z'
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: 'True'
+      type: Available
+  observedGeneration: 32
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

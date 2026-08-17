@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: nms4cloud
+  labels: {}
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      namespace: nms4cloud
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - args:
+        - --default-time-zone=+08:00
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secrets
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_CHARACTER_SET_SERVER
+          value: utf8mb4
+        - name: MYSQL_COLLATION_SERVER
+          value: utf8mb4_unicode_ci
+        - name: TZ
+          value: Asia/Shanghai
+        image: mysql:8.0
+        imagePullPolicy: IfNotPresent
+        name: mysql
+        ports:
+        - containerPort: 3306
+          hostPort: 3306
+          name: mysql
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: 750m
+            memory: 1536Mi
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: mysql-storage
+      volumes:
+      - name: mysql-storage
+        persistentVolumeClaim:
+          claimName: mysql-pvc

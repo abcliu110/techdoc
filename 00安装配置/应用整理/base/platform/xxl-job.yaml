@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: xxl-job
+  namespace: nms4cloud
+  labels:
+    app: xxl-job
+spec:
+  selector:
+    matchLabels:
+      app: xxl-job
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      namespace: nms4cloud
+      labels:
+        app: xxl-job
+    spec:
+      containers:
+      - env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: db-password
+              name: xxl-job-secret
+        - name: ACCESS_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: access-token
+              name: xxl-job-secret
+        - name: PARAMS
+          value: --spring.datasource.url=jdbc:mysql://mysql:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+            --spring.datasource.username=root --spring.datasource.password=$(DB_PASSWORD)
+            --xxl.job.accessToken=$(ACCESS_TOKEN)
+        image: 10.43.92.252/library/xxl-job-admin:2.4.1
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /xxl-job-admin/actuator/health
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: xxl-job
+        ports:
+        - containerPort: 8080
+          name: 8080tcp
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /xxl-job-admin/actuator/health
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        securityContext:
+          privileged: false

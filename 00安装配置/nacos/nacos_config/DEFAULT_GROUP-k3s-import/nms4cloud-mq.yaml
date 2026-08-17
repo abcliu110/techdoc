@@ -1,0 +1,30 @@
+server:
+  port: 18120
+spring:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://192.168.253.128:30306/a_mq?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+    username: __K3S_MYSQL_USERNAME__
+    password: __K3S_MYSQL_PASSWORD__
+  cloud:
+    config:
+      enabled: false
+    nacos:
+      config:
+        file-extension: yaml 
+        shared-configs:
+          - data-id: nms4cloud-shared.yaml
+  
+
+
+
+
+logstash:
+  destination: 172.16.0.14:35044
+
+netty:
+  server:
+    host: 10.11.252.71
+    port: 9999
+    useNettyService: true

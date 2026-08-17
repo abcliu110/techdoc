@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: nms4cloud
+  labels:
+    app: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      namespace: nms4cloud
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: 10.43.92.252/library/nginx:1.25.3
+        imagePullPolicy: Always
+        name: nginx
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d
+          name: nginx-conf-files
+        - mountPath: /usr/share/nginx/html
+          name: nginx-html-files
+      volumes:
+      - name: nginx-conf-files
+        persistentVolumeClaim:
+          claimName: nginx-conf-files
+      - name: nginx-html-files
+        persistentVolumeClaim:
+          claimName: nginx-html-files

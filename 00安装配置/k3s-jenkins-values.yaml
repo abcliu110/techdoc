@@ -1,0 +1,138 @@
+controller:
+  image:
+    tag: "2.568.2-jdk21"
+    pullPolicy: IfNotPresent
+  admin:
+    createSecret: true
+    existingSecret: jenkins-admin
+    userKey: chart-admin-username
+    passwordKey: chart-admin-password
+  JCasC:
+    overwriteConfiguration: true
+  numExecutors: 0
+  javaOpts: "-Xms256m -Xmx1024m -XX:+UseG1GC"
+  jenkinsOpts: "--sessionTimeout=480"
+  jenkinsUrl: "http://192.168.253.128:30080/"
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "512Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1536Mi"
+  initContainerResources:
+    requests:
+      cpu: "50m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "1Gi"
+  initContainerEnv:
+    - name: JAVA_TOOL_OPTIONS
+      value: "-Xms64m -Xmx512m"
+  serviceType: NodePort
+  nodePort: 30080
+  installPlugins:
+    - kubernetes:4540.v612369217f87
+    - workflow-aggregator:608.v67378e9d3db_1
+    - git:5.10.1
+    - git-client:6.6.1
+    - configuration-as-code:2116.v98dde145b_dce
+    - pipeline-model-definition:2.2291.v2934911987b_6
+    - pipeline-model-api:2.2291.v2934911987b_6
+    - pipeline-model-extensions:2.2291.v2934911987b_6
+    - pipeline-stage-step:345.va_96187909426
+    - workflow-job:1590.v49101d088542
+    - workflow-cps:4362.v9b_991749898e
+    - pipeline-groovy-lib:798.v5cc688825312
+    - workflow-multibranch:841.vec5b_9e1806ec
+    - branch-api:2.1280.v0d4e5b_b_460ef
+    - remote-file:1.24
+    - script-security:1412.v7737b_3405f86
+    - credentials-binding:728.v902a_273b_8947
+    - jakarta-mail-api:2.1.5-1
+  installLatestPlugins: false
+  installLatestSpecifiedPlugins: false
+  # The Jenkins home PVC is authoritative after the first successful initialization.
+  # This prevents a restarted init container from replaying the chart's interactive
+  # plugin copy against its retained emptyDir workspace.
+  initializeOnce: true
+  overwritePlugins: false
+
+persistence:
+  enabled: true
+  storageClass: local-path
+  size: 20Gi
+
+rbac:
+  create: true
+  readSecrets: false
+
+serviceAccount:
+  create: true
+
+agent:
+  enabled: true
+  # Single-node VM: allow only one Kubernetes build agent across all jobs.
+  containerCap: 1
+  jenkinsUrl: "http://jenkins.jenkins.svc.cluster.local.:8080"
+  jenkinsTunnel: "jenkins-agent.jenkins.svc.cluster.local.:50000"
+  disableDefaultAgent: true
+  podTemplates:
+    enterprise-maven-kaniko: |
+      - name: enterprise-maven-kaniko
+        label: enterprise-maven-kaniko
+        serviceAccount: jenkins
+        instanceCap: 1
+        idleMinutes: 0
+        yaml: |
+          apiVersion: v1
+          kind: Pod
+          spec:
+            securityContext:
+              runAsUser: 1000
+              runAsGroup: 1000
+              fsGroup: 1000
+            dnsConfig:
+              options:
+                - name: ndots
+                  value: "1"
+        containers:
+          - name: maven
+            image: maven:3.9.11-eclipse-temurin-21
+            command: "cat"
+            ttyEnabled: true
+            resourceRequestCpu: "250m"
+            resourceRequestMemory: "768Mi"
+            resourceLimitCpu: "2"
+            resourceLimitMemory: "2Gi"
+          - name: kaniko
+            image: gcr.io/kaniko-project/executor:v1.23.2-debug
+            command: "/busybox/cat"
+            ttyEnabled: true
+            runAsUser: 0
+            runAsGroup: 0
+            envVars:
+              - envVar:
+                  key: HTTP_PROXY
+                  value: http://192.168.253.1:7897
+              - envVar:
+                  key: HTTPS_PROXY
+                  value: http://192.168.253.1:7897
+              - envVar:
+                  key: NO_PROXY
+                  value: 127.0.0.1,localhost,.cluster.local,.svc,10.42.0.0/16,10.43.0.0/16,192.168.253.128
+            resourceRequestCpu: "100m"
+            resourceRequestMemory: "256Mi"
+            resourceLimitCpu: "1"
+            resourceLimitMemory: "1Gi"
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"
+
+networkPolicy:
+  enabled: false

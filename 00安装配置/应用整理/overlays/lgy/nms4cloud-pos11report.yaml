@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nms4cloud-pos11report
+  labels:
+    app: nms4cloud-pos11report
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nms4cloud-pos11report
+  template:
+    metadata:
+      labels:
+        app: nms4cloud-pos11report
+    spec:
+      containers:
+      - name: nms4cloud-pos11report
+        image: 192.168.253.128:30083/library/nms4cloud-biz:c5b4beb12158-11
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: nacos-client
+        - secretRef:
+            name: nacos-client-env
+        env:
+        - name: SPRING_APPLICATION_NAME
+          value: nms4cloud-pos11report
+        - name: JAVA_TOOL_OPTIONS
+          value: -Xms128m -Xmx512m -XX:MaxMetaspaceSize=256m
+        ports:
+        - name: http
+          containerPort: 9190
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 1280Mi
+        volumeMounts:
+        - name: report-artifact
+          mountPath: /app.jar
+          subPath: app.jar
+      volumes:
+      - name: report-artifact
+        hostPath:
+          path: /home/lgy/k3s-report
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nms4cloud-pos11report
+spec:
+  selector:
+    app: nms4cloud-pos11report
+  ports:
+  - name: http
+    port: 9190
+    targetPort: http

@@ -1,0 +1,266 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: '6'
+    field.cattle.io/publicEndpoints: >-
+      [{"port":30088,"protocol":"TCP","serviceName":"nms4cloud:xxl-job","allNodes":true}]
+    objectset.rio.cattle.io/applied: >-
+      H4sIAAAAAAAA/7RUUW/jNgz+L3y2Eyeu00TAMGTt7TDc7i5ortvDcChomU7UypJOonM2Cv/3Qc6aJdsK9GVPtijy40fyo54BnfqNfFDWgAB0LkwPM0jgSZkKBNyS07ZvyDAk0BBjhYwgngGNsYysrAnxaMtHkhyIJ17ZiURmTRNlpyqCzLNaFpnEVM6WRXq1QpliKRdpQXklcbm6LosahgQ0lqRHOHQOBHSdTh9tCcmr8HsMexCwqMtlSXWRlbTK5svrsiiq+ZKuljKvaZUXtazL63w1j0kMNnSBHQ3BoYxW04QrqW1bRc/gSEYynpxWEgOIWQKBNEm2Pl40yHL/6yukh4jAHpl2/YhitVZmd+8qZDpGd9vW72iEbbC7N3hApbHUBCIbEuDeRU53F4HRTo3TLyBnI3mtfcNZLdIaRmXIBxB/PAOZw/j9qym3Pz1s1tvt75/vbiGBA+qWfva2iYGBpCf+QP0d1fH8RD0IqMrUYQjfra/gn61NjyEwDENyyrC+uXm33T58+fzh3ae3pUApKYSU7ROZt+XYrO/WH7cv6CAgTYPzyuwmsVPBtl7SpPX6h8eqlKLpwzctptPjN8+zxbTr9MOjLX9sA90bJS0MXxNQDe7GzG3XklbTFwZYNcqI+eRqEtdm9Nq0Wm+sVjLy/6X+ZHnjKRx3SKsDGQph4205TrBGpVtPX/aewt7qCkSewJ7ZvSeO9w45Svwy3xQlt8jWT/eEmveQgLOeQSyzZZSOMooV6lvS2G9JWlMFEIssAUde2epkmmX/tRER6qiPk1w2f6N/TcATVuqiiv+FcP5vwsUQsx9nOEpdq0bx+CddCwKKLGvGp6qxPra/mM0/KhijvrUUzl3nxaXrvFhE17gtJFuvuL+xhqk7VuXVQWnaUQWiRh1oOIkijns76jCcL1Nl5RP5k0LHtgVGzydprPV37APEjfaNMuNr+t6jpM1l0Xk2DMPwZwAAAP//JCTjQ6sFAAA
+    objectset.rio.cattle.io/id: 20fc50ca-c185-49ac-abc6-5e3dca897b5f
+  creationTimestamp: '2026-04-02T10:37:54Z'
+  generation: 9
+  labels:
+    app: xxl-job
+    objectset.rio.cattle.io/hash: 6fb8bef50be90287b55d28e48c3fe935fcfb7392
+  managedFields:
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:field.cattle.io/publicEndpoints: {}
+            f:objectset.rio.cattle.io/applied: {}
+            f:objectset.rio.cattle.io/id: {}
+          f:labels:
+            .: {}
+            f:app: {}
+            f:objectset.rio.cattle.io/hash: {}
+        f:spec:
+          f:progressDeadlineSeconds: {}
+          f:replicas: {}
+          f:revisionHistoryLimit: {}
+          f:selector: {}
+          f:strategy:
+            f:rollingUpdate:
+              .: {}
+              f:maxSurge: {}
+              f:maxUnavailable: {}
+            f:type: {}
+          f:template:
+            f:metadata:
+              f:annotations:
+                .: {}
+                f:cattle.io/timestamp: {}
+              f:labels:
+                .: {}
+                f:app: {}
+              f:namespace: {}
+            f:spec:
+              f:containers:
+                k:{"name":"xxl-job"}:
+                  .: {}
+                  f:env:
+                    .: {}
+                    k:{"name":"ACCESS_TOKEN"}:
+                      .: {}
+                      f:name: {}
+                      f:valueFrom:
+                        .: {}
+                        f:secretKeyRef: {}
+                    k:{"name":"DB_PASSWORD"}:
+                      .: {}
+                      f:name: {}
+                      f:valueFrom:
+                        .: {}
+                        f:secretKeyRef: {}
+                    k:{"name":"PARAMS"}:
+                      .: {}
+                      f:name: {}
+                      f:value: {}
+                  f:image: {}
+                  f:imagePullPolicy: {}
+                  f:livenessProbe:
+                    .: {}
+                    f:failureThreshold: {}
+                    f:httpGet:
+                      .: {}
+                      f:path: {}
+                      f:port: {}
+                      f:scheme: {}
+                    f:initialDelaySeconds: {}
+                    f:periodSeconds: {}
+                    f:successThreshold: {}
+                    f:timeoutSeconds: {}
+                  f:name: {}
+                  f:ports:
+                    .: {}
+                    k:{"containerPort":8080,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:name: {}
+                      f:protocol: {}
+                  f:readinessProbe:
+                    .: {}
+                    f:failureThreshold: {}
+                    f:httpGet:
+                      .: {}
+                      f:path: {}
+                      f:port: {}
+                      f:scheme: {}
+                    f:initialDelaySeconds: {}
+                    f:periodSeconds: {}
+                    f:successThreshold: {}
+                    f:timeoutSeconds: {}
+                  f:resources:
+                    .: {}
+                    f:limits:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                    f:requests:
+                      .: {}
+                      f:cpu: {}
+                      f:memory: {}
+                  f:securityContext:
+                    .: {}
+                    f:privileged: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+              f:dnsPolicy: {}
+              f:restartPolicy: {}
+              f:schedulerName: {}
+              f:securityContext: {}
+              f:terminationGracePeriodSeconds: {}
+      manager: rancher
+      operation: Update
+      time: '2026-05-21T01:33:41Z'
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:deployment.kubernetes.io/revision: {}
+        f:status:
+          f:availableReplicas: {}
+          f:conditions:
+            .: {}
+            k:{"type":"Available"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Progressing"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+          f:observedGeneration: {}
+          f:readyReplicas: {}
+          f:replicas: {}
+          f:updatedReplicas: {}
+      manager: kube-controller-manager
+      operation: Update
+      subresource: status
+      time: '2026-08-12T09:31:40Z'
+  name: xxl-job
+  namespace: nms4cloud
+  resourceVersion: '27859893'
+  uid: 9140c4d4-28d6-4825-a60a-496d56661fba
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: xxl-job
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        cattle.io/timestamp: '2026-05-21T01:33:37Z'
+      labels:
+        app: xxl-job
+      namespace: nms4cloud
+    spec:
+      containers:
+        - env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: db-password
+                  name: xxl-job-secret
+            - name: ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: access-token
+                  name: xxl-job-secret
+            - name: PARAMS
+              value: >-
+                --spring.datasource.url=jdbc:mysql://mysql:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+                --spring.datasource.username=root
+                --spring.datasource.password=$(DB_PASSWORD)
+                --xxl.job.accessToken=$(ACCESS_TOKEN)
+          image: 10.43.92.252/library/xxl-job-admin:2.4.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /xxl-job-admin/actuator/health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: xxl-job
+          ports:
+            - containerPort: 8080
+              name: 8080tcp
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /xxl-job-admin/actuator/health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+          securityContext:
+            privileged: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+    - lastTransitionTime: '2026-04-02T10:37:54Z'
+      lastUpdateTime: '2026-05-21T01:34:46Z'
+      message: ReplicaSet "xxl-job-78958f78f5" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: 'True'
+      type: Progressing
+    - lastTransitionTime: '2026-08-12T09:31:40Z'
+      lastUpdateTime: '2026-08-12T09:31:40Z'
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: 'True'
+      type: Available
+  observedGeneration: 9
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

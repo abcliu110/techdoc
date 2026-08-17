@@ -1,0 +1,17 @@
+spec:
+  template:
+    spec:
+      containers:
+      - name: nms4cloud-biz
+        command: null
+        env:
+        - name: SPRING_CLOUD_NACOS_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: nacos-client-auth
+              key: username
+        - name: SPRING_CLOUD_NACOS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: nacos-client-auth
+              key: password
