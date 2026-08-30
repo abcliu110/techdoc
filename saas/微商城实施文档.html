@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>微商城功能实施文档</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #333;
+    background: #f5f5f5;
+    padding: 40px 20px;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 48px 56px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    border-radius: 4px;
+  }
+  h1 {
+    font-size: 22px;
+    color: #1890ff;
+    text-align: center;
+    margin-bottom: 8px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #1890ff;
+  }
+  h2 {
+    font-size: 17px;
+    color: #222;
+    background: #f0f5ff;
+    padding: 8px 14px;
+    margin: 28px 0 12px;
+    border-left: 4px solid #1890ff;
+  }
+  h3 {
+    font-size: 15px;
+    color: #333;
+    margin: 20px 0 8px;
+    font-weight: bold;
+  }
+  p {
+    margin: 8px 0;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 13px;
+  }
+  th {
+    background: #1890ff;
+    color: #fff;
+    padding: 9px 12px;
+    text-align: left;
+    font-weight: bold;
+  }
+  td {
+    padding: 7px 12px;
+    border: 1px solid #d9d9d9;
+    color: #333;
+  }
+  tr:nth-child(even) td { background: #f9f9f9; }
+  code {
+    background: #f0f2f5;
+    color: #c7254e;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-family: "Consolas", "Courier New", monospace;
+  }
+  pre {
+    background: #f5f5f5;
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+    padding: 14px 16px;
+    margin: 10px 0;
+    overflow-x: auto;
+    font-size: 12px;
+    line-height: 1.6;
+    font-family: "Consolas", "Courier New", monospace;
+  }
+  pre code {
+    background: none;
+    color: #333;
+    padding: 0;
+    border-radius: 0;
+    font-size: inherit;
+  }
+  ul, ol {
+    margin: 8px 0 8px 24px;
+  }
+  li {
+    margin: 4px 0;
+  }
+  strong {
+    color: #222;
+    font-weight: bold;
+  }
+  blockquote {
+    background: #e8f4ff;
+    border-left: 4px solid #1890ff;
+    margin: 10px 0;
+    padding: 10px 14px;
+    border-radius: 0 4px 4px 0;
+    font-size: 13px;
+    color: #555;
+    line-height: 1.7;
+  }
+  hr {
+    border: none;
+    border-top: 1px solid #e8e8e8;
+    margin: 20px 0;
+  }
+  .footer {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid #e8e8e8;
+    text-align: center;
+    color: #999;
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>微商城功能实施文档</h1>
+<h2>一、功能概述</h2>
+<p>微商城是面向顾客的<strong>积分+商品兑换</strong>平台，顾客可通过小程序使用积分（部分情况可加钱）兑换商品。商品分为两种类型：</p>
+<table>
+<thead><tr>
+<th>类型</th>
+<th>说明</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>商品（P）</strong></td>
+<td>实物商品，顾客下单后由商家配送</td>
+</tr>
+<tr>
+<td><strong>券（C）</strong></td>
+<td>积分兑换优惠券，后台需要关联一张优惠券模板并设置兑换数量</td>
+</tr>
+</tbody></table>
+<blockquote><strong>重要区分</strong>：微商城与"积分兑换规则"是<strong>两套独立系统</strong>，功能对比见文末附表。</blockquote>
+<hr>
+<h2>二、完整实施步骤</h2>
+<h3>步骤1：创建商品类别（可选）</h3>
+<p><strong>后台路径</strong>：<code>微商城 &rarr; 类别</code></p>
+<p><strong>操作说明</strong>：</p>
+<ol><li>点击「新增」</li><li>填写类别名称、排序号（越小越靠前）</li><li>选择父级类别（支持多级分类）</li><li>选择状态：启用/停用</li><li>上传类别图标（可选）</li><li>保存</li></ol>
+<blockquote><strong>说明</strong>：类别是可选的。如果不创建类别，商品将无法在"分类模式"下展示；可以直接创建商品（不选类别）在"首页模式"下展示。</blockquote>
+<hr>
+<h3>步骤2：创建商品</h3>
+<p><strong>后台路径</strong>：<code>微商城 &rarr; 商品</code></p>
+<p><strong>操作说明</strong>：</p>
+<p>#### 2.1 基础信息</p>
+<ul><li><strong>产品类型</strong>：选择「商品」或「券」</li><li>选择「券」时，需要额外选择关联的优惠券模板并填写优惠券数量</li><li><strong>分类</strong>：下拉选择步骤1创建的类别（支持多级）</li><li><strong>名称</strong>（必填）</li><li><strong>单位</strong>（必填，如：个、份、瓶）</li></ul>
+<p>#### 2.2 价格与积分</p>
+<table>
+<thead><tr>
+<th>字段</th>
+<th>说明</th>
+<th>示例</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>售价</td>
+<td>金额（元），整数输入，自动转为分存储</td>
+<td>输入 <code>78</code> &rarr; 存储 <code>7800</code>（分）</td>
+</tr>
+<tr>
+<td>原价</td>
+<td>市场价，展示用划线价格</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>所需积分</td>
+<td>兑换所需积分，整数输入</td>
+<td>输入 <code>780</code> &rarr; 直接存储 <code>780</code></td>
+</tr>
+</tbody></table>
+<p><strong>价格分位说明</strong>：</p>
+<ul><li>金额字段：前端输入元，后端固定乘 100 转分（<code>priceScale = 2</code>），实际金额 = <code>priceFee / 100</code></li><li>积分字段：前端输入整数，后端直接存储（<code>pointsScale = 0</code>），实际积分 = <code>pointsFee</code></li></ul>
+<p><strong>兑换模式</strong>：</p>
+<table>
+<thead><tr>
+<th>售价</th>
+<th>所需积分</th>
+<th>小程序展示</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>> 0</td>
+<td>> 0</td>
+<td>积分 + 金额组合支付</td>
+</tr>
+<tr>
+<td>0</td>
+<td>> 0</td>
+<td><strong>纯积分兑换</strong></td>
+</tr>
+<tr>
+<td>> 0</td>
+<td>0</td>
+<td>纯金额购买</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>不允许（后端会拦截报错）</td>
+</tr>
+</tbody></table>
+<p>#### 2.3 库存与限购</p>
+<table>
+<thead><tr>
+<th>字段</th>
+<th>说明</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>库存</td>
+<td>必须填写，为 0 则小程序显示"已售空"</td>
+</tr>
+<tr>
+<td>成本</td>
+<td>内部记录用，小程序不展示</td>
+</tr>
+<tr>
+<td>每人总限购数</td>
+<td>同一手机号用户累计可购买数量，不填=不限制</td>
+</tr>
+<tr>
+<td>每人每天限购数</td>
+<td>同上，按每日统计，不填=不限制</td>
+</tr>
+</tbody></table>
+<p>#### 2.4 展示设置</p>
+<table>
+<thead><tr>
+<th>字段</th>
+<th>说明</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>显示在首页</td>
+<td>开启后，该商品会出现在小程序首页推荐区域</td>
+</tr>
+<tr>
+<td>显示顺序</td>
+<td>越小越靠前</td>
+</tr>
+<tr>
+<td>商品主图</td>
+<td>必填，建议 750x750px</td>
+</tr>
+<tr>
+<td>banner图片</td>
+<td>最多10张，逗号分隔</td>
+</tr>
+</tbody></table>
+<p>#### 2.5 保存</p>
+<hr>
+<h3>步骤3：上架商品（重要！）</h3>
+<p><strong>后台路径</strong>：<code>微商城 &rarr; 商品</code></p>
+<p><strong>操作说明</strong>：</p>
+<ol><li>商品默认状态为"停用"（<code>obsolete = false</code> 才是上架）</li><li>在商品列表点击「启用/下架」按钮切换状态</li><li><strong>发布数据</strong>：点击顶部「发布微商城数据」按钮，清空 Redis 缓存，使小程序获取最新数据</li></ol>
+<blockquote><strong>发布的作用</strong>：<code>release()</code> 方法会清除以下 Redis 缓存：<br>- <code>micro_mall_in_home</code>（首页推荐商品）<br>- <code>micro_mall_all_spu</code>（全部商品）<br>- <code>micro_mall_cate</code>（类别）<br>- <code>micro_mall_spu</code>（单品）<br><br><strong>不点击发布 &rarr; 数据仍在 Redis 缓存中 &rarr; 小程序看不到新增/修改</strong></blockquote>
+<hr>
+<h3>步骤4：类别也需要发布</h3>
+<p><strong>后台路径</strong>：<code>微商城 &rarr; 类别</code></p>
+<p>新增/修改/删除类别后，也需要点击「发布微商城数据」，清空类别缓存。</p>
+<hr>
+<h3>步骤5：小程序端查看</h3>
+<ol><li>打开小程序</li><li>进入「积分商城」页面</li><li>切换模式：分类浏览 / 首页推荐</li><li>选择商品 &rarr; 加入购物车 &rarr; 结算 &rarr; 支付</li></ol>
+<hr>
+<h2>三、字段说明表</h2>
+<h3>商品主表（mall_spu）</h3>
+<table>
+<thead><tr>
+<th>数据库字段</th>
+<th>后台字段</th>
+<th>必填</th>
+<th>说明</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>名称</td>
+<td>是</td>
+<td>商品名称</td>
+</tr>
+<tr>
+<td><code>category_id</code></td>
+<td>分类</td>
+<td>否</td>
+<td>关联 mall_category，支持多级</td>
+</tr>
+<tr>
+<td><code>unit</code></td>
+<td>单位</td>
+<td>是</td>
+<td>个/份/瓶等</td>
+</tr>
+<tr>
+<td><code>main_url</code></td>
+<td>商品主图</td>
+<td>是</td>
+<td>小程序展示图</td>
+</tr>
+<tr>
+<td><code>banner_url</code></td>
+<td>banner图片</td>
+<td>否</td>
+<td>最多10张，逗号分隔</td>
+</tr>
+<tr>
+<td><code>show_in_home</code></td>
+<td>显示在首页</td>
+<td>否</td>
+<td>true=首页推荐，false=否</td>
+</tr>
+<tr>
+<td><code>show_order</code></td>
+<td>显示顺序</td>
+<td>否</td>
+<td>越小越靠前</td>
+</tr>
+<tr>
+<td><code>purchase_limit_per_person</code></td>
+<td>每人总限购数</td>
+<td>否</td>
+<td>null=不限</td>
+</tr>
+<tr>
+<td><code>purchase_limit_per_person_per_day</code></td>
+<td>每人每天限购数</td>
+<td>否</td>
+<td>null=不限</td>
+</tr>
+<tr>
+<td><code>obsolete</code></td>
+<td>上下架状态</td>
+<td>是</td>
+<td>false=上架，true=下架</td>
+</tr>
+<tr>
+<td><code>type_</code></td>
+<td>产品类型</td>
+<td>是</td>
+<td>P=商品，C=券</td>
+</tr>
+<tr>
+<td><code>type_lid</code></td>
+<td>券的优惠券编号</td>
+<td>C时必填</td>
+<td>关联优惠券模板</td>
+</tr>
+<tr>
+<td><code>type_num</code></td>
+<td>优惠券数量</td>
+<td>C时必填</td>
+<td>≤30</td>
+</tr>
+</tbody></table>
+<h3>SKU表（mall_sku）</h3>
+<table>
+<thead><tr>
+<th>数据库字段</th>
+<th>后台字段</th>
+<th>说明</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>price_fee</code></td>
+<td>售价</td>
+<td>分存储，实际金额=priceFee/100</td>
+</tr>
+<tr>
+<td><code>price_scale</code></td>
+<td>售价分位</td>
+<td>固定为2</td>
+</tr>
+<tr>
+<td><code>market_price_fee</code></td>
+<td>原价</td>
+<td>同上</td>
+</tr>
+<tr>
+<td><code>market_price_scale</code></td>
+<td>原价分位</td>
+<td>固定为2</td>
+</tr>
+<tr>
+<td><code>points_fee</code></td>
+<td>所需积分</td>
+<td>直接存储</td>
+</tr>
+<tr>
+<td><code>points_scale</code></td>
+<td>积分分位</td>
+<td>固定为0，实际积分=pointsFee</td>
+</tr>
+<tr>
+<td><code>sales_volume</code></td>
+<td>已售数量</td>
+<td>展示用</td>
+</tr>
+</tbody></table>
+<h3>库存表（mall_sku_stock）</h3>
+<table>
+<thead><tr>
+<th>数据库字段</th>
+<th>后台字段</th>
+<th>说明</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>sku_id</code></td>
+<td>-</td>
+<td>关联 mall_sku.lid</td>
+</tr>
+<tr>
+<td><code>quantity</code></td>
+<td>库存</td>
+<td>为0则显示"已售空"</td>
+</tr>
+</tbody></table>
+<h3>类别表（mall_category）</h3>
+<table>
+<thead><tr>
+<th>数据库字段</th>
+<th>后台字段</th>
+<th>说明</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>类别名称</td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>parent_id</code></td>
+<td>父级</td>
+<td>支持多级分类，null=顶级</td>
+</tr>
+<tr>
+<td><code>pic_url</code></td>
+<td>类别图标</td>
+<td>小程序分类展示</td>
+</tr>
+<tr>
+<td><code>show_order</code></td>
+<td>排序号</td>
+<td>越小越靠前</td>
+</tr>
+<tr>
+<td><code>obsolete</code></td>
+<td>状态</td>
+<td>false=启用，true=停用</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>四、积分计算规则</h2>
+<pre><code>实际金额（元）= price_fee / 10^price_scale   （price_scale 固定为2）
+实际积分     = points_fee / 10^points_scale （points_scale 固定为0）</code></pre>
+<p><strong>示例</strong>：</p>
+<table>
+<thead><tr>
+<th>售价输入</th>
+<th>price_fee 存储</th>
+<th>实际金额</th>
+<th>所需积分输入</th>
+<th>points_fee 存储</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>78</td>
+<td>7800</td>
+<td>78.00元</td>
+<td>780</td>
+<td>780</td>
+</tr>
+<tr>
+<td>0.5</td>
+<td>50</td>
+<td>0.50元</td>
+<td>100</td>
+<td>100</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>五、常见问题</h2>
+<h3>Q1：小程序不显示商品</h3>
+<p><strong>排查顺序</strong>：</p>
+<ol><li>商品状态是否为"上架"？（<code>obsolete = false</code>）</li><li>是否点击了「发布微商城数据」？（清缓存）</li><li>关联的类别是否"停用"？（<code>obsolete = true</code>）</li><li>库存数量是否为 0？</li><li>商品是否设置了"显示在首页"，但想看分类模式？</li><li>小程序是否选择了正确的门店？</li></ol>
+<h3>Q2：分类模式不显示商品</h3>
+<p><strong>排查</strong>：商品是否绑定了正确的分类？未绑定分类的商品不会出现在分类模式。</p>
+<h3>Q3：首页模式不显示商品</h3>
+<p><strong>排查</strong>：商品是否开启了"显示在首页"开关？</p>
+<h3>Q4：积分兑换规则（积分营销-积分兑换）不显示</h3>
+<p><strong>原因</strong>：这是另一套系统，与微商城无关。该功能目前小程序未对接。</p>
+<h3>Q5：后端报错"积分和价格不能同时为0"</h3>
+<p><strong>原因</strong>：<code>priceFee > 0 || pointsFee > 0</code> 校验，至少要填一个。</p>
+<h3>Q6：新增商品后需要重复操作？</h3>
+<p><strong>是</strong>。每次新增/修改商品或类别后，都需要点击「发布微商城数据」，否则小程序因 Redis 缓存看不到最新数据。</p>
+<hr>
+<h2>六、附：两套积分系统对比</h2>
+<table>
+<thead><tr>
+<th>对比项</th>
+<th>微商城</th>
+<th>积分兑换规则</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>后台路径</td>
+<td>微商城 - 商品/类别</td>
+<td>积分营销 - 积分兑换</td>
+</tr>
+<tr>
+<td>数据库表</td>
+<td><code>mall_spu</code> / <code>mall_sku</code> / <code>mall_category</code></td>
+<td><code>crm_point_exchange</code></td>
+</tr>
+<tr>
+<td>小程序入口</td>
+<td>积分商城</td>
+<td><strong>未对接</strong></td>
+</tr>
+<tr>
+<td>兑换内容</td>
+<td>实物商品或优惠券（通过"券"类型）</td>
+<td>优惠券</td>
+</tr>
+<tr>
+<td>状态控制</td>
+<td><code>obsolete</code>（上下架）</td>
+<td><code>status</code>（生效中/已失效）</td>
+</tr>
+<tr>
+<td>限购</td>
+<td>每人总限购数 / 每天限购数</td>
+<td>限制每人兑换最大次数（<strong>当前未实现</strong>）</td>
+</tr>
+</tbody></table>
+<hr>
+<p>*文档版本：v1.1*</p>
+<p>*最后更新：2026-08-27*</p>
+<div class="footer">文档版本：v1.1 &nbsp;&nbsp; 最后更新：2026-08-27</div>
+</div>
+</body>
+</html>

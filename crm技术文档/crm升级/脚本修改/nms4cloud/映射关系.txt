@@ -1,0 +1,20 @@
+          crm_deposit_plan:
+            actual-data-nodes: crm.crm_deposit_plan
+          crm_deposit_category:
+            actual-data-nodes: crm.crm_deposit_category
+          crm_deposit_agreement:
+            actual-data-nodes: crm.crm_deposit_agreement
+          crm_deposit_charge_record:
+            actual-data-nodes: crm.crm_deposit_charge_record
+          crm_deposit_coupon_schedule:
+            actual-data-nodes: crm.crm_deposit_coupon_schedule
+          crm_consume_points_grant:
+            actual-data-nodes: crm.crm_consume_points_grant
+          crm_points_rule:
+            actual-data-nodes: crm.crm_points_rule
+          crm_consume_points_task:
+            actual-data-nodes: crm.crm_consume_points_task            
+          crm_consume_coupon_op_record:
+            actual-data-nodes: crm.crm_consume_coupon_op_record            
+          crm_consume_cash_op_record:
+            actual-data-nodes: crm.crm_consume_cash_op_record            

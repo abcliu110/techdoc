@@ -1,0 +1,238 @@
+项目：D:\mywork\nms4cloud-order
+  当前分支：jujiao_master
+
+  目标：
+  继续完成“小程序券核销前置”改造。用户已经确认 WP、MP、DP 三类券全部迁移到订单创建前核销链路。前端不改，购物车 Redis key 结构不改，采用最小修改。第 6 项“购物车删除改
+  为事务提交后执行”明确暂不处理，其他问题全部修复。
+
+  已有部分改动（必须先检查工作区，不要覆盖已有修改）：
+  1. CrtOrderService 增加了生命周期钩子：
+     - beforeCreateOrder(request, cart, context)
+     - afterCreateOrderFailure(request, cart, context, cause)
+     handle() 已按以下流程编排：
+     preHandle -> beforeCreateOrder -> Spring 代理调用 crtOrder -> 异常时 afterCreateOrderFailure -> postHandle
+  2. CrtPostOrderServiceImpl 已尝试把正式核销移到 beforeCreateOrder。
+  3. CrtOrderContext 已增加 ProductCouponWriteOffSuccess 列表。
+  4. 已新增核销记录主表、明细表、实体、Mapper、Service 和 SQL：
+     - docs/sql/migration/V20260824__coupon_write_off_record_mysql.sql
+     - CouponWriteOffRecord
+     - CouponWriteOffRecordDetail
+  5. 已增加 claim_owner、claim_expire_time、version 等字段，但实现还不完整。
+  6. 已有订单提交状态查询逻辑 findOrderCommitState，但要重新验证。
+  7. 最近一次 Maven 编译曾通过，但当前改动仍未达到可上线标准。
+
+  必须修复的问题（除第 6 项外全部处理）：
+
+  一、并发原子认领
+  当前代码是“先 findByTraceNo，再 createInit，再调用外部核销”，不是原子操作，两个请求可能同时调用外部核销。
+
+  要求：
+  - trace_no 保持唯一索引；
+  - 保持只有三种业务状态：INIT、SUCCESS、FAILED，不增加 PROCESSING；
+  - 使用 claim_owner、claim_expire_time、version 记录暂时认领人和租约；
+  - 首次插入遇到唯一键冲突时，不能直接判定核销失败，必须重新读取记录；
+  - 只有原子认领成功的请求才能调用外部 verify；
+  - INIT 且租约未过期：不能重复调用外部核销，应等待或查询外部结果；
+  - INIT 且租约已过期：通过条件 UPDATE 原子接管；
+  - SUCCESS：直接复用持久化结果，不能再次 verify；
+  - FAILED：按失败原因决定是否允许重试；
+  - markSuccess、markFailed 必须检查更新影响行数，不能无条件认为成功；
+  - 旧请求不能覆盖已经被新请求接管的记录。
+
+  二、外部核销成功结果完整持久化
+  当前只在内存 ProductCouponWriteOffSuccess 中保存部分结果，进程崩溃或 markSuccess 失败后无法恢复。
+
+  要求：
+  - 外部核销成功后，立即在独立事务中保存完整主记录和明细；
+  - 主表至少保存：
+    trace_no、券业务类型（WP/MP/DP）、provider、mid、sid、coupon_no、status、order_saas_order_key、claim 信息、重试次数、错误原因；
+  - 保存平台相关凭证：
+    platformWriteOffId、必要的 verifyToken/encryptedCode、外部请求使用的稳定 trace_no、必要的安全摘要；
+  - 明细表必须按每个 verify_id 保存：
+    verify_id、实际核销数量、平台凭证、必要的反核销参数；
+  - 不能只保存总数量或用一个字符串保存所有 verify_id；
+  - 写 SUCCESS 时校验明细数量之和等于本次请求核销数量；
+  - 不记录完整敏感请求/响应对象，遵守脱敏要求；
+  - 主记录和明细必须在同一个独立事务中原子写入。
+
+  三、外部成功但本地保存失败
+  场景：
+  外部平台已经核销成功，但本地 markSuccess 或明细写入失败。
+
+  要求：
+  - 不能只抛异常；
+  - 先重新读取本地记录，确认是否实际写入 SUCCESS；
+  - 已经是 SUCCESS 且凭证完整：继续使用，不反核销；
+  - 未写入 SUCCESS：使用当前外部响应中的凭证立即反核销；
+  - 反核销成功：记录 FAILED/可重试状态并阻断本次订单；
+  - 反核销失败或结果未知：阻断订单并保留恢复所需记录，不能继续创建订单；
+  - 当前成功券必须加入补偿清单，即使 markSuccess 抛异常；
+  - 恢复任务必须能处理这种遗留记录。
+
+  四、SUCCESS 重入时恢复结果
+  当前再次送单读到 SUCCESS 时，只跳过了外呼，但没有从数据库恢复 ProductCouponWriteOffSuccess，导致订单凭证回写和异常补偿缺少数据。
+
+  要求：
+  - SUCCESS 重入必须从主表和明细表恢复 ProductCouponWriteOffSuccess；
+  - 恢复出的对象必须包含 WP/MP/DP 各自反核销所需参数；
+  - 凭证不完整时不能盲目继续订单，应阻断并告警/进入恢复；
+  - 后续订单保存和异常补偿都使用持久化结果，不重新扫描购物车构造成功清单。
+
+  五、订单事务失败后的精确补偿
+  场景：
+  所有券前置核销成功，但 crtOrder 的 calc、订单保存、菜品保存、免赠等步骤失败，事务回滚。
+
+  要求：
+  - afterCreateOrderFailure 只补偿本次请求实际取得认领权并成功核销的券；
+  - 不能重新扫描购物车所有 WP/MP/DP，否则会误反核销历史 SUCCESS 券；
+  - 补偿前按 mid + sid + saasOrderKey 查询 order_bill 和 order_food；
+  - 已确认订单存在：不反核销；
+  - 已确认订单不存在：使用持久化凭证执行反核销；
+  - 查询结果未知：不能直接反核销，阻断并等待恢复；
+  - WP、MP、DP 必须走统一补偿清单，不能保留两条互相独立的补偿链；
+  - 反核销必须使用稳定 couponWriteOffTraceNo/持久化外部凭证；
+  - 多 verify_id 必须按明细数量逐项反核销；
+  - 反核销成功后记录最终状态；
+  - 反核销失败或未知必须保留可恢复记录并告警。
+
+  六、订单成功后的记录绑定
+  订单创建成功后，核销记录必须绑定订单。
+
+  要求：
+  - 在订单事务成功路径中将核销记录更新为对应 order_saas_order_key；
+  - 绑定必须带 mid、sid、trace_no 等条件；
+  - 恢复任务看到 SUCCESS 且已绑定订单时不能反核销；
+  - 防止恢复任务与正在创建订单的事务竞争。必要时使用 claim_owner、claim_expire_time、version 或订单创建认领字段做原子保护；
+  - 不能仅通过“查不到 order_food”就立即反核销，因为订单事务可能尚未提交。
+
+  七、OrderFood 凭证回填
+  重要事实：
+  OrderFoodVO 和 OrderFood 不是同一引用。CalcGenericOrderServiceImpl.calc() 会新建 OrderFood，并通过 BeanUtilsPlus.mapBean() 复制。
+
+  因此不能认为：
+  preHandle 修改 OrderFoodVO -> calc -> saveBatch 会自动带上修改。
+
+  要求：
+  - calc 生成 OrderFood/OrderFoodVO 后，按 couponWriteOffTraceNo 将持久化核销结果回填到 calc 结果；
+  - 回填字段至少包括 platformWriteOffId、核销凭证、couponWriteOffTraceNo 等实际需要落库的字段；
+  - 必须在 saveBatch 前完成回填；
+  - 确认每条订单菜品与对应券的 trace 关联正确；
+  - 不要只更新购物车对象或订单保存后再依赖不可靠的补写。
+
+  八、恢复任务
+  必须增加可恢复处理，不能只依赖内存对象。
+
+  至少扫描：
+  - INIT 长时间未完成的记录；
+  - SUCCESS 但未绑定订单的记录；
+  - 外部成功、本地保存失败的记录；
+  - 反核销失败或结果未知的记录；
+  - claim_expire_time 已过期的记录。
+
+  要求：
+  - 恢复任务使用原子认领，避免与送单并发处理；
+  - 对 WP 可按现有 CRM 查询/反核销能力处理；
+  - 对 MP/DP 如果外部查询契约无法确认，必须保持未知并告警，不能猜测“已成功”或直接反核销；
+  - 恢复任务必须幂等，可重复执行；
+  - 不能因为查不到订单就立即反核销，必须考虑订单事务尚未提交和认领租约；
+  - 记录 retry_count、last_error、最后处理时间等必要信息。
+
+  九、数据库迁移和测试
+  必须检查并完善真实 SQL 迁移，保证新旧版本兼容。
+
+  需要增加或补充特征化测试：
+  - WP 前置核销成功；
+  - MP 前置核销成功；
+  - DP 前置核销成功；
+  - 同一 trace 两个并发请求只有一个外部 verify；
+  - 唯一键冲突后正确重读 SUCCESS；
+  - INIT 未过期不重复外呼；
+  - INIT 过期可原子接管；
+  - 外部成功但 markSuccess 失败；
+  - 多 verify_id 且数量映射正确；
+  - 部分券成功、后续券失败时只反核销本次成功券；
+  - 所有券成功但订单事务回滚时精确补偿；
+  - 订单成功后核销记录正确绑定；
+  - SUCCESS 重入能恢复凭证；
+  - 恢复任务可重复执行；
+  - 订单提交状态未知时不误反核销。
+
+  验证命令：
+  mvn -pl nms4cloud-order-service -am -DskipTests compile
+
+  还要运行相关单测/集成测试，并报告：
+  - 实际修改文件；
+  - 编译和测试命令；
+  - 通过/失败结果；
+  - 未覆盖风险；
+  - 数据库迁移和回滚方式。
+
+  限制：
+  - 不修改前端；
+  - 不修改购物车 Redis key 结构；
+  - 不处理第 6 项“购物车删除改为事务提交后执行”；
+  - 不删除失败测试、不放宽断言；
+  - 不扩大到与本需求无关的重构；
+  - Java 使用 UTF-8 无 BOM；
+  - 代码中的复杂事务、补偿、兼容逻辑增加中文注释；
+  - 修改前先检查 git status，保留当前已有未提交改动；
+  - 完成后进行多角色对抗性代码评审，按 P0/P1/P2 输出问题。
+
+
+codex resume 01a0330a-28fd-7693-822a-a94b4045945d
+
+
+==================== CC Switch / Codex 配置（修正版） ====================
+
+model_provider = "ai_gateway"
+model = "gpt-5.6-terra"
+model_reasoning_effort = "medium"
+disable_response_storage = true
+
+notify = [ "C:\\Users\\16555\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\cd454f7c85348168\\bin\\node_modules\\@oai\\sky\\bin\\windows\\codex-computer-use.exe", "turn-ended" ]
+[model_providers.ai_gateway]
+name = "ai_gateway"
+base_url = "https://xiuzhenzyxy.online"
+wire_api = "responses"
+requires_openai_auth = true
+
+[mcp_servers]
+
+[mcp_servers.code-review-graph]
+type = "stdio"
+command = 'C:\Users\16555\.pyenv\pyenv-win\versions\3.11.4\python.exe'
+args = ['C:\Users\16555\.codex\bin\code-review-graph-mcp-wrapper.py']
+
+[mcp_servers.node_repl]
+args = []
+command = 'C:\Users\16555\AppData\Local\OpenAI\Codex\runtimes\cua_node\cd454f7c85348168\bin\node_repl.exe'
+startup_timeout_sec = 120
+
+[mcp_servers.node_repl.env]
+NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+NODE_REPL_NODE_MODULE_DIRS = 'C:\Users\16555\AppData\Local\OpenAI\Codex\runtimes\cua_node\cd454f7c85348168\bin\node_modules'
+NODE_REPL_NODE_PATH = 'C:\Users\16555\AppData\Local\OpenAI\Codex\runtimes\cua_node\cd454f7c85348168\bin\node.exe'
+NODE_REPL_TRUSTED_CODE_PATHS = 'C:\Users\16555\.codex;C:\Users\16555\AppData\Local\OpenAI\Codex\runtimes\cua_node\cd454f7c85348168\bin\node_modules'
+CODEX_HOME = 'C:\Users\16555\.codex'
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "8e172ec9f458f2e636fc69a1b8c68c217f6bb8d10c41f70a05a0878b73863701"
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.810.52044"
+SKY_CUA_NATIVE_PIPE = "1"
+SKY_CUA_NATIVE_PIPE_DIRECTORY = '\\.\pipe\codex-computer-use-112c99db-083d-4a37-aaa6-4b1cc4b00069'
+CODEX_CLI_PATH = 'C:\Users\16555\AppData\Local\OpenAI\Codex\bin\110b3d66a02d864e\codex.exe'
+
+[projects.'d:\']
+trust_level = "trusted"
+
+[features]
+js_repl = false
+
+[shell_environment_policy.set]
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "8e172ec9f458f2e636fc69a1b8c68c217f6bb8d10c41f70a05a0878b73863701"
+NODE_REPL_TRUSTED_CODE_PATHS = 'C:\Users\16555\.codex;C:\Users\16555\AppData\Local\OpenAI\Codex\runtimes\cua_node\cd454f7c85348168\bin\node_modules'
+
+==========================================================================

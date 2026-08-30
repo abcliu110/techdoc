@@ -1,0 +1,305 @@
+/*
+ * ============================================================================
+ * NMS4Cloud Order 模块 Jenkins 构建流水线
+ * ============================================================================
+ *
+ * 用途:
+ *   - 检出并构建独立的 nms4cloud-order 仓库
+ *   - 将 Order Maven 制品部署到 Nexus（可选）
+ *   - 构建并推送 nms4cloud-order 镜像到 Harbor（可选）
+ *
+ * 构建范围:
+ *   nms4cloud-order/
+ *   ├── pom.xml
+ *   ├── nms4cloud-order-api/
+ *   ├── nms4cloud-order-dao/
+ *   ├── nms4cloud-order-service/
+ *   └── nms4cloud-order-app/
+ *
+ * 说明:
+ *   - Order 是独立仓库，主项目父 POM 与共享模块依赖从 Nexus 获取
+ *   - Docker 阶段只构建 nms4cloud-order-app 的镜像
+ *   - Jenkins 凭据: aliyun-codeup-token、nexus-credentials、harbor-user-auth
+ *
+ * ============================================================================
+ */
+
+def generateMavenSettings() {
+    sh """
+        cat > ${MAVEN_SETTINGS} <<EOF
+<settings>
+  <mirrors>
+    <mirror>
+      <id>nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>${NEXUS_URL}/repository/${NEXUS_REPO_GROUP}/</url>
+    </mirror>
+  </mirrors>
+  <servers>
+    <server>
+      <id>nexus-releases</id>
+      <username>${NEXUS_USER}</username>
+      <password>${NEXUS_PASS}</password>
+    </server>
+    <server>
+      <id>nexus-snapshots</id>
+      <username>${NEXUS_USER}</username>
+      <password>${NEXUS_PASS}</password>
+    </server>
+    <server>
+      <id>nexus</id>
+      <username>${NEXUS_USER}</username>
+      <password>${NEXUS_PASS}</password>
+    </server>
+  </servers>
+  <profiles>
+    <profile>
+      <id>nexus-snapshots-repo</id>
+      <repositories>
+        <repository>
+          <id>maven-snapshots</id>
+          <url>${NEXUS_URL}/repository/${NEXUS_REPO_SNAPSHOTS}/</url>
+          <releases><enabled>false</enabled></releases>
+          <snapshots><enabled>true</enabled><updatePolicy>always</updatePolicy></snapshots>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
+  <activeProfiles><activeProfile>nexus-snapshots-repo</activeProfile></activeProfiles>
+</settings>
+EOF
+    """
+}
+
+def getMavenVersion() {
+    return sh(
+        script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout -s ${MAVEN_SETTINGS}",
+        returnStdout: true
+    ).trim()
+}
+
+pipeline {
+    agent {
+        kubernetes {
+            yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    jenkins: agent
+    project: nms4cloud-order
+spec:
+  serviceAccountName: default
+  containers:
+  - name: jnlp
+    image: 192.168.1.119:30020/library/inbound-agent:3355.v388858a_47b_33-3-jdk21
+  - name: maven
+    image: 192.168.1.119:30020/library/maven:3.9-eclipse-temurin-21
+    command: [cat]
+    tty: true
+    volumeMounts:
+    - name: jenkins-home
+      mountPath: /var/jenkins_home
+    resources:
+      requests: {cpu: 1000m, memory: 2Gi}
+      limits: {cpu: 4000m, memory: 6Gi}
+    env:
+    - name: MAVEN_OPTS
+      value: -Xmx4g -Xms1g -XX:+UseG1GC -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError
+  - name: kaniko
+    image: 192.168.1.119:30020/library/kaniko:debug
+    command: [/busybox/cat]
+    tty: true
+    volumeMounts:
+    - name: jenkins-home
+      mountPath: /var/jenkins_home
+    resources:
+      requests: {cpu: 500m, memory: 1Gi}
+      limits: {cpu: 3000m, memory: 3Gi}
+  volumes:
+  - name: jenkins-home
+    persistentVolumeClaim:
+      claimName: jenkins-pvc
+"""
+        }
+    }
+
+    environment {
+        MAVEN_SETTINGS = '/tmp/maven-settings.xml'
+        NEXUS_URL = 'http://nexus.nexus:8081'
+        NEXUS_REPO_GROUP = 'maven-public'
+        NEXUS_REPO_RELEASES = 'maven-releases'
+        NEXUS_REPO_SNAPSHOTS = 'maven-snapshots'
+        NEXUS_CRED_ID = 'nexus-credentials'
+
+        PROJECT_NAME = 'nms4cloud-order'
+        ORDER_APP_PATH = 'nms4cloud-order-app'
+        ORDER_MAVEN_PROJECT = 'nms4cloud-order-app'
+        ARTIFACT_VERSION = 'unknown'
+
+        GIT_CREDENTIAL_ID = 'aliyun-codeup-token'
+        GIT_BRANCH = 'jujiao_master'
+        REPO_ORDER = 'https://codeup.aliyun.com/613895a803e1c17d57a7630f/nms4cloud-pos-java/nms4cloud-order.git'
+
+        HARBOR_REGISTRY = 'harbor.harbor'
+        HARBOR_PROJECT = 'library'
+        HARBOR_CRED_ID = 'harbor-user-auth'
+        DOCKER_IMAGE_NAME = 'nms4cloud-order'
+        DOCKER_IMAGE_TAG = "${env.BUILD_NUMBER}"
+    }
+
+    parameters {
+        booleanParam(name: 'SKIP_TESTS', defaultValue: true, description: '跳过单元测试（推荐开启以加快构建）')
+        booleanParam(name: 'CLEAN_BUILD', defaultValue: true, description: '清理构建（首次构建或依赖变更时建议开启）')
+        booleanParam(name: 'DEPLOY_TO_NEXUS', defaultValue: true, description: '将 Order 构建产物推送到 Nexus 仓库')
+        booleanParam(name: 'BUILD_DOCKER_IMAGE', defaultValue: true, description: '构建并推送 Order Docker 镜像到 Harbor')
+        choice(name: 'DOCKER_REGISTRY_SOURCE', choices: ['harbor-proxy', 'daocloud-mirror', 'docker-hub'], description: '选择 Docker 镜像拉取源')
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        disableConcurrentBuilds()
+        timeout(time: 20, unit: 'MINUTES')
+        timestamps()
+    }
+
+    stages {
+        stage('环境检查') {
+            steps {
+                container('maven') {
+                    script {
+                        withCredentials([usernamePassword(credentialsId: "${NEXUS_CRED_ID}", usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
+                            generateMavenSettings()
+                        }
+                        currentBuild.displayName = "#${BUILD_NUMBER} - Order"
+                        currentBuild.description = "Order 模块 | 分支: ${GIT_BRANCH}"
+                        echo "Order 构建配置: 项目=${PROJECT_NAME}, 分支=${GIT_BRANCH}, 跳过测试=${params.SKIP_TESTS}, 清理构建=${params.CLEAN_BUILD}, 推送 Nexus=${params.DEPLOY_TO_NEXUS}, 构建镜像=${params.BUILD_DOCKER_IMAGE}"
+                        sh 'set +x; java -version; mvn -version -s ${MAVEN_SETTINGS}'
+                    }
+                }
+            }
+        }
+
+        stage('代码检出') {
+            steps {
+                container('maven') {
+                    script {
+                        deleteDir()
+                        checkout([
+                            $class: 'GitSCM',
+                            branches: [[name: "*/${GIT_BRANCH}"]],
+                            extensions: [[$class: 'CloneOption', depth: 1, shallow: true, timeout: 20], [$class: 'CheckoutOption', timeout: 20]],
+                            userRemoteConfigs: [[credentialsId: "${GIT_CREDENTIAL_ID}", url: "${REPO_ORDER}"]]
+                        ])
+                    }
+                }
+            }
+        }
+
+        stage('Maven 构建 Order') {
+            steps {
+                container('maven') {
+                    script {
+                        def cleanCmd = params.CLEAN_BUILD ? 'clean' : ''
+                        def skipTests = params.SKIP_TESTS ? '-Dmaven.test.skip=true' : ''
+                        def mvnOpts = "-U ${skipTests}".trim()
+                        def mavenGoal = params.DEPLOY_TO_NEXUS ? 'deploy' : 'install'
+                        def altRepos = "-DaltSnapshotDeploymentRepository=nexus-snapshots::${NEXUS_URL}/repository/${NEXUS_REPO_SNAPSHOTS}/ -DaltReleaseDeploymentRepository=nexus-releases::${NEXUS_URL}/repository/${NEXUS_REPO_RELEASES}/"
+
+                        sh "mvn ${cleanCmd} ${mavenGoal} -pl ${ORDER_MAVEN_PROJECT} -am ${mvnOpts} ${altRepos} -s ${MAVEN_SETTINGS}"
+                        env.ARTIFACT_VERSION = getMavenVersion()
+                        sh """
+                            set +x
+                            JAR_COUNT=\$(find ${ORDER_APP_PATH}/target -name '*.jar' -type f | grep -vc '\\.original\$' || true)
+                            if [ "\$JAR_COUNT" -eq 0 ]; then
+                                echo '错误: 未找到 Order App 可运行 JAR'
+                                exit 1
+                            fi
+                            find ${ORDER_APP_PATH}/target -name '*.jar' -type f | grep -v '\\.original\$'
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('单元测试') {
+            when { expression { !params.SKIP_TESTS } }
+            steps {
+                container('maven') {
+                    sh "mvn test -pl ${ORDER_MAVEN_PROJECT} -am -s ${MAVEN_SETTINGS}"
+                }
+            }
+            post { always { junit '**/target/surefire-reports/*.xml' } }
+        }
+
+        stage('归档构建产物') {
+            steps {
+                container('maven') {
+                    archiveArtifacts artifacts: "${ORDER_APP_PATH}/target/*.jar", fingerprint: true, allowEmptyArchive: false
+                }
+            }
+        }
+
+        stage('构建并推送 Order Docker 镜像') {
+            when { expression { params.BUILD_DOCKER_IMAGE } }
+            steps {
+                container('kaniko') {
+                    script {
+                        def result = buildOrderImage()
+                        if (!result.success) {
+                            error("Order 镜像构建失败: ${result.reason}")
+                        }
+                        env.BUILT_IMAGE = result.imageName
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Order 构建成功: 项目=${PROJECT_NAME}, 版本=${ARTIFACT_VERSION}, 分支=${GIT_BRANCH}, 耗时=${currentBuild.durationString}"
+            script {
+                if (params.BUILD_DOCKER_IMAGE && env.BUILT_IMAGE) {
+                    echo "Order Docker 镜像已推送到 Harbor: ${env.BUILT_IMAGE}"
+                }
+            }
+        }
+        failure {
+            echo 'Order 构建失败。请检查 Order 模块编译、依赖解析、JAR 生成和 Harbor 推送日志。'
+        }
+        always {
+            cleanWs(deleteDirs: true, patterns: [[pattern: 'target/**', type: 'INCLUDE']])
+        }
+    }
+}
+
+def buildOrderImage() {
+    def dockerfilePath = "${WORKSPACE}/${ORDER_APP_PATH}/Dockerfile"
+    def buildContext = "${WORKSPACE}/${ORDER_APP_PATH}"
+    def harborImageName = "${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${DOCKER_IMAGE_NAME}"
+    def registryMirror = params.DOCKER_REGISTRY_SOURCE == 'daocloud-mirror' ? 'docker.m.daocloud.io' : (params.DOCKER_REGISTRY_SOURCE == 'docker-hub' ? '' : 'harbor.harbor/dockerhub-proxy')
+
+    try {
+        withCredentials([usernamePassword(credentialsId: "${HARBOR_CRED_ID}", usernameVariable: 'HB_USER', passwordVariable: 'HB_PASS')]) {
+            sh """
+                set +x
+                mkdir -p /kaniko/.docker
+                AUTH=\$(echo -n "\${HB_USER}:\${HB_PASS}" | base64)
+                echo "{\\"auths\\":{\\"${HARBOR_REGISTRY}\\":{\\"auth\\":\\"\$AUTH\\"}}}" > /kaniko/.docker/config.json
+                test -d "${buildContext}"
+                test -f "${dockerfilePath}"
+                find "${buildContext}/target" -name '*.jar' -type f | grep -v '\\.original\$' | grep -q .
+                DESTINATIONS="--destination=${harborImageName}:${DOCKER_IMAGE_TAG} --destination=${harborImageName}:latest"
+                if [ -n "${registryMirror}" ]; then
+                    timeout 300 /kaniko/executor --context="${buildContext}" --dockerfile="${dockerfilePath}" --registry-mirror="${registryMirror}" --skip-default-registry-fallback \${DESTINATIONS} --insecure --insecure-pull --skip-tls-verify --insecure-registry="${HARBOR_REGISTRY}" --compression=gzip --compression-level=9 --push-retry=3 --skip-push-permission-check --cache=false --verbosity=info --skip-unused-stages=true --single-snapshot=true
+                else
+                    timeout 300 /kaniko/executor --context="${buildContext}" --dockerfile="${dockerfilePath}" \${DESTINATIONS} --insecure --insecure-pull --skip-tls-verify --insecure-registry="${HARBOR_REGISTRY}" --compression=gzip --compression-level=9 --push-retry=3 --skip-push-permission-check --cache=false --verbosity=info --skip-unused-stages=true --single-snapshot=true
+                fi
+            """
+        }
+        return [success: true, imageName: "${harborImageName}:${DOCKER_IMAGE_TAG}", reason: '']
+    } catch (Exception e) {
+        return [success: false, imageName: null, reason: e.message ?: '未知错误']
+    }
+}

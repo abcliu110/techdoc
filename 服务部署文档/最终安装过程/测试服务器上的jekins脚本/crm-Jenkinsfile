@@ -1,0 +1,641 @@
+1/*
+ * ============================================================================
+ * NMS4Cloud CRM 模块 Jenkins 构建流水线
+ * ============================================================================
+ *
+ * 用途:
+ *   - 只构建 nms4cloud 主项目中的 CRM 模块
+ *   - 构建并推送 nms4cloud-crm 镜像到 Harbor
+ *
+ * 构建范围:
+ *   nms4cloud/
+ *   ├── pom.xml
+ *   ├── nms4cloud-starter/
+ *   └── nms4cloud-app/2_business/nms4cloud-crm/
+ *       ├── nms4cloud-crm-api
+ *       ├── nms4cloud-crm-dao
+ *       ├── nms4cloud-crm-service
+ *       └── nms4cloud-crm-app
+ *
+ * 说明:
+ *   - CRM 是主项目内部业务模块，不需要检出 BI/WMS 仓库
+ *   - Maven 阶段只保证 CRM 编译和打包所需依赖完整
+ *   - Docker 阶段只构建 nms4cloud-crm-app 的镜像
+ *
+ * ============================================================================
+ */
+
+// ==================== 共享函数 ====================
+
+/**
+ * 生成 Maven settings.xml 配置文件
+ * 包含 Nexus 镜像配置和服务器认证信息
+ */
+def generateMavenSettings() {
+    sh """
+        cat > ${MAVEN_SETTINGS} <<EOF
+<settings>
+  <mirrors>
+    <mirror>
+      <id>nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>${NEXUS_URL}/repository/${NEXUS_REPO_GROUP}/</url>
+    </mirror>
+  </mirrors>
+  <servers>
+    <server>
+      <id>nexus-releases</id>
+      <username>${NEXUS_USER}</username>
+      <password>${NEXUS_PASS}</password>
+    </server>
+    <server>
+      <id>nexus-snapshots</id>
+      <username>${NEXUS_USER}</username>
+      <password>${NEXUS_PASS}</password>
+    </server>
+    <server>
+      <id>nexus</id>
+      <username>${NEXUS_USER}</username>
+      <password>${NEXUS_PASS}</password>
+    </server>
+  </servers>
+  <profiles>
+    <profile>
+      <id>nexus-snapshots-repo</id>
+      <repositories>
+        <repository>
+          <id>maven-snapshots</id>
+          <url>${NEXUS_URL}/repository/${NEXUS_REPO_SNAPSHOTS}/</url>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+          </snapshots>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <activeProfile>nexus-snapshots-repo</activeProfile>
+  </activeProfiles>
+</settings>
+EOF
+    """
+}
+
+/**
+ * 从 pom.xml 动态读取项目版本号
+ * 需在代码检出后调用
+ */
+def getMavenCoordinates() {
+    return sh(
+        script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout -s ${MAVEN_SETTINGS}",
+        returnStdout: true
+    ).trim()
+}
+
+pipeline {
+    agent {
+        kubernetes {
+            yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    jenkins: agent
+    project: nms4cloud-crm
+spec:
+  serviceAccountName: default
+
+  containers:
+  - name: jnlp
+    image: 192.168.1.119:30020/library/inbound-agent:3355.v388858a_47b_33-3-jdk21
+
+  - name: maven
+    image: 192.168.1.119:30020/library/maven:3.9-eclipse-temurin-21
+    command:
+    - cat
+    tty: true
+    volumeMounts:
+    - name: jenkins-home
+      mountPath: /var/jenkins_home
+    resources:
+      requests:
+        cpu: 1000m
+        memory: 2Gi
+      limits:
+        cpu: 4000m
+        memory: 6Gi
+    env:
+    - name: MAVEN_OPTS
+      value: "-Xmx4g -Xms1g -XX:+UseG1GC -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError"
+
+  - name: kaniko
+    image: 192.168.1.119:30020/library/kaniko:debug
+    command:
+    - /busybox/cat
+    tty: true
+    volumeMounts:
+    - name: jenkins-home
+      mountPath: /var/jenkins_home
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 3000m
+        memory: 3Gi
+
+  volumes:
+  - name: jenkins-home
+    persistentVolumeClaim:
+      claimName: jenkins-pvc
+"""
+        }
+    }
+
+    environment {
+        // Maven 配置
+        MAVEN_SETTINGS = '/tmp/maven-settings.xml'
+
+        // Nexus 配置
+        NEXUS_URL = 'http://nexus.nexus:8081'
+        NEXUS_REPO_GROUP = 'maven-public'
+        NEXUS_REPO_RELEASES = 'maven-releases'
+        NEXUS_REPO_SNAPSHOTS = 'maven-snapshots'
+        NEXUS_CRED_ID = 'nexus-credentials'
+
+        // 项目配置
+        PROJECT_NAME = 'nms4cloud-crm'
+        CRM_MODULE_PATH = 'nms4cloud-app/2_business/nms4cloud-crm'
+        CRM_APP_PATH = 'nms4cloud-app/2_business/nms4cloud-crm/nms4cloud-crm-app'
+        CRM_MAVEN_PROJECT = 'nms4cloud-app/2_business/nms4cloud-crm/nms4cloud-crm-app'
+        ARTIFACT_VERSION = 'unknown'
+
+        // Git 配置
+        GIT_CREDENTIAL_ID = 'aliyun-codeup-token'
+        GIT_BRANCH_MAIN = 'jujiao_master'
+        REPO_MAIN = 'https://codeup.aliyun.com/613895a803e1c17d57a7630f/nms4cloud.git'
+
+        // Harbor 配置
+        HARBOR_REGISTRY = 'harbor.harbor'
+        HARBOR_PROJECT = 'library'
+        HARBOR_CRED_ID = 'harbor-user-auth'
+
+        DOCKER_IMAGE_NAME = 'nms4cloud-crm'
+        DOCKER_IMAGE_TAG = "${env.BUILD_NUMBER}"
+    }
+
+    parameters {
+        booleanParam(
+            name: 'SKIP_TESTS',
+            defaultValue: true,
+            description: '跳过单元测试（推荐开启以加快构建）'
+        )
+        booleanParam(
+            name: 'CLEAN_BUILD',
+            defaultValue: true,
+            description: '清理构建（首次构建或依赖变更时建议开启）'
+        )
+        booleanParam(
+            name: 'DEPLOY_TO_NEXUS',
+            defaultValue: true,
+            description: '将 CRM 构建产物推送到 Nexus 仓库'
+        )
+        booleanParam(
+            name: 'BUILD_DOCKER_IMAGE',
+            defaultValue: true,
+            description: '构建并推送 CRM Docker 镜像到 Harbor'
+        )
+        choice(
+            name: 'DOCKER_REGISTRY_SOURCE',
+            choices: [
+                'harbor-proxy',
+                'daocloud-mirror',
+                'docker-hub'
+            ],
+            description: '选择 Docker 镜像拉取源'
+        )
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        disableConcurrentBuilds()
+        timeout(time: 20, unit: 'MINUTES')
+        timestamps()
+    }
+
+    stages {
+        stage('环境检查') {
+            steps {
+                container('maven') {
+                    script {
+                        withCredentials([usernamePassword(
+                            credentialsId: "${NEXUS_CRED_ID}",
+                            usernameVariable: 'NEXUS_USER',
+                            passwordVariable: 'NEXUS_PASS'
+                        )]) {
+                            echo ">>> 生成 Maven settings.xml"
+                            generateMavenSettings()
+                        }
+
+                        currentBuild.displayName = "#${BUILD_NUMBER} - CRM"
+                        currentBuild.description = "CRM 模块 | 主分支: ${GIT_BRANCH_MAIN}"
+
+                        echo """
+                        ╔════════════════════════════════════════╗
+                        ║         CRM 构建配置                    ║
+                        ╚════════════════════════════════════════╝
+                        项目: ${PROJECT_NAME}
+                        主项目分支: ${GIT_BRANCH_MAIN}
+                        跳过测试: ${params.SKIP_TESTS}
+                        清理构建: ${params.CLEAN_BUILD}
+                        推送 Nexus: ${params.DEPLOY_TO_NEXUS}
+                        构建镜像: ${params.BUILD_DOCKER_IMAGE}
+                        """
+
+                        sh '''
+                            set +x
+                            echo "=== 环境信息 ==="
+                            java -version
+                            mvn -version -s ${MAVEN_SETTINGS}
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('代码检出') {
+            steps {
+                container('maven') {
+                    script {
+                        echo "=== 清理工作空间 ==="
+                        deleteDir()
+                        checkoutRepo('nms4cloud 主项目', REPO_MAIN, '.', GIT_BRANCH_MAIN)
+                    }
+                }
+            }
+        }
+
+        stage('Maven 构建 CRM') {
+            steps {
+                container('maven') {
+                    script {
+                        def cleanCmd = params.CLEAN_BUILD ? 'clean' : ''
+                        def skipTests = params.SKIP_TESTS ? '-Dmaven.test.skip=true' : ''
+                        def mvnOpts = "-U ${skipTests}".trim()
+                        def mavenGoal = params.DEPLOY_TO_NEXUS ? 'deploy' : 'install'
+                        def altRepos = "-DaltSnapshotDeploymentRepository=nexus-snapshots::${NEXUS_URL}/repository/${NEXUS_REPO_SNAPSHOTS}/ -DaltReleaseDeploymentRepository=nexus-releases::${NEXUS_URL}/repository/${NEXUS_REPO_RELEASES}/"
+
+                        echo """
+                        ╔════════════════════════════════════════╗
+                        ║         Maven 构建 CRM                  ║
+                        ╚════════════════════════════════════════╝
+                        Maven 选项: ${mvnOpts}
+                        Maven goal: ${mavenGoal}
+                        CRM 路径: ${CRM_MODULE_PATH}
+                        Maven 构建目标: ${CRM_MAVEN_PROJECT}
+                        """
+
+                        buildStep('1/4', '安装父 POM', """
+                            mvn ${mavenGoal} -N ${mvnOpts} ${altRepos} -s ${MAVEN_SETTINGS}
+                        """)
+
+                        env.ARTIFACT_VERSION = getMavenCoordinates()
+                        echo ">>> 项目版本: ${env.ARTIFACT_VERSION}"
+
+                        buildStep('2/4', '构建 nms4cloud-starter', """
+                            cd nms4cloud-starter
+                            mvn ${cleanCmd} ${mavenGoal} ${mvnOpts} ${altRepos} -s ${MAVEN_SETTINGS}
+                            cd ..
+                        """)
+
+                        buildStep('3/4', '构建 CRM 模块', """
+                            mvn ${cleanCmd} ${mavenGoal} -pl ${CRM_MAVEN_PROJECT} -am ${mvnOpts} ${altRepos} -s ${MAVEN_SETTINGS}
+                        """)
+
+                        buildStep('4/4', '检查 CRM App JAR', """
+                            if [ ! -d "${CRM_APP_PATH}/target" ]; then
+                                echo "错误: CRM App target 目录不存在: ${CRM_APP_PATH}/target"
+                                exit 1
+                            fi
+
+                            JAR_COUNT=\$(find ${CRM_APP_PATH}/target -name "*.jar" -type f | grep -vc "\\.original\\\$" || true)
+                            if [ "\$JAR_COUNT" -eq 0 ]; then
+                                echo "错误: 未找到 CRM App 可运行 JAR"
+                                ls -la ${CRM_APP_PATH}/target
+                                exit 1
+                            fi
+
+                            echo "CRM App JAR 已生成:"
+                            find ${CRM_APP_PATH}/target -name "*.jar" -type f | grep -v "\\.original\\\$"
+                        """)
+                    }
+                }
+            }
+        }
+
+        stage('单元测试') {
+            when {
+                expression { !params.SKIP_TESTS }
+            }
+            steps {
+                container('maven') {
+                    script {
+                        echo "=== 执行 CRM 单元测试 ==="
+                        sh "mvn test -pl ${CRM_MAVEN_PROJECT} -am -s ${MAVEN_SETTINGS}"
+                    }
+                }
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage('归档构建产物') {
+            steps {
+                container('maven') {
+                    script {
+                        echo "=== 归档 CRM 构建产物 ==="
+                        archiveArtifacts artifacts: "${CRM_APP_PATH}/target/*.jar", fingerprint: true, allowEmptyArchive: false
+                    }
+                }
+            }
+        }
+
+        stage('构建并推送 CRM Docker 镜像') {
+            when {
+                expression { params.BUILD_DOCKER_IMAGE }
+            }
+            steps {
+                container('kaniko') {
+                    script {
+                        def result = buildCrmImage()
+                        if (!result.success) {
+                            error("CRM 镜像构建失败: ${result.reason}")
+                        }
+                        env.BUILT_IMAGE = result.imageName
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            script {
+                echo """
+                ╔════════════════════════════════════════╗
+                ║         ✓ CRM 构建成功                  ║
+                ╚════════════════════════════════════════╝
+                项目: ${PROJECT_NAME}
+                版本: ${ARTIFACT_VERSION}
+                主项目分支: ${GIT_BRANCH_MAIN}
+                耗时: ${currentBuild.durationString}
+                """
+
+                if (params.BUILD_DOCKER_IMAGE && env.BUILT_IMAGE) {
+                    echo """
+                    CRM Docker 镜像已推送到 Harbor:
+                      - ${env.BUILT_IMAGE}
+                      - ${env.BUILT_IMAGE.replaceAll(':.*', ':latest')}
+                    """
+                }
+            }
+        }
+        failure {
+            echo """
+            ╔════════════════════════════════════════╗
+            ║         ✗ CRM 构建失败                  ║
+            ╚════════════════════════════════════════╝
+            请检查构建日志，常见问题：
+            1. CRM 模块编译错误
+            2. Maven 依赖解析失败
+            3. CRM App 未生成 JAR
+            4. Harbor 推送失败或超时
+            """
+        }
+        always {
+            echo "=== 清理临时文件 ==="
+            cleanWs(
+                deleteDirs: true,
+                patterns: [[pattern: 'target/**', type: 'INCLUDE']]
+            )
+        }
+    }
+}
+
+// ==================== 辅助函数 ====================
+
+/**
+ * 检出 Git 仓库
+ */
+def checkoutRepo(String name, String url, String targetDir, String branch) {
+    echo "=== 检出 ${name} (分支: ${branch}) ==="
+    if (targetDir == '.') {
+        checkout([
+            $class: 'GitSCM',
+            branches: [[name: "*/${branch}"]],
+            extensions: [
+                [$class: 'CloneOption', depth: 1, shallow: true, timeout: 20],
+                [$class: 'CheckoutOption', timeout: 20]
+            ],
+            userRemoteConfigs: [[
+                credentialsId: "${GIT_CREDENTIAL_ID}",
+                url: "${url}"
+            ]]
+        ])
+    } else {
+        dir(targetDir) {
+            checkout([
+                $class: 'GitSCM',
+                branches: [[name: "*/${branch}"]],
+                extensions: [
+                    [$class: 'CloneOption', depth: 1, shallow: true, timeout: 20],
+                    [$class: 'CheckoutOption', timeout: 20]
+                ],
+                userRemoteConfigs: [[
+                    credentialsId: "${GIT_CREDENTIAL_ID}",
+                    url: "${url}"
+                ]]
+            ])
+        }
+    }
+}
+
+/**
+ * 构建步骤
+ */
+def buildStep(String stepNum, String stepName, String command) {
+    echo """
+    ┌────────────────────────────────────────┐
+    │ [${stepNum}] ${stepName}
+    └────────────────────────────────────────┘
+    """
+    def startTime = System.currentTimeMillis()
+    sh "set +x\n${command.trim()}"
+    def duration = (System.currentTimeMillis() - startTime) / 1000
+    echo "✓ ${stepName} 完成 (耗时: ${duration}s)"
+}
+
+/**
+ * 使用 Kaniko 构建 CRM Docker 镜像
+ */
+def buildCrmImage() {
+    def dockerfilePath = "${WORKSPACE}/${CRM_APP_PATH}/Dockerfile"
+    def buildContext = "${WORKSPACE}/${CRM_APP_PATH}"
+    def harborImageName = "${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${DOCKER_IMAGE_NAME}"
+
+    def registryMirror = ''
+    def registrySourceName = ''
+    switch(params.DOCKER_REGISTRY_SOURCE) {
+        case 'harbor-proxy':
+            registryMirror = 'harbor.harbor/dockerhub-proxy'
+            registrySourceName = 'Harbor代理(本地缓存)'
+            break
+        case 'daocloud-mirror':
+            registryMirror = 'docker.m.daocloud.io'
+            registrySourceName = 'DaoCloud国内镜像'
+            break
+        case 'docker-hub':
+            registryMirror = ''
+            registrySourceName = 'Docker Hub官方源'
+            break
+        default:
+            registryMirror = 'harbor.harbor/dockerhub-proxy'
+            registrySourceName = 'Harbor代理(本地缓存,默认)'
+    }
+
+    echo """
+    ════════════════════════════════════════
+    开始构建 CRM 镜像
+    ════════════════════════════════════════
+    构建上下文: ${buildContext}
+    Dockerfile: ${dockerfilePath}
+    镜像源: ${registrySourceName}
+    推送目标: Harbor (${HARBOR_REGISTRY})
+    镜像名称: ${harborImageName}:${DOCKER_IMAGE_TAG}
+    """
+
+    try {
+        withCredentials([usernamePassword(
+            credentialsId: "${HARBOR_CRED_ID}",
+            usernameVariable: 'HB_USER',
+            passwordVariable: 'HB_PASS'
+        )]) {
+            sh """
+                set +x
+
+                echo ">>> 生成 Harbor 认证配置..."
+                mkdir -p /kaniko/.docker
+                AUTH=\$(echo -n "\${HB_USER}:\${HB_PASS}" | base64)
+                echo "{\\"auths\\":{\\"${HARBOR_REGISTRY}\\":{\\"auth\\":\\"\$AUTH\\"}}}" > /kaniko/.docker/config.json
+
+                if [ ! -d "${buildContext}" ]; then
+                    echo "错误: 构建上下文目录不存在: ${buildContext}"
+                    exit 1
+                fi
+
+                if [ ! -f "${dockerfilePath}" ]; then
+                    echo "错误: 未找到 Dockerfile: ${dockerfilePath}"
+                    ls -la ${buildContext}/ | head -20
+                    exit 1
+                fi
+
+                JAR_FILES=\$(find ${buildContext}/target -name "*.jar" -type f | grep -v "\\.original\\\$" || true)
+                JAR_COUNT=\$(echo "\$JAR_FILES" | grep -c "\\.jar\\\$" || true)
+
+                if [ "\$JAR_COUNT" -eq 0 ]; then
+                    echo "错误: 未找到 CRM App JAR 文件"
+                    ls -la ${buildContext}/target/ 2>/dev/null || echo "target 目录不存在"
+                    exit 1
+                fi
+
+                echo "✓ CRM App JAR 已就绪 (找到 \$JAR_COUNT 个)"
+                echo "\$JAR_FILES"
+
+                DESTINATIONS="--destination=${harborImageName}:${DOCKER_IMAGE_TAG} --destination=${harborImageName}:latest"
+
+                echo ">>> 开始构建并推送 CRM 镜像..."
+                START_TIME=\$(date +%s)
+
+                if [ -n "${registryMirror}" ]; then
+                    timeout 300 /kaniko/executor \\
+                        --context=${buildContext} \\
+                        --dockerfile=${dockerfilePath} \\
+                        --registry-mirror=${registryMirror} \\
+                        --skip-default-registry-fallback \\
+                        \${DESTINATIONS} \\
+                        --insecure \\
+                        --insecure-pull \\
+                        --skip-tls-verify \\
+                        --insecure-registry=${HARBOR_REGISTRY} \\
+                        --compression=gzip \\
+                        --compression-level=9 \\
+                        --push-retry=3 \\
+                        --skip-push-permission-check \\
+                        --cache=false \\
+                        --verbosity=info \\
+                        --skip-unused-stages=true \\
+                        --single-snapshot=true
+                else
+                    timeout 300 /kaniko/executor \\
+                        --context=${buildContext} \\
+                        --dockerfile=${dockerfilePath} \\
+                        \${DESTINATIONS} \\
+                        --insecure \\
+                        --insecure-pull \\
+                        --skip-tls-verify \\
+                        --insecure-registry=${HARBOR_REGISTRY} \\
+                        --compression=gzip \\
+                        --compression-level=9 \\
+                        --push-retry=3 \\
+                        --skip-push-permission-check \\
+                        --cache=false \\
+                        --verbosity=info \\
+                        --skip-unused-stages=true \\
+                        --single-snapshot=true
+                fi
+
+                END_TIME=\$(date +%s)
+                DURATION=\$((END_TIME - START_TIME))
+
+                echo ""
+                echo "════════════════════════════════════════"
+                echo "CRM 镜像构建推送统计"
+                echo "════════════════════════════════════════"
+                echo "镜像名称: ${harborImageName}:${DOCKER_IMAGE_TAG}"
+                echo "latest:   ${harborImageName}:latest"
+                echo "总耗时:   \$((DURATION / 60))分\$((DURATION % 60))秒 (\${DURATION}秒)"
+                echo "压缩级别: Level 9"
+                echo "重试次数: 最多3次"
+                echo "超时设置: 300秒"
+                echo "════════════════════════════════════════"
+            """
+        }
+
+        return [success: true, imageName: "${harborImageName}:${DOCKER_IMAGE_TAG}", reason: ""]
+    } catch (Exception e) {
+        def errorMsg = e.message ?: "未知错误"
+        echo "CRM 镜像构建失败: ${errorMsg}"
+
+        def reason = "未知错误"
+        if (errorMsg.contains("exit code 143") || errorMsg.contains("timeout")) {
+            reason = "推送超时 (5分钟)"
+        } else if (errorMsg.contains("Dockerfile")) {
+            reason = "未找到 Dockerfile"
+        } else if (errorMsg.contains("JAR") || errorMsg.contains("jar")) {
+            reason = "未找到 CRM App JAR 文件"
+        } else if (errorMsg.contains("exit code 1")) {
+            reason = "构建失败 - 检查日志"
+        } else {
+            reason = errorMsg.take(100)
+        }
+
+        return [success: false, imageName: null, reason: reason]
+    }
+}
