@@ -1,0 +1,738 @@
+{
+  "level": 6,
+  "build_time": "2026-09-10T23:27:47.232660",
+  "summary": {
+    "total_flows": 50,
+    "domain_flows": {
+      "other": 50
+    },
+    "top_flows": [
+      {
+        "name": "getLoadBalanceSafeProxy",
+        "depth": 10,
+        "node_count": 80,
+        "criticality": 1.0
+      },
+      {
+        "name": "getServerCharacterEncoding",
+        "depth": 10,
+        "node_count": 80,
+        "criticality": 1.0
+      },
+      {
+        "name": "changeUser",
+        "depth": 10,
+        "node_count": 99,
+        "criticality": 1.0
+      },
+      {
+        "name": "doHandshake",
+        "depth": 10,
+        "node_count": 99,
+        "criticality": 1.0
+      },
+      {
+        "name": "enableMultiQueries",
+        "depth": 11,
+        "node_count": 79,
+        "criticality": 1.0
+      },
+      {
+        "name": "disableMultiQueries",
+        "depth": 11,
+        "node_count": 79,
+        "criticality": 1.0
+      },
+      {
+        "name": "fetchRowsViaCursor",
+        "depth": 9,
+        "node_count": 78,
+        "criticality": 0.99
+      },
+      {
+        "name": "ResultSetImpl",
+        "depth": 9,
+        "node_count": 73,
+        "criticality": 0.99
+      },
+      {
+        "name": "onDisconnect",
+        "depth": 10,
+        "node_count": 63,
+        "criticality": 0.9841
+      },
+      {
+        "name": "onClose",
+        "depth": 10,
+        "node_count": 61,
+        "criticality": 0.9836
+      },
+      {
+        "name": "sendNamespaceMsg",
+        "depth": 10,
+        "node_count": 54,
+        "criticality": 0.9815
+      },
+      {
+        "name": "sendPrivateMsg",
+        "depth": 10,
+        "node_count": 54,
+        "criticality": 0.9815
+      },
+      {
+        "name": "getAnyConnection",
+        "depth": 8,
+        "node_count": 39,
+        "criticality": 0.98
+      },
+      {
+        "name": "ConnectionImpl",
+        "depth": 8,
+        "node_count": 96,
+        "criticality": 0.98
+      },
+      {
+        "name": "executeUpdate",
+        "depth": 8,
+        "node_count": 39,
+        "criticality": 0.98
+      },
+      {
+        "name": "SQLiteConnection",
+        "depth": 8,
+        "node_count": 47,
+        "criticality": 0.98
+      },
+      {
+        "name": "FabricMultiTenantConnectionProvider",
+        "depth": 7,
+        "node_count": 33,
+        "criticality": 0.97
+      },
+      {
+        "name": "FabricMySQLConnectionProxy",
+        "depth": 7,
+        "node_count": 86,
+        "criticality": 0.97
+      },
+      {
+        "name": "clearQueryTables",
+        "depth": 7,
+        "node_count": 65,
+        "criticality": 0.97
+      },
+      {
+        "name": "executeBatch",
+        "depth": 7,
+        "node_count": 48,
+        "criticality": 0.97
+      }
+    ]
+  },
+  "flows": [
+    {
+      "name": "getLoadBalanceSafeProxy",
+      "depth": 10,
+      "node_count": 80,
+      "criticality": 1.0
+    },
+    {
+      "name": "getServerCharacterEncoding",
+      "depth": 10,
+      "node_count": 80,
+      "criticality": 1.0
+    },
+    {
+      "name": "changeUser",
+      "depth": 10,
+      "node_count": 99,
+      "criticality": 1.0
+    },
+    {
+      "name": "doHandshake",
+      "depth": 10,
+      "node_count": 99,
+      "criticality": 1.0
+    },
+    {
+      "name": "enableMultiQueries",
+      "depth": 11,
+      "node_count": 79,
+      "criticality": 1.0
+    },
+    {
+      "name": "disableMultiQueries",
+      "depth": 11,
+      "node_count": 79,
+      "criticality": 1.0
+    },
+    {
+      "name": "fetchRowsViaCursor",
+      "depth": 9,
+      "node_count": 78,
+      "criticality": 0.99
+    },
+    {
+      "name": "ResultSetImpl",
+      "depth": 9,
+      "node_count": 73,
+      "criticality": 0.99
+    },
+    {
+      "name": "onDisconnect",
+      "depth": 10,
+      "node_count": 63,
+      "criticality": 0.9841
+    },
+    {
+      "name": "onClose",
+      "depth": 10,
+      "node_count": 61,
+      "criticality": 0.9836
+    },
+    {
+      "name": "sendNamespaceMsg",
+      "depth": 10,
+      "node_count": 54,
+      "criticality": 0.9815
+    },
+    {
+      "name": "sendPrivateMsg",
+      "depth": 10,
+      "node_count": 54,
+      "criticality": 0.9815
+    },
+    {
+      "name": "getAnyConnection",
+      "depth": 8,
+      "node_count": 39,
+      "criticality": 0.98
+    },
+    {
+      "name": "ConnectionImpl",
+      "depth": 8,
+      "node_count": 96,
+      "criticality": 0.98
+    },
+    {
+      "name": "executeUpdate",
+      "depth": 8,
+      "node_count": 39,
+      "criticality": 0.98
+    },
+    {
+      "name": "SQLiteConnection",
+      "depth": 8,
+      "node_count": 47,
+      "criticality": 0.98
+    },
+    {
+      "name": "FabricMultiTenantConnectionProvider",
+      "depth": 7,
+      "node_count": 33,
+      "criticality": 0.97
+    },
+    {
+      "name": "FabricMySQLConnectionProxy",
+      "depth": 7,
+      "node_count": 86,
+      "criticality": 0.97
+    },
+    {
+      "name": "clearQueryTables",
+      "depth": 7,
+      "node_count": 65,
+      "criticality": 0.97
+    },
+    {
+      "name": "executeBatch",
+      "depth": 7,
+      "node_count": 48,
+      "criticality": 0.97
+    },
+    {
+      "name": "executeLargeBatch",
+      "depth": 7,
+      "node_count": 48,
+      "criticality": 0.97
+    },
+    {
+      "name": "connect",
+      "depth": 11,
+      "node_count": 158,
+      "criticality": 0.9668
+    },
+    {
+      "name": "sendClusterMsg",
+      "depth": 9,
+      "node_count": 60,
+      "criticality": 0.9608
+    },
+    {
+      "name": "addQueryTable",
+      "depth": 6,
+      "node_count": 64,
+      "criticality": 0.96
+    },
+    {
+      "name": "onData",
+      "depth": 9,
+      "node_count": 69,
+      "criticality": 0.9574
+    },
+    {
+      "name": "onException",
+      "depth": 9,
+      "node_count": 46,
+      "criticality": 0.9574
+    },
+    {
+      "name": "setSettings",
+      "depth": 8,
+      "node_count": 33,
+      "criticality": 0.9573
+    },
+    {
+      "name": "call",
+      "depth": 7,
+      "node_count": 116,
+      "criticality": 0.9549
+    },
+    {
+      "name": "regist",
+      "depth": 8,
+      "node_count": 29,
+      "criticality": 0.9541
+    },
+    {
+      "name": "FabricConnection",
+      "depth": 5,
+      "node_count": 28,
+      "criticality": 0.95
+    },
+    {
+      "name": "interceptException",
+      "depth": 5,
+      "node_count": 60,
+      "criticality": 0.95
+    },
+    {
+      "name": "executeInternal",
+      "depth": 5,
+      "node_count": 47,
+      "criticality": 0.95
+    },
+    {
+      "name": "executeQuery",
+      "depth": 5,
+      "node_count": 36,
+      "criticality": 0.95
+    },
+    {
+      "name": "run",
+      "depth": 5,
+      "node_count": 37,
+      "criticality": 0.95
+    },
+    {
+      "name": "find",
+      "depth": 5,
+      "node_count": 20,
+      "criticality": 0.95
+    },
+    {
+      "name": "UrlEncodedFormEntity",
+      "depth": 5,
+      "node_count": 23,
+      "criticality": 0.95
+    },
+    {
+      "name": "encUserInfo",
+      "depth": 5,
+      "node_count": 20,
+      "criticality": 0.95
+    },
+    {
+      "name": "encUric",
+      "depth": 5,
+      "node_count": 20,
+      "criticality": 0.95
+    },
+    {
+      "name": "encPath",
+      "depth": 5,
+      "node_count": 20,
+      "criticality": 0.95
+    },
+    {
+      "name": "handleEntity",
+      "depth": 5,
+      "node_count": 23,
+      "criticality": 0.95
+    },
+    {
+      "name": "createHttpParams",
+      "depth": 5,
+      "node_count": 15,
+      "criticality": 0.95
+    },
+    {
+      "name": "close",
+      "depth": 5,
+      "node_count": 16,
+      "criticality": 0.95
+    },
+    {
+      "name": "next",
+      "depth": 5,
+      "node_count": 16,
+      "criticality": 0.95
+    },
+    {
+      "name": "setSavepoint",
+      "depth": 5,
+      "node_count": 24,
+      "criticality": 0.95
+    },
+    {
+      "name": "executeBatch",
+      "depth": 5,
+      "node_count": 35,
+      "criticality": 0.95
+    },
+    {
+      "name": "ReleasableInputStreamEntity",
+      "depth": 6,
+      "node_count": 23,
+      "criticality": 0.9491
+    },
+    {
+      "name": "close",
+      "depth": 8,
+      "node_count": 48,
+      "criticality": 0.9487
+    },
+    {
+      "name": "closeExpiredConnections",
+      "depth": 6,
+      "node_count": 20,
+      "criticality": 0.9475
+    },
+    {
+      "name": "closeExpiredConnections",
+      "depth": 6,
+      "node_count": 20,
+      "criticality": 0.9475
+    },
+    {
+      "name": "writePingAndAwaitPong",
+      "depth": 7,
+      "node_count": 33,
+      "criticality": 0.9473
+    }
+  ],
+  "domain_flows": {
+    "other": [
+      {
+        "name": "getLoadBalanceSafeProxy",
+        "depth": 10,
+        "node_count": 80,
+        "criticality": 1.0
+      },
+      {
+        "name": "getServerCharacterEncoding",
+        "depth": 10,
+        "node_count": 80,
+        "criticality": 1.0
+      },
+      {
+        "name": "changeUser",
+        "depth": 10,
+        "node_count": 99,
+        "criticality": 1.0
+      },
+      {
+        "name": "doHandshake",
+        "depth": 10,
+        "node_count": 99,
+        "criticality": 1.0
+      },
+      {
+        "name": "enableMultiQueries",
+        "depth": 11,
+        "node_count": 79,
+        "criticality": 1.0
+      },
+      {
+        "name": "disableMultiQueries",
+        "depth": 11,
+        "node_count": 79,
+        "criticality": 1.0
+      },
+      {
+        "name": "fetchRowsViaCursor",
+        "depth": 9,
+        "node_count": 78,
+        "criticality": 0.99
+      },
+      {
+        "name": "ResultSetImpl",
+        "depth": 9,
+        "node_count": 73,
+        "criticality": 0.99
+      },
+      {
+        "name": "onDisconnect",
+        "depth": 10,
+        "node_count": 63,
+        "criticality": 0.9841
+      },
+      {
+        "name": "onClose",
+        "depth": 10,
+        "node_count": 61,
+        "criticality": 0.9836
+      },
+      {
+        "name": "sendNamespaceMsg",
+        "depth": 10,
+        "node_count": 54,
+        "criticality": 0.9815
+      },
+      {
+        "name": "sendPrivateMsg",
+        "depth": 10,
+        "node_count": 54,
+        "criticality": 0.9815
+      },
+      {
+        "name": "getAnyConnection",
+        "depth": 8,
+        "node_count": 39,
+        "criticality": 0.98
+      },
+      {
+        "name": "ConnectionImpl",
+        "depth": 8,
+        "node_count": 96,
+        "criticality": 0.98
+      },
+      {
+        "name": "executeUpdate",
+        "depth": 8,
+        "node_count": 39,
+        "criticality": 0.98
+      },
+      {
+        "name": "SQLiteConnection",
+        "depth": 8,
+        "node_count": 47,
+        "criticality": 0.98
+      },
+      {
+        "name": "FabricMultiTenantConnectionProvider",
+        "depth": 7,
+        "node_count": 33,
+        "criticality": 0.97
+      },
+      {
+        "name": "FabricMySQLConnectionProxy",
+        "depth": 7,
+        "node_count": 86,
+        "criticality": 0.97
+      },
+      {
+        "name": "clearQueryTables",
+        "depth": 7,
+        "node_count": 65,
+        "criticality": 0.97
+      },
+      {
+        "name": "executeBatch",
+        "depth": 7,
+        "node_count": 48,
+        "criticality": 0.97
+      },
+      {
+        "name": "executeLargeBatch",
+        "depth": 7,
+        "node_count": 48,
+        "criticality": 0.97
+      },
+      {
+        "name": "connect",
+        "depth": 11,
+        "node_count": 158,
+        "criticality": 0.9668
+      },
+      {
+        "name": "sendClusterMsg",
+        "depth": 9,
+        "node_count": 60,
+        "criticality": 0.9608
+      },
+      {
+        "name": "addQueryTable",
+        "depth": 6,
+        "node_count": 64,
+        "criticality": 0.96
+      },
+      {
+        "name": "onData",
+        "depth": 9,
+        "node_count": 69,
+        "criticality": 0.9574
+      },
+      {
+        "name": "onException",
+        "depth": 9,
+        "node_count": 46,
+        "criticality": 0.9574
+      },
+      {
+        "name": "setSettings",
+        "depth": 8,
+        "node_count": 33,
+        "criticality": 0.9573
+      },
+      {
+        "name": "call",
+        "depth": 7,
+        "node_count": 116,
+        "criticality": 0.9549
+      },
+      {
+        "name": "regist",
+        "depth": 8,
+        "node_count": 29,
+        "criticality": 0.9541
+      },
+      {
+        "name": "FabricConnection",
+        "depth": 5,
+        "node_count": 28,
+        "criticality": 0.95
+      },
+      {
+        "name": "interceptException",
+        "depth": 5,
+        "node_count": 60,
+        "criticality": 0.95
+      },
+      {
+        "name": "executeInternal",
+        "depth": 5,
+        "node_count": 47,
+        "criticality": 0.95
+      },
+      {
+        "name": "executeQuery",
+        "depth": 5,
+        "node_count": 36,
+        "criticality": 0.95
+      },
+      {
+        "name": "run",
+        "depth": 5,
+        "node_count": 37,
+        "criticality": 0.95
+      },
+      {
+        "name": "find",
+        "depth": 5,
+        "node_count": 20,
+        "criticality": 0.95
+      },
+      {
+        "name": "UrlEncodedFormEntity",
+        "depth": 5,
+        "node_count": 23,
+        "criticality": 0.95
+      },
+      {
+        "name": "encUserInfo",
+        "depth": 5,
+        "node_count": 20,
+        "criticality": 0.95
+      },
+      {
+        "name": "encUric",
+        "depth": 5,
+        "node_count": 20,
+        "criticality": 0.95
+      },
+      {
+        "name": "encPath",
+        "depth": 5,
+        "node_count": 20,
+        "criticality": 0.95
+      },
+      {
+        "name": "handleEntity",
+        "depth": 5,
+        "node_count": 23,
+        "criticality": 0.95
+      },
+      {
+        "name": "createHttpParams",
+        "depth": 5,
+        "node_count": 15,
+        "criticality": 0.95
+      },
+      {
+        "name": "close",
+        "depth": 5,
+        "node_count": 16,
+        "criticality": 0.95
+      },
+      {
+        "name": "next",
+        "depth": 5,
+        "node_count": 16,
+        "criticality": 0.95
+      },
+      {
+        "name": "setSavepoint",
+        "depth": 5,
+        "node_count": 24,
+        "criticality": 0.95
+      },
+      {
+        "name": "executeBatch",
+        "depth": 5,
+        "node_count": 35,
+        "criticality": 0.95
+      },
+      {
+        "name": "ReleasableInputStreamEntity",
+        "depth": 6,
+        "node_count": 23,
+        "criticality": 0.9491
+      },
+      {
+        "name": "close",
+        "depth": 8,
+        "node_count": 48,
+        "criticality": 0.9487
+      },
+      {
+        "name": "closeExpiredConnections",
+        "depth": 6,
+        "node_count": 20,
+        "criticality": 0.9475
+      },
+      {
+        "name": "closeExpiredConnections",
+        "depth": 6,
+        "node_count": 20,
+        "criticality": 0.9475
+      },
+      {
+        "name": "writePingAndAwaitPong",
+        "depth": 7,
+        "node_count": 33,
+        "criticality": 0.9473
+      }
+    ]
+  }
+}

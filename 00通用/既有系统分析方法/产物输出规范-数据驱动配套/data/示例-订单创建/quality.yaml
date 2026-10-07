@@ -1,0 +1,24 @@
+﻿# quality.yaml — 技术债务、测试缺口、覆盖率（唯一数据源）
+# TD / GAP 的全局唯一登记处：本文件。其他产物文件只做"链接引用 + 相关性说明"。
+tech_debts:
+  - { id: TD001, desc: 促销规则硬编码,             impact: 新增促销类型需修改代码,   priority: P0, effort_days: 5,  owner: 张三, status: 待修复, context: CTX001 }
+  - { id: TD002, desc: 流程步骤硬编码,             impact: 难以支持租户定制,         priority: P0, effort_days: 10, owner: 李四, status: 待修复, context: CTX001 }
+  - { id: TD003, desc: 缺少订单创建领域事件,       impact: 无法解耦,                 priority: P0, effort_days: 3,  owner: 王五, status: 待修复, context: CTX001 }
+  - { id: TD004, desc: 缺少API网关,               impact: 鉴权限流逻辑分散,         priority: P0, effort_days: 8,  owner: 赵六, status: 待修复 }
+  - { id: TD005, desc: 补偿流程缺少重试机制,       impact: 补偿失败导致数据不一致,   priority: P0, effort_days: 4,  owner: 张三, status: 待修复 }
+  - { id: TD006, desc: 缺少分布式事务,             impact: 跨服务数据一致性问题,     priority: P0, effort_days: 15, owner: 李四, status: 待修复 }
+  - { id: TD007, desc: 缺少配置中心,               impact: 配置修改需重启,           priority: P1, effort_days: 5,  status: 待修复 }
+  - { id: TD008, desc: 缺少链路追踪,               impact: 排查问题困难,             priority: P1, effort_days: 6,  status: 待修复 }
+  - { id: TD009, desc: 缺少服务监控,               impact: 故障发现不及时,           priority: P1, effort_days: 4,  status: 待修复 }
+  - { id: TD010, desc: 数据库未分库分表,           impact: 单表数据量超500万,        priority: P1, effort_days: 20, status: 待修复 }
+
+test_gaps:
+  - { id: GAP001, desc: R004会员折扣叠加规则未覆盖,       type: 单元测试, priority: P0, context: CTX001, effort_days: 0.5, owner: 张三 }
+  - { id: GAP002, desc: 促销服务异常降级流程未覆盖,       type: 集成测试, priority: P0, context: CTX001, effort_days: 1,   owner: 李四 }
+  - { id: GAP003, desc: 并发创建订单号场景未覆盖,         type: E2E测试,  priority: P1, context: CTX001, effort_days: 2,   owner: 王五 }
+  - { id: GAP004, desc: OrderCreated消费幂等未覆盖,       type: 事件测试, priority: P1, context: CTX001, effort_days: 1,   owner: 赵六 }
+
+coverage:
+  - { context: CTX001, unit: 80, integration: 70, e2e: 60, target_unit: 80, target_integration: 70, target_e2e: 60 }
+  - { context: CTX002, unit: 75, integration: 65, e2e: 55, target_unit: 80, target_integration: 70, target_e2e: 60 }
+  - { context: CTX003, unit: 70, integration: 60, e2e: 50, target_unit: 80, target_integration: 70, target_e2e: 60 }

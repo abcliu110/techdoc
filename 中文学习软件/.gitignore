@@ -1,0 +1,45 @@
+# Flutter specific
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+.flutter-sync
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Local files
+*.db
+*.db-shm
+*.db-wal
+
+# Fonts
+assets/fonts/
+
+# Images (keep structure, ignore actual images)
+assets/images/*
+!assets/images/.gitkeep
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test
+coverage/
+
+# Build outputs
+*.apk
+*.aab
+*.ipa
+*.app
+*.exe
+*.dmg
+*.zip

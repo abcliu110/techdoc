@@ -1,0 +1,14 @@
+{
+  "packageId": "kps-003",
+  "title": "整体与部分 - 分数与整体关系",
+  "description": "理解分数表示的是整体与部分的关系，建立部分与整体的对应概念。",
+  "thoughtLine": "整体与部分",
+  "thoughtLineOrder": 3,
+  "difficulty": "medium",
+  "gradeLevel": "3-4年级",
+  "estimatedMinutes": 18,
+  "version": "1.0.0",
+  "author": "MathMind Team",
+  "createdAt": "2026-10-06",
+  "updatedAt": "2026-10-06"
+}

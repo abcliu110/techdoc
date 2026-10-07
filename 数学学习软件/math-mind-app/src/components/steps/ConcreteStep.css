@@ -1,0 +1,38 @@
+.concrete-step {
+  border-left: 4px solid var(--color-primary, #4f46e5);
+}
+
+.concrete-step.completed {
+  border-left-color: var(--color-success, #10b981);
+}
+
+.concrete-step-instruction {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background-color: var(--color-bg-secondary, #f9fafb);
+  border-radius: 12px;
+}
+
+.instruction-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.instruction-text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text, #1f2937);
+}
+
+.concrete-step-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  padding: 20px;
+  background-color: var(--color-bg-card, white);
+  border-radius: 12px;
+  border: 2px dashed var(--color-border, #e5e7eb);
+}

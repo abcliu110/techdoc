@@ -1,0 +1,47 @@
+{
+  "stepId": "kps-002-step-04",
+  "stepType": "conjecture",
+  "title": "验证与应用规则",
+  "description": "运用规则解决实际问题",
+  "content": {
+    "stepId": "kps-002-step-04",
+    "stepType": "conjecture",
+    "title": "验证与应用规则",
+    "instruction": "小明有5/12块巧克力，小红有7/12块巧克力。谁的巧克力更多？\n\n提示：分母都是12，比较的是分子。",
+    "visual": {
+      "type": "numberLine",
+      "start": 0,
+      "end": 1,
+      "marks": [0, 0.25, 0.5, 0.75, 1],
+      "points": [
+        { "value": 5/12, "label": "小明5/12", "color": "#4A90D9" },
+        { "value": 7/12, "label": "小红7/12", "color": "#7B68EE" }
+      ],
+      "animatable": true
+    },
+    "interaction": {
+      "type": "tap",
+      "options": [
+        { "id": "tap-xm", "label": "小明更多" },
+        { "id": "tap-xh", "label": "小红更多", "isCorrect": true },
+        { "id": "tap-same", "label": "一样多" }
+      ]
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "正确！5/12 < 7/12，所以小红的巧克力更多。7个1/12比5个1/12要多。",
+        "animation": "bounce"
+      },
+      {
+        "type": "incorrect",
+        "message": "提示：单位统一都是1/12，比较7个1/12和5个1/12，谁包含的单位更多？",
+        "animation": "shake",
+        "highlight": ["number-line"]
+      }
+    ],
+    "autoAdvance": 1500
+  },
+  "prerequisites": ["kps-002-step-03"],
+  "unlocks": ["kps-002-step-05"]
+}

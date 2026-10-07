@@ -1,0 +1,46 @@
+{
+  "stepId": "kps-005-step-04",
+  "stepType": "conjecture",
+  "title": "发现等式的性质",
+  "description": "总结等式的性质并验证",
+  "content": {
+    "stepId": "kps-005-step-04",
+    "stepType": "conjecture",
+    "title": "发现等式的性质",
+    "instruction": "用等式的性质解方程：\n\nx - 3 = 7\n两边同时加3：x = ?\n\n验证：10 - 3 = ?（应该等于7）",
+    "visual": {
+      "type": "bar",
+      "bars": [
+        { "value": 7, "label": "7", "color": "#4A90D9" },
+        { "value": 7, "label": "10-3=7", "color": "#7B68EE" }
+      ],
+      "maxValue": 12,
+      "showValues": true,
+      "animatable": true
+    },
+    "interaction": {
+      "type": "tap",
+      "options": [
+        { "id": "tap-10", "label": "x = 10", "isCorrect": true },
+        { "id": "tap-4", "label": "x = 4" },
+        { "id": "tap-3", "label": "x = 3" }
+      ]
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "正确！x = 10。验证：10 - 3 = 7，等式成立。你已经掌握了利用等式性质解方程的方法！",
+        "animation": "glow"
+      },
+      {
+        "type": "incorrect",
+        "message": "提示：x - 3 = 7，两边同时加3：x = 7 + 3 = 10。",
+        "animation": "shake",
+        "highlight": ["bar-chart"]
+      }
+    ],
+    "autoAdvance": 2000
+  },
+  "prerequisites": ["kps-005-step-03"],
+  "unlocks": ["kps-005-step-05"]
+}

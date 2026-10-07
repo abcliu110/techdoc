@@ -1,0 +1,34 @@
+{
+  "id": "whole-application",
+  "type": "application",
+  "name": "整体思想应用",
+  "instruction": "运用整体思想解决实际问题",
+  "content": {
+    "type": "application",
+    "instruction": "运用整体思想解决实际问题",
+    "variants": [
+      {
+        "id": "scenario-1",
+        "question": "小明有一些糖果，他给了小红一半，还剩下5颗。小明原来有多少颗糖果？",
+        "options": ["10颗", "15颗", "5颗", "20颗"],
+        "correctAnswer": "10颗"
+      },
+      {
+        "id": "scenario-2",
+        "question": "一根彩带，用去了总长度的一半，还剩3米。这根彩带原来长多少米？",
+        "options": ["6米", "3米", "9米", "12米"],
+        "correctAnswer": "6米"
+      }
+    ],
+    "minCorrect": 2
+  },
+  "completionCriteria": {
+    "type": "choice",
+    "config": {}
+  },
+  "hintLevels": [
+    "提示：用去了一半，剩下的是整体的几分之几？",
+    "提示：剩下的和用去的是一样多的"
+  ],
+  "ability": "whole-part-thinking"
+}

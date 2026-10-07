@@ -1,0 +1,50 @@
+{
+  "id": "trans-symbolic",
+  "type": "symbolic",
+  "name": "转化与化归符号",
+  "instruction": "学习用数学符号表示转化过程",
+  "content": {
+    "type": "symbolic",
+    "instruction": "学习用数学符号表示转化过程",
+    "inputType": "expression",
+    "expectedAnswer": "4",
+    "method": "化简分数要找到分子分母的最大公约数",
+    "steps": [
+      "找到分子分母的最大公约数",
+      "分子分母同时除以最大公约数"
+    ],
+    "equivalenceRules": [
+      {
+        "name": "化简分数",
+        "pattern": "分子分母同除以一个数",
+        "replacement": "分子分母同时除以它们的最大公约数"
+      },
+      {
+        "name": "通分",
+        "pattern": "分子分母同乘以一个数",
+        "replacement": "把异分母分数化成同分母分数"
+      },
+      {
+        "name": "转化",
+        "pattern": "除法转化为乘法",
+        "replacement": "除以一个数等于乘以它的倒数"
+      }
+    ]
+  },
+  "completionCriteria": {
+    "type": "input",
+    "config": {
+      "problems": [
+        { "id": "prob-1", "answer": "4" },
+        { "id": "prob-2", "answer": "6/15" },
+        { "id": "prob-3", "answer": "12×1/3" }
+      ],
+      "allowEquivalent": true
+    }
+  },
+  "hintLevels": [
+    "提示：化简分数要找到分子分母的最大公约数",
+    "提示：通分时，分子分母乘以相同的数"
+  ],
+  "ability": "transformation"
+}

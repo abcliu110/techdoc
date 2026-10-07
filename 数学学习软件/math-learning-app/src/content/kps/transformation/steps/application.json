@@ -1,0 +1,40 @@
+{
+  "id": "trans-application",
+  "type": "application",
+  "name": "转化思想应用",
+  "instruction": "运用转化思想解决实际问题",
+  "content": {
+    "type": "application",
+    "instruction": "用转化思想解决下面的问题",
+    "variants": [
+      {
+        "id": "scenario-1",
+        "question": "计算：1/4 + 1/6",
+        "options": ["5/12", "2/10", "2/24", "1/12"],
+        "correctAnswer": "5/12"
+      },
+      {
+        "id": "scenario-2",
+        "question": "一个三角形的底是8厘米，高是6厘米。它的面积是多少平方厘米？",
+        "options": ["24平方厘米", "48平方厘米", "12平方厘米", "36平方厘米"],
+        "correctAnswer": "24平方厘米"
+      },
+      {
+        "id": "scenario-3",
+        "question": "把 15/45 化简成最简分数",
+        "options": ["1/3", "15/45", "3/9", "5/15"],
+        "correctAnswer": "1/3"
+      }
+    ],
+    "minCorrect": 3
+  },
+  "completionCriteria": {
+    "type": "choice",
+    "config": {}
+  },
+  "hintLevels": [
+    "提示：分数加减需要先通分",
+    "提示：三角形面积需要除以2"
+  ],
+  "ability": "transformation"
+}

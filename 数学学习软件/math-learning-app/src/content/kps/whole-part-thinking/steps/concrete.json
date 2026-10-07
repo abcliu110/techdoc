@@ -1,0 +1,34 @@
+{
+  "id": "whole-concrete",
+  "type": "concrete",
+  "name": "认识整体与部分",
+  "instruction": "通过动手操作认识整体与部分的关系",
+  "content": {
+    "type": "concrete",
+    "scenario": {
+      "title": "分水果",
+      "description": "妈妈买了一些苹果，把它们分给小明和小红。小明得到了3个苹果，小红得到了2个苹果。他们一共得到了多少个苹果？",
+      "emoji": "🍎"
+    },
+    "interaction": {
+      "kind": "split",
+      "target": "将一组物体分成两部分",
+      "visualType": "apples",
+      "visualConfig": {
+        "totalApples": 5,
+        "highlightRange": [0, 5]
+      }
+    }
+  },
+  "completionCriteria": {
+    "type": "interactive",
+    "config": {
+      "requiredInteraction": "split-complete"
+    }
+  },
+  "hintLevels": [
+    "提示：数一数，总共有多少个苹果？",
+    "提示：小明3个，小红2个，加起来是5个"
+  ],
+  "ability": "whole-part-thinking"
+}

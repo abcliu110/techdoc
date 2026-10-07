@@ -1,0 +1,46 @@
+{
+  "stepId": "kps-002-step-02",
+  "stepType": "pictorial",
+  "title": "同分母分数比较大",
+  "description": "用条形图直观展示同分母分数的大小关系",
+  "content": {
+    "stepId": "kps-002-step-02",
+    "stepType": "pictorial",
+    "title": "同分母分数比较大",
+    "instruction": "比较3/6和5/6的大小。观察下面的条形图，哪个涂色的部分更长？",
+    "visual": {
+      "type": "bar",
+      "bars": [
+        { "value": 3, "label": "3/6", "color": "#4A90D9" },
+        { "value": 5, "label": "5/6", "color": "#7B68EE" }
+      ],
+      "maxValue": 6,
+      "showValues": true,
+      "animatable": true
+    },
+    "interaction": {
+      "type": "tap",
+      "options": [
+        { "id": "tap-3", "label": "3/6 更大" },
+        { "id": "tap-5", "label": "5/6 更大", "isCorrect": true },
+        { "id": "tap-same", "label": "一样大" }
+      ]
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "正确！在同分母（单位统一）的情况下，分子越大，分数就越大。5/6 > 3/6。",
+        "animation": "bounce"
+      },
+      {
+        "type": "incorrect",
+        "message": "观察条形图：两个条形的总长度相同，都是6个格子。哪一条涂色的格子更多？",
+        "animation": "shake",
+        "highlight": ["bar-chart"]
+      }
+    ],
+    "autoAdvance": 1500
+  },
+  "prerequisites": ["kps-002-step-01"],
+  "unlocks": ["kps-002-step-03"]
+}

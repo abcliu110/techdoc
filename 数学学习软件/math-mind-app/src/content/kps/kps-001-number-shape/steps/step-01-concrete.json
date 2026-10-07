@@ -1,0 +1,44 @@
+{
+  "stepId": "kps-001-step-01",
+  "stepType": "concrete",
+  "title": "认识圆形分数",
+  "description": "通过动手操作，将圆形分成相等的部分，感知分数的含义",
+  "content": {
+    "stepId": "kps-001-step-01",
+    "stepType": "concrete",
+    "title": "认识圆形分数",
+    "instruction": "把下面的圆形分成4个相等的部分，然后将其中1个部分涂上颜色。你涂色的部分占整个圆形的几分之几？",
+    "visual": {
+      "type": "pie",
+      "totalParts": 4,
+      "filledParts": 0,
+      "showLabels": true,
+      "animatable": true
+    },
+    "interaction": {
+      "type": "tap",
+      "options": [
+        { "id": "tap-1", "label": "1/4", "isCorrect": true },
+        { "id": "tap-2", "label": "1/3" },
+        { "id": "tap-3", "label": "1/2" },
+        { "id": "tap-4", "label": "2/4" }
+      ]
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "太棒了！你把圆形分成了4份，涂了1份，所以是1/4。",
+        "animation": "bounce"
+      },
+      {
+        "type": "incorrect",
+        "message": "再想一想：圆形被分成了几份？涂了几份？",
+        "animation": "shake",
+        "highlight": ["pie-chart"]
+      }
+    ],
+    "autoAdvance": 1500
+  },
+  "prerequisites": [],
+  "unlocks": ["kps-001-step-02"]
+}

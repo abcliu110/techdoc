@@ -1,0 +1,14 @@
+{
+  "packageId": "kps-004",
+  "title": "转化与化归 - 分数与小数的转化",
+  "description": "掌握分数与小数相互转化的方法，理解两种表示形式的内在联系。",
+  "thoughtLine": "转化与化归",
+  "thoughtLineOrder": 4,
+  "difficulty": "medium",
+  "gradeLevel": "4-5年级",
+  "estimatedMinutes": 20,
+  "version": "1.0.0",
+  "author": "MathMind Team",
+  "createdAt": "2026-10-06",
+  "updatedAt": "2026-10-06"
+}

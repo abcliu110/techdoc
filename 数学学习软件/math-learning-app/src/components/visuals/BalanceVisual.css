@@ -1,0 +1,75 @@
+.balance-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+}
+
+.balance-status {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  transition: all 0.3s ease;
+}
+
+.balance-status.status-balanced {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.balance-status.status-left {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.balance-status.status-right {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.balance-visual svg {
+  cursor: default;
+}
+
+.balance-weights {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 12px;
+}
+
+.weight-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+}
+
+.weight-side.left {
+  background-color: #dbeafe;
+}
+
+.weight-side.right {
+  background-color: #fee2e2;
+}
+
+.weight-label {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.weight-value {
+  font-size: 20px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.weight-vs {
+  font-size: 14px;
+  color: #9ca3af;
+  font-weight: 500;
+}

@@ -1,0 +1,46 @@
+{
+  "id": "eq-symbolic",
+  "type": "symbolic",
+  "name": "等量关系与方程",
+  "instruction": "学习用符号表示等量关系",
+  "content": {
+    "type": "symbolic",
+    "instruction": "学习用符号表示等量关系",
+    "inputType": "equation",
+    "expectedAnswer": "3",
+    "method": "利用等式性质解方程",
+    "steps": [
+      "把等式一边看成整体",
+      "求x就是求另一部分",
+      "利用等式性质移项"
+    ],
+    "equivalenceRules": [
+      {
+        "name": "等式性质1",
+        "pattern": "等式两边同时加/减",
+        "replacement": "等式仍然成立"
+      },
+      {
+        "name": "等式性质2",
+        "pattern": "等式两边同时乘/除(不为0)",
+        "replacement": "等式仍然成立"
+      }
+    ]
+  },
+  "completionCriteria": {
+    "type": "input",
+    "config": {
+      "problems": [
+        { "id": "prob-1", "answer": "3" },
+        { "id": "prob-2", "answer": "10" },
+        { "id": "prob-3", "answer": "4" }
+      ],
+      "allowEquivalent": false
+    }
+  },
+  "hintLevels": [
+    "提示：把等式一边看成整体，求x就是求另一部分",
+    "提示：加减法中，把x单独留下需要移项"
+  ],
+  "ability": "equation-reasoning"
+}

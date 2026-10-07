@@ -1,0 +1,36 @@
+{
+  "id": "unit-pictorial",
+  "type": "pictorial",
+  "name": "单位关系图",
+  "instruction": "通过图形理解长度单位之间的进率关系",
+  "content": {
+    "type": "pictorial",
+    "task": "观察尺子刻度，理解单位换算",
+    "visualType": "ruler",
+    "outputFormat": "select",
+    "visualConfig": {
+      "showRuler": true,
+      "showGrid": true,
+      "interactive": true,
+      "marks": [
+        { "value": 0, "isMajor": true, "label": "0" },
+        { "value": 10, "isMajor": true, "label": "1厘米" },
+        { "value": 100, "isMajor": true, "label": "1分米" }
+      ],
+      "minValue": 0,
+      "maxValue": 100,
+      "unit": "毫米"
+    }
+  },
+  "completionCriteria": {
+    "type": "verbal",
+    "config": {
+      "requiredAnswers": ["1米等于10分米", "1分米等于10厘米", "1厘米等于10毫米"]
+    }
+  },
+  "hintLevels": [
+    "提示：仔细观察图形，数一数相邻单位之间的格子数",
+    "提示：每相邻两个单位之间，都是10倍的关系"
+  ],
+  "ability": "unit-unification"
+}

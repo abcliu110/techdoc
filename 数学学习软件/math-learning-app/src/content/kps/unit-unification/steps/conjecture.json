@@ -1,0 +1,40 @@
+{
+  "id": "unit-conjecture",
+  "type": "conjecture",
+  "name": "发现换算规律",
+  "instruction": "通过观察和思考，发现单位换算的规律",
+  "content": {
+    "type": "conjecture",
+    "observationPrompt": "观察以下单位换算，你能发现什么规律？",
+    "examples": [
+      {
+        "input": "1米",
+        "output": "10分米"
+      },
+      {
+        "input": "1分米",
+        "output": "10厘米"
+      },
+      {
+        "input": "1厘米",
+        "output": "10毫米"
+      }
+    ],
+    "conjecturePrompt": "如果1米 = 100厘米，那么1米等于多少毫米？说说你的猜想。"
+  },
+  "completionCriteria": {
+    "type": "verbal",
+    "config": {
+      "requiredAnswers": [
+        "进率是10",
+        "1000毫米"
+      ],
+      "allowPartial": false
+    }
+  },
+  "hintLevels": [
+    "提示：观察1米到厘米的换算，1米 = 100厘米",
+    "提示：1厘米 = 10毫米，那么100厘米 = 1000毫米"
+  ],
+  "ability": "unit-unification"
+}

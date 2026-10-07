@@ -1,0 +1,16 @@
+{
+  "id": "fraction-comparison",
+  "name": "分数大小比较",
+  "description": "通过数形结合理解分数大小的比较方法",
+  "ability": "number-shape-integration",
+  "grade": 3,
+  "level": 1,
+  "prerequisites": [],
+  "stepCount": 4,
+  "learningObjectives": [
+    "理解分数大小比较的几何意义（数形结合）",
+    "掌握通分法比较分数大小的方法",
+    "发现分数的基本性质：分子分母同乘除以非零数，分数大小不变",
+    "能够将分数比较方法迁移到实际生活问题中"
+  ]
+}

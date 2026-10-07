@@ -1,0 +1,16 @@
+{
+  "id": "equation-reasoning",
+  "name": "等量关系与方程",
+  "description": "理解等量关系的意义，掌握用方程解决问题的思想方法",
+  "ability": "equation-reasoning",
+  "grade": 3,
+  "level": 1,
+  "prerequisites": [],
+  "stepCount": 5,
+  "learningObjectives": [
+    "理解等量关系的意义",
+    "认识等号两边相等的含义",
+    "学会用字母表示未知数",
+    "能够找出简单问题中的等量关系"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "whole-part-thinking",
+  "name": "整体与部分",
+  "description": "理解整体与部分的关系，掌握用整体思想解决数学问题的方法",
+  "ability": "whole-part-thinking",
+  "grade": 3,
+  "level": 1,
+  "prerequisites": [],
+  "stepCount": 5,
+  "learningObjectives": [
+    "理解整体与部分的意义",
+    "认识整体与部分的关系",
+    "掌握用整体思想分析问题的方法",
+    "能够将整体思想应用于分数问题和面积问题"
+  ]
+}

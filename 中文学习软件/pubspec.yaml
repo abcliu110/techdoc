@@ -1,0 +1,43 @@
+name: hanzi_learn
+description: 汉字学习 App - 帮助 K12 学生高效认识汉字，深刻理解汉字构造逻辑
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # 状态管理
+  flutter_riverpod: ^2.4.9
+  riverpod_annotation: ^2.3.3
+
+  # 本地数据库
+  sqflite: ^2.3.0
+  sqflite_common_ffi: ^2.3.0+1  # 桌面端支持
+  sqflite_common_ffi_web: ^0.4.5+4  # Web 端支持
+  path_provider: ^2.1.1
+  path: ^1.8.3
+
+  # 工具库
+  cupertino_icons: ^1.0.6
+  google_fonts: ^6.1.0
+  intl: ^0.18.1
+  shared_preferences: ^2.2.2
+  uuid: ^4.2.1
+  equatable: ^2.0.5
+  json_annotation: ^4.8.1
+  collection: ^1.18.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+  build_runner: ^2.4.7
+  riverpod_generator: ^2.3.9
+  json_serializable: ^6.7.1
+
+flutter:
+  uses-material-design: true

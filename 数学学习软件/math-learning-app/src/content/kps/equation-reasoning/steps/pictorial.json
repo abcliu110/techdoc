@@ -1,0 +1,34 @@
+{
+  "id": "eq-pictorial",
+  "type": "pictorial",
+  "name": "等量关系图示",
+  "instruction": "通过图形理解等量关系",
+  "content": {
+    "type": "pictorial",
+    "task": "观察天平图示，理解等量关系",
+    "visualType": "balance",
+    "outputFormat": "select",
+    "visualConfig": {
+      "showBalance": true,
+      "showEquations": true,
+      "interactive": true,
+      "leftItems": [
+        { "type": "red-ball", "count": 3 }
+      ],
+      "rightItems": [
+        { "type": "blue-ball", "count": 6 }
+      ]
+    }
+  },
+  "completionCriteria": {
+    "type": "verbal",
+    "config": {
+      "requiredAnswers": ["相等", "等式"]
+    }
+  },
+  "hintLevels": [
+    "提示：观察天平，两边平衡时表示什么？",
+    "提示：等号表示两边相等"
+  ],
+  "ability": "equation-reasoning"
+}

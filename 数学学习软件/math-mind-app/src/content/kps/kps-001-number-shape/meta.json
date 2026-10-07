@@ -1,0 +1,14 @@
+{
+  "packageId": "kps-001",
+  "title": "数形结合 - 分数大小比较",
+  "description": "通过图形直观理解分数大小的概念，建立数与形的联系，培养几何直观能力。",
+  "thoughtLine": "数形结合",
+  "thoughtLineOrder": 1,
+  "difficulty": "easy",
+  "gradeLevel": "3-4年级",
+  "estimatedMinutes": 15,
+  "version": "1.0.0",
+  "author": "MathMind Team",
+  "createdAt": "2026-10-06",
+  "updatedAt": "2026-10-06"
+}

@@ -1,0 +1,43 @@
+{
+  "stepId": "kps-001-step-02",
+  "stepType": "pictorial",
+  "title": "比较1/2和1/4",
+  "description": "通过图形对比，直观感受相同整体下，份数越多每份越小",
+  "content": {
+    "stepId": "kps-001-step-02",
+    "stepType": "pictorial",
+    "title": "比较1/2和1/4",
+    "instruction": "观察下面两个圆形，哪个涂色部分更大？点击选择答案。",
+    "visual": {
+      "type": "pie",
+      "totalParts": 2,
+      "filledParts": 1,
+      "showLabels": true,
+      "animatable": true
+    },
+    "interaction": {
+      "type": "tap",
+      "options": [
+        { "id": "tap-left", "label": "左边的圆（1/2）更大", "isCorrect": true },
+        { "id": "tap-right", "label": "右边的圆（1/4）更大" },
+        { "id": "tap-same", "label": "一样大" }
+      ]
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "正确！把一个圆分成2份，每份是1/2；分成4份，每份是1/4。1/2比1/4大，因为2份中的1份比4份中的1份要大。",
+        "animation": "bounce"
+      },
+      {
+        "type": "incorrect",
+        "message": "注意观察：左边圆被分成了2份，涂了1份；右边圆被分成了4份，涂了1份。哪一份更大呢？",
+        "animation": "shake",
+        "highlight": ["pie-chart"]
+      }
+    ],
+    "autoAdvance": 2000
+  },
+  "prerequisites": ["kps-001-step-01"],
+  "unlocks": ["kps-001-step-03"]
+}

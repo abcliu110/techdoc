@@ -1,0 +1,36 @@
+{
+  "id": "whole-conjecture",
+  "type": "conjecture",
+  "name": "发现整体与部分规律",
+  "instruction": "通过观察和思考，发现整体与部分的关系规律",
+  "content": {
+    "type": "conjecture",
+    "observationPrompt": "观察整体与部分的分割，你能发现什么规律？",
+    "examples": [
+      {
+        "input": "整体分成3和5",
+        "output": "合起来是8"
+      },
+      {
+        "input": "整体分成2、3、5",
+        "output": "合起来是10"
+      }
+    ],
+    "conjecturePrompt": "如果一个整体分成两部分，一部分是整体的一半，另一部分是多少？说说你的猜想。"
+  },
+  "completionCriteria": {
+    "type": "verbal",
+    "config": {
+      "requiredAnswers": [
+        "一半",
+        "5"
+      ],
+      "allowPartial": false
+    }
+  },
+  "hintLevels": [
+    "提示：观察整体分成两半的情况",
+    "提示：一半加一半等于整体"
+  ],
+  "ability": "whole-part-thinking"
+}

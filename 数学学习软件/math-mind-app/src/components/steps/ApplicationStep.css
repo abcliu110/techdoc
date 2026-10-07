@@ -1,0 +1,57 @@
+.application-step {
+  border-left: 4px solid #ef4444;
+}
+
+.application-step.completed {
+  border-left-color: var(--color-success, #10b981);
+}
+
+.application-step-instruction {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background-color: #fef2f2;
+  border-radius: 12px;
+}
+
+.application-step-instruction .instruction-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.application-step-instruction .instruction-text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text, #1f2937);
+}
+
+.application-step-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  min-height: 180px;
+  padding: 20px;
+  background-color: var(--color-bg-card, white);
+  border-radius: 12px;
+  border: 2px dashed #fecaca;
+}
+
+.application-step-content .scenario-area {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.application-step-content .scenario-description {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-text, #374151);
+  padding: 12px;
+  background-color: #fef2f2;
+  border-radius: 8px;
+  border-left: 3px solid #ef4444;
+}

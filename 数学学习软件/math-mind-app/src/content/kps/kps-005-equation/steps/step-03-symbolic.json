@@ -1,0 +1,42 @@
+{
+  "stepId": "kps-005-step-03",
+  "stepType": "symbolic",
+  "title": "用字母表示未知数",
+  "description": "建立方程思想的符号化表达",
+  "content": {
+    "stepId": "kps-005-step-03",
+    "stepType": "symbolic",
+    "title": "用字母表示未知数",
+    "instruction": "如果天平左边有x个苹果，右边有5个苹果，天平平衡。\n\n那么 x + 2 = ? \n如果两边同时减去2：x = ?\n\n填空：x = ?",
+    "visual": {
+      "type": "fractionBar",
+      "fractions": [
+        { "denominator": 1, "numerator": 5, "label": "x = 5 - 2 = 3", "color": "#4A90D9" }
+      ],
+      "equalLength": true,
+      "showLabels": true,
+      "animatable": true
+    },
+    "interaction": {
+      "type": "input",
+      "placeholder": "输入x的值",
+      "inputType": "number"
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "正确！x = 3。因为 x + 2 = 5，两边同时减去2，得到 x = 3。这就是解方程的第一步！",
+        "animation": "glow"
+      },
+      {
+        "type": "incorrect",
+        "message": "提示：x + 2 = 5，两边减去2：x + 2 - 2 = 5 - 2，所以 x = 3。",
+        "animation": "shake",
+        "highlight": ["fraction-bar"]
+      }
+    ],
+    "autoAdvance": 2000
+  },
+  "prerequisites": ["kps-005-step-02"],
+  "unlocks": ["kps-005-step-04"]
+}

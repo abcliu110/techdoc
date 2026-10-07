@@ -1,0 +1,48 @@
+{
+  "stepId": "kps-001-step-05",
+  "stepType": "application",
+  "title": "综合应用",
+  "description": "在实际问题中应用数形结合思想比较分数大小",
+  "content": {
+    "stepId": "kps-001-step-05",
+    "stepType": "application",
+    "title": "综合应用",
+    "instruction": "小明把一块蛋糕分成8份，吃了1份；小红把同样的蛋糕分成4份，吃了1份。谁吃得多？\n\n（提示：可以用图形来表示）",
+    "visual": {
+      "type": "rectGrid",
+      "rows": 2,
+      "cols": 8,
+      "filledCells": [
+        { "row": 0, "col": 0 },
+        { "row": 1, "col": 0 },
+        { "row": 1, "col": 1 }
+      ],
+      "showGrid": true,
+      "animatable": true
+    },
+    "interaction": {
+      "type": "tap",
+      "options": [
+        { "id": "tap-xm", "label": "小明吃得多（1/8）" },
+        { "id": "tap-xh", "label": "小红吃得多（1/4）", "isCorrect": true },
+        { "id": "tap-same", "label": "一样多" }
+      ]
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "正确！小明吃了1/8，小红吃了1/4。因为1/4 > 1/8，所以小红吃得多。这就是数形结合思想的实际应用！",
+        "animation": "glow"
+      },
+      {
+        "type": "incorrect",
+        "message": "提示：比较1/4和1/8的大小。观察上面的小方格图，哪个涂色的部分更多？",
+        "animation": "shake",
+        "highlight": ["rect-grid"]
+      }
+    ],
+    "autoAdvance": 2000
+  },
+  "prerequisites": ["kps-001-step-04"],
+  "unlocks": []
+}

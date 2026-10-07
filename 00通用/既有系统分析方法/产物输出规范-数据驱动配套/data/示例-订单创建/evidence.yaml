@@ -1,0 +1,128 @@
+﻿# evidence.yaml — 证据登记表（全局唯一登记处）
+# 规范：符号定位优先于行号；行号必须绑定 commit；confidence 缺失即校验失败。
+evidence:
+  - id: EVD-001
+    locate: "PromotionService#calculatePromotion"
+    file: "order-service/src/main/java/com/example/order/service/PromotionService.java"
+    line: 78
+    commit: "a1b2c3d"
+    snippet: "按 满减 > 折扣 > 优惠券 顺序依次应用促销"
+    confidence: L4
+    verified_at: 2026-09-05
+
+  - id: EVD-002
+    locate: "OrderValidator#validate"
+    file: "order-service/src/main/java/com/example/order/validator/OrderValidator.java"
+    line: 23
+    commit: "a1b2c3d"
+    snippet: "订单总额 < 0 时抛出 IllegalArgumentException"
+    confidence: L5
+    verified_at: 2026-09-05
+
+  - id: EVD-003
+    locate: "OrderService#createOrder"
+    file: "order-service/src/main/java/com/example/order/service/OrderService.java"
+    line: 54
+    commit: "a1b2c3d"
+    snippet: "创建订单前逐项校验购买数量 <= 库存数量"
+    confidence: L5
+    verified_at: 2026-09-05
+
+  - id: EVD-004
+    locate: "OrderService#applyMemberDiscount"
+    file: "order-service/src/main/java/com/example/order/service/OrderService.java"
+    line: 103
+    commit: "a1b2c3d"
+    snippet: "会员折扣与促销金额直接相加，未发现折扣上限"
+    confidence: L3
+    verified_at: 2026-09-05
+
+  - id: EVD-005
+    locate: "OrderService#generateOrderNo"
+    file: "order-service/src/main/java/com/example/order/service/OrderService.java"
+    line: 23
+    commit: "a1b2c3d"
+    snippet: "Redis INCR 生成全局唯一订单号，前缀 ORD"
+    confidence: L5
+    verified_at: 2026-09-05
+
+  - id: EVD-006
+    locate: "OrderEntity"
+    file: "order-dao/src/main/java/com/example/order/dao/entity/OrderEntity.java"
+    line: 12
+    commit: "a1b2c3d"
+    snippet: "t_order 表实体映射，含乐观锁 version 字段"
+    confidence: L5
+    verified_at: 2026-09-05
+
+  - id: EVD-007
+    locate: "OrderItemEntity"
+    file: "order-dao/src/main/java/com/example/order/dao/entity/OrderItemEntity.java"
+    line: 10
+    commit: "a1b2c3d"
+    snippet: "t_order_item 表实体映射，orderId 外键非空"
+    confidence: L5
+    verified_at: 2026-09-05
+
+  - id: EVD-008
+    locate: "Address"
+    file: "order-api/src/main/java/com/example/order/api/model/Address.java"
+    line: 5
+    commit: "a1b2c3d"
+    snippet: "值对象，无独立 ID，字段级 equals"
+    confidence: L4
+    verified_at: 2026-09-05
+
+  - id: EVD-009
+    locate: "Order#pay"
+    file: "order-domain/src/main/java/com/example/order/domain/Order.java"
+    line: 89
+    commit: "a1b2c3d"
+    snippet: "pay() 前置校验金额，后置发送 OrderPaid 事件"
+    confidence: L5
+    verified_at: 2026-09-05
+
+  - id: EVD-010
+    locate: "Order#cancel"
+    file: "order-domain/src/main/java/com/example/order/domain/Order.java"
+    line: 115
+    commit: "a1b2c3d"
+    snippet: "仅 PENDING_PAY 状态可取消"
+    confidence: L5
+    verified_at: 2026-09-05
+
+  - id: EVD-011
+    locate: "Order#refund"
+    file: "order-domain/src/main/java/com/example/order/domain/Order.java"
+    line: 102
+    commit: "a1b2c3d"
+    snippet: "仅 PAID 状态可退款，校验同班次与退款数量"
+    confidence: L5
+    verified_at: 2026-09-05
+
+  - id: EVD-012
+    locate: "Order#reverseSettle"
+    file: "order-domain/src/main/java/com/example/order/domain/Order.java"
+    line: 126
+    commit: "a1b2c3d"
+    snippet: "反结账：PAID 回退 PENDING_PAY，限同班次未发货"
+    confidence: L4
+    verified_at: 2026-09-05
+
+  - id: EVD-013
+    locate: "OrderStatus"
+    file: "order-api/src/main/java/com/example/order/api/enums/OrderStatus.java"
+    line: 12
+    commit: "a1b2c3d"
+    snippet: "状态枚举 PENDING_PAY/PAID/REFUNDED/CANCELLED"
+    confidence: L5
+    verified_at: 2026-09-05
+
+  - id: EVD-014
+    locate: "OrderEventPublisher#publish"
+    file: "order-service/src/main/java/com/example/order/event/OrderEventPublisher.java"
+    line: 12
+    commit: "a1b2c3d"
+    snippet: "RocketMQ topic=order-events 发布 OrderCreated"
+    confidence: L5
+    verified_at: 2026-09-05

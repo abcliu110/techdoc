@@ -1,0 +1,46 @@
+{
+  "stepId": "kps-003-step-02",
+  "stepType": "pictorial",
+  "title": "整体可以变化",
+  "description": "理解同一个分数，在不同整体中可以表示不同数量",
+  "content": {
+    "stepId": "kps-003-step-02",
+    "stepType": "pictorial",
+    "title": "整体可以变化",
+    "instruction": "观察：两个图中涂色的部分都表示整体的1/4，但数量一样吗？\n\n第一图：8个苹果的1/4\n第二图：12个苹果的1/4",
+    "visual": {
+      "type": "bar",
+      "bars": [
+        { "value": 2, "label": "8的1/4 = 2个", "color": "#4A90D9" },
+        { "value": 3, "label": "12的1/4 = 3个", "color": "#7B68EE" }
+      ],
+      "maxValue": 12,
+      "showValues": true,
+      "animatable": true
+    },
+    "interaction": {
+      "type": "tap",
+      "options": [
+        { "id": "tap-same", "label": "一样多" },
+        { "id": "tap-8", "label": "8的1/4更多" },
+        { "id": "tap-12", "label": "12的1/4更多", "isCorrect": true }
+      ]
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "正确！分数表示比例关系，整体不同，1/4表示的数量也不同。12的1/4=3个，比8的1/4=2个要多。",
+        "animation": "bounce"
+      },
+      {
+        "type": "incorrect",
+        "message": "提示：8的1/4是把8分成4份取1份；12的1/4是把12分成4份取1份。哪一份的数量更多？",
+        "animation": "shake",
+        "highlight": ["bar-chart"]
+      }
+    ],
+    "autoAdvance": 2000
+  },
+  "prerequisites": ["kps-003-step-01"],
+  "unlocks": ["kps-003-step-03"]
+}

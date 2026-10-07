@@ -1,0 +1,40 @@
+{
+  "id": "eq-application",
+  "type": "application",
+  "name": "等量关系应用",
+  "instruction": "运用等量关系解决实际问题",
+  "content": {
+    "type": "application",
+    "instruction": "找出题目中的等量关系并列方程解答",
+    "variants": [
+      {
+        "id": "scenario-1",
+        "question": "小明有若干本书，小红有7本书，他们一共有15本书。小明有多少本书？",
+        "options": ["8本", "7本", "6本", "9本"],
+        "correctAnswer": "8本"
+      },
+      {
+        "id": "scenario-2",
+        "question": "爸爸的年龄是小明的3倍，爸爸今年36岁，小明今年几岁？",
+        "options": ["12岁", "10岁", "9岁", "15岁"],
+        "correctAnswer": "12岁"
+      },
+      {
+        "id": "scenario-3",
+        "question": "5个苹果可以换10个橘子，1个苹果可以换几个橘子？",
+        "options": ["2个", "3个", "5个", "10个"],
+        "correctAnswer": "2个"
+      }
+    ],
+    "minCorrect": 3
+  },
+  "completionCriteria": {
+    "type": "choice",
+    "config": {}
+  },
+  "hintLevels": [
+    "提示：找出题目中的等量关系",
+    "提示：设未知数为x，根据等量关系列方程"
+  ],
+  "ability": "equation-reasoning"
+}

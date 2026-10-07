@@ -1,0 +1,46 @@
+{
+  "stepId": "kps-001-step-04",
+  "stepType": "conjecture",
+  "title": "验证猜想",
+  "description": "通过更多例子验证总结出的比较规则",
+  "content": {
+    "stepId": "kps-001-step-04",
+    "stepType": "conjecture",
+    "title": "验证猜想",
+    "instruction": "现在我们验证刚才发现的规律。请比较下面每组分数的大小，点击较大的分数。",
+    "visual": {
+      "type": "fractionBar",
+      "fractions": [
+        { "denominator": 6, "numerator": 1, "label": "1/6" },
+        { "denominator": 8, "numerator": 1, "label": "1/8" }
+      ],
+      "equalLength": true,
+      "showLabels": true,
+      "animatable": true
+    },
+    "interaction": {
+      "type": "tap",
+      "options": [
+        { "id": "tap-1", "label": "1/6 更大", "isCorrect": true },
+        { "id": "tap-2", "label": "1/8 更大" },
+        { "id": "tap-3", "label": "一样大" }
+      ]
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "正确！1/6 > 1/8，因为分母6小于8，所以1/6更大。规律验证成功！",
+        "animation": "bounce"
+      },
+      {
+        "type": "incorrect",
+        "message": "再想一想：把一个整体分成6份和分成8份，哪一份更大？",
+        "animation": "shake",
+        "highlight": ["fraction-bar"]
+      }
+    ],
+    "autoAdvance": 1500
+  },
+  "prerequisites": ["kps-001-step-03"],
+  "unlocks": ["kps-001-step-05"]
+}

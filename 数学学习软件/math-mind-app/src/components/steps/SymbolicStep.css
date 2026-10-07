@@ -1,0 +1,58 @@
+.symbolic-step {
+  border-left: 4px solid #8b5cf6;
+}
+
+.symbolic-step.completed {
+  border-left-color: var(--color-success, #10b981);
+}
+
+.symbolic-step-instruction {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background-color: #f5f3ff;
+  border-radius: 12px;
+}
+
+.symbolic-step-instruction .instruction-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.symbolic-step-instruction .instruction-text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text, #1f2937);
+}
+
+.symbolic-step-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  min-height: 160px;
+  padding: 20px;
+  background-color: var(--color-bg-card, white);
+  border-radius: 12px;
+  border: 2px dashed #c4b5fd;
+}
+
+.symbolic-step-content .input-area {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.symbolic-step-content .formula-display {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--color-primary, #4f46e5);
+  font-family: 'Times New Roman', serif;
+  padding: 12px 24px;
+  background-color: #f5f3ff;
+  border-radius: 8px;
+}

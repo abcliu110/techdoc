@@ -1,0 +1,50 @@
+{
+  "stepId": "kps-003-step-01",
+  "stepType": "concrete",
+  "title": "认识整体与部分",
+  "description": "通过实物操作理解整体和部分的相对关系",
+  "content": {
+    "stepId": "kps-003-step-01",
+    "stepType": "concrete",
+    "title": "认识整体与部分",
+    "instruction": "左边有6个苹果，右边涂色的部分占整体的2/3。\n\n请问右边有几个苹果？点击计算。",
+    "visual": {
+      "type": "rectGrid",
+      "rows": 1,
+      "cols": 6,
+      "filledCells": [
+        { "row": 0, "col": 0 },
+        { "row": 0, "col": 1 }
+      ],
+      "showGrid": true,
+      "animatable": true
+    },
+    "interaction": {
+      "type": "input",
+      "placeholder": "请输入数量",
+      "inputType": "number",
+      "validation": {
+        "type": "range",
+        "min": 0,
+        "max": 10,
+        "message": "答案应该是0-10之间的数字"
+      }
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "正确！6个苹果分成3份，每份2个。涂色的2份就是2/3，有2×2=4个苹果。",
+        "animation": "bounce"
+      },
+      {
+        "type": "incorrect",
+        "message": "提示：把6个苹果平均分成3份，每份有几个？涂色的部分占2份。",
+        "animation": "shake",
+        "highlight": ["rect-grid"]
+      }
+    ],
+    "autoAdvance": 2000
+  },
+  "prerequisites": [],
+  "unlocks": ["kps-003-step-02"]
+}

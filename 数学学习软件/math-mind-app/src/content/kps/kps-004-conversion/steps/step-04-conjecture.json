@@ -1,0 +1,46 @@
+{
+  "stepId": "kps-004-step-04",
+  "stepType": "conjecture",
+  "title": "验证转化规律",
+  "description": "通过更多例子验证分数小数互化",
+  "content": {
+    "stepId": "kps-004-step-04",
+    "stepType": "conjecture",
+    "title": "验证转化规律",
+    "instruction": "将下列分数转化为小数：\n\n1/2 = ?（0.5）\n3/4 = ?（0.75）\n1/5 = ?（0.2）\n2/5 = ?（0.4）",
+    "visual": {
+      "type": "fractionBar",
+      "fractions": [
+        { "denominator": 4, "numerator": 3, "label": "3/4", "color": "#4A90D9" },
+        { "denominator": 10, "numerator": 7, "label": "0.75", "color": "#7B68EE" }
+      ],
+      "equalLength": true,
+      "showLabels": true,
+      "animatable": true
+    },
+    "interaction": {
+      "type": "tap",
+      "options": [
+        { "id": "tap-correct", "label": "3/4 = 0.75", "isCorrect": true },
+        { "id": "tap-wrong", "label": "3/4 = 0.34" },
+        { "id": "tap-other", "label": "3/4 = 0.7" }
+      ]
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "正确！3/4 = 3÷4 = 0.75。你已经掌握了分数转小数的方法！",
+        "animation": "glow"
+      },
+      {
+        "type": "incorrect",
+        "message": "提示：3/4 = 3÷4。在计算器上算一下3除以4。",
+        "animation": "shake",
+        "highlight": ["fraction-bar"]
+      }
+    ],
+    "autoAdvance": 1500
+  },
+  "prerequisites": ["kps-004-step-03"],
+  "unlocks": ["kps-004-step-05"]
+}

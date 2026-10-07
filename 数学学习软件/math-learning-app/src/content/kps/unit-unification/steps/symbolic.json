@@ -1,0 +1,51 @@
+{
+  "id": "unit-symbolic",
+  "type": "symbolic",
+  "name": "单位换算法",
+  "instruction": "学习单位换算的数学方法",
+  "content": {
+    "type": "symbolic",
+    "instruction": "学习单位换算的数学方法",
+    "inputType": "expression",
+    "expectedAnswer": "30",
+    "method": "大单位换小单位用乘法，小单位换大单位用除法",
+    "steps": [
+      "判断是大单位换小单位还是小单位换大单位",
+      "大单位换小单位：数值 × 进率",
+      "小单位换大单位：数值 ÷ 进率"
+    ],
+    "equivalenceRules": [
+      {
+        "name": "米到分米",
+        "pattern": "米 → 分米",
+        "replacement": "×10"
+      },
+      {
+        "name": "分米到厘米",
+        "pattern": "分米 → 厘米",
+        "replacement": "×10"
+      },
+      {
+        "name": "厘米到毫米",
+        "pattern": "厘米 → 毫米",
+        "replacement": "×10"
+      }
+    ]
+  },
+  "completionCriteria": {
+    "type": "input",
+    "config": {
+      "problems": [
+        { "id": "prob-1", "answer": "30" },
+        { "id": "prob-2", "answer": "7" },
+        { "id": "prob-3", "answer": "80" }
+      ],
+      "allowEquivalent": false
+    }
+  },
+  "hintLevels": [
+    "提示：大单位换小单位，用乘法",
+    "提示：小单位换大单位，用除法"
+  ],
+  "ability": "unit-unification"
+}

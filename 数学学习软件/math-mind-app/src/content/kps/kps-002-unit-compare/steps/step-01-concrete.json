@@ -1,0 +1,48 @@
+{
+  "stepId": "kps-002-step-01",
+  "stepType": "concrete",
+  "title": "认识分数单位",
+  "description": "通过具体操作理解分数单位的含义",
+  "content": {
+    "stepId": "kps-002-step-01",
+    "stepType": "concrete",
+    "title": "认识分数单位",
+    "instruction": "把下面的长方形分成5个相等的部分，每个部分就是这个整体的1/5。\n\n数一数，涂色的部分有几个1/5？",
+    "visual": {
+      "type": "rectGrid",
+      "rows": 1,
+      "cols": 5,
+      "filledCells": [
+        { "row": 0, "col": 0 },
+        { "row": 0, "col": 1 }
+      ],
+      "showGrid": true,
+      "animatable": true
+    },
+    "interaction": {
+      "type": "tap",
+      "options": [
+        { "id": "tap-1", "label": "1个1/5" },
+        { "id": "tap-2", "label": "2个1/5", "isCorrect": true },
+        { "id": "tap-3", "label": "3个1/5" },
+        { "id": "tap-4", "label": "5个1/5" }
+      ]
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "很好！涂色的部分包含2个1/5，所以是2/5。1/5就是分数单位。",
+        "animation": "bounce"
+      },
+      {
+        "type": "incorrect",
+        "message": "每个小格都是整个图形的1/5。数一数涂了几个小格？",
+        "animation": "shake",
+        "highlight": ["rect-grid"]
+      }
+    ],
+    "autoAdvance": 1500
+  },
+  "prerequisites": [],
+  "unlocks": ["kps-002-step-02"]
+}

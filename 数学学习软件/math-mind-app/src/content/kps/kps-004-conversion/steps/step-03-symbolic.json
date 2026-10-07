@@ -1,0 +1,48 @@
+{
+  "stepId": "kps-004-step-03",
+  "stepType": "symbolic",
+  "title": "转化方法总结",
+  "description": "总结分数与小数的互化规则",
+  "content": {
+    "stepId": "kps-004-step-03",
+    "stepType": "symbolic",
+    "title": "转化方法总结",
+    "instruction": "填空：\n\n【分数转小数】分子___分母\n【小数转分数】看小数点后有几位，就在1后面写几个0作为分母，___作为分子\n\n验证：1/4 = 4÷4 = ___？",
+    "visual": {
+      "type": "bar",
+      "bars": [
+        { "value": 1, "label": "1/4 = 0.25", "color": "#4A90D9" }
+      ],
+      "maxValue": 1,
+      "showValues": true,
+      "animatable": true
+    },
+    "interaction": {
+      "type": "match",
+      "items": [
+        { "id": "chu", "label": "除以" },
+        { "id": "cheng", "label": "乘以" }
+      ],
+      "targets": [
+        { "id": "target-1", "label": "分数转小数：分子___分母" },
+        { "id": "target-2", "label": "小数转分数：去掉小数点的数" }
+      ]
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "很好！1/4 = 1÷4 = 0.25。记住：分数转小数用除法！",
+        "animation": "glow"
+      },
+      {
+        "type": "incorrect",
+        "message": "提示：1/4表示1除以4，所以在计算器上试试1÷4等于多少？",
+        "animation": "shake",
+        "highlight": ["bar-chart"]
+      }
+    ],
+    "autoAdvance": 2000
+  },
+  "prerequisites": ["kps-004-step-02"],
+  "unlocks": ["kps-004-step-04"]
+}

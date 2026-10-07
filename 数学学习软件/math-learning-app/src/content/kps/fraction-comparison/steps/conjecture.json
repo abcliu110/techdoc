@@ -1,0 +1,30 @@
+{
+  "id": "frac-compare-conjecture",
+  "type": "conjecture",
+  "name": "提出猜想",
+  "instruction": "观察分数特点，提出比较规律",
+  "content": {
+    "type": "conjecture",
+    "observationPrompt": "观察以下分数对：1/2 vs 2/4，3/5 vs 6/10，2/3 vs 4/6",
+    "examples": [
+      {"input": "1/2 vs 2/4", "output": "相等"},
+      {"input": "3/5 vs 6/10", "output": "相等"},
+      {"input": "2/3 vs 4/6", "output": "相等"}
+    ],
+    "conjecturePrompt": "你发现了什么规律？用你自己的话说一说。",
+    "reflection": "为什么分子分母同时扩大相同倍数，分数大小不变？"
+  },
+  "completionCriteria": {
+    "type": "verbal",
+    "config": {
+      "minLength": 5,
+      "expectedKeywords": ["相等", "相同", "一样", "倍数", "扩大"],
+      "minKeywords": 1
+    }
+  },
+  "hintLevels": [
+    "提示：这些分数有什么关系？",
+    "提示：分子和分母有什么特点？"
+  ],
+  "ability": "number-shape-integration"
+}

@@ -1,0 +1,163 @@
+.step {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.step-content {
+  padding: 20px;
+}
+
+.observation-card {
+  background: linear-gradient(135deg, #faf5ff 0%, #ede9fe 100%);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.observation-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #5b21b6;
+}
+
+.observation-prompt {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #7c3aed;
+}
+
+.examples-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.example-item {
+  position: relative;
+  background-color: white;
+  border: 2px solid #ddd6fe;
+  border-radius: 8px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.example-item:hover {
+  border-color: #a78bfa;
+}
+
+.example-item.shown {
+  cursor: default;
+}
+
+.example-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.example-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+  min-width: 40px;
+}
+
+.example-value {
+  font-size: 16px;
+  color: #1e293b;
+  font-family: 'Times New Roman', serif;
+}
+
+.example-value.highlight {
+  color: #7c3aed;
+  font-weight: 600;
+}
+
+.example-mask {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(167, 139, 250, 0.9);
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.example-item.shown .example-mask {
+  display: none;
+}
+
+.conjecture-card {
+  background-color: #fef3c7;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.conjecture-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #78350f;
+}
+
+.conjecture-prompt {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #92400e;
+}
+
+.conjecture-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  line-height: 1.6;
+  border: 2px solid #f59e0b;
+  border-radius: 8px;
+  background-color: white;
+  outline: none;
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.conjecture-input:focus {
+  border-color: #d97706;
+}
+
+.conjecture-input:disabled {
+  background-color: #fef3c7;
+  cursor: not-allowed;
+}
+
+.conjecture-hint {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.char-count {
+  font-size: 12px;
+  color: #92400e;
+}
+
+.step-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid #e2e8f0;
+  background-color: #f8fafc;
+}

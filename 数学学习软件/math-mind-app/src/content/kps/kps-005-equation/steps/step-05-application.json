@@ -1,0 +1,50 @@
+{
+  "stepId": "kps-005-step-05",
+  "stepType": "application",
+  "title": "综合应用",
+  "description": "在实际问题中建立等量关系",
+  "content": {
+    "stepId": "kps-005-step-05",
+    "stepType": "application",
+    "title": "综合应用",
+    "instruction": "问题：小明有一些糖果，给了小红5颗后，还剩8颗。小明原来有多少颗糖果？\n\n分析：原有 - 给出 = 剩下\n设 x 为原有的糖果数\n方程：x - 5 = 8\n\n解：x = ?",
+    "visual": {
+      "type": "rectGrid",
+      "rows": 1,
+      "cols": 13,
+      "filledCells": [
+        { "row": 0, "col": 0 },
+        { "row": 0, "col": 1 },
+        { "row": 0, "col": 2 },
+        { "row": 0, "col": 3 },
+        { "row": 0, "col": 4 },
+        { "row": 0, "col": 5 },
+        { "row": 0, "col": 6 },
+        { "row": 0, "col": 7 }
+      ],
+      "showGrid": true,
+      "animatable": true
+    },
+    "interaction": {
+      "type": "input",
+      "placeholder": "输入原有的糖果数",
+      "inputType": "number"
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "正确！x = 13。小明原来有13颗糖果。验证：13 - 5 = 8，完全正确！等量关系与方程的思想帮助我们解决了实际问题。",
+        "animation": "glow"
+      },
+      {
+        "type": "incorrect",
+        "message": "提示：x - 5 = 8，两边同时加5：x = 8 + 5 = 13。",
+        "animation": "shake",
+        "highlight": ["rect-grid"]
+      }
+    ],
+    "autoAdvance": 2000
+  },
+  "prerequisites": ["kps-005-step-04"],
+  "unlocks": []
+}

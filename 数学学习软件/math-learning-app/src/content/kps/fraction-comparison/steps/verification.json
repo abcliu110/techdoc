@@ -1,0 +1,44 @@
+{
+  "id": "frac-compare-verification",
+  "type": "verification",
+  "name": "验证猜想",
+  "instruction": "通过更多例子验证你发现的规律",
+  "content": {
+    "type": "verification",
+    "conjectureToVerify": "分子分母同时扩大相同倍数，分数大小不变",
+    "testCases": [
+      {
+        "input": "1/3 分子分母同时乘以 2",
+        "expectedOutput": "2/6，与 1/3 相等"
+      },
+      {
+        "input": "2/5 分子分母同时乘以 3",
+        "expectedOutput": "6/15，与 2/5 相等"
+      },
+      {
+        "input": "3/7 分子分母同时乘以 4",
+        "expectedOutput": "12/28，与 3/7 相等"
+      },
+      {
+        "input": "检验：1/4 分子分母同时乘以 2 后是几分之几？",
+        "expectedOutput": "2/8"
+      }
+    ],
+    "verificationPrompt": "请自己写出一个分数，然后把它分子分母同时扩大一个倍数，看看结果是否相等？",
+    "feedbackConfig": {
+      "showCounterExample": false,
+      "allowRetry": true
+    }
+  },
+  "completionCriteria": {
+    "type": "input",
+    "config": {
+      "minCorrect": 3
+    }
+  },
+  "hintLevels": [
+    "提示：选择一个你熟悉的分数作为例子",
+    "提示：分子分母同时乘以相同的数，不能相加或相减"
+  ],
+  "ability": "number-shape-integration"
+}

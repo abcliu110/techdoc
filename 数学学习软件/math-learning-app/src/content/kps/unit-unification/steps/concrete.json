@@ -1,0 +1,37 @@
+{
+  "id": "unit-concrete",
+  "type": "concrete",
+  "name": "测量工具认识",
+  "instruction": "通过测量活动认识不同的长度单位",
+  "content": {
+    "type": "concrete",
+    "scenario": {
+      "title": "测量教室",
+      "description": "小明想知道教室有多长，他用不同的工具测量：尺子测量得到60个小格，卷尺测量得到6个大格。60小格和6大格是一样长的吗？",
+      "emoji": "📏"
+    },
+    "interaction": {
+      "kind": "tap",
+      "target": "观察尺子上的刻度，理解不同单位的关系",
+      "visualType": "ruler",
+      "visualConfig": {
+        "rulerMarks": [
+          { "label": "1厘米", "value": 1 },
+          { "label": "1分米", "value": 10 }
+        ],
+        "highlightRange": [0, 10]
+      }
+    }
+  },
+  "completionCriteria": {
+    "type": "interactive",
+    "config": {
+      "requiredInteraction": "observe-complete"
+    }
+  },
+  "hintLevels": [
+    "提示：数一数，1分米里面有几个1厘米？",
+    "提示：1分米 = 10厘米，你发现了吗？"
+  ],
+  "ability": "unit-unification"
+}

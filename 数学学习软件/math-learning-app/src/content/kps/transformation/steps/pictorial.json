@@ -1,0 +1,41 @@
+{
+  "id": "trans-pictorial",
+  "type": "pictorial",
+  "name": "图形转化",
+  "instruction": "通过观察图形理解转化思想",
+  "content": {
+    "type": "pictorial",
+    "task": "观察图形变化，发现转化规律",
+    "visualType": "shapes",
+    "outputFormat": "select",
+    "visualConfig": {
+      "showTransformations": true,
+      "interactive": true,
+      "shapes": [
+        {
+          "type": "triangle",
+          "count": 2,
+          "label": "两个三角形",
+          "color": "#FF6B6B"
+        },
+        {
+          "type": "square",
+          "count": 1,
+          "label": "一个正方形",
+          "color": "#4ECDC4"
+        }
+      ]
+    }
+  },
+  "completionCriteria": {
+    "type": "verbal",
+    "config": {
+      "requiredAnswers": ["转化", "拼成"]
+    }
+  },
+  "hintLevels": [
+    "提示：观察图形变化，两个图形可以变成一个图形吗？",
+    "提示：复杂的问题可以转化成简单的问题"
+  ],
+  "ability": "transformation"
+}

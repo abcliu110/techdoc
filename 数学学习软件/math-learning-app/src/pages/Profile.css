@@ -1,0 +1,261 @@
+.profile-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.profile-loading,
+.profile-error {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 16px;
+}
+
+.profile-error {
+  color: #ef4444;
+}
+
+/* 能力等级总览 */
+.profile-overview {
+  /* Section styling */
+}
+
+.section-title {
+  margin: 0 0 16px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.ability-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.ability-card {
+  text-align: center;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.ability-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+}
+
+.ability-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 12px;
+}
+
+.ability-level {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 16px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.ability-level.level-0 {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+.ability-level.level-1 {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.ability-level.level-2 {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.ability-level.level-3 {
+  background-color: #d1fae5;
+  color: #047857;
+}
+
+.ability-evidence {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+/* 雷达图 */
+.radar-card {
+  padding: 20px;
+}
+
+.radar-chart {
+  /* Chart container */
+}
+
+.radar-legend {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.legend-item .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.legend-item .dot.level-0 {
+  background-color: #cbd5e1;
+}
+
+.legend-item .dot.level-1 {
+  background-color: #fcd34d;
+}
+
+.legend-item .dot.level-2 {
+  background-color: #60a5fa;
+}
+
+.legend-item .dot.level-3 {
+  background-color: #34d399;
+}
+
+/* 趋势图 */
+.trend-card {
+  padding: 20px;
+}
+
+.trend-chart {
+  /* Chart container */
+}
+
+.trend-chart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.trend-svg {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+}
+
+.trend-placeholder {
+  text-align: center;
+  padding: 40px 20px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.trend-hint {
+  color: #94a3b8;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.trend-legend {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.trend-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.trend-legend-color {
+  width: 12px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.trend-legend-text {
+  white-space: nowrap;
+}
+
+/* 常见障碍 */
+.mistakes-card {
+  padding: 20px;
+}
+
+.mistakes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mistake-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.mistake-icon {
+  flex-shrink: 0;
+}
+
+.no-mistakes {
+  text-align: center;
+  color: #64748b;
+  font-size: 14px;
+  padding: 20px;
+}
+
+/* 学习建议 */
+.recommendations-card {
+  padding: 20px;
+}
+
+.recommendations-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.recommendation-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.recommendation-icon {
+  flex-shrink: 0;
+}
+
+.recommendations-action {
+  display: flex;
+  justify-content: center;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
+}

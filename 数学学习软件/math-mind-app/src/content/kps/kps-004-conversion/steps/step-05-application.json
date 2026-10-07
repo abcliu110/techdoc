@@ -1,0 +1,46 @@
+{
+  "stepId": "kps-004-step-05",
+  "stepType": "application",
+  "title": "综合应用",
+  "description": "在实际比较中灵活运用转化",
+  "content": {
+    "stepId": "kps-004-step-05",
+    "stepType": "application",
+    "title": "综合应用",
+    "instruction": "比较3/5和0.6的大小，哪个更大？\n\n提示：可以都转化成小数比较，或者都转化成分数比较。",
+    "visual": {
+      "type": "bar",
+      "bars": [
+        { "value": 6, "label": "3/5 = 0.6", "color": "#4A90D9" },
+        { "value": 6, "label": "0.6 = 0.6", "color": "#7B68EE" }
+      ],
+      "maxValue": 10,
+      "showValues": true,
+      "animatable": true
+    },
+    "interaction": {
+      "type": "tap",
+      "options": [
+        { "id": "tap-3-5", "label": "3/5 更大" },
+        { "id": "tap-06", "label": "0.6 更大" },
+        { "id": "tap-equal", "label": "一样大", "isCorrect": true }
+      ]
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "正确！3/5 = 3÷5 = 0.6，和0.6一样大。转化与化归的思想让我们能够灵活比较不同形式的数！",
+        "animation": "glow"
+      },
+      {
+        "type": "incorrect",
+        "message": "提示：3/5 = 3÷5 = 0.6。把分数转化成小数后再比较。",
+        "animation": "shake",
+        "highlight": ["bar-chart"]
+      }
+    ],
+    "autoAdvance": 2000
+  },
+  "prerequisites": ["kps-004-step-04"],
+  "unlocks": []
+}

@@ -1,0 +1,43 @@
+{
+  "id": "whole-pictorial",
+  "type": "pictorial",
+  "name": "整体与部分图示",
+  "instruction": "通过图形理解整体与部分的关系",
+  "content": {
+    "type": "pictorial",
+    "task": "观察圆形和方块，理解整体与部分",
+    "visualType": "shapes",
+    "outputFormat": "select",
+    "visualConfig": {
+      "showCircle": true,
+      "showSquare": true,
+      "interactive": true,
+      "shapes": [
+        {
+          "type": "circle",
+          "count": 1,
+          "label": "整体",
+          "color": "#4ECDC4"
+        },
+        {
+          "type": "circle",
+          "count": 1,
+          "label": "阴影部分",
+          "color": "#FF6B6B",
+          "highlighted": true
+        }
+      ]
+    }
+  },
+  "completionCriteria": {
+    "type": "verbal",
+    "config": {
+      "requiredAnswers": ["整体", "部分", "合起来"]
+    }
+  },
+  "hintLevels": [
+    "提示：观察图形，大的图形是整体吗？",
+    "提示：所有的部分合在一起就是整体"
+  ],
+  "ability": "whole-part-thinking"
+}

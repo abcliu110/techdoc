@@ -1,0 +1,44 @@
+{
+  "stepId": "kps-004-step-02",
+  "stepType": "pictorial",
+  "title": "分数转小数",
+  "description": "通过图形理解分数转小数的原理",
+  "content": {
+    "stepId": "kps-004-step-02",
+    "stepType": "pictorial",
+    "title": "分数转小数",
+    "instruction": "把1个正方形分成100个小格，涂色25个小格。\n\n用分数表示：25/100\n用小数表示：0.25\n\n想一想：3/10 = ? / 100 = ?",
+    "visual": {
+      "type": "rectGrid",
+      "rows": 10,
+      "cols": 10,
+      "filledCells": [],
+      "showGrid": true,
+      "animatable": true
+    },
+    "interaction": {
+      "type": "tap",
+      "options": [
+        { "id": "tap-03", "label": "3/10 = 30/100 = 0.30", "isCorrect": true },
+        { "id": "tap-003", "label": "3/10 = 3/100 = 0.03" },
+        { "id": "tap-0030", "label": "3/10 = 300/100 = 3.00" }
+      ]
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "正确！3/10 = 30/100 = 0.30（可以简写为0.3）。分子分母同时扩大或缩小相同的倍数，分数的值不变。",
+        "animation": "bounce"
+      },
+      {
+        "type": "incorrect",
+        "message": "提示：把分母从10变成100，需要分子分母同时乘以10。3×10=？",
+        "animation": "shake",
+        "highlight": ["rect-grid"]
+      }
+    ],
+    "autoAdvance": 2000
+  },
+  "prerequisites": ["kps-004-step-01"],
+  "unlocks": ["kps-004-step-03"]
+}

@@ -1,0 +1,48 @@
+.pictorial-step {
+  border-left: 4px solid #f59e0b;
+}
+
+.pictorial-step.completed {
+  border-left-color: var(--color-success, #10b981);
+}
+
+.pictorial-step-instruction {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background-color: #fffbeb;
+  border-radius: 12px;
+}
+
+.pictorial-step-instruction .instruction-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.pictorial-step-instruction .instruction-text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text, #1f2937);
+}
+
+.pictorial-step-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  min-height: 200px;
+  padding: 20px;
+  background-color: var(--color-bg-card, white);
+  border-radius: 12px;
+  border: 2px dashed #fcd34d;
+}
+
+.pictorial-step-content .canvas-area {
+  width: 100%;
+  min-height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

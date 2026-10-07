@@ -1,0 +1,40 @@
+{
+  "stepId": "kps-003-step-05",
+  "stepType": "application",
+  "title": "综合应用",
+  "description": "在实际问题中运用整体与部分的思想",
+  "content": {
+    "stepId": "kps-003-step-05",
+    "stepType": "application",
+    "title": "综合应用",
+    "instruction": "一箱苹果，吃了2/5后还剩12个。原来有多少个苹果？\n\n分析：吃了2/5，剩下1-2/5=3/5\n剩下12个 = 整体的3/5\n整体 = ?",
+    "visual": {
+      "type": "pie",
+      "totalParts": 5,
+      "filledParts": 2,
+      "showLabels": true,
+      "animatable": true
+    },
+    "interaction": {
+      "type": "input",
+      "placeholder": "输入苹果总数",
+      "inputType": "number"
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "正确！剩下3/5对应12个，所以整体=12÷3/5=20个。原来有20个苹果。整体与部分的思想帮助我们解决了问题！",
+        "animation": "glow"
+      },
+      {
+        "type": "incorrect",
+        "message": "提示：吃了2/5，剩下3/5。12个对应的是3/5，整体=12÷3/5。",
+        "animation": "shake",
+        "highlight": ["pie-chart"]
+      }
+    ],
+    "autoAdvance": 2000
+  },
+  "prerequisites": ["kps-003-step-04"],
+  "unlocks": []
+}

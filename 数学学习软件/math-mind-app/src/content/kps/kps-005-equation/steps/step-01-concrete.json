@@ -1,0 +1,46 @@
+{
+  "stepId": "kps-005-step-01",
+  "stepType": "concrete",
+  "title": "认识天平平衡",
+  "description": "通过天平模型理解等式的平衡概念",
+  "content": {
+    "stepId": "kps-005-step-01",
+    "stepType": "concrete",
+    "title": "认识天平平衡",
+    "instruction": "天平左边有3个苹果，右边有3个苹果，天平保持平衡。\n\n这表示：3 = 3\n\n如果两边各加1个苹果，天平还平衡吗？",
+    "visual": {
+      "type": "bar",
+      "bars": [
+        { "value": 3, "label": "左边: 3个", "color": "#4A90D9" },
+        { "value": 3, "label": "右边: 3个", "color": "#7B68EE" }
+      ],
+      "maxValue": 6,
+      "showValues": true,
+      "animatable": true
+    },
+    "interaction": {
+      "type": "tap",
+      "options": [
+        { "id": "tap-yes", "label": "平衡", "isCorrect": true },
+        { "id": "tap-left", "label": "左边重" },
+        { "id": "tap-right", "label": "右边重" }
+      ]
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "正确！两边各加1个苹果后，左边4个，右边4个，天平仍然平衡。这就是等式的基本性质：等式两边同时加上同一个数，等式仍然成立。",
+        "animation": "bounce"
+      },
+      {
+        "type": "incorrect",
+        "message": "提示：天平两边同时变化相同的数量，天平仍然会平衡。",
+        "animation": "shake",
+        "highlight": ["bar-chart"]
+      }
+    ],
+    "autoAdvance": 2000
+  },
+  "prerequisites": [],
+  "unlocks": ["kps-005-step-02"]
+}

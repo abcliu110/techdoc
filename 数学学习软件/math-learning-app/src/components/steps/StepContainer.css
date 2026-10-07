@@ -1,0 +1,32 @@
+.step-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.step-placeholder {
+  text-align: center;
+  padding: 40px;
+  background-color: #f8fafc;
+  border-radius: 12px;
+  color: #64748b;
+}
+
+.step-placeholder p {
+  margin: 8px 0;
+}
+
+.step-placeholder button {
+  margin-top: 16px;
+  padding: 10px 24px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.step-placeholder button:hover {
+  background-color: #2563eb;
+}

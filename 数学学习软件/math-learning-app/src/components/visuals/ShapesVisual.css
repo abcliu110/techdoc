@@ -1,0 +1,23 @@
+.shapes-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+}
+
+.shapes-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.shapes-visual svg {
+  cursor: default;
+  transition: transform 0.2s ease;
+}
+
+.shapes-visual svg:hover {
+  transform: scale(1.1);
+}

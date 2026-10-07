@@ -1,0 +1,5023 @@
+{
+  "level": 3,
+  "build_time": "2026-09-11T09:43:57.331534",
+  "summary": {
+    "total_relationships": 276,
+    "relationship_types": {
+      "N:1": 276
+    },
+    "domains": 20
+  },
+  "relationships": [
+    {
+      "source": "BaseDataVo",
+      "source_package": "com.shouqianba.kaci.base",
+      "target_field": "bizId",
+      "target_inferred": "Biz",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "BaseDto",
+      "source_package": "com.shouqianba.kaci.base",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "BaseVo",
+      "source_package": "com.shouqianba.kaci.base",
+      "target_field": "traceId",
+      "target_inferred": "Trace",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "OperateBaseVo",
+      "source_package": "com.shouqianba.kaci.base",
+      "target_field": "bizId",
+      "target_inferred": "Biz",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "OrgBaseDto",
+      "source_package": "com.shouqianba.kaci.base",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "OrgBaseDto",
+      "source_package": "com.shouqianba.kaci.base",
+      "target_field": "brandId",
+      "target_inferred": "BrandScopeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "MutexShareValidBo",
+      "source_package": "com.shouqianba.kaci.scrm",
+      "target_field": "promotionId",
+      "target_inferred": "PromotionSdkClient",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "scrm"
+    },
+    {
+      "source": "SdkLimitGiftBo",
+      "source_package": "com.shouqianba.kaci.scrm",
+      "target_field": "giftId",
+      "target_inferred": "GiftRealTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "scrm"
+    },
+    {
+      "source": "SyncPointRuleListBo",
+      "source_package": "com.shouqianba.kaci.scrm",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "scrm"
+    },
+    {
+      "source": "CustomerGiftCurrentDayUseEntity",
+      "source_package": "com.shouqianba.kaci.scrm",
+      "target_field": "giftId",
+      "target_inferred": "GiftRealTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "scrm"
+    },
+    {
+      "source": "SdkLimitGiftEntity",
+      "source_package": "com.shouqianba.kaci.scrm",
+      "target_field": "giftId",
+      "target_inferred": "GiftRealTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "scrm"
+    },
+    {
+      "source": "AccountRightData",
+      "source_package": "com.shouqianba.localserver.base",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "AccountRightData",
+      "source_package": "com.shouqianba.localserver.base",
+      "target_field": "accountId",
+      "target_inferred": "Account",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "GetOrgLicensesDTO",
+      "source_package": "com.shouqianba.localserver.base",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "GetAccountRightListRequest",
+      "source_package": "com.shouqianba.localserver.base",
+      "target_field": "accountId",
+      "target_inferred": "Account",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "OperateShortAccountRequest",
+      "source_package": "com.shouqianba.localserver.base",
+      "target_field": "shortAccountId",
+      "target_inferred": "Shortaccount",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "ClearSiteInfoMqttDto",
+      "source_package": "com.shouqianba.localserver.base",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "ClearSiteInfoMqttDto",
+      "source_package": "com.shouqianba.localserver.base",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "QueryInvoiceRequest",
+      "source_package": "com.shouqianba.localserver.base",
+      "target_field": "operatorId",
+      "target_inferred": "BaseOperator",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "RechargeInvoicePrintRequest",
+      "source_package": "com.shouqianba.localserver.base",
+      "target_field": "transId",
+      "target_inferred": "Trans",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "ReqMessageDto",
+      "source_package": "com.shouqianba.localserver.base",
+      "target_field": "messageId",
+      "target_inferred": "Message",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "ResDbMangerDto",
+      "source_package": "com.shouqianba.localserver.base",
+      "target_field": "messageId",
+      "target_inferred": "Message",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "DictionaryResponse",
+      "source_package": "com.shouqianba.localserver.base",
+      "target_field": "id",
+      "target_inferred": "Id",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "DictionaryResponse",
+      "source_package": "com.shouqianba.localserver.base",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "BindDeviceResponse",
+      "source_package": "com.shouqianba.localserver.base",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "BindDeviceResponse",
+      "source_package": "com.shouqianba.localserver.base",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "OrgResponse",
+      "source_package": "com.shouqianba.localserver.base",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "OrgResponse",
+      "source_package": "com.shouqianba.localserver.base",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "base"
+    },
+    {
+      "source": "RechargePackageInfoDto",
+      "source_package": "com.shouqianba.localserver.biz",
+      "target_field": "packageStallsId",
+      "target_inferred": "Packagestalls",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "biz"
+    },
+    {
+      "source": "RechargePackageInfoDto",
+      "source_package": "com.shouqianba.localserver.biz",
+      "target_field": "rechargePackageId",
+      "target_inferred": "Rechargepackage",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "biz"
+    },
+    {
+      "source": "TemplateAddress",
+      "source_package": "com.shouqianba.localserver.biz",
+      "target_field": "cateSubDetailId",
+      "target_inferred": "Catesubdetail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "biz"
+    },
+    {
+      "source": "PrintTableSetDTO",
+      "source_package": "com.shouqianba.localserver.biz",
+      "target_field": "tablePrintId",
+      "target_inferred": "SyncPrintTableSetService",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "biz"
+    },
+    {
+      "source": "TableAccountRequest",
+      "source_package": "com.shouqianba.localserver.biz",
+      "target_field": "accountId",
+      "target_inferred": "Account",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "biz"
+    },
+    {
+      "source": "BaseDto",
+      "source_package": "com.shouqianba.localserver.biz",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "biz"
+    },
+    {
+      "source": "PayResultByTransOrderNoQueryDto",
+      "source_package": "com.shouqianba.localserver.biz",
+      "target_field": "cardId",
+      "target_inferred": "Card",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "biz"
+    },
+    {
+      "source": "CancelVerifyDto",
+      "source_package": "com.shouqianba.localserver.biz",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "biz"
+    },
+    {
+      "source": "GetBookTableRequest",
+      "source_package": "com.shouqianba.localserver.book",
+      "target_field": "areaId",
+      "target_inferred": "Area",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "book"
+    },
+    {
+      "source": "BusinessException",
+      "source_package": "com.shouqianba.localserver.common",
+      "target_field": "traceId",
+      "target_inferred": "Trace",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "common"
+    },
+    {
+      "source": "BookDetailDTO",
+      "source_package": "com.shouqianba.localserver.dao",
+      "target_field": "dataId",
+      "target_inferred": "Data",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "dao"
+    },
+    {
+      "source": "BookDetailDTO",
+      "source_package": "com.shouqianba.localserver.dao",
+      "target_field": "relationDataId",
+      "target_inferred": "Relationdata",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "dao"
+    },
+    {
+      "source": "AppletOperateSkuDTO",
+      "source_package": "com.shouqianba.localserver.dao",
+      "target_field": "skuId",
+      "target_inferred": "AppletOperateSkuDTO",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "dao"
+    },
+    {
+      "source": "CategoryGoodsCountDTO",
+      "source_package": "com.shouqianba.localserver.dao",
+      "target_field": "categoryId",
+      "target_inferred": "CategoryLevelEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "dao"
+    },
+    {
+      "source": "CategoryGoodsCountDTO",
+      "source_package": "com.shouqianba.localserver.dao",
+      "target_field": "parentId",
+      "target_inferred": "Parent",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "dao"
+    },
+    {
+      "source": "KDSPrintGroupSettingQuery",
+      "source_package": "com.shouqianba.localserver.dao",
+      "target_field": "printGroupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "dao"
+    },
+    {
+      "source": "KDSPrintGroupSettingQuery",
+      "source_package": "com.shouqianba.localserver.dao",
+      "target_field": "categoryId",
+      "target_inferred": "CategoryLevelEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "dao"
+    },
+    {
+      "source": "KDSScreenAllotScoreQuery",
+      "source_package": "com.shouqianba.localserver.dao",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "dao"
+    },
+    {
+      "source": "KDSScreenAllotScoreQuery",
+      "source_package": "com.shouqianba.localserver.dao",
+      "target_field": "detailId",
+      "target_inferred": "Detail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "dao"
+    },
+    {
+      "source": "KDSScreenMakeDetailTagQuery",
+      "source_package": "com.shouqianba.localserver.dao",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "dao"
+    },
+    {
+      "source": "KDSScreenMakeDetailTagQuery",
+      "source_package": "com.shouqianba.localserver.dao",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "dao"
+    },
+    {
+      "source": "SwimConfigQuery",
+      "source_package": "com.shouqianba.localserver.dao",
+      "target_field": "allotId",
+      "target_inferred": "Allot",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "dao"
+    },
+    {
+      "source": "SwimConfigQuery",
+      "source_package": "com.shouqianba.localserver.dao",
+      "target_field": "swimId",
+      "target_inferred": "Swim",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "dao"
+    },
+    {
+      "source": "CombineDiscountAmountDTO",
+      "source_package": "com.shouqianba.localserver.dto",
+      "target_field": "combineDetailId",
+      "target_inferred": "Combinedetail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "dto"
+    },
+    {
+      "source": "CombineDiscountAmountDTO",
+      "source_package": "com.shouqianba.localserver.dto",
+      "target_field": "maxAmountDetailId",
+      "target_inferred": "Maxamountdetail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "dto"
+    },
+    {
+      "source": "MemberMarketingGiftDto",
+      "source_package": "com.shouqianba.localserver.dto",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "dto"
+    },
+    {
+      "source": "MemberMarketingGiftDto",
+      "source_package": "com.shouqianba.localserver.dto",
+      "target_field": "objectId",
+      "target_inferred": "Object",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "dto"
+    },
+    {
+      "source": "OrderTableExclusiveDto",
+      "source_package": "com.shouqianba.localserver.dto",
+      "target_field": "accountId",
+      "target_inferred": "Account",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "dto"
+    },
+    {
+      "source": "TakeWineDetailDTO",
+      "source_package": "com.shouqianba.localserver.dto",
+      "target_field": "depositId",
+      "target_inferred": "Deposit",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "dto"
+    },
+    {
+      "source": "TakeWineDetailDTO",
+      "source_package": "com.shouqianba.localserver.dto",
+      "target_field": "depositDetailId",
+      "target_inferred": "Depositdetail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "dto"
+    },
+    {
+      "source": "TakeWineDetailDTO",
+      "source_package": "com.shouqianba.localserver.dto",
+      "target_field": "skuId",
+      "target_inferred": "AppletOperateSkuDTO",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "dto"
+    },
+    {
+      "source": "GetGoodsCategoryRequest",
+      "source_package": "com.shouqianba.localserver.goods",
+      "target_field": "areaId",
+      "target_inferred": "Area",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "goods"
+    },
+    {
+      "source": "GetPracticeDetailRequest",
+      "source_package": "com.shouqianba.localserver.goods",
+      "target_field": "practiceId",
+      "target_inferred": "Practice",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "goods"
+    },
+    {
+      "source": "GetPracticeDetailRequest",
+      "source_package": "com.shouqianba.localserver.goods",
+      "target_field": "goodsId",
+      "target_inferred": "CalrGoodsTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "goods"
+    },
+    {
+      "source": "GetPracticeGroupingsRequest",
+      "source_package": "com.shouqianba.localserver.goods",
+      "target_field": "goodsId",
+      "target_inferred": "CalrGoodsTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "goods"
+    },
+    {
+      "source": "GetTagGroupingsRequest",
+      "source_package": "com.shouqianba.localserver.goods",
+      "target_field": "goodsId",
+      "target_inferred": "CalrGoodsTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "goods"
+    },
+    {
+      "source": "GoodsBuffetListRequest",
+      "source_package": "com.shouqianba.localserver.goods",
+      "target_field": "areaId",
+      "target_inferred": "Area",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "goods"
+    },
+    {
+      "source": "GoodsCombineRequest",
+      "source_package": "com.shouqianba.localserver.goods",
+      "target_field": "skuId",
+      "target_inferred": "AppletOperateSkuDTO",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "goods"
+    },
+    {
+      "source": "GoodsCombineRequest",
+      "source_package": "com.shouqianba.localserver.goods",
+      "target_field": "dataId",
+      "target_inferred": "Data",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "goods"
+    },
+    {
+      "source": "GoodsPracticeRequest",
+      "source_package": "com.shouqianba.localserver.goods",
+      "target_field": "goodsId",
+      "target_inferred": "CalrGoodsTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "goods"
+    },
+    {
+      "source": "GoodsTagRequest",
+      "source_package": "com.shouqianba.localserver.goods",
+      "target_field": "goodsId",
+      "target_inferred": "CalrGoodsTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "goods"
+    },
+    {
+      "source": "OrderGetBo",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "OrderGetBo",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "OrderQueryBo",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "OrderQueryBo",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "KdsMakeDetailDto",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "makeDetailId",
+      "target_inferred": "Makedetail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "KdsMakeInvalidDto",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "KdsQueryGoodsConfigDto",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "KdsQueryGoodsConfigDto",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "KdsQueryGoodsConfigDto",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "detailId",
+      "target_inferred": "Detail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "PrintSettingEntity",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "printSettingId",
+      "target_inferred": "RechargeInvoicePrintRequest",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "QuerySwimConfigDto",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "QuerySwimConfigDto",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "QuerySwimConfigDto",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "allotId",
+      "target_inferred": "Allot",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "QuerySwimDetailAllotDto",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "allotId",
+      "target_inferred": "Allot",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "SwimDetailGoodsDto",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "goodsId",
+      "target_inferred": "CalrGoodsTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "SwimDetailGoodsDto",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "skuId",
+      "target_inferred": "AppletOperateSkuDTO",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "KdsMakeAutoDetailDto",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "makeId",
+      "target_inferred": "Make",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "KdsMakeAutoOperateDto",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "KdsMakeAutoOperateDto",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "detailId",
+      "target_inferred": "Detail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "KdsMakeDetailBo",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "makeDetailId",
+      "target_inferred": "Makedetail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "MakeBarcodeEntity",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "MakeBarcodeEntity",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "QueryScreenDetailAllotDto",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "QueryScreenDetailAllotDto",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "QueryScreenDetailAllotDto",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "detailId",
+      "target_inferred": "Detail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "SaveAllotDto",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "allotId",
+      "target_inferred": "Allot",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "UpdateScreenDetailAllotDto",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "UpdateScreenDetailAllotDto",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "UpdateScreenDetailAllotDto",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "detailId",
+      "target_inferred": "Detail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "MakeBarcodeQuery",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "MakeBarcodeQuery",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "QueryOrgPrintSettingGoodsRequest",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "printSettingId",
+      "target_inferred": "RechargeInvoicePrintRequest",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "QueryOrgPrintSettingGoodsRequest",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "categoryId",
+      "target_inferred": "CategoryLevelEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "TempSaveScreenParamsRequest",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "allotId",
+      "target_inferred": "Allot",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "TempSaveScreenParamsRequest",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "detailId",
+      "target_inferred": "Detail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "KdsMakeAutoDetailRequest",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "makeId",
+      "target_inferred": "Make",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "KdsMakeAutoOperateRequest",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "detailId",
+      "target_inferred": "Detail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "KDSMakeBathOperateShopRequest",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "detailId",
+      "target_inferred": "Detail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "KDSMakeOperateShopDTO",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "makeId",
+      "target_inferred": "Make",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "KDSQueryWorkDateRequest",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "detailId",
+      "target_inferred": "Detail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "MakeDetailBarcodeQueryRequest",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "pickupWindowId",
+      "target_inferred": "Pickupwindow",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "MakeDetailBarcodeQueryRequest",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "detailId",
+      "target_inferred": "Detail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "QueryScreenDetailAllotRequest",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "detailId",
+      "target_inferred": "Detail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "QueryScreenDetailRequest",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "detailId",
+      "target_inferred": "Detail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "QuerySwimConfigRequest",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "allotId",
+      "target_inferred": "Allot",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "QuerySwimDetailAllotDTO",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "allotId",
+      "target_inferred": "Allot",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "SaveSwimConfigRequest",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "allotId",
+      "target_inferred": "Allot",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "UpdateScreenDetailAllotRequest",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "detailId",
+      "target_inferred": "Detail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "UpdateSwimSwitchRequest",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "detailId",
+      "target_inferred": "Detail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "PrintSettingVo",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "allotId",
+      "target_inferred": "Allot",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "AllotTableAreaVo",
+      "source_package": "com.shouqianba.localserver.kds",
+      "target_field": "areaId",
+      "target_inferred": "Area",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "kds"
+    },
+    {
+      "source": "GetCardInfoRequest",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "cardId",
+      "target_inferred": "Card",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "GetPreferenceAndLabelRequest",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "customerId",
+      "target_inferred": "CustomerDiscountTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "QueryCardSchemeLevelRequest",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "cardSchemeId",
+      "target_inferred": "Cardscheme",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "QueryRechargePackageRequest",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "cardSchemeId",
+      "target_inferred": "Cardscheme",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "QueryRechargePackageRequest",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "cardLevelId",
+      "target_inferred": "Cardlevel",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "QueryRechargePackageRequest",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "cardId",
+      "target_inferred": "Card",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "QueryRechargePackageRequest",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "customerId",
+      "target_inferred": "CustomerDiscountTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "PointExchangeGiftDetailsQueryRequest",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "customerId",
+      "target_inferred": "CustomerDiscountTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "GiftCardConsumeRequest",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "couponId",
+      "target_inferred": "Coupon",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "ChangeCardPwdRequest",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "cardId",
+      "target_inferred": "Card",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "ResetCardPwdRequest",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "cardId",
+      "target_inferred": "Card",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "ResetCardPwdRequest",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "cardSchemeId",
+      "target_inferred": "Cardscheme",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "ResetCardPwdRequest",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "cardLevelId",
+      "target_inferred": "Cardlevel",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "UpdateCardInfoRequest",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "cardId",
+      "target_inferred": "Card",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "UpdateCardInfoRequest",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "cardSchemeId",
+      "target_inferred": "Cardscheme",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "UpdateCardInfoRequest",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "cardLevelId",
+      "target_inferred": "Cardlevel",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "CardConsumeRollbackRequest",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "cardId",
+      "target_inferred": "Card",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "ConsumeResultRequest",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "cardId",
+      "target_inferred": "Card",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "MemberCardConsumeRequest",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "cardId",
+      "target_inferred": "Card",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "RechargeRefundRequest",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "cardId",
+      "target_inferred": "Card",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "RechargeRefundRequest",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "transId",
+      "target_inferred": "Trans",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "BenefitMarketingOtherScopeVo",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "otherId",
+      "target_inferred": "Other",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "BenefitMarketingRuleVo",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "ruleId",
+      "target_inferred": "Rule",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "BenefitPromotionOtherScopeVo",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "otherId",
+      "target_inferred": "Other",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "EquitySaleResponse",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "transQueueId",
+      "target_inferred": "Transqueue",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "OpenBenefitCardVo",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "transQueueId",
+      "target_inferred": "Transqueue",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "OpenCardVo",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "transQueueId",
+      "target_inferred": "Transqueue",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "OpenCardVo",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "bizId",
+      "target_inferred": "Biz",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "RechargeResponse",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "transQueueId",
+      "target_inferred": "Transqueue",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "SalesGiftCardVo",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "transQueueId",
+      "target_inferred": "Transqueue",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "GiftCardInfo",
+      "source_package": "com.shouqianba.localserver.member",
+      "target_field": "transQueueId",
+      "target_inferred": "Transqueue",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "member"
+    },
+    {
+      "source": "CloudOrderDetailExtAddDto",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "combinationId",
+      "target_inferred": "Combination",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "CloudOrderExtAddDto",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "appId",
+      "target_inferred": "App",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "CloudOrderExtAddDto",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "nfcTagId",
+      "target_inferred": "Nfctag",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "CloudOrderExtAddDto",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "openId",
+      "target_inferred": "Open",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "PosOrderCoverDto",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "PosOrderDetailExtAddDto",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "combinationId",
+      "target_inferred": "Combination",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "QueryUploadOrderResultDto",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "QueryUploadOrderResultDto",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "QueryUploadOrderResultDto",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "taskId",
+      "target_inferred": "Task",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "QueryUploadOrderResultDto",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "relationId",
+      "target_inferred": "Relation",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "DeleteOrderDetailRequest",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "tableId",
+      "target_inferred": "SyncPrintTableSetService",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "DeleteOrderDetailRequest",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "goodsId",
+      "target_inferred": "CalrGoodsTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "GetOrderBillHeadRequest",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "tableId",
+      "target_inferred": "SyncPrintTableSetService",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "GetOrderDetailRequest",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "tableId",
+      "target_inferred": "SyncPrintTableSetService",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "ModifyGoodsQtyOrderDetailRequest",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "tableId",
+      "target_inferred": "SyncPrintTableSetService",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "ModifyGoodsQtyOrderDetailRequest",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "goodsId",
+      "target_inferred": "CalrGoodsTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "OrderDetailTasteRequest",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "detailId",
+      "target_inferred": "Detail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "OrderDetailTasteRequest",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "goodsId",
+      "target_inferred": "CalrGoodsTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "OrderDetailTasteRequest",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "practiceId",
+      "target_inferred": "Practice",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "OrderStructureAccountRequest",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "accountId",
+      "target_inferred": "Account",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "DcqModifyQtyRequest",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "detailId",
+      "target_inferred": "Detail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "CertificateQueryDto",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "CertificateQueryDto",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "CancelCouponPopupRequest",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "payId",
+      "target_inferred": "ChoosePayTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "PartialRefundRequest",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "payId",
+      "target_inferred": "ChoosePayTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "PayRetryRequest",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "payId",
+      "target_inferred": "ChoosePayTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "HoldConsumeQueryDto",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "companyId",
+      "target_inferred": "Company",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "HoldConsumeQueryDto",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "employeeTransId",
+      "target_inferred": "Employeetrans",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "HoldConsumeRefundDto",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "transOrgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "HoldConsumeRefundDto",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "companyId",
+      "target_inferred": "Company",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "HoldConsumeRefundDto",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "employeeTransId",
+      "target_inferred": "Employeetrans",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "OnlinePayDto",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "OnlineQueryDto",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "PayGoodsDto",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "goodsId",
+      "target_inferred": "CalrGoodsTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "CancelSettlePayRequest",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "settleOrgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "CancelSettlePayRequest",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "companyId",
+      "target_inferred": "Company",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "CancelSettleRequest",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "companyId",
+      "target_inferred": "Company",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "GetOrderDetailPromotionRequest",
+      "source_package": "com.shouqianba.localserver.order",
+      "target_field": "detailId",
+      "target_inferred": "Detail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "order"
+    },
+    {
+      "source": "PrintGoodsCategoryDTO",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "categoryId",
+      "target_inferred": "CategoryLevelEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "WineOperateDetailDTO",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "skuId",
+      "target_inferred": "AppletOperateSkuDTO",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "TicketPrint",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "printId",
+      "target_inferred": "RechargeInvoicePrintRequest",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "PrintBatchGroup",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "printTaskId",
+      "target_inferred": "RechargeInvoicePrintRequest",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "PrinterReq",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "printId",
+      "target_inferred": "RechargeInvoicePrintRequest",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "PrinterReq",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "printGroupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "GetPrintTicketJobRequest",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "jobId",
+      "target_inferred": "Job",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "PrintRequest",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "printId",
+      "target_inferred": "RechargeInvoicePrintRequest",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "PrintRequest",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "printTaskId",
+      "target_inferred": "RechargeInvoicePrintRequest",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "WsPrintTicketJobRequest",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "jobId",
+      "target_inferred": "Job",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "WsPrintTicketJobRequest",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "printId",
+      "target_inferred": "RechargeInvoicePrintRequest",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "AppletAreaGroupRequest",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "appletAreaGroupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "AppletAreaGroupRequest",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "appletPrintId",
+      "target_inferred": "RechargeInvoicePrintRequest",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "AppletAreaGroupRequest",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "appletRetainPrintId",
+      "target_inferred": "RechargeInvoicePrintRequest",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "AreaRequest",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "areaId",
+      "target_inferred": "Area",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "ChannelRequest",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "channelId",
+      "target_inferred": "Channel",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "DeletePrintSetRequest",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "printId",
+      "target_inferred": "RechargeInvoicePrintRequest",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "GoodsRequest",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "goodsId",
+      "target_inferred": "CalrGoodsTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "GoodsRequest",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "channelShopId",
+      "target_inferred": "Channelshop",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "OrgPrintSettingDelRequest",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "printSettingId",
+      "target_inferred": "RechargeInvoicePrintRequest",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "QueryPrintGoodsGroupV2Request",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "printSettingId",
+      "target_inferred": "RechargeInvoicePrintRequest",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "QueryPrintSetListRequest",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "printId",
+      "target_inferred": "RechargeInvoicePrintRequest",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "AppletAreaGroupResponse",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "appletAreaGroupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "AppletAreaGroupResponse",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "appletPrintId",
+      "target_inferred": "RechargeInvoicePrintRequest",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "AppletAreaGroupResponse",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "appletRetainPrintId",
+      "target_inferred": "RechargeInvoicePrintRequest",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "CategoryGoodsVO",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "categoryId",
+      "target_inferred": "CategoryLevelEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "ChannelResponse",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "channelId",
+      "target_inferred": "Channel",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "CloudPrintResponse",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "platformOrderId",
+      "target_inferred": "OrderGoodsTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "GetPrintTicketResponse",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "jobId",
+      "target_inferred": "Job",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "GoodsResponse",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "goodsId",
+      "target_inferred": "CalrGoodsTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "GoodsResponse",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "channelShopId",
+      "target_inferred": "Channelshop",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "PrintGoodsGroupPosResponse",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "printSettingId",
+      "target_inferred": "RechargeInvoicePrintRequest",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "PrintOnlineSetV2Response",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "PrintOnlineSetV2Response",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "TableResponse",
+      "source_package": "com.shouqianba.localserver.print",
+      "target_field": "tableId",
+      "target_inferred": "SyncPrintTableSetService",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "print"
+    },
+    {
+      "source": "PromotionValidJoinCountDto",
+      "source_package": "com.shouqianba.localserver.promotion",
+      "target_field": "customerId",
+      "target_inferred": "CustomerDiscountTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "promotion"
+    },
+    {
+      "source": "PromotionValidJoinCountDto",
+      "source_package": "com.shouqianba.localserver.promotion",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "promotion"
+    },
+    {
+      "source": "CancelPackGoodsRequest",
+      "source_package": "com.shouqianba.localserver.promotion",
+      "target_field": "dataId",
+      "target_inferred": "Data",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "promotion"
+    },
+    {
+      "source": "AppletSoldOutConfirmRequest",
+      "source_package": "com.shouqianba.localserver.request",
+      "target_field": "fromUserId",
+      "target_inferred": "UserAccount",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "request"
+    },
+    {
+      "source": "BatchRefundPledgeRequest",
+      "source_package": "com.shouqianba.localserver.request",
+      "target_field": "cashPledgeId",
+      "target_inferred": "Cashpledge",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "request"
+    },
+    {
+      "source": "CashPledgeNullifyRequest",
+      "source_package": "com.shouqianba.localserver.request",
+      "target_field": "cashPledgeId",
+      "target_inferred": "Cashpledge",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "request"
+    },
+    {
+      "source": "CashPledgePrintRequest",
+      "source_package": "com.shouqianba.localserver.request",
+      "target_field": "cashPledgeId",
+      "target_inferred": "Cashpledge",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "request"
+    },
+    {
+      "source": "CashPledgeRecordListRequest",
+      "source_package": "com.shouqianba.localserver.request",
+      "target_field": "cashPledgeId",
+      "target_inferred": "Cashpledge",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "request"
+    },
+    {
+      "source": "CashPledgeRetryRequest",
+      "source_package": "com.shouqianba.localserver.request",
+      "target_field": "cashPledgeId",
+      "target_inferred": "Cashpledge",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "request"
+    },
+    {
+      "source": "CashPledgeRetryRequest",
+      "source_package": "com.shouqianba.localserver.request",
+      "target_field": "id",
+      "target_inferred": "Id",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "request"
+    },
+    {
+      "source": "CashPledgeUseRequest",
+      "source_package": "com.shouqianba.localserver.request",
+      "target_field": "cashPledgeId",
+      "target_inferred": "Cashpledge",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "request"
+    },
+    {
+      "source": "CashPledgeUseRequest",
+      "source_package": "com.shouqianba.localserver.request",
+      "target_field": "payId",
+      "target_inferred": "ChoosePayTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "request"
+    },
+    {
+      "source": "PledgePayRecordRequest",
+      "source_package": "com.shouqianba.localserver.request",
+      "target_field": "cashPledgeId",
+      "target_inferred": "Cashpledge",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "request"
+    },
+    {
+      "source": "PledgeRefundInfo",
+      "source_package": "com.shouqianba.localserver.request",
+      "target_field": "cashPledgeId",
+      "target_inferred": "Cashpledge",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "request"
+    },
+    {
+      "source": "QueryWineGoodsListRequest",
+      "source_package": "com.shouqianba.localserver.request",
+      "target_field": "categoryId",
+      "target_inferred": "CategoryLevelEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "request"
+    },
+    {
+      "source": "TakeWineTicketRepeatPrintRequest",
+      "source_package": "com.shouqianba.localserver.request",
+      "target_field": "depositId",
+      "target_inferred": "Deposit",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "request"
+    },
+    {
+      "source": "QuerySoldOutOccupyListBo",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "QuerySoldOutOccupyListBo",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "QuerySoldOutSettingListBo",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "QuerySoldOutSettingListBo",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "SoldOutDailySettlementBo",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "groupId",
+      "target_inferred": "GroupBuyExchangeCouponCalr",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "SoldOutDailySettlementBo",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "orgId",
+      "target_inferred": "OrgBaseDto",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "SoldOutOccupyDetailBo",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "goodsId",
+      "target_inferred": "CalrGoodsTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "SoldOutOccupyDetailBo",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "skuId",
+      "target_inferred": "AppletOperateSkuDTO",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "SoldOutStockHandleDetailBo",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "goodsId",
+      "target_inferred": "CalrGoodsTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "AppletSoldOutGoodsQtyCallbackDTO",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "skuId",
+      "target_inferred": "AppletOperateSkuDTO",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "AppletSoldOutSkuDetailDTO",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "skuId",
+      "target_inferred": "AppletOperateSkuDTO",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "SoldOutStockChannelSettingDTO",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "skuId",
+      "target_inferred": "AppletOperateSkuDTO",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "SoldOutOccupyResultGoodsEntity",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "notEnoughGoodsId",
+      "target_inferred": "CalrGoodsTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "PracticeSoldOutRequest",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "practiceId",
+      "target_inferred": "Practice",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "PracticeSoldOutRequest",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "practiceItemId",
+      "target_inferred": "Practiceitem",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "PracticeDetails",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "practiceId",
+      "target_inferred": "Practice",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "PracticeDetails",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "practiceItemId",
+      "target_inferred": "Practiceitem",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "SoldOutStockHandleDetailDto",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "goodsId",
+      "target_inferred": "CalrGoodsTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "PosSoldOutOccupyBizService",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "soldOutStocksId",
+      "target_inferred": "Soldoutstocks",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "PosSoldOutOccupyBizService",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "soldOutStocksId",
+      "target_inferred": "Soldoutstocks",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "UpdateOccupyNumBo",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "soldOutStocksId",
+      "target_inferred": "Soldoutstocks",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "UpdateOccupyNumBo",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "soldOutStocksId",
+      "target_inferred": "Soldoutstocks",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "UpdateOccupyNumBoBuilder",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "soldOutStocksId",
+      "target_inferred": "Soldoutstocks",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "UpdateOccupyNumBoBuilder",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "soldOutStocksId",
+      "target_inferred": "Soldoutstocks",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "QuerySoldOutDetailVo",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "goodsId",
+      "target_inferred": "CalrGoodsTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "SoldOutOccupyVo",
+      "source_package": "com.shouqianba.localserver.soldout",
+      "target_field": "notEnoughGoodsId",
+      "target_inferred": "CalrGoodsTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "soldout"
+    },
+    {
+      "source": "GetTableRequest",
+      "source_package": "com.shouqianba.localserver.table",
+      "target_field": "areaId",
+      "target_inferred": "Area",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "table"
+    },
+    {
+      "source": "CancelDeliveryDetailResponse",
+      "source_package": "com.shouqianba.localserver.takeout",
+      "target_field": "platformDeliveryOrderId",
+      "target_inferred": "OrderGoodsTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "takeout"
+    },
+    {
+      "source": "CreateDeliveryOrderResponse",
+      "source_package": "com.shouqianba.localserver.takeout",
+      "target_field": "platformDeliveryOrderId",
+      "target_inferred": "OrderGoodsTypeEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "takeout"
+    },
+    {
+      "source": "DispatchResponse",
+      "source_package": "com.shouqianba.localserver.takeout",
+      "target_field": "originId",
+      "target_inferred": "Origin",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "takeout"
+    },
+    {
+      "source": "DishesBindQueryRequest",
+      "source_package": "com.shouqianba.localserver.tripartite",
+      "target_field": "categoryId",
+      "target_inferred": "CategoryLevelEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "tripartite"
+    },
+    {
+      "source": "MakeOptTimeResponse",
+      "source_package": "com.shouqianba.localserver.vo",
+      "target_field": "detailId",
+      "target_inferred": "Detail",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "vo"
+    },
+    {
+      "source": "CashPledgePayResponse",
+      "source_package": "com.shouqianba.localserver.vo",
+      "target_field": "cashPledgeId",
+      "target_inferred": "Cashpledge",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "vo"
+    },
+    {
+      "source": "WineGoodsCategoryVO",
+      "source_package": "com.shouqianba.localserver.vo",
+      "target_field": "categoryId",
+      "target_inferred": "CategoryLevelEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "vo"
+    },
+    {
+      "source": "KDSQueryPrintSettingGoodsCategoryListHandler",
+      "source_package": "com.shouqianba.localserver.web",
+      "target_field": "categoryId",
+      "target_inferred": "CategoryLevelEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "web"
+    },
+    {
+      "source": "GoodsCategoryResponse",
+      "source_package": "com.shouqianba.localserver.web",
+      "target_field": "categoryId",
+      "target_inferred": "CategoryLevelEnum",
+      "target_type": "ID引用",
+      "relationship_type": "N:1",
+      "domain": "web"
+    }
+  ],
+  "domain_relationships": {
+    "base": [
+      {
+        "source": "BaseDataVo",
+        "source_package": "com.shouqianba.kaci.base",
+        "target_field": "bizId",
+        "target_inferred": "Biz",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "BaseDto",
+        "source_package": "com.shouqianba.kaci.base",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "BaseVo",
+        "source_package": "com.shouqianba.kaci.base",
+        "target_field": "traceId",
+        "target_inferred": "Trace",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "OperateBaseVo",
+        "source_package": "com.shouqianba.kaci.base",
+        "target_field": "bizId",
+        "target_inferred": "Biz",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "OrgBaseDto",
+        "source_package": "com.shouqianba.kaci.base",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "OrgBaseDto",
+        "source_package": "com.shouqianba.kaci.base",
+        "target_field": "brandId",
+        "target_inferred": "BrandScopeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "AccountRightData",
+        "source_package": "com.shouqianba.localserver.base",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "AccountRightData",
+        "source_package": "com.shouqianba.localserver.base",
+        "target_field": "accountId",
+        "target_inferred": "Account",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "GetOrgLicensesDTO",
+        "source_package": "com.shouqianba.localserver.base",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "GetAccountRightListRequest",
+        "source_package": "com.shouqianba.localserver.base",
+        "target_field": "accountId",
+        "target_inferred": "Account",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "OperateShortAccountRequest",
+        "source_package": "com.shouqianba.localserver.base",
+        "target_field": "shortAccountId",
+        "target_inferred": "Shortaccount",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "ClearSiteInfoMqttDto",
+        "source_package": "com.shouqianba.localserver.base",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "ClearSiteInfoMqttDto",
+        "source_package": "com.shouqianba.localserver.base",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "QueryInvoiceRequest",
+        "source_package": "com.shouqianba.localserver.base",
+        "target_field": "operatorId",
+        "target_inferred": "BaseOperator",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "RechargeInvoicePrintRequest",
+        "source_package": "com.shouqianba.localserver.base",
+        "target_field": "transId",
+        "target_inferred": "Trans",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "ReqMessageDto",
+        "source_package": "com.shouqianba.localserver.base",
+        "target_field": "messageId",
+        "target_inferred": "Message",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "ResDbMangerDto",
+        "source_package": "com.shouqianba.localserver.base",
+        "target_field": "messageId",
+        "target_inferred": "Message",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "DictionaryResponse",
+        "source_package": "com.shouqianba.localserver.base",
+        "target_field": "id",
+        "target_inferred": "Id",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "DictionaryResponse",
+        "source_package": "com.shouqianba.localserver.base",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "BindDeviceResponse",
+        "source_package": "com.shouqianba.localserver.base",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "BindDeviceResponse",
+        "source_package": "com.shouqianba.localserver.base",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "OrgResponse",
+        "source_package": "com.shouqianba.localserver.base",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      },
+      {
+        "source": "OrgResponse",
+        "source_package": "com.shouqianba.localserver.base",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "base"
+      }
+    ],
+    "scrm": [
+      {
+        "source": "MutexShareValidBo",
+        "source_package": "com.shouqianba.kaci.scrm",
+        "target_field": "promotionId",
+        "target_inferred": "PromotionSdkClient",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "scrm"
+      },
+      {
+        "source": "SdkLimitGiftBo",
+        "source_package": "com.shouqianba.kaci.scrm",
+        "target_field": "giftId",
+        "target_inferred": "GiftRealTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "scrm"
+      },
+      {
+        "source": "SyncPointRuleListBo",
+        "source_package": "com.shouqianba.kaci.scrm",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "scrm"
+      },
+      {
+        "source": "CustomerGiftCurrentDayUseEntity",
+        "source_package": "com.shouqianba.kaci.scrm",
+        "target_field": "giftId",
+        "target_inferred": "GiftRealTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "scrm"
+      },
+      {
+        "source": "SdkLimitGiftEntity",
+        "source_package": "com.shouqianba.kaci.scrm",
+        "target_field": "giftId",
+        "target_inferred": "GiftRealTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "scrm"
+      }
+    ],
+    "biz": [
+      {
+        "source": "RechargePackageInfoDto",
+        "source_package": "com.shouqianba.localserver.biz",
+        "target_field": "packageStallsId",
+        "target_inferred": "Packagestalls",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "biz"
+      },
+      {
+        "source": "RechargePackageInfoDto",
+        "source_package": "com.shouqianba.localserver.biz",
+        "target_field": "rechargePackageId",
+        "target_inferred": "Rechargepackage",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "biz"
+      },
+      {
+        "source": "TemplateAddress",
+        "source_package": "com.shouqianba.localserver.biz",
+        "target_field": "cateSubDetailId",
+        "target_inferred": "Catesubdetail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "biz"
+      },
+      {
+        "source": "PrintTableSetDTO",
+        "source_package": "com.shouqianba.localserver.biz",
+        "target_field": "tablePrintId",
+        "target_inferred": "SyncPrintTableSetService",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "biz"
+      },
+      {
+        "source": "TableAccountRequest",
+        "source_package": "com.shouqianba.localserver.biz",
+        "target_field": "accountId",
+        "target_inferred": "Account",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "biz"
+      },
+      {
+        "source": "BaseDto",
+        "source_package": "com.shouqianba.localserver.biz",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "biz"
+      },
+      {
+        "source": "PayResultByTransOrderNoQueryDto",
+        "source_package": "com.shouqianba.localserver.biz",
+        "target_field": "cardId",
+        "target_inferred": "Card",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "biz"
+      },
+      {
+        "source": "CancelVerifyDto",
+        "source_package": "com.shouqianba.localserver.biz",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "biz"
+      }
+    ],
+    "book": [
+      {
+        "source": "GetBookTableRequest",
+        "source_package": "com.shouqianba.localserver.book",
+        "target_field": "areaId",
+        "target_inferred": "Area",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "book"
+      }
+    ],
+    "common": [
+      {
+        "source": "BusinessException",
+        "source_package": "com.shouqianba.localserver.common",
+        "target_field": "traceId",
+        "target_inferred": "Trace",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "common"
+      }
+    ],
+    "dao": [
+      {
+        "source": "BookDetailDTO",
+        "source_package": "com.shouqianba.localserver.dao",
+        "target_field": "dataId",
+        "target_inferred": "Data",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "dao"
+      },
+      {
+        "source": "BookDetailDTO",
+        "source_package": "com.shouqianba.localserver.dao",
+        "target_field": "relationDataId",
+        "target_inferred": "Relationdata",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "dao"
+      },
+      {
+        "source": "AppletOperateSkuDTO",
+        "source_package": "com.shouqianba.localserver.dao",
+        "target_field": "skuId",
+        "target_inferred": "AppletOperateSkuDTO",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "dao"
+      },
+      {
+        "source": "CategoryGoodsCountDTO",
+        "source_package": "com.shouqianba.localserver.dao",
+        "target_field": "categoryId",
+        "target_inferred": "CategoryLevelEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "dao"
+      },
+      {
+        "source": "CategoryGoodsCountDTO",
+        "source_package": "com.shouqianba.localserver.dao",
+        "target_field": "parentId",
+        "target_inferred": "Parent",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "dao"
+      },
+      {
+        "source": "KDSPrintGroupSettingQuery",
+        "source_package": "com.shouqianba.localserver.dao",
+        "target_field": "printGroupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "dao"
+      },
+      {
+        "source": "KDSPrintGroupSettingQuery",
+        "source_package": "com.shouqianba.localserver.dao",
+        "target_field": "categoryId",
+        "target_inferred": "CategoryLevelEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "dao"
+      },
+      {
+        "source": "KDSScreenAllotScoreQuery",
+        "source_package": "com.shouqianba.localserver.dao",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "dao"
+      },
+      {
+        "source": "KDSScreenAllotScoreQuery",
+        "source_package": "com.shouqianba.localserver.dao",
+        "target_field": "detailId",
+        "target_inferred": "Detail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "dao"
+      },
+      {
+        "source": "KDSScreenMakeDetailTagQuery",
+        "source_package": "com.shouqianba.localserver.dao",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "dao"
+      },
+      {
+        "source": "KDSScreenMakeDetailTagQuery",
+        "source_package": "com.shouqianba.localserver.dao",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "dao"
+      },
+      {
+        "source": "SwimConfigQuery",
+        "source_package": "com.shouqianba.localserver.dao",
+        "target_field": "allotId",
+        "target_inferred": "Allot",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "dao"
+      },
+      {
+        "source": "SwimConfigQuery",
+        "source_package": "com.shouqianba.localserver.dao",
+        "target_field": "swimId",
+        "target_inferred": "Swim",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "dao"
+      }
+    ],
+    "dto": [
+      {
+        "source": "CombineDiscountAmountDTO",
+        "source_package": "com.shouqianba.localserver.dto",
+        "target_field": "combineDetailId",
+        "target_inferred": "Combinedetail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "dto"
+      },
+      {
+        "source": "CombineDiscountAmountDTO",
+        "source_package": "com.shouqianba.localserver.dto",
+        "target_field": "maxAmountDetailId",
+        "target_inferred": "Maxamountdetail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "dto"
+      },
+      {
+        "source": "MemberMarketingGiftDto",
+        "source_package": "com.shouqianba.localserver.dto",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "dto"
+      },
+      {
+        "source": "MemberMarketingGiftDto",
+        "source_package": "com.shouqianba.localserver.dto",
+        "target_field": "objectId",
+        "target_inferred": "Object",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "dto"
+      },
+      {
+        "source": "OrderTableExclusiveDto",
+        "source_package": "com.shouqianba.localserver.dto",
+        "target_field": "accountId",
+        "target_inferred": "Account",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "dto"
+      },
+      {
+        "source": "TakeWineDetailDTO",
+        "source_package": "com.shouqianba.localserver.dto",
+        "target_field": "depositId",
+        "target_inferred": "Deposit",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "dto"
+      },
+      {
+        "source": "TakeWineDetailDTO",
+        "source_package": "com.shouqianba.localserver.dto",
+        "target_field": "depositDetailId",
+        "target_inferred": "Depositdetail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "dto"
+      },
+      {
+        "source": "TakeWineDetailDTO",
+        "source_package": "com.shouqianba.localserver.dto",
+        "target_field": "skuId",
+        "target_inferred": "AppletOperateSkuDTO",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "dto"
+      }
+    ],
+    "goods": [
+      {
+        "source": "GetGoodsCategoryRequest",
+        "source_package": "com.shouqianba.localserver.goods",
+        "target_field": "areaId",
+        "target_inferred": "Area",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "goods"
+      },
+      {
+        "source": "GetPracticeDetailRequest",
+        "source_package": "com.shouqianba.localserver.goods",
+        "target_field": "practiceId",
+        "target_inferred": "Practice",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "goods"
+      },
+      {
+        "source": "GetPracticeDetailRequest",
+        "source_package": "com.shouqianba.localserver.goods",
+        "target_field": "goodsId",
+        "target_inferred": "CalrGoodsTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "goods"
+      },
+      {
+        "source": "GetPracticeGroupingsRequest",
+        "source_package": "com.shouqianba.localserver.goods",
+        "target_field": "goodsId",
+        "target_inferred": "CalrGoodsTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "goods"
+      },
+      {
+        "source": "GetTagGroupingsRequest",
+        "source_package": "com.shouqianba.localserver.goods",
+        "target_field": "goodsId",
+        "target_inferred": "CalrGoodsTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "goods"
+      },
+      {
+        "source": "GoodsBuffetListRequest",
+        "source_package": "com.shouqianba.localserver.goods",
+        "target_field": "areaId",
+        "target_inferred": "Area",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "goods"
+      },
+      {
+        "source": "GoodsCombineRequest",
+        "source_package": "com.shouqianba.localserver.goods",
+        "target_field": "skuId",
+        "target_inferred": "AppletOperateSkuDTO",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "goods"
+      },
+      {
+        "source": "GoodsCombineRequest",
+        "source_package": "com.shouqianba.localserver.goods",
+        "target_field": "dataId",
+        "target_inferred": "Data",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "goods"
+      },
+      {
+        "source": "GoodsPracticeRequest",
+        "source_package": "com.shouqianba.localserver.goods",
+        "target_field": "goodsId",
+        "target_inferred": "CalrGoodsTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "goods"
+      },
+      {
+        "source": "GoodsTagRequest",
+        "source_package": "com.shouqianba.localserver.goods",
+        "target_field": "goodsId",
+        "target_inferred": "CalrGoodsTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "goods"
+      }
+    ],
+    "kds": [
+      {
+        "source": "OrderGetBo",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "OrderGetBo",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "OrderQueryBo",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "OrderQueryBo",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "KdsMakeDetailDto",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "makeDetailId",
+        "target_inferred": "Makedetail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "KdsMakeInvalidDto",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "KdsQueryGoodsConfigDto",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "KdsQueryGoodsConfigDto",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "KdsQueryGoodsConfigDto",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "detailId",
+        "target_inferred": "Detail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "PrintSettingEntity",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "printSettingId",
+        "target_inferred": "RechargeInvoicePrintRequest",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "QuerySwimConfigDto",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "QuerySwimConfigDto",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "QuerySwimConfigDto",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "allotId",
+        "target_inferred": "Allot",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "QuerySwimDetailAllotDto",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "allotId",
+        "target_inferred": "Allot",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "SwimDetailGoodsDto",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "goodsId",
+        "target_inferred": "CalrGoodsTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "SwimDetailGoodsDto",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "skuId",
+        "target_inferred": "AppletOperateSkuDTO",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "KdsMakeAutoDetailDto",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "makeId",
+        "target_inferred": "Make",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "KdsMakeAutoOperateDto",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "KdsMakeAutoOperateDto",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "detailId",
+        "target_inferred": "Detail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "KdsMakeDetailBo",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "makeDetailId",
+        "target_inferred": "Makedetail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "MakeBarcodeEntity",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "MakeBarcodeEntity",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "QueryScreenDetailAllotDto",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "QueryScreenDetailAllotDto",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "QueryScreenDetailAllotDto",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "detailId",
+        "target_inferred": "Detail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "SaveAllotDto",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "allotId",
+        "target_inferred": "Allot",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "UpdateScreenDetailAllotDto",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "UpdateScreenDetailAllotDto",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "UpdateScreenDetailAllotDto",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "detailId",
+        "target_inferred": "Detail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "MakeBarcodeQuery",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "MakeBarcodeQuery",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "QueryOrgPrintSettingGoodsRequest",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "printSettingId",
+        "target_inferred": "RechargeInvoicePrintRequest",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "QueryOrgPrintSettingGoodsRequest",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "categoryId",
+        "target_inferred": "CategoryLevelEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "TempSaveScreenParamsRequest",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "allotId",
+        "target_inferred": "Allot",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "TempSaveScreenParamsRequest",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "detailId",
+        "target_inferred": "Detail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "KdsMakeAutoDetailRequest",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "makeId",
+        "target_inferred": "Make",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "KdsMakeAutoOperateRequest",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "detailId",
+        "target_inferred": "Detail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "KDSMakeBathOperateShopRequest",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "detailId",
+        "target_inferred": "Detail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "KDSMakeOperateShopDTO",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "makeId",
+        "target_inferred": "Make",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "KDSQueryWorkDateRequest",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "detailId",
+        "target_inferred": "Detail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "MakeDetailBarcodeQueryRequest",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "pickupWindowId",
+        "target_inferred": "Pickupwindow",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "MakeDetailBarcodeQueryRequest",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "detailId",
+        "target_inferred": "Detail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "QueryScreenDetailAllotRequest",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "detailId",
+        "target_inferred": "Detail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "QueryScreenDetailRequest",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "detailId",
+        "target_inferred": "Detail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "QuerySwimConfigRequest",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "allotId",
+        "target_inferred": "Allot",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "QuerySwimDetailAllotDTO",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "allotId",
+        "target_inferred": "Allot",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "SaveSwimConfigRequest",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "allotId",
+        "target_inferred": "Allot",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "UpdateScreenDetailAllotRequest",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "detailId",
+        "target_inferred": "Detail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "UpdateSwimSwitchRequest",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "detailId",
+        "target_inferred": "Detail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "PrintSettingVo",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "allotId",
+        "target_inferred": "Allot",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      },
+      {
+        "source": "AllotTableAreaVo",
+        "source_package": "com.shouqianba.localserver.kds",
+        "target_field": "areaId",
+        "target_inferred": "Area",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "kds"
+      }
+    ],
+    "member": [
+      {
+        "source": "GetCardInfoRequest",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "cardId",
+        "target_inferred": "Card",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "GetPreferenceAndLabelRequest",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "customerId",
+        "target_inferred": "CustomerDiscountTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "QueryCardSchemeLevelRequest",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "cardSchemeId",
+        "target_inferred": "Cardscheme",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "QueryRechargePackageRequest",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "cardSchemeId",
+        "target_inferred": "Cardscheme",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "QueryRechargePackageRequest",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "cardLevelId",
+        "target_inferred": "Cardlevel",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "QueryRechargePackageRequest",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "cardId",
+        "target_inferred": "Card",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "QueryRechargePackageRequest",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "customerId",
+        "target_inferred": "CustomerDiscountTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "PointExchangeGiftDetailsQueryRequest",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "customerId",
+        "target_inferred": "CustomerDiscountTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "GiftCardConsumeRequest",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "couponId",
+        "target_inferred": "Coupon",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "ChangeCardPwdRequest",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "cardId",
+        "target_inferred": "Card",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "ResetCardPwdRequest",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "cardId",
+        "target_inferred": "Card",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "ResetCardPwdRequest",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "cardSchemeId",
+        "target_inferred": "Cardscheme",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "ResetCardPwdRequest",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "cardLevelId",
+        "target_inferred": "Cardlevel",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "UpdateCardInfoRequest",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "cardId",
+        "target_inferred": "Card",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "UpdateCardInfoRequest",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "cardSchemeId",
+        "target_inferred": "Cardscheme",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "UpdateCardInfoRequest",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "cardLevelId",
+        "target_inferred": "Cardlevel",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "CardConsumeRollbackRequest",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "cardId",
+        "target_inferred": "Card",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "ConsumeResultRequest",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "cardId",
+        "target_inferred": "Card",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "MemberCardConsumeRequest",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "cardId",
+        "target_inferred": "Card",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "RechargeRefundRequest",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "cardId",
+        "target_inferred": "Card",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "RechargeRefundRequest",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "transId",
+        "target_inferred": "Trans",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "BenefitMarketingOtherScopeVo",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "otherId",
+        "target_inferred": "Other",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "BenefitMarketingRuleVo",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "ruleId",
+        "target_inferred": "Rule",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "BenefitPromotionOtherScopeVo",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "otherId",
+        "target_inferred": "Other",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "EquitySaleResponse",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "transQueueId",
+        "target_inferred": "Transqueue",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "OpenBenefitCardVo",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "transQueueId",
+        "target_inferred": "Transqueue",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "OpenCardVo",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "transQueueId",
+        "target_inferred": "Transqueue",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "OpenCardVo",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "bizId",
+        "target_inferred": "Biz",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "RechargeResponse",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "transQueueId",
+        "target_inferred": "Transqueue",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "SalesGiftCardVo",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "transQueueId",
+        "target_inferred": "Transqueue",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      },
+      {
+        "source": "GiftCardInfo",
+        "source_package": "com.shouqianba.localserver.member",
+        "target_field": "transQueueId",
+        "target_inferred": "Transqueue",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "member"
+      }
+    ],
+    "order": [
+      {
+        "source": "CloudOrderDetailExtAddDto",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "combinationId",
+        "target_inferred": "Combination",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "CloudOrderExtAddDto",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "appId",
+        "target_inferred": "App",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "CloudOrderExtAddDto",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "nfcTagId",
+        "target_inferred": "Nfctag",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "CloudOrderExtAddDto",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "openId",
+        "target_inferred": "Open",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "PosOrderCoverDto",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "PosOrderDetailExtAddDto",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "combinationId",
+        "target_inferred": "Combination",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "QueryUploadOrderResultDto",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "QueryUploadOrderResultDto",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "QueryUploadOrderResultDto",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "taskId",
+        "target_inferred": "Task",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "QueryUploadOrderResultDto",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "relationId",
+        "target_inferred": "Relation",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "DeleteOrderDetailRequest",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "tableId",
+        "target_inferred": "SyncPrintTableSetService",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "DeleteOrderDetailRequest",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "goodsId",
+        "target_inferred": "CalrGoodsTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "GetOrderBillHeadRequest",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "tableId",
+        "target_inferred": "SyncPrintTableSetService",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "GetOrderDetailRequest",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "tableId",
+        "target_inferred": "SyncPrintTableSetService",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "ModifyGoodsQtyOrderDetailRequest",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "tableId",
+        "target_inferred": "SyncPrintTableSetService",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "ModifyGoodsQtyOrderDetailRequest",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "goodsId",
+        "target_inferred": "CalrGoodsTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "OrderDetailTasteRequest",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "detailId",
+        "target_inferred": "Detail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "OrderDetailTasteRequest",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "goodsId",
+        "target_inferred": "CalrGoodsTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "OrderDetailTasteRequest",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "practiceId",
+        "target_inferred": "Practice",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "OrderStructureAccountRequest",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "accountId",
+        "target_inferred": "Account",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "DcqModifyQtyRequest",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "detailId",
+        "target_inferred": "Detail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "CertificateQueryDto",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "CertificateQueryDto",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "CancelCouponPopupRequest",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "payId",
+        "target_inferred": "ChoosePayTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "PartialRefundRequest",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "payId",
+        "target_inferred": "ChoosePayTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "PayRetryRequest",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "payId",
+        "target_inferred": "ChoosePayTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "HoldConsumeQueryDto",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "companyId",
+        "target_inferred": "Company",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "HoldConsumeQueryDto",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "employeeTransId",
+        "target_inferred": "Employeetrans",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "HoldConsumeRefundDto",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "transOrgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "HoldConsumeRefundDto",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "companyId",
+        "target_inferred": "Company",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "HoldConsumeRefundDto",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "employeeTransId",
+        "target_inferred": "Employeetrans",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "OnlinePayDto",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "OnlineQueryDto",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "PayGoodsDto",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "goodsId",
+        "target_inferred": "CalrGoodsTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "CancelSettlePayRequest",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "settleOrgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "CancelSettlePayRequest",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "companyId",
+        "target_inferred": "Company",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "CancelSettleRequest",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "companyId",
+        "target_inferred": "Company",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      },
+      {
+        "source": "GetOrderDetailPromotionRequest",
+        "source_package": "com.shouqianba.localserver.order",
+        "target_field": "detailId",
+        "target_inferred": "Detail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "order"
+      }
+    ],
+    "print": [
+      {
+        "source": "PrintGoodsCategoryDTO",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "categoryId",
+        "target_inferred": "CategoryLevelEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "WineOperateDetailDTO",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "skuId",
+        "target_inferred": "AppletOperateSkuDTO",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "TicketPrint",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "printId",
+        "target_inferred": "RechargeInvoicePrintRequest",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "PrintBatchGroup",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "printTaskId",
+        "target_inferred": "RechargeInvoicePrintRequest",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "PrinterReq",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "printId",
+        "target_inferred": "RechargeInvoicePrintRequest",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "PrinterReq",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "printGroupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "GetPrintTicketJobRequest",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "jobId",
+        "target_inferred": "Job",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "PrintRequest",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "printId",
+        "target_inferred": "RechargeInvoicePrintRequest",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "PrintRequest",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "printTaskId",
+        "target_inferred": "RechargeInvoicePrintRequest",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "WsPrintTicketJobRequest",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "jobId",
+        "target_inferred": "Job",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "WsPrintTicketJobRequest",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "printId",
+        "target_inferred": "RechargeInvoicePrintRequest",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "AppletAreaGroupRequest",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "appletAreaGroupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "AppletAreaGroupRequest",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "appletPrintId",
+        "target_inferred": "RechargeInvoicePrintRequest",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "AppletAreaGroupRequest",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "appletRetainPrintId",
+        "target_inferred": "RechargeInvoicePrintRequest",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "AreaRequest",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "areaId",
+        "target_inferred": "Area",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "ChannelRequest",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "channelId",
+        "target_inferred": "Channel",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "DeletePrintSetRequest",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "printId",
+        "target_inferred": "RechargeInvoicePrintRequest",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "GoodsRequest",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "goodsId",
+        "target_inferred": "CalrGoodsTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "GoodsRequest",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "channelShopId",
+        "target_inferred": "Channelshop",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "OrgPrintSettingDelRequest",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "printSettingId",
+        "target_inferred": "RechargeInvoicePrintRequest",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "QueryPrintGoodsGroupV2Request",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "printSettingId",
+        "target_inferred": "RechargeInvoicePrintRequest",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "QueryPrintSetListRequest",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "printId",
+        "target_inferred": "RechargeInvoicePrintRequest",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "AppletAreaGroupResponse",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "appletAreaGroupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "AppletAreaGroupResponse",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "appletPrintId",
+        "target_inferred": "RechargeInvoicePrintRequest",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "AppletAreaGroupResponse",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "appletRetainPrintId",
+        "target_inferred": "RechargeInvoicePrintRequest",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "CategoryGoodsVO",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "categoryId",
+        "target_inferred": "CategoryLevelEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "ChannelResponse",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "channelId",
+        "target_inferred": "Channel",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "CloudPrintResponse",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "platformOrderId",
+        "target_inferred": "OrderGoodsTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "GetPrintTicketResponse",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "jobId",
+        "target_inferred": "Job",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "GoodsResponse",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "goodsId",
+        "target_inferred": "CalrGoodsTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "GoodsResponse",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "channelShopId",
+        "target_inferred": "Channelshop",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "PrintGoodsGroupPosResponse",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "printSettingId",
+        "target_inferred": "RechargeInvoicePrintRequest",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "PrintOnlineSetV2Response",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "PrintOnlineSetV2Response",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      },
+      {
+        "source": "TableResponse",
+        "source_package": "com.shouqianba.localserver.print",
+        "target_field": "tableId",
+        "target_inferred": "SyncPrintTableSetService",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "print"
+      }
+    ],
+    "promotion": [
+      {
+        "source": "PromotionValidJoinCountDto",
+        "source_package": "com.shouqianba.localserver.promotion",
+        "target_field": "customerId",
+        "target_inferred": "CustomerDiscountTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "promotion"
+      },
+      {
+        "source": "PromotionValidJoinCountDto",
+        "source_package": "com.shouqianba.localserver.promotion",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "promotion"
+      },
+      {
+        "source": "CancelPackGoodsRequest",
+        "source_package": "com.shouqianba.localserver.promotion",
+        "target_field": "dataId",
+        "target_inferred": "Data",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "promotion"
+      }
+    ],
+    "request": [
+      {
+        "source": "AppletSoldOutConfirmRequest",
+        "source_package": "com.shouqianba.localserver.request",
+        "target_field": "fromUserId",
+        "target_inferred": "UserAccount",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "request"
+      },
+      {
+        "source": "BatchRefundPledgeRequest",
+        "source_package": "com.shouqianba.localserver.request",
+        "target_field": "cashPledgeId",
+        "target_inferred": "Cashpledge",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "request"
+      },
+      {
+        "source": "CashPledgeNullifyRequest",
+        "source_package": "com.shouqianba.localserver.request",
+        "target_field": "cashPledgeId",
+        "target_inferred": "Cashpledge",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "request"
+      },
+      {
+        "source": "CashPledgePrintRequest",
+        "source_package": "com.shouqianba.localserver.request",
+        "target_field": "cashPledgeId",
+        "target_inferred": "Cashpledge",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "request"
+      },
+      {
+        "source": "CashPledgeRecordListRequest",
+        "source_package": "com.shouqianba.localserver.request",
+        "target_field": "cashPledgeId",
+        "target_inferred": "Cashpledge",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "request"
+      },
+      {
+        "source": "CashPledgeRetryRequest",
+        "source_package": "com.shouqianba.localserver.request",
+        "target_field": "cashPledgeId",
+        "target_inferred": "Cashpledge",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "request"
+      },
+      {
+        "source": "CashPledgeRetryRequest",
+        "source_package": "com.shouqianba.localserver.request",
+        "target_field": "id",
+        "target_inferred": "Id",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "request"
+      },
+      {
+        "source": "CashPledgeUseRequest",
+        "source_package": "com.shouqianba.localserver.request",
+        "target_field": "cashPledgeId",
+        "target_inferred": "Cashpledge",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "request"
+      },
+      {
+        "source": "CashPledgeUseRequest",
+        "source_package": "com.shouqianba.localserver.request",
+        "target_field": "payId",
+        "target_inferred": "ChoosePayTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "request"
+      },
+      {
+        "source": "PledgePayRecordRequest",
+        "source_package": "com.shouqianba.localserver.request",
+        "target_field": "cashPledgeId",
+        "target_inferred": "Cashpledge",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "request"
+      },
+      {
+        "source": "PledgeRefundInfo",
+        "source_package": "com.shouqianba.localserver.request",
+        "target_field": "cashPledgeId",
+        "target_inferred": "Cashpledge",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "request"
+      },
+      {
+        "source": "QueryWineGoodsListRequest",
+        "source_package": "com.shouqianba.localserver.request",
+        "target_field": "categoryId",
+        "target_inferred": "CategoryLevelEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "request"
+      },
+      {
+        "source": "TakeWineTicketRepeatPrintRequest",
+        "source_package": "com.shouqianba.localserver.request",
+        "target_field": "depositId",
+        "target_inferred": "Deposit",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "request"
+      }
+    ],
+    "soldout": [
+      {
+        "source": "QuerySoldOutOccupyListBo",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "QuerySoldOutOccupyListBo",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "QuerySoldOutSettingListBo",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "QuerySoldOutSettingListBo",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "SoldOutDailySettlementBo",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "groupId",
+        "target_inferred": "GroupBuyExchangeCouponCalr",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "SoldOutDailySettlementBo",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "orgId",
+        "target_inferred": "OrgBaseDto",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "SoldOutOccupyDetailBo",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "goodsId",
+        "target_inferred": "CalrGoodsTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "SoldOutOccupyDetailBo",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "skuId",
+        "target_inferred": "AppletOperateSkuDTO",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "SoldOutStockHandleDetailBo",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "goodsId",
+        "target_inferred": "CalrGoodsTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "AppletSoldOutGoodsQtyCallbackDTO",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "skuId",
+        "target_inferred": "AppletOperateSkuDTO",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "AppletSoldOutSkuDetailDTO",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "skuId",
+        "target_inferred": "AppletOperateSkuDTO",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "SoldOutStockChannelSettingDTO",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "skuId",
+        "target_inferred": "AppletOperateSkuDTO",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "SoldOutOccupyResultGoodsEntity",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "notEnoughGoodsId",
+        "target_inferred": "CalrGoodsTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "PracticeSoldOutRequest",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "practiceId",
+        "target_inferred": "Practice",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "PracticeSoldOutRequest",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "practiceItemId",
+        "target_inferred": "Practiceitem",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "PracticeDetails",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "practiceId",
+        "target_inferred": "Practice",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "PracticeDetails",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "practiceItemId",
+        "target_inferred": "Practiceitem",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "SoldOutStockHandleDetailDto",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "goodsId",
+        "target_inferred": "CalrGoodsTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "PosSoldOutOccupyBizService",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "soldOutStocksId",
+        "target_inferred": "Soldoutstocks",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "PosSoldOutOccupyBizService",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "soldOutStocksId",
+        "target_inferred": "Soldoutstocks",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "UpdateOccupyNumBo",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "soldOutStocksId",
+        "target_inferred": "Soldoutstocks",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "UpdateOccupyNumBo",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "soldOutStocksId",
+        "target_inferred": "Soldoutstocks",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "UpdateOccupyNumBoBuilder",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "soldOutStocksId",
+        "target_inferred": "Soldoutstocks",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "UpdateOccupyNumBoBuilder",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "soldOutStocksId",
+        "target_inferred": "Soldoutstocks",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "QuerySoldOutDetailVo",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "goodsId",
+        "target_inferred": "CalrGoodsTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      },
+      {
+        "source": "SoldOutOccupyVo",
+        "source_package": "com.shouqianba.localserver.soldout",
+        "target_field": "notEnoughGoodsId",
+        "target_inferred": "CalrGoodsTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "soldout"
+      }
+    ],
+    "table": [
+      {
+        "source": "GetTableRequest",
+        "source_package": "com.shouqianba.localserver.table",
+        "target_field": "areaId",
+        "target_inferred": "Area",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "table"
+      }
+    ],
+    "takeout": [
+      {
+        "source": "CancelDeliveryDetailResponse",
+        "source_package": "com.shouqianba.localserver.takeout",
+        "target_field": "platformDeliveryOrderId",
+        "target_inferred": "OrderGoodsTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "takeout"
+      },
+      {
+        "source": "CreateDeliveryOrderResponse",
+        "source_package": "com.shouqianba.localserver.takeout",
+        "target_field": "platformDeliveryOrderId",
+        "target_inferred": "OrderGoodsTypeEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "takeout"
+      },
+      {
+        "source": "DispatchResponse",
+        "source_package": "com.shouqianba.localserver.takeout",
+        "target_field": "originId",
+        "target_inferred": "Origin",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "takeout"
+      }
+    ],
+    "tripartite": [
+      {
+        "source": "DishesBindQueryRequest",
+        "source_package": "com.shouqianba.localserver.tripartite",
+        "target_field": "categoryId",
+        "target_inferred": "CategoryLevelEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "tripartite"
+      }
+    ],
+    "vo": [
+      {
+        "source": "MakeOptTimeResponse",
+        "source_package": "com.shouqianba.localserver.vo",
+        "target_field": "detailId",
+        "target_inferred": "Detail",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "vo"
+      },
+      {
+        "source": "CashPledgePayResponse",
+        "source_package": "com.shouqianba.localserver.vo",
+        "target_field": "cashPledgeId",
+        "target_inferred": "Cashpledge",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "vo"
+      },
+      {
+        "source": "WineGoodsCategoryVO",
+        "source_package": "com.shouqianba.localserver.vo",
+        "target_field": "categoryId",
+        "target_inferred": "CategoryLevelEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "vo"
+      }
+    ],
+    "web": [
+      {
+        "source": "KDSQueryPrintSettingGoodsCategoryListHandler",
+        "source_package": "com.shouqianba.localserver.web",
+        "target_field": "categoryId",
+        "target_inferred": "CategoryLevelEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "web"
+      },
+      {
+        "source": "GoodsCategoryResponse",
+        "source_package": "com.shouqianba.localserver.web",
+        "target_field": "categoryId",
+        "target_inferred": "CategoryLevelEnum",
+        "target_type": "ID引用",
+        "relationship_type": "N:1",
+        "domain": "web"
+      }
+    ]
+  }
+}

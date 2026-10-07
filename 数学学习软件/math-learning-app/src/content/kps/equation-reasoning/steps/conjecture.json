@@ -1,0 +1,39 @@
+{
+  "id": "eq-conjecture",
+  "type": "conjecture",
+  "name": "发现等量关系规律",
+  "instruction": "通过观察和思考，发现等量关系的规律",
+  "content": {
+    "type": "conjecture",
+    "observationPrompt": "观察等式两边同时变化的情况，你能发现什么规律？",
+    "examples": [
+      {
+        "input": "3 = 3，两边同时加2",
+        "output": "5 = 5"
+      },
+      {
+        "input": "8 = 8，两边同时减3",
+        "output": "5 = 5"
+      },
+      {
+        "input": "2 = 2，两边同时乘3",
+        "output": "6 = 6"
+      }
+    ],
+    "conjecturePrompt": "如果 a = b，那么 a + c 和 b + c 有什么关系？说说你的猜想。"
+  },
+  "completionCriteria": {
+    "type": "verbal",
+    "config": {
+      "requiredAnswers": [
+        "相等"
+      ],
+      "allowPartial": false
+    }
+  },
+  "hintLevels": [
+    "提示：等式两边同时加上相同的数",
+    "提示：等式性质告诉我们什么？"
+  ],
+  "ability": "equation-reasoning"
+}

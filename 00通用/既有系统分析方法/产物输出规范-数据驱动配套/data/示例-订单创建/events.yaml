@@ -1,0 +1,52 @@
+﻿# events.yaml — 领域事件（唯一数据源）
+events:
+  - id: EVT001
+    name: OrderCreated
+    aggregate: Order
+    trigger: 订单创建成功
+    topic: order-events
+    tag: OrderCreated
+    payload_summary: "{orderId, orderNo, items[], totalAmount, memberId}"
+    idempotency_key: eventId
+    subscribers: [库存服务, 积分服务, 数据分析服务]
+    evidence: [EVD-014]
+  - id: EVT002
+    name: OrderPaid
+    aggregate: Order
+    trigger: 订单支付成功
+    topic: order-events
+    tag: OrderPaid
+    payload_summary: "{orderNo, paidAmount, paymentId}"
+    idempotency_key: eventId
+    subscribers: [财务服务, 数据分析服务, 发货服务]
+    evidence: [EVD-009]
+  - id: EVT003
+    name: OrderRefunded
+    aggregate: Order
+    trigger: 订单退款完成
+    topic: order-events
+    tag: OrderRefunded
+    payload_summary: "{orderNo, refundAmount, refundReason}"
+    idempotency_key: eventId
+    subscribers: [库存服务, 财务服务]
+    evidence: [EVD-011]
+  - id: EVT004
+    name: OrderCancelled
+    aggregate: Order
+    trigger: 订单取消
+    topic: order-events
+    tag: OrderCancelled
+    payload_summary: "{orderNo, cancelReason}"
+    idempotency_key: eventId
+    subscribers: [库存服务]
+    evidence: [EVD-010]
+  - id: EVT005
+    name: OrderReversed
+    aggregate: Order
+    trigger: 订单反结账
+    topic: order-events
+    tag: OrderReversed
+    payload_summary: "{orderNo, originalPaidAmount}"
+    idempotency_key: eventId
+    subscribers: [支付服务, 财务服务]
+    evidence: [EVD-012]

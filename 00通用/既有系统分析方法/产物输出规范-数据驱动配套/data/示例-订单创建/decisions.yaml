@@ -1,0 +1,15 @@
+﻿# decisions.yaml — 决策矩阵（唯一数据源）
+# 主视角 04-业务逻辑分析 §2.1 与辅助视角 订单创建主流程 §8.1 的表格均由本文件生成。
+decision_matrices:
+  - id: DM001
+    name: 促销规则选择
+    context: CTX001
+    conditions: [订单金额, 会员等级, 优惠券]
+    evidence: [EVD-001]
+    rows:
+      - { conditions: [">=100", 金卡, 有], result: "满减+会员折扣+优惠券", code: "PromotionService.java:78", evidence: EVD-001 }
+      - { conditions: [">=100", 普通, 有], result: "满减+优惠券",           code: "PromotionService.java:82", evidence: EVD-001 }
+      - { conditions: [">=100", 金卡, 无], result: "满减+会员折扣",         code: "PromotionService.java:86", evidence: EVD-001 }
+      - { conditions: ["<100",  金卡, 有], result: "会员折扣+优惠券",       code: "PromotionService.java:90", evidence: EVD-001 }
+      - { conditions: ["<100",  普通, 有], result: "优惠券",               code: "PromotionService.java:94", evidence: EVD-001 }
+      - { conditions: ["<100",  普通, 无], result: "无优惠",               code: "PromotionService.java:98", evidence: EVD-001 }

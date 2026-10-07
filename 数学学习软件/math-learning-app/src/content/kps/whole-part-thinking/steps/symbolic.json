@@ -1,0 +1,45 @@
+{
+  "id": "whole-symbolic",
+  "type": "symbolic",
+  "name": "整体与部分符号表示",
+  "instruction": "学习用数学符号表示整体与部分的关系",
+  "content": {
+    "type": "symbolic",
+    "instruction": "学习用数学符号表示整体与部分的关系",
+    "inputType": "expression",
+    "expectedAnswer": "8",
+    "method": "整体减去一部分等于另一部分，两部分相加等于整体",
+    "steps": [
+      "整体减去一部分等于另一部分",
+      "两部分相加等于整体"
+    ],
+    "equivalenceRules": [
+      {
+        "name": "求部分",
+        "pattern": "整体 - 部分1",
+        "replacement": "部分2"
+      },
+      {
+        "name": "求整体",
+        "pattern": "部分1 + 部分2",
+        "replacement": "整体"
+      }
+    ]
+  },
+  "completionCriteria": {
+    "type": "input",
+    "config": {
+      "problems": [
+        { "id": "prob-1", "answer": "8" },
+        { "id": "prob-2", "answer": "12" },
+        { "id": "prob-3", "answer": "14" }
+      ],
+      "allowEquivalent": false
+    }
+  },
+  "hintLevels": [
+    "提示：整体减去一部分等于另一部分",
+    "提示：两部分相加等于整体"
+  ],
+  "ability": "whole-part-thinking"
+}

@@ -1,0 +1,38 @@
+{
+  "id": "eq-concrete",
+  "type": "concrete",
+  "name": "认识等量关系",
+  "instruction": "通过操作活动认识等量关系",
+  "content": {
+    "type": "concrete",
+    "scenario": {
+      "title": "天平称重",
+      "description": "一个天平左边放3个红球，右边放6个蓝球，天平平衡了。如果左边放1个红球，右边应该放几个蓝球才能保持平衡？",
+      "emoji": "⚖️"
+    },
+    "interaction": {
+      "kind": "drag",
+      "target": "通过天平理解等量关系",
+      "visualType": "balance",
+      "visualConfig": {
+        "leftItems": [
+          { "type": "red-ball", "count": 3 }
+        ],
+        "rightItems": [
+          { "type": "blue-ball", "count": 6 }
+        ]
+      }
+    }
+  },
+  "completionCriteria": {
+    "type": "interactive",
+    "config": {
+      "requiredInteraction": "balance-complete"
+    }
+  },
+  "hintLevels": [
+    "提示：天平平衡说明两边一样重",
+    "提示：3个红球等于6个蓝球，那么1个红球等于2个蓝球"
+  ],
+  "ability": "equation-reasoning"
+}

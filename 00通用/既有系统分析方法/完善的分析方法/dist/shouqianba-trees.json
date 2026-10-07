@@ -1,0 +1,4244 @@
+{
+  "level": 2,
+  "build_time": "2026-09-11T09:42:06.675452",
+  "summary": {
+    "aggregate_roots": 195,
+    "total_fields": 612,
+    "field_types": {
+      "值对象": 336,
+      "ID引用": 276
+    }
+  },
+  "object_trees": [
+    {
+      "root": "BaseDataVo",
+      "package": "com.shouqianba.kaci.base",
+      "fields": [
+        {
+          "name": "bizData",
+          "type": "T",
+          "classification": "值对象"
+        },
+        {
+          "name": "bizId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "bizNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "bizIds",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "bizNos",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "BaseDto",
+      "package": "com.shouqianba.kaci.base",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "useSlave",
+          "type": "Boolean",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "BaseVo",
+      "package": "com.shouqianba.kaci.base",
+      "fields": [
+        {
+          "name": "code",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "message",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "success",
+          "type": "Boolean",
+          "classification": "值对象"
+        },
+        {
+          "name": "traceId",
+          "type": "String",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "OperateBaseVo",
+      "package": "com.shouqianba.kaci.base",
+      "fields": [
+        {
+          "name": "bizId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "OrgBaseDto",
+      "package": "com.shouqianba.kaci.base",
+      "fields": [
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "brandId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "MutexShareValidBo",
+      "package": "com.shouqianba.kaci.scrm",
+      "fields": [
+        {
+          "name": "promotionId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "promotionCode",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "promotionType",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "promotionName",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "SdkLimitGiftBo",
+      "package": "com.shouqianba.kaci.scrm",
+      "fields": [
+        {
+          "name": "giftId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "giftName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "limitType",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "SyncPointRuleListBo",
+      "package": "com.shouqianba.kaci.scrm",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "list",
+          "type": "List<SdkPointRuleBo>",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "CustomerGiftCurrentDayUseEntity",
+      "package": "com.shouqianba.kaci.scrm",
+      "fields": [
+        {
+          "name": "giftId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "useCount",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "SdkLimitGiftEntity",
+      "package": "com.shouqianba.kaci.scrm",
+      "fields": [
+        {
+          "name": "giftId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "giftName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "limitType",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "AccountRightData",
+      "package": "com.shouqianba.localserver.base",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "accountId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "pageCode",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "rightCode",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "GetOrgLicensesDTO",
+      "package": "com.shouqianba.localserver.base",
+      "fields": [
+        {
+          "name": "orgId",
+          "type": "String",
+          "classification": "ID引用"
+        },
+        {
+          "name": "productList",
+          "type": "List<LicensesProduct>",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "GetAccountRightListRequest",
+      "package": "com.shouqianba.localserver.base",
+      "fields": [
+        {
+          "name": "accountId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "OperateShortAccountRequest",
+      "package": "com.shouqianba.localserver.base",
+      "fields": [
+        {
+          "name": "shortAccountId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "shortLoginName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "newLoginPwd",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "ClearSiteInfoMqttDto",
+      "package": "com.shouqianba.localserver.base",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "type",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "body",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "msgType",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "QueryInvoiceRequest",
+      "package": "com.shouqianba.localserver.base",
+      "fields": [
+        {
+          "name": "invoiceStartDate",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "invoiceEndDate",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "operatorId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "RechargeInvoicePrintRequest",
+      "package": "com.shouqianba.localserver.base",
+      "fields": [
+        {
+          "name": "transId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "ReqMessageDto",
+      "package": "com.shouqianba.localserver.base",
+      "fields": [
+        {
+          "name": "sql",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "messageId",
+          "type": "String",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "ResDbMangerDto",
+      "package": "com.shouqianba.localserver.base",
+      "fields": [
+        {
+          "name": "messageId",
+          "type": "String",
+          "classification": "ID引用"
+        },
+        {
+          "name": "code",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "msg",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "DictionaryResponse",
+      "package": "com.shouqianba.localserver.base",
+      "fields": [
+        {
+          "name": "id",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "dictionaryName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "dictionaryCode",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "dictTypeCode",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "BindDeviceResponse",
+      "package": "com.shouqianba.localserver.base",
+      "fields": [
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orgName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "groupName",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "OrgResponse",
+      "package": "com.shouqianba.localserver.base",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "groupName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orgName",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "RechargePackageInfoDto",
+      "package": "com.shouqianba.localserver.biz",
+      "fields": [
+        {
+          "name": "rechargeOrderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "rechargeTotalAmount",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        },
+        {
+          "name": "packageStallsId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "rechargePackageId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "TemplateAddress",
+      "package": "com.shouqianba.localserver.biz",
+      "fields": [
+        {
+          "name": "cateSubDetailId",
+          "type": "Integer",
+          "classification": "ID引用"
+        },
+        {
+          "name": "temType",
+          "type": "Long",
+          "classification": "值对象"
+        },
+        {
+          "name": "url",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "PrintTableSetDTO",
+      "package": "com.shouqianba.localserver.biz",
+      "fields": [
+        {
+          "name": "tablePrintId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "TableAccountRequest",
+      "package": "com.shouqianba.localserver.biz",
+      "fields": [
+        {
+          "name": "accountId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "accountName",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "BaseDto",
+      "package": "com.shouqianba.localserver.biz",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "useSlave",
+          "type": "Boolean",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "PayResultByTransOrderNoQueryDto",
+      "package": "com.shouqianba.localserver.biz",
+      "fields": [
+        {
+          "name": "cardId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "transOrderNo",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "CancelVerifyDto",
+      "package": "com.shouqianba.localserver.biz",
+      "fields": [
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "certificateNo",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "GetBookTableRequest",
+      "package": "com.shouqianba.localserver.book",
+      "fields": [
+        {
+          "name": "workDate",
+          "type": "Long",
+          "classification": "值对象"
+        },
+        {
+          "name": "classes",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "areaId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "statusFlag",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "isMeal",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "BusinessException",
+      "package": "com.shouqianba.localserver.common",
+      "fields": [
+        {
+          "name": "code",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "msg",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "traceId",
+          "type": "String",
+          "classification": "ID引用"
+        },
+        {
+          "name": "data",
+          "type": "Object",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "BookDetailDTO",
+      "package": "com.shouqianba.localserver.dao",
+      "fields": [
+        {
+          "name": "dataId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "relationDataId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "AppletOperateSkuDTO",
+      "package": "com.shouqianba.localserver.dao",
+      "fields": [
+        {
+          "name": "skuId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "batchNo",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "CategoryGoodsCountDTO",
+      "package": "com.shouqianba.localserver.dao",
+      "fields": [
+        {
+          "name": "categoryId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "categoryName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "goodsCount",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "sortIndex",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "parentId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "KDSPrintGroupSettingQuery",
+      "package": "com.shouqianba.localserver.dao",
+      "fields": [
+        {
+          "name": "printGroupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "searchKey",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "categoryId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "KDSScreenAllotScoreQuery",
+      "package": "com.shouqianba.localserver.dao",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "detailId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "detailIdList",
+          "type": "List<Long>",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "KDSScreenMakeDetailTagQuery",
+      "package": "com.shouqianba.localserver.dao",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "makeDetailIdList",
+          "type": "List<Long>",
+          "classification": "值对象"
+        },
+        {
+          "name": "tagType",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "SwimConfigQuery",
+      "package": "com.shouqianba.localserver.dao",
+      "fields": [
+        {
+          "name": "allotId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "swimId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "swimDetailIdList",
+          "type": "List<Long>",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "CombineDiscountAmountDTO",
+      "package": "com.shouqianba.localserver.dto",
+      "fields": [
+        {
+          "name": "combineDetailId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "totalDiscountAmount",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        },
+        {
+          "name": "maxAmountDetailId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "totalDetailAmount",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "MemberMarketingGiftDto",
+      "package": "com.shouqianba.localserver.dto",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "objectId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "changeType",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "status",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "orgIds",
+          "type": "List<Long>",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "OrderTableExclusiveDto",
+      "package": "com.shouqianba.localserver.dto",
+      "fields": [
+        {
+          "name": "accountId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "userName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "deviceName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "identifyCode",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "TakeWineDetailDTO",
+      "package": "com.shouqianba.localserver.dto",
+      "fields": [
+        {
+          "name": "depositId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "depositDetailId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "skuId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "takeNum",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "GetGoodsCategoryRequest",
+      "package": "com.shouqianba.localserver.goods",
+      "fields": [
+        {
+          "name": "areaId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "featureType",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "orderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "bizType",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "categoryIds",
+          "type": "List<Long>",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "GetPracticeDetailRequest",
+      "package": "com.shouqianba.localserver.goods",
+      "fields": [
+        {
+          "name": "practiceId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "goodsId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "reqType",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "isShowSoldOut",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "searchKey",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "GetPracticeGroupingsRequest",
+      "package": "com.shouqianba.localserver.goods",
+      "fields": [
+        {
+          "name": "goodsId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "GetTagGroupingsRequest",
+      "package": "com.shouqianba.localserver.goods",
+      "fields": [
+        {
+          "name": "goodsId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "GoodsBuffetListRequest",
+      "package": "com.shouqianba.localserver.goods",
+      "fields": [
+        {
+          "name": "areaId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "GoodsCombineRequest",
+      "package": "com.shouqianba.localserver.goods",
+      "fields": [
+        {
+          "name": "skuId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "billNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "dataId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "GoodsPracticeRequest",
+      "package": "com.shouqianba.localserver.goods",
+      "fields": [
+        {
+          "name": "goodsId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "reqType",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "isShowSoldOut",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "isStopPractice",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "GoodsTagRequest",
+      "package": "com.shouqianba.localserver.goods",
+      "fields": [
+        {
+          "name": "goodsId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "isShowSoldOut",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "orderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "featureType",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "OrderGetBo",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "orderNoList",
+          "type": "List<String>",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "OrderQueryBo",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orderNoList",
+          "type": "List<String>",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "KdsMakeDetailDto",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "makeDetailId",
+          "type": "String",
+          "classification": "ID引用"
+        },
+        {
+          "name": "qty",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "KdsMakeInvalidDto",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "refundSkuList",
+          "type": "List<KdsMakeInvalidGoodsDto>",
+          "classification": "值对象"
+        },
+        {
+          "name": "isAllRefund",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "updateBy",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "KdsQueryGoodsConfigDto",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "detailId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "PrintSettingEntity",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "printSettingId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "printSettingName",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "QuerySwimConfigDto",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "allotId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "QuerySwimDetailAllotDto",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "allotId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "swimName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "makeStatus",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "SwimDetailGoodsDto",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "goodsId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "goodsName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "goodsCode",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "skuId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "saleUnit",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "KdsMakeAutoDetailDto",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "orderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "makeId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "makeDetailList",
+          "type": "List<KdsMakeDetailDto>",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "KdsMakeAutoOperateDto",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "currentScreen",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "detailId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "sn",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "makeDetailList",
+          "type": "List<KdsMakeAutoDetailDto>",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "KdsMakeDetailBo",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "makeDetailId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "qty",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        },
+        {
+          "name": "flowList",
+          "type": "List<Integer>",
+          "classification": "值对象"
+        },
+        {
+          "name": "nextFlow",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "updateBy",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "MakeBarcodeEntity",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "makeBarcode",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "barcodeContent",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "QueryScreenDetailAllotDto",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "detailId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "SaveAllotDto",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "allotId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "allotName",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "UpdateScreenDetailAllotDto",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "detailId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "allotList",
+          "type": "List<SaveAllotDto>",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "MakeBarcodeQuery",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "makeBarcode",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "QueryOrgPrintSettingGoodsRequest",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "printSettingId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "searchKey",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "categoryId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "TempSaveScreenParamsRequest",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "allotId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "detailId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "params",
+          "type": "List<SaveScreenParamRequest>",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "KdsMakeAutoDetailRequest",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "orderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "makeId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "makeDetailList",
+          "type": "List<KdsMakeDetailDto>",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "KdsMakeAutoOperateRequest",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "currentScreen",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "detailId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "makeDetailList",
+          "type": "List<KdsMakeAutoDetailRequest>",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "KDSMakeBathOperateShopRequest",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "currentScreen",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "detailId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "operateList",
+          "type": "List<KDSMakeOperateShopDTO>",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "KDSMakeOperateShopDTO",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "orderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "pickupCode",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "makeId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "makeDetailList",
+          "type": "List<KdsMakeDetailDto>",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "KDSQueryWorkDateRequest",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "detailId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "MakeDetailBarcodeQueryRequest",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "makeBarcode",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "currentScreen",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "pickupWindowId",
+          "type": "String",
+          "classification": "ID引用"
+        },
+        {
+          "name": "detailId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "QueryScreenDetailAllotRequest",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "detailId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "QueryScreenDetailRequest",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "screenSn",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "detailId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "QuerySwimConfigRequest",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "allotId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "QuerySwimDetailAllotDTO",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "allotId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "swimName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "makeStatus",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "SaveSwimConfigRequest",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "allotId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "takeoutTop",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "pickupTop",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "swimDetailList",
+          "type": "List<SwimDetailDto>",
+          "classification": "值对象"
+        },
+        {
+          "name": "updateBy",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "UpdateScreenDetailAllotRequest",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "detailId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "allotList",
+          "type": "List<SaveAllotDto>",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "UpdateSwimSwitchRequest",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "detailId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "paramCode",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "paramValue",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "extJson",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "PrintSettingVo",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "allotId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "allotName",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "AllotTableAreaVo",
+      "package": "com.shouqianba.localserver.kds",
+      "fields": [
+        {
+          "name": "areaId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "areaName",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "GetCardInfoRequest",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "cardId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "GetPreferenceAndLabelRequest",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "customerId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "dataNum",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "stime",
+          "type": "Long",
+          "classification": "值对象"
+        },
+        {
+          "name": "etime",
+          "type": "Long",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "QueryCardSchemeLevelRequest",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "cardSchemeId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "pageNo",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "pageSize",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "QueryRechargePackageRequest",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "cardSchemeId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "cardLevelId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "cardId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "customerId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "PointExchangeGiftDetailsQueryRequest",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "customerId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "marketingType",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "GiftCardConsumeRequest",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "couponId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "couponNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "cardPwd",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "ChangeCardPwdRequest",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "orgName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "cardId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "cardNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "oldPwd",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "newPwd",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "ResetCardPwdRequest",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "cardId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "cardSchemeId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "cardLevelId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "UpdateCardInfoRequest",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "cardId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "cardSchemeId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "cardLevelId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "cardNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "cardRemark",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "CardConsumeRollbackRequest",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "cardId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "paySubjectGroupCode",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "ConsumeResultRequest",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "cardId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "billNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "transPayNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "roundingFlag",
+          "type": "Boolean",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "MemberCardConsumeRequest",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "cardId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "transPoint",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        },
+        {
+          "name": "validateType",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "checkCode",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "searchKeyType",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "RechargeRefundRequest",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "cardId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "transId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "transOrderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "remark",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "paySubjectCode",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "BenefitMarketingOtherScopeVo",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "otherId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "otherName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "otherType",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "ext1",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "ext2",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "BenefitMarketingRuleVo",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "ruleId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "ruleType",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "ruleValue",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        },
+        {
+          "name": "ruleCondition",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        },
+        {
+          "name": "conditionIndex",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "BenefitPromotionOtherScopeVo",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "otherId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "otherName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "otherType",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "ext1",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "ext2",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "EquitySaleResponse",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "transOrderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "transQueueId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "OpenBenefitCardVo",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "transOrderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "transQueueId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "OpenCardVo",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "transOrderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "transQueueId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "bizId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "RechargeResponse",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "transOrderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "transQueueId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "SalesGiftCardVo",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "transOrderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "transQueueId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "couponInfos",
+          "type": "List<GiftCardInfo>",
+          "classification": "值对象"
+        },
+        {
+          "name": "couponNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "remark",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "GiftCardInfo",
+      "package": "com.shouqianba.localserver.member",
+      "fields": [
+        {
+          "name": "transOrderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "transQueueId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "couponInfos",
+          "type": "List<GiftCardInfo>",
+          "classification": "值对象"
+        },
+        {
+          "name": "couponNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "remark",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "CloudOrderDetailExtAddDto",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "field",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "combinationId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "plusSalePrice",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "CloudOrderExtAddDto",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "appId",
+          "type": "String",
+          "classification": "ID引用"
+        },
+        {
+          "name": "nfcTagId",
+          "type": "String",
+          "classification": "ID引用"
+        },
+        {
+          "name": "openId",
+          "type": "String",
+          "classification": "ID引用"
+        },
+        {
+          "name": "countryCode",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "PosOrderCoverDto",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "posOrderAddDto",
+          "type": "PosOrderAddDto",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "PosOrderDetailExtAddDto",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "field",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "combinationId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "plusSalePrice",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        },
+        {
+          "name": "formulaCode",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "recommendPromotion",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "QueryUploadOrderResultDto",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "taskId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "workDate",
+          "type": "Long",
+          "classification": "值对象"
+        },
+        {
+          "name": "relationId",
+          "type": "String",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "DeleteOrderDetailRequest",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "tableId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "billNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "goodsId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "GetOrderBillHeadRequest",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "orderKey",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "bizType",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "tableId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "GetOrderDetailRequest",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "tableId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "billNo",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "ModifyGoodsQtyOrderDetailRequest",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "tableId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "billNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "goodsId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "goodsQty",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        },
+        {
+          "name": "isDel",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "OrderDetailTasteRequest",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "billNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "detailId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "goodsId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "practiceId",
+          "type": "String",
+          "classification": "ID引用"
+        },
+        {
+          "name": "practice",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "OrderStructureAccountRequest",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "accountId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "accountName",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "DcqModifyQtyRequest",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "billNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "detailId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "goodsQty",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "CertificateQueryDto",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "certificateList",
+          "type": "List<CertificateDto>",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "CancelCouponPopupRequest",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "billNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "payId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "paySubjectCode",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "paySubjectGroupCode",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "PartialRefundRequest",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "billNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "payId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "paySubjectGroupCode",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "paySubjectCode",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "PayRetryRequest",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "billNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "payId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "HoldConsumeQueryDto",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "companyId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "transOrderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "payOrderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "employeeTransId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "HoldConsumeRefundDto",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "transOrgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "transOrgName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "companyId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "employeeTransId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "OnlinePayDto",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "OnlineQueryDto",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "PayGoodsDto",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "goodsId",
+          "type": "String",
+          "classification": "ID引用"
+        },
+        {
+          "name": "goodsName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "quantity",
+          "type": "int",
+          "classification": "值对象"
+        },
+        {
+          "name": "price",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "CancelSettlePayRequest",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "settleOrgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "settleOrgName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "companyId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "settleNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "paySubject",
+          "type": "PaySubjectRequest",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "CancelSettleRequest",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "companyId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "settleNo",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "GetOrderDetailPromotionRequest",
+      "package": "com.shouqianba.localserver.order",
+      "fields": [
+        {
+          "name": "orderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "detailId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "PrintGoodsCategoryDTO",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "categoryId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "printIndex",
+          "type": "Long",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "WineOperateDetailDTO",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "skuId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "goodsName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "saleUnit",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "totalNum",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        },
+        {
+          "name": "storageDays",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "TicketPrint",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "clientType",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "ticketType",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "reqHeader",
+          "type": "HttpRequestHeader",
+          "classification": "值对象"
+        },
+        {
+          "name": "printId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "PrintBatchGroup",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "printTaskId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orderKey",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "printerKey",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "jobs",
+          "type": "List<OrgPrintJob>",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "PrinterReq",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "printId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "printWay",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "printGroupId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "GetPrintTicketJobRequest",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "jobId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "PrintRequest",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "ticketType",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "orderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "printId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "printTaskId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "WsPrintTicketJobRequest",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "jobId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "printId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "AppletAreaGroupRequest",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "appletAreaGroupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "areaIdList",
+          "type": "List<Long>",
+          "classification": "值对象"
+        },
+        {
+          "name": "appletPrintId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "appletRetainPrintId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "AreaRequest",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "areaId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "areaName",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "ChannelRequest",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "channelId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "channelCode",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "channelName",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "DeletePrintSetRequest",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "printId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "printName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "revision",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "GoodsRequest",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "goodsId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "goodsCode",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "goodsName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "channelCode",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "channelShopId",
+          "type": "String",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "OrgPrintSettingDelRequest",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "printSettingId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "QueryPrintGoodsGroupV2Request",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "printSettingId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "QueryPrintSetListRequest",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "printId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "printName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "printType",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "printBrand",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "portType",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "AppletAreaGroupResponse",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "appletAreaGroupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "areaIdList",
+          "type": "List<Long>",
+          "classification": "值对象"
+        },
+        {
+          "name": "appletPrintId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "appletRetainPrintId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "CategoryGoodsVO",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "categoryId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "categoryName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "goodsCount",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "ChannelResponse",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "channelId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "channelCode",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "channelName",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "CloudPrintResponse",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "printStatus",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "platformOrderId",
+          "type": "String",
+          "classification": "ID引用"
+        },
+        {
+          "name": "failureReasonCode",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "failureReason",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "GetPrintTicketResponse",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "jobId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "GoodsResponse",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "goodsId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "goodsCode",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "goodsName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "channelCode",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "channelShopId",
+          "type": "String",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "PrintGoodsGroupPosResponse",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "printSettingId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "printSettingName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "printCount",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "typeContent",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "PrintOnlineSetV2Response",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "TableResponse",
+      "package": "com.shouqianba.localserver.print",
+      "fields": [
+        {
+          "name": "tableId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "tableNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "seatCount",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "PromotionValidJoinCountDto",
+      "package": "com.shouqianba.localserver.promotion",
+      "fields": [
+        {
+          "name": "customerId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "promotionIds",
+          "type": "List<Long>",
+          "classification": "值对象"
+        },
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orgPath",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "CancelPackGoodsRequest",
+      "package": "com.shouqianba.localserver.promotion",
+      "fields": [
+        {
+          "name": "dataId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "AppletSoldOutConfirmRequest",
+      "package": "com.shouqianba.localserver.request",
+      "fields": [
+        {
+          "name": "soldOutSkuIds",
+          "type": "List<AppletSoldOutSkuDetailDTO>",
+          "classification": "值对象"
+        },
+        {
+          "name": "orderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "fromUserId",
+          "type": "String",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "BatchRefundPledgeRequest",
+      "package": "com.shouqianba.localserver.request",
+      "fields": [
+        {
+          "name": "billNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "cashPledgeId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "pledgeList",
+          "type": "List<PledgeRefundInfo>",
+          "classification": "值对象"
+        },
+        {
+          "name": "remark",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "CashPledgeNullifyRequest",
+      "package": "com.shouqianba.localserver.request",
+      "fields": [
+        {
+          "name": "cashPledgeId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "phoneNumber",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "useBillNo",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "CashPledgePrintRequest",
+      "package": "com.shouqianba.localserver.request",
+      "fields": [
+        {
+          "name": "cashPledgeId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "CashPledgeRecordListRequest",
+      "package": "com.shouqianba.localserver.request",
+      "fields": [
+        {
+          "name": "cashPledgeId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "CashPledgeRetryRequest",
+      "package": "com.shouqianba.localserver.request",
+      "fields": [
+        {
+          "name": "cashPledgeId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "id",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "CashPledgeUseRequest",
+      "package": "com.shouqianba.localserver.request",
+      "fields": [
+        {
+          "name": "cashPledgeId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "billNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "payId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "payAmount",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "PledgePayRecordRequest",
+      "package": "com.shouqianba.localserver.request",
+      "fields": [
+        {
+          "name": "cashPledgeId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "useBillNo",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "PledgeRefundInfo",
+      "package": "com.shouqianba.localserver.request",
+      "fields": [
+        {
+          "name": "cashPledgeId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "paySubjectGroupCode",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "paySubjectCode",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "refundAmount",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "QueryWineGoodsListRequest",
+      "package": "com.shouqianba.localserver.request",
+      "fields": [
+        {
+          "name": "categoryId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "goodsName",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "TakeWineTicketRepeatPrintRequest",
+      "package": "com.shouqianba.localserver.request",
+      "fields": [
+        {
+          "name": "depositId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "tableName",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "QuerySoldOutOccupyListBo",
+      "package": "com.shouqianba.localserver.soldout",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "skuIds",
+          "type": "List<Long>",
+          "classification": "值对象"
+        },
+        {
+          "name": "startDate",
+          "type": "Long",
+          "classification": "值对象"
+        },
+        {
+          "name": "endDate",
+          "type": "Long",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "QuerySoldOutSettingListBo",
+      "package": "com.shouqianba.localserver.soldout",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "mealDate",
+          "type": "Long",
+          "classification": "值对象"
+        },
+        {
+          "name": "goodsIds",
+          "type": "List<Long>",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "SoldOutDailySettlementBo",
+      "package": "com.shouqianba.localserver.soldout",
+      "fields": [
+        {
+          "name": "groupId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "orgId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "mealDate",
+          "type": "Long",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "SoldOutOccupyDetailBo",
+      "package": "com.shouqianba.localserver.soldout",
+      "fields": [
+        {
+          "name": "goodsId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "skuId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "occupyNum",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        },
+        {
+          "name": "forceSoldOut",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "SoldOutStockHandleDetailBo",
+      "package": "com.shouqianba.localserver.soldout",
+      "fields": [
+        {
+          "name": "goodsId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "goodsNum",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "AppletSoldOutGoodsQtyCallbackDTO",
+      "package": "com.shouqianba.localserver.soldout",
+      "fields": [
+        {
+          "name": "skuId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "goodsNum",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "AppletSoldOutSkuDetailDTO",
+      "package": "com.shouqianba.localserver.soldout",
+      "fields": [
+        {
+          "name": "skuId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "goodsQty",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "SoldOutStockChannelSettingDTO",
+      "package": "com.shouqianba.localserver.soldout",
+      "fields": [
+        {
+          "name": "skuId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "usableNum",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        },
+        {
+          "name": "isShopSyncDelivery",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "SoldOutOccupyResultGoodsEntity",
+      "package": "com.shouqianba.localserver.soldout",
+      "fields": [
+        {
+          "name": "notEnoughGoodsId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "usableNum",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "PracticeSoldOutRequest",
+      "package": "com.shouqianba.localserver.soldout",
+      "fields": [
+        {
+          "name": "practiceId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "practiceItemName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "practiceItemId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "isActive",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "PracticeDetails",
+      "package": "com.shouqianba.localserver.soldout",
+      "fields": [
+        {
+          "name": "practiceId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "practiceItemName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "practiceItemId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "isActive",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "SoldOutStockHandleDetailDto",
+      "package": "com.shouqianba.localserver.soldout",
+      "fields": [
+        {
+          "name": "goodsId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "goodsNum",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "PosSoldOutOccupyBizService",
+      "package": "com.shouqianba.localserver.soldout",
+      "fields": [
+        {
+          "name": "soldOutStocksId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "occupyNum",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        },
+        {
+          "name": "soldOutStocksId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "occupyNum",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "UpdateOccupyNumBo",
+      "package": "com.shouqianba.localserver.soldout",
+      "fields": [
+        {
+          "name": "soldOutStocksId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "occupyNum",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        },
+        {
+          "name": "soldOutStocksId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "occupyNum",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "UpdateOccupyNumBoBuilder",
+      "package": "com.shouqianba.localserver.soldout",
+      "fields": [
+        {
+          "name": "soldOutStocksId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "occupyNum",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        },
+        {
+          "name": "soldOutStocksId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "occupyNum",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "QuerySoldOutDetailVo",
+      "package": "com.shouqianba.localserver.soldout",
+      "fields": [
+        {
+          "name": "goodsId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "goodsName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "goodsCode",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "usableNum",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "SoldOutOccupyVo",
+      "package": "com.shouqianba.localserver.soldout",
+      "fields": [
+        {
+          "name": "notEnoughGoodsId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "usableNum",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "GetTableRequest",
+      "package": "com.shouqianba.localserver.table",
+      "fields": [
+        {
+          "name": "areaId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "searchType",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "searchKey",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "tableStatus",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "CancelDeliveryDetailResponse",
+      "package": "com.shouqianba.localserver.takeout",
+      "fields": [
+        {
+          "name": "deliveryOrderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "platformDeliveryOrderId",
+          "type": "String",
+          "classification": "ID引用"
+        },
+        {
+          "name": "cancelFee",
+          "type": "BigDecimal",
+          "classification": "值对象"
+        },
+        {
+          "name": "success",
+          "type": "Boolean",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "CreateDeliveryOrderResponse",
+      "package": "com.shouqianba.localserver.takeout",
+      "fields": [
+        {
+          "name": "deliveryOrderNo",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "platformDeliveryOrderId",
+          "type": "String",
+          "classification": "ID引用"
+        },
+        {
+          "name": "deliveryStatus",
+          "type": "Integer",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "DispatchResponse",
+      "package": "com.shouqianba.localserver.takeout",
+      "fields": [
+        {
+          "name": "originId",
+          "type": "String",
+          "classification": "ID引用"
+        },
+        {
+          "name": "data",
+          "type": "List<DispatchDetailResponse>",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "DishesBindQueryRequest",
+      "package": "com.shouqianba.localserver.tripartite",
+      "fields": [
+        {
+          "name": "tagType",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "categoryId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "searchKey",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "MakeOptTimeResponse",
+      "package": "com.shouqianba.localserver.vo",
+      "fields": [
+        {
+          "name": "detailId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "status",
+          "type": "Integer",
+          "classification": "值对象"
+        },
+        {
+          "name": "time",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "CashPledgePayResponse",
+      "package": "com.shouqianba.localserver.vo",
+      "fields": [
+        {
+          "name": "cashPledgeId",
+          "type": "Long",
+          "classification": "ID引用"
+        }
+      ]
+    },
+    {
+      "root": "WineGoodsCategoryVO",
+      "package": "com.shouqianba.localserver.vo",
+      "fields": [
+        {
+          "name": "categoryId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "categoryName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "categoryCode",
+          "type": "String",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "KDSQueryPrintSettingGoodsCategoryListHandler",
+      "package": "com.shouqianba.localserver.web",
+      "fields": [
+        {
+          "name": "categoryId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "categoryName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "sortIndex",
+          "type": "Long",
+          "classification": "值对象"
+        }
+      ]
+    },
+    {
+      "root": "GoodsCategoryResponse",
+      "package": "com.shouqianba.localserver.web",
+      "fields": [
+        {
+          "name": "categoryId",
+          "type": "Long",
+          "classification": "ID引用"
+        },
+        {
+          "name": "categoryName",
+          "type": "String",
+          "classification": "值对象"
+        },
+        {
+          "name": "sortIndex",
+          "type": "Long",
+          "classification": "值对象"
+        }
+      ]
+    }
+  ]
+}

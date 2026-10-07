@@ -1,0 +1,51 @@
+﻿# states.yaml — 状态机（唯一数据源）
+state_machines:
+  - id: SM01
+    object: Order
+    domain: 订单域
+    contexts: [CTX001, CTX002, CTX003]
+    evidence: [EVD-013]
+    states:
+      - { code: PENDING_PAY, name_cn: 待结账,   terminal: false, initial: true, storage: "0", evidence: EVD-013 }
+      - { code: PAID,        name_cn: 已结账,   terminal: false, storage: "1", evidence: EVD-013 }
+      - { code: REFUNDED,    name_cn: 已退款,   terminal: true,  storage: "2", evidence: EVD-013 }
+      - { code: CANCELLED,   name_cn: 已取消,   terminal: true,  storage: "9", evidence: EVD-013 }
+    transitions:
+      - id: T01
+        from: PENDING_PAY
+        event: pay()
+        to: PAID
+        guard: "paidAmount >= totalAmount，支付方式有效"
+        post: "发送 OrderPaid 事件"
+        rollback: "reverseSettle()"
+        confidence: L5
+        evidence: EVD-009
+      - id: T02
+        from: PENDING_PAY
+        event: cancel()
+        to: CANCELLED
+        guard: "无"
+        post: "发送 OrderCancelled 事件"
+        confidence: L5
+        evidence: EVD-010
+      - id: T03
+        from: PAID
+        event: refund()
+        to: REFUNDED
+        guard: "同班次，退款数量 <= 购买数量"
+        post: "发送 OrderRefunded 事件"
+        confidence: L5
+        evidence: EVD-011
+      - id: T04
+        from: PAID
+        event: reverseSettle()
+        to: PENDING_PAY
+        guard: "同班次，未发货"
+        post: "发送 OrderReversed 事件"
+        confidence: L4
+        evidence: EVD-012
+    illegal_transitions:
+      - { from: PENDING_PAY, action: refund(),        reason: "未支付不能退款" }
+      - { from: PAID,        action: cancel(),        reason: "已支付不能取消，只能退款" }
+      - { from: REFUNDED,    action: pay(),           reason: "终态不能再支付" }
+      - { from: CANCELLED,   action: pay(),           reason: "终态不能再支付" }

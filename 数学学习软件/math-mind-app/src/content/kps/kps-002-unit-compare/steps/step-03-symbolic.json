@@ -1,0 +1,49 @@
+{
+  "stepId": "kps-002-step-03",
+  "stepType": "symbolic",
+  "title": "总结比较规则",
+  "description": "将图形规律抽象为符号化的比较规则",
+  "content": {
+    "stepId": "kps-002-step-03",
+    "stepType": "symbolic",
+    "title": "总结比较规则",
+    "instruction": "填空并选择：在分母相同的情况下，分子越___，分数越___。\n\n2/7  4/7\n3/8  5/8\n6/9  8/9",
+    "visual": {
+      "type": "fractionBar",
+      "fractions": [
+        { "denominator": 7, "numerator": 2, "label": "2/7" },
+        { "denominator": 7, "numerator": 4, "label": "4/7" }
+      ],
+      "equalLength": true,
+      "showLabels": true,
+      "animatable": true
+    },
+    "interaction": {
+      "type": "match",
+      "items": [
+        { "id": "big", "label": "大" },
+        { "id": "small", "label": "小" }
+      ],
+      "targets": [
+        { "id": "mol", "label:": "分子越___" },
+        { "id": "result", "label": "分数越___" }
+      ]
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "完美！在分母相同（单位统一）时，分子越大，分数越大。这就是'单位统一'的重要性！",
+        "animation": "glow"
+      },
+      {
+        "type": "incorrect",
+        "message": "回顾：我们比较2/7和4/7，哪个更大？想一想，分母都是7，比较的是什么？",
+        "animation": "shake",
+        "highlight": ["fraction-bar"]
+      }
+    ],
+    "autoAdvance": 2000
+  },
+  "prerequisites": ["kps-002-step-02"],
+  "unlocks": ["kps-002-step-04"]
+}

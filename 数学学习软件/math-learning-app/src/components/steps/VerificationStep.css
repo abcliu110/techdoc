@@ -1,0 +1,251 @@
+.verification-step {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.instruction-card {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.instruction-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #0c4a6e;
+}
+
+.instruction-card p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #0369a1;
+}
+
+.hypothesis-card {
+  background-color: #fef3c7;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  border-left: 4px solid #f59e0b;
+}
+
+.hypothesis-card h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #78350f;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hypothesis-text {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #92400e;
+}
+
+/* 进度指示器 */
+.progress-indicator {
+  margin-bottom: 16px;
+}
+
+.progress-text {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.progress-bar {
+  height: 8px;
+  background-color: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* 统计卡片 */
+.stats-card {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: #f8fafc;
+}
+
+.stat-item.passed {
+  background-color: #ecfdf5;
+}
+
+.stat-item.failed {
+  background-color: #fef2f2;
+}
+
+.stat-item.remaining {
+  background-color: #f8fafc;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.stat-item.passed .stat-value {
+  color: #059669;
+}
+
+.stat-item.failed .stat-value {
+  color: #dc2626;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* 测试用例卡片 */
+.test-case-card {
+  background-color: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.test-case-header {
+  margin-bottom: 8px;
+}
+
+.test-case-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.test-case-input {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e293b;
+  padding: 16px;
+  background-color: #f1f5f9;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  text-align: center;
+  font-family: monospace;
+}
+
+.test-case-question {
+  font-size: 14px;
+  color: #475569;
+  margin-bottom: 12px;
+}
+
+.answer-input-area {
+  margin-bottom: 12px;
+}
+
+.answer-input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 18px;
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: white;
+  outline: none;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+  text-align: center;
+  font-family: monospace;
+}
+
+.answer-input:focus {
+  border-color: #3b82f6;
+}
+
+.answer-input:disabled {
+  background-color: #f8fafc;
+  cursor: not-allowed;
+}
+
+/* 最终结论卡片 */
+.conclusion-card {
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 16px;
+}
+
+.conclusion-card.supported {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border: 2px solid #10b981;
+}
+
+.conclusion-card.refuted {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border: 2px solid #ef4444;
+}
+
+.conclusion-card h4 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.conclusion-card.supported h4 {
+  color: #059669;
+}
+
+.conclusion-card.refuted h4 {
+  color: #dc2626;
+}
+
+.conclusion-card p {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #374151;
+}
+
+.conclusion-stats {
+  display: flex;
+  gap: 24px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.conclusion-stats span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.step-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid #e2e8f0;
+  background-color: #f8fafc;
+}

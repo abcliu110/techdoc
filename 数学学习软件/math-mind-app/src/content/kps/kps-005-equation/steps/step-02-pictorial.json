@@ -1,0 +1,47 @@
+{
+  "stepId": "kps-005-step-02",
+  "stepType": "pictorial",
+  "title": "两边同时变化",
+  "description": "用图形理解等式两边可以同时加减乘除",
+  "content": {
+    "stepId": "kps-005-step-02",
+    "stepType": "pictorial",
+    "title": "两边同时变化",
+    "instruction": "等式两边可以同时进行什么操作仍然保持相等？\n\n5 + 3 = 8\n两边同时减去3：5 = ?\n两边同时除以2：? = 4",
+    "visual": {
+      "type": "numberLine",
+      "start": 0,
+      "end": 10,
+      "marks": [0, 2, 4, 5, 6, 8, 10],
+      "points": [
+        { "value": 5, "label": "5", "color": "#4A90D9" },
+        { "value": 8, "label": "8", "color": "#7B68EE" }
+      ],
+      "animatable": true
+    },
+    "interaction": {
+      "type": "tap",
+      "options": [
+        { "id": "tap-add", "label": "加、减、乘、除都可以", "isCorrect": true },
+        { "id": "tap-addsub", "label": "只能加、减" },
+        { "id": "tap-addmul", "label": "只能加、乘" }
+      ]
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "正确！等式两边可以同时加、减、乘、除（除数不能为0）相同的数，等式仍然成立。这是解方程的基础！",
+        "animation": "bounce"
+      },
+      {
+        "type": "incorrect",
+        "message": "提示：等式的核心是平衡。只要两边做相同的操作，天平就不会倾斜。",
+        "animation": "shake",
+        "highlight": ["number-line"]
+      }
+    ],
+    "autoAdvance": 2000
+  },
+  "prerequisites": ["kps-005-step-01"],
+  "unlocks": ["kps-005-step-03"]
+}

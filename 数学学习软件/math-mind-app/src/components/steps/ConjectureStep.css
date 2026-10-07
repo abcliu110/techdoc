@@ -1,0 +1,90 @@
+.conjecture-step {
+  border-left: 4px solid #10b981;
+}
+
+.conjecture-step.completed {
+  border-left-color: var(--color-success, #10b981);
+}
+
+.conjecture-step-instruction {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background-color: #ecfdf5;
+  border-radius: 12px;
+}
+
+.conjecture-step-instruction .instruction-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.conjecture-step-instruction .instruction-text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text, #1f2937);
+}
+
+.conjecture-step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.conjecture-input-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.conjecture-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text, #374151);
+}
+
+.conjecture-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-family: inherit;
+  line-height: 1.6;
+  color: var(--color-text, #1f2937);
+  background-color: var(--color-bg-card, white);
+  border: 2px solid var(--color-border, #d1d5db);
+  border-radius: 10px;
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color 0.2s ease;
+}
+
+.conjecture-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary, #4f46e5);
+}
+
+.conjecture-textarea::placeholder {
+  color: var(--color-text-secondary, #9ca3af);
+}
+
+.verification-area {
+  padding: 16px;
+  background-color: var(--color-bg-card, white);
+  border-radius: 12px;
+  border: 2px dashed #a7f3d0;
+}
+
+.verification-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text, #1f2937);
+  margin: 0 0 12px 0;
+}
+
+.verification-placeholder {
+  padding: 20px;
+  text-align: center;
+  color: var(--color-text-secondary, #9ca3af);
+  font-style: italic;
+}

@@ -1,0 +1,44 @@
+{
+  "id": "frac-compare-pictorial",
+  "type": "pictorial",
+  "name": "图示表达",
+  "instruction": "通过图形理解分数的含义和大小关系",
+  "content": {
+    "type": "pictorial",
+    "task": "观察下面的图形表示，判断 3/5 和 2/3 哪个更大。",
+    "visualType": "fraction-bar",
+    "visualConfig": {
+      "fractions": [
+        {
+          "id": "f1",
+          "numerator": 3,
+          "denominator": 5,
+          "label": "3/5",
+          "color": "#4CAF50"
+        },
+        {
+          "id": "f2",
+          "numerator": 2,
+          "denominator": 3,
+          "label": "2/3",
+          "color": "#2196F3"
+        }
+      ],
+      "showUnit": true,
+      "alignment": "bottom"
+    },
+    "outputFormat": "select"
+  },
+  "completionCriteria": {
+    "type": "choice",
+    "config": {
+      "correctAnswer": "2/3 更大",
+      "options": ["3/5 更大", "2/3 更大", "一样大"]
+    }
+  },
+  "hintLevels": [
+    "提示：注意两个分数条的起点和终点位置",
+    "提示：把两个分数条都延伸到相同的长度（通成长度），再比较涂色部分"
+  ],
+  "ability": "number-shape-integration"
+}

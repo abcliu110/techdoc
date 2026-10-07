@@ -1,0 +1,90 @@
+{
+  "id": "fraction-comparison",
+  "name": "分数大小比较",
+  "description": "通过数形结合思想学习分数的大小比较",
+  "ability": "number-shape-integration",
+  "grade": 3,
+  "level": 1,
+  "stepCount": 3,
+  "steps": [
+    {
+      "id": "step-concrete-1",
+      "type": "concrete",
+      "name": "分割操作",
+      "instruction": "通过分割圆形来表示分数",
+      "content": {
+        "type": "concrete",
+        "scenario": {
+          "title": "分蛋糕游戏",
+          "description": "小明和小红各有一个蛋糕，小明把蛋糕分成4份吃了3份，小红把蛋糕分成3份吃了2份。谁吃的多？",
+          "emoji": "🎂"
+        },
+        "interaction": {
+          "kind": "split",
+          "target": "在两个圆上分别表示出 3/4 和 2/3",
+          "visualType": "split-circle",
+          "visualConfig": {}
+        }
+      },
+      "completionCriteria": {
+        "type": "interactive",
+        "config": {
+          "requiredInteraction": "split-complete"
+        }
+      },
+      "hintLevels": [
+        "提示：数一数每个圆被分成了几份？",
+        "提示：数一数每个圆被涂色了几份？",
+        "提示：3/4 表示分成4份取3份"
+      ],
+      "ability": "number-shape-integration"
+    },
+    {
+      "id": "step-pictorial-1",
+      "type": "pictorial",
+      "name": "图示表达",
+      "instruction": "用条形图表示分数",
+      "content": {
+        "type": "pictorial",
+        "task": "使用条形图表示 3/4 和 2/3",
+        "visualType": "fraction-bar",
+        "visualConfig": {},
+        "outputFormat": "select"
+      },
+      "completionCriteria": {
+        "type": "interactive",
+        "config": {
+          "requiredInteraction": "bar-complete"
+        }
+      },
+      "hintLevels": [
+        "提示：条形图的每一格代表整体的一部分",
+        "提示：3/4 需要涂色3个格子"
+      ],
+      "ability": "number-shape-integration"
+    },
+    {
+      "id": "step-symbolic-1",
+      "type": "symbolic",
+      "name": "符号表示",
+      "instruction": "用数学符号比较分数大小",
+      "content": {
+        "type": "symbolic",
+        "instruction": "比较 3/4 和 2/3 的大小，用 > 或 < 表示",
+        "inputType": "expression",
+        "expectedAnswer": [">", "3/4 > 2/3"]
+      },
+      "completionCriteria": {
+        "type": "input",
+        "config": {
+          "expectedAnswers": [">", "3/4>2/3", "3/4 > 2/3"]
+        }
+      },
+      "hintLevels": [
+        "提示：分母相同，分子大的分数更大",
+        "提示：可以通分后比较"
+      ],
+      "ability": "number-shape-integration"
+    }
+  ]
+}

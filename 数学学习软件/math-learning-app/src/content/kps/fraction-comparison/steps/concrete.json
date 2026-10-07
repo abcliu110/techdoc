@@ -1,0 +1,36 @@
+{
+  "id": "frac-compare-concrete",
+  "type": "concrete",
+  "name": "分割比较",
+  "instruction": "通过分割图形来比较分数大小",
+  "content": {
+    "type": "concrete",
+    "scenario": {
+      "title": "分蛋糕",
+      "description": "小明和小红各有一个蛋糕，小明把蛋糕分成4份吃了3份，小红把蛋糕分成3份吃了2份。谁吃的多？",
+      "emoji": "🎂"
+    },
+    "interaction": {
+      "kind": "split",
+      "target": "在两个圆上分别表示出 3/4 和 2/3",
+      "visualType": "split-circle",
+      "visualConfig": {
+        "circles": [
+          { "denominator": 4, "highlighted": [0, 1, 2] },
+          { "denominator": 3, "highlighted": [0, 1] }
+        ]
+      }
+    }
+  },
+  "completionCriteria": {
+    "type": "interactive",
+    "config": {
+      "requiredInteraction": "split-complete"
+    }
+  },
+  "hintLevels": [
+    "提示：数一数每个圆被分成了几份？",
+    "提示：数一数每个圆被涂色了几份？"
+  ],
+  "ability": "number-shape-integration"
+}

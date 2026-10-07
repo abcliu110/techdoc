@@ -1,0 +1,29 @@
+{
+  "id": "frac-compare-symbolic",
+  "type": "symbolic",
+  "name": "符号表达",
+  "instruction": "用通分或交叉相乘比较分数大小",
+  "content": {
+    "type": "symbolic",
+    "instruction": "用通分或交叉相乘比较分数大小",
+    "inputType": "expression",
+    "expectedAnswer": "3/4 > 2/3",
+    "method": "通分",
+    "steps": [
+      "找到最小公倍数：4和3的最小公倍数是12",
+      "通分：3/4 = 9/12，2/3 = 8/12",
+      "比较：9/12 > 8/12，所以 3/4 > 2/3"
+    ]
+  },
+  "completionCriteria": {
+    "type": "input",
+    "config": {
+      "expectedAnswers": ["3/4 > 2/3", "3/4>2/3", "3/4更大", "3/4 大于 2/3", "9/12 > 8/12"]
+    }
+  },
+  "hintLevels": [
+    "提示：先通分再比较",
+    "提示：3/4 = 9/12，2/3 = 8/12"
+  ],
+  "ability": "number-shape-integration"
+}

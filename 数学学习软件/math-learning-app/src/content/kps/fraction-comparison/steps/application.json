@@ -1,0 +1,46 @@
+{
+  "id": "frac-compare-application",
+  "type": "application",
+  "name": "迁移应用",
+  "instruction": "在新情境中应用所学方法",
+  "content": {
+    "type": "application",
+    "instruction": "小明把一根绳子分成5份取了3份，小红分成4份取了2份。谁拿的绳子更长？",
+    "scenario": "分绳子情境",
+    "variants": [
+      {
+        "id": "v1",
+        "question": "比较 3/5 和 2/4 的大小",
+        "options": ["3/5 更大", "2/4 更大", "一样大"],
+        "correctAnswer": "3/5 更大",
+        "explanation": "3/5 = 12/20，2/4 = 10/20，所以 3/5 更大"
+      },
+      {
+        "id": "v2",
+        "question": "比较 4/7 和 3/5 的大小",
+        "options": ["4/7 更大", "3/5 更大", "一样大"],
+        "correctAnswer": "3/5 更大",
+        "explanation": "4/7 ≈ 0.571，3/5 = 0.6，所以 3/5 更大"
+      },
+      {
+        "id": "v3",
+        "question": "比较 5/8 和 3/4 的大小",
+        "options": ["5/8 更大", "3/4 更大", "一样大"],
+        "correctAnswer": "3/4 更大",
+        "explanation": "5/8 = 15/24，3/4 = 18/24，所以 3/4 更大"
+      }
+    ],
+    "minCorrect": 2
+  },
+  "completionCriteria": {
+    "type": "choice",
+    "config": {
+      "minCorrect": 2
+    }
+  },
+  "hintLevels": [
+    "提示：通分后比较",
+    "提示：找到两个分母的最小公倍数"
+  ],
+  "ability": "number-shape-integration"
+}

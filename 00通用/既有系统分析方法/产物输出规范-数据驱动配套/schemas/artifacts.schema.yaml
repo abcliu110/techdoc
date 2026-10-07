@@ -1,0 +1,108 @@
+﻿# artifacts.schema.yaml — 产物数据文件模式定义
+# 由 tools/validate-data.py 消费；新增字段先改这里，再改数据文件。
+version: 1
+
+enums:
+  confidence: [L1, L2, L3, L4, L5]
+  priority: [P0, P1, P2, P3]
+  rule_type: [校验, 计算, 决策, 约束]
+  rule_visibility: [显性, 隐性]
+  dependency_type: [强, 弱, 互斥, 条件]
+  relation_type: [组合, 引用, 创建, 关联, 嵌入]
+  entity_kind: [聚合根, 实体, 值对象]
+  aggregate_status: [已确认, 候选, 已排除]
+  debt_status: [待修复, 处理中, 已修复, 已接受]
+  gap_type: [单元测试, 集成测试, E2E测试, 接口测试, 事件测试]
+
+top_keys:
+  entities.yaml: [contexts, aggregates]
+  rules.yaml: [rules, dependencies]
+  states.yaml: [state_machines]
+  flows.yaml: [flows]
+  decisions.yaml: [decision_matrices]
+  events.yaml: [events]
+  quality.yaml: [tech_debts, test_gaps, coverage]
+  evidence.yaml: [evidence]
+
+objects:
+  context:
+    file: entities.yaml
+    key: contexts
+    required: [id, name, domain, priority]
+    enums: {priority: priority}
+    id_field: id
+    id_pattern: "^CTX\\d{3}$"
+  aggregate:
+    file: entities.yaml
+    key: aggregates
+    required: [id, name, name_cn, domain, contexts, status, kind]
+    enums: {status: aggregate_status, kind: entity_kind}
+    id_field: id
+    id_pattern: "^AR\\d{2}$"
+    optional: [table, evidence, attributes, children, relations, invariants, events]
+  rule:
+    file: rules.yaml
+    key: rules
+    required: [id, domain, context, name, type, description, priority, confidence, evidence]
+    enums: {type: rule_type, visibility: rule_visibility, priority: priority, confidence: confidence}
+    id_field: id
+    id_pattern: "^R\\d{3}$"
+    optional: [exec_order, pending_questions, visibility]
+  dependency:
+    file: rules.yaml
+    key: dependencies
+    required: [from, to, type]
+    enums: {type: dependency_type}
+    optional: [reason]
+  state_machine:
+    file: states.yaml
+    key: state_machines
+    required: [id, object, domain, states, transitions]
+    id_field: id
+    id_pattern: "^SM\\d{2}$"
+    optional: [contexts, illegal_transitions, evidence]
+  flow:
+    file: flows.yaml
+    key: flows
+    required: [id, name, domain, context, steps]
+    id_field: id
+    id_pattern: "^F\\d{3}$"
+    optional: [variants, exceptions, compensations, evidence]
+  decision_matrix:
+    file: decisions.yaml
+    key: decision_matrices
+    required: [id, name, context, conditions, rows]
+    id_field: id
+    id_pattern: "^DM\\d{3}$"
+    optional: [evidence]
+  event:
+    file: events.yaml
+    key: events
+    required: [id, name, aggregate, trigger, subscribers]
+    id_field: id
+    id_pattern: "^EVT\\d{3}$"
+    optional: [topic, tag, payload_summary, idempotency_key, evidence]
+  tech_debt:
+    file: quality.yaml
+    key: tech_debts
+    required: [id, desc, impact, priority, effort_days, status]
+    enums: {priority: priority, status: debt_status}
+    id_field: id
+    id_pattern: "^TD\\d{3}$"
+    optional: [owner, context]
+  test_gap:
+    file: quality.yaml
+    key: test_gaps
+    required: [id, desc, type, priority, context, effort_days]
+    enums: {type: gap_type, priority: priority}
+    id_field: id
+    id_pattern: "^GAP\\d{3}$"
+    optional: [owner]
+  evidence:
+    file: evidence.yaml
+    key: evidence
+    required: [id, locate, file, confidence]
+    enums: {confidence: confidence}
+    id_field: id
+    id_pattern: "^EVD-\\d{3}$"
+    optional: [line, commit, snippet, verified_at]

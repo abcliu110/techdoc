@@ -1,0 +1,120 @@
+{
+  "version": "1.1",
+  "sopName": "kaci-pos-decompiled 系统 SOP",
+  "createdAt": "2026-09-02T00:00:00+08:00",
+  "updatedAt": "2026-09-02T23:59:59+08:00",
+  "sessions": [
+    {
+      "id": "S0_启动",
+      "status": "completed",
+      "startedAt": "2026-09-02T00:00:00+08:00",
+      "completedAt": "2026-09-02T00:30:00+08:00",
+      "error": null
+    },
+    {
+      "id": "S1_骨架",
+      "status": "completed",
+      "startedAt": "2026-09-02T00:30:00+08:00",
+      "completedAt": "2026-09-02T02:00:00+08:00",
+      "error": null
+    },
+    {
+      "id": "S2_粗分析",
+      "status": "completed",
+      "startedAt": "2026-09-02T02:00:00+08:00",
+      "completedAt": "2026-09-02T04:00:00+08:00",
+      "error": null
+    },
+    {
+      "id": "S3_订单",
+      "status": "completed",
+      "startedAt": "2026-09-02T04:00:00+08:00",
+      "completedAt": "2026-09-02T08:00:00+08:00",
+      "error": null
+    },
+    {
+      "id": "S3_商品",
+      "status": "completed",
+      "startedAt": "2026-09-02T04:00:00+08:00",
+      "completedAt": "2026-09-02T08:00:00+08:00",
+      "error": null
+    },
+    {
+      "id": "S3_桌台",
+      "status": "completed",
+      "startedAt": "2026-09-02T08:00:00+08:00",
+      "completedAt": "2026-09-02T11:00:00+08:00",
+      "error": null
+    },
+    {
+      "id": "S3_打印",
+      "status": "completed",
+      "startedAt": "2026-09-02T08:00:00+08:00",
+      "completedAt": "2026-09-02T11:00:00+08:00",
+      "error": null
+    },
+    {
+      "id": "S3_促销",
+      "status": "completed",
+      "startedAt": "2026-09-02T11:00:00+08:00",
+      "completedAt": "2026-09-02T14:00:00+08:00",
+      "error": null
+    },
+    {
+      "id": "S3_会员",
+      "status": "completed",
+      "startedAt": "2026-09-02T11:00:00+08:00",
+      "completedAt": "2026-09-02T14:00:00+08:00",
+      "error": null
+    },
+    {
+      "id": "S3_预订",
+      "status": "completed",
+      "startedAt": "2026-09-02T14:00:00+08:00",
+      "completedAt": "2026-09-02T16:00:00+08:00",
+      "error": null
+    },
+    {
+      "id": "S3_配送",
+      "status": "completed",
+      "startedAt": "2026-09-02T14:00:00+08:00",
+      "completedAt": "2026-09-02T16:00:00+08:00",
+      "error": null
+    },
+    {
+      "id": "S3_KDS",
+      "status": "completed",
+      "startedAt": "2026-09-02T16:00:00+08:00",
+      "completedAt": "2026-09-02T18:00:00+08:00",
+      "error": null
+    },
+    {
+      "id": "S3_支付押金",
+      "status": "completed",
+      "startedAt": "2026-09-02T16:00:00+08:00",
+      "completedAt": "2026-09-02T18:00:00+08:00",
+      "error": null
+    },
+    {
+      "id": "S3_日结班次",
+      "status": "completed",
+      "startedAt": "2026-09-02T18:00:00+08:00",
+      "completedAt": "2026-09-02T20:00:00+08:00",
+      "error": null
+    },
+    {
+      "id": "S3_估清",
+      "status": "completed",
+      "startedAt": "2026-09-02T18:00:00+08:00",
+      "completedAt": "2026-09-02T20:00:00+08:00",
+      "error": null
+    },
+    {
+      "id": "S4_整合",
+      "status": "completed",
+      "startedAt": "2026-09-02T20:00:00+08:00",
+      "completedAt": "2026-09-02T23:59:59+08:00",
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "stepId": "kps-003-step-04",
+  "stepType": "conjecture",
+  "title": "发现整体与部分的规律",
+  "description": "总结整体与部分的数学规律",
+  "content": {
+    "stepId": "kps-003-step-04",
+    "stepType": "conjecture",
+    "title": "发现整体与部分的规律",
+    "instruction": "根据以下例子，总结规律：\n\n- 20的1/4 = 5，因为5×4=20\n- 15的2/3 = 10，因为10÷2/3=15\n- 某个数的3/5=9，整体=9÷3/5=15\n\n填空：已知部分和分数，求整体，用___法。",
+    "visual": {
+      "type": "fractionBar",
+      "fractions": [
+        { "denominator": 5, "numerator": 3, "label": "3/5", "color": "#4A90D9" },
+        { "denominator": 5, "numerator": 5, "label": "1（整体）", "color": "#7B68EE" }
+      ],
+      "equalLength": true,
+      "showLabels": true,
+      "animatable": true
+    },
+    "interaction": {
+      "type": "tap",
+      "options": [
+        { "id": "tap-cheng", "label": "乘", "isCorrect": false },
+        { "id": "tap-chu", "label": "除", "isCorrect": true },
+        { "id": "tap-jia", "label": "加" },
+        { "id": "tap-jian", "label": "减" }
+      ]
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "正确！已知部分和分数求整体，用除法：整体 = 部分 ÷ 分数。",
+        "animation": "glow"
+      },
+      {
+        "type": "incorrect",
+        "message": "提示：20的1/4=5，那么20=5÷1/4。想一想已知积和一个因数，求另一个因数用什么运算？",
+        "animation": "shake",
+        "highlight": ["fraction-bar"]
+      }
+    ],
+    "autoAdvance": 2000
+  },
+  "prerequisites": ["kps-003-step-03"],
+  "unlocks": ["kps-003-step-05"]
+}

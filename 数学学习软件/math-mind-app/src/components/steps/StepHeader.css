@@ -1,0 +1,27 @@
+.step-header-component {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.step-header-emoji {
+  font-size: 40px;
+}
+
+.step-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.step-header-name {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-text, #1f2937);
+  margin: 0;
+}
+
+.step-header-index {
+  font-size: 14px;
+  color: var(--color-text-secondary, #6b7280);
+}

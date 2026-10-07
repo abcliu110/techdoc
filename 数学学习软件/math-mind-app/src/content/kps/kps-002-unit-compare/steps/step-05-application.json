@@ -1,0 +1,48 @@
+{
+  "stepId": "kps-002-step-05",
+  "stepType": "application",
+  "title": "综合应用",
+  "description": "在生活情境中运用单位统一思想",
+  "content": {
+    "stepId": "kps-002-step-05",
+    "stepType": "application",
+    "title": "综合应用",
+    "instruction": "有三杯果汁，第一杯有3/8升，第二杯有5/8升，第三杯有7/8升。\n\n请按从少到多的顺序排列：\n________ < ________ < ________",
+    "visual": {
+      "type": "bar",
+      "bars": [
+        { "value": 3, "label": "3/8升", "color": "#90EE90" },
+        { "value": 5, "label": "5/8升", "color": "#FFB6C1" },
+        { "value": 7, "label": "7/8升", "color": "#87CEEB" }
+      ],
+      "maxValue": 8,
+      "showValues": true,
+      "animatable": true
+    },
+    "interaction": {
+      "type": "order",
+      "items": [
+        { "id": "a", "content": "3/8升" },
+        { "id": "b", "content": "5/8升" },
+        { "id": "c", "content": "7/8升" }
+      ],
+      "direction": "asc"
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "太棒了！3/8 < 5/8 < 7/8。因为单位统一（都是1/8升），所以只需要比较分子的数量。这在日常生活中非常有用！",
+        "animation": "glow"
+      },
+      {
+        "type": "incorrect",
+        "message": "提示：三杯果汁的单位都是1/8升。哪杯的分子最小？哪杯最大？",
+        "animation": "shake",
+        "highlight": ["bar-chart"]
+      }
+    ],
+    "autoAdvance": 2000
+  },
+  "prerequisites": ["kps-002-step-04"],
+  "unlocks": []
+}

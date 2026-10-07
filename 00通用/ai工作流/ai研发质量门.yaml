@@ -1,0 +1,1428 @@
+version: 1.4.0
+policy_name: ai研发质量门
+execution_mode: strict
+agent_execution_mode: strict_multi_agent
+execution_mode_locked: true
+allowed_execution_modes:
+  - strict_multi_agent
+mode_change_requires: forbidden
+mode_selection_prompt_is_invalid: true
+new_project_still_requires_full_workflow: true
+quick_start_workflow_is_invalid: true
+user_process_choice_prompt_is_invalid: true
+first_response_schema:
+  required_marker: WORKFLOW_PREFLIGHT
+  required_fields:
+    - mode
+    - specs_loaded
+    - agent_runtime
+    - feature_team
+    - next_gate
+    - status
+    - reason
+  forbidden_first_response_patterns:
+    - mode_selection_question
+    - quick_start_option
+    - strict_or_simple_choice
+    - direct_project_scaffolding
+subagent_required: true
+subagent_unavailable_action: blocked
+role_simulation_is_not_valid: true
+unresolved_command_action: blocked
+missing_evidence_action: blocked
+failed_gate_action: changes_requested
+protocol_violation_action: blocked_and_preserve_workspace
+destructive_cleanup_forbidden: true
+forbidden_recovery_commands:
+  - rm -rf
+  - Remove-Item -Recurse
+  - git reset --hard
+  - git clean
+  - git checkout
+  - delete_source_or_evidence_directory
+incident_artifact: evidence/protocol-incident.json
+destructive_operation_requires:
+  - task_owner_explicit_approval
+  - path_in_allowed_files
+  - rollback_evidence
+specs:
+  coordination: 00-AI研发执行协议.md@1.4.0
+  architecture: 01-AI软件架构设计规范.md@1.0.1
+  testing_quality: 02-AI软件测试与代码质量规范.md@1.2.0
+  controller: 03-AI质量门控制器接口规范.md@1.0.0
+
+canonical_roles:
+  task_owner: Task Owner
+  acceptance_challenger: Acceptance Challenger
+  task_orchestrator: Task Orchestrator
+  feature_orchestrator: Feature Orchestrator
+  feature_process_auditor: Feature Process Auditor
+  workflow_auditor: Workflow Auditor
+  domain_expert: Domain Expert
+  domain_rule_challenger: Domain Rule Challenger
+  architect: Architect
+  architecture_adversary: Architecture Adversary
+  architecture_reviewer: Architecture Reviewer
+  architecture_review_auditor: Architecture Review Auditor
+  interaction_designer: Interaction Designer
+  design_adversary: Design Adversary
+  implementer: Implementer
+  implementation_adversary: Implementation Adversary
+  automated_test: Automated Test Agent
+  test_adequacy_adversary: Test Adequacy Adversary
+  clean_code_reviewer: Clean Code Reviewer
+  maintainability_adversary: Maintainability Adversary
+  test_reviewer: Test Reviewer
+  test_review_auditor: Test Review Auditor
+  independent_code_reviewer: Independent Code Reviewer
+  review_auditor: Review Auditor
+  e2e_visual_reviewer: E2E and Visual Reviewer
+  user_journey_adversary: User Journey Adversary
+  security_contract_reviewer: Security and Contract Reviewer
+  security_contract_adversary: Security and Contract Adversary
+  release_verifier: Release Verifier
+  release_risk_adversary: Release Risk Adversary
+
+rules:
+  design_before_implementation: true
+  self_approval_forbidden: true
+  reviewer_must_differ_from_implementer: true
+  reviewer_must_differ_from_test_author: true
+  contract_change_requires_redesign: true
+  require_baseline_before_change: true
+  require_clean_checkout_verification: true
+  max_files_per_checkpoint: 5
+  one_behavior_per_checkpoint: true
+  over_limit_action: owner_approval_and_reason_required
+  retry_limit_for_flaky_test: 1
+  flaky_test_action: defect_and_block_related_gate
+  distinct_agent_identity_required: true
+  implementation_and_approval_must_differ: true
+
+# 文档只能表达规则，不能阻止 Agent 直接写文件或执行命令。
+# 严格模式必须绑定拒绝默认的质量门控制器。
+enforcement:
+  level: controller_required
+  documentation_alone_is_not_enforcement: true
+  controller_required: true
+  controller_name: ai-quality-gate-controller
+  controller_unavailable_action: blocked
+  direct_file_write_action: denied
+  direct_command_execution_action: denied
+  all_writes_must_be_audited: true
+  all_commands_must_be_audited: true
+  state_artifact: evidence/workflow-state.json
+  write_audit_artifact: evidence/write-audit.jsonl
+  command_audit_artifact: evidence/command-audit.jsonl
+  evidence_append_only: true
+  fail_closed: true
+  controller_must_verify_before_write:
+    - current_task_state
+    - current_gate_passed
+    - feature_team_and_agent_identity
+    - allowed_files
+    - checkpoint_id
+    - tdd_phase
+  controller_must_verify_before_command:
+    - command_is_registered
+    - command_owner_matches_gate_owner
+    - current_gate_allows_command
+    - working_directory_is_allowed
+    - environment_is_declared
+    - expected_exit_code_is_declared
+  denied_when:
+    - gate_missing
+    - gate_failed
+    - gate_evidence_missing
+    - command_unregistered
+    - path_outside_allowed_files
+    - agent_identity_unverified
+    - tdd_phase_mismatch
+
+command_registry:
+  required: true
+  source: task_contract.commands
+  every_gate_command_ref_must_resolve: true
+  unresolved_reference_action: blocked
+  command_must_be_registered_before_invocation: true
+  registration_is_immutable_during_gate: true
+  required_fields:
+    - command
+    - working_directory
+    - environment
+    - timeout_seconds
+    - expected_exit_code
+    - report_path
+    - owner_agent_id
+    - owner_role
+  command_change_requires:
+    - changes_requested
+    - affected_gate_rerun
+    - command_revision_increment
+
+write_policy:
+  source_and_production_config_writes_allowed_only_after:
+    - workflow_bootstrap_verified
+    - agent_runtime_verified
+    - agent_assignments_verified
+    - design_approved
+    - design_adversarial_reviews_passed
+    - feature_process_audit_passed
+    - test_strategy_ready
+    - implementation_ack_validated
+    - checkpoint_submitted
+    - tdd_red_phase_passed
+  red_phase_allowed_paths:
+    - tests
+    - test
+    - __tests__
+    - evidence
+  red_phase_forbidden_writes:
+    - source
+    - src
+    - server
+    - client
+    - app
+    - package.json
+    - package-lock.json
+    - pnpm-lock.yaml
+    - yarn.lock
+    - database
+    - migrations
+    - production_configuration
+  green_phase_requires:
+    - tdd_red_phase_passed
+    - red_snapshot_hash
+    - red_exit_code_nonzero
+    - red_test_revision
+  refactor_phase_requires:
+    - tdd_green_phase_passed
+    - clean_code_reviewer_agent_id
+    - maintainability_adversary_agent_id
+    - rerun_exit_code_zero
+
+tdd_execution:
+  checkpoint_snapshot_required: true
+  production_snapshot_before_red_required: true
+  red_must_run_against_snapshot: true
+  production_revision_must_not_change_before_red: true
+  test_revision_must_precede_implementation_revision: true
+  red_requires_controller_write_audit: true
+  green_requires_same_test_command: true
+  refactor_requires_post_refactor_rerun: true
+  violation_action: invalidate_checkpoint_preserve_code_restart_at_red
+
+agent_execution:
+  feature_team_required: true
+  team_identity_field: feature_team_id
+  parallel_execution_policy: parallel_when_dependencies_allow
+  required_team_fields:
+    - feature_id
+    - feature_team_id
+    - parallel_plan
+  minimum_distinct_roles:
+    - task_owner
+    - acceptance_challenger
+    - task_orchestrator
+    - workflow_auditor
+    - feature_orchestrator
+    - feature_process_auditor
+    - domain_expert
+    - domain_rule_challenger
+    - architect
+    - architecture_adversary
+    - architecture_reviewer
+    - architecture_review_auditor
+    - implementer
+    - implementation_adversary
+    - automated_test
+    - test_adequacy_adversary
+    - clean_code_reviewer
+    - maintainability_adversary
+    - test_reviewer
+    - test_review_auditor
+    - independent_code_reviewer
+    - review_auditor
+  frontend_additional_roles:
+    - interaction_designer
+    - design_adversary
+    - e2e_visual_reviewer
+    - user_journey_adversary
+  interaction_task_additional_roles:
+    - interaction_designer
+    - design_adversary
+  security_or_contract_task_additional_roles:
+    - security_contract_reviewer
+    - security_contract_adversary
+  sequential_resource_reuse_allowed: true
+  identity_reuse_for_same_artifact_allowed: false
+  communication_mode: orchestrator_mediated_or_direct_with_persisted_handoff
+  required_assignment_fields:
+    - role
+    - agent_id
+    - input_revision
+    - output_artifact
+    - conclusion
+  required_runtime_evidence:
+    - agent_tool_name
+    - invocation_or_session_id
+    - agent_id
+    - role
+    - feature_id
+    - feature_team_id
+    - input_revision
+    - output_artifact
+    - conclusion
+    - unresolved_questions
+    - completed_at
+  invalid_runtime_evidence:
+    - skill_loaded
+    - slash_command_output
+    - background_shell
+    - same_session_role_switch
+    - ui_agent_count
+    - generic_agent_name
+    - zero_tool_use_summary
+    - finished_counter
+    - missing_agent_handoff
+    - background_agent_waiting
+    - auto_notification_only
+  batch_handoff_policy:
+    all_batch_agents_must_handoff: true
+    next_batch_requires_prior_batch_complete: true
+    unresolved_handoff_blocks_next_batch: true
+    owner_role: feature_orchestrator
+
+role_pairs:
+  task_owner: acceptance_challenger
+  task_orchestrator: workflow_auditor
+  feature_orchestrator: feature_process_auditor
+  domain_expert: domain_rule_challenger
+  architect: architecture_adversary
+  architecture_reviewer: architecture_review_auditor
+  interaction_designer: design_adversary
+  implementer: implementation_adversary
+  automated_test: test_adequacy_adversary
+  clean_code_reviewer: maintainability_adversary
+  test_reviewer: test_review_auditor
+  e2e_visual_reviewer: user_journey_adversary
+  independent_code_reviewer: review_auditor
+  security_contract_reviewer: security_contract_adversary
+  release_verifier: release_risk_adversary
+
+role_pair_policy:
+  adversarial_roles_are_terminal: true
+  mapping_must_be_canonical_roles: true
+
+adversarial_evidence:
+  required_fields:
+    - producer_role
+    - producer_agent_id
+    - producer_output_revision
+    - adversary_role
+    - adversary_agent_id
+    - input_revision
+    - findings
+    - finding_severity
+    - disposition
+    - owner
+    - regression_evidence
+    - independent_approval
+  executor_checks:
+    - adversary_agent_id != producer_agent_id
+    - input_revision == producer_output_revision
+    - blocking_findings_have_resolved_or_approved_disposition
+    - high_or_blocking_findings_require_regression_evidence
+    - deferred_findings_require_task_owner_approval
+
+e2e_policy:
+  required_runs: 2
+  max_allowed_retries_per_run: 1
+  required_scenarios:
+    - entry
+    - user_action
+    - state_change
+    - success
+    - failure
+    - retry
+    - cancellation_if_applicable
+    - persisted_result
+  required_artifacts:
+    - run_matrix.json
+    - report.html
+    - trace_or_video
+    - console-network.json
+
+visual_policy:
+  required_viewports:
+    desktop: project_declared_desktop_viewport
+    mobile: project_declared_mobile_viewport
+  required_browser_version: project_declared_browser_version
+  diff_threshold: project_declared_threshold
+  required_states:
+    - initial
+    - loading
+    - success
+    - empty
+    - error
+    - retry
+  state_matrix_artifact: evidence/visual/state-matrix.json
+  dynamic_mask_requires_reason: true
+
+clean_code_policy:
+  thresholds_required: true
+  threshold_schema:
+    source: task_contract.quality_thresholds
+    version_required: true
+    fields:
+      cyclomatic_complexity_max: number
+      function_length_max: number
+      file_length_max: number
+      duplication_rate_max: percentage
+      dead_code_allowed: boolean
+      comment_consistency_command: command_ref
+  tool_commands_required:
+    - task.commands.complexity_check
+    - task.commands.duplication_check
+    - task.commands.dead_code_check
+    - task.commands.comment_consistency_check
+  required_metrics:
+    - cyclomatic_complexity
+    - function_length
+    - file_length
+    - duplication_rate
+    - dead_code
+    - comment_consistency
+  exception_requires: reason, owner, expiry, task_owner_approval
+
+tdd_policy:
+  required: true
+  cycle: red_green_refactor
+  scope: every_checkpoint_and_every_behavior
+  red_requires_test_before_production_code: true
+  green_requires_declared_tests_pass: true
+  refactor_requires_behavior_preserved_and_tests_rerun: true
+  test_weaken_or_delete_after_red_action: changes_requested
+  violation_action: invalidate_checkpoint_preserve_code_restart_at_red
+  user_choice_on_violation: forbidden
+  production_code_before_red_is_unverified: true
+  evidence_fields:
+    red:
+      - checkpoint_id
+      - test_revision
+      - production_revision_at_test_creation
+      - command_invoked
+      - exit_code
+      - failing_assertion
+    green:
+      - checkpoint_id
+      - test_revision
+      - implementation_revision
+      - command_invoked
+      - exit_code
+      - regression_result
+    refactor:
+      - checkpoint_id
+      - pre_refactor_revision
+      - post_refactor_revision
+      - behavior_preserved
+      - rerun_command
+      - rerun_exit_code
+
+required_evidence_fields:
+  - task_id
+  - checkpoint_id
+  - work_type
+  - spec_versions
+  - code_revision
+  - executor_agent_id
+  - executor_role
+  - command_ref
+  - command_invoked
+  - exit_code
+  - pass_criteria_result
+  - artifact_paths
+  - findings
+
+gate_schema:
+  required_fields:
+    - id
+    - owner_role
+    - command_ref
+    - pass_criteria
+    - artifact
+    - rerun_on_change
+    - failure_action
+  unresolved_command_is_failure: true
+  missing_artifact_is_failure: true
+
+review_gate_ids:
+  - design_approved
+  - clean_code_reviewed
+  - architecture_review_accepted
+  - test_review_accepted
+  - independent_review_accepted
+
+feature_progression_policy:
+  smallest_release_unit: feature_id
+  acceptance_required_before_next_feature: true
+  exactly_one_active_feature: true
+  active_feature_state_artifact: evidence/feature-progress.json
+  feature_order_source: task_orchestrator_generated_backlog
+  feature_start_requires:
+    first_feature:
+      - workflow_bootstrap_verified
+      - agent_runtime_verified
+      - agent_assignments_verified
+    subsequent_feature:
+      - prior_feature_acceptance_passed
+      - prior_defect_registry_resolved
+      - prior_feature_evidence_frozen
+      - no_other_feature_in_progress
+  feature_completion_requires:
+    - feature_acceptance_passed
+    - defect_registry_resolved
+    - feature_evidence_frozen
+  next_feature_creation_requires:
+    - prior_feature_acceptance_passed
+    - prior_defect_registry_resolved
+    - prior_feature_evidence_frozen
+  cannot_batch_features_under_one_acceptance: true
+  cannot_start_next_feature_while_current_feature_is_in_progress: true
+  acceptance_scope_must_match_feature_id: true
+  acceptance_revision_must_match_latest_approved_revision: true
+  failed_acceptance_action: blocked
+  missing_prior_acceptance_action: blocked
+  bypass_action: protocol_violation_preserve_workspace
+
+review_evidence_required_fields:
+  - reviewer_agent_id
+  - reviewer_role
+  - implementer_agent_id
+  - test_author_agent_id
+  - design_author_agent_id
+  - architecture_author_agent_id
+  - visual_author_agent_id
+  - reviewer_is_independent
+  - independence_comparison
+  - review_revision
+  - review_conclusion
+  - approved_revision
+
+command_schema:
+  task.commands.*:
+    required_fields:
+      - command
+      - working_directory
+      - environment
+      - timeout_seconds
+      - expected_exit_code
+      - report_path
+    command_must_be_declared_before_execution: true
+    command_owner_role_must_match_gate_owner: true
+
+change_scope_schema:
+  allowed_labels:
+    - backend_logic
+    - frontend_logic
+    - ui
+    - api_consumer
+    - public_api
+    - schema
+    - migration
+    - auth
+    - sensitive_data
+    - performance
+    - reliability
+    - observability
+    - dependency
+    - release
+  source: orchestrator_generated_from_diff_and_task_contract
+  agent_self_declaration_allowed: false
+  every_matching_condition_must_be_recorded: true
+  condition_evaluation_artifact: evidence/change-scope-evaluation.json
+  ui_change_detection:
+    derived_from:
+      - rendered_component_files
+      - stylesheets
+      - route_definitions
+      - accessibility_attributes
+      - browser_behavior
+    forced_label: ui
+    agent_self_declaration_allowed: false
+    misclassification_action: blocked
+    ui_label_requires:
+      - accessibility_verified
+      - desktop_visual_verified
+      - mobile_visual_verified
+      - e2e_tests_passed
+
+condition_schema:
+  operators:
+    - includes
+    - intersects
+    - exists
+  expression_format: structured
+  source_fields:
+    change_scope: task_contract.change_scope
+    release_target: task_contract.release_target
+  evaluation_order: declared_conditional_sequence_order
+  duplicate_gate_action: keep_first_occurrence
+  evaluation_artifact_required: true
+
+gate_catalog:
+  workflow_bootstrap_verified:
+    id: workflow_bootstrap_verified
+    owner_role: task_orchestrator
+    command_ref: task.commands.verify_workflow_bootstrap
+    pass_criteria: all authoritative specs are read successfully; versions, read timestamps and content fingerprints are recorded in task context; task agent_mode is exactly strict_multi_agent with no override; controller adapter is available and direct writes/commands are denied; no path, encoding, version or mode-selection error exists
+    artifact: evidence/workflow-bootstrap.json
+    rerun_on_change: spec_version_or_task_context_change
+    failure_action: blocked
+  agent_runtime_verified:
+    id: agent_runtime_verified
+    owner_role: task_orchestrator
+    command_ref: task.commands.verify_agent_runtime
+    pass_criteria: an actual Agent tool invocation creates an independent subagent and returns a role-bound, non-generic agent_id, invocation/session identifier and persisted role-specific agent_handoff containing feature_id, feature_team_id, input_revision, output_artifact and conclusion; Skill loading, slash commands, background shells, generic Agent names, zero-tool-use summaries, finished counters and UI agent-count labels are explicitly invalid evidence; any tool failure or unverifiable identity blocks the task
+    artifact: evidence/agent-runtime.json
+    rerun_on_change: runtime_or_agent_tool_change
+    failure_action: blocked
+  design_package_complete:
+    id: design_package_complete
+    owner_role: architect
+    command_ref: task.commands.validate_design_package
+    pass_criteria: metadata, required work_type fields, approvals, versions and applicable artifacts are present
+    artifact: evidence/design-package-validation.json
+    rerun_on_change: design_or_contract_change
+    failure_action: blocked
+  agent_assignments_verified:
+    id: agent_assignments_verified
+    owner_role: workflow_auditor
+    command_ref: task.commands.verify_agent_assignments
+    pass_criteria: required_roles are generated from work_type and change_scope; every required production and adversarial role belongs to the same feature_team_id and has a distinct runtime agent_id, input_revision, output_artifact and conclusion; parallel_plan and dependency order are declared; automated_test and its adversary are assigned before implementation
+    artifact: evidence/agent-assignments.json
+    rerun_on_change: role_assignment_or_scope_change
+    failure_action: blocked
+  task_contract_adversarial_reviewed:
+    id: task_contract_adversarial_reviewed
+    owner_role: workflow_auditor
+    command_ref: task.commands.task_contract_adversarial_review
+    required_pairs:
+      - task_owner/acceptance_challenger
+      - task_orchestrator/workflow_auditor
+    pass_criteria: acceptance and orchestration challengers independently check the task contract revision; scope, acceptance, role assignment and evidence risks are resolved
+    artifact: evidence/task-contract-adversarial-review.json
+    rerun_on_change: task_contract_or_role_assignment_change
+    failure_action: blocked
+  design_approved:
+    id: design_approved
+    owner_role: task_owner
+    command_ref: task.commands.verify_design_approval
+    pass_criteria: Task Owner, Architect and applicable Designer approvals match the approved design revision
+    artifact: evidence/design-approval.json
+    rerun_on_change: design_or_contract_change
+    failure_action: blocked
+  design_adversarial_reviews_passed:
+    id: design_adversarial_reviews_passed
+    owner_role: workflow_auditor
+    command_ref: task.commands.design_adversarial_review
+    required_pairs:
+      - domain_expert/domain_rule_challenger
+      - architect/architecture_adversary
+      - interaction_designer/design_adversary
+    applicability: interaction_designer and design_adversary are required only when the task assigns those roles
+    pass_criteria: every applicable design pair has a distinct challenger, documented counterexamples and an accepted resolution
+    artifact: evidence/design-adversarial-review.json
+    rerun_on_change: design_or_contract_change
+    failure_action: blocked
+  test_strategy_ready:
+    id: test_strategy_ready
+    owner_role: automated_test
+    command_ref: task.commands.test_strategy_review
+    pass_criteria: automated test agent provides a requirement-to-test matrix, concrete declared commands, fixtures/reset strategy, failure and boundary cases, and for frontend tasks an E2E/visual run plan before implementation starts
+    artifact: evidence/test-strategy.json
+    rerun_on_change: design_or_contract_or_scope_change
+    failure_action: blocked
+  feature_process_audit_passed:
+    id: feature_process_audit_passed
+    owner_role: feature_process_auditor
+    command_ref: task.commands.feature_process_audit
+    pass_criteria: feature scope, checkpoint plan, applicable gates, failure recovery and regression plan are complete
+    artifact: evidence/feature-process-audit.json
+    rerun_on_change: feature_contract_or_gate_change
+    failure_action: blocked
+  implementation_ack_validated:
+    id: implementation_ack_validated
+    owner_role: task_orchestrator
+    command_ref: task.commands.validate_implementation_ack
+    pass_criteria: goal, invariants, design refs, scope, test plan and unresolved questions are present; unresolved questions are empty
+    artifact: evidence/implementation-ack.json
+    rerun_on_change: implementation_scope_change
+    failure_action: changes_requested
+  checkpoint_submitted:
+    id: checkpoint_submitted
+    owner_role: task_orchestrator
+    command_ref: task.commands.validate_checkpoint
+    pass_criteria: one behavior, changed files, out-of-scope files and test plan are recorded
+    artifact: evidence/checkpoint.json
+    rerun_on_change: every_checkpoint
+    failure_action: changes_requested
+  tdd_red_phase_passed:
+    id: tdd_red_phase_passed
+    owner_role: automated_test
+    command_ref: task.commands.tdd_red
+    pass_criteria: checkpoint tests are added before production implementation revision; the declared test command exits nonzero for the intended missing behavior; failure reason and test revision are recorded; no test assertion is removed or weakened
+    artifact: evidence/tdd-red.json
+    rerun_on_change: checkpoint_or_test_change
+    failure_action: blocked
+  tdd_green_phase_passed:
+    id: tdd_green_phase_passed
+    owner_role: automated_test
+    command_ref: task.commands.tdd_green
+    pass_criteria: the same red tests and applicable regression tests pass after the smallest implementation; exit code is zero; test revision and implementation revision are recorded; no unrelated test is skipped
+    artifact: evidence/tdd-green.json
+    rerun_on_change: code_or_test_change
+    failure_action: changes_requested
+  tdd_refactor_passed:
+    id: tdd_refactor_passed
+    owner_role: clean_code_reviewer
+    command_ref: task.commands.tdd_refactor
+    pass_criteria: refactor improves structure without changing behavior; green tests are rerun after refactor; diff remains within checkpoint scope; reviewer is independent of implementer
+    artifact: evidence/tdd-refactor.json
+    rerun_on_change: refactor_or_code_change
+    failure_action: changes_requested
+  baseline_passed:
+    id: baseline_passed
+    owner_role: automated_test
+    command_ref: task.commands.baseline
+    pass_criteria: baseline command passes on clean checkout and revision is recorded
+    artifact: evidence/baseline.log
+    rerun_on_change: task_start
+    failure_action: blocked
+  scope_verified:
+    id: scope_verified
+    owner_role: task_orchestrator
+    command_ref: task.commands.verify_scope
+    pass_criteria: diff contains no unapproved files, dependencies, APIs or migrations
+    artifact: evidence/scope-diff.json
+    rerun_on_change: every_checkpoint
+    failure_action: changes_requested
+  scope_labels_verified:
+    id: scope_labels_verified
+    owner_role: task_orchestrator
+    command_ref: task.commands.detect_change_scope
+    pass_criteria: labels are derived from diff, dependency, contract, UI, NFR and migration analysis; every applicable label has evidence or an explicit not_applicable reason approved by Architect
+    artifact: evidence/change-scope-evaluation.json
+    rerun_on_change: every_checkpoint
+    failure_action: blocked
+  format_passed:
+    id: format_passed
+    owner_role: implementer
+    command_ref: task.commands.format_check
+    pass_criteria: formatter exits 0 with no uncommitted formatting changes
+    artifact: evidence/format.log
+    rerun_on_change: code_change
+    failure_action: changes_requested
+  lint_passed:
+    id: lint_passed
+    owner_role: implementer
+    command_ref: task.commands.lint
+    pass_criteria: lint exits 0 or approved warnings are recorded
+    artifact: evidence/lint.log
+    rerun_on_change: code_change
+    failure_action: changes_requested
+  typecheck_passed:
+    id: typecheck_passed
+    owner_role: implementer
+    command_ref: task.commands.typecheck
+    pass_criteria: type checker exits 0
+    artifact: evidence/typecheck.log
+    rerun_on_change: code_change_or_contract_change
+    failure_action: changes_requested
+  build_passed:
+    id: build_passed
+    owner_role: implementer
+    command_ref: task.commands.build
+    pass_criteria: clean build exits 0
+    artifact: evidence/build.log
+    rerun_on_change: code_or_dependency_change
+    failure_action: changes_requested
+  clean_code_reviewed:
+    id: clean_code_reviewed
+    owner_role: clean_code_reviewer
+    command_ref: task.commands.clean_code_review
+    pass_criteria: clean_code_policy.required_metrics are measured against declared thresholds; naming, responsibility, complexity, duplication, errors, dead code and comments pass; reviewer is independent
+    artifact: evidence/clean-code-review.json
+    rerun_on_change: code_change
+    failure_action: changes_requested
+  clean_code_adversarial_reviewed:
+    id: clean_code_adversarial_reviewed
+    owner_role: workflow_auditor
+    command_ref: task.commands.clean_code_adversarial_review
+    required_pairs:
+      - clean_code_reviewer/maintainability_adversary
+    pass_criteria: maintainability adversary independently checks the exact clean-code review revision; findings, counterexamples and dispositions are recorded
+    artifact: evidence/clean-code-adversarial-review.json
+    rerun_on_change: code_or_clean_code_review_change
+    failure_action: changes_requested
+  implementation_adversarial_reviews_passed:
+    id: implementation_adversarial_reviews_passed
+    owner_role: workflow_auditor
+    command_ref: task.commands.implementation_adversarial_review
+    required_pairs:
+      - implementer/implementation_adversary
+    pass_criteria: every applicable implementation pair has a distinct challenger, findings, counterexamples and resolution status
+    artifact: evidence/implementation-adversarial-review.json
+    rerun_on_change: code_test_or_review_change
+    failure_action: changes_requested
+  test_adversarial_reviewed:
+    id: test_adversarial_reviewed
+    owner_role: workflow_auditor
+    command_ref: task.commands.test_adversarial_review
+    required_pairs:
+      - automated_test/test_adequacy_adversary
+    pass_criteria: test adequacy adversary independently checks the exact automated-test revision; blind spots, false positives and counterexamples are resolved or explicitly accepted
+    artifact: evidence/test-adversarial-review.json
+    rerun_on_change: code_or_test_change
+    failure_action: changes_requested
+  architecture_review_adversarial_reviewed:
+    id: architecture_review_adversarial_reviewed
+    owner_role: workflow_auditor
+    command_ref: task.commands.architecture_review_adversarial_review
+    required_pairs:
+      - architecture_reviewer/architecture_review_auditor
+    pass_criteria: architecture review auditor independently checks the exact architecture review revision; missed risks and unsupported approvals are resolved
+    artifact: evidence/architecture-review-adversarial-review.json
+    rerun_on_change: architecture_or_code_review_change
+    failure_action: changes_requested
+  test_review_adversarial_reviewed:
+    id: test_review_adversarial_reviewed
+    owner_role: workflow_auditor
+    command_ref: task.commands.test_review_adversarial_review
+    required_pairs:
+      - test_reviewer/test_review_auditor
+    pass_criteria: test review auditor independently checks the exact test review revision; coverage claims and omissions are resolved
+    artifact: evidence/test-review-adversarial-review.json
+    rerun_on_change: test_or_requirement_review_change
+    failure_action: changes_requested
+  independent_review_adversarial_reviewed:
+    id: independent_review_adversarial_reviewed
+    owner_role: workflow_auditor
+    command_ref: task.commands.independent_review_adversarial_review
+    required_pairs:
+      - independent_code_reviewer/review_auditor
+    pass_criteria: review auditor independently checks the exact independent review revision; missed risks and unsupported approvals are resolved
+    artifact: evidence/independent-review-adversarial-review.json
+    rerun_on_change: code_or_review_change
+    failure_action: changes_requested
+  e2e_adversarial_reviewed:
+    id: e2e_adversarial_reviewed
+    owner_role: e2e_visual_reviewer
+    command_ref: task.commands.e2e_adversarial_review
+    pass_criteria: User Journey Adversary findings are resolved or explicitly accepted with owner, expiry and regression evidence
+    artifact: evidence/e2e-adversarial-review.json
+    rerun_on_change: e2e_or_visual_change
+    failure_action: changes_requested
+  security_contract_adversarial_reviewed:
+    id: security_contract_adversarial_reviewed
+    owner_role: workflow_auditor
+    command_ref: task.commands.security_contract_adversarial_review
+    required_pairs:
+      - security_contract_reviewer/security_contract_adversary
+    pass_criteria: security and contract adversary independently checks the exact security/contract review revision; blocking findings have regression evidence
+    artifact: evidence/security-contract-adversarial-review.json
+    rerun_on_change: security_or_contract_review_change
+    failure_action: blocked
+  security_contract_reviewed:
+    id: security_contract_reviewed
+    owner_role: security_contract_reviewer
+    command_ref: task.commands.security_contract_review
+    pass_criteria: security, authorization, data handling and API compatibility review is complete for the approved revision
+    artifact: evidence/security-contract-review.json
+    rerun_on_change: security_or_contract_change
+    failure_action: blocked
+  release_adversarial_reviewed:
+    id: release_adversarial_reviewed
+    owner_role: workflow_auditor
+    command_ref: task.commands.release_adversarial_review
+    required_pairs:
+      - release_verifier/release_risk_adversary
+    pass_criteria: release risk adversary independently checks the exact release verification revision; rollback, migration and operational risks are resolved or approved
+    artifact: evidence/release-adversarial-review.json
+    rerun_on_change: release_or_migration_review_change
+    failure_action: blocked
+  release_reviewed:
+    id: release_reviewed
+    owner_role: release_verifier
+    command_ref: task.commands.release_review
+    pass_criteria: deployment, migration, rollback, smoke and operational verification is complete for the target revision
+    artifact: evidence/release-review.json
+    rerun_on_change: release_or_migration_change
+    failure_action: blocked
+  schema_validated:
+    id: schema_validated
+    owner_role: automated_test
+    command_ref: task.commands.schema_test
+    pass_criteria: valid, invalid, missing, boundary and version compatibility cases pass
+    artifact: evidence/schema-test.log
+    rerun_on_change: schema_or_api_change
+    failure_action: changes_requested
+  unit_tests_passed:
+    id: unit_tests_passed
+    owner_role: automated_test
+    command_ref: task.commands.unit_test
+    pass_criteria: required unit tests exit 0 and traceability is complete
+    artifact: evidence/unit-test-report
+    rerun_on_change: code_or_test_change
+    failure_action: changes_requested
+  integration_tests_passed:
+    id: integration_tests_passed
+    owner_role: automated_test
+    command_ref: task.commands.integration_test
+    pass_criteria: database, transaction rollback, concurrency, timeout, dependency failure, retry and cleanup scenarios pass
+    artifact: evidence/integration-test-report
+    rerun_on_change: affected_backend_change
+    failure_action: changes_requested
+  api_contract_tests_passed:
+    id: api_contract_tests_passed
+    owner_role: automated_test
+    command_ref: task.commands.api_contract_test
+    pass_criteria: provider, consumer, error, status and compatibility cases pass
+    artifact: evidence/api-contract-report
+    rerun_on_change: api_or_schema_change
+    failure_action: changes_requested
+  security_tests_passed:
+    id: security_tests_passed
+    owner_role: test_reviewer
+    command_ref: task.commands.security_test
+    pass_criteria: unauthenticated, unauthorized, missing-resource, authentication, authorization, tenant isolation, input validation, secret exposure and error redaction checks pass
+    artifact: evidence/security-report
+    rerun_on_change: auth_data_api_or_dependency_change
+    failure_action: blocked
+  regression_tests_passed:
+    id: regression_tests_passed
+    owner_role: automated_test
+    command_ref: task.commands.regression_test
+    pass_criteria: affected existing behavior passes on a clean environment
+    artifact: evidence/regression-report
+    rerun_on_change: code_or_contract_change
+    failure_action: changes_requested
+  accessibility_verified:
+    id: accessibility_verified
+    owner_role: e2e_visual_reviewer
+    command_ref: task.commands.accessibility_test
+    pass_criteria: keyboard path, focus, accessible names and error announcements pass; if no rendered UI changed, scope evaluation must include an approved not_applicable reason
+    artifact: evidence/accessibility-report
+    rerun_on_change: ui_or_interaction_change
+    failure_action: changes_requested
+  test_environment_verified:
+    id: test_environment_verified
+    owner_role: automated_test
+    command_ref: task.commands.test_environment_check
+    pass_criteria: accounts, data, browser state, fixtures, time, network and cleanup are resettable and isolated
+    artifact: evidence/test-environment.json
+    rerun_on_change: test_environment_change_or_each_e2e_run
+    failure_action: blocked
+  component_tests_passed:
+    id: component_tests_passed
+    owner_role: automated_test
+    command_ref: task.commands.component_test
+    pass_criteria: input, keyboard, accessible-name, initial, loading, success, empty, error, retry and duplicate-submit states pass
+    artifact: evidence/component-test-report
+    rerun_on_change: ui_or_component_change
+    failure_action: changes_requested
+  e2e_tests_passed:
+    id: e2e_tests_passed
+    owner_role: automated_test
+    command_ref: task.commands.e2e_test
+    pass_criteria: e2e_policy.required_runs pass with all applicable scenarios and no unexplained errors; dependency installation, server startup, static rendering or a test configuration file alone never count as an E2E run
+    artifact:
+      required_files:
+        - evidence/e2e/run-matrix.json
+        - evidence/e2e/report.html
+        - evidence/e2e/trace-or-video
+        - evidence/e2e/console-network.json
+    rerun_on_change: ui_api_or_flow_change
+    failure_action: changes_requested
+  desktop_visual_verified:
+    id: desktop_visual_verified
+    owner_role: e2e_visual_reviewer
+    command_ref: task.commands.visual_desktop
+    pass_criteria: every applicable visual_policy.required_state has an artifact and no unexplained diff above declared threshold; if no rendered UI changed, scope evaluation must include an approved not_applicable reason
+    artifact:
+      required_files:
+        - evidence/visual/desktop/state-matrix.json
+        - evidence/visual/desktop/screenshots/
+        - evidence/visual/desktop/comparisons/
+    rerun_on_change: ui_change
+    failure_action: changes_requested
+  mobile_visual_verified:
+    id: mobile_visual_verified
+    owner_role: e2e_visual_reviewer
+    command_ref: task.commands.visual_mobile
+    pass_criteria: every applicable visual_policy.required_state has an artifact and no unexplained diff above declared threshold; if no rendered UI changed, scope evaluation must include an approved not_applicable reason
+    artifact:
+      required_files:
+        - evidence/visual/mobile/state-matrix.json
+        - evidence/visual/mobile/screenshots/
+        - evidence/visual/mobile/comparisons/
+    rerun_on_change: ui_change
+    failure_action: changes_requested
+  console_network_clean:
+    id: console_network_clean
+    owner_role: e2e_visual_reviewer
+    command_ref: task.commands.console_network_check
+    pass_criteria: no unexplained console, page or network errors
+    artifact: evidence/console-network.json
+    rerun_on_change: e2e_or_ui_change
+    failure_action: changes_requested
+  architecture_review_accepted:
+    id: architecture_review_accepted
+    owner_role: architecture_reviewer
+    command_ref: task.commands.architecture_review
+    pass_criteria: implementation follows approved boundaries, contracts, ADR and NFRs; reviewer is independent
+    artifact: evidence/architecture-review.json
+    rerun_on_change: design_or_code_change
+    failure_action: changes_requested
+  test_review_accepted:
+    id: test_review_accepted
+    owner_role: test_reviewer
+    command_ref: task.commands.test_review
+    pass_criteria: tests map to requirements and cover behavior, failure, boundary and regression cases
+    artifact: evidence/test-review.json
+    rerun_on_change: test_or_requirement_change
+    failure_action: changes_requested
+  independent_review_accepted:
+    id: independent_review_accepted
+    owner_role: independent_code_reviewer
+    command_ref: task.commands.independent_code_review
+    pass_criteria: diff, design adherence, risks and unresolved findings reviewed by a non-implementer
+    artifact: evidence/independent-code-review.json
+    rerun_on_change: code_or_contract_change
+    failure_action: changes_requested
+  feature_acceptance_passed:
+    id: feature_acceptance_passed
+    owner_role: task_owner
+    command_ref: task.commands.feature_acceptance
+    required_pairs:
+      - task_owner/acceptance_challenger
+    pass_criteria: current feature_id is validated from its real entry point against every approved acceptance scenario; backend features use real API/integration flows and frontend or fullstack features use real browser E2E; failure, retry, boundary and persisted-result behavior are included; Task Owner and Acceptance Challenger independently approve the same revision; no blocking or high defect remains open
+    artifact:
+      required_files:
+        - evidence/feature-acceptance.json
+        - evidence/feature-acceptance-report
+        - evidence/feature-acceptance-trace-or-video
+    rerun_on_change: feature_code_contract_test_or_acceptance_change
+    failure_action: blocked
+  feature_evidence_frozen:
+    id: feature_evidence_frozen
+    owner_role: feature_orchestrator
+    command_ref: task.commands.freeze_feature_evidence
+    pass_criteria: all current feature gates, acceptance artifacts, agent handoffs, defect records and revisions are immutable and indexed under the current feature_id; no later feature artifact is included
+    artifact: evidence/feature-evidence-freeze.json
+    rerun_on_change: any_current_feature_evidence_change
+    failure_action: blocked
+  feature_closed:
+    id: feature_closed
+    owner_role: feature_orchestrator
+    command_ref: task.commands.close_feature
+    pass_criteria: feature_acceptance_passed, defect_registry_resolved and feature_evidence_frozen are passed for the same feature_id and approved revision; active_feature_id is cleared only after this gate
+    artifact: evidence/feature-closed.json
+    rerun_on_change: feature_acceptance_or_evidence_change
+    failure_action: blocked
+  next_feature_authorized:
+    id: next_feature_authorized
+    owner_role: feature_process_auditor
+    command_ref: task.commands.authorize_next_feature
+    applicability: required when the approved backlog contains another feature; otherwise an explicit not_applicable result must be recorded
+    pass_criteria: previous feature is closed, its acceptance evidence is frozen, no other feature is active, and the next feature contract has not been created before authorization
+    artifact: evidence/next-feature-authorization.json
+    rerun_on_change: feature_order_or_previous_feature_change
+    failure_action: blocked
+  real_api_integration_passed:
+    id: real_api_integration_passed
+    owner_role: automated_test
+    command_ref: task.commands.real_api_integration
+    pass_criteria: frontend and backend pass versioned contracts using real integration environment
+    artifact: evidence/real-api-integration-report
+    rerun_on_change: api_or_frontend_integration_change
+    failure_action: changes_requested
+  migration_rehearsed:
+    id: migration_rehearsed
+    owner_role: release_verifier
+    command_ref: task.commands.migration_rehearsal
+    pass_criteria: migration, backfill, validation and failure recovery pass on representative data
+    artifact: evidence/migration-rehearsal.log
+    rerun_on_change: schema_or_migration_change
+    failure_action: blocked
+  rollback_verified:
+    id: rollback_verified
+    owner_role: release_verifier
+    command_ref: task.commands.rollback_test
+    pass_criteria: rollback procedure executes and data/API consistency is verified
+    artifact: evidence/rollback-report
+    rerun_on_change: release_or_migration_change
+    failure_action: blocked
+  smoke_passed:
+    id: smoke_passed
+    owner_role: release_verifier
+    command_ref: task.commands.smoke_test
+    pass_criteria: core user flows pass after deployment to target-like environment
+    artifact: evidence/smoke-report
+    rerun_on_change: deployment_or_config_change
+    failure_action: blocked
+  testability_hooks_verified:
+    id: testability_hooks_verified
+    owner_role: architecture_reviewer
+    command_ref: task.commands.testability_hooks_check
+    pass_criteria: required roles, labels, states and reset hooks exist and are stable
+    artifact: evidence/testability-hooks.json
+    rerun_on_change: ui_or_interaction_change
+    failure_action: changes_requested
+  defect_registry_resolved:
+    id: defect_registry_resolved
+    owner_role: task_orchestrator
+    command_ref: task.commands.verify_defect_registry
+    pass_criteria: no blocking or high defects are open; accepted lower risks have owner, expiry and Task Owner approval
+    artifact: evidence/defect-registry.json
+    rerun_on_change: every_gate_failure_or_release
+    failure_action: blocked
+  nfr_verified:
+    id: nfr_verified
+    owner_role: architecture_reviewer
+    command_ref: task.commands.nfr_verification
+    pass_criteria: applicable performance, reliability and observability budgets have measured evidence
+    artifact: evidence/nfr-verification.json
+    rerun_on_change: performance_reliability_observability_change
+    failure_action: changes_requested
+  task_owner_acceptance:
+    id: task_owner_acceptance
+    owner_role: task_owner
+    command_ref: task.commands.verify_all_applicable_gates
+    pass_criteria: every generated gate is present, passed, evidenced and independently reviewed where required
+    artifact: evidence/task-owner-acceptance.json
+    rerun_on_change: any_gate_or_scope_change
+    failure_action: blocked
+  adversarial_matrix_verified:
+    id: adversarial_matrix_verified
+    owner_role: workflow_auditor
+    command_ref: task.commands.verify_adversarial_matrix
+    pass_criteria: every assigned production role has its configured adversarial role; identities and revisions are executor-compared; every blocking/high finding is resolved or approved with regression evidence
+    artifact: evidence/adversarial-role-matrix.json
+    rerun_on_change: any_role_assignment_or_review_change
+    failure_action: blocked
+
+gate_sequences:
+  common:
+    - workflow_bootstrap_verified
+    - agent_runtime_verified
+    - design_package_complete
+    - agent_assignments_verified
+    - task_contract_adversarial_reviewed
+    - design_approved
+    - design_adversarial_reviews_passed
+    - feature_process_audit_passed
+    - test_strategy_ready
+    - implementation_ack_validated
+    - baseline_passed
+    - checkpoint_submitted
+    - scope_verified
+    - scope_labels_verified
+    - tdd_red_phase_passed
+  backend:
+    - schema_validated
+    - test_environment_verified
+    - unit_tests_passed
+    - integration_tests_passed
+    - api_contract_tests_passed
+    - security_tests_passed
+    - regression_tests_passed
+    - tdd_green_phase_passed
+    - test_adversarial_reviewed
+    - tdd_refactor_passed
+    - format_passed
+    - lint_passed
+    - typecheck_passed
+    - build_passed
+    - clean_code_reviewed
+    - clean_code_adversarial_reviewed
+    - implementation_adversarial_reviews_passed
+    - architecture_review_accepted
+    - architecture_review_adversarial_reviewed
+    - test_review_accepted
+    - test_review_adversarial_reviewed
+    - independent_review_accepted
+    - independent_review_adversarial_reviewed
+  frontend:
+    - component_tests_passed
+    - test_environment_verified
+    - testability_hooks_verified
+    - e2e_tests_passed
+    - console_network_clean
+    - tdd_green_phase_passed
+    - test_adversarial_reviewed
+    - tdd_refactor_passed
+    - format_passed
+    - lint_passed
+    - typecheck_passed
+    - build_passed
+    - clean_code_reviewed
+    - clean_code_adversarial_reviewed
+    - implementation_adversarial_reviews_passed
+    - accessibility_verified
+    - desktop_visual_verified
+    - mobile_visual_verified
+    - e2e_adversarial_reviewed
+    - architecture_review_accepted
+    - architecture_review_adversarial_reviewed
+    - test_review_accepted
+    - test_review_adversarial_reviewed
+    - independent_review_accepted
+    - independent_review_adversarial_reviewed
+  fullstack:
+    - schema_validated
+    - unit_tests_passed
+    - component_tests_passed
+    - test_environment_verified
+    - testability_hooks_verified
+    - integration_tests_passed
+    - api_contract_tests_passed
+    - security_tests_passed
+    - regression_tests_passed
+    - real_api_integration_passed
+    - e2e_tests_passed
+    - console_network_clean
+    - tdd_green_phase_passed
+    - test_adversarial_reviewed
+    - tdd_refactor_passed
+    - format_passed
+    - lint_passed
+    - typecheck_passed
+    - build_passed
+    - clean_code_reviewed
+    - clean_code_adversarial_reviewed
+    - implementation_adversarial_reviews_passed
+    - accessibility_verified
+    - desktop_visual_verified
+    - mobile_visual_verified
+    - e2e_adversarial_reviewed
+    - architecture_review_accepted
+    - architecture_review_adversarial_reviewed
+    - test_review_accepted
+    - test_review_adversarial_reviewed
+    - independent_review_accepted
+    - independent_review_adversarial_reviewed
+
+  feature_closure:
+    - feature_acceptance_passed
+    - defect_registry_resolved
+    - feature_evidence_frozen
+    - feature_closed
+    - next_feature_authorized
+
+  final:
+    - adversarial_matrix_verified
+    - defect_registry_resolved
+    - task_owner_acceptance
+
+conditional_sequences:
+  api_consumer_change:
+    when:
+      field: change_scope
+      operator: includes
+      value: api_consumer
+    append:
+      - schema_validated
+      - api_contract_tests_passed
+  nfr_change:
+    when:
+      field: change_scope
+      operator: intersects
+      value: [performance, reliability, observability]
+    append:
+      - nfr_verified
+  security_change:
+    when:
+      field: change_scope
+      operator: intersects
+      value: [auth, sensitive_data]
+    append:
+      - security_tests_passed
+  security_or_contract_change:
+    when:
+      field: change_scope
+      operator: intersects
+      value: [auth, sensitive_data, api_consumer, public_api, schema]
+    append:
+      - security_contract_reviewed
+      - security_contract_adversarial_reviewed
+  data_or_public_api_change:
+    when:
+      field: change_scope
+      operator: intersects
+      value: [migration, public_api]
+    append:
+      - migration_rehearsed
+      - rollback_verified
+      - smoke_passed
+      - release_reviewed
+      - release_adversarial_reviewed
+  any_deployed_change:
+    when:
+      field: release_target
+      operator: exists
+      value: true
+    append:
+      - smoke_passed
+      - release_reviewed
+      - release_adversarial_reviewed
+
+required_roles_by_work_type:
+  backend:
+    - task_owner
+    - acceptance_challenger
+    - task_orchestrator
+    - feature_orchestrator
+    - feature_process_auditor
+    - workflow_auditor
+    - domain_expert
+    - domain_rule_challenger
+    - architect
+    - architecture_adversary
+    - architecture_reviewer
+    - architecture_review_auditor
+    - implementer
+    - implementation_adversary
+    - automated_test
+    - test_adequacy_adversary
+    - clean_code_reviewer
+    - maintainability_adversary
+    - test_reviewer
+    - test_review_auditor
+    - independent_code_reviewer
+    - review_auditor
+  frontend:
+    - task_owner
+    - acceptance_challenger
+    - task_orchestrator
+    - feature_orchestrator
+    - feature_process_auditor
+    - workflow_auditor
+    - domain_expert
+    - domain_rule_challenger
+    - interaction_designer
+    - design_adversary
+    - architect
+    - architecture_adversary
+    - implementer
+    - implementation_adversary
+    - automated_test
+    - test_adequacy_adversary
+    - clean_code_reviewer
+    - maintainability_adversary
+    - architecture_reviewer
+    - architecture_review_auditor
+    - test_reviewer
+    - test_review_auditor
+    - e2e_visual_reviewer
+    - user_journey_adversary
+    - independent_code_reviewer
+    - review_auditor
+  fullstack:
+    - task_owner
+    - acceptance_challenger
+    - task_orchestrator
+    - feature_orchestrator
+    - feature_process_auditor
+    - workflow_auditor
+    - domain_expert
+    - domain_rule_challenger
+    - interaction_designer
+    - design_adversary
+    - architect
+    - architecture_adversary
+    - implementer
+    - implementation_adversary
+    - automated_test
+    - test_adequacy_adversary
+    - clean_code_reviewer
+    - maintainability_adversary
+    - architecture_reviewer
+    - architecture_review_auditor
+    - test_reviewer
+    - test_review_auditor
+    - e2e_visual_reviewer
+    - user_journey_adversary
+    - independent_code_reviewer
+    - review_auditor
+
+required_roles_by_condition:
+  security_or_contract_change:
+    when:
+      field: change_scope
+      operator: intersects
+      value: [auth, sensitive_data, api_consumer, public_api, schema]
+    roles:
+      - security_contract_reviewer
+      - security_contract_adversary
+  release_or_migration_or_public_api:
+    when:
+      any:
+        - field: release_target
+          operator: exists
+          value: true
+        - field: change_scope
+          operator: intersects
+          value: [migration, public_api]
+    roles:
+      - release_verifier
+      - release_risk_adversary
+
+evidence_rules:
+  every_gate_requires:
+    - command_ref
+    - command_invoked
+    - exit_code
+    - pass_criteria_result
+    - artifact_paths
+    - executor_agent_id
+  review_gate_requires:
+    gate_ids_ref: review_gate_ids
+    required_fields:
+      - reviewer_agent_id
+      - reviewer_role
+      - review_revision
+      - review_conclusion
+      - independence_comparison
+      - reviewer_is_independent
+  independence_is_executor_computed: true
+  independence_comparison_required_fields:
+    - reviewer_agent_id
+    - implementer_agent_id
+    - test_author_agent_id
+    - design_author_agent_id
+    - architecture_author_agent_id
+    - visual_author_agent_id
+  visual_evidence_requires:
+    - browser
+    - viewport
+    - baseline_revision
+    - diff_threshold
+    - screenshot
+    - comparison_report
+  approval_requires:
+    - approver_agent_id
+    - approver_role
+    - approved_revision
+    - approved_at
+  unresolved_or_missing_evidence_action: blocked
+
+release_requirements:
+  authoritative_sequence: gate_sequences
+  merge_rule: common, work_type, matching conditional_sequences, feature_closure and final are evaluated in that order; gates are deduplicated while preserving first occurrence; an inapplicable gate requires an explicit not_applicable artifact
+  migration_or_public_api_change:
+    - migration_rehearsed
+    - rollback_verified
+    - smoke_passed
+  other_deployed_change:
+    - smoke_passed

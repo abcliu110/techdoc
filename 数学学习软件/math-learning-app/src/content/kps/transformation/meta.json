@@ -1,0 +1,16 @@
+{
+  "id": "transformation",
+  "name": "转化与化归",
+  "description": "理解数学中转化与化归的思想，掌握将复杂问题转化为简单问题的方法",
+  "ability": "transformation",
+  "grade": 3,
+  "level": 1,
+  "prerequisites": [],
+  "stepCount": 5,
+  "learningObjectives": [
+    "理解转化思想的意义",
+    "掌握将未知转化为已知的方法",
+    "学会将复杂问题转化为简单问题",
+    "能够运用转化思想解决分数和面积问题"
+  ]
+}

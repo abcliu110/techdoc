@@ -1,0 +1,37 @@
+{
+  "id": "trans-concrete",
+  "type": "concrete",
+  "name": "认识转化思想",
+  "instruction": "通过操作活动认识转化思想",
+  "content": {
+    "type": "concrete",
+    "scenario": {
+      "title": "拼图游戏",
+      "description": "用两块相同大小的三角形可以拼成一个正方形。用四块相同大小的正方形可以拼成一个大正方形。你能发现其中的规律吗？",
+      "emoji": "🧩"
+    },
+    "interaction": {
+      "kind": "tap",
+      "target": "通过组合和分割理解转化",
+      "visualType": "shapes",
+      "visualConfig": {
+        "shapeTypes": ["triangle", "square"],
+        "transformations": [
+          { "from": "2 triangles", "to": "1 square" },
+          { "from": "4 squares", "to": "1 large square" }
+        ]
+      }
+    }
+  },
+  "completionCriteria": {
+    "type": "interactive",
+    "config": {
+      "requiredInteraction": "transform-complete"
+    }
+  },
+  "hintLevels": [
+    "提示：数一数，用几个小图形可以拼成大图形？",
+    "提示：转化就是用简单图形表示复杂图形"
+  ],
+  "ability": "transformation"
+}

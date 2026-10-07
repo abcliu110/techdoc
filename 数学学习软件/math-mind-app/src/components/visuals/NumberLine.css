@@ -1,0 +1,86 @@
+.number-line-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.number-line-svg {
+  display: block;
+}
+
+.number-line-axis {
+  stroke-linecap: round;
+}
+
+.number-line-tick {
+  stroke-linecap: round;
+}
+
+.number-line-label {
+  font-size: 12px;
+  font-family: inherit;
+}
+
+.number-line-point-line {
+  stroke-dasharray: 3, 2;
+  animation: dashDraw 0.5s ease forwards;
+}
+
+.number-line-point {
+  transition: all 0.2s ease;
+}
+
+.number-line-point:not(.highlighted):hover {
+  transform-origin: center;
+  transform: scale(1.2);
+}
+
+.number-line-point.highlighted {
+  filter: drop-shadow(0 2px 4px rgba(79, 70, 229, 0.3));
+}
+
+.number-line-point.selected {
+  animation: pulse 0.6s ease infinite;
+}
+
+.number-line-point-label {
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.number-line-clear-btn {
+  padding: 6px 16px;
+  font-size: 14px;
+  font-family: inherit;
+  background-color: var(--color-bg-secondary, #f3f4f6);
+  color: var(--color-text-secondary, #6b7280);
+  border: 1px solid var(--color-border, #d1d5db);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.number-line-clear-btn:hover {
+  background-color: var(--color-bg-hover, #e5e7eb);
+  color: var(--color-text, #374151);
+}
+
+@keyframes dashDraw {
+  from {
+    stroke-dashoffset: 10;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}

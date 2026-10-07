@@ -1,0 +1,14 @@
+{
+  "packageId": "kps-002",
+  "title": "单位统一与比较 - 同分母分数比较",
+  "description": "理解相同分数单位下分数大小的比较方法，掌握同分母分数加减的基础。",
+  "thoughtLine": "单位统一与比较",
+  "thoughtLineOrder": 2,
+  "difficulty": "easy",
+  "gradeLevel": "3-4年级",
+  "estimatedMinutes": 15,
+  "version": "1.0.0",
+  "author": "MathMind Team",
+  "createdAt": "2026-10-06",
+  "updatedAt": "2026-10-06"
+}

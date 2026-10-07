@@ -1,0 +1,107 @@
+﻿# entities.yaml — 上下文、聚合根、对象树、关系（唯一数据源）
+contexts:
+  - { id: CTX001, name: 订单创建, domain: 订单域, priority: P0 }
+  - { id: CTX002, name: 订单支付, domain: 订单域, priority: P0 }
+  - { id: CTX003, name: 订单退款, domain: 订单域, priority: P1 }
+
+aggregates:
+  - id: AR01
+    name: Order
+    name_cn: 订单
+    domain: 订单域
+    kind: 聚合根
+    status: 已确认
+    table: t_order
+    contexts: [CTX001, CTX002, CTX003]
+    evidence: [EVD-006]
+    attributes:
+      - { name: orderId,      type: Long,         desc: 订单ID,     constraint: "PK, 自增",          evidence: EVD-006 }
+      - { name: orderNo,      type: String,       desc: 订单号,     constraint: "唯一索引, 非空",     evidence: EVD-005 }
+      - { name: status,       type: OrderStatus,  desc: 订单状态,   constraint: "枚举 4 值",          evidence: EVD-013 }
+      - { name: items,        type: "List<OrderItem>", desc: 订单明细, constraint: "组合, 非空, size>=1", evidence: EVD-007 }
+      - { name: totalAmount,  type: BigDecimal,   desc: 订单总额,   constraint: ">=0, 精度2",        evidence: EVD-002 }
+      - { name: discountAmount, type: BigDecimal, desc: 优惠金额,   constraint: ">=0, 精度2",        evidence: EVD-001 }
+      - { name: memberId,     type: Long,         desc: 会员ID,     constraint: "可空, 外键",         evidence: EVD-006 }
+      - { name: address,      type: Address,      desc: 配送地址,   constraint: "值对象, 可空",       evidence: EVD-008 }
+    children:
+      - name: OrderItem
+        kind: 实体
+        evidence: EVD-007
+        attributes:
+          - { name: itemId,      type: Long,      desc: 明细ID,  constraint: "PK, 自增", evidence: EVD-007 }
+          - { name: orderId,     type: Long,      desc: 订单ID,  constraint: "FK, 非空", evidence: EVD-007 }
+          - { name: productId,   type: Long,      desc: 商品ID,  constraint: "FK, 非空", evidence: EVD-007 }
+          - { name: productName, type: String,    desc: 商品名称, constraint: "非空, 冗余存储(历史快照)", evidence: EVD-007 }
+          - { name: quantity,    type: Integer,   desc: 数量,    constraint: ">0",       evidence: EVD-007 }
+          - { name: price,       type: BigDecimal, desc: 单价,   constraint: ">=0, 精度2", evidence: EVD-007 }
+      - name: Address
+        kind: 值对象
+        evidence: EVD-008
+        attributes:
+          - { name: province,       type: String, desc: 省份,     constraint: 非空, evidence: EVD-008 }
+          - { name: city,           type: String, desc: 城市,     constraint: 非空, evidence: EVD-008 }
+          - { name: detail,         type: String, desc: 详细地址, constraint: 非空, evidence: EVD-008 }
+          - { name: recipientName,  type: String, desc: 收件人,   constraint: 非空, evidence: EVD-008 }
+          - { name: recipientPhone, type: String, desc: 收件人电话, constraint: "非空, 11位手机号", evidence: EVD-008 }
+    relations:
+      - { type: 组合, from: Order, to: OrderItem, multiplicity: "1:N", note: "级联删除，必须通过聚合根修改", evidence: EVD-007 }
+      - { type: 嵌入, from: Order, to: Address,   multiplicity: "1:0..1", note: "值对象嵌入，整体替换", evidence: EVD-008 }
+      - { type: 引用, from: Order, to: Member,    multiplicity: "N:1", note: "只存 memberId", evidence: EVD-006 }
+      - { type: 引用, from: Order, to: Product,   multiplicity: "N:1", note: "OrderItem 引用 productId", evidence: EVD-007 }
+      - { type: 引用, from: Order, to: Coupon,    multiplicity: "N:1", note: "只存 couponId", evidence: EVD-006 }
+      - { type: 创建, from: Order, to: Payment,   multiplicity: "1:1", note: "支付成功后创建，状态需一致", evidence: EVD-009 }
+    invariants:
+      - { id: INV001, desc: "订单总额 = 所有明细小计之和", expr: "totalAmount = Σ(items[i].subtotal)", evidence: EVD-002 }
+      - { id: INV002, desc: "实付金额 = 订单总额 - 优惠金额", expr: "paidAmount = totalAmount - discountAmount", evidence: EVD-002 }
+      - { id: INV003, desc: "订单至少包含 1 个明细", expr: "items.size() >= 1", evidence: EVD-007 }
+    events: [EVT001, EVT002, EVT003, EVT004]
+
+  - id: AR02
+    name: Payment
+    name_cn: 支付
+    domain: 支付域
+    kind: 聚合根
+    status: 已确认
+    contexts: [CTX002, CTX003]
+    relations:
+      - { type: 引用, from: Payment, to: Order, multiplicity: "N:1", note: "存 orderId", evidence: EVD-009 }
+
+  - id: AR03
+    name: Member
+    name_cn: 会员
+    domain: 会员域
+    kind: 聚合根
+    status: 已确认
+    contexts: [CTX001, CTX002]
+
+  - id: AR04
+    name: Product
+    name_cn: 商品
+    domain: 商品域
+    kind: 聚合根
+    status: 已确认
+    contexts: [CTX001]
+
+  - id: AR06
+    name: Coupon
+    name_cn: 优惠券
+    domain: 营销域
+    kind: 聚合根
+    status: 已确认
+    contexts: [CTX001]
+
+  - id: AR08
+    name: Table
+    name_cn: 餐台
+    domain: 餐台域
+    kind: 聚合根
+    status: 已确认
+    contexts: [CTX001]
+
+  - id: AR09
+    name: ShoppingCart
+    name_cn: 购物车
+    domain: 订单域
+    kind: 聚合根
+    status: 候选
+    contexts: [CTX001]

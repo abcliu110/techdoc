@@ -1,0 +1,44 @@
+{
+  "stepId": "kps-003-step-03",
+  "stepType": "symbolic",
+  "title": "求整体的方法",
+  "description": "掌握已知部分和分数，求整体的方法",
+  "content": {
+    "stepId": "kps-003-step-03",
+    "stepType": "symbolic",
+    "title": "求整体的方法",
+    "instruction": "问题：一个数的3/5是12，这个数是多少？\n\n思路：部分=整体×分数\n所以：整体=部分÷分数\n\n计算：整体 = 12 ÷ 3/5 = ?",
+    "visual": {
+      "type": "numberLine",
+      "start": 0,
+      "end": 25,
+      "marks": [0, 5, 10, 15, 20],
+      "points": [
+        { "value": 12, "label": "12（部分）", "color": "#4A90D9" },
+        { "value": 20, "label": "整体", "color": "#7B68EE" }
+      ],
+      "animatable": true
+    },
+    "interaction": {
+      "type": "input",
+      "placeholder": "请输入整体的值",
+      "inputType": "number"
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "正确！12 ÷ 3/5 = 12 × 5/3 = 20。因为20的3/5等于12个单位。",
+        "animation": "glow"
+      },
+      {
+        "type": "incorrect",
+        "message": "提示：12是整体的3/5，那么1/5是多少？整体有几个1/5？",
+        "animation": "shake",
+        "highlight": ["number-line"]
+      }
+    ],
+    "autoAdvance": 2000
+  },
+  "prerequisites": ["kps-003-step-02"],
+  "unlocks": ["kps-003-step-04"]
+}

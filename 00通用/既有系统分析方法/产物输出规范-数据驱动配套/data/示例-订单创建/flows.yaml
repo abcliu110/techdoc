@@ -1,0 +1,25 @@
+﻿# flows.yaml — 业务流程（唯一数据源）
+flows:
+  - id: F001
+    name: 订单创建主流程
+    domain: 订单域
+    context: CTX001
+    evidence: [EVD-003, EVD-005, EVD-014]
+    steps:
+      - { "no": 1, action: 校验库存,     code: "InventoryService.checkStock():45",    io: "items[] / boolean",  side_effect: 无,        recoverability: "-",       determinism: L4-多源一致,  evidence: EVD-003 }
+      - { "no": 2, action: 生成订单号,   code: "OrderService.generateOrderNo():23",   io: "- / orderNo",        side_effect: "Redis INCR", recoverability: 可补偿,  determinism: L5-完全确定,  evidence: EVD-005 }
+      - { "no": 3, action: 计算促销,     code: "PromotionService.calculate():67",     io: "items, promotions / discount", side_effect: 无, recoverability: "-",     determinism: L3-单源确定,  evidence: EVD-001 }
+      - { "no": 4, action: 应用会员折扣, code: "MemberService.getDiscount():89",      io: "memberId / memberDiscount", side_effect: 无,  recoverability: "-",     determinism: L3-单源确定,  evidence: EVD-004 }
+      - { "no": 5, action: 创建订单对象, code: "Order.create():12",                   io: "orderData / Order",  side_effect: 无,        recoverability: "-",       determinism: L5-完全确定,  evidence: EVD-006 }
+      - { "no": 6, action: 保存到数据库, code: "OrderMapper.insert():45",             io: "Order / orderId",    side_effect: 写DB,      recoverability: 可回滚,    determinism: L5-完全确定,  evidence: EVD-006 }
+      - { "no": 7, action: 发送领域事件, code: "OrderEventPublisher.publish():23",    io: "OrderCreated / -",   side_effect: 写MQ,      recoverability: 最终一致,  determinism: L4-多源一致,  evidence: EVD-014 }
+    variants:
+      - { name: 使用优惠券, trigger: "couponId != null", code: "CouponService.validate():45" }
+      - { name: 餐台点餐,   trigger: "tableId != null", code: "TableService.checkStatus():23" }
+    exceptions:
+      - { name: 库存不足,       trigger: "checkStock() = false",       handling: "返回错误码 1001，无副作用", code: "OrderService.java:56" }
+      - { name: 订单号生成失败, trigger: "Redis 连接超时",             handling: "重试 3 次后降级 UUID，订单号格式异常", code: "OrderService.java:28" }
+      - { name: 促销服务超时,   trigger: "PromotionService 超时 >200ms", handling: "使用原价（无促销），数据正确性受影响", code: "OrderService.java:71" }
+    compensations:
+      - { name: 库存扣减补偿,   trigger: "订单创建失败", idempotency_key: orderNo,  retry: "3次, 间隔5s", fallback: "记录日志，人工介入", code: "OrderCompensationService.java:23" }
+      - { name: 优惠券核销补偿, trigger: "订单创建失败且已核销", idempotency_key: couponId, retry: "1次",        fallback: "回滚优惠券状态",    code: "CouponCompensationService.java:45" }

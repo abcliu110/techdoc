@@ -1,0 +1,17 @@
+{
+  "id": "unit-unification",
+  "name": "单位统一",
+  "description": "理解不同单位之间的换算关系，掌握单位换算的方法",
+  "ability": "unit-unification",
+  "grade": 3,
+  "level": 1,
+  "prerequisites": [],
+  "stepCount": 5,
+  "learningObjectives": [
+    "认识常见的长度单位：米、分米、厘米、毫米",
+    "理解相邻单位之间的进率关系",
+    "掌握单位换算的方法",
+    "能够进行简单的长度单位换算",
+    "将单位换算应用于实际测量问题"
+  ]
+}

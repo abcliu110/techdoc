@@ -1,0 +1,46 @@
+{
+  "stepId": "kps-004-step-01",
+  "stepType": "concrete",
+  "title": "认识十分位",
+  "description": "通过具体操作理解十分位的含义",
+  "content": {
+    "stepId": "kps-004-step-01",
+    "stepType": "concrete",
+    "title": "认识十分位",
+    "instruction": "把一条绳子平均分成10份，取其中的3份。\n\n用小数表示：0.3米\n用分数表示：3/10米\n\n它们表示的数量一样吗？",
+    "visual": {
+      "type": "numberLine",
+      "start": 0,
+      "end": 1,
+      "marks": [0, 0.3, 0.5, 1],
+      "points": [
+        { "value": 0.3, "label": "0.3 = 3/10", "color": "#4A90D9" }
+      ],
+      "animatable": true
+    },
+    "interaction": {
+      "type": "tap",
+      "options": [
+        { "id": "tap-yes", "label": "一样多", "isCorrect": true },
+        { "id": "tap-0-3", "label": "0.3更多" },
+        { "id": "tap-3-10", "label": "3/10更多" }
+      ]
+    },
+    "feedback": [
+      {
+        "type": "correct",
+        "message": "正确！0.3 = 3/10，它们表示的是同一个数量。小数只是分数的另一种写法。",
+        "animation": "bounce"
+      },
+      {
+        "type": "incorrect",
+        "message": "提示：把整体分成10份，取3份。用小数表示是0.3，用分数表示是3/10。",
+        "animation": "shake",
+        "highlight": ["number-line"]
+      }
+    ],
+    "autoAdvance": 1500
+  },
+  "prerequisites": [],
+  "unlocks": ["kps-004-step-02"]
+}

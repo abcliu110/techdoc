@@ -1,0 +1,37 @@
+{
+  "id": "unit-application",
+  "type": "application",
+  "name": "解决实际问题",
+  "instruction": "将单位换算应用于测量和计算",
+  "content": {
+    "type": "application",
+    "instruction": "将单位换算应用于测量和计算",
+    "variants": [
+      {
+        "id": "problem-1",
+        "question": "小明身高1米30厘米，换算成厘米是多少？",
+        "correctAnswer": "130厘米"
+      },
+      {
+        "id": "problem-2",
+        "question": "一根绳子长2米，剪成10厘米一段，可以剪成多少段？",
+        "correctAnswer": "20段"
+      },
+      {
+        "id": "problem-3",
+        "question": "比较大小：3分米 ○ 25厘米，在○中填入>、<或=",
+        "correctAnswer": ">"
+      }
+    ],
+    "minCorrect": 3
+  },
+  "completionCriteria": {
+    "type": "choice",
+    "config": {}
+  },
+  "hintLevels": [
+    "提示：先统一单位，再比较大小",
+    "提示：3分米 = 30厘米"
+  ],
+  "ability": "unit-unification"
+}

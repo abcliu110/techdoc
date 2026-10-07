@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dexie 持久化验证</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .test-section {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1 { color: #333; }
+    h2 { color: #666; margin-top: 0; }
+    .pass { color: #22c55e; font-weight: bold; }
+    .fail { color: #ef4444; font-weight: bold; }
+    .pending { color: #f59e0b; }
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 15px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 13px;
+    }
+    button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      margin: 5px;
+    }
+    button:hover { background: #2563eb; }
+    .log { margin-top: 15px; }
+    .log-entry {
+      padding: 8px 12px;
+      margin: 4px 0;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 13px;
+    }
+    .log-entry.info { background: #e0f2fe; }
+    .log-entry.success { background: #dcfce7; }
+    .log-entry.error { background: #fee2e2; }
+  </style>
+</head>
+<body>
+  <h1>Dexie 数据持久化验证</h1>
+
+  <div class="test-section">
+    <h2>测试说明</h2>
+    <p>点击下方按钮运行测试，验证 Dexie 数据库的持久化功能。</p>
+    <p>测试包括：会话保存/读取、证据保存/查询、能力画像保存/读取、会话恢复</p>
+    <button onclick="runAllTests()">运行全部测试</button>
+    <button onclick="clearDatabase()">清空数据库</button>
+  </div>
+
+  <div class="test-section">
+    <h2>测试日志</h2>
+    <div id="log" class="log"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>控制台输出</h2>
+    <pre id="console-output">等待测试运行...</pre>
+  </div>
+
+  <script type="module">
+    import Dexie from 'dexie';
+
+    // ==================== 类型定义 ====================
+    const SessionStatus = {
+      NOT_STARTED: 'not-started',
+      IN_PROGRESS: 'in-progress',
+      PAUSED: 'paused',
+      COMPLETED: 'completed',
+      ABANDONED: 'abandoned',
+    };
+
+    const Ability = {
+      NUMBER_SHAPE_INTEGRATION: 'number-shape-integration',
+      UNIT_UNIFICATION: 'unit-unification',
+      WHOLE_PART_THINKING: 'whole-part-thinking',
+      TRANSFORMATION: 'transformation',
+      EQUATION_REASONING: 'equation-reasoning',
+    };
+
+    const AbilityLevel = {
+      NOT_STARTED: 0,
+      AWARE: 1,
+      DEVELOPING: 2,
+      MASTERED: 3,
+    };
+
+    const EvidenceType = {
+      OPERATION: 'operation',
+      ANSWER: 'answer',
+      EXPLANATION: 'explanation',
+      HINT_USAGE: 'hint-usage',
+      TRANSFER: 'transfer',
+    };
+
+    // ==================== 数据库定义 ====================
+    class LearningDatabase extends Dexie {
+      constructor() {
+        super('LearningDB');
+        this.version(1).stores({
+          sessions: 'id, status, startedAt',
+          evidence: 'id, sessionId, timestamp',
+          profiles: 'userId',
+        });
+      }
+    }
+
+    const db = new LearningDatabase();
+
+    // ==================== 测试工具 ====================
+    const logs = [];
+    const consoleOutput = document.getElementById('log');
+    const consoleText = document.getElementById('console-output');
+
+    function log(message, type = 'info') {
+      const entry = document.createElement('div');
+      entry.className = `log-entry ${type}`;
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      consoleOutput.appendChild(entry);
+      consoleOutput.scrollTop = consoleOutput.scrollHeight;
+      logs.push({ message, type, time: new Date() });
+    }
+
+    function logToConsole(...args) {
+      console.log(...args);
+      consoleText.textContent += args.map(a =>
+        typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)
+      ).join(' ') + '\n';
+      consoleText.scrollTop = consoleText.scrollHeight;
+    }
+
+    async function assertEqual(actual, expected, message) {
+      if (JSON.stringify(actual) === JSON.stringify(expected)) {
+        log(`✓ ${message}`, 'success');
+        return true;
+      } else {
+        log(`✗ ${message}`, 'error');
+        log(`  期望: ${JSON.stringify(expected)}`, 'error');
+        log(`  实际: ${JSON.stringify(actual)}`, 'error');
+        return false;
+      }
+    }
+
+    async function assertNotNull(value, message) {
+      if (value !== null && value !== undefined) {
+        log(`✓ ${message}`, 'success');
+        return true;
+      } else {
+        log(`✗ ${message} - 值为 null`, 'error');
+        return false;
+      }
+    }
+
+    // ==================== 测试用例 ====================
+
+    // 测试 1: 数据库初始化
+    async function testDatabaseInit() {
+      log('--- 测试 1: 数据库初始化 ---');
+      try {
+        await db.open();
+        log('数据库连接成功', 'success');
+        return true;
+      } catch (e) {
+        log(`数据库连接失败: ${e.message}`, 'error');
+        return false;
+      }
+    }
+
+    // 测试 2: 会话保存和读取
+    async function testSessionSaveAndFind() {
+      log('--- 测试 2: 会话保存和读取 ---');
+      const testSession = {
+        id: 'session-' + Date.now(),
+        knowledgePointId: 'kp-001',
+        ability: Ability.NUMBER_SHAPE_INTEGRATION,
+        status: SessionStatus.IN_PROGRESS,
+        currentStepIndex: 2,
+        startedAt: Date.now(),
+        evidence: [],
+      };
+
+      try {
+        await db.sessions.put(testSession);
+        log('会话保存成功');
+
+        const found = await db.sessions.get(testSession.id);
+        const passed = await assertNotNull(found, 'findById 返回结果');
+        if (passed) {
+          await assertEqual(found.id, testSession.id, '会话 ID 一致');
+          await assertEqual(found.status, testSession.status, '会话状态一致');
+        }
+
+        return passed;
+      } catch (e) {
+        log(`会话操作失败: ${e.message}`, 'error');
+        return false;
+      }
+    }
+
+    // 测试 3: 查找活动会话
+    async function testFindActiveSession() {
+      log('--- 测试 3: 查找活动会话 ---');
+
+      // 先创建一个未开始的会话
+      const notStartedSession = {
+        id: 'session-not-started-' + Date.now(),
+        knowledgePointId: 'kp-002',
+        ability: Ability.UNIT_UNIFICATION,
+        status: SessionStatus.NOT_STARTED,
+        currentStepIndex: 0,
+        startedAt: Date.now(),
+        evidence: [],
+      };
+
+      // 创建一个已完成会话
+      const completedSession = {
+        id: 'session-completed-' + Date.now(),
+        knowledgePointId: 'kp-003',
+        ability: Ability.WHOLE_PART_THINKING,
+        status: SessionStatus.COMPLETED,
+        currentStepIndex: 5,
+        startedAt: Date.now() - 100000,
+        completedAt: Date.now(),
+        evidence: [],
+      };
+
+      try {
+        await db.sessions.bulkPut([notStartedSession, completedSession]);
+        log('创建测试会话成功');
+
+        const activeSession = await db.sessions
+          .where('status')
+          .anyOf(['not-started', 'in-progress'])
+          .first();
+
+        const passed = await assertNotNull(activeSession, '找到活动会话');
+        if (passed) {
+          await assertEqual(
+            ['not-started', 'in-progress'].includes(activeSession.status),
+            true,
+            '活动会话状态正确'
+          );
+        }
+
+        return passed;
+      } catch (e) {
+        log(`查找活动会话失败: ${e.message}`, 'error');
+        return false;
+      }
+    }
+
+    // 测试 4: 证据保存和查询
+    async function testEvidenceSaveAndQuery() {
+      log('--- 测试 4: 证据保存和查询 ---');
+      const sessionId = 'session-evidence-' + Date.now();
+
+      const testEvidence = [
+        {
+          id: 'evidence-1-' + Date.now(),
+          stepId: 'step-001',
+          type: EvidenceType.OPERATION,
+          data: {
+            type: EvidenceType.OPERATION,
+            interactionKind: 'tap',
+            result: { selected: 3 },
+            attempts: 1,
+          },
+          timestamp: Date.now(),
+        },
+        {
+          id: 'evidence-2-' + Date.now(),
+          stepId: 'step-002',
+          type: EvidenceType.ANSWER,
+          data: {
+            type: EvidenceType.ANSWER,
+            answer: '6',
+            isCorrect: true,
+            attempts: 1,
+          },
+          timestamp: Date.now() + 1000,
+        },
+      ];
+
+      try {
+        // 保存证据（模拟 saveEvidence 方法）
+        for (const evidence of testEvidence) {
+          await db.evidence.put({ ...evidence, sessionId });
+        }
+        log('证据保存成功');
+
+        // 查询证据（模拟 findEvidenceBySessionId 方法）
+        const foundEvidence = await db.evidence
+          .where('sessionId')
+          .equals(sessionId)
+          .toArray();
+
+        let passed = await assertEqual(foundEvidence.length, 2, '查询到 2 条证据');
+        if (passed) {
+          await assertEqual(
+            foundEvidence[0].sessionId,
+            sessionId,
+            '证据关联正确的 sessionId'
+          );
+        }
+
+        return passed;
+      } catch (e) {
+        log(`证据操作失败: ${e.message}`, 'error');
+        return false;
+      }
+    }
+
+    // 测试 5: 能力画像保存和读取
+    async function testProfileSaveAndFind() {
+      log('--- 测试 5: 能力画像保存和读取 ---');
+      const userId = 'user-test-' + Date.now();
+
+      const testProfile = {
+        userId,
+        states: [
+          {
+            ability: Ability.NUMBER_SHAPE_INTEGRATION,
+            level: AbilityLevel.DEVELOPING,
+            evidenceCount: 5,
+            lastPracticedAt: Date.now(),
+          },
+          {
+            ability: Ability.UNIT_UNIFICATION,
+            level: AbilityLevel.AWARE,
+            evidenceCount: 2,
+            lastPracticedAt: Date.now() - 86400000,
+          },
+        ],
+        totalEvidence: [],
+        updatedAt: Date.now(),
+      };
+
+      try {
+        await db.profiles.put(testProfile);
+        log('能力画像保存成功');
+
+        const found = await db.profiles.get(userId);
+        let passed = await assertNotNull(found, 'findByUserId 返回结果');
+        if (passed) {
+          await assertEqual(found.userId, userId, '用户 ID 一致');
+          await assertEqual(found.states.length, 2, '能力状态数量正确');
+          await assertEqual(
+            found.states[0].ability,
+            Ability.NUMBER_SHAPE_INTEGRATION,
+            '第一个能力类型正确'
+          );
+        }
+
+        return passed;
+      } catch (e) {
+        log(`能力画像操作失败: ${e.message}`, 'error');
+        return false;
+      }
+    }
+
+    // 测试 6: 会话恢复（模拟退出后重新进入）
+    async function testSessionRecovery() {
+      log('--- 测试 6: 会话恢复 ---');
+
+      // 模拟用户开始学习，创建会话
+      const sessionId = 'session-recovery-' + Date.now();
+      const recoverySession = {
+        id: sessionId,
+        knowledgePointId: 'kp-recovery',
+        ability: Ability.TRANSFORMATION,
+        status: SessionStatus.IN_PROGRESS,
+        currentStepIndex: 3,
+        startedAt: Date.now() - 300000,
+        evidence: [],
+        snapshot: {
+          stepIndex: 3,
+          stepData: { userInput: 'some data' },
+          timestamp: Date.now() - 60000,
+        },
+      };
+
+      try {
+        // 保存会话
+        await db.sessions.put(recoverySession);
+        log('会话快照保存成功');
+
+        // 模拟用户退出应用后重新进入
+        // 关闭并重新打开数据库连接
+        db.close();
+        await db.open();
+        log('数据库重新连接');
+
+        // 恢复会话
+        const restored = await db.sessions.get(sessionId);
+        let passed = await assertNotNull(restored, '恢复会话成功');
+        if (passed) {
+          await assertEqual(restored.currentStepIndex, 3, '步骤索引正确恢复');
+          await assertEqual(restored.snapshot.stepIndex, 3, '快照步骤正确');
+          await assertEqual(
+            restored.snapshot.stepData.userInput,
+            'some data',
+            '快照数据正确'
+          );
+        }
+
+        return passed;
+      } catch (e) {
+        log(`会话恢复失败: ${e.message}`, 'error');
+        return false;
+      }
+    }
+
+    // ==================== 测试执行 ====================
+    window.clearDatabase = async function() {
+      if (confirm('确定要清空数据库吗？')) {
+        await db.delete();
+        await db.open();
+        consoleOutput.innerHTML = '';
+        consoleText.textContent = '数据库已清空\n';
+        log('数据库已清空', 'success');
+      }
+    };
+
+    window.runAllTests = async function() {
+      consoleOutput.innerHTML = '';
+      consoleText.textContent = '';
+
+      log('开始执行测试...', 'info');
+      logToConsole('='.repeat(50));
+      logToConsole('Dexie 数据持久化测试');
+      logToConsole('='.repeat(50));
+
+      const results = [];
+
+      results.push({ name: '数据库初始化', passed: await testDatabaseInit() });
+      results.push({ name: '会话保存和读取', passed: await testSessionSaveAndFind() });
+      results.push({ name: '查找活动会话', passed: await testFindActiveSession() });
+      results.push({ name: '证据保存和查询', passed: await testEvidenceSaveAndQuery() });
+      results.push({ name: '能力画像保存和读取', passed: await testProfileSaveAndFind() });
+      results.push({ name: '会话恢复', passed: await testSessionRecovery() });
+
+      log('', 'info');
+      log('='.repeat(40), 'info');
+      log('测试结果汇总', 'info');
+      log('='.repeat(40), 'info');
+
+      let passCount = 0;
+      for (const r of results) {
+        log(`${r.passed ? '✓' : '✗'} ${r.name}`, r.passed ? 'success' : 'error');
+        if (r.passed) passCount++;
+      }
+
+      log('', 'info');
+      log(`通过: ${passCount}/${results.length}`, passCount === results.length ? 'success' : 'info');
+      logToConsole('');
+      logToConsole(`测试完成: ${passCount}/${results.length} 通过`);
+    };
+
+    // 页面加载时自动运行测试
+    runAllTests();
+  </script>
+</body>
+</html>

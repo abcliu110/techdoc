@@ -1,0 +1,294 @@
+.learn-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg, #f9fafb);
+}
+
+.learn-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  background-color: white;
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.back-button {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-family: inherit;
+  background: none;
+  border: 1px solid var(--color-border, #d1d5db);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  background-color: var(--color-bg-hover, #f3f4f6);
+}
+
+.header-progress {
+  flex: 1;
+}
+
+.step-counter {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-secondary, #6b7280);
+  min-width: 60px;
+  text-align: right;
+}
+
+.learn-content {
+  flex: 1;
+  padding: 32px 24px;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.loading {
+  text-align: center;
+  padding: 48px;
+  color: var(--color-text-secondary, #6b7280);
+}
+
+/* 步骤内容样式 */
+.step-content-visual {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.scenario-box {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-radius: 12px;
+  border: 1px solid #fcd34d;
+}
+
+.scenario-emoji {
+  font-size: 48px;
+}
+
+.scenario-text h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #92400e;
+}
+
+.scenario-text p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #a16207;
+}
+
+.task-box {
+  padding: 16px 20px;
+  background-color: var(--color-bg-secondary, #f3f4f6);
+  border-radius: 10px;
+  border-left: 4px solid var(--color-primary, #4f46e5);
+}
+
+.task-box h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-primary, #4f46e5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.task-box p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text, #1f2937);
+}
+
+.visual-comparison {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  padding: 24px;
+  background-color: white;
+  border-radius: 12px;
+  border: 1px solid var(--color-border, #e5e7eb);
+}
+
+.visual-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.visual-label {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text, #1f2937);
+}
+
+/* 符号输入区域 */
+.step-content-input {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.symbolic-input-area {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+}
+
+.symbolic-expression {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 32px;
+  background-color: white;
+  border-radius: 12px;
+  border: 2px solid var(--color-primary, #4f46e5);
+}
+
+.fraction {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-text, #1f2937);
+}
+
+.comparison-input {
+  width: 60px;
+  height: 48px;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  border: 2px solid var(--color-border, #d1d5db);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.comparison-input:focus {
+  border-color: var(--color-primary, #4f46e5);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* 步骤操作按钮 */
+.step-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border, #e5e7eb);
+}
+
+.unsupported-step {
+  padding: 48px;
+  text-align: center;
+  color: var(--color-text-secondary, #6b7280);
+}
+
+/* 完成页样式 */
+.complete-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.complete-celebration {
+  margin-bottom: 48px;
+}
+
+.complete-emoji {
+  font-size: 80px;
+  display: block;
+  margin-bottom: 24px;
+  animation: bounce 1s ease infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.complete-celebration h1 {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--color-text, #1f2937);
+  margin: 0 0 12px;
+}
+
+.complete-celebration p {
+  font-size: 18px;
+  color: var(--color-text-secondary, #6b7280);
+  margin: 0;
+}
+
+.complete-stats {
+  display: flex;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-value {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--color-primary, #4f46e5);
+}
+
+.stat-label {
+  font-size: 14px;
+  color: var(--color-text-secondary, #6b7280);
+}
+
+.complete-actions {
+  display: flex;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .learn-header {
+    padding: 12px 16px;
+  }
+
+  .learn-content {
+    padding: 24px 16px;
+  }
+
+  .visual-comparison {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .complete-stats {
+    gap: 32px;
+  }
+}
