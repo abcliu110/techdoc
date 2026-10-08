@@ -453,15 +453,90 @@ gate_schema:
     - artifact
     - rerun_on_change
     - failure_action
+  optional_fields:
+    - applicability
+    - required_pairs
+    - evidence_requirements
+  field_rules:
+    required_pairs:
+      type: list
+      item_schema:
+        type: string
+        format: producer_role/adversary_role
+      must_resolve_to_role_pairs: true
+      evidence_must_bind_each_pair: true
+    applicability:
+      type: string
+      evaluated_before_gate_execution: true
+      unresolved_action: blocked
+    evidence_requirements:
+      type: list
+      item_schema:
+        type: string
+    artifact:
+      type: string_or_object
+  unknown_field_action: blocked
   unresolved_command_is_failure: true
   missing_artifact_is_failure: true
 
 review_gate_ids:
   - design_approved
+  - task_contract_adversarial_reviewed
+  - design_adversarial_reviews_passed
   - clean_code_reviewed
+  - clean_code_adversarial_reviewed
+  - implementation_adversarial_reviews_passed
+  - test_adversarial_reviewed
   - architecture_review_accepted
+  - architecture_review_adversarial_reviewed
   - test_review_accepted
+  - test_review_adversarial_reviewed
   - independent_review_accepted
+  - independent_review_adversarial_reviewed
+  - e2e_adversarial_reviewed
+  - security_contract_reviewed
+  - security_contract_adversarial_reviewed
+  - release_reviewed
+  - release_adversarial_reviewed
+  - feature_acceptance_passed
+
+review_evidence_schema:
+  required_fields:
+    - reviewer_agent_id
+    - reviewer_role
+    - producer_agent_id
+    - producer_role
+    - review_revision
+    - producer_output_revision
+    - reviewer_is_independent
+    - findings
+    - disposition
+    - regression_evidence
+  executor_checks:
+    - reviewer_agent_id != producer_agent_id
+    - review_revision == producer_output_revision
+    - reviewer_role != producer_role
+    - blocking_findings_have_resolved_or_approved_disposition
+    - high_or_blocking_findings_require_regression_evidence
+
+pair_evidence_schema:
+  required_fields:
+    - producer_agent_id
+    - producer_role
+    - reviewer_agent_id
+    - reviewer_role
+    - input_revision
+    - producer_output_revision
+    - review_revision
+    - reviewer_is_independent
+    - findings
+    - disposition
+    - regression_evidence
+  executor_checks:
+    - producer_agent_id != reviewer_agent_id
+    - producer_role/reviewer_role matches required_pairs
+    - input_revision == producer_output_revision
+    - producer_output_revision == review_revision
 
 feature_progression_policy:
   smallest_release_unit: feature_id
@@ -817,9 +892,24 @@ gate_catalog:
     failure_action: changes_requested
   e2e_adversarial_reviewed:
     id: e2e_adversarial_reviewed
-    owner_role: e2e_visual_reviewer
+    owner_role: workflow_auditor
     command_ref: task.commands.e2e_adversarial_review
-    pass_criteria: User Journey Adversary findings are resolved or explicitly accepted with owner, expiry and regression evidence
+    required_pairs:
+      - e2e_visual_reviewer/user_journey_adversary
+    evidence_requirements:
+      - reviewer_agent_id
+      - reviewer_role
+      - producer_agent_id
+      - producer_role
+      - review_revision
+      - user_journey_adversary_agent_id
+      - producer_output_revision
+      - input_revision
+      - reviewer_is_independent
+      - findings
+      - disposition
+      - regression_evidence
+    pass_criteria: User Journey Adversary independently checks the exact E2E and visual revision; findings are resolved or explicitly accepted with owner, expiry and regression evidence
     artifact: evidence/e2e-adversarial-review.json
     rerun_on_change: e2e_or_visual_change
     failure_action: changes_requested
@@ -1006,7 +1096,28 @@ gate_catalog:
     command_ref: task.commands.feature_acceptance
     required_pairs:
       - task_owner/acceptance_challenger
-    pass_criteria: current feature_id is validated from its real entry point against every approved acceptance scenario; backend features use real API/integration flows and frontend or fullstack features use real browser E2E; failure, retry, boundary and persisted-result behavior are included; Task Owner and Acceptance Challenger independently approve the same revision; no blocking or high defect remains open
+    evidence_requirements:
+      - reviewer_agent_id
+      - reviewer_role
+      - producer_agent_id
+      - producer_role
+      - review_revision
+      - producer_output_revision
+      - reviewer_is_independent
+      - findings
+      - disposition
+      - regression_evidence
+      - task_owner_agent_id
+      - acceptance_challenger_agent_id
+      - approved_revision
+      - task_owner_conclusion
+      - acceptance_challenger_conclusion
+      - command_invoked
+      - exit_code
+      - acceptance_report
+      - trace_or_video
+      - defect_registry_status
+    pass_criteria: current feature_id is validated from its real entry point against every approved acceptance scenario; backend features use real API/integration flows and frontend or fullstack features use real browser E2E; failure, retry, boundary and persisted-result behavior are included; Task Owner and Acceptance Challenger are different agents, independently approve the same approved_revision, and provide the real command, exit code, report, trace/video and defect registry status; no blocking or high defect remains open
     artifact:
       required_files:
         - evidence/feature-acceptance.json
@@ -1125,19 +1236,19 @@ gate_sequences:
     - test_strategy_ready
     - implementation_ack_validated
     - baseline_passed
+    - test_environment_verified
     - checkpoint_submitted
     - scope_verified
     - scope_labels_verified
     - tdd_red_phase_passed
   backend:
+    - tdd_green_phase_passed
     - schema_validated
-    - test_environment_verified
     - unit_tests_passed
     - integration_tests_passed
     - api_contract_tests_passed
     - security_tests_passed
     - regression_tests_passed
-    - tdd_green_phase_passed
     - test_adversarial_reviewed
     - tdd_refactor_passed
     - format_passed
@@ -1154,12 +1265,11 @@ gate_sequences:
     - independent_review_accepted
     - independent_review_adversarial_reviewed
   frontend:
-    - component_tests_passed
-    - test_environment_verified
+    - tdd_green_phase_passed
     - testability_hooks_verified
+    - component_tests_passed
     - e2e_tests_passed
     - console_network_clean
-    - tdd_green_phase_passed
     - test_adversarial_reviewed
     - tdd_refactor_passed
     - format_passed
@@ -1180,11 +1290,11 @@ gate_sequences:
     - independent_review_accepted
     - independent_review_adversarial_reviewed
   fullstack:
+    - tdd_green_phase_passed
+    - testability_hooks_verified
     - schema_validated
     - unit_tests_passed
     - component_tests_passed
-    - test_environment_verified
-    - testability_hooks_verified
     - integration_tests_passed
     - api_contract_tests_passed
     - security_tests_passed
@@ -1192,7 +1302,6 @@ gate_sequences:
     - real_api_integration_passed
     - e2e_tests_passed
     - console_network_clean
-    - tdd_green_phase_passed
     - test_adversarial_reviewed
     - tdd_refactor_passed
     - format_passed
@@ -1260,7 +1369,7 @@ conditional_sequences:
     when:
       field: change_scope
       operator: intersects
-      value: [migration, public_api]
+      value: [release, migration, public_api]
     append:
       - migration_rehearsed
       - rollback_verified
@@ -1373,7 +1482,7 @@ required_roles_by_condition:
           value: true
         - field: change_scope
           operator: intersects
-          value: [migration, public_api]
+          value: [release, migration, public_api]
     roles:
       - release_verifier
       - release_risk_adversary
@@ -1420,7 +1529,7 @@ evidence_rules:
 release_requirements:
   authoritative_sequence: gate_sequences
   merge_rule: common, work_type, matching conditional_sequences, feature_closure and final are evaluated in that order; gates are deduplicated while preserving first occurrence; an inapplicable gate requires an explicit not_applicable artifact
-  migration_or_public_api_change:
+  release_or_migration_or_public_api_change:
     - migration_rehearsed
     - rollback_verified
     - smoke_passed

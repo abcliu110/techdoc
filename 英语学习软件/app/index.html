@@ -1,0 +1,1869 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>英语学习 - K-12 · 维度驱动</title>
+  <link rel="stylesheet" href="static/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app-wrap">
+
+  <!-- ==================== 顶部导航 ==================== -->
+  <nav class="top-nav">
+    <div class="logo">
+      <div class="logo-icon">A</div>
+      <span>英语学习</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span class="grade-badge">高中 · 高二</span>
+      <div class="nav-icon">🔔<span class="red-dot"></span></div>
+    </div>
+  </nav>
+
+  <!-- ==================== 首页 ==================== -->
+  <div id="page-home" class="page active">
+
+    <!-- 今日学习头 -->
+    <div class="home-header">
+      <div class="greeting">早安，今天继续加油 👋</div>
+      <div class="target-word">perseverance</div>
+      <div class="target-meaning">n. 坚持；毅力</div>
+      <div class="home-stats">
+        <div class="home-stat"><div class="stat-n">47</div><div class="stat-l">今日已学</div></div>
+        <div class="home-stat"><div class="stat-n">23</div><div class="stat-l">待复习</div></div>
+        <div class="home-stat"><div class="stat-n">1820</div><div class="stat-l">总词汇量</div></div>
+      </div>
+    </div>
+
+    <!-- 今日任务 -->
+    <div class="today-tasks">
+      <div class="section-title">今日任务<span class="more" onclick="showPage('review')">全部 →</span></div>
+      <div class="task-card" onclick="showPage('learn')">
+        <div class="task-icon" style="background:#EEF2FF;color:#4F46E5;">📖</div>
+        <div class="task-info"><div class="task-name">新词学习</div><div class="task-sub">高考核心词汇 · 今日目标 20 词</div></div>
+        <div class="task-count">8/20</div>
+      </div>
+      <div class="task-card" onclick="showPage('review')">
+        <div class="task-icon" style="background:#FEF2F2;color:#EF4444;">🔥</div>
+        <div class="task-info"><div class="task-name">间隔复习</div><div class="task-sub">FSRS 智能调度 · 到期单词</div></div>
+        <div class="task-count urgent">23词</div>
+      </div>
+      <div class="task-card" onclick="showPage('themes')">
+        <div class="task-icon" style="background:#F0FDF4;color:#10B981;">🌿</div>
+        <div class="task-info"><div class="task-name">主题深化</div><div class="task-sub">科学技术 · 8个新词</div></div>
+        <div class="task-count">0/8</div>
+      </div>
+    </div>
+
+    <!-- 四大维度入口 -->
+    <div class="section-title">按维度学习<span class="more" onclick="showToast('四大维度，全面覆盖')">完整体系 →</span></div>
+    <div class="dim-grid">
+      <div class="dim-card type-1" onclick="navTo('本体')">
+        <div class="dim-color-tag"></div><div class="dim-icon">📝</div>
+        <div class="dim-name">词汇本体</div>
+        <div class="dim-sub">词条·义项·词形·词素·发音·词源·词族</div>
+        <div class="dim-bar"><div class="dim-bar-fill" style="width:65%"></div></div>
+        <div class="dim-num">1820词 · 22子维度</div>
+      </div>
+      <div class="dim-card type-2" onclick="navTo('关系')">
+        <div class="dim-color-tag"></div><div class="dim-icon">🔗</div>
+        <div class="dim-name">语言关系</div>
+        <div class="dim-sub">同义·反义·上下位·派生·搭配·易混·L1迁移</div>
+        <div class="dim-bar"><div class="dim-bar-fill" style="width:42%;background:#10B981"></div></div>
+        <div class="dim-num">5600对 · 16子维度</div>
+      </div>
+      <div class="dim-card type-3" onclick="navTo('资源')">
+        <div class="dim-color-tag"></div><div class="dim-icon">📚</div>
+        <div class="dim-name">教学资源</div>
+        <div class="dim-sub">主题·年级·教材·词频·CEFR·先备·高考</div>
+        <div class="dim-bar"><div class="dim-bar-fill" style="width:78%;background:#F59E0B"></div></div>
+        <div class="dim-num">24主题 · 5学段 · 17子维度</div>
+      </div>
+      <div class="dim-card type-4" onclick="navTo('证据')">
+        <div class="dim-color-tag"></div><div class="dim-icon">📊</div>
+        <div class="dim-name">学习证据</div>
+        <div class="dim-sub">5技能·6题型·5状态·VKS·FSRS参数</div>
+        <div class="dim-bar"><div class="dim-bar-fill" style="width:35%;background:#EF4444"></div></div>
+        <div class="dim-num">31子维度</div>
+      </div>
+      <div class="dim-card type-5" onclick="navTo('词根词缀')">
+        <div class="dim-color-tag"></div><div class="dim-icon">🔬</div>
+        <div class="dim-name">词根词缀</div>
+        <div class="dim-sub">120+词根·80+词缀·词族派生·构词规则</div>
+        <div class="dim-bar"><div class="dim-bar-fill" style="width:55%;background:#8B5CF6"></div></div>
+        <div class="dim-num">200+词素 · L3-L6词族</div>
+      </div>
+    </div>
+
+    <!-- 快捷入口 -->
+    <div class="section-title">快捷学习</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;">
+      <div style="background:#EEF2FF;border-radius:12px;padding:14px 8px;text-align:center;cursor:pointer;" onclick="showPage('learn')"><div style="font-size:24px;margin-bottom:4px;">🎯</div><div style="font-size:12px;font-weight:600;color:#4F46E5;">单词卡</div></div>
+      <div style="background:#FEF2F2;border-radius:12px;padding:14px 8px;text-align:center;cursor:pointer;" onclick="showPage('review')"><div style="font-size:24px;margin-bottom:4px;">🔥</div><div style="font-size:12px;font-weight:600;color:#EF4444;">复习</div></div>
+      <div style="background:#F0FDF4;border-radius:12px;padding:14px 8px;text-align:center;cursor:pointer;" onclick="showPage('themes')"><div style="font-size:24px;margin-bottom:4px;">🌏</div><div style="font-size:12px;font-weight:600;color:#10B981;">主题</div></div>
+      <div style="background:#F5F3FF;border-radius:12px;padding:14px 8px;text-align:center;cursor:pointer;" onclick="navTo('词根词缀')"><div style="font-size:24px;margin-bottom:4px;">🔬</div><div style="font-size:12px;font-weight:600;color:#8B5CF6;">词根</div></div>
+      <div style="background:#FFF7ED;border-radius:12px;padding:14px 8px;text-align:center;cursor:pointer;" onclick="navTo('本体-词块')"><div style="font-size:24px;margin-bottom:4px;">📦</div><div style="font-size:12px;font-weight:600;color:#F59E0B;">词块</div></div>
+      <div style="background:#F0F9FF;border-radius:12px;padding:14px 8px;text-align:center;cursor:pointer;" onclick="showPage('me')"><div style="font-size:24px;margin-bottom:4px;">📈</div><div style="font-size:12px;font-weight:600;color:#0284C7;">报告</div></div>
+    </div>
+  </div>
+  <!-- /首页 -->
+
+  <!-- ==================== 维度导航页 ==================== -->
+  <div id="page-dim" class="page">
+    <!-- 导航栏 -->
+    <div class="dim-nav-bar">
+      <button class="dim-nav-back" id="dim-back-btn" onclick="dimGoBack()">←</button>
+      <div class="dim-breadcrumb" id="dim-breadcrumb"></div>
+    </div>
+    <!-- 内容区 -->
+    <div id="dim-content"></div>
+  </div>
+
+  <!-- ==================== 学习页 ==================== -->
+  <div id="page-learn" class="page">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+      <button onclick="showPage('home')" class="dim-nav-back" style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#F1F5F9;border:none;font-size:16px;cursor:pointer;">←</button>
+      <span style="font-size:15px;font-weight:600;">单词学习</span>
+    </div>
+    <div class="learn-hero">
+      <div class="lh-word" id="learn-word">perseverance</div>
+      <div class="lh-ph" id="learn-ph">/ˌpɜːsɪˈvɪərəns/</div>
+      <button class="lh-btn" onclick="playAudio()">🔊 发音</button>
+    </div>
+    <div style="background:#F5F3FF;border-radius:12px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+      <span style="font-size:18px;">📦</span>
+      <div><div style="font-size:13px;font-weight:700;color:#5B21B6;">词块</div><div style="font-size:14px;font-weight:600;color:#7C3AED;">show perseverance = 展现毅力</div></div>
+    </div>
+    <div class="learn-tabs">
+      <div class="learn-tab active" onclick="switchLearnTab(this,'meaning')">释义</div>
+      <div class="learn-tab" onclick="switchLearnTab(this,'example')">例句</div>
+      <div class="learn-tab" onclick="switchLearnTab(this,'wordform')">词形</div>
+      <div class="learn-tab" onclick="switchLearnTab(this,'relation')">关系</div>
+    </div>
+    <div id="learn-meaning">
+      <div class="meaning-card">
+        <span class="mc-pos">noun</span>
+        <div class="mc-cn">坚持；毅力；不屈不挠的精神</div>
+        <div class="mc-ex">Success belongs to those who never give up — perseverance is the key.</div>
+        <div class="mc-ex-cn">成功属于永不放弃的人——坚持是关键。</div>
+      </div>
+      <div class="meaning-card">
+        <span class="mc-pos">noun (词源引申)</span>
+        <div class="mc-cn">持续；延续</div>
+        <div class="mc-ex">The melody persisted — perseverance of a haunting tune.</div>
+        <div class="mc-ex-cn">旋律持续不断，一首萦绕心头的曲子。</div>
+      </div>
+      <div class="meaning-card" style="background:#F0FDF4;border:1px solid #BBF7D0;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="font-size:16px;">🏛️</span><span style="font-size:13px;font-weight:700;color:#065F46;">词源故事</span></div>
+        <div style="font-size:13px;color:#047857;line-height:1.7;">源自拉丁语 <strong>perseverare</strong> = per-(完全)+severus(严格)。古罗马人用这个词形容"严格坚持到底"的精神，西塞罗在演讲中多次使用。英语13世纪进入词汇。</div>
+      </div>
+    </div>
+    <div id="learn-example" class="hidden">
+      <div class="example-item"><div class="ei-en">Her <strong>perseverance</strong> in learning English paid off — she scored 145 in the Gaokao.</div><div class="ei-cn">她在英语学习上的坚持得到了回报——高考英语得了145分。</div></div>
+      <div class="example-item"><div class="ei-en">The scientist's <strong>perseverance</strong> led to a breakthrough in renewable energy.</div><div class="ei-cn">科学家的坚持带来了可再生能源的突破。</div></div>
+    </div>
+    <div id="learn-wordform" class="hidden">
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;">
+        <div class="morph-card"><div class="morph-label">词根</div><div class="morph-form morph-root">-sever-</div><div class="morph-meaning">严肃、严格（拉丁）</div></div>
+        <div class="morph-card"><div class="morph-label">前缀</div><div class="morph-form morph-prefix">per-</div><div class="morph-meaning">完全、贯穿</div></div>
+        <div class="morph-card"><div class="morph-label">后缀</div><div class="morph-form morph-suffix">-ance</div><div class="morph-meaning">名词后缀</div></div>
+        <div class="morph-card" style="background:#EEF2FF;border-color:#C7D2FE;"><div class="morph-label">词族</div><div class="morph-form" style="color:#4F46E5;">persevere</div><div class="morph-meaning">v. 坚持</div></div>
+      </div>
+      <div style="background:#F1F5F9;border-radius:10px;padding:12px;">
+        <div style="font-size:12px;font-weight:700;color:#475569;margin-bottom:6px;">Bauer & Nation 词族层级</div>
+        <div style="font-size:12px;color:#64748B;">L1(act) → L2(acts/acted) → L3(action) → L4(activity) → L5(interaction) → L6(所有词缀)</div>
+        <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;">
+          <span style="background:#EEF2FF;color:#4F46E5;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;">L1</span>
+          <span style="background:#EEF2FF;color:#4F46E5;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;">L2</span>
+          <span style="background:#C7D2FE;color:#4338CA;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;">L3</span>
+          <span style="background:#C7D2FE;color:#4338CA;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;">L4 ← 当前</span>
+          <span style="background:#F1F5F9;color:#94A3B8;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;">L5</span>
+          <span style="background:#F1F5F9;color:#94A3B8;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;">L6</span>
+        </div>
+      </div>
+    </div>
+    <div id="learn-relation" class="hidden">
+      <div class="relation-row" style="margin-bottom:16px;">
+        <div class="rel-item" style="background:#FEF2F2;border:1px solid #FECACA;"><span class="rel-type" style="color:#EF4444;">反义</span><span>giving up</span></div>
+        <div class="rel-item" style="background:#FFF7ED;border:1px solid #FED7AA;"><span class="rel-type" style="color:#D97706;">近义</span><span>determination</span></div>
+        <div class="rel-item" style="background:#F0FDF4;border:1px solid #BBF7D0;"><span class="rel-type" style="color:#059669;">近义</span><span>persistence</span></div>
+      </div>
+      <div style="background:#FFF7ED;border:1px solid #FED7AA;border-radius:10px;padding:12px;margin-bottom:12px;">
+        <div style="font-size:12px;font-weight:700;color:#92400E;margin-bottom:6px;">⚠️ 易混词辨析（L1迁移）</div>
+        <div style="font-size:13px;color:#78350F;line-height:1.8;">
+          <strong>perseverance</strong>：目标驱动的坚持，有明确目的<br>
+          <strong>persistence</strong>：中性，持续做某事，不一定有高价值目标<br>
+          <strong>determination</strong>：下决心做某事，强调意志力
+        </div>
+      </div>
+    </div>
+    <div class="learn-actions">
+      <div class="learn-action-btn" onclick="showToast('已加入复习队列')"><div class="la-icon">🔄</div><div class="la-name">复习</div><div class="la-sub">FSRS调度</div></div>
+      <div class="learn-action-btn" onclick="showWordModal()"><div class="la-icon">📋</div><div class="la-name">详情</div><div class="la-sub">全部义项</div></div>
+      <div class="learn-action-btn" onclick="showToast('已标记为已掌握')"><div class="la-icon">✅</div><div class="la-name">掌握</div><div class="la-sub">标记完成</div></div>
+    </div>
+    <div style="background:linear-gradient(135deg,#4F46E5,#818CF8);border-radius:16px;padding:20px;color:white;cursor:pointer;" onclick="showPage('exercise')">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div><div style="font-size:16px;font-weight:700;margin-bottom:4px;">🎯 开始练习</div><div style="font-size:13px;opacity:0.8;">听音辨词 · 选义 · 拼写 · 词块运用</div></div>
+        <div style="font-size:24px;">→</div>
+      </div>
+    </div>
+  </div>
+  <!-- /学习页 -->
+
+  <!-- ==================== 复习页 ==================== -->
+  <div id="page-review" class="page">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+      <button onclick="showPage('home')" class="dim-nav-back" style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#F1F5F9;border:none;font-size:16px;cursor:pointer;">←</button>
+      <span style="font-size:15px;font-weight:600;">间隔复习</span>
+    </div>
+    <div class="review-header">
+      <div class="rh-title">🔥 今日复习</div>
+      <div class="rh-sub">FSRS 智能调度 · 根据记忆状态安排复习时间</div>
+      <div class="rh-progress">
+        <div class="progress-bar" style="flex:1;height:6px;background:rgba(255,255,255,0.3);border-radius:99px;overflow:hidden;">
+          <div class="progress-fill" style="height:100%;background:white;border-radius:99px;width:30%;"></div>
+        </div>
+        <span class="rh-count">7/23</span>
+      </div>
+    </div>
+    <div class="review-card" id="review-card" onclick="revealReview()">
+      <div class="rc-word">conscientious</div>
+      <div class="rc-ph">/ˌkɒnʃiˈenʃəs/</div>
+      <button class="lh-btn" style="border:none;background:rgba(255,255,255,0.25);" onclick="event.stopPropagation();playAudio()">🔊</button>
+      <div class="rc-tap">👆 点击显示释义</div>
+    </div>
+    <div class="review-card hidden" id="review-card-back" style="background:linear-gradient(135deg,#10B981,#34D399);">
+      <div style="font-size:18px;font-weight:700;margin-bottom:8px;">释义</div>
+      <div style="font-size:22px;font-weight:800;margin-bottom:8px;">认真的；尽责的；一丝不苟的</div>
+      <div style="font-size:14px;opacity:0.75;margin-bottom:16px;">adj. · 派生词：conscience（良心）</div>
+      <div style="font-size:14px;opacity:0.65;">词素：con- + scient-（知道）+ -ious</div>
+      <div class="rc-tap">选择复习强度</div>
+    </div>
+    <div class="review-buttons" id="review-buttons">
+      <div class="review-btn again" onclick="nextReview('again')"><div class="rb-label">Again</div><div class="rb-interval">&lt;1分钟</div></div>
+      <div class="review-btn hard" onclick="nextReview('hard')"><div class="rb-label">Hard</div><div class="rb-interval">~10分钟</div></div>
+      <div class="review-btn good" onclick="nextReview('good')"><div class="rb-label">Good</div><div class="rb-interval">~4天</div></div>
+      <div class="review-btn easy" onclick="nextReview('easy')"><div class="rb-label">Easy</div><div class="rb-interval">~15天</div></div>
+    </div>
+    <div class="review-dim-breakdown">
+      <div class="section-title">按维度分布</div>
+      <div class="review-dim-item" onclick="navTo('本体-词形')"><div class="rdi-icon">📝</div><div class="rdi-info"><div class="rdi-name">词汇本体 · 词形</div><div class="rdi-count">form / pronunciation / spelling</div></div><div class="rdi-num">8</div></div>
+      <div class="review-dim-item" onclick="navTo('关系-同义')"><div class="rdi-icon">🔗</div><div class="rdi-info"><div class="rdi-name">语言关系 · 同义/反义</div><div class="rdi-count">synonym · antonym · hypernym</div></div><div class="rdi-num">6</div></div>
+      <div class="review-dim-item" onclick="navTo('资源-主题')"><div class="rdi-icon">📚</div><div class="rdi-info"><div class="rdi-name">教学资源 · 主题</div><div class="rdi-count">三大主题群 · 24子主题</div></div><div class="rdi-num">5</div></div>
+      <div class="review-dim-item" onclick="navTo('证据-技能')"><div class="rdi-icon">📊</div><div class="rdi-info"><div class="rdi-name">学习证据 · 技能</div><div class="rdi-count">form · sound · meaning · usage · relation</div></div><div class="rdi-num">4</div></div>
+    </div>
+  </div>
+  <!-- /复习页 -->
+
+  <!-- ==================== 主题维度页 ==================== -->
+  <div id="page-themes" class="page">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+      <button onclick="showPage('home')" class="dim-nav-back" style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#F1F5F9;border:none;font-size:16px;cursor:pointer;">←</button>
+      <span style="font-size:15px;font-weight:600;">三大主题群 · 24子主题</span>
+    </div>
+
+    <div class="theme-group">
+      <div class="theme-group-title"><span class="tgt-icon">🧑</span>人与自我<span style="font-size:12px;font-weight:500;color:#64748B;margin-left:4px;">（8个子主题）</span></div>
+      <div class="theme-grid">
+        <div class="theme-chip" onclick="navToLeaf('主题-个人情况')"><div class="tc-icon">👤</div><div class="tc-name">个人情况</div><div class="tc-count">42词</div></div>
+        <div class="theme-chip" onclick="navToLeaf('主题-日常生活')"><div class="tc-icon">🏠</div><div class="tc-name">日常生活</div><div class="tc-count">58词</div></div>
+        <div class="theme-chip" onclick="navToLeaf('主题-兴趣爱好')"><div class="tc-icon">🎯</div><div class="tc-name">兴趣爱好</div><div class="tc-count">35词</div></div>
+        <div class="theme-chip" onclick="navToLeaf('主题-情绪情感')"><div class="tc-icon">💖</div><div class="tc-name">情绪情感</div><div class="tc-count">40词</div></div>
+        <div class="theme-chip" onclick="navToLeaf('主题-计划安排')"><div class="tc-icon">📅</div><div class="tc-name">计划安排</div><div class="tc-count">28词</div></div>
+        <div class="theme-chip" onclick="navToLeaf('主题-饮食健康')"><div class="tc-icon">🍎</div><div class="tc-name">饮食健康</div><div class="tc-count">33词</div></div>
+        <div class="theme-chip" onclick="navToLeaf('主题-健康急救')"><div class="tc-icon">🏥</div><div class="tc-name">健康急救</div><div class="tc-count">25词</div></div>
+        <div class="theme-chip" onclick="navToLeaf('主题-语言学习')"><div class="tc-icon">📖</div><div class="tc-name">语言学习</div><div class="tc-count">30词</div></div>
+      </div>
+    </div>
+
+    <div class="theme-group">
+      <div class="theme-group-title"><span class="tgt-icon">👥</span>人与社会<span style="font-size:12px;font-weight:500;color:#64748B;margin-left:4px;">（13个子主题）</span></div>
+      <div class="theme-grid">
+        <div class="theme-chip" onclick="navToLeaf('主题-家庭朋友')"><div class="tc-icon">👨‍👩‍👧</div><div class="tc-name">家庭朋友</div><div class="tc-count">38词</div></div>
+        <div class="theme-chip" onclick="navToLeaf('主题-学校生活')"><div class="tc-icon">🏫</div><div class="tc-name">学校生活</div><div class="tc-count">45词</div></div>
+        <div class="theme-chip" onclick="navToLeaf('主题-人际交往')"><div class="tc-icon">💬</div><div class="tc-name">人际交往</div><div class="tc-count">30词</div></div>
+        <div class="theme-chip" onclick="navToLeaf('主题-节假日')"><div class="tc-icon">🎉</div><div class="tc-name">节假日</div><div class="tc-count">22词</div></div>
+        <div class="theme-chip" onclick="navToLeaf('主题-购物')"><div class="tc-icon">🛒</div><div class="tc-name">购物</div><div class="tc-count">26词</div></div>
+        <div class="theme-chip" onclick="navToLeaf('主题-文娱体育')"><div class="tc-icon">⚽</div><div class="tc-name">文娱体育</div><div class="tc-count">40词</div></div>
+        <div class="theme-chip" onclick="navToLeaf('主题-旅游交通')"><div class="tc-icon">✈️</div><div class="tc-name">旅游交通</div><div class="tc-count">35词</div></div>
+        <div class="theme-chip" onclick="navToLeaf('主题-通信网络')"><div class="tc-icon">📱</div><div class="tc-name">通信网络</div><div class="tc-count">32词</div></div>
+        <div class="theme-chip" onclick="navToLeaf('主题-文学艺术')"><div class="tc-icon">🎨</div><div class="tc-name">文学艺术</div><div class="tc-count">28词</div></div>
+        <div class="theme-chip" onclick="navToLeaf('主题-历史社会')"><div class="tc-icon">🏛️</div><div class="tc-name">历史社会</div><div class="tc-count">24词</div></div>
+        <div class="theme-chip" onclick="navToLeaf('主题-职业工作')"><div class="tc-icon">💼</div><div class="tc-name">职业工作</div><div class="tc-count">36词</div></div>
+        <div class="theme-chip" onclick="navToLeaf('主题-科学技术')"><div class="tc-icon">🔬</div><div class="tc-name">科学技术</div><div class="tc-count">42词</div></div>
+        <div class="theme-chip" onclick="navToLeaf('主题-热点话题')"><div class="tc-icon">🔥</div><div class="tc-name">热点话题</div><div class="tc-count">20词</div></div>
+      </div>
+    </div>
+
+    <div class="theme-group">
+      <div class="theme-group-title"><span class="tgt-icon">🌍</span>人与自然<span style="font-size:12px;font-weight:500;color:#64748B;margin-left:4px;">（3个子主题）</span></div>
+      <div class="theme-grid">
+        <div class="theme-chip" onclick="navToLeaf('主题-天气气候')"><div class="tc-icon">🌤️</div><div class="tc-name">天气气候</div><div class="tc-count">30词</div></div>
+        <div class="theme-chip" onclick="navToLeaf('主题-自然世界')"><div class="tc-icon">🌿</div><div class="tc-name">自然世界</div><div class="tc-count">35词</div></div>
+        <div class="theme-chip" onclick="navToLeaf('主题-环境保护')"><div class="tc-icon">♻️</div><div class="tc-name">环境保护</div><div class="tc-count">28词</div></div>
+      </div>
+    </div>
+
+    <div class="theme-group">
+      <div class="theme-group-title" style="color:#5B21B6;"><span class="tgt-icon">🎓</span>高中专题<span style="font-size:12px;font-weight:500;color:#64748B;margin-left:4px;">（高中特有内容）</span></div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">
+        <div class="dim-card type-4" style="padding:14px;" onclick="navToLeaf('高考核心词')"><div class="dim-icon">🏆</div><div class="dim-name">高考核心词</div><div class="dim-sub">必考词 · 180词</div></div>
+        <div class="dim-card type-2" style="padding:14px;" onclick="navToLeaf('学术词块')"><div class="dim-icon">📝</div><div class="dim-name">学术词块</div><div class="dim-sub">in terms of · as a result of</div></div>
+        <div class="dim-card type-3" style="padding:14px;" onclick="navToLeaf('CET过渡词')"><div class="dim-icon">📈</div><div class="dim-name">CET过渡词</div><div class="dim-sub">高考→大学英语衔接</div></div>
+        <div class="dim-card type-1" style="padding:14px;" onclick="navToLeaf('词义辨析')"><div class="dim-icon">🔍</div><div class="dim-name">词义辨析</div><div class="dim-sub">易混词 · L1迁移</div></div>
+      </div>
+    </div>
+  </div>
+  <!-- /主题页 -->
+
+  <!-- ==================== 我的页面 ==================== -->
+  <div id="page-me" class="page">
+    <div class="profile-header">
+      <div class="ph-avatar">👤</div>
+      <div class="ph-info">
+        <div class="ph-name">小明</div>
+        <div class="ph-meta">高二 · 理科 · 目标 B2</div>
+        <div class="ph-grade">高中二年级</div>
+      </div>
+    </div>
+    <div class="profile-stats">
+      <div class="profile-stat"><div class="ps-n">47</div><div class="ps-l">今日学习</div></div>
+      <div class="profile-stat"><div class="ps-n" style="color:#10B981;">1820</div><div class="ps-l">累计词量</div></div>
+      <div class="profile-stat"><div class="ps-n" style="color:#F59E0B;">89%</div><div class="ps-l">掌握率</div></div>
+    </div>
+    <div class="mastery-card">
+      <div class="mc-title">📊 维度掌握度</div>
+      <div class="mastery-row"><div class="mr-label">词汇本体</div><div class="mr-bar-wrap"><div class="mr-bar" style="width:65%;background:linear-gradient(90deg,#4F46E5,#818CF8);"></div></div><div class="mr-val" style="color:#4F46E5;">65%</div></div>
+      <div class="mastery-row"><div class="mr-label">语言关系</div><div class="mr-bar-wrap"><div class="mr-bar" style="width:42%;background:linear-gradient(90deg,#10B981,#34D399);"></div></div><div class="mr-val" style="color:#10B981;">42%</div></div>
+      <div class="mastery-row"><div class="mr-label">教学资源</div><div class="mr-bar-wrap"><div class="mr-bar" style="width:78%;background:linear-gradient(90deg,#F59E0B,#FCD34D);"></div></div><div class="mr-val" style="color:#F59E0B;">78%</div></div>
+      <div class="mastery-row"><div class="mr-label">学习证据</div><div class="mr-bar-wrap"><div class="mr-bar" style="width:35%;background:linear-gradient(90deg,#EF4444,#F87171);"></div></div><div class="mr-val" style="color:#EF4444;">35%</div></div>
+    </div>
+    <div class="profile-menu">
+      <div class="profile-menu-item"><div class="pmi-icon">📈</div><div class="pmi-text"><div class="pmi-name">学习报告</div><div class="pmi-sub">查看详细学习数据</div></div><div class="pmi-arrow">→</div></div>
+      <div class="profile-menu-item"><div class="pmi-icon">🎯</div><div class="pmi-text"><div class="pmi-name">VKS自评</div><div class="pmi-sub">重新评估词汇掌握度</div></div><div class="pmi-arrow">→</div></div>
+      <div class="profile-menu-item"><div class="pmi-icon">⚙️</div><div class="pmi-text"><div class="pmi-name">学习设置</div><div class="pmi-sub">每日目标 · 复习偏好</div></div><div class="pmi-arrow">→</div></div>
+      <div class="profile-menu-item"><div class="pmi-icon">👨‍👩‍👧</div><div class="pmi-text"><div class="pmi-name">家长监督</div><div class="pmi-sub">家长端绑定与报告</div></div><div class="pmi-arrow">→</div></div>
+    </div>
+    <div class="mastery-card">
+      <div class="mc-title">⚙️ FSRS 学习参数</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;">
+        <div style="background:#F8FAFC;border-radius:8px;padding:10px;"><div style="font-size:18px;font-weight:800;color:#4F46E5;">8.5</div><div style="font-size:10px;color:#94A3B8;margin-top:2px;">稳定性</div></div>
+        <div style="background:#F8FAFC;border-radius:8px;padding:10px;"><div style="font-size:18px;font-weight:800;color:#F59E0B;">4.2</div><div style="font-size:10px;color:#94A3B8;margin-top:2px;">难度</div></div>
+        <div style="background:#F8FAFC;border-radius:8px;padding:10px;"><div style="font-size:18px;font-weight:800;color:#10B981;">0.87</div><div style="font-size:10px;color:#94A3B8;margin-top:2px;">可提取性</div></div>
+      </div>
+    </div>
+  </div>
+  <!-- /我的 -->
+
+</div>
+<!-- /app-wrap -->
+
+<!-- ==================== 底部标签栏 ==================== -->
+<div class="tab-bar">
+  <div class="tab-item active" onclick="switchTab(this,'home')"><div class="tab-icon">🏠</div>首页</div>
+  <div class="tab-item" onclick="switchTab(this,'learn')"><div class="tab-icon">📖</div>学习</div>
+  <div class="tab-item" onclick="switchTab(this,'review')"><div class="tab-icon">🔥</div>复习</div>
+  <div class="tab-item" onclick="switchTab(this,'themes')"><div class="tab-icon">🌏</div>主题</div>
+  <div class="tab-item" onclick="switchTab(this,'me')"><div class="tab-icon">👤</div>我的</div>
+</div>
+
+<!-- ==================== 单词详情弹窗 ==================== -->
+<div class="word-modal" id="word-modal">
+  <div class="word-sheet">
+    <div class="word-sheet-handle"></div>
+    <div class="word-sheet-content">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <div style="font-size:18px;font-weight:800;">单词详情</div>
+        <button onclick="closeWordModal()" style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#F1F5F9;border:none;font-size:16px;cursor:pointer;">✕</button>
+      </div>
+      <div class="word-main">
+        <div class="wm-lemma">perseverance</div>
+        <div class="wm-phonetic">/ˌpɜːsɪˈvɪərəns/</div>
+        <button class="wm-audio-btn" onclick="playAudio()">🔊</button>
+      </div>
+      <div class="tag-row" style="margin-bottom:20px;gap:6px;">
+        <span class="tag">noun</span><span class="tag">CET-4</span><span class="tag">高考核心</span><span class="tag">B1</span><span class="tag">词族L4</span><span class="tag">词块5</span>
+      </div>
+      <div class="word-meanings">
+        <div class="wm-title">义项 · Senses</div>
+        <div class="meaning-item"><div class="mi-pos">noun</div><div class="mi-cn">坚持；毅力；不屈不挠的精神</div><div class="mi-en">the quality of continuing to try to achieve a particular aim despite difficulties</div></div>
+        <div class="meaning-item"><div class="mi-pos">noun (词源引申)</div><div class="mi-cn">持续；延续</div><div class="mi-en">continued effort; persistence</div></div>
+      </div>
+      <div class="word-sections">
+        <div class="ws-section">
+          <div class="ws-section-title">词素分解</div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <span class="morph-tag morph-prefix">per-</span><span style="color:#94A3B8;">+</span>
+            <span class="morph-tag morph-root">-sever-</span><span style="color:#94A3B8;">+</span>
+            <span class="morph-tag morph-suffix">-ance</span>
+          </div>
+          <div style="margin-top:8px;font-size:12px;color:#64748B;">per-(完全) + severus(严格,拉丁) + -ance(名词后缀)</div>
+        </div>
+        <div class="ws-section">
+          <div class="ws-section-title">词块 · Chunks</div>
+          <div class="example-item"><div class="ei-en">show / demonstrate <strong>perseverance</strong></div><div class="ei-cn">展现毅力</div></div>
+          <div class="example-item"><div class="ei-en">require great <strong>perseverance</strong></div><div class="ei-cn">需要极大的毅力</div></div>
+        </div>
+        <div class="ws-section">
+          <div class="ws-section-title">语言关系</div>
+          <div class="relation-row">
+            <div class="rel-item"><span class="rel-type" style="color:#EF4444;">反义</span>giving up</div>
+            <div class="rel-item"><span class="rel-type" style="color:#10B981;">同义</span>determination</div>
+            <div class="rel-item"><span class="rel-type" style="color:#10B981;">同义</span>persistence</div>
+          </div>
+        </div>
+        <div class="ws-section">
+          <div class="ws-section-title">主题归类</div>
+          <div class="tag-row">
+            <span class="tag">🧑 人与自我 > 情绪情感</span>
+            <span class="tag">🏫 学校生活 > 学习方法</span>
+            <span class="tag">🔥 热点话题 > 励志</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:20px;">
+        <button class="btn" style="background:#EEF2FF;color:#4F46E5;font-size:13px;padding:12px 8px;font-weight:600;" onclick="showToast('已加入复习')">🔄 复习</button>
+        <button class="btn" style="background:#F0FDF4;color:#10B981;font-size:13px;padding:12px 8px;font-weight:600;" onclick="showToast('已掌握')">✅ 掌握</button>
+        <button class="btn" style="background:#FEF2F2;color:#EF4444;font-size:13px;padding:12px 8px;font-weight:600;" onclick="showToast('已标记')">🏷️ 生词</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Toast 提示 ==================== -->
+<div class="toast" id="toast"></div>
+
+<!-- ==================== JavaScript ==================== -->
+<script>
+// ============================================================
+// 维度多层级树数据
+// 结构: { id, label, icon, color, desc, parent, children: [...] }
+// children = null 表示叶子节点(显示词条)
+// ============================================================
+
+const dimTree = [
+  // ====== 词汇本体 ======
+  {
+    id: '本体', label: '词汇本体', icon: '📝', color: 'd1',
+    desc: '词条、义项、词形、词素、发音——单词的本体结构',
+    stats: '1820词条 · 3200义项 · L1-L6词族',
+    children: [
+      { id: '本体-词条类型', label: '词条类型', icon: '📄', color: '#EEF2FF', textColor: '#4F46E5', desc: 'simple / derived / compound / converted / phrase / chunk', children: [
+        { id: '本体-词条类型-simple', label: 'simple 简单词', icon: '•', color: '#EEF2FF', textColor: '#4F46E5', desc: '不可拆分的原始词', words: [{w:'run'},{w:'happy'},{w:'water'},{w:'book'},{w:'table'}] },
+        { id: '本体-词条类型-derived', label: 'derived 派生词', icon: '→', color: '#F5F3FF', textColor: '#7C3AED', desc: '由词素组合构成', words: [{w:'happy→happiness'},{w:'act→action'},{w:'nation→national'}] },
+        { id: '本体-词条类型-compound', label: 'compound 复合词', icon: '+', color: '#F0FDF4', textColor: '#059669', desc: '两个以上词组合', words: [{w:'sunrise'},{w:'classroom'},{w:'bedroom'},{w:'homework'},{w:'football'}] },
+        { id: '本体-词条类型-converted', label: 'converted 转化词', icon: '↔', color: '#FFF7ED', textColor: '#D97706', desc: '同形不同词性', words: [{w:'record'},{w:'permit'},{w:'contrast'},{w:'project'},{w:'present'}] },
+        { id: '本体-词条类型-phrase', label: 'phrase 短语', icon: '📝', color: '#F0F9FF', textColor: '#0284C7', desc: '动宾/介词等搭配短语', words: [{w:'take a photo'},{w:'make a decision'},{w:'take care of'}] },
+        { id: '本体-词条类型-chunk', label: 'chunk 词块', icon: '📦', color: '#F5F3FF', textColor: '#8B5CF6', desc: 'Lewis词块，整体习得多词单位', words: [{w:'look after'},{w:'a cup of'},{w:'Thank you'},{w:'as a result of'},{w:'in terms of'}] },
+      ]},
+      { id: '本体-词族层级', label: '词族层级', icon: '📊', color: '#FFFBEB', textColor: '#B45309', desc: 'Bauer & Nation Level 1-6', children: [
+        { id: '本体-词族-L1', label: 'L1 自由词根', icon: 'L1', color: '#EEF2FF', textColor: '#4F46E5', desc: '仅自由词根，可独立成词', words: [{w:'act'},{w:'happy'},{w:'serve'}] },
+        { id: '本体-词族-L2', label: 'L2 规则屈折', icon: 'L2', color: '#E0E7FF', textColor: '#4338CA', desc: '+规则变化：复数/时态/比较级', words: [{w:'acts'},{w:'happier'},{w:'acted'}] },
+        { id: '本体-词族-L3', label: 'L3 高产派生', icon: 'L3', color: '#C7D2FE', textColor: '#4338CA', desc: '+高频透明后缀：-tion/-ness/-er', words: [{w:'action'},{w:'happiness'},{w:'actor'}] },
+        { id: '本体-词族-L4', label: 'L4 常见派生', icon: 'L4', color: '#A5B4FC', textColor: '#3730A3', desc: '+常见派生后缀：-ity/-ment', words: [{w:'activity'},{w:'happiness+ly=happily'},{w:'government'}] },
+        { id: '本体-词族-L5', label: 'L5 前缀派生', icon: 'L5', color: '#818CF8', textColor: '#3730A3', desc: '+常见前缀：re-/un-/pre-', words: [{w:'reaction'},{w:'unhappy'},{w:'preview'}] },
+        { id: '本体-词族-L6', label: 'L6 全部词缀', icon: 'L6', color: '#6366F1', textColor: '#FFFFFF', desc: '所有词缀（高中完整覆盖）', words: [{w:'intervention'},{w:'misunderstanding'}] },
+      ]},
+      { id: '本体-词形', label: '词形 form', icon: '🔤', color: '#F0FDF4', textColor: '#059669', desc: '复数/时态/比较级/拼写变体，共11种', children: [
+        { id: '本体-词形-plural', label: 'plural 复数', icon: '📌', color: '#D1FAE5', textColor: '#065F46', desc: '名词复数变化', words: [{w:'cat→cats'},{w:'child→children'},{w:'leaf→leaves'}] },
+        { id: '本体-词形-past', label: 'past 过去式', icon: '📌', color: '#FEE2E2', textColor: '#991B1B', desc: '规则/不规则过去式', words: [{w:'walk→walked'},{w:'go→went'},{w:'run→ran'}] },
+        { id: '本体-词形-pastParticiple', label: 'past_participle 过去分词', icon: '📌', color: '#FEE2E2', textColor: '#991B1B', desc: '完成时态和被动语态', words: [{w:'go→gone'},{w:'write→written'},{w:'see→seen'}] },
+        { id: '本体-词形-presentParticiple', label: 'present_participle 现在分词', icon: '📌', color: '#E0E7FF', textColor: '#3730A3', desc: '进行时态和形容词', words: [{w:'run→running'},{w:'write→writing'}] },
+        { id: '本体-词形-comparative', label: 'comparative 比较级', icon: '📌', color: '#FEF3C7', textColor: '#92400E', desc: '形容词/副词比较级', words: [{w:'big→bigger'},{w:'good→better'},{w:'important→more important'}] },
+        { id: '本体-词形-superlative', label: 'superlative 最高级', icon: '📌', color: '#FEF3C7', textColor: '#92400E', desc: '形容词/副词最高级', words: [{w:'big→biggest'},{w:'good→best'},{w:'important→most important'}] },
+        { id: '本体-词形-thirdPerson', label: 'third_person 第三人称单数', icon: '📌', color: '#F0FDF4', textColor: '#065F46', desc: '一般现在时主语三单', words: [{w:'run→runs'},{w:'study→studies'},{w:'go→goes'}] },
+        { id: '本体-词形-possessive', label: 'possessive 所有格', icon: '📌', color: '#FFF7ED', textColor: '#B45309', desc: "'s 所有格形式", words: [{w:"child→child's"},{w:"children→children's"}] },
+        { id: '本体-词形-variant', label: 'variant 拼写变体', icon: '📌', color: '#F5F3FF', textColor: '#6D28D9', desc: '英美拼写差异', words: [{w:'color/colour'},{w:'center/centre'},{w:'travel/travelled'}] },
+        { id: '本体-词形-phrasal', label: 'phrasal 短语动词形式', icon: '📌', color: '#F0F9FF', textColor: '#0369A1', desc: '可分/不可分动词短语', words: [{w:'look/look after'},{w:'turn/turn on'},{w:'pick/pick up'}] },
+      ]},
+      { id: '本体-词素', label: '词素 morpheme', icon: '🧬', color: '#FFF7ED', textColor: '#D97706', desc: '自由词根/粘着词根/前缀/后缀，共200+', children: [
+        { id: '本体-词素-freeRoot', label: '自由词根 free_root', icon: '🌱', color: '#D1FAE5', textColor: '#065F46', desc: '可独立成词的词根', words: [{w:'act'},{w:'happy'},{w:'serve'},{w:'form'},{w:'state'}] },
+        { id: '本体-词素-boundRoot', label: '粘着词根 bound_root', icon: '🔒', color: '#FEE2E2', textColor: '#991B1B', desc: '不可独立成词', words: [{w:'-ject- (reject/inject)'},{w:'-port- (import/export)'},{w:'-scrib- (describe/subscribe)'},{w:'-spect- (inspect/respect)'}] },
+        { id: '本体-词素-prefix', label: 'prefix 前缀', icon: '←', color: '#EEF2FF', textColor: '#4F46E5', desc: '改变词义，不改变词性', words: [{w:'un- 不/非'},{w:'re- 再/重新'},{w:'pre- 预先'},{w:'dis- 否定'},{w:'mis- 错误'},{w:'ex- 以外'},{w:'inter- 之间'},{w:'auto- 自动'}] },
+        { id: '本体-词素-suffix', label: 'suffix 后缀', icon: '→', color: '#FEF3C7', textColor: '#92400E', desc: '常改变词性', words: [{w:'-tion/-sion 名词'},{w:'-ness 名词'},{w:'-er/-or 人/物'},{w:'-ful 形容词'},{w:'-ly 副词'},{w:'-able/-ible 可…的'},{w:'-ous 形容词'}] },
+        { id: '本体-词素-allomorph', label: 'allomorph 变体', icon: '🔄', color: '#F5F3FF', textColor: '#7C3AED', desc: '同词素的拼写变体归并', words: [{w:'im-/in-/il-/ir- (否定前缀变体)'},{w:'-fect/-fic (affect/efficient)'}] },
+      ]},
+      { id: '本体-发音', label: '发音 pronunciation', icon: '🔊', color: '#FEF2F2', textColor: '#DC2626', desc: '英式/美式音标、音素、音节、重音', children: [
+        { id: '本体-发音-音标', label: 'IPA 音标', icon: '🔤', color: '#FEE2E2', textColor: '#991B1B', desc: '英式/美式双版本IPA', words: [{w:'perseverance /ˌpɜːsɪˈvɪərəns/ (UK)'},{w:'perseverance /ˌpɜːrsɪˈvɪrəns/ (US)'}] },
+        { id: '本体-发音-音素', label: 'phoneme 音素', icon: '🔤', color: '#FEE2E2', textColor: '#991B1B', desc: '音素序列和边界', words: [{w:'/p/ /ɜː/ /s/ /ɪ/'},{w:'最小对立对: bit vs beat'}] },
+        { id: '本体-发音-音节', label: 'syllable 音节', icon: '🔤', color: '#FECACA', textColor: '#7F1D1D', desc: '音节拆分和数量', words: [{w:'per-se-ve-rance (4音节)'},{w:'ac-tion (2音节)'},{w:'in-ter-nat-ion-al (5音节)'}] },
+        { id: '本体-发音-重音', label: 'stress 重音', icon: '🔤', color: '#FCA5A5', textColor: '#7F1D1D', desc: '重音位置和等级', words: [{w:"'photo (名词)"},{w:"pho'to (动词)"},{w:"con'versation (4音节词)"},{w:"in/for/mation (4音节词)"}] },
+        { id: '本体-发音-字母音素', label: '字母-音素对应', icon: '🔤', color: '#F87171', textColor: '#7F1D1D', desc: '字母组合发音规则', words: [{w:'ea → /iː/ (read/heat/mean)'},{w:'ea → /e/ (bread/head/break)'},{w:'ough → /ʌf/ (rough/cough/enough)'}] },
+        { id: '本体-发音-变体', label: '发音变体', icon: '🔤', color: '#EF4444', textColor: '#FFFFFF', desc: '口音/语速/音频版本', words: [{w:'either /ˈaɪðər/ 或 /ˈiːðər/'},{w:'tomato /təˈmɑːtəʊ/ 或 /təˈmeɪtoʊ/'}] },
+      ]},
+      { id: '本体-义项', label: '义项属性', icon: '📖', color: '#F5F3FF', textColor: '#7C3AED', desc: '词性/语域/可数性/及物性，共14种词性', children: [
+        { id: '本体-义项-pos', label: '词性 pos', icon: '🏷️', color: '#F5F3FF', textColor: '#7C3AED', desc: '14种词性', words: [
+          {w:'noun 名词'},{w:'verb 动词'},{w:'adjective 形容词'},{w:'adverb 副词'},{w:'pronoun 代词'},{w:'preposition 介词'},{w:'conjunction 连词'},{w:'determiner 限定词'},
+          {w:'numeral 数词'},{w:'auxiliary 助动词'},{w:'modal 情态动词'},{w:'interjection 感叹词'},{w:'particle 助词/小品词'},{w:'phrase 短语'}
+        ]},
+        { id: '本体-义项-register', label: '语域 register', icon: '🎭', color: '#EDE9FE', textColor: '#5B21B6', desc: '正式/中性/口语/俚语', words: [
+          {w:'formal 正式: utilize = use'},
+          {w:'neutral 中性: use'},
+          {w:'informal 非正式: kick off = begin'},
+          {w:'slang 俚语: vibe (气氛)'
+        }]},
+        { id: '本体-义项-countability', label: '可数性 countability', icon: '🔢', color: '#DDD6FE', textColor: '#4C1D95', desc: 'countable/uncountable/both', words: [
+          {w:'countable: apple/banana'},
+          {w:'uncountable: water/information'},
+          {w:'both: chicken(肉/鸡)/glass(玻璃/杯)'
+        }]},
+        { id: '本体-义项-transitivity', label: '及物性 transitivity', icon: '➡️', color: '#C4B5FD', textColor: '#4C1D95', desc: 'transitive/intransitive/both', words: [
+          {w:'transitive: She closed the door.'},
+          {w:'intransitive: He runs every morning.'},
+          {w:'both: The door opened. / She opened the door.'
+        }]},
+        { id: '本体-义项-cognitveLoad', label: '认知负荷 cognitive_load', icon: '🧠', color: '#A78BFA', textColor: '#5B21B6', desc: 'low/medium/high', words: [
+          {w:'low: cat/dog/run/eat'},
+          {w:'medium: photosynthesis / perseverance'},
+          {w:'high: antidisestablishmentarianism'}
+        ]},
+        { id: '本体-义项-inherentDiff', label: '固有难度 inherent_difficulty', icon: '📊', color: '#8B5CF6', textColor: '#FFFFFF', desc: 'low/medium/high（义项自身属性）', words: [
+          {w:'low: day/week/month'},
+          {w:'medium: algorithm/hypothesis'},
+          {w:'high: idiosyncrasy/quintessential'
+        }]},
+      ]},
+      { id: '本体-词源', label: '词源 etymology', icon: '🏛️', color: '#FDF4FF', textColor: '#C026D3', desc: '拉丁/日耳曼/法语/希腊语/借词，共5系', children: [
+        { id: '本体-词源-germanic', label: 'germanic 日耳曼语', icon: '🇬🇧', color: '#D1FAE5', textColor: '#065F46', desc: '英语固有词（基础词）', words: [{w:'the/a/and/of/to'},{w:'man/woman/child'},{w:'run/eat/sleep'},{w:'water/fire/earth'}] },
+        { id: '本体-词源-latin', label: 'latin 拉丁语', icon: '🏛️', color: '#FEE2E2', textColor: '#991B1B', desc: '50%+英语词汇来自拉丁', words: [{w:'state/station/nation'},{w:'act/fact/perfect'},{w:'port/portable/import'}] },
+        { id: '本体-词源-french', label: 'french 法语', icon: '🇫🇷', color: '#DBEAFE', textColor: '#1E40AF', desc: '诺曼征服后大量借入', words: [{w:'government/authority'},{w:'beautiful/possible'},{w:'table/chair/cuisine'}] },
+        { id: '本体-词源-greek', label: 'greek 希腊语', icon: '🇬🇷', color: '#FEF3C7', textColor: '#92400E', desc: '科技/学术词汇主要来源', words: [{w:'tele/graph/phono'},{w:'bio/graphy/logy'},{w:'philo/sophy/psych'}] },
+        { id: '本体-词源-loanword', label: 'loanword 借词', icon: '📥', color: '#F5F3FF', textColor: '#6D28D9', desc: '从其他语言借入', words: [{w:'tycoon 日语'},{w:'sofa 土耳其语'},{w:'ketchup 闽南语'},{w:' tofu 中文'}] },
+      ]},
+      { id: '本体-词块', label: '词块 chunk', icon: '📦', color: '#F0F9FF', textColor: '#0284C7', desc: 'Lewis词块教学法，整体习得多词单位', children: [
+        { id: '本体-词块-小学', label: '小学词块', icon: '📦', color: '#BAE6FD', textColor: '#0369A1', desc: '小学阶段词块（听说为主）', words: [
+          {w:'How are you? / I\'m fine.'},
+          {w:'a cup of water'},
+          {w:'look after'},
+          {w:'in front of'},
+          {w:'a lot of'}
+        ]},
+        { id: '本体-词块-初中', label: '初中词块', icon: '📦', color: '#7DD3FC', textColor: '#0369A1', desc: '初中阶段词块（综合运用）', words: [
+          {w:'take into consideration'},
+          {w:'make a decision'},
+          {w:'pay attention to'},
+          {w:'in addition to'},
+          {w:'as a result of'}
+        ]},
+        { id: '本体-词块-高中', label: '高中·学术词块', icon: '📦', color: '#0EA5E9', textColor: '#FFFFFF', desc: '高中阶段学术词块（高考/CET衔接）', words: [
+          {w:'in terms of 就…而言'},
+          {w:'with respect to 关于'},
+          {w:'on the basis of 根据'},
+          {w:'to a large extent 在很大程度上'},
+          {w:'give rise to 引起'},
+          {w:'be attributed to 归因于'},
+          {w:'make contributions to 对…作出贡献'},
+          {w:'a wide range of 广泛的'}
+        ]},
+      ]},
+    ]
+  },
+
+  // ====== 语言关系 ======
+  {
+    id: '关系', label: '语言关系', icon: '🔗', color: 'd2',
+    desc: '词与词之间的所有相同维度——同根/同缀/同音/同形/同源',
+    stats: '词素分解·同缀·同音·同源·同拼写·同义·反义',
+    children: [
+      { id: '关系-同根', label: '同词根', icon: '🌱', color: '#F0FDF4', textColor: '#059669', desc: '相同词根的词归为一组', children: [
+        { id: '关系-同根-act', label: '-act- 词族', icon: '⚡', color: '#BBF7D0', textColor: '#065F46', desc: 'act / action / active / actor / activity / actual / interact / react', words: [
+          {w:'act v. 行动'},
+          {w:'action n. 行动'},
+          {w:'active adj. 活跃的'},
+          {w:'activity n. 活动'},
+          {w:'actor n. 演员'},
+          {w:'actual adj. 实际的'},
+          {w:'interact v. 互动'},
+          {w:'react v. 反应'}
+        ]},
+        { id: '关系-同根-spect', label: '-spect- 词族', icon: '👁️', color: '#86EFAC', textColor: '#166534', desc: 'spect / inspect / respect / expect / aspect / prospect', words: [
+          {w:'spect (看)'},
+          {w:'inspect v. 检查'},
+          {w:'respect v./n. 尊重'},
+          {w:'expect v. 期待'},
+          {w:'aspect n. 方面'},
+          {w:'prospect n. 前景'}
+        ]},
+        { id: '关系-同根-duct', label: '-duct- 词族', icon: '🚶', color: '#4ADE80', textColor: '#FFFFFF', desc: 'duct / conduct / introduce / produce / reduce / deduce', words: [
+          {w:'duct n. 管'},
+          {w:'conduct v. 引导'},
+          {w:'introduce v. 介绍'},
+          {w:'produce v. 生产'},
+          {w:'reduce v. 减少'},
+          {w:'deduce v. 推断'}
+        ]},
+        { id: '关系-同根-pend', label: '-pend- 词族', icon: '⏰', color: '#22C55E', textColor: '#FFFFFF', desc: 'pend / depend / suspend / expense / spend / appendix', words: [
+          {w:'pend v. 悬挂/待定'},
+          {w:'depend v. 依赖'},
+          {w:'suspend v. 暂停'},
+          {w:'expense n. 费用'},
+          {w:'spend v. 花费'},
+          {w:'appendix n. 附录'}
+        ]},
+        { id: '关系-同根-sist', label: '-sist- 词族', icon: '🧍', color: '#16A34A', textColor: '#FFFFFF', desc: 'sist / exist / resist / assist / consist / persist / insist', words: [
+          {w:'sist (站立)'},
+          {w:'exist v. 存在'},
+          {w:'resist v. 抵抗'},
+          {w:'assist v. 帮助'},
+          {w:'consist v. 由…组成'},
+          {w:'persist v. 坚持'},
+          {w:'insist v. 坚持'}
+        ]},
+        { id: '关系-同根-ced', label: '-ced-/-cess- 词族', icon: '🚶', color: '#15803D', textColor: '#FFFFFF', desc: 'ced / proceed / succeed / exceed / access / process', words: [
+          {w:'ceed (走)'},
+          {w:'proceed v. 继续'},
+          {w:'succeed v. 成功'},
+          {w:'exceed v. 超过'},
+          {w:'access n. 通道'},
+          {w:'process n. 过程'}
+        ]},
+        { id: '关系-同根-ject', label: '-ject- 词族', icon: '🎯', color: '#166534', textColor: '#FFFFFF', desc: 'ject / project / inject / reject / object / subject / eject', words: [
+          {w:'ject (投掷)'},
+          {w:'project v. 投射 n. 项目'},
+          {w:'inject v. 注射'},
+          {w:'reject v. 拒绝'},
+          {w:'object v. 反对 n. 物体'},
+          {w:'subject v. 使服从 n. 主题'},
+          {w:'eject v. 驱逐'}
+        ]},
+        { id: '关系-同根-vert', label: '-vert-/-vers- 词族', icon: '🔄', color: '#052E16', textColor: '#FFFFFF', desc: 'vert / convert / advert / divert / reverse / diverse / conversation', words: [
+          {w:'vert (转)'},
+          {w:'convert v. 转换'},
+          {w:'advertise v. 做广告'},
+          {w:'divert v. 转移'},
+          {w:'reverse v. 逆转'},
+          {w:'diverse adj. 多样的'},
+          {w:'conversation n. 对话'}
+        ]},
+        { id: '关系-同根-form', label: '-form- 词族', icon: '📐', color: '#14532D', textColor: '#FFFFFF', desc: 'form / formal / formation / transform / reform / inform / perform / uniform', words: [
+          {w:'form v. 形成 n. 形式'},
+          {w:'formal adj. 正式的'},
+          {w:'formation n. 形成'},
+          {w:'transform v. 转变'},
+          {w:'reform v./n. 改革'},
+          {w:'inform v. 通知'},
+          {w:'perform v. 表演'},
+          {w:'uniform n. 制服 adj. 统一的'}
+        ]},
+        { id: '关系-同根-port', label: '-port- 词族', icon: '🚢', color: '#052E16', textColor: '#FFFFFF', desc: 'port / import / export / portable / transport / support / airport / passport', words: [
+          {w:'port n. 港口'},
+          {w:'import v. 进口'},
+          {w:'export v. 出口'},
+          {w:'portable adj. 便携的'},
+          {w:'transport v./n. 运输'},
+          {w:'support v./n. 支持'},
+          {w:'airport n. 机场'},
+          {w:'passport n. 护照'}
+        ]},
+        { id: '关系-同根-scrib', label: '-scrib-/-script- 词族', icon: '✏️', color: '#166534', textColor: '#FFFFFF', desc: 'scribe / describe / prescribe / subscribe / manuscript / script', words: [
+          {w:'scribe (写)'},
+          {w:'describe v. 描述'},
+          {w:'prescribe v. 规定'},
+          {w:'subscribe v. 订阅'},
+          {w:'manuscript n. 手稿'},
+          {w:'script n. 剧本'}
+        ]},
+        { id: '关系-同根-plic', label: '-plic-/-ply- 词族', icon: '📂', color: '#052E16', textColor: '#FFFFFF', desc: 'plicate / apply / reply / supply / complicate / explicit / employ / duplicate', words: [
+          {w:'plicate (折叠)'},
+          {w:'apply v. 申请'},
+          {w:'reply v./n. 回复'},
+          {w:'supply v./n. 供应'},
+          {w:'complicate v. 使复杂'},
+          {w:'explicit adj. 明确的'},
+          {w:'employ v. 雇佣'},
+          {w:'duplicate v. 复制'}
+        ]},
+      ]},
+      { id: '关系-同缀', label: '同词缀', icon: '→', color: '#EEF2FF', textColor: '#4F46E5', desc: '相同前缀或后缀的词归为一组', children: [
+        { id: '关系-同缀-名词后缀', label: '名词后缀 (-tion/-ness/-ment)', icon: '📌', color: '#E0E7FF', textColor: '#4338CA', desc: '-tion/-sion/-ness/-ment/-ity/-er/-ance', children: [
+          { id: '关系-同缀-tion', label: '-tion 派生词', icon: '📌', color: '#C7D2FE', textColor: '#3730A3', desc: '名词后缀，源自拉丁-tio(n)', words: [
+            {w:'nation → nation'},
+            {w:'education → education'},
+            {w:'revolution → revolution'},
+            {w:'action → action'},
+            {w:'pollution → pollution'},
+            {w:'solution → solution'},
+            {w:'generation → generation'},
+            {w:'population → population'},
+            {w:'information → information'},
+            {w:'situation → situation'}
+          ]},
+          { id: '关系-同缀-ness', label: '-ness 派生词', icon: '📌', color: '#C7D2FE', textColor: '#3730A3', desc: '形容词+-ness=名词', words: [
+            {w:'happy → happiness'},
+            {w:'kind → kindness'},
+            {w:'dark → darkness'},
+            {w:'weak → weakness'},
+            {w:'aware → awareness'},
+            {w:'careful → carefulness'},
+            {w:'sad → sadness'},
+            {w:'ill → illness'}
+          ]},
+          { id: '关系-同缀-ment', label: '-ment 派生词', icon: '📌', color: '#C7D2FE', textColor: '#3730A3', desc: '名词后缀，动词+ment=名词', words: [
+            {w:'develop → development'},
+            {w:'agree → agreement'},
+            {w:'move → movement'},
+            {w:'argue → argument'},
+            {w:'achieve → achievement'},
+            {w:'employ → employment'},
+            {w:'govern → government'},
+            {w:'manage → management'}
+          ]},
+          { id: '关系-同缀-ity', label: '-ity 派生词', icon: '📌', color: '#A5B4FC', textColor: '#3730A3', desc: '形容词去e/y加-ity', words: [
+            {w:'active → activity'},
+            {w:'real → reality'},
+            {w:'curious → curiosity'},
+            {w:'electric → electricity'},
+            {w:'pure → purity'},
+            {w:'able → ability'},
+            {w:'diverse → diversity'},
+            {w:'responsible → responsibility'}
+          ]},
+        ]},
+        { id: '关系-同缀-形容词后缀', label: '形容词后缀 (-ful/-ous/-ive)', icon: '📌', color: '#A5B4FC', textColor: '#3730A3', desc: '-ful/-less/-ous/-ive/-able/-ible/-al', children: [
+          { id: '关系-同缀-ful', label: '-ful 派生词', icon: '📌', color: '#818CF8', textColor: '#FFFFFF', desc: '名词+-ful=形容词', words: [
+            {w:'beauty → beautiful'},
+            {w:'care → careful'},
+            {w:'help → helpful'},
+            {w:'hope → hopeful'},
+            {w:'success → successful'},
+            {w:'pain → painful'},
+            {w:'peace → peaceful'},
+            {w:'wonder → wonderful'}
+          ]},
+          { id: '关系-同缀-less', label: '-less 派生词', icon: '📌', color: '#818CF8', textColor: '#FFFFFF', desc: '名词+-less=形容词（无…的）', words: [
+            {w:'hope → hopeless'},
+            {w:'care → careless'},
+            {w:'help → helpless'},
+            {w:'home → homeless'},
+            {w:'end → endless'},
+            {w:'use → useless'},
+            {w:'fear → fearless'},
+            {w:'cloud → cloudless'}
+          ]},
+          { id: '关系-同缀-ous', label: '-ous 派生词', icon: '📌', color: '#818CF8', textColor: '#FFFFFF', desc: '名词+-ous=形容词', words: [
+            {w:'danger → dangerous'},
+            {w:'fame → famous'},
+            {w:'generous → generous'},
+            {w:'various → various'},
+            {w:'courage → courageous'},
+            {w:'poison → poisonous'},
+            {w:'nerve → nervous'},
+            {w:'advantage → advantageous'}
+          ]},
+          { id: '关系-同缀-ive', label: '-ive 派生词', icon: '📌', color: '#818CF8', textColor: '#FFFFFF', desc: '名词/动词+-ive=形容词', words: [
+            {w:'act → active'},
+            {w:'create → creative'},
+            {w:'product → productive'},
+            {w:'effect → effective'},
+            {w:'attract → attractive'},
+            {w:'imagine → imaginative'},
+            {w:'support → supportive'},
+            {w:'decide → decisive'}
+          ]},
+        ]},
+        { id: '关系-同缀-动词后缀', label: '动词后缀 (-ize/-ify/-en)', icon: '📌', color: '#6366F1', textColor: '#FFFFFF', desc: '-ize/-ify/-en 使…化', children: [
+          { id: '关系-同缀-ize', label: '-ize/-ise 派生词', icon: '📌', color: '#6366F1', textColor: '#FFFFFF', desc: '使…化', words: [
+            {w:'modern → modernize'},
+            {w:'organ → organize'},
+            {w:'real → realize'},
+            {w:'special → specialize'},
+            {w:'critic → criticize'},
+            {w:'memory → memorize'},
+            {w:'theory → theorize'},
+            {w:'social → socialize'}
+          ]},
+          { id: '关系-同缀-ify', label: '-ify 派生词', icon: '📌', color: '#6366F1', textColor: '#FFFFFF', desc: '使…化/使…充满', words: [
+            {w:'simple → simplify'},
+            {w:'pure → purify'},
+            {w:'class → classify'},
+            {w:'beauty → beautify'},
+            {w:'electric → electrify'},
+            {w:'solid → solidify'},
+            {w:'identity → identify'}
+          ]},
+          { id: '关系-同缀-en', label: '-en 派生词', icon: '📌', color: '#6366F1', textColor: '#FFFFFF', desc: '使…', words: [
+            {w:'short → shorten'},
+            {w:'wide → widen'},
+            {w:'deep → deepen'},
+            {w:'strong → strengthen'},
+            {w:'weak → weaken'},
+            {w:'hard → harden'},
+            {w:'bright → brighten'},
+            {w:'dark → darken'}
+          ]},
+        ]},
+        { id: '关系-同缀-否定前缀', label: '否定前缀 (un-/in-/dis-)', icon: '📌', color: '#FEF2F2', textColor: '#991B1B', desc: 'un-/in-/im-/dis-/non- 否定', children: [
+          { id: '关系-同缀-un', label: 'un- 否定', icon: '✗', color: '#FEE2E2', textColor: '#991B1B', desc: '形容词/动词前加un-表否定', words: [
+            {w:'happy → unhappy'},
+            {w:'usual → unusual'},
+            {w:'do → undo'},
+            {w:'fold → unfold'},
+            {w:'fair → unfair'},
+            {w:'known → unknown'},
+            {w:'able → unable'},
+            {w:'necessary → unnecessary'}
+          ]},
+          { id: '关系-同缀-in', label: 'in-/im-/il-/ir- 否定', icon: '✗', color: '#FECACA', textColor: '#7F1D1D', desc: '拉丁语源的否定前缀', words: [
+            {w:'visible → invisible'},
+            {w:'possible → impossible'},
+            {w:'legal → illegal'},
+            {w:'regular → irregular'},
+            {w:'patient → impatient'},
+            {w:'capable → incapable'},
+            {w:'complete → incomplete'},
+            {w:'literate → illiterate'}
+          ]},
+          { id: '关系-同缀-dis', label: 'dis- 否定', icon: '✗', color: '#FCA5A5', textColor: '#7F1D1D', desc: '动词/形容词前加dis-', words: [
+            {w:'agree → disagree'},
+            {w:'appear → disappear'},
+            {w:'honest → dishonest'},
+            {w:'like → dislike'},
+            {w:'obey → disobey'},
+            {w:'cover → discover'},
+            {w:'content → discontent'},
+            {w:'allow → disallow'}
+          ]},
+        ]},
+      ]},
+      { id: '关系-同字母组合', label: '同字母组合', icon: '🔤', color: '#F5F3FF', textColor: '#7C3AED', desc: '相同字母序列的词归为一组，发音模式相同', children: [
+        { id: '关系-同字母组合-ea', label: 'ea 组合', icon: '🔤', color: '#DDD6FE', textColor: '#5B21B6', desc: 'ea 发 /iː/ 或 /e/', words: [
+          {w:'ea → /iː/: read / heat / meat / sea / team / speak / clean'},
+          {w:'ea → /e/: bread / head / dead / breakfast / treasure'},
+          {w:'注意: break / great → /eɪ/'}
+        ]},
+        { id: '关系-同字母组合-ee', label: 'ee 组合', icon: '🔤', color: '#C4B5FD', textColor: '#5B21B6', desc: 'ee 几乎总是发 /iː/', words: [
+          {w:'see / meet / feet / deep / sleep / green / street / free / keep / feel / week / speech / three / queen / speed'}
+        ]},
+        { id: '关系-同字母组合-oo', label: 'oo 组合', icon: '🔤', color: '#A78BFA', textColor: '#FFFFFF', desc: 'oo 发 /uː/ 或 /ʊ/', words: [
+          {w:'oo → /uː/: moon / food / pool / cool / school / room / tool / root / pool / moon'},
+          {w:'oo → /ʊ/: book / look / cook / took / good / foot / stood / wood / wool / understood'}
+        ]},
+        { id: '关系-同字母组合-ie', label: 'ie 组合', icon: '🔤', color: '#8B5CF6', textColor: '#FFFFFF', desc: 'ie 发音不规律', words: [
+          {w:'ie → /aɪ/: die / lie / tie / pie /vie /ried / nies'},
+          {w:'ie → /iː/: believe / thief / field / piece / niece / friend / view / achieve'},
+          {w:'ie → /i/: patient / efficient / ancient / science / society'}
+        ]},
+        { id: '关系-同字母组合-ough', label: 'ough 组合', icon: '🔤', color: '#7C3AED', textColor: '#FFFFFF', desc: 'ough 发音最多变', words: [
+          {w:'/ʌf/: rough / tough / enough / slough'},
+          {w:'/əʊ/: though / although / dough'},
+          {w:'/ɔː/: thought / bought / brought / fought / sought'},
+          {w:'/aʊ/: through / plough'},
+          {w:'/ɒf/: cough'},
+          {w:'零辅音:hiccup (pp发/kʌp/)'}
+        ]},
+        { id: '关系-同字母组合-tion', label: '-tion 结尾', icon: '🔤', color: '#6D28D9', textColor: '#FFFFFF', desc: '-tion 结尾词群', words: [
+          {w:'nation / education / revolution / action / information / population / situation / attention / direction / nation / communication'}
+        ]},
+        { id: '关系-同字母组合-sion', label: '-sion 结尾', icon: '🔤', color: '#5B21B6', textColor: '#FFFFFF', desc: '-sion 结尾词群', words: [
+          {w:'decision / discussion / expression / impression / permission / television / explosion / conclusion / tension / version'}
+        ]},
+        { id: '关系-同字母组合-ful', label: '-ful 结尾', icon: '🔤', color: '#4C1D95', textColor: '#FFFFFF', desc: '-ful 结尾词群', words: [
+          {w:'beautiful / careful / helpful / hopeful / successful / painful / peaceful / wonderful / grateful / powerful / forgetful / colorful'}
+        ]},
+        { id: '关系-同字母组合-ness', label: '-ness 结尾', icon: '🔤', color: '#3B0764', textColor: '#FFFFFF', desc: '-ness 结尾词群', words: [
+          {w:'happiness / kindness / darkness / weakness / awareness / sadness / illness / goodness / tiredness / business / loneliness / eagerness'}
+        ]},
+      ]},
+      { id: '关系-同音', label: '同发音模式', icon: '🔊', color: '#FEF2F2', textColor: '#DC2626', desc: '相同音素序列的词，但拼写不同（最小对立对）', children: [
+        { id: '关系-同音-bitBeat', label: '/bɪt/ vs /biːt/', icon: '🎧', color: '#FEE2E2', textColor: '#991B1B', desc: 'bit / beat 发音区别', words: [
+          {w:'bit (一点) vs beat (打败)'},
+          {w:'ship (船) vs sheep (羊)'},
+          {w:'pin (针) vs peen (锤) vs pan (平底锅)'},
+          {w:'fill (填充) vs feel (感觉)'},
+          {w:'sit (坐) vs seat (座位)'}
+        ]},
+        { id: '关系-同音-porkBeef', label: '/pɔːk/ vs /biːf/', icon: '🎧', color: '#FECACA', textColor: '#7F1D1D', desc: 'pork vs beef 发音对比', words: [
+          {w:'pork (猪肉) — 猪→猪叫'},
+          {w:'beef (牛肉) — 牛→法国古语boeuf'}
+        ]},
+        { id: '关系-同音-homophones', label: '同音异形词 homophones', icon: '🎧', color: '#FCA5A5', textColor: '#7F1D1D', desc: '发音相同但拼写不同', words: [
+          {w:'there / their / they\'re'},
+          {w:'to / too / two'},
+          {w:'for / four / fore'},
+          {w:'write / right / rite'},
+          {w:'sea / see / C'},
+          {w:'sun / son'},
+          {w:'night / knight'},
+          {w:'weak / week'},
+          {w:'no / know'},
+          {w:'hear / here'},
+          {w:'meat / meet / mete'},
+          {w:'peace / piece'},
+          {w:'weather / whether'}
+        ]},
+        { id: '关系-同音-minimal', label: '最小对立对 minimal pairs', icon: '🎧', color: '#F87171', textColor: '#FFFFFF', desc: '只有一个音素不同的词对', words: [
+          {w:'pat / bat / cat / mat / rat / fat / hat / lat / nat'},
+          {w:'pen / ben / ten / den / len / hen / men / wren'},
+          {w:'cup / cap / cob / cop / cod / cog / cot / cog'},
+          {w:'ship / sip / chip / dip / hip / lip / nip / rip / zip / tip / pip'}
+        ]},
+      ]},
+      { id: '关系-同源', label: '同词源', icon: '🏛️', color: '#FDF4FF', textColor: '#C026D3', desc: '相同词源语系的词归为一组', children: [
+        { id: '关系-同源-日耳曼', label: '日耳曼语 Germanic', icon: '🇬🇧', color: '#D1FAE5', textColor: '#065F46', desc: '英语固有核心词，盎格鲁撒克逊来源', words: [
+          {w:'基础功能词: the / a / an / and / of / to / in / is / are / was / were'},
+          {w:'身体部位: hand / foot / head / eye / heart / arm / leg'},
+          {w:'家庭: man / woman / child / brother / sister / mother / father'},
+          {w:'自然: water / fire / earth / wood / stone / wind / rain / snow'},
+          {w:'动词: run / eat / sleep / walk / speak / know / think / make / take / give'},
+          {w:'形容词: good / bad / big / small / hot / cold / new / old / long / short'}
+        ]},
+        { id: '关系-同源-拉丁', label: '拉丁语 Latin', icon: '🏛️', color: '#FEE2E2', textColor: '#991B1B', desc: '古罗马官方语言，约50%英语词汇', words: [
+          {w:'法律/政治: legal / nation / state / form / act / just / rule / govern'},
+          {w:'科学/技术: quantum / spectrum / formula / virus / species / biology'},
+          {w:'医学: medicine / surgery / patient / symptom / diagnosis / remedy'},
+          {w:'宗教/哲学: religion / philosophy / spirit / moral / ethics / angel'}
+        ]},
+        { id: '关系-同源-法语', label: '法语 French', icon: '🇫🇷', color: '#DBEAFE', textColor: '#1E40AF', desc: '诺曼征服后大量借入，宫廷/美食/艺术词汇', words: [
+          {w:'政府/权力: government / authority / court / battle / noble / people'},
+          {w:'艺术/文化: art / music / dance / color / fashion / cuisine / menu / chef'},
+          {w:'情感/品质: beautiful / pleasant / honest / happy / delicate / elegant'},
+          {w:'食物: cuisine / menu / restaurant / café / champagne / bourgeois'}
+        ]},
+        { id: '关系-同源-希腊', label: '希腊语 Greek', icon: '🇬🇷', color: '#FEF3C7', textColor: '#92400E', desc: '科技/学术/哲学词汇主要来源', words: [
+          {w:'科学/技术: bio/logy / chem/istry / phys/ics / geo/graphy / psych/o/logy'},
+          {w:'医学/健康: cardio/vascular / neuro/logy / phar/macy / surgi/cal'},
+          {w:'哲学/思想: philo/sophy / ethic/s / meta/physics / psyche'},
+          {w:'前缀: tele-/phone / micro-/scope / auto-/mobile / poly-/technic'}
+        ]},
+        { id: '关系-同源-借词', label: '借词 Loanwords', icon: '📥', color: '#F5F3FF', textColor: '#6D28D9', desc: '从各语言借入的词汇', words: [
+          {w:'日语: tycoon / sake / sushi / karaoke / emoji / tsunami / karate / judo'},
+          {w:'中文: tofu / kung fu / dim sum / chow mein / tea (闽南语)'},
+          {w:'阿拉伯语: algebra / algorithm / alcohol / alarm / candy / lemon / zero'},
+          {w:'意大利语: piano / opera / studio / bandit / volcano / umbrella'},
+          {w:'德语: kindergarten / gesundheit / wanderlust / schadenfreude'}
+        ]},
+      ]},
+      { id: '关系-同拼写', label: '同拼写模式', icon: '✏️', color: '#F0F9FF', textColor: '#0284C7', desc: '相同拼写规律的词归为一组', children: [
+        { id: '关系-同拼写-双辅', label: '双辅音字母', icon: '✏️', color: '#BAE6FD', textColor: '#0369A1', desc: '双辅音字母的词（历史遗留）', words: [
+          {w:'happen / letter / middle / summer / butter / coffee / happy / tennis / klass（美式k）'},
+          {w:'规律: 单辅音+元音+相同辅音+元音: s-a-d-d-y / b-u-t-t-er'}
+        ]},
+        { id: '关系-同拼写-ie', label: 'i before e', icon: '✏️', color: '#7DD3FC', textColor: '#0369A1', desc: 'i before e except after c', words: [
+          {w:'符合规则: believe / thief / field / piece / niece / friend / view / achieve'},
+          {w:'符合规则(after c): receive / ceiling / deceive / perceive / conceit'},
+          {w:'不符合规则: weird / height / weight / neighbor / their / eight / foreign / leisure / science'}
+        ]},
+        { id: '关系-同拼写-去e', label: '去e加后缀', icon: '✏️', color: '#38BDF8', textColor: '#FFFFFF', desc: '辅e结尾+元音后缀去e，辅音+e+辅音保持e', words: [
+          {w:'去e: hope→hopeful / make→making / use→used / believe→belief / write→writing'},
+          {w:'保持e: notice→noticeable / courage→courageous / knowledge→knowledgeable'},
+          {w:'注意: true→truly (e变y) / argue→argument (去e)'}
+        ]},
+        { id: '关系-同拼写-y', label: '名词y变i', icon: '✏️', color: '#0EA5E9', textColor: '#FFFFFF', desc: '辅音+y结尾，变y为i再加后缀', words: [
+          {w:'happy→happiness / lazy→laziness / heavy→heavily / angry→angrily'},
+          {w:'注意: day→daily / play→playing (加后缀不需变y)'}
+        ]},
+      ]},
+      { id: '关系-同义词', label: '同义关系', icon: '≈', color: '#F0FDF4', textColor: '#059669', desc: '意义相近的词（对称关系）', children: [
+        { id: '关系-同义-size', label: '表示大小的词', icon: '≈', color: '#BBF7D0', textColor: '#065F46', desc: 'big / large / great / huge / enormous / vast', words: [
+          {w:'big 口语化，最通用'},
+          {w:'large 比big正式，不指人的大小'},
+          {w:'great 带有情感色彩，巨大/伟大'},
+          {w:'huge 口语化，体积或数量极大'},
+          {w:'enormous 比huge更正式，程度更高'},
+          {w:'vast 强调面积广阔'}
+        ]},
+        { id: '关系-同义-small', label: '表示大小的词', icon: '≈', color: '#86EFAC', textColor: '#166534', desc: 'small / little / tiny / slight / minute', words: [
+          {w:'small 客观描述尺寸'},
+          {w:'little 带有感情色彩，小巧可爱'},
+          {w:'tiny 强调极小'},
+          {w:'slight 轻微/细小的'},
+          {w:'minute 极微小的，精密的'}
+        ]},
+        { id: '关系-同义-happy', label: '表示情感的词', icon: '≈', color: '#4ADE80', textColor: '#FFFFFF', desc: 'happy / joyful / cheerful / delighted / thrilled', words: [
+          {w:'happy 最通用'},
+          {w:'joyful 充满喜悦的'},
+          {w:'cheerful 愉快开朗的'},
+          {w:'delighted 高兴的（被某事感动）'},
+          {w:'thrilled 非常激动/兴奋'}
+        ]},
+      ]},
+      { id: '关系-反义', label: '反义关系', icon: '≠', color: '#FEF2F2', textColor: '#DC2626', desc: '意义相反的词（对称关系）', children: [
+        { id: '关系-反义-hotCold', label: 'hot ↔ cold', icon: '≠', color: '#FEE2E2', textColor: '#991B1B', desc: '温度反义', words: [
+          {w:'hot / cold（温度）'},
+          {w:'warm / cool（温和的/凉爽的）'},
+          {w:'hot / freezing（极端温度）'}
+        ]},
+        { id: '关系-反义-bigSmall', label: 'big ↔ small', icon: '≠', color: '#FECACA', textColor: '#7F1D1D', desc: '大小反义', words: [
+          {w:'big / small'},
+          {w:'large / tiny'},
+          {w:'enormous / minute'},
+          {w:'huge / minuscule'}
+        ]},
+        { id: '关系-反义-happySad', label: 'happy ↔ sad', icon: '≠', color: '#FCA5A5', textColor: '#7F1D1D', desc: '情感反义', words: [
+          {w:'happy / sad'},
+          {w:'joyful / miserable'},
+          {w:'pleased / displeased'},
+          {w:'delighted / distressed'},
+          {w:'thrilled / devastated'}
+        ]},
+        { id: '关系-反义-increase', label: 'increase ↔ decrease', icon: '≠', color: '#F87171', textColor: '#FFFFFF', desc: '增减反义', words: [
+          {w:'increase / decrease'},
+          {w:'rise / fall'},
+          {w:'grow / shrink'},
+          {w:'expand / contract'},
+          {w:'inflate / deflate'}
+        ]},
+      ]},
+      { id: '关系-易混', label: '易混词辨析', icon: '⚠️', color: '#FEF2F2', textColor: '#DC2626', desc: '拼写/发音/意义/L1迁移易混，共800+对', children: [
+        { id: '关系-易混-拼写', label: '拼写相似', icon: '✏️', color: '#FEE2E2', textColor: '#991B1B', desc: '视觉上容易混淆', words: [
+          {w:'quiet / quite'},
+          {w:'accept / except'},
+          {w:'affect / effect'},
+          {w:'principal / principle'},
+          {w:'dessert / desert / dissert'},
+          {w:'precede / proceed'},
+          {w:'latent / patent / potent'},
+          {w:'allusion / illusion'}
+        ]},
+        { id: '关系-易混-发音', label: '发音相似', icon: '🔊', color: '#FECACA', textColor: '#7F1D1D', desc: '听觉上容易混淆', words: [
+          {w:'piece / peace'},
+          {w:'weather / whether'},
+          {w:'through / though / thought'},
+          {w:'bare / bear'},
+          {w:'site / sight / cite'},
+          {w:'waist / waste'},
+          {w:'weak / week'},
+          {w:'real / reel'}
+        ]},
+        { id: '关系-易混-意义', label: '意义相近但用法不同', icon: '≈', color: '#FCA5A5', textColor: '#7F1D1D', desc: '意义相近但搭配/语体不同', words: [
+          {w:'effect / affect / influence（影响）'},
+          {w:'journey / trip / travel / tour（旅行）'},
+          {w:'method / way / approach（方法）'},
+          {w:'task / job / work（工作/任务）'},
+          {w:'time / period / era / age（时间）'},
+          {w:'country / nation / state（国家）'},
+          {w:'climate / weather（气候）'},
+          {w:'evidence / proof（证据）'}
+        ]},
+        { id: '关系-易混-L1', label: 'L1迁移（汉语负迁移）', icon: '🇨🇳', color: '#EF4444', textColor: '#FFFFFF', desc: '汉语负迁移导致的混淆，辨析题高价值', words: [
+          {w:'look / see / watch / read（都=看）'},
+          {w:'borrow / lend / keep（都=借）'},
+          {w:'say / speak / talk / tell（都=说）'},
+          {w:'take / bring / carry（都=拿）'},
+          {w:'spend / cost / pay（都=花钱）'},
+          {w:'in / on / at（时间介词）'},
+          {w:'receive / accept（都=收到）'},
+          {w:'learn / study（都=学习）'},
+          {w:'problem / question（都=问题）'},
+          {w:'no / not（都=不）'},
+          {w:'if / whether（都=是否）'},
+          {w:'die / dead / death（都=死）'}
+        ]},
+      ]},
+      { id: '关系-同错因', label: '同错因', icon: '❌', color: '#FDF4FF', textColor: '#C026D3', desc: '相同错误原因的词归为一组', children: [
+        { id: '关系-同错因-ie', label: 'i/e 混淆', icon: '❌', color: '#F5D0FE', textColor: '#A21CAF', desc: 'believe/receive/achieve 拼写常错', words: [
+          {w:'错误: recieve / beleive / acheive / precieve / deceieve'},
+          {w:'正确: receive / believe / achieve / perceive / deceive'}
+        ]},
+        { id: '关系-同错因-tion', label: '-tion 拼写', icon: '❌', color: '#E879F9', textColor: '#FFFFFF', desc: '-tion 常写成 -sion', words: [
+          {w:'attention / education / information / station / education'},
+          {w:'注意: decision / discussion / expression / mission / permission → -sion'}
+        ]},
+        { id: '关系-同错因-双辅', label: '双辅音遗漏', icon: '❌', color: '#D946EF', textColor: '#FFFFFF', desc: '双辅音只写一个', words: [
+          {w:'错误: hapen / leter / writting / smal / comming'},
+          {w:'正确: happen / letter / writing / small / coming'}
+        ]},
+        { id: '关系-同错因-名词动用', label: '名词动词转换', icon: '❌', color: '#C026D3', textColor: '#FFFFFF', desc: '名词动用的重音变化常错', words: [
+          {w:"'record(名) / re'cord(动)"},
+          {w:"'present(名) / pre'sent(动)"},
+          {w:"'export(名) / ex'port(动)"},
+          {w:"'contrast(名) / con'trast(动)"}
+        ]},
+      ]},
+      { id: '关系-同构词', label: '同构词类型', icon: '🧩', color: '#FFF7ED', textColor: '#D97706', desc: '相同构词法的词归为一组', children: [
+        { id: '关系-同构词-转化', label: '转化词 conversion', icon: '↔', color: '#FED7AA', textColor: '#C2410C', desc: '同一词形不同词性，重音常变', words: [
+          {w:"record (名/动): 'record / re'cord"},
+          {w:"present (名/动/形): 'present / pre'sent"},
+          {w:"export (名/动): 'export / ex'port"},
+          {w:"object (名/动): 'object / ob'ject"},
+          {w:"contrast (名/动): 'contrast / con'trast"},
+          {w:"increase (名/动): 'increase / in'crease"}
+        ]},
+        { id: '关系-同构词-派生', label: '派生词 derivation', icon: '→', color: '#FDE68A', textColor: '#B45309', desc: '词根+词缀构成', words: [
+          {w:'happy → happiness / unhappy / happily'},
+          {w:'nation → national → internationally'},
+          {w:'act → action → inactive → interact'},
+          {w:'serve → service → servant → reservation'}
+        ]},
+        { id: '关系-同构词-复合', label: '复合词 compounding', icon: '+', color: '#FCD34D', textColor: '#78350F', desc: '两个以上词组合', words: [
+          {w:'sun + rise = sunrise'},
+          {w:'class + room = classroom'},
+          {w:'home + work = homework'},
+          {w:'bed + room = bedroom'},
+          {w:'foot + ball = football'},
+          {w:'every + one = everyone'}
+        ]},
+      ]},
+      { id: '关系-同搭配', label: '同搭配', icon: '🤝', color: '#F5F3FF', textColor: '#7C3AED', desc: '相同搭配模式的词归为一组', children: [
+        { id: '关系-同搭配-heavy', label: 'heavy + N', icon: '🤝', color: '#DDD6FE', textColor: '#5B21B6', desc: 'heavy+名词固定搭配', words: [
+          {w:'heavy rain / heavy snow / heavy traffic'},
+          {w:'heavy smoker / heavy drinker'},
+          {w:'heavy load / heavy burden'},
+          {w:'heavy cost / heavy price'}
+        ]},
+        { id: '关系-同搭配-take', label: 'take + N', icon: '🤝', color: '#C4B5FD', textColor: '#5B21B6', desc: 'take+名词固定搭配', words: [
+          {w:'take a photo / take a break / take a look'},
+          {w:'take a seat / take notes / take medicine'},
+          {w:'take a shower / take a nap / take a rest'},
+          {w:'take responsibility / take action'}
+        ]},
+        { id: '关系-同搭配-make', label: 'make + N', icon: '🤝', color: '#A78BFA', textColor: '#FFFFFF', desc: 'make+名词固定搭配', words: [
+          {w:'make a decision / make progress / make a mistake'},
+          {w:'make a plan / make an effort / make a choice'},
+          {w:'make money / make friends / make trouble'},
+          {w:'make sure / make it / make sense'}
+        ]},
+        { id: '关系-同搭配-pay', label: 'pay + N', icon: '🤝', color: '#8B5CF6', textColor: '#FFFFFF', desc: 'pay+名词固定搭配', words: [
+          {w:'pay attention to'},
+          {w:'pay a visit to'},
+          {w:'pay the bill / pay by card'},
+          {w:'pay for something'}
+        ]},
+        { id: '关系-同搭配-介词', label: 'V + in/on/at 固定', icon: '🤝', color: '#7C3AED', textColor: '#FFFFFF', desc: '不同动词配不同介词', words: [
+          {w:'arrive in (城市/国家) / arrive at (具体地点)'},
+          {w:'believe in / rely on / depend on / insist on'},
+          {w:'laugh at / look at / stare at / glance at'},
+          {w:'belong to / lead to / contribute to / adapt to'}
+        ]},
+      ]},
+      { id: '关系-上下位', label: '上下位关系', icon: '⬆️', color: '#EEF2FF', textColor: '#4F46E5', desc: '下位词→上位词单向关系，聚合关系', children: [
+        { id: '关系-上下位-animal', label: 'animal 词族', icon: '🐾', color: '#E0E7FF', textColor: '#4338CA', desc: 'animal是上位词', words: [
+          {w:'animal (上位)'},
+          {w:'→ mammal / bird / fish / reptile / insect'},
+          {w:'→ dog / cat / elephant / lion / dolphin'}
+        ]},
+        { id: '关系-上下位-plant', label: 'plant 词族', icon: '🌿', color: '#C7D2FE', textColor: '#3730A3', desc: 'plant是上位词', words: [
+          {w:'plant (上位)'},
+          {w:'→ tree / flower / grass / vegetable'},
+          {w:'→ rose / oak / fern / moss'}
+        ]},
+        { id: '关系-上下位-emotion', label: 'emotion 词族', icon: '💗', color: '#A5B4FC', textColor: '#3730A3', desc: 'emotion是上位词', words: [
+          {w:'emotion (上位)'},
+          {w:'→ happiness / sadness / anger / fear / surprise'},
+          {w:'→ joy / grief / fury / terror / amazement'}
+        ]},
+        { id: '关系-上下位-vehicle', label: 'vehicle 词族', icon: '🚗', color: '#818CF8', textColor: '#FFFFFF', desc: 'vehicle是上位词', words: [
+          {w:'vehicle (上位)'},
+          {w:'→ car / bus / truck / motorcycle'},
+          {w:'→ bicycle / train / airplane / ship'}
+        ]},
+      ]},
+    ]
+  },
+
+  // ====== 教学资源 ======
+  {
+    id: '资源', label: '教学资源', icon: '📚', color: 'd3',
+    desc: '主题、年级、教材、词频——在什么时候教什么内容',
+    stats: '24子主题 · 5个学段 · 高考大纲',
+    children: [
+      { id: '资源-主题', label: '主题 themes', icon: '🌏', color: '#F0FDF4', textColor: '#059669', desc: '对齐2022课标三大主题群', children: [
+        { id: '资源-主题-自我', label: '人与自我 self', icon: '🧑', color: '#BBF7D0', textColor: '#065F46', desc: '8个子主题', words: [
+          {w:'个人情况: identity / personality'},
+          {w:'日常生活: routine / schedule'},
+          {w:'兴趣爱好: hobby / interest / passion'},
+          {w:'情绪情感: emotion / mood / feeling'},
+          {w:'计划安排: plan / arrange / schedule'},
+          {w:'饮食健康: diet / nutrition / health'},
+          {w:'健康急救: first aid / symptom / treatment'},
+          {w:'语言学习: vocabulary / grammar / fluency'}
+        ]},
+        { id: '资源-主题-社会', label: '人与社会 society', icon: '👥', color: '#86EFAC', textColor: '#166534', desc: '13个子主题', words: [
+          {w:'家庭朋友: family / relative / friendship'},
+          {w:'学校生活: campus / subject / exam'},
+          {w:'人际交往: communicate / cooperate / negotiate'},
+          {w:'节假日: festival / holiday / celebration'},
+          {w:'购物: purchase / discount / bargain'},
+          {w:'文娱体育: entertainment / tournament / athlete'},
+          {w:'旅游交通: tourism / commute / vehicle'},
+          {w:'通信网络: internet / social media / algorithm'},
+          {w:'文学艺术: literature / artwork / masterpiece'},
+          {w:'历史社会: civilization / revolution / reform'},
+          {w:'职业工作: occupation / career / interview'},
+          {w:'科学技术: technology / innovation / artificial'},
+          {w:'热点话题: sustainable / climate / pandemic'}
+        ]},
+        { id: '资源-主题-自然', label: '人与自然 nature', icon: '🌍', color: '#4ADE80', textColor: '#FFFFFF', desc: '3个子主题', words: [
+          {w:'天气气候: climate / temperature / monsoon'},
+          {w:'自然世界: ecosystem / biodiversity / habitat'},
+          {w:'环境保护: conservation / recycle / carbon'}
+        ]},
+      ]},
+      { id: '资源-年级', label: '年级学段', icon: '🏫', color: '#EEF2FF', textColor: '#4F46E5', desc: '5个学段：小学→初中→高中', children: [
+        { id: '资源-年级-预备', label: '预备级 preparatory', icon: '👶', color: '#FEF3C7', textColor: '#92400E', desc: '小学1-2年级，6-7岁，无词汇量要求', words: [{w:'听说为主，无拼写要求'}] },
+        { id: '资源-年级-一级', label: '一级 primary', icon: '👧', color: '#DBEAFE', textColor: '#1E40AF', desc: '小学3-4年级，8-9岁', words: [{w:'目标词汇: 300-400词'}] },
+        { id: '资源-年级-二级', label: '二级 primary', icon: '🧒', color: '#A5B4FC', textColor: '#3730A3', desc: '小学5-6年级，10-12岁', words: [{w:'目标词汇: 700词（累计）'}] },
+        { id: '资源-年级-三级', label: '三级 junior', icon: '🧑‍🎓', color: '#818CF8', textColor: '#FFFFFF', desc: '初中1-3年级，12-15岁', words: [{w:'目标词汇: 1600词（累计）'}] },
+        { id: '资源-年级-高级', label: '高级 senior', icon: '🎓', color: '#6366F1', textColor: '#FFFFFF', desc: '高中1-3年级，15-18岁', words: [{w:'目标词汇: 3500词（累计）'}] },
+      ]},
+      { id: '资源-课程来源', label: '课程来源', icon: '📖', color: '#FFF7ED', textColor: '#D97706', desc: '课标/教材/产品扩展/试验词', children: [
+        { id: '资源-课程来源-standard', label: 'standard 课标', icon: '📋', color: '#FED7AA', textColor: '#C2410C', desc: '2022英语课程标准', words: [{w:'课标规定词汇量'}] },
+        { id: '资源-课程来源-textbook', label: 'textbook 教材', icon: '📚', color: '#FDE68A', textColor: '#B45309', desc: '地区版本教材', words: [{w:'人教版/外研版/译林版等'}] },
+        { id: '资源-课程来源-productExt', label: 'product_extension 产品扩展', icon: '🔧', color: '#FCD34D', textColor: '#92400E', desc: '产品自行扩展的词汇', words: [{w:'预备级扩展词'}] },
+        { id: '资源-课程来源-pilot', label: 'pilot 试验词', icon: '🧪', color: '#FBBF24', textColor: '#78350F', desc: '待审核的新词', words: [] },
+      ]},
+      { id: '资源-词频', label: '词频波段', icon: '📈', color: '#F5F3FF', textColor: '#7C3AED', desc: '锚定NGSL/EVP，映射为高/中/低', children: [
+        { id: '资源-词频-high', label: 'high 高频', icon: '⬆️', color: '#C4B5FD', textColor: '#5B21B6', desc: 'NGSL核心词汇', words: [{w:'the / be / have / do / make'}] },
+        { id: '资源-词频-medium', label: 'medium 中频', icon: '➡️', color: '#A78BFA', textColor: '#4C1D95', desc: 'NGSL中频词汇', words: [{w:'philosophy / circumstance'}] },
+        { id: '资源-词频-low', label: 'low 低频', icon: '⬇️', color: '#8B5CF6', textColor: '#FFFFFF', desc: 'NGSL低频/学术词汇', words: [{w:'antidisestablishmentarianism'}] },
+      ]},
+      { id: '资源-CEFR', label: 'CEFR等级', icon: '🎯', color: '#F0F9FF', textColor: '#0284C7', desc: 'A1-C2，目标高中B1-B2', children: [
+        { id: '资源-CEFR-A1', label: 'A1 初学者', icon: 'A1', color: '#BAE6FD', textColor: '#0369A1', desc: '能理解和使用熟悉的日常用语', words: [{w:'hello / goodbye / thank you'}] },
+        { id: '资源-CEFR-A2', label: 'A2 基础', icon: 'A2', color: '#7DD3FC', textColor: '#0369A1', desc: '能进行简单的日常交流', words: [{w:'family / friend / school'}] },
+        { id: '资源-CEFR-B1', label: 'B1 进阶级', icon: 'B1', color: '#38BDF8', textColor: '#FFFFFF', desc: '能在旅行中应对大多数情境', words: [{w:'experience / environment / situation'}] },
+        { id: '资源-CEFR-B2', label: 'B2 高阶', icon: 'B2', color: '#0EA5E9', textColor: '#FFFFFF', desc: '能流利自然地进行交流', words: [{w:'sufficient / substantial / demonstrate'}] },
+      ]},
+      { id: '资源-难度', label: '难度维度', icon: '📊', color: '#FEF2F2', textColor: '#DC2626', desc: '固有难度与课程难度分开', children: [
+        { id: '资源-难度-inherent', label: 'inherent_difficulty 固有难度', icon: '📌', color: '#FECACA', textColor: '#7F1D1D', desc: '义项自身属性，与课程无关', words: [{w:'low: cat / dog / run'},{w:'medium: algorithm / hypothesis'},{w:'high: antidisestablishmentarianism'}] },
+        { id: '资源-难度-curriculum', label: 'curriculum_difficulty 课程难度', icon: '📌', color: '#FCA5A5', textColor: '#7F1D1D', desc: '某课程要求下的难度', words: [{w:'low: 小学课标内'},{w:'medium: 初中拓展'},{w:'high: 高中超纲'}] },
+      ]},
+      { id: '资源-先备', label: '先备关系', icon: '⚡', color: '#FDF4FF', textColor: '#C026D3', desc: '学习该词前需要掌握的词/规则', children: [
+        { id: '资源-先备-example', label: '先备示例', icon: '🔗', color: '#F5D0FE', textColor: '#A21CAF', desc: '学习目标词前的先备词', words: [
+          {w:'学injection前需先掌握: inject / -tion'},
+          {w:'学photosynthesis前需先掌握: photo- / synthesis'},
+          {w:'学unemployment前需先掌握: employ / un- / -ment'}
+        ]},
+      ]},
+      { id: '资源-掌握要求', label: '掌握要求', icon: '🎯', color: '#FFFBEB', textColor: '#B45309', desc: 'recognize/understand/produce', children: [
+        { id: '资源-掌握要求-recognize', label: 'recognize 识别', icon: '👁️', color: '#FEF3C7', textColor: '#92400E', desc: '见到能认读', words: [{w:'passive词汇'}] },
+        { id: '资源-掌握要求-understand', label: 'understand 理解', icon: '🧠', color: '#FDE68A', textColor: '#B45309', desc: '能用中文说出意思', words: [{w:'active词汇（阅读）'}] },
+        { id: '资源-掌握要求-produce', label: 'produce 产出', icon: '✍️', color: '#FCD34D', textColor: '#78350F', desc: '能写能用', words: [{w:'active词汇（写作/口语）'}] },
+      ]},
+      { id: '资源-高考', label: '高考专题', icon: '🏆', color: '#FFFBEB', textColor: '#B45309', desc: '高中特有内容', children: [
+        { id: '资源-高考-核心词', label: '高考核心词', icon: '🏆', color: '#FEF3C7', textColor: '#92400E', desc: '高考必考词', words: [{w:'perseverance / crucial / significant / target'}] },
+        { id: '资源-高考-学术词块', label: '学术词块', icon: '📝', color: '#FDE68A', textColor: '#B45309', desc: '高中学术写作词块', words: [{w:'in terms of / with respect to / to a large extent'}] },
+        { id: '资源-高考-CET', label: 'CET过渡词', icon: '📈', color: '#FCD34D', textColor: '#78350F', desc: '高考→大学英语衔接', words: [{w:'academic / methodology / framework'}] },
+        { id: '资源-高考-辨析', label: '词义辨析', icon: '🔍', color: '#FBBF24', textColor: '#78350F', desc: '高考高频辨析词', words: [{w:'approach / method / way / means'},{w:'effect / affect / influence'},{w:'journey / trip / travel / tour'}] },
+      ]},
+    ]
+  },
+
+  // ====== 学习证据 ======
+  {
+    id: '证据', label: '学习证据', icon: '📊', color: 'd4',
+    desc: '技能、题型、掌握度、FSRS复习——学生学到了什么',
+    stats: '5技能×2方向 · 6题型 · 5状态 · VKS5级',
+    children: [
+      { id: '证据-技能', label: '5种技能 skill', icon: '🎯', color: '#EEF2FF', textColor: '#4F46E5', desc: 'form/sound/meaning/usage/relation，每种有接受+产出', children: [
+        { id: '证据-技能-form', label: 'form 形式', icon: '👁️', color: '#E0E7FF', textColor: '#4338CA', desc: 'form_recognition + spelling', children: [
+          { id: '证据-技能-form-recog', label: 'form_recognition 形式识别', icon: '👁️', color: '#C7D2FE', textColor: '#3730A3', desc: '看词认读、识别词根词缀', words: [{w:'识别 -tion 后缀→名词'},{w:'识别 un- 前缀→否定'}] },
+          { id: '证据-技能-form-spelling', label: 'spelling 拼写', icon: '✍️', color: '#A5B4FC', textColor: '#3730A3', desc: '拼写、词形变化、组合单词', words: [{w:'听音拼写: /prɪˈzɜːv/ → preserve'},{w:'词形变化: happy→happily'},{w:'组合单词: un+happy+ness'}] },
+        ]},
+        { id: '证据-技能-sound', label: 'sound 声音', icon: '👂', color: '#F5F3FF', textColor: '#7C3AED', desc: 'sound_recognition + pronunciation', children: [
+          { id: '证据-技能-sound-recog', label: 'sound_recognition 声音识别', icon: '👂', color: '#DDD6FE', textColor: '#5B21B6', desc: '听音辨词', words: [{w:'听音选出正确拼写: /fəˈnetɪk/ → phonetic'}] },
+          { id: '证据-技能-sound-pro', label: 'pronunciation 发音', icon: '🔊', color: '#C4B5FD', textColor: '#5B21B6', desc: '跟读、发音评测', words: [{w:'跟读句子并获得打分'},{w:'最小对立对: bit vs beat'}] },
+        ]},
+        { id: '证据-技能-meaning', label: 'meaning 意义', icon: '🧠', color: '#F0FDF4', textColor: '#059669', desc: 'meaning_recall', children: [
+          { id: '证据-技能-meaning-receptive', label: '接受性 meaning_recall', icon: '📖', color: '#BBF7D0', textColor: '#065F46', desc: '看词选义、听词选图', words: [{w:'看词选择正确中文释义'},{w:'听音选择对应图片'}] },
+          { id: '证据-技能-meaning-productive', label: '产出性 meaning_recall', icon: '✍️', color: '#86EFAC', textColor: '#166534', desc: '无提示回忆义项', words: [{w:'看英语回忆中文意思'}] },
+        ]},
+        { id: '证据-技能-usage', label: 'usage 使用', icon: '✍️', color: '#FFF7ED', textColor: '#D97706', desc: 'usage', children: [
+          { id: '证据-技能-usage-receptive', label: '接受性 usage', icon: '📝', color: '#FED7AA', textColor: '#C2410C', desc: '句内选择', words: [{w:'选择正确的词填空: The rain ___ (affect/effects) my mood.'}] },
+          { id: '证据-技能-usage-productive', label: '产出性 usage', icon: '🖊️', color: '#FDE68A', textColor: '#B45309', desc: '补全或生成句子', words: [{w:'根据中文提示写句子'}] },
+        ]},
+        { id: '证据-技能-relation', label: 'relation 关系', icon: '🔗', color: '#F0F9FF', textColor: '#0284C7', desc: 'relation', children: [
+          { id: '证据-技能-relation-receptive', label: '接受性 relation', icon: '🔍', color: '#BAE6FD', textColor: '#0369A1', desc: '识别词族、同反义', words: [{w:'选择与 brave 意思最接近的词'},{w:'判断哪个词与 act 同族'}] },
+          { id: '证据-技能-relation-productive', label: '产出性 relation', icon: '🎨', color: '#7DD3FC', textColor: '#0369A1', desc: '解释关系或完成构词', words: [{w:'解释为什么这两个词是同义词'},{w:'写出 happy 的名词和副词形式'}] },
+        ]},
+      ]},
+      { id: '证据-题型', label: '6种题型 exercise_type', icon: '📝', color: '#FEF2F2', textColor: '#DC2626', desc: 'choice/spelling/listening/pronunciation/sentence/relation', children: [
+        { id: '证据-题型-choice', label: 'choice 选词填空', icon: '☑️', color: '#FEE2E2', textColor: '#991B1B', desc: '从选项中选出正确单词', words: [{w:'选择正确的词完成句子'},{w:'四个选项：同义/形似/无关'}] },
+        { id: '证据-题型-spelling', label: 'spelling 拼写题', icon: '✏️', color: '#FECACA', textColor: '#7F1D1D', desc: '听写/看释义拼写', words: [{w:'听音拼写'},{w:'看中文写英文'},{w:'给出词素写出完整单词'}] },
+        { id: '证据-题型-listening', label: 'listening 听力题', icon: '🎧', color: '#FCA5A5', textColor: '#7F1D1D', desc: '听音辨词/听音选图', words: [{w:'听句子选图片'},{w:'听音判断对错'}] },
+        { id: '证据-题型-pronunciation', label: 'pronunciation 口语题', icon: '🎤', color: '#F87171', textColor: '#FFFFFF', desc: '跟读评测/发音判断', words: [{w:'跟读单词获得评分'},{w:'判断两个词的音标是否正确'}] },
+        { id: '证据-题型-sentence', label: 'sentence 句型题', icon: '📃', color: '#EF4444', textColor: '#FFFFFF', desc: '造句/改写/补全', words: [{w:'用给定词根造句'},{w:'同义改写句子'},{w:'用词块完成句子'}] },
+        { id: '证据-题型-relation', label: 'relation 关系题', icon: '🔗', color: '#DC2626', textColor: '#FFFFFF', desc: '词义辨析/词族/构词', words: [{w:'选择同义词'},{w:'判断词素组合'},{w:'词义辨析'}] },
+      ]},
+      { id: '证据-状态', label: '掌握状态 status', icon: '📊', color: '#FDF4FF', textColor: '#C026D3', desc: 'unknown→learning→review→mastered→forgotten', children: [
+        { id: '证据-状态-unknown', label: 'unknown 陌生', icon: '❓', color: '#F5D0FE', textColor: '#A21CAF', desc: '从未学习过', words: [{w:'新词待学习'}] },
+        { id: '证据-状态-learning', label: 'learning 学习中', icon: '📖', color: '#E879F9', textColor: '#FFFFFF', desc: '正在学习', words: [{w:'当前在复习队列中'}] },
+        { id: '证据-状态-review', label: 'review 待复习', icon: '🔄', color: '#D946EF', textColor: '#FFFFFF', desc: '已学完，等待FSRS调度', words: [{w:'FSRS安排复习'}] },
+        { id: '证据-状态-mastered', label: 'mastered 已掌握', icon: '✅', color: '#C026D3', textColor: '#FFFFFF', desc: '达到掌握标准', words: [{w:'稳定记忆超过阈值'}] },
+        { id: '证据-状态-forgotten', label: 'forgotten 已遗忘', icon: '💨', color: '#A21CAF', textColor: '#FFFFFF', desc: '记忆衰退，需重新学习', words: [{w:'可提取性低于阈值'}] },
+      ]},
+      { id: '证据-VKS', label: 'VKS五级自评', icon: '⭐', color: '#FFFBEB', textColor: '#B45309', desc: 'Vocabulary Knowledge Scale，1-5级', children: [
+        { id: '证据-VKS-1', label: 'VKS-1 从未见过', icon: '❌', color: '#FEF3C7', textColor: '#92400E', desc: '这个词我从未见过', words: [{w:'初始状态'}] },
+        { id: '证据-VKS-2', label: 'VKS-2 见过但不认识', icon: '👁️', color: '#FDE68A', textColor: '#B45309', desc: '见过但不知道意思', words: [{w:'见过但不会'}] },
+        { id: '证据-VKS-3', label: 'VKS-3 能回忆', icon: '💭', color: '#FCD34D', textColor: '#78350F', desc: '能大概猜到意思', words: [{w:'模糊认识'}] },
+        { id: '证据-VKS-4', label: 'VKS-4 认识不会用', icon: '🤔', color: '#FBBF24', textColor: '#78350F', desc: '知道意思但不会正确使用', words: [{w:'消极掌握'}] },
+        { id: '证据-VKS-5', label: 'VKS-5 会用', icon: '✅', color: '#F59E0B', textColor: '#FFFFFF', desc: '完全掌握，能正确使用', words: [{w:'积极掌握'}] },
+      ]},
+      { id: '证据-FSRS', label: 'FSRS参数', icon: '⚙️', color: '#FFFBEB', textColor: '#B45309', desc: 'stability/difficulty/retrievability', children: [
+        { id: '证据-FSRS-stability', label: 'stability 稳定性', icon: '🛡️', color: '#FEF3C7', textColor: '#92400E', desc: '记忆稳定性，天，浮点（支持分钟级）', words: [{w:'当前: 8.5天'},{w:'越高越不容易忘'}] },
+        { id: '证据-FSRS-difficulty', label: 'fsrs_difficulty 难度', icon: '📊', color: '#FDE68A', textColor: '#B45309', desc: 'FSRS难度1-10', words: [{w:'当前: 4.2'},{w:'1=极易，10=极难'}] },
+        { id: '证据-FSRS-retrievability', label: 'retrievability 可提取性', icon: '🔮', color: '#FCD34D', textColor: '#78350F', desc: '当前可提取性，0-1', words: [{w:'当前: 0.87'},{w:'1.0=完全记得，0=完全忘记'}] },
+      ]},
+      { id: '证据-错误', label: '错误类型 mistake_type', icon: '❌', color: '#FEF2F2', textColor: '#DC2626', desc: 'spelling/pronunciation/meaning/collocation/grammar', children: [
+        { id: '证据-错误-spelling', label: 'spelling 拼写错误', icon: '✏️', color: '#FEE2E2', textColor: '#991B1B', desc: '拼写错误记录', words: [{w:'perserverance → perseverance'}] },
+        { id: '证据-错误-pronunciation', label: 'pronunciation 发音错误', icon: '🔊', color: '#FECACA', textColor: '#7F1D1D', desc: '发音错误记录', words: [{w:'perseverance → /pɜːrˈzɛvərəns/'}] },
+        { id: '证据-错误-meaning', label: 'meaning 词义错误', icon: '❌', color: '#FCA5A5', textColor: '#7F1D1D', desc: '词义混淆', words: [{w:'effect / affect 混淆'}] },
+        { id: '证据-错误-collocation', label: 'collocation 搭配错误', icon: '🤝', color: '#F87171', textColor: '#FFFFFF', desc: '搭配使用错误', words: [{w:'make a photo (×) → take a photo (✓)'}] },
+        { id: '证据-错误-grammar', label: 'grammar 语法错误', icon: '📖', color: '#EF4444', textColor: '#FFFFFF', desc: '语法错误', words: [{w:'She goed home (×) → She went home (✓)'}] },
+      ]},
+      { id: '证据-复习记录', label: '复习记录 review_records', icon: '📋', color: '#F5F3FF', textColor: '#7C3AED', desc: '每次复习的详细记录', children: [
+        { id: '证据-复习记录-detail', label: '复习记录字段', icon: '📋', color: '#DDD6FE', textColor: '#5B21B6', desc: '包含评分/时间/信心等', words: [
+          {w:'fsrs_rating: again/hard/good/easy'},
+          {w:'response_time_ms: 反应时间(毫秒)'},
+          {w:'confidence: 1-5 信心等级'},
+          {w:'hint_used: 是否使用了提示'},
+          {w:'result: correct/wrong/hesitate/skipped'}
+        ]},
+      ]},
+    ]
+  },
+
+  // ====== 词根词缀（独立顶级维度）======
+  {
+    id: '词根词缀', label: '词根词缀', icon: '🔬', color: 'd5',
+    desc: '词根、词缀、词族——通过构词法高效扩展词汇量',
+    stats: '120+词根 · 80+词缀 · L3-L6派生词族',
+    children: [
+      { id: '词根词缀-词根', label: '词根 roots', icon: '🌱', color: '#D1FAE5', textColor: '#065F46', desc: '自由词根和粘着词根，词族的中心', children: [
+        { id: '词根词缀-词根-自由', label: '自由词根 free_root', icon: '🌱', color: '#BBF7D0', textColor: '#065F46', desc: '可独立成词，是词族的核心', children: [
+          { id: '词根词缀-词根-自由-act', label: '-act- 行动', icon: '⚡', color: '#86EFAC', textColor: '#166534', desc: 'act / action / actor / active / activity / actual / interact / react / transaction', words: [
+            {w:'act v. 行动'},
+            {w:'action n. 行动/行为'},
+            {w:'active adj. 活跃的'},
+            {w:'activity n. 活动'},
+            {w:'actor n. 演员'},
+            {w:'actual adj. 实际的'},
+            {w:'interact v. 互动'},
+            {w:'react v. 反应'},
+            {w:'transaction n. 交易'}
+          ]},
+          { id: '词根词缀-词根-自由-serve', label: '-serv- 服务/保持', icon: '⚡', color: '#4ADE80', textColor: '#FFFFFF', desc: 'serve / service / servant / preserve / observe / reserve', words: [
+            {w:'serve v. 服务/任职'},
+            {w:'service n. 服务'},
+            {w:'servant n. 仆人/公仆'},
+            {w:'preserve v. 保存/保护'},
+            {w:'observe v. 观察/遵守'},
+            {w:'reserve v. 保留/预约'}
+          ]},
+          { id: '词根词缀-词根-自由-form', label: '-form- 形式/形状', icon: '⚡', color: '#22C55E', textColor: '#FFFFFF', desc: 'form / formal / formation / transform / reform / deform / inform / perform', words: [
+            {w:'form v. 形成 n. 形式'},
+            {w:'formal adj. 正式的'},
+            {w:'formation n. 形成/编队'},
+            {w:'transform v. 转变/改造'},
+            {w:'reform v./n. 改革'},
+            {w:'deform v. 使变形'},
+            {w:'inform v. 通知'},
+            {w:'perform v. 表演/执行'}
+          ]},
+          { id: '词根词缀-词根-自由-struct', label: '-struct- 建造', icon: '⚡', color: '#16A34A', textColor: '#FFFFFF', desc: 'construct / destruction / structure / instruct / obstruct', words: [
+            {w:'construct v. 建造'},
+            {w:'destruction n. 破坏'},
+            {w:'structure n. 结构'},
+            {w:'instruct v. 指导/指示'},
+            {w:'obstruct v. 阻碍'}
+          ]},
+          { id: '词根词缀-词根-自由-pend', label: '-pend- 悬挂/花费', icon: '⚡', color: '#15803D', textColor: '#FFFFFF', desc: 'depend / suspend / expense / spend / appendix / compensate', words: [
+            {w:'depend v. 依赖'},
+            {w:'suspend v. 暂停/悬挂'},
+            {w:'expense n. 开支'},
+            {w:'spend v. 花费'},
+            {w:'appendix n. 附录'},
+            {w:'compensate v. 补偿'}
+          ]},
+          { id: '词根词缀-词根-自由-ject', label: '-ject- 投掷', icon: '⚡', color: '#166534', textColor: '#FFFFFF', desc: 'reject / inject / project / object / subject / eject / commit', words: [
+            {w:'reject v. 拒绝'},
+            {w:'inject v. 注射'},
+            {w:'project v. 投射 n. 项目'},
+            {w:'object v. 反对 n. 物体'},
+            {w:'subject v. 使服从 n. 主题/主语'},
+            {w:'eject v. 驱逐'},
+            {w:'commit v. 犯(罪)/承诺'}
+          ]},
+          { id: '词根词缀-词根-自由-duct', label: '-duct- 引导', icon: '⚡', color: '#14532D', textColor: '#FFFFFF', desc: 'conduct / introduce / produce / reduce / deduce / induce / seduce', words: [
+            {w:'conduct v. 引导/实施'},
+            {w:'introduce v. 介绍'},
+            {w:'produce v. 生产'},
+            {w:'reduce v. 减少'},
+            {w:'deduce v. 推断'},
+            {w:'induce v. 诱导'},
+            {w:'seduce v. 引诱'}
+          ]},
+          { id: '词根词缀-词根-自由-vert', label: '-vert- 转', icon: '⚡', color: '#052E16', textColor: '#FFFFFF', desc: 'convert / convert / advert / divert / revert / introvert / extrovert', words: [
+            {w:'convert v. 转换'},
+            {w:'advertise v. 做广告'},
+            {w:'divert v. 转移/使娱乐'},
+            {w:'revert v. 恢复/回复'},
+            {w:'introvert n. 内向者'},
+            {w:'extrovert n. 外向者'}
+          ]},
+        ]},
+        { id: '词根词缀-词根-粘着', label: '粘着词根 bound_root', icon: '🔒', color: '#FEE2E2', textColor: '#991B1B', desc: '不可独立成词，必须结合词缀', children: [
+          { id: '词根词缀-词根-粘着-scrib', label: '-scrib-/ -script- 写', icon: '✏️', color: '#FECACA', textColor: '#7F1D1D', desc: 'describe / prescribe / subscribe / manuscript / script / scribble', words: [
+            {w:'describe v. 描述'},
+            {w:'prescribe v. 开处方/规定'},
+            {w:'subscribe v. 订阅'},
+            {w:'manuscript n. 手稿'},
+            {w:'script n. 剧本/脚本'},
+            {w:'scribble v. 潦草书写'}
+          ]},
+          { id: '词根词缀-词根-粘着-spect', label: '-spect- 看', icon: '👁️', color: '#FCA5A5', textColor: '#7F1D1D', desc: 'inspect / respect / spectator / expect / aspect / prospect / retrospect', words: [
+            {w:'inspect v. 检查'},
+            {w:'respect v./n. 尊重'},
+            {w:'spectator n. 观众'},
+            {w:'expect v. 期待'},
+            {w:'aspect n. 方面'},
+            {w:'prospect n. 前景'},
+            {w:'retrospect n. 回顾'}
+          ]},
+          { id: '词根词缀-词根-粘着-port', label: '-port- 携带/港口', icon: '🚢', color: '#F87171', textColor: '#FFFFFF', desc: 'import / export / portable / transport / support / airport / passport / portfolio', words: [
+            {w:'import v. 进口'},
+            {w:'export v. 出口'},
+            {w:'portable adj. 便携的'},
+            {w:'transport v./n. 运输'},
+            {w:'support v./n. 支持'},
+            {w:'airport n. 机场'},
+            {w:'passport n. 护照'},
+            {w:'portfolio n. 作品集/公文包'}
+          ]},
+          { id: '词根词缀-词根-粘着-ced', label: '-ced-/-cess-/-ceed- 走', icon: '🚶', color: '#EF4444', textColor: '#FFFFFF', desc: 'proceed / success / exceed / process / access / predecessor / necessary', words: [
+            {w:'proceed v. 继续/进行'},
+            {w:'success n. 成功'},
+            {w:'exceed v. 超过'},
+            {w:'process n. 过程 v. 加工'},
+            {w:'access n. 通道/访问'},
+            {w:'predecessor n. 前任'},
+            {w:'necessary adj. 必要的'}
+          ]},
+          { id: '词根词缀-词根-粘着-plic', label: '-plic-/-ply-/-ploit- 折叠/用', icon: '📂', color: '#DC2626', textColor: '#FFFFFF', desc: 'apply / supply / complicate / explicit / implicit / exploit / employ', words: [
+            {w:'apply v. 申请/应用'},
+            {w:'supply v./n. 供应'},
+            {w:'complicate v. 使复杂'},
+            {w:'explicit adj. 明确的'},
+            {w:'implicit adj. 含蓄的'},
+            {w:'exploit v. 剥削/开发'},
+            {w:'employ v. 雇佣/使用'}
+          ]},
+          { id: '词根词缀-词根-粘着-sist', label: '-sist- 站立', icon: '🧍', color: '#B91C1C', textColor: '#FFFFFF', desc: 'exist / resist / assist / consist / persist / insist / desist', words: [
+            {w:'exist v. 存在'},
+            {w:'resist v. 抵抗'},
+            {w:'assist v. 帮助'},
+            {w:'consist v. 由…组成'},
+            {w:'persist v. 坚持/持续'},
+            {w:'insist v. 坚持'},
+            {w:'desist v. 停止'}
+          ]},
+        ]},
+      ]},
+      { id: '词根词缀-前缀', label: '前缀 prefixes', icon: '←', color: '#EEF2FF', textColor: '#4F46E5', desc: '改变词义，不改变词性，共40+', children: [
+        { id: '词根词缀-前缀-否定', label: '否定前缀', icon: '✗', color: '#FEE2E2', textColor: '#991B1B', desc: 'un- / in- / im- / il- / ir- / dis- / non- / a-', words: [
+          {w:'un- (否定): unhappy / undo / unusual'},
+          {w:'in- (不): invisible / inactive / incapable'},
+          {w:'im- (不): impossible / impatient / immoral'},
+          {w:'il- (不): illegal / illiterate / illegal'},
+          {w:'ir- (不): irregular / irresponsible / irrelevant'},
+          {w:'dis- (不): disagree / disappear / dishonest'},
+          {w:'non- (非): nonsense / nonstop / non-violent'},
+          {w:'a- (无): atypical / amoral / anonymous'}
+        ]},
+        { id: '词根词缀-前缀-方向', label: '方向前缀', icon: '➡️', color: '#DBEAFE', textColor: '#1E40AF', desc: 're- / pre- / pro- / post- / ex- / out-', words: [
+          {w:'re- (再/回): rewrite / return / rebuild'},
+          {w:'pre- (前/预先): preview / predict / prepare'},
+          {w:'pro- (向前/支持): progress / project / promote'},
+          {w:'post- (后): postgraduate / postwar / postpone'},
+          {w:'ex- (以外/前): export / ex-wife / exclude'},
+          {w:'out- (超过): outdo / outrun / outstanding'}
+        ]},
+        { id: '词根词缀-前缀-程度', label: '程度/数量前缀', icon: '⬆️', color: '#C7D2FE', textColor: '#3730A3', desc: 'over- / under- / super- / sub- / hyper- / hypo- / multi- / semi-', words: [
+          {w:'over- (过度): overuse / overdo / overflow'},
+          {w:'under- (不足): underestimate / underdeveloped'},
+          {w:'super- (超级): supermarket / superstar / supernatural'},
+          {w:'sub- (下/次): subway / subtitle / subdivide'},
+          {w:'hyper- (过高): hyperactive / hypertension'},
+          {w:'hypo- (低): hypothesis / hypodermic'},
+          {w:'multi- (多): multimedia / multiply / multicultural'},
+          {w:'semi- (半): semiconductor / semicircle'}
+        ]},
+        { id: '词根词缀-前缀-位置', label: '位置前缀', icon: '📍', color: '#A5B4FC', textColor: '#3730A3', desc: 'inter- / trans- / tele- / auto- / counter-', words: [
+          {w:'inter- (之间): international / interact / internet'},
+          {w:'trans- (跨越): transport / translate / transmit'},
+          {w:'tele- (远): telephone / telescope / telecommute'},
+          {w:'auto- (自己): automatic / autobiography / autonomy'},
+          {w:'counter- (反): counterattack / counterpart / counterclockwise'}
+        ]},
+      ]},
+      { id: '词根词缀-后缀', label: '后缀 suffixes', icon: '→', color: '#FFF7ED', textColor: '#D97706', desc: '改变词性，常决定词族层级，共40+', children: [
+        { id: '词根词缀-后缀-名词', label: '名词后缀', icon: '📌', color: '#FED7AA', textColor: '#C2410C', desc: '-tion/-sion/-ness/-ment/-ity/-er/-or/-al/-ance/-ence/-dom/-hood/-ship', words: [
+          {w:'-tion (名词): action / education / revolution / nation'},
+          {w:'-sion (名词): decision / discussion / explosion / tension'},
+          {w:'-ness (名词): happiness / kindness / darkness / awareness'},
+          {w:'-ment (名词): development / agreement / movement / argument'},
+          {w:'-ity (名词): activity / reality / ability / diversity'},
+          {w:'-er / -or (人/物): teacher / reader / actor / visitor'},
+          {w:'-al (名词): arrival / refusal / removal / trial'},
+          {w:'-ance / -ence (名词): importance / confidence / existence /ference'},
+          {w:'-dom (领域): freedom / kingdom / wisdom'},
+          {w:'-hood (身份): childhood / neighborhood / brotherhood'},
+          {w:'-ship (关系): friendship / leadership / membership'}
+        ]},
+        { id: '词根词缀-后缀-形容词', label: '形容词后缀', icon: '📌', color: '#FDE68A', textColor: '#B45309', desc: '-ful/-less/-ous/-ive/-able/-ible/-al/-ic/-ish/-ly', words: [
+          {w:'-ful (…的): beautiful / careful / successful / helpful'},
+          {w:'-less (无…的): careless / helpless / useless / endless'},
+          {w:'-ous (…的): dangerous / famous / generous / various'},
+          {w:'-ive (…性的): active / creative / positive / native'},
+          {w:'-able / -ible (可…的): comfortable / possible / available / visible'},
+          {w:'-al (…的): natural / cultural / national / personal'},
+          {w:'-ic (…的): scientific / historic / economic / classic'},
+          {w:'-ish (像…的): foolish / selfish / Swedish / childish'},
+          {w:'-ly (…的): friendly / lovely / daily / monthly'}
+        ]},
+        { id: '词根词缀-后缀-副词', label: '副词后缀', icon: '📌', color: '#FCD34D', textColor: '#92400E', desc: '-ly', words: [
+          {w:'-ly (…地): quickly / happily / naturally / finally'},
+          {w:'注意: friendly (adj) / friendlily (adv); daily (adj/adv)'}
+        ]},
+        { id: '词根词缀-后缀-动词', label: '动词后缀', icon: '📌', color: '#FBBF24', textColor: '#78350F', desc: '-ize / -ify / -en', words: [
+          {w:'-ize / -ise (使…化): modernize / organize / realize / criticize'},
+          {w:'-ify (使…化): simplify / purify / classify / beautify'},
+          {w:'-en (使…): shorten / widen / deepen / strengthen'}
+        ]},
+      ]},
+      { id: '词根词缀-词族', label: '词族 family', icon: '🧬', color: '#F5F3FF', textColor: '#7C3AED', desc: 'Bauer & Nation L1-L6，派生关系系统', children: [
+        { id: '词根词缀-词族-L3', label: 'L3 高产派生词族', icon: 'L3', color: '#DDD6FE', textColor: '#5B21B6', desc: '常见派生后缀：-tion/-ness/-er/-ful/-ly', words: [
+          {w:'act → action → active → activity'},
+          {w:'serve → service → servant → servitude'},
+          {w:'kind → kindness → kindly'},
+          {w:'form → formal → formally → informal'},
+          {w:'nation → national → international'}
+        ]},
+        { id: '词根词缀-词族-L4', label: 'L4 常见派生词族', icon: 'L4', color: '#C4B5FD', textColor: '#5B21B6', desc: '+-ity/-ment/-ation', words: [
+          {w:'active → activity (L3) → inactivity (L4)'},
+          {w:'nation → national (L3) → nationality (L4)'},
+          {w:'treat → treatment (L4) → retreat (L5)'},
+          {w:'produce → product → production (L4)'}
+        ]},
+        { id: '词根词缀-词族-L5', label: 'L5 前缀派生词族', icon: 'L5', color: '#A78BFA', textColor: '#FFFFFF', desc: '+常见前缀', words: [
+          {w:'action → reaction / interaction / transaction'},
+          {w:'active → interactive / proactive'},
+          {w:'form → transform / reform / inform'},
+          {w:'serve → observe / preserve / reserve'}
+        ]},
+        { id: '词根词缀-词族-L6', label: 'L6 完整词族（高中目标）', icon: 'L6', color: '#8B5CF6', textColor: '#FFFFFF', desc: '全部词缀组合', words: [
+          {w:'intervention (L6): inter + vent + -ion'},
+          {w:'misunderstanding (L6): mis + under + stand + -ing'},
+          {w:'incomprehensible (L6): in + com + pre + hend + -ible'},
+          {w:'responsibility (L6): re + spond + -ibil + -ity'}
+        ]},
+      ]},
+      { id: '词根词缀-构词规则', label: '构词规则 rules', icon: '📖', color: '#F0F9FF', textColor: '#0284C7', desc: '派生规则、复合词规则', children: [
+        { id: '词根词缀-构词规则-派生', label: '派生规则 derivation', icon: '→', color: '#BAE6FD', textColor: '#0369A1', desc: '前缀+词根+后缀的组合规则', words: [
+          {w:'前缀+词根: interact / export / transport'},
+          {w:'词根+后缀: action / happiness / teacher'},
+          {w:'前缀+词根+后缀: international / uncomfortable'},
+          {w:'词根重复: cooperate (co+operate) / support (sup+port)'},
+          {w:'词根连接元音: act+ive / form+al / serve+ice'},
+          {w:'e结尾词根: fame→famous / produce→productive'},
+          {w:'y结尾词根: happy→happiness / apply→application'},
+          {w:'e结尾后缀: -tion/-sion/-ment 吞e: hope→hopeful, believe→belief'}
+        ]},
+        { id: '词根词缀-构词规则-复合', label: '复合词规则 compounding', icon: '+', color: '#7DD3FC', textColor: '#0369A1', desc: '词+词组合规则', words: [
+          {w:'名词+名词: classroom / keyboard / sunlight'},
+          {w:'形容词+名词: handsome / blackboard / highway'},
+          {w:'动词+副词: breakthrough / set-up / feedback'},
+          {w:'副词+动词: outcome / output / income'},
+          {w:'重音规则: 第一个成分重读: ˈclassroom / ˈsunlight'},
+          {w:'复合词 vs 短语: notebook(n.) vs note book(短语)'}
+        ]},
+      ]},
+      { id: '词根词缀-高频词根', label: '高频词根 top roots', icon: '⭐', color: '#FFFBEB', textColor: '#B45309', desc: '高考/CET高频词根，按派生词数量排序', children: [
+        { id: '词根词缀-高频-top1', label: '词根数量排行榜', icon: '🏆', color: '#FEF3C7', textColor: '#92400E', desc: '派生词最多的词根', words: [
+          {w:'#1 -scrib- 写: describe/prescribe/subscribe/manuscript/script (6+)'},
+          {w:'#2 -spect- 看: respect/inspect/spectator/expect/aspect (6+)'},
+          {w:'#3 -port- 携带: transport/import/export/portable/support (6+)'},
+          {w:'#4 -duct- 引导: conduct/introduce/produce/reduce/deduct (6+)'},
+          {w:'#5 -ced- 走: proceed/success/exceed/process/access (6+)'},
+          {w:'#6 -act- 行动: action/active/activity/actor/interact (5+)'},
+          {w:'#7 -form- 形式: formal/formation/transform/reform/inform (5+)'},
+          {w:'#8 -serv- 服务: service/servant/preserve/observe/reserve (5+)'},
+          {w:'#9 -ject- 投: project/object/reject/inject/eject (5+)'},
+          {w:'#10 -sist- 站立: exist/resist/assist/persist/insist (5+)'}
+        ]},
+      ]},
+    ]
+  }
+];
+
+// ============================================================
+// 维度导航状态
+// ============================================================
+let dimNavStack = []; // 导航栈: [{node, parentLabel}]
+
+function navTo(nodeId) {
+  // 从顶层进入某个维度
+  const node = findNode(nodeId);
+  if (!node) return;
+  dimNavStack = [{ node: node }];
+  renderDimPage(node, true);
+  showPage('dim');
+}
+
+function navToLeaf(nodeId) {
+  // 直接导航到某个叶子节点并显示词条
+  const node = findNode(nodeId);
+  if (!node) return;
+  // 构建路径
+  const path = buildPath(node);
+  dimNavStack = path.map(n => ({ node: n }));
+  renderDimPage(node, false);
+  showPage('dim');
+}
+
+function findNode(id) {
+  // BFS 查找节点
+  for (const root of dimTree) {
+    if (root.id === id) return root;
+    const found = findInChildren(root, id);
+    if (found) return found;
+  }
+  return null;
+}
+
+function findInChildren(parent, id) {
+  if (!parent.children) return null;
+  for (const child of parent.children) {
+    if (child.id === id) return child;
+    const found = findInChildren(child, id);
+    if (found) return found;
+  }
+  return null;
+}
+
+function buildPath(node) {
+  // 从叶子节点回溯构建路径
+  const path = [node];
+  let current = node;
+  while (current.parent) {
+    path.unshift(current.parent);
+    current = current.parent;
+  }
+  return path;
+}
+
+// 标记所有节点的 parent 引用
+function linkParents() {
+  for (const root of dimTree) {
+    linkParentsRecursive(root, null);
+  }
+}
+
+function linkParentsRecursive(node, parent) {
+  node.parent = parent;
+  if (node.children) {
+    for (const child of node.children) {
+      linkParentsRecursive(child, node);
+    }
+  }
+}
+
+linkParents();
+
+// ============================================================
+// 渲染维度页面
+// ============================================================
+function renderDimPage(node, isTopLevel) {
+  const isLeaf = !node.children || node.children.length === 0;
+
+  // 更新面包屑
+  renderBreadcrumb();
+
+  // 返回按钮逻辑
+  const backBtn = document.getElementById('dim-back-btn');
+  if (isTopLevel) {
+    backBtn.style.opacity = '0';
+    backBtn.style.pointerEvents = 'none';
+  } else {
+    backBtn.style.opacity = '1';
+    backBtn.style.pointerEvents = 'auto';
+  }
+
+  const content = document.getElementById('dim-content');
+
+  if (isLeaf) {
+    // 叶子节点：显示词条列表
+    content.innerHTML = `
+      <div class="dim-header ${isTopLevel ? '' : node.color}" style="${isTopLevel ? '' : `background:${node.color};`}">
+        <div class="dim-h-icon" style="${isTopLevel ? '' : `background:rgba(0,0,0,0.1);border-radius:12px;padding:8px 14px;font-size:22px;`}">${node.icon || '📝'}</div>
+        <div class="dim-h-title">${node.label}</div>
+        <div class="dim-h-desc">${node.desc || ''}</div>
+        ${node.stats ? `<div class="dim-h-stats"><div class="dim-h-stat">${node.stats}</div></div>` : ''}
+      </div>
+      <div class="section-title">词条列表 · ${node.words ? node.words.length : 0} 个</div>
+      ${node.words && node.words.length > 0 ? node.words.map(w => `
+        <div class="word-list-item" onclick="showWordModal()">
+          <div class="word-l" style="min-width:80px;">${w.w}</div>
+          <div class="word-m">
+            <div class="wm-cn">${w.m || w.w}</div>
+            <div class="wm-pos">${node.label}</div>
+          </div>
+          <div class="word-tags">
+            <span class="word-tag">${node.label}</span>
+          </div>
+        </div>
+      `).join('') : '<div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-title">暂无数据</div><div class="empty-state-desc">词条录入后在此显示</div></div>'}
+    `;
+  } else {
+    // 非叶子节点：显示子节点
+    const headerColor = isTopLevel ? node.color : '';
+    content.innerHTML = `
+      <div class="dim-header ${headerColor}">
+        <div class="dim-h-icon">${node.icon}</div>
+        <div class="dim-h-title">${node.label}</div>
+        <div class="dim-h-desc">${node.desc || ''}</div>
+        ${node.stats ? `<div class="dim-h-stats"><div class="dim-h-stat">${node.stats}</div></div>` : ''}
+      </div>
+      <div class="section-title">子维度 · ${node.children.length} 个<span class="more">点击进入</span></div>
+      ${node.children.map(child => {
+        const isLeafChild = !child.children || child.children.length === 0;
+        return `
+        <div class="sub-dim-card ${isLeafChild ? 'is-leaf' : ''}" onclick="${isLeafChild ? `navToLeaf('${child.id}')` : `dimEnter('${child.id}')`}">
+          <div class="sub-dim-icon" style="background:${child.color};color:${child.textColor || child.color};${child.color && !child.textColor ? 'color:white;' : ''}">${child.icon || '•'}</div>
+          <div class="sub-dim-info">
+            <div class="sub-dim-name">${child.label}</div>
+            <div class="sub-dim-desc">${child.desc || ''}</div>
+          </div>
+          <div class="sub-dim-count">${child.words ? child.words.length + '词' : child.children ? child.children.length + '项' : ''}</div>
+          <div class="sub-dim-arrow">${isLeafChild ? '→' : '›'}</div>
+        </div>
+      `}).join('')}
+    `;
+  }
+}
+
+function dimEnter(nodeId) {
+  const node = findNode(nodeId);
+  if (!node) return;
+  dimNavStack.push({ node: node });
+  renderDimPage(node, false);
+}
+
+function dimGoBack() {
+  if (dimNavStack.length <= 1) {
+    showPage('home');
+    return;
+  }
+  dimNavStack.pop();
+  const prev = dimNavStack[dimNavStack.length - 1];
+  const isTop = dimNavStack.length === 1;
+  renderDimPage(prev.node, isTop);
+}
+
+function renderBreadcrumb() {
+  const bc = document.getElementById('dim-breadcrumb');
+  if (dimNavStack.length === 0) {
+    bc.innerHTML = '';
+    return;
+  }
+  bc.innerHTML = dimNavStack.map((item, i) => {
+    if (i === dimNavStack.length - 1) {
+      return `<span class="bc-current">${item.node.label}</span>`;
+    }
+    return `<span class="bc-seg" onclick="dimGoTo(${i})">${item.node.label}</span><span class="bc-sep"> › </span>`;
+  }).join('');
+}
+
+function dimGoTo(index) {
+  if (index < 0) { showPage('home'); return; }
+  dimNavStack = dimNavStack.slice(0, index + 1);
+  const node = dimNavStack[index].node;
+  renderDimPage(node, index === 0);
+}
+
+// ============================================================
+// 页面切换
+// ============================================================
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function switchTab(el, page) {
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  showPage(page);
+}
+
+// ============================================================
+// 学习Tab切换
+// ============================================================
+function switchLearnTab(el, tab) {
+  document.querySelectorAll('.learn-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  ['meaning','example','wordform','relation'].forEach(t => {
+    const el2 = document.getElementById('learn-' + t);
+    if (el2) el2.classList.toggle('hidden', t !== tab);
+  });
+}
+
+// ============================================================
+// 复习翻转
+// ============================================================
+let reviewFlipped = false;
+function revealReview() {
+  if (!reviewFlipped) {
+    document.getElementById('review-card').classList.add('hidden');
+    document.getElementById('review-card-back').classList.remove('hidden');
+    reviewFlipped = true;
+  }
+}
+function nextReview(rating) {
+  reviewFlipped = false;
+  document.getElementById('review-card-back').classList.add('hidden');
+  document.getElementById('review-card').classList.remove('hidden');
+  const msgs = { again: '记住了吗？再来一个！', hard: '有点难，继续加油！', good: '太棒了，掌握得很好！', easy: '太轻松了，下一个！' };
+  showToast(msgs[rating]);
+}
+
+// ============================================================
+// 单词弹窗
+// ============================================================
+function showWordModal() { document.getElementById('word-modal').classList.add('show'); }
+function closeWordModal() { document.getElementById('word-modal').classList.remove('show'); }
+document.getElementById('word-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeWordModal();
+});
+
+// ============================================================
+// Toast
+// ============================================================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ============================================================
+// 发音
+// ============================================================
+function playAudio() {
+  if ('speechSynthesis' in window) {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(document.getElementById('learn-word')?.textContent || 'perseverance');
+    u.lang = 'en-US'; u.rate = 0.85;
+    speechSynthesis.speak(u);
+  }
+}
+
+// ============================================================
+// 初始化
+// ============================================================
+// 预加载词条数据（模拟）
+const wordListData = {
+  '科学技术': [
+    {w:'algorithm',m:'n. 算法'},
+    {w:'hypothesis',m:'n. 假设'},
+    {w:'empirical',m:'adj. 经验的'},
+    {w:'synthesis',m:'n. 合成'},
+    {w:'quantum',m:'n. 量子'},
+    {w:'autonomous',m:'adj. 自治的'},
+  ]
+};
+</script>
+</body>
+</html>
