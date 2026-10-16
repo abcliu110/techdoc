@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>一图看懂：使用权资产全生命周期（含会计科目）</title>
+<style>
+  :root{
+    --ink:#0f172a; --muted:#475569; --line:#e2e8f0;
+    --blue:#2563eb; --blue-bg:#eff6ff; --blue-bd:#bfdbfe;
+    --orange:#ea580c; --orange-bg:#fff7ed; --orange-bd:#fed7aa;
+    --green:#15803d; --green-bg:#f0fdf4; --green-bd:#bbf7d0;
+    --violet:#6d28d9; --violet-bg:#f5f3ff; --violet-bd:#ddd6fe;
+    --red:#b91c1c; --red-bg:#fef2f2; --red-bd:#fecaca;
+    --slate:#475569;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;padding:32px 20px 64px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    color:var(--ink);background:#f8fafc;line-height:1.75;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto}
+  h1{font-size:30px;letter-spacing:-.5px;margin:0 0 8px}
+  .sub{color:var(--muted);font-size:15px;margin:0 0 6px}
+  .toc{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 26px}
+  .toc a{font-size:13px;text-decoration:none;color:#334155;background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 13px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px 28px;margin:0 0 22px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  .card h2{font-size:19px;margin:0 0 6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .num{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:26px;padding:0 8px;border-radius:8px;background:var(--ink);color:#fff;font-size:14px;font-weight:600;flex:0 0 auto}
+  .kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--violet);background:var(--violet-bg);border:1px solid var(--violet-bd);border-radius:999px;padding:3px 12px;margin-bottom:14px}
+  .lead{color:var(--muted);font-size:14.5px;margin:0 0 16px}
+  .note{font-size:13.5px;color:var(--muted);margin:14px 0 0;padding-left:14px;border-left:3px solid var(--line)}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0 2px}
+  th,td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:#f8fafc;font-weight:600;color:#334155}
+  td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  .tot{font-weight:700;background:#f8fafc}
+  .chip{display:inline-block;font-size:12.5px;font-weight:600;padding:1px 8px;border-radius:6px;background:#eef2ff;color:#4338ca;border:1px solid #c7d2fe;white-space:nowrap}
+  .chip.liab{background:var(--orange-bg);color:#c2410c;border-color:var(--orange-bd)}
+  .chip.contra{background:#f1f5f9;color:#475569;border-color:#cbd5e1}
+  .chip.pl{background:var(--green-bg);color:#166534;border-color:var(--green-bd)}
+  .entry{background:#0f172a;color:#e2e8f0;border-radius:12px;padding:15px 18px;margin:12px 0 0;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace;font-size:13.5px;line-height:2;overflow-x:auto}
+  .entry .dr{color:#93c5fd}
+  .entry .cr{color:#fdba74}
+  .entry .cmt{color:#94a3b8}
+  .entry .t{color:#f8fafc;font-weight:700}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:760px){.cols{grid-template-columns:1fr}}
+  .box{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:#fff}
+  .box h3{margin:0 0 8px;font-size:15px}
+  .box.a{background:var(--blue-bg);border-color:var(--blue-bd)}
+  .box.b{background:var(--orange-bg);border-color:var(--orange-bd)}
+  .box.c{background:var(--green-bg);border-color:var(--green-bd)}
+  .box.d{background:var(--violet-bg);border-color:var(--violet-bd)}
+  .box.e{background:var(--red-bg);border-color:var(--red-bd)}
+  .split{margin-top:4px}
+  .split-title{font-size:14.5px;font-weight:700;color:#334155;margin:10px 0 6px}
+  .formula{border:1px solid var(--orange-bd);background:var(--orange-bg);border-radius:10px;
+    padding:10px 14px;font-size:14.5px;font-weight:700;color:#9a3412;letter-spacing:.2px}
+  .plusline{font-size:13.5px;color:#334155;margin:10px 0 0;line-height:1.9}
+  .pay{background:var(--orange-bg)}
+  .stack{display:flex;flex-direction:column;gap:6px;margin:8px 0 4px}
+  .brick{border-radius:9px;padding:11px 15px;font-size:14px;display:flex;justify-content:space-between;gap:12px;color:#fff;font-weight:600}
+  .brick span:last-child{font-variant-numeric:tabular-nums;white-space:nowrap}
+  .b1{background:#1d4ed8}.b2{background:#6d28d9}.b3{background:#0e7490}.b4{background:#15803d}.b5{background:#475569}
+  .sum{border:2px dashed var(--ink);border-radius:9px;padding:11px 15px;font-size:15px;font-weight:700;display:flex;justify-content:space-between}
+  .arrow{text-align:center;color:var(--muted);font-size:16px;line-height:1}
+  .legend{display:flex;gap:20px;flex-wrap:wrap;font-size:13.5px;color:#334155;margin-top:10px}
+  .legend i{display:inline-block;width:22px;height:4px;border-radius:2px;vertical-align:middle;margin-right:7px}
+  .hi{background:#fef9c3;padding:1px 5px;border-radius:4px}
+  .bad{color:var(--red);font-weight:600}
+  .ok{color:var(--green);font-weight:600}
+  .foot{text-align:center;color:var(--muted);font-size:13.5px;margin-top:26px;line-height:2}
+  ul,ol{margin:8px 0;padding-left:22px}
+  li{margin:4px 0}
+  code{background:#f1f5f9;padding:1px 6px;border-radius:5px;font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>一图看懂：使用权资产全生命周期</h1>
+  <p class="sub">从「租到手」到「还回去」，每一步的<b>科目、分录、报表</b>，一张图走完 &nbsp;·&nbsp; 含会计科目地图</p>
+  <p class="sub" style="font-size:13.5px">口径依据：CAS 21 第十六条（初始计量）／《应用指南》（科目设置、折旧、减值）／CAS 8（减值）；示例沿用本系统合同 <b>PROP-2024-001</b> 与最小例子（3 年×100、8%）</p>
+
+  <div class="toc">
+    <a href="#c0">⓪ 入表前先过三关</a><a href="#c1">① 它是什么</a><a href="#c2">② 起租日：四块砖</a><a href="#c3">③ 科目地图</a>
+    <a href="#c4">④ 每月的三笔分录</a><a href="#c5">⑤ 折旧三问</a><a href="#c6">⑥ 减值</a>
+    <a href="#c7">⑦ 重新计量</a><a href="#c8">⑧ 到期与终止</a><a href="#c9">⑨ 三张报表</a>
+    <a href="#c10">⑩ 全周期总表</a><a href="#c11">⑪ 常见错账</a>
+    <a href="#csys">附：系统落地</a>
+    <a href="#c12">⑫ 租赁变更</a><a href="#c13">⑬ 售后租回</a><a href="#c14">⑭ 转租赁</a><a href="#c15">⑮ 首次执行过渡</a>
+    <a href="#c16">⑯ 合同分拆（混了物业费）</a><a href="#c17">⑰ 月度总表</a><a href="#c18">⑱ 资产的出口</a>
+    <a href="#cchk">附2：判断树</a><a href="#ccmp">附3：三类资产对照</a>
+  </div>
+
+  <div class="card">
+    <span class="kicker">总览 · 一条时间线</span>
+    <h2>从起租日到还回去，会发生 5 件事</h2>
+<p class="lead">一句话：使用权资产是"<b>租来的资产</b>"——不是实物，而是<b>一项权利</b>（CAS 21 第十四条）。下面按<b>从判断到归零</b>的顺序，把 17 步走完（含 ⑯ 合同分拆、⑰ 月度总表）。</p>
+    <svg viewBox="0 0 1000 220" width="100%" height="220" role="img" aria-label="使用权资产全生命周期时间轴">
+      <line x1="60" y1="110" x2="950" y2="110" stroke="#cbd5e1" stroke-width="2"/>
+      <circle cx="120" cy="110" r="11" fill="#2563eb"/>
+      <circle cx="330" cy="110" r="9" fill="#15803d"/>
+      <circle cx="540" cy="110" r="9" fill="#c2410c"/>
+      <circle cx="740" cy="110" r="9" fill="#6d28d9"/>
+      <circle cx="920" cy="110" r="11" fill="#64748b"/>
+      <text x="120" y="72" text-anchor="middle" font-size="14" font-weight="700" fill="#2563eb">起租日</text>
+      <text x="120" y="90" text-anchor="middle" font-size="12" fill="#64748b">确认使用权资产＋租赁负债</text>
+      <text x="330" y="72" text-anchor="middle" font-size="14" font-weight="700" fill="#15803d">每个月</text>
+      <text x="330" y="90" text-anchor="middle" font-size="12" fill="#64748b">折旧 ＋ 计息</text>
+      <text x="540" y="150" text-anchor="middle" font-size="14" font-weight="700" fill="#c2410c">每一期付款</text>
+      <text x="540" y="168" text-anchor="middle" font-size="12" fill="#64748b">冲减租赁付款额</text>
+      <text x="740" y="72" text-anchor="middle" font-size="14" font-weight="700" fill="#6d28d9">触发事件</text>
+      <text x="740" y="90" text-anchor="middle" font-size="12" fill="#64748b">重估／变更／减值</text>
+      <text x="920" y="150" text-anchor="middle" font-size="14" font-weight="700" fill="#64748b">到期 / 终止</text>
+      <text x="920" y="168" text-anchor="middle" font-size="12" fill="#64748b">清理结转</text>
+      <text x="60" y="205" font-size="12.5" fill="#64748b">前两步是「常规动作」（每月都做）；后两步是「特殊情况」（发生才做）</text>
+    </svg>
+    <p class="note"><b>一句话定义</b>：使用权资产 = <b>承租人可在租赁期内使用租赁资产的权利</b>（CAS 21 第十四条）。它不是实物，是一项<b>权利</b>。</p>
+  </div>
+
+  <div class="card" id="c0">
+    <span class="kicker">第 ⓪ 步 · 入表之前</span>
+    <h2><span class="num">⓪</span>先过三关：这是不是租赁？能不能不记？记多长？</h2>
+    <p class="lead">这一步在"起租日入账"<b>之前</b>。三关的结果，决定后面所有数字。</p>
+
+    <div class="box a" style="margin-bottom:14px"><h3>第一关：这是不是租赁？（两个条件都满足才算）</h3>
+      <table>
+        <tr><th>条件</th><th>看什么</th></tr>
+        <tr><td>① <b>已识别资产</b></td><td>合同是否指定了特定资产（或物理上可区分）？供应方有<b>实质性替换权</b>吗（替换是否可行、成本是否高）？</td></tr>
+        <tr><td>② <b>控制三要素</b></td><td>承租人能否<b>主导</b>资产使用（何时用／怎么用／用多少）？能否获得使用资产的<b>几乎全部经济利益</b>？</td></tr>
+      </table>
+      <p class="note" style="margin-top:8px">若只有"服务"、没有让渡使用权的控制（如<b>酒店住宿、临时用车</b>）→ <b>不是租赁</b> → 不进使用权资产。判断的是"使用权是否被让渡"，<b>与出租人怎么分类无关</b>。</p>
+    </div>
+
+    <div class="box d" style="margin-bottom:14px"><h3>第二关：能不能豁免？（满足其一，可选择"不进表"）</h3>
+      <table>
+        <tr><th>豁免类型</th><th>条件</th><th>易错点</th></tr>
+        <tr><td><b>短期租赁</b></td><td>租赁期 <b>≤ 12 个月</b></td><td><b>含购买选择权的，即使 ≤12 个月也不算短期租赁</b>；续租权涵盖期间要计入 → 不可撤销 9 个月 ＋ 合理确定的续租 4 个月 ＝ <b>13 个月，不满足</b></td></tr>
+        <tr><td><b>低价值资产租赁</b></td><td>单项资产<b>全新状态下</b>绝对价值较低（应用指南：通常 <b>&lt; 4 万元</b>）</td><td>只看<b>绝对价值</b>，不受企业规模影响；<b>拟转租的，原租赁不适用</b></td></tr>
+      </table>
+      <p class="note" style="margin-top:8px">选简化处理 → <b>不进使用权资产</b>，租金按<b>直线法</b>计入费用，现金流量表走<b>经营活动</b>。本系统用 <code>setIsExempt</code> 标志位实现（详见《短期租赁豁免详解》）。</p>
+    </div>
+
+    <div class="box b"><h3>第三关：租赁期算多长？（它决定后面所有数字）</h3>
+      <div class="entry" style="margin-top:4px">
+租赁期 ＝ 不可撤销期间
+　　　　＋ 合理确定将行使的【续租选择权】涵盖期间
+　　　　＋ 合理确定不会行使的【终止租赁选择权】涵盖期间
+      </div>
+      <p class="note" style="margin-top:8px">判断"合理确定"看：<b>不可撤销期越短、替代资产取得成本越高</b> → 越可能续租。<b>租赁期一变，现值、月利息、折旧年限全部跟着变。</b></p>
+    </div>
+  </div>
+
+  <div class="card" id="c1">
+    <span class="kicker">第 ① 步 · 它是什么、从哪来</span>
+    <h2><span class="num">①</span>你的资产，来自对方的让渡</h2>
+<p class="lead">一句话：你拿到的，正是对方让出去的——<b>有出才有进</b>，所以使用权资产是"对方让渡"落在你账上的<b>镜像</b>。</p>
+    <div class="cols">
+      <div class="box a"><h3>对方（房东）</h3>
+        <ul><li>原本持有整项资产</li><li>把「未来 N 年的使用利益」<b>让渡</b>给你</li><li>换到「未来 N 年收租」的债权</li></ul>
+      </div>
+      <div class="box c"><h3>我方（承租人）</h3>
+        <ul><li><b>拿到</b>「未来 N 年的使用权」→ 记 <span class="chip">使用权资产</span></li><li><b>欠下</b>「未来 N 年的租金」→ 记 <span class="chip liab">租赁负债</span></li></ul>
+      </div>
+    </div>
+    <p class="note"><b>你多的 = 对方少的</b>。所以使用权资产不是"自己长出来的"，而是对方让渡落在你账上的<b>镜像</b>——只开自己的账会陷入"资产凭什么确认"的死胡同。（详见《使用权资产与租赁负债计算详解》§7.7）</p>
+  </div>
+
+  <div class="card" id="c2">
+    <span class="kicker">第 ② 步 · 起租日</span>
+    <h2><span class="num">②</span>使用权资产由「四块砖」砌成（不是只有租金！）</h2>
+    <p class="lead">准则第十六条：按<b>成本</b>初始计量，成本包含四块。多数人只知道第一块。</p>
+    <div class="stack">
+      <div class="brick b1"><span>第一块｜租赁负债的初始计量金额（= 未付租金的现值）</span><span>最常见 · 主体</span></div>
+      <div class="brick b2"><span>第二块｜在租赁期开始日或之前已支付的租赁付款额（<b>扣</b>已享受的租赁激励）</span><span>预付租金 / 激励</span></div>
+      <div class="brick b3"><span>第三块｜初始直接费用（律师费、佣金、印花税等增量成本）</span><span>本系统示例 35,000</span></div>
+      <div class="brick b4"><span>第四块｜复原成本的现值（拆卸、移除、恢复场地）→ 贷记 <code>预计负债</code>（2801）</span><span>常见于装修租入 · 见下方详解</span></div>
+      <div class="sum"><span>＝ 使用权资产 入账成本</span><span>四块相加</span></div>
+    </div>
+    <p class="note" style="margin-top:10px"><b>为什么偏偏比作"砖"？</b>——因为它同时说清三件事：① <b>可数</b>（成本由四个有名有姓的部件组成，不是"啪"地一个数）；② <b>可加</b>（成本＝四块相加）；③ <b>砌成一体</b>（入账后合成"一面墙"＝使用权资产，<b>不再分家</b>）。<br>
+    比喻还自带三条推论，正好都是易错点：<b>① 缺一块，墙就残缺</b>——漏记初始直接费用 → 折旧基数变小、资产负债率虚高；<b>② 砌进墙里就不再单独存在</b>——资产侧只有<b>一条折旧线</b>，不分块折旧（对比负债侧：<b>两条利息线</b>，因为两笔义务还在）；<b>③ 砖本身不生息</b>——利息只来自"还欠着的义务"，所以已付的 ②③ 不生息、欠着的 ①④ 才生息。<br>
+    <b>边界也说清楚</b>：② 的激励是"<b>负砖</b>"（把墙削薄一块 −5,000）；④ 是"<b>预订的砖</b>"（按现值先记、将来才付款）；入账后这面墙还会被<b>侵蚀</b>（折旧）、<b>削薄</b>（减值）、<b>改造</b>（重新计量／变更）——"砖"只负责讲<b>初始计量</b>这一层。</p>
+    <h3 style="font-size:15px;margin:22px 0 6px">四块砖逐个说清楚：钱付给谁 · 为什么进资产 · 贷什么科目</h3>
+    <table>
+      <tr><th>砖</th><th>大白话</th><th>钱付给谁 · 什么时候</th><th>贷方科目</th><th>判断要点 / 常见坑</th></tr>
+      <tr><td><b>① 租赁负债现值</b></td><td>未来要付的租金，折成"今天的钱"</td><td>出租人，未来分期付</td><td><span class="chip liab">租赁负债—租赁付款额</span>（现值部分）</td><td>只有五类付款额才算；折现率优先内含利率，拿不到用增量借款利率</td></tr>
+      <tr><td><b>② 已付租金（扣激励）</b></td><td>起租日或之前已经付掉的那部分租金</td><td>出租人，已经付了</td><td>银行存款（或冲预付账款）</td><td><b>已付的不折现</b>；收到的激励要<b>减</b>（不是加）</td></tr>
+      <tr><td><b>③ 初始直接费用</b></td><td><b>不签这份合同</b>就不会发生的支出</td><td>中介、律师、税局；签约前后付</td><td>银行存款</td><td>佣金、律师费算（印花税实务上多随合同一并资本化）；<b>差旅费、内部员工工时一般不算</b>（非增量成本）</td></tr>
+      <tr><td><b>④ 复原成本现值</b></td><td>退租时要花的钱（拆掉、修复、恢复原状），先按现值记账</td><td><b>不是付给出租人的租金</b>；将来付给施工方</td><td><span class="chip liab">预计负债</span>（2801）</td><td>按 CAS 13 或有事项计量；判断与账务见下方详解</td></tr>
+    </table>
+    <div class="box b" style="margin-top:16px"><h3>必然会有的一问：四块加起来，为什么<b>不等于</b>租赁负债？</h3>
+      <p style="margin:4px 0">因为准则对两者用的是<b>两种口径</b>：<b>资产</b>按「取得这项权利付出的<b>全部代价</b>」记（第十六条，四项之和）；<b>负债</b>只记「<b>还欠着的义务</b>」（第十七条，尚未支付的现值）。四块砖里只有 <b>①</b> 是"欠出租人"的——②③ 已经付清、④ 欠的是施工方。所以「<b>资产 ≠ 租赁负债</b>」是<b>常态，不是错账</b>。</p>
+      <p class="note" style="margin-top:8px"><b>把"钱从哪来"列清楚，一眼就明白</b>（本系统合同）：</p>
+      <table style="margin-top:4px">
+        <tr><th>使用权资产的钱从哪来</th><th class="n">金额</th><th>性质</th></tr>
+        <tr><td>租赁负债（欠出租人，①）</td><td class="n">2,071,906</td><td>负债科目：租赁负债</td></tr>
+        <tr><td>预计负债（欠施工方，④）</td><td class="n">—</td><td>负债科目：预计负债</td></tr>
+        <tr><td>已付现金（②③ 净额）</td><td class="n">35,000</td><td>自己的钱：银行存款（已流出）</td></tr>
+        <tr class="tot"><td>＝ 使用权资产</td><td class="n">2,106,906</td><td><b>资产 ＝ 各项来源之和</b></td></tr>
+      </table>
+      <p class="note">换成"四块全用"的算例同样成立：<b>355,391（租赁负债）＋ 61,391（预计负债）＋ 65,000（已付现金净额）＝ 481,782（使用权资产）</b>。</p>
+      <p class="note"><b>拿买房一对就懂</b>：房价 300 万 ＝ 首付 100 万（自己的钱）＋ 房贷 200 万。<b>房子记 300 万、贷款只记 200 万</b>——差 100 万是你已经付出的，没人会说"账错了"。租赁只是把"首付"换成"已付租金＋初始直接费用"，把"另一笔借款"换成"预计负债"。</p>
+      <p class="note"><b>什么时候才"资产＝负债"</b>：当 ②③④ 全为 0（不预付、无初始直接费用、无复原义务）时——<b>图一的最小例子（3 年×100、8%）正是这种特例</b>：那里资产和负债都是 257.70。现实中很少见。</p>
+      <p class="note"><b>最后用分录验一遍</b>（本系统合同）：借方 使用权资产 2,106,906 ＋ 未确认融资费用 210,843 ＝ <b>2,317,749</b>；贷方 租赁付款额 2,282,749 ＋ 银行存款 35,000 ＝ <b>2,317,749</b>。<b>借贷相等，账是平的</b>——要检查的等式是「<b>借方 ＝ 贷方</b>」，不是「<b>资产 ＝ 负债</b>」。</p>
+    </div>
+
+    <div class="box a" style="margin-top:16px"><h3>第一块详解：租赁负债为什么按"现值"，而不是合同上要付的总额？</h3>
+      <p style="margin:4px 0">因为资产要按「<b>取得使用权付出的经济代价</b>」计量，而未来的租金要<b>折回今天</b>才算代价——这就是现值。合同总额 2,282,749 里有 <b>210,843 是"还没发生的时间价值"</b>，不属于今天的资产成本。</p>
+      <p style="margin:10px 0 4px"><b>三步机理</b>（PROP-2024-001，20 期租金、5%）</p>
+      <ol style="margin-top:0">
+        <li><b>折</b>：未来每期租金按折现率折回起租日 → 加总 <b>2,071,906</b>（＝① 砖，进使用权资产）</li>
+        <li><b>留差</b>：合同总额 − 现值 ＝ <b>210,843</b> → 记成备抵科目 <span class="chip contra">未确认融资费用</span>（＝<b>整个租期的利息"池子"</b>）</li>
+        <li><b>消耗</b>：租期内逐期从"池子"转入 <span class="chip pl">财务费用—利息费用</span>（实际利率法）——负债<b>净额</b>随之长大（利息滚入），付款时再冲减</li>
+      </ol>
+      <p class="note"><b>数字自证</b>：2,282,749 − 2,071,906 ＝ <b>210,843</b>，它正是租期利息费用的<b>合计</b>（"池子恒等式"）。图二平衡式也对得上：<b>2,106,906（资产）＋ 210,843（池子）＝ 2,282,749（付款总额）＋ 35,000（初始直接费用）</b>。</p>
+      <table style="margin-top:10px">
+        <tr><th>同一份合同</th><th class="n">正确：资产按现值</th><th class="n">错误：资产按总额</th></tr>
+        <tr><td>使用权资产</td><td class="n">2,106,906</td><td class="n">2,317,749</td></tr>
+        <tr><td>月折旧（60 期平摊）</td><td class="n">35,115</td><td class="n">38,629（<b>虚增 3,514/月</b>）</td></tr>
+        <tr><td>租期利息合计</td><td class="n">210,843</td><td class="n">210,843（照旧要确认）</td></tr>
+        <tr class="tot"><td>租期费用合计</td><td class="n">2,317,749</td><td class="n"><b>2,528,592</b>（多计 210,843）</td></tr>
+      </table>
+      <p class="note"><b>错在哪里</b>：把"未来的利息"先当成本存进资产 → 它<b>随折旧再进一次费用</b>，而租期内利息又按实际利率法进一次 → 同一个 210,843 被<b>计了两遍</b>。</p>
+      <p class="note"><b>顺带解开一个疑惑</b>：起租日资产 2,106,906 vs 负债净额 2,071,906，差 <b>35,000</b> 不是错——那是第三块（初始直接费用）。忽略第二、三、四块时，"资产＝负债"才成立。</p>
+    </div>
+    <div class="box b" style="margin-top:16px"><h3>第二块详解：已付租金与租赁激励——"已付要加、激励要减"</h3>
+      <p style="margin:4px 0"><b>两条规则</b>：① 起租日<b>或之前</b>已付的租金 → 按<b>实付金额</b>直接加，<b>不折现</b>；② 已享受的租赁激励 → <b>减</b>（不是加）。</p>
+      <p class="note" style="margin-top:8px"><b>为什么已付的不折现</b>：折现是把"未来的钱"换算成"今天的钱"；起租日（或之前）付掉的钱<b>本来就是今天的钱</b>——折现因子＝1，折了等于没折。准则也要求按<b>实际支付金额</b>计入资产成本。<br>还有一层：已付的钱<b>不进租赁负债</b>——义务已经清掉了，再进负债就等于"把付过的钱又欠一遍"。</p>
+      <p class="note"><b>为什么激励要减</b>：激励是出租人"还给你"的部分，<b>实质降低了取得使用权的净代价</b>。它有两种形态：</p>
+      <table style="margin-top:4px">
+        <tr><th>形态</th><th>例子</th><th>怎么处理</th></tr>
+        <tr><td><b>现金／补贴</b></td><td>装修补贴、搬迁补助 5,000</td><td>收到时 <b>借 银行存款 ／ 贷 使用权资产</b>（直接冲减资产）</td></tr>
+        <tr><td><b>让利／免租</b></td><td>免租期（本项目合同 2024-07～09）</td><td><b>不单独做账</b>：付款计划里这几个月就是不排钱（不进负债）</td></tr>
+      </table>
+      <p class="note"><b>免租期的一个准则变化</b>：旧准则（经营租赁）下免租期这类激励要在租期内<b>直线摊销</b>；新准则<b>不再单独处理</b>——它就是"这几个月的付款额＝0"，好处体现在更低的付款总额与负债上。本项目这 3 个月<b>只计息、不提现金</b>，所以 ⑰ 卡的月度表里"免租期利息反而在涨"。</p>
+      <p style="margin:12px 0 4px"><b>准则应用指南算例</b>（起租日付首期 50,000、剩余 9 期 × 50,000、5%、初始直接费用 20,000、收到激励 5,000）：</p>
+      <table>
+        <tr><th>组成</th><th class="n">金额</th></tr>
+        <tr><td>① 剩余 9 期租金现值（450,000 按 5% 折现）</td><td class="n">355,391</td></tr>
+        <tr><td>② 起租日已付第 1 期（<b>不折现</b>）</td><td class="n">+50,000</td></tr>
+        <tr><td>③ 初始直接费用</td><td class="n">+20,000</td></tr>
+        <tr><td>④ 已收到的激励</td><td class="n">−5,000</td></tr>
+        <tr class="tot"><td>＝ 使用权资产</td><td class="n">420,391</td></tr>
+      </table>
+      <p class="note"><b>三个坑</b>：① 把起租日已付的租金<b>也塞进负债去折现</b>（＝把付过的钱又欠一遍：负债虚增、资产重复）；② 激励<b>方向记反</b>（误加进资产，虚增 2 倍）；③ 起租日<b>之前</b>预付的租金，一直挂在"预付账款"忘了转到使用权资产。</p>
+    </div>
+    <div class="box c" style="margin-top:16px"><h3>第三块详解：初始直接费用为什么"资本化"？——先搞清"资本化"是什么意思</h3>
+      <p style="margin:4px 0"><b>资本化 ＝ 先把这笔支出记成"资产"，以后再分期转成费用。</b>它不改你<b>什么时候掏钱</b>，改的是这笔钱<b>在哪几期进利润表</b>：先"挂"在资产上，随利益一点点被用掉，再逐格转成费用（对使用权资产，就是跟着折旧 60 个月分期进管理费用）。<b>不是"不认费用"，而是"晚点认、分期认"。</b></p>
+      <p class="note" style="margin-top:8px"><b>一句话判据</b>：<b>资产 ＝ 还没用完的成本；费用 ＝ 已经用完的成本</b>。同一笔 35,000：起租日先记成"还没用完"，之后每用掉一点、就转一点进费用——这正是 ⑤ 卡"折旧"的由来。</p>
+      <p style="margin:10px 0 4px"><b>为什么必须资本化？三条理由</b></p>
+      <ul style="margin-top:0">
+        <li><b>① 它买的是"未来 60 个月的使用权"，不是"这个月的服务"</b>——佣金、律师费是为了把这份 5 年合同签下来；<b>利益跨 60 个月，成本就跟着摊 60 个月</b>（配比）。</li>
+        <li><b>② 不签这份合同，这笔钱就不会发生</b>（<b>增量成本</b>）——它和租金是"同一件事的两种支出"：租金按"折旧 ＋ 利息"摊，它也按"折旧"摊。</li>
+        <li><b>③ 准则明文规定</b>——CAS 21 第十六条把"初始直接费用"列为使用权资产成本的组成部分（应用指南科目说明：借记"使用权资产"、贷记"银行存款"）。</li>
+      </ul>
+      <table style="margin-top:8px">
+        <tr><th>同一笔 35,000 的两种走法</th><th class="n">资本化（正确）</th><th class="n">费用化（错误）</th></tr>
+        <tr><td>起租日</td><td class="n">资产 +35,000（挂在表里）</td><td class="n">管理费用 35,000（立刻出表）</td></tr>
+        <tr><td>第 1 年损益</td><td class="n">−7,000（折旧：35,000÷5）</td><td class="n"><b>−35,000</b>（一次进）</td></tr>
+        <tr><td>第 2–5 年每年</td><td class="n">−7,000（继续摊）</td><td class="n">0（后面没得摊）</td></tr>
+        <tr class="tot"><td>5 年累计</td><td class="n">−35,000</td><td class="n">−35,000（<b>总额一样</b>）</td></tr>
+        <tr><td>起租日折旧基数</td><td class="n">2,106,906（含）</td><td class="n">2,071,906（<b>偏小</b>）</td></tr>
+        <tr><td>资产负债率</td><td class="n">正常</td><td class="n"><b>虚高</b>（资产少了 35,000）</td></tr>
+      </table>
+      <p class="note"><b>为什么"错误"那一列不行</b>：总额虽一样，但<b>费用被前移</b>——起租当年利润被"独吞"一块（−35,000 vs −7,000），后面 4 年反而虚高 7,000／年（没折旧可提）；资产偏小、负债不动 → <b>资产负债率与 ROE 都被扭曲</b>，且与"权利在逐月消耗"的事实不配比。</p>
+      <p class="note"><b>边界：不是所有前期支出都能资本化</b>。判据就是那一句：<b>"不签这份合同，这笔钱还会不会发生？"</b>——<b>不会</b> → 资本化（佣金、律师费）；<b>会</b>（差旅费、内部员工工时不因这单而增减）→ <b>当期费用</b>。印花税实务上有"随合同成本资本化"与"计入税金及附加"两种做法，本项目按前者、并保持全公司一致。</p>
+      <p class="note"><b>系统落地</b>：这 35,000 必须作为<b>合同层字段</b>进入使用权资产原值、并参与折旧基数——否则"资产 2,106,906 ／ 负债 2,071,906 差 35,000"这条勾稽就断了（见附·系统落地"三数互校"）。</p>
+    </div>
+
+    <div class="box d" style="margin-top:16px"><h3>第四块详解：复原成本——现在没花钱，为什么也算资产成本？</h3>
+      <p style="margin:4px 0">因为准则看的是「<b>取得这项使用权，总共要付出多少</b>」：<b>将来为了把它还回去而必须花的钱</b>，也是"拥有这项权利"的代价。所以按<b>现值</b>先记进资产，同时把义务记成负债——<b>贷：预计负债</b>，<b>不是</b>租赁负债。</p>
+      <p class="note" style="margin-top:8px"><b>三步判断</b>（同时满足才确认）：① 合同或法律<b>要求</b>你拆／恢复（不是你想不想）；② 义务<b>由这次租赁产生</b>（已构成现时义务）；③ 金额<b>能可靠估计</b>（不能可靠估计 → 不确认，但要在附注中说明）。<br>依据：CAS 21 第十六条第（四）项 ＋ <b>《企业会计准则第 13 号——或有事项》</b>（按现值计量）；<b>若该成本是为生产存货发生的 → 走存货准则（CAS 1），不进使用权资产</b>。</p>
+      <p class="note" style="margin-top:8px"><b>最常被问的一句：将来要付 50,000，为什么账上只记 34,029？</b><br>
+      —— <b>因为起租日只认"现值"</b>：34,029 ＝ 50,000 ÷ 1.08⁵，是把"将来要付的钱"折回起租日；资产侧加 34,029、负债侧加 34,029，<b>同一天、同金额、都是现值</b>。<br>
+      差额 <b>15,971</b> 不是"漏记"，而是<b>时间价值</b>：它随时间推移<b>逐年以贴息的形式补上</b>（借 财务费用 / 贷 预计负债），到第 5 年末正好把预计负债顶到 50,000。它属于<b>融资性质</b>的费用，<b>不能资本化进使用权资产</b>，只能各期进损益。（CAS 13 第六条：货币时间价值影响重大的，应按未来现金流出的折现值确定最佳估计数；应用指南：预计负债通常等于未来应支付金额，但与现值相差较大的应按现值确定——弃置费用即典型例子）</p>
+      <table style="margin-top:12px">
+        <tr><th>同一件事的两种"外壳"</th><th>租赁负债（欠出租人）</th><th>预计负债（将来付施工方）</th></tr>
+        <tr><td>起租日贷方金额</td><td><b>总额</b> 2,282,749（租赁付款额）</td><td><b>现值</b> 34,029</td></tr>
+        <tr><td>有备抵科目吗</td><td>有：<span class="chip contra">未确认融资费用</span> 210,843（借）</td><td><b>没有</b>——直接按现值立账</td></tr>
+        <tr><td>报表列示</td><td>租赁付款额 − 未确认融资费用 ＝ 净额</td><td>账面余额本身就是"现值滚存"数</td></tr>
+        <tr><td>时间价值进损益的路径</td><td>摊销未确认融资费用 → <span class="chip pl">财务费用</span></td><td>贴息 → <span class="chip pl">财务费用</span></td></tr>
+        <tr><td>什么时候掏钱</td><td>租期内逐期付</td><td>期满一次付（本例第 5 年末）</td></tr>
+      </table>
+      <p class="note"><b>两条负债、两副外壳，内核一样</b>：<b>起租日只认现值，差额在租期内以财务费用消耗完</b>。外壳不同源自科目设置——应用指南为租赁负债设了"租赁付款额／未确认融资费用"两个明细（总额 ＋ 备抵），复原义务没有这种明细设置，就直接按现值立账、逐年"长大"。<br><b>折现率口径</b>：反映货币时间价值与相关风险的折现率；实务上常与租赁折现率取同一口径（本例 8%，便于对照）。</p>
+      <p style="margin:12px 0 4px"><b>三段账</b>（租期 5 年，预计第 5 年末拆复支出 50,000，折现率 8%）</p>
+      <div class="entry">
+<span class="t">起租日：按现值入资产 ＋ 记负债</span>
+<span class="dr">借：使用权资产</span>                  34,029　<span class="cmt">（50,000 ÷ 1.08⁵）</span>
+<span class="cr">　贷：预计负债</span>                        34,029
+<span class="t">每年末：给"未来的支出"贴利息（让它长到 50,000）</span>
+<span class="dr">借：财务费用—利息费用</span>         2,722　<span class="cmt">（期初 34,029 × 8%；第 2 年 2,940 …）</span>
+<span class="cr">　贷：预计负债</span>                         2,722
+<span class="t">第 5 年末：真花钱拆了，与负债对冲</span>
+<span class="dr">借：预计负债</span>                     50,000
+<span class="cr">　贷：银行存款</span>                        50,000　<span class="cmt">（实际支出与预计不同 → 差额调当期损益）</span>
+      </div>
+      <table style="margin-top:10px">
+        <tr><th>年度</th><th class="n">期初预计负债</th><th class="n">当年贴息（财务费用）</th><th class="n">期末预计负债</th></tr>
+        <tr><td>起租日</td><td class="n">—</td><td class="n">—</td><td class="n"><b>34,029</b></td></tr>
+        <tr><td>第 1 年</td><td class="n">34,029</td><td class="n">2,722</td><td class="n">36,751</td></tr>
+        <tr><td>第 2 年</td><td class="n">36,751</td><td class="n">2,940</td><td class="n">39,691</td></tr>
+        <tr><td>第 3 年</td><td class="n">39,691</td><td class="n">3,175</td><td class="n">42,866</td></tr>
+        <tr><td>第 4 年</td><td class="n">42,866</td><td class="n">3,429</td><td class="n">46,295</td></tr>
+        <tr class="tot"><td>第 5 年</td><td class="n">46,295</td><td class="n">3,705</td><td class="n"><b>50,000</b></td></tr>
+      </table>
+      <p class="note"><b>恒等式</b>：这 34,029 也进了折旧基数，按租期 5 年折旧 → 每年 <b>6,805.80</b>。<b>折旧合计（本金 34,029）＋ 财务费用合计（贴息 15,971）＝ 未来实际支出 50,000</b>——与租赁那套"<b>折旧 ＋ 利息 ＝ 总租金</b>"是同一个骨架。<br><b>估计变了怎么办</b>：预计负债<b>减少</b> → 以资产账面价值为限扣减资产成本，超出部分进当期损益；<b>增加</b> → 增加资产成本（参照固定资产弃置费用的处理原则）；此外，<b>每个资产负债表日都要复核</b>这项预计负债（CAS 13 第十二条），估计变了就按当前<b>最佳估计数</b>调整。</p>
+      <p class="note"><b>三个常见坑</b>：① 把复原成本当成租金<b>塞进租赁负债</b>（错：租赁负债＝欠出租人的租金，预计负债＝将来付给施工方的复原费，<b>两条义务、两个对方</b>）；② 起租日<b>不计</b>、等真拆的那年一次进费用（资产少一块、费用跨期错配）；③ 忘了每期<b>贴息</b>（预计负债永远停在 34,029，第 5 年不够付）。</p>
+      <p class="note"><b>"常见于装修租入"是什么意思</b>：租来的房子装修后，合同常约定"<b>退租时恢复原状</b>"（拆吊顶、还原隔断、补地砖）——那就是复原义务。<br><b>两笔钱要分开</b>：<b>装修支出本身</b> → <span class="chip">长期待摊费用—租入固定资产改良支出</span>（按租期孰短摊销，<b>不进使用权资产</b>）；<b>"退租时把装修拆掉"的成本</b> → 才是这里的复原成本（进使用权资产、贷预计负债）。</p>
+    </div>
+    <div class="box a" style="margin-top:16px"><h3>追问：④ 的现值是「一个数 ÷ (1+8%)⁵」，① 的现值却要把 20 笔租金一笔笔折回来加总——<b>为什么算法不一样？是因为 ④ 是一次性吗</b>？</h3>
+      <p style="margin:4px 0"><b>八成对——但更准确的说法是：折现的「尺子」完全一样，不一样的是要量的「东西」。</b>现值永远只有一个公式：PV ＝ Σ 各期现金流 ÷ (1+r)ᵗ。
+      <br>· <b>① 租赁负债</b>：钱是<b>多期、分期</b>付出去的（PROP-2024-001 是 20 期季付）→ 就是「多笔现金流逐笔折现再加总」（年金公式只是它的快捷算法）；
+      <br>· <b>④ 复原成本</b>：钱是<b>期末一笔</b>付出去的（第 5 年末 50,000）→ 公式就退化成「单笔折现」50,000 ÷ 1.08⁵ ＝ 34,029。
+      <br>所以「一次性」是<b>现金流形状</b>的差异，不是折现原理的差异。</p>
+      <table style="margin-top:6px">
+        <tr><th>换个形状，算法跟着换（尺子还是那把尺子）</th><th class="n">现值</th><th>算法</th></tr>
+        <tr><td>④ 复原费：第 5 年末<b>一次性</b>付 50,000（8%）</td><td class="n">34,029</td><td>单笔折现 ＝ 50,000 ÷ 1.08⁵</td></tr>
+        <tr><td>同样的 50,000，改成 <b>5 年每年末付 10,000</b></td><td class="n">39,927</td><td>多期折现 ＝ 10,000 × 年金现值系数（8%，5 期）——<b>钱更早出去，现值就更大</b>（差 5,898）</td></tr>
+        <tr><td>租金：<b>第 3 年末一次性付清</b>（总租 300、8%）</td><td class="n">238.15</td><td>租赁负债也会变成「单笔折现」＝ 300 ÷ 1.08³（见 ④ 卡延伸）——<b>反过来说明：决定算法的是现金流形状，不是「租赁还是复原」</b></td></tr>
+      </table>
+      <p class="note"><b>真正不一样的是另外四处（都与折现无关）</b>：① <b>金额来源</b>——租赁付款额由合同／指数比率<b>确定</b>；复原成本是<b>最佳估计数</b>（CAS 13 第五条：有连续范围取中间值、单个项目取最可能金额、多个项目按概率加权）；② <b>折现率</b>——租赁负债首选租赁内含利率、否则承租人增量借款利率（CAS 21 第十七条）；复原成本用反映货币时间价值与该负债特有风险的利率（CAS 13 第六条：<b>货币时间价值影响重大的，应折现后确定最佳估计数</b>；实务常与租赁取同一口径）；③ <b>账怎么立</b>——租赁负债走<b>总额法</b>（贷「租赁付款额」总额 2,282,749 ＋ 借「未确认融资费用」备抵 210,843，净额才是现值）；复原成本<b>直接按现值立账</b> 34,029，<b>没有备抵科目</b>（这就是「两副外壳、同一个内核」）；④ <b>中途动不动</b>——租赁负债每期<b>付款冲减</b>（余额先涨后降）；复原负债中途<b>不付款、只贴息</b>（34,029 单调爬到 50,000），期满一次性清偿。</p>
+      <p class="note"><b>这也顺带解释了「两条利息线」为什么差这么大</b>：同一年，① 的利息 <b>17,770</b>（本金 355,391 × 5%）vs ④ 的贴息 <b>3,070</b>（本金 61,391 × 5%）——<b>本金小、而且到期才还本，利息自然少</b>；两条线合计 94,609 ＋ 38,609 ＝ 133,218。</p>
+      <p class="note"><b>三个易错点</b>：① 先看付款计划表再选公式——把 ④ 硬套年金、把 ① 当成单笔，都会算错；② 两处折现率<b>口径混用</b>（一个含税一个不含税、一个年率一个季率）——那不是算法错，是参数错，必须全系统统一并在附注说明；③ 复原义务的发生时点<b>未必在租期末</b>（如退租后 3 个月才拆）——n 可以是<b>小数年</b>，别硬套「整年折现」。</p>
+      <p class="note"><b>可检验判据（三条都应落回各自的未来现金流）</b>：34,029 ＋ 15,971 ＝ <b>50,000</b>；61,391 ＋ 38,609 ＝ <b>100,000</b>；355,391 ＋ 94,609 ＝ <b>450,000</b>（＝ 9 期 × 50,000）。三条都成立 → 折现是同一把尺子，差的只是<b>形状与参数</b>。同源说明见《使用权资产与租赁负债计算详解》§8.13。</p>
+    </div>
+    <div class="box c" style="margin-top:16px"><h3>追问：复原<b>也要折现吗</b>？——什么时候可以不折？</h3>
+      <p style="margin:4px 0"><b>要，除非货币时间价值影响不重大。</b>依据链条：CAS 21 第十六条第（四）项把复原成本交给 CAS 13 计量 → <b>CAS 13 第六条：确定最佳估计数时应综合考虑风险、不确定性和货币时间价值；货币时间价值影响重大的，应当通过对未来现金流出折现后确定</b>。CAS 13 应用指南进一步说明：预计负债通常按未来应支付金额确定，<b>但与现值相差较大的，应按现值</b>（弃置费用即典型例子）；固定资产弃置费用（CAS 4 第十三条）走同一逻辑。折现率口径：反映当前市场货币时间价值与<b>该负债特有风险的税前利率</b>（定义可参照 CAS 8 第十三条；实务常与租赁折现率取同一口径）。</p>
+      <table style="margin-top:6px">
+        <tr><th>"影响重不重大"用三个尺度量（同一笔 50,000）</th><th class="n">现值</th><th class="n">不折现 − 现值</th><th>结论</th></tr>
+        <tr><td>第 5 年末付、8%</td><td class="n">34,029</td><td class="n">15,971（31.94%）</td><td><b>必须折现</b></td></tr>
+        <tr><td>第 10 年末付、5%</td><td class="n">61,391</td><td class="n">38,609（38.61%）</td><td><b>必须折现</b></td></tr>
+        <tr><td>半年后付、8%（n ＝ 0.5）</td><td class="n">48,112</td><td class="n">1,888（3.8%）</td><td>影响不重大时可简化；为保持口径一致仍建议折现</td></tr>
+      </table>
+      <p class="note"><b>关键澄清：折现与否，改变的是"跨期分布"，不是"总额"</b>——两种做法的五年费用合计都是 50,000，差别在资产起点与每期费用：</p>
+      <table>
+        <tr><th>做法</th><th class="n">起租日资产</th><th class="n">年折旧</th><th class="n">贴息（财务费用）</th><th class="n">5 年费用合计</th></tr>
+        <tr><td><b>折现（正确）</b></td><td class="n">34,029</td><td class="n">6,805.80</td><td class="n">2,722 → 3,705（合 15,971）</td><td class="n"><b>50,000</b></td></tr>
+        <tr><td>不折现（错）</td><td class="n">50,000（<span class="bad">虚增 15,971</span>）</td><td class="n">10,000（<span class="bad">每年多 3,194.20</span>）</td><td class="n">0</td><td class="n">50,000</td></tr>
+      </table>
+      <p class="note"><b>费用形状也跟着不同</b>：折现法每年 ＝ 折旧 6,805.80 ＋ 贴息递增 → <b>9,527.80／9,745.80／9,980.80／10,234.80／10,510.80</b>（<b>前低后高</b>）；不折现法是平的 10,000／年。<b>注意方向</b>：租赁负债利息是<b>递减</b>（前高后低），复原负债贴息是<b>递增</b>（前低后高）——<b>两条利息线方向相反，别记反</b>。</p>
+      <p class="note"><b>三个易错点</b>：① <b>忘了贴息</b>——预计负债停在 34,029，第 5 年不够付 50,000；② <b>折现率乱用</b>（存款利率／含税利率／与租赁口径混用）——须用反映该负债特有风险的税前利率，并保持全系统一致；③ <b>时点跨期与估计变更</b>——义务发生在租期结束后（如退租 3 个月后才拆，n ＝ 5.25）、或金额估计变了，都要按 CAS 13 第十二条在资产负债表日复核、按当前最佳估计数的现值调整（增加 → 增加资产成本；减少 → 以资产账面价值为限扣减、超出部分进当期损益）。</p>
+      <p class="note"><b>一句话</b>：<b>只要货币时间价值影响重大，就要折现</b>——"复原"这个词没有豁免权；折出来的差（贴息）在租期内逐期进财务费用，与租赁利息一样，<b>不进资产、不资本化</b>。同源说明见《使用权资产与租赁负债计算详解》§8.14。</p>
+    </div>
+    <h3 style="font-size:15px;margin:20px 0 6px">本系统示例合同 PROP-2024-001</h3>
+    <table>
+      <tr><th>构件</th><th class="n">金额</th><th>说明</th></tr>
+      <tr><td>① 租赁负债现值</td><td class="n">2,071,906</td><td>20 期租金（季付 120,000 起、含递增）按 5% 折现</td></tr>
+      <tr><td>② 已付租金／租赁激励</td><td class="n">—</td><td>本合同无</td></tr>
+      <tr><td>③ 初始直接费用</td><td class="n">35,000</td><td>律师费、印花税等</td></tr>
+      <tr><td>④ 复原成本现值</td><td class="n">—</td><td>本合同无</td></tr>
+      <tr class="tot"><td>＝ 使用权资产</td><td class="n">2,106,906</td><td>= 2,071,906 ＋ 35,000</td></tr>
+    </table>
+    <div class="entry">
+<span class="t">起租日分录（总额法）</span>
+<span class="dr">借：使用权资产—办公楼</span>                  2,106,906
+<span class="dr">借：租赁负债—未确认融资费用</span>              210,843
+<span class="cr">　贷：租赁负债—租赁付款额</span>                        2,282,749
+<span class="cr">　贷：银行存款（初始直接费用）</span>                       35,000
+<span class="cmt">　　　②③④若有，各对应银行卡／预计负债；本例只有③</span>
+    </div>
+    <div class="cols" style="margin-top:16px">
+      <div class="box b"><h3>负债侧对应：租赁付款额包含哪 5 类？</h3>
+        <ul>
+          <li>固定付款额及<b>实质固定</b>付款额（<b>扣</b>租赁激励）</li>
+          <li>取决于<b>指数或比率</b>的可变付款额（按起租日水平确定）</li>
+          <li><b>购买选择权</b>行权价（合理确定将行使时）</li>
+          <li><b>终止租赁选择权</b>需支付的款项（合理确定将行使时）</li>
+          <li><b>担保余值</b>预计应付金额</li>
+        </ul>
+        <p class="note" style="margin-top:8px">不纳入：<b>其他可变付款额</b>（如按营业额提成）、短期／低价值租赁付款。</p>
+      </div>
+      <div class="box d"><h3>折现率怎么定？（决定现值的关键）</h3>
+        <ol>
+          <li><b>首选：租赁内含利率</b>——使「出租人收款额现值＋未担保余值现值 ＝ 资产公允价值＋出租人初始直接费用」的利率</li>
+          <li><b>拿不到就用：承租人增量借款利率</b>——类似期限、类似抵押条件下借钱的利率</li>
+        </ol>
+        <p class="note" style="margin-top:8px">实务多为第 2 种：对方的账未必体现该收益率（尤其<b>经营租赁</b>）。<b>利率一变，现值、月利息、使用权资产全都变。</b></p>
+      </div>
+    </div>
+    <p class="note"><b>易错点</b>：把初始直接费用<b>费用化</b>（错，它要资本化进使用权资产）；把已付租金也折现（错，已付的不用折现，直接加）。</p>
+     <p class="note"><b>易错点</b>：把初始直接费用<b>费用化</b>（错，它要资本化进使用权资产）；把已付租金也折现（错，已付的不用折现，直接加）。
+     <br>另两条：把复原成本当租金<b>塞进租赁负债</b>（错，它走"预计负债"）；记得每期给它<b>贴息</b>（否则第 5 年不够付）。</p>
+    <h3 style="font-size:15px;margin:20px 0 6px">完整算例：四块砖全用上（准则应用指南示例）</h3>
+    <table>
+      <tr><th>构件</th><th class="n">金额</th><th>说明</th></tr>
+      <tr><td>① 租赁负债现值</td><td class="n">355,391</td><td>剩余 9 期×50,000，按 5% 折现</td></tr>
+      <tr><td>② 起租日已付租金</td><td class="n">50,000</td><td>第 1 期在起租日支付（不折现，直接加）</td></tr>
+      <tr><td>③ 初始直接费用</td><td class="n">20,000</td><td>律师费／佣金等增量成本</td></tr>
+      <tr><td>② 扣减：租赁激励</td><td class="n">−5,000</td><td><b>收到的</b>激励，从资产中<b>减</b>掉（属 ② 的扣减项；<b>应用指南原例没有 ④ 复原成本</b>——加上 ④ 的完整版见本卡末尾「两条利息线」）</td></tr>
+      <tr class="tot"><td>＝ 使用权资产</td><td class="n">420,391</td><td>= 355,391＋50,000＋20,000−5,000</td></tr>
+    </table>
+    <div class="entry">
+<span class="t">第 1 步：起租日确认（①＋②）</span>
+<span class="dr">借：使用权资产</span>              405,391　<span class="cmt">（①355,391＋②50,000）</span>
+<span class="dr">借：租赁负债—未确认融资费用</span>      94,609
+<span class="cr">　贷：租赁负债—租赁付款额</span>             450,000　<span class="cmt">（9 期×50,000）</span>
+<span class="cr">　贷：银行存款</span>                         50,000
+<span class="t">第 2 步：初始直接费用资本化（③）</span>
+<span class="dr">借：使用权资产</span>               20,000
+<span class="cr">　贷：银行存款</span>                         20,000
+<span class="t">第 3 步：收到租赁激励，冲减资产（④）</span>
+<span class="t">第 3 步：收到租赁激励，冲减资产（② 的扣减项）</span>
+<span class="dr">借：银行存款</span>                5,000
+<span class="cr">　贷：使用权资产</span>                        5,000
+<span class="cmt">　　　→ 使用权资产入账 420,391；未确认融资费用 94,609 ＝ 450,000 − 355,391</span>
+    <div class="box e" style="margin-top:16px"><h3>如果四块砖都进使用权资产，利息到底怎么算？——两条利息线</h3>
+      <p style="margin:4px 0"><b>关键</b>：利息<b>不是算在资产上，而是算在负债上</b>。资产侧只有<b>一条折旧线</b>（把四块砖一起摊掉）；利息要看每块砖<b>背后还有没有"欠着的钱"</b>。</p>
+      <table style="margin-top:8px">
+        <tr><th>砖</th><th>背后有钱欠着吗</th><th>有没有利息</th></tr>
+        <tr><td><b>① 租赁负债现值</b></td><td>欠出租人（分期付）</td><td><b>有</b>：租赁负债利息（＝池子 94,609）</td></tr>
+        <tr><td><b>② 已付租金</b></td><td>不欠了（起租日已付清）</td><td><b>无</b></td></tr>
+        <tr><td><b>③ 初始直接费用</b></td><td>不欠了（已付现结清）</td><td><b>无</b></td></tr>
+        <tr><td><b>④ 复原成本现值</b></td><td>欠（将来付给施工方）→ <span class="chip liab">预计负债</span></td><td><b>有</b>：预计负债贴息（＝38,609）</td></tr>
+      </table>
+      <p class="note" style="margin-top:8px"><b>两条利息线各自滚动</b>（都按实际利率法，但余额口径不同）：<br>
+      · ① 的余额 ＝ <b>租赁付款额 − 未确认融资费用</b>（净额）→ 利息 <b>借 财务费用／贷 未确认融资费用</b><br>
+      · ④ 的余额 ＝ <b>预计负债</b>（现值滚存数）→ 贴息 <b>借 财务费用／贷 预计负债</b></p>
+      <p style="margin:12px 0 4px"><b>接着用上面那个算例，把 ④ 也加上</b>（租期 10 年、第 10 年末复原支出 100,000、折现率 5% → 现值 100,000 ÷ 1.05¹⁰ ＝ <b>61,391</b>）</p>
+      <table>
+        <tr><th>构件</th><th class="n">金额</th><th>说明</th></tr>
+        <tr><td>① 租赁负债现值</td><td class="n">355,391</td><td>剩余 9 期×50,000 按 5% 折现</td></tr>
+        <tr><td>② 起租日已付租金</td><td class="n">50,000</td><td>不折现，直接加</td></tr>
+        <tr><td>③ 初始直接费用</td><td class="n">20,000</td><td>已付现</td></tr>
+        <tr><td>② 扣减：租赁激励</td><td class="n">−5,000</td><td>收到即冲减资产</td></tr>
+        <tr><td><b>④ 复原成本现值</b></td><td class="n"><b>61,391</b></td><td>贷：预计负债（新增的这块）</td></tr>
+        <tr class="tot"><td>＝ 使用权资产（折旧基数）</td><td class="n">481,782</td><td>年折旧 ＝ 481,782 ÷ 10 ＝ <b>48,178.20</b></td></tr>
+      </table>
+      <table style="margin-top:10px">
+        <tr><th>年度</th><th class="n">① 租赁负债净额</th><th class="n">① 利息</th><th class="n">④ 预计负债</th><th class="n">④ 贴息</th><th class="n">两条线合计</th></tr>
+        <tr><td>起租日</td><td class="n">355,391</td><td class="n">—</td><td class="n">61,391</td><td class="n">—</td><td class="n">—</td></tr>
+        <tr><td>第 1 年</td><td class="n">323,161</td><td class="n">17,770</td><td class="n">64,461</td><td class="n">3,070</td><td class="n"><b>20,840</b></td></tr>
+        <tr><td>第 2 年</td><td class="n">289,319</td><td class="n">16,158</td><td class="n">67,684</td><td class="n">3,223</td><td class="n">19,381</td></tr>
+        <tr><td>第 3 年</td><td class="n">253,785</td><td class="n">14,466</td><td class="n">71,068</td><td class="n">3,384</td><td class="n">17,850</td></tr>
+        <tr class="tot"><td>租期合计</td><td class="n">→ 0</td><td class="n"><b>94,609</b></td><td class="n">→ 100,000</td><td class="n"><b>38,609</b></td><td class="n"><b>133,218</b></td></tr>
+      </table>
+      <p class="note"><b>恒等式（推广版"折旧＋利息＝总付出"）</b>：折旧 <b>481,782</b> ＋ 租赁负债利息 <b>94,609</b> ＋ 预计负债贴息 <b>38,609</b> ＝ <b>615,000</b> ＝ 现金总流出（租金 500,000 ＋ 初始直接费用 20,000 − 激励 5,000 ＋ 复原支出 100,000）。<b>四块砖一个不多、一个不少，全部在租期内转成费用。</b></p>
+      <p class="note"><b>三个提醒</b>：① 这两笔利息<b>都不进使用权资产</b>（资产只有折旧线）；仅当使用权资产用于建造"符合资本化条件的资产"时，利息才可改记 <span class="chip">在建工程</span>；② 两条线利率<b>可以不同</b>——④ 用反映其自身风险的折现率，实务上常与①取同一口径（本例 5%）；③ ④ 的贴息<b>必须记"预计负债"</b>，不能塞进"未确认融资费用"科目——那个科目只属于租赁负债。</p>
+    </div>
+    </div>
+    <p class="note"><b>记住方向</b>：<b>已付租金要加</b>、<b>收到的激励要减</b>——两个方向最容易记反。</p>
+  </div>
+
+  <div class="card" id="c3">
+    <span class="kicker">第 ③ 步 · 科目地图</span>
+    <h2><span class="num">③</span>资产侧 3 项 ＋ 负债侧 2 项（共 5 个科目）</h2>
+<p class="lead">一句话：资产侧、负债侧各有「<b>一个主科目 ＋ 一个备抵科目</b>」，<b>报表一律看净额</b>。</p>
+    <div class="cols">
+      <div class="box a">
+        <h3>资产侧（借方余额）</h3>
+        <table>
+          <tr><th>科目</th><th>性质</th></tr>
+          <tr><td><span class="chip">使用权资产</span></td><td>资产类，<b>借</b>方余额</td></tr>
+          <tr><td><span class="chip contra">使用权资产累计折旧</span></td><td><b>备抵</b>，<b>贷</b>方余额</td></tr>
+          <tr><td><span class="chip contra">使用权资产减值准备</span></td><td><b>备抵</b>，<b>贷</b>方余额</td></tr>
+          <tr class="tot"><td colspan="2">报表净额 = 使用权资产 − 累计折旧 − 减值准备</td></tr>
+        </table>
+      </div>
+      <div class="box b">
+        <h3>负债侧（贷方余额）</h3>
+        <table>
+          <tr><th>科目</th><th>性质</th></tr>
+          <tr><td><span class="chip liab">租赁负债—租赁付款额</span></td><td>负债类，<b>贷</b>方余额</td></tr>
+          <tr><td><span class="chip contra">租赁负债—未确认融资费用</span></td><td><b>备抵</b>，<b>借</b>方余额</td></tr>
+          <tr class="tot"><td colspan="2">报表净额 = 租赁付款额 − 未确认融资费用</td></tr>
+        </table>
+      </div>
+    </div>
+    <p class="note"><b>两个"备抵"是同一种设计</b>：主科目记<b>总额</b>，备抵科目记<b>还没发生的那部分</b>，报表按<b>净额</b>列示。资产侧的备抵叫「累计折旧／减值准备」，负债侧的备抵叫「未确认融资费用」——<b>方向相反、思路一致</b>。</p>
+    <h3 style="font-size:15px;margin:16px 0 6px">起租日各科目余额长这样（本系统示例）</h3>
+    <table>
+      <tr><th>科目</th><th>方向</th><th class="n">金额</th></tr>
+      <tr><td>使用权资产</td><td>借</td><td class="n">2,106,906</td></tr>
+      <tr><td>使用权资产累计折旧</td><td>贷</td><td class="n">0</td></tr>
+      <tr><td>使用权资产减值准备</td><td>贷</td><td class="n">0</td></tr>
+      <tr><td>租赁负债—租赁付款额</td><td>贷</td><td class="n">2,282,749</td></tr>
+      <tr><td>租赁负债—未确认融资费用</td><td>借</td><td class="n">210,843</td></tr>
+      <tr class="tot"><td colspan="2">报表列示</td><td class="n">资产 2,106,906 ｜ 负债 2,071,906</td></tr>
+    </table>
+    <p class="note"><b>归属别混</b>：使用权资产<b>单独列示</b>于资产负债表（<b>不并入固定资产</b>）；折旧按用途进 <span class="chip pl">管理费用／营业成本／制造费用／销售费用／研发支出</span>。</p>
+  </div>
+
+  <div class="card" id="c4">
+    <span class="kicker">第 ④ 步 · 常规动作</span>
+    <h2><span class="num">④</span>每个月固定做三件事（各管一条线）</h2>
+<p class="lead">一句话：每月三件事——<b>折旧</b>（管资产）、<b>计息</b>（让负债长大）、<b>付款</b>（让负债变小）。</p>
+    <table>
+      <tr><th>动作</th><th>分录</th><th>影响哪条线</th></tr>
+      <tr><td><b>① 计提折旧</b><br><span class="note" style="border:0;padding:0;margin:0">不管当月是否付款</span></td>
+          <td><span class="chip pl">管理费用—使用权资产折旧</span> 借 35,115<br><span class="chip contra">使用权资产累计折旧</span> 贷 35,115</td>
+          <td>使用权资产<b>净额↓</b>（费用进利润表）</td></tr>
+      <tr><td><b>② 摊销利息</b><br>（实际利率法）</td>
+          <td><span class="chip pl">财务费用—利息费用</span> 借 8,633<br><span class="chip contra">租赁负债—未确认融资费用</span> 贷 8,633</td>
+          <td>租赁负债<b>净额↑</b>（利息使欠款长大）</td></tr>
+      <tr><td><b>③ 支付租金</b><br>（到付款日才做）</td>
+          <td><span class="chip liab">租赁负债—租赁付款额</span> 借 120,000<br>银行存款 贷 120,000</td>
+          <td>租赁付款额<b>↓</b>（负债净额↓）</td></tr>
+    </table>
+    <div class="entry">
+<span class="t">2024-12（首次付款日）三笔一起看</span>
+<span class="dr">借：管理费用—使用权资产折旧</span>     35,115
+<span class="cr">　贷：使用权资产累计折旧</span>             35,115
+<span class="dr">借：财务费用—利息费用</span>          8,814
+<span class="cr">　贷：租赁负债—未确认融资费用</span>          8,814
+<span class="dr">借：租赁负债—租赁付款额</span>        120,000
+<span class="cr">　贷：银行存款</span>                        120,000
+<span class="cmt">　　　折旧 60 个月平摊；利息＝月初负债余额×月利率（5%/12）</span>
+    </div>
+    <p class="note"><b>免租期也不能停折旧</b>：2024-07～09 免租，但折旧照提（3 个月 105,345）——因为"使用权在消耗"，与付不付钱无关。</p>
+    <p class="note"><b>利息为什么逐月变大</b>（8,633 → … → 8,814）？因为<b>上月的利息滚进了本金</b>：免租期内不付款，负债余额只增不减，再按月利率 5%÷12 计提；<b>开始付款后余额才会下降、利息转为递减</b>——这正是"实际利率法"的形状。<br><b>口径</b>：本卡金额按"<b>逐月四舍五入到分、余额按月结转</b>"（与 ⑰ 卡一致）；若改为"只在期末舍入"，个别月份会相差 <b>1 元</b>——全系统须统一并做末期尾差封口。</p>
+    <p class="note"><b>如果用「按日计息」</b>（本项目 dczh 实现）：利息按<b>实际天数</b>累计，月末汇总入账；利率要先从年利率换算成<b>日利率</b>，并注意<b>起租日是否计息</b>、<b>付款日先计息还是先扣款</b>这两个口径——差异与尾差处理详见《计息算法差异详解（Cosmic vs dczh）》。</p>
+    <div class="split" style="margin-top:18px;border-top:1px dashed var(--line);padding-top:14px">
+      <div class="split-title">延伸：如果租金<b>一次性付清</b>，还有折旧吗？——<b>有，而且是折旧最多的一种</b></div>
+      <table>
+        <tr><th>付款安排（总租金都是 300）</th><th class="n">折旧合计</th><th class="n">利息合计</th><th>费用形状</th></tr>
+        <tr><td><b>起租日一次性付清</b></td><td class="n"><b>300.00</b></td><td class="n"><b>0.00</b></td><td>平的：100／100／100</td></tr>
+        <tr><td>第 1 年末一次付清</td><td class="n">277.78</td><td class="n">22.22</td><td>—</td></tr>
+        <tr><td>三年分期（每年末 100）</td><td class="n">257.70</td><td class="n">42.30</td><td>前高后低：106.52／100.17／93.31</td></tr>
+        <tr><td>第 3 年末一次性付清</td><td class="n">238.15</td><td class="n">61.85</td><td>前低后高：98.43／99.96／101.60</td></tr>
+      </table>
+      <div class="formula" style="margin-top:10px">恒等式：　折旧合计 ＋ 利息合计 ＝ 总租金（300）</div>
+      <p class="plusline">起租日付清时：<b>使用权资产 300、租赁负债 0、未确认融资费用 0</b>；每月仍提折旧 <b>100</b>（＝300÷3），不再有财务费用。报表上呈现「<b>有资产、没负债</b>」——完全正常。<br>原因：<b>折旧的对象是"权利"，不是"欠款"</b>；付款只清零负债，动不了折旧。<br>真正"没有折旧"只有两种：<b>短期租赁豁免</b>、<b>低价值租赁豁免</b>（因为压根不进表）。</p>
+    </div>
+  </div>
+
+  <div class="card" id="c5">
+    <span class="kicker">第 ⑤ 步 · 折旧三问</span>
+    <h2><span class="num">⑤</span>折多少年？从哪个月开始？算到哪个科目？</h2>
+<p class="lead">一句话：折旧三问——<b>折多少年、从哪个月起、记到什么科目</b>。三问全对，折旧就不会错。</p>
+<p class="note"><b>折旧只是"资产→费用"四条出口里最常用的一条</b>（另有摊销、折耗、结转成本，以及减值／处置两个一次性出口）——家族谱见 <a href="#c18">⑱ 资产的出口</a>。</p>
+    <div class="cols">
+      <div class="box d"><h3>问 1：折多少年？（三档规则）</h3>
+        <ul>
+          <li><b>能合理确定</b>租期届满取得所有权（含合理确定行使购买选择权）→ 按资产<b>剩余使用寿命</b>折</li>
+          <li><b>不能确定</b> → 按<b>租期</b>与<b>资产剩余使用寿命</b><span class="hi">孰短</span>折</li>
+          <li>若使用权资产<b>自身剩余寿命</b>更短 → 按它折</li>
+        </ul>
+        <p class="note" style="margin-top:8px">本系统示例：60 个月租期，无购买选择权 → 按 60 个月，月折旧 35,115。</p>
+      </div>
+      <div class="box e"><h3>问 2：从哪个月开始？（有口径选择）</h3>
+        <ul>
+          <li><b>原则</b>：自<b>租赁期开始日起</b>按月计提 → <b>当月就提</b>（这点与固定资产"次月提"不同）</li>
+          <li><b>例外</b>：当月计提确有困难 → 可<b>从下月起提</b>，但须<b>附注披露</b>，且同类使用权资产须<b>统一政策</b></li>
+        </ul>
+        <p class="note" style="margin-top:8px"><b>本项目待财务确认</b>（两种口径的期末数）：
+        <br>· 起租当月起提 → 2024-12-31 使用权资产 <b>1,896,216</b>（＝2,106,906 − 6×35,115）
+        <br>· 次月起提 → <b>1,931,331</b>（＝2,106,906 − 5×35,115）
+        <br>两者都合规，<b>两口径并列保留</b>（待财务定稿）；一经确定，<b>必须全公司一致 + 附注说明</b>。</p>
+    <p class="note"><b>建议口径</b>：优先「<b>起租当月起提</b>」（准则首选表述）；若系统计算确有困难，可用「次月起提」，但必须<b>全公司统一 ＋ 附注披露</b>。两种都可过审，<b>不能混用</b>。</p>
+      </div>
+    </div>
+    <div class="box" style="margin-top:14px"><h3>问 3：折旧算到哪个科目？</h3>
+      <p>按<b>用途</b>归属：办公场地 → <span class="chip pl">管理费用</span>；生产用 → <span class="chip pl">制造／营业成本</span>；销售门店 → <span class="chip pl">销售费用</span>；研发用 → <span class="chip pl">研发支出</span>。
+      <b>贷方永远只有一个</b>：<span class="chip contra">使用权资产累计折旧</span>。未使用的使用权资产（租入后暂未启用）→ 折旧同样计入 <span class="chip pl">管理费用</span>（参照 CAS 4 对未使用固定资产的处理）。</p>
+    </div>
+  </div>
+
+  <div class="card" id="c6">
+    <span class="kicker">第 ⑥ 步 · 减值（用不上了怎么办）</span>
+    <h2><span class="num">⑥</span>用不上了怎么办：减值</h2>
+<p class="lead">一句话：租来的权利也可能"不值钱"了——那就<b>减值</b>；而且<b>一旦计提不得转回</b>。</p>
+    <div class="cols">
+      <div class="box"><h3>什么时候测</h3>
+        <p>出现<b>减值迹象</b>时（如：门店关停、租金市价大跌、资产闲置、经营亏损且短期难好转），按 <b>CAS 8 资产减值</b>测可收回金额。</p>
+      </div>
+      <div class="box a"><h3>怎么测</h3>
+        <p style="margin:4px 0"><b>可收回金额 ＝ max（公允价值 − 处置费用，预计未来现金流量现值）</b></p>
+        <p>若可收回金额 &lt; 账面价值（成本 − 累计折旧 − 已提减值）→ 差额计提减值。</p>
+        <p class="note" style="margin-top:8px">实务提示：对"包含使用权资产的资产组"做现金流测算时，通常<b>同时剔除租赁负债及其未来租金付款</b>，口径要一致。</p>
+      </div>
+    </div>
+    <div class="entry">
+<span class="t">计提减值</span>
+<span class="dr">借：资产减值损失</span>                    X
+<span class="cr">　贷：使用权资产减值准备</span>                 X
+<span class="cmt">　　　一经计提，不得转回（CAS 8）；之后按扣除减值后的账面价值继续折旧</span>
+    </div>
+    <p class="note"><b>三条硬规则</b>：① 备抵科目，<b>贷方余额</b>；② <span class="bad">一旦计提不得转回</span>（区别于存货、应收款等）；③ 减值后<b>重新算折旧</b>（金额变小）。</p>
+    <p class="note"><b>减值之后怎么接着折旧（算例）</b>：设备使用权资产原值 <b>100,000</b>、10 年直线（年折旧 10,000）；第 <b>5 年末</b>账面价值 50,000，当年确认减值 <b>20,000</b> → 账面降至 30,000 → 之后 <b>5 年</b>按 <b>30,000 ÷ 5 ＝ 6,000／年</b>继续折旧。即：<b>减值后要重算折旧，而不是继续按原额提</b>。</p>
+  </div>
+
+  <div class="card" id="c7">
+    <span class="kicker">第 ⑦ 步 · 重新计量</span>
+    <h2><span class="num">⑦</span>什么情况下使用权资产会被"改写"</h2>
+    <p class="lead">原则：<b>租赁负债被重新计量时，使用权资产跟着调</b>（准则：承租人重新计量租赁负债的，相应调整使用权资产的账面价值）。</p>
+    <table>
+      <tr><th>触发事件</th><th>发生了什么</th><th>怎么调</th></tr>
+      <tr><td>续租选择权／终止选择权评估变化</td><td>租期变 → 付款额变</td><td>重算租赁负债 → <b>调使用权资产</b></td></tr>
+      <tr><td>购买选择权评估变化</td><td>预计会买了</td><td>同上，并改按<b>剩余使用寿命</b>折旧</td></tr>
+      <tr><td><b>指数或比率</b>变动（如 CPI 调租）</td><td>租金按公式变了</td><td>重算差额 → <b>调使用权资产</b>；若资产已减至零，超出部分进当期损益</td></tr>
+      <tr><td>担保余值预计变动</td><td>预计要赔的钱变了</td><td>重算租赁负债 → 调使用权资产</td></tr>
+      <tr><td><b>租赁变更</b>（非单独租赁）</td><td>范围／对价／期限变了</td><td>按变更后重新计量；若<b>范围缩小／租期缩短</b> → 按比例结转，差额进 <span class="chip pl">资产处置损益</span></td></tr>
+    </table>
+    <div class="entry">
+<span class="t">方向记法</span>
+租赁负债<span class="dr">增加</span> → <span class="dr">借记 使用权资产</span>，差额借 未确认融资费用，贷 租赁付款额
+租赁负债<span class="cr">减少</span> → <span class="cr">贷记 使用权资产</span>（调整账面价值）
+<span class="cmt">　　　若调整后使用权资产被"调到负数"，超出部分转当期损益</span>
+    </div>
+  </div>
+
+  <div class="card" id="c8">
+    <span class="kicker">第 ⑧ 步 · 到期与终止</span>
+    <h2><span class="num">⑧</span>还回去那天，账怎么收尾</h2>
+<p class="lead">一句话：正常用完是「<b>平账</b>」（不动损益）；<b>提前走人会有损益</b>。</p>
+    <div class="cols">
+      <div class="box c"><h3>正常到期（用完归还）</h3>
+        <p>使用权资产已折旧完（净额＝0），只剩<b>清理结转</b>：</p>
+        <div class="entry" style="margin-top:8px">
+<span class="dr">借：使用权资产累计折旧</span>   2,106,906
+<span class="dr">借：使用权资产减值准备</span>        （如有）
+<span class="cr">　贷：使用权资产—办公楼</span>         2,106,906
+        </div>
+        <p class="note">两笔总额对冲，科目归零；若还有残值或复原义务，用 <span class="chip liab">预计负债</span> 结清。</p>
+      </div>
+      <div class="box e"><h3>提前终止 / 范围缩小 / 转租</h3>
+        <ul>
+          <li><b>范围缩小或租期缩短</b>：按比例结转 租赁负债、累计折旧、减值准备，与使用权资产对冲，差额进 <span class="chip pl">资产处置损益</span></li>
+          <li><b>转租（形成融资租赁）</b>：差额进 <span class="chip pl">资产处置收益</span></li>
+          <li><b>提前退租</b>：确认终止选择权的付款 ＋ 结转上述科目，差额进当期损益</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note"><b>关键区别</b>：正常到期是"平账"（不动损益）；<b>提前终止／缩小范围是"有损益"的</b>——因为当初按 5 年入的账，现在只用了 3 年。</p>
+  </div>
+
+  <div class="card" id="c9">
+    <span class="kicker">第 ⑨ 步 · 报表去向</span>
+    <h2><span class="num">⑨</span>最终落到三张报表的哪里</h2>
+<p class="lead">一句话：一个资产、一个负债、两笔费用——分别落到<b>三张报表</b>的不同位置。</p>
+    <table>
+      <tr><th>报表</th><th>列示什么</th><th>金额来源</th></tr>
+      <tr><td><b>资产负债表</b>（非流动）</td><td><span class="chip">使用权资产</span>（单独列示，<b>不并入固定资产</b>）</td><td>使用权资产 − 累计折旧 − 减值准备</td></tr>
+      <tr><td><b>资产负债表</b>（负债）</td><td><span class="chip liab">租赁负债</span>（拆分：一年内到期 → 流动）</td><td>租赁付款额 − 未确认融资费用，按<b>现值口径</b>拆</td></tr>
+      <tr><td><b>利润表</b></td><td>折旧（管理费用等）＋ 利息（财务费用）＋ 减值损失</td><td>三项费用，<b>前高后低</b>（折旧平 ＋ 利息递减）</td></tr>
+      <tr><td><b>现金流量表</b>（中国口径）</td><td><b>偿还本金 ＋ 利息 → 筹资活动</b>；<b>起租日或之前支付的租金、租赁保证金 → 也是筹资活动</b> ⚠️反直觉</td><td>CAS 21 第53条 ＋ 财政部会计司实施问答（2021-04）</td></tr>
+      <tr><td><b>经营活动</b></td><td>短期租赁／低价值租赁付款（含其预付租金、保证金）、未纳入负债的可变付款</td><td>豁免部分不进使用权资产</td></tr>
+    </table>
+    <p class="note"><b>附注必须披露</b>：各〈类〉使用权资产的期初余额、本期增加、期末余额、累计折旧额和减值金额；租赁负债的利息费用；简化处理的短期租赁和低价值资产费用；未纳入租赁负债计量的可变租赁付款额；转租收入；租赁相关总现金流出等（CAS 21 第五十三条）。</p>
+    <p class="note"><b>「按现值口径拆」什么意思</b>：一年内到期的部分取的是<b>未来 12 个月付款额的现值</b>（不是这 12 个月要付的名义金额），且要把对应的<b>未确认融资费用一起搬</b>过去。</p>
+    <p class="note"><b>数字例子（3 年×100、8%）</b>：起租日看未来 12 个月——付款现值 ＝ 100 ÷ 1.08 ＝ <b>92.59</b> →「一年内到期」列 <b>92.59</b>、非流动列 <b>165.11</b>（合计 257.70）。<br>若错按名义金额拆，就会变成 100.00 ／ 157.70 —— <b>流动负债虚增 7.41</b>，流动比率被静默拉低。</p>
+    <p class="note"><b>税务提示（税会差异）</b>：企业所得税口径下租金一般按<b>合同约定</b>扣除，而会计确认的是「折旧＋利息」——金额与节奏都不同，须做<b>纳税调整</b>。本图解只讲会计口径。</p>
+    <p class="note"><b>现金流分类的坑</b>：中国口径下「<b>只要进了表的租赁，租金出去的钱一律进筹资</b>」（连<b>起租日一次性付清</b>的也算），豁免的走经营；而 <b>IFRS 下起租日前的预付款通常列为投资活动</b>——别拿国际所模板直接套 A 股报表。利息与折旧<b>不产生现金流</b>，在补充资料中间接法调节。</p>
+  </div>
+
+  <div class="card" id="c10">
+    <span class="kicker">第 ⑩ 步 · 一表总览</span>
+    <h2><span class="num">⑩</span>全生命周期：科目余额怎么变</h2>
+<p class="lead">一句话：把前面所有动作连起来，看<b>五个科目的余额怎么走</b>（含减值那一栏为什么"下台阶"）。</p>
+    <table>
+      <tr><th>时点／动作</th><th class="n">使用权资产</th><th class="n">累计折旧</th><th class="n">减值准备</th><th class="n">净额</th><th class="n">租赁负债净额</th></tr>
+      <tr><td>起租日<br><span class="note" style="border:0;padding:0;margin:0">（本例：257.70 / 300）</span></td><td class="n">257.70</td><td class="n">0</td><td class="n">0</td><td class="n"><b>257.70</b></td><td class="n"><b>257.70</b></td></tr>
+      <tr><td>第 1 年：折旧 ＋ 计息 ＋ 付款</td><td class="n">257.70</td><td class="n">85.90</td><td class="n">0</td><td class="n"><b>171.80</b></td><td class="n"><b>178.32</b></td></tr>
+      <tr><td>第 2 年</td><td class="n">257.70</td><td class="n">171.80</td><td class="n">0</td><td class="n"><b>85.90</b></td><td class="n"><b>92.59</b></td></tr>
+      <tr><td>第 3 年</td><td class="n">257.70</td><td class="n">257.70</td><td class="n">0</td><td class="n"><b>0.00</b></td><td class="n"><b>0.00</b></td></tr>
+      <tr class="tot"><td>到期清理</td><td class="n">0（转出）</td><td class="n">0（转出）</td><td class="n">—</td><td class="n">0</td><td class="n">0</td></tr>
+    </table>
+    <p class="note"><b>看这张表记住三件事</b>：① 资产侧走"直线"、负债侧走"实际利率"，所以中间会分叉（最后都归零）；② 减值若发生，资产侧会<b>永久性下台阶</b>（不得转回）；③ 重新计量是<b>资产与负债同步调整</b>，且调整额<b>通常等于负债的变动额</b>（只有资产被减至零后，超出部分才转损益）。</p>
+    <div class="box a" style="margin-top:16px"><h3>必然的追问：折旧和负债，是<b>同时消耗完</b>的吗？</h3>
+      <p style="margin:4px 0"><b>不是。</b>资产按<b>时间</b>消耗（折旧，通常直线法：每月固定 35,115），负债按<b>钱</b>消耗（实际利率法：前期利息滚入本金、还本少，余额降得慢）。两条线只在<b>两个端点</b>上重合——<b>起租日</b>（且 ②③④＝0 时）与<b>租期结束全部结清</b>；中间任何时点都不相等。</p>
+      <table style="margin-top:6px">
+        <tr><th>时点（PROP-2024-001）</th><th class="n">使用权资产净额</th><th class="n">租赁负债净额</th><th class="n">负债 − 资产</th><th>发生了什么</th></tr>
+        <tr><td>起租日 2024-07-01</td><td class="n">2,106,906</td><td class="n">2,071,906</td><td class="n">−35,000</td><td>资产更高：里头含着已付的 ③</td></tr>
+        <tr><td>第 1 个月末</td><td class="n">2,071,791</td><td class="n">2,080,539</td><td class="n">+8,748</td><td><b>两条线交叉</b>：负债反超</td></tr>
+        <tr><td>2024-12-31（6 个月）</td><td class="n">1,896,216</td><td class="n">2,004,246</td><td class="n">+108,030</td><td>免租期内负债只增不减</td></tr>
+        <tr><td>2025-06-30（12 个月）</td><td class="n">1,685,526</td><td class="n">1,813,371</td><td class="n">+127,845</td><td>资产降 421,380，负债只降 258,535</td></tr>
+        <tr class="tot"><td>租期末（全部结清）</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td>这时才同时归零（尾差封口后）</td></tr>
+      </table>
+      <p class="note"><b>三条来源，解释"为什么不齐"</b>：① <b>起点口径不同</b>——资产含 ②③④（本例 ③＝35,000），负债只有 ①，所以起租日就差 35,000；② <b>消耗方法不同</b>——资产直线下走、负债实际利率（只计息不付款时余额还涨），所以头一个月就被反超；③ <b>非常规事件</b>——减值（资产单边下台阶）、重新计量／变更（同步调一次，但后续消耗仍不同步）、能确定取得所有权（改按剩余使用寿命折旧，资产活得比负债久）。</p>
+      <div class="formula" style="margin-top:10px">可检验恒等式：　任一月末　负债净额 − 资产净额 ＝ 累计折旧 − 累计还本 −（②③④中未进租赁负债的部分）</div>
+      <p class="plusline"><b>代入验算</b>：12 个月末 → 421,380 − 258,535 − 35,000 ＝ <b>127,845</b> ✓（＝ 1,813,371 − 1,685,526）；<br>最小例子（②③④＝0，3 年×100、8%）→ 第 1 年末 85.90 − 79.38 ＝ <b>6.52</b> ✓（＝ 178.32 − 171.80）；第 2 年末 171.80 − 165.11 ＝ <b>6.69</b> ✓；第 3 年末两边同时归零。</p>
+<p class="note"><b>这个差额不是"噪声"——它就是"费用前置"的度量</b>：任一时点 <b>累计已前置的费用 ＝ 累计折旧 ＋ 累计利息 − 累计付款</b>（＝费用比现金多认了多少）。12 个月末：421,380 ＋ 101,465 − 360,000 ＝ <b>162,845</b>，再减去未进租赁负债的 ③（35,000）＝ <b>127,845</b>，正是两条线的账面差额；最小例子第 1 年末 106.52 − 100 ＝ <b>6.52</b>✓、第 2 年末 206.69 − 200 ＝ <b>6.69</b>✓。<b>反过来说</b>：若强行让资产也按"付款 − 利息"消耗（两条线恒等），每期费用就会恒等于每期租金（100／100／100）——会计退化成"收付实现制"，租赁的<b>融资特征（费用前高后低）就看不见了</b>。所以"不同步"不是缺陷，正是它承载信息的地方。</p>
+<p class="note"><b>什么时候才真的算"怪"（三条自检）</b>：① 起租日差额 ≠ −(②③④)——多半漏记／错记砖；② 任一时点 <b>负债净额 − 资产净额 ≠ 累计（折旧 ＋ 利息 − 付款）−（②③④）</b>——折旧或利息算错（含起提月、舍入口径不统一）；③ 租期末两边不能同时归零——少提折旧、或尾差未封口。（减值、重新计量属"已知调整项"，校验时先剔除，否则会误报。）</p>
+      <p class="note"><b>为什么准则不要求"同步"</b>：资产是「<b>权利</b>」，按 CAS 4 的折旧规则在租期内直线消耗（CAS 21 第二十条、第二十一条）；负债是「<b>义务</b>」，按 CAS 21 用现值计量、实际利率法摊销。两把尺子量的是两件事——"权利还剩多少" vs "还欠多少"。硬绑成一条线，资产就不再代表"权利"了。</p>
+      <p class="note"><b>对账红线（别拿错等式做校验）</b>：<span class="bad">不要用"资产净额 ＝ 负债净额"</span>。正确是三件事——① 各自构成式：资产净额 ＝ 原值 − 累计折旧 − 减值准备；负债净额 ＝ 租赁付款额余额 − 未确认融资费用余额；② 用上面的恒等式交叉验；③ 期末<b>尾差封口</b>：本例 2,106,906 ÷ 60 ＝ 35,115.1，按 35,115 提 60 期只有 2,106,900，<b>差 6 元</b>须在最后一期调整，否则资产永远归不了零（负债侧同理）。</p>
+      <p class="note"><b>买房同理</b>：房子按 30 年直线折旧、房贷按等额本息还——第 10 年房子账面还剩 2/3，贷款可能只剩一半。<b>各走各的表，谁也不影响谁。</b>逐月明细见 ⑰ 卡；同源说明见《使用权资产与租赁负债计算详解》§8.11。</p>
+    </div>
+    <div class="box b" style="margin-top:16px"><h3>再追一层：会不会出现「<b>一边归零、另一边还在</b>」？</h3>
+      <p style="margin:4px 0"><b>会——而且准则原文里就写着。</b>让资产消失的事由（用完／减值／处置／转固）和让负债消失的事由（还清／豁免／终止／转固）<b>本来就不是同一件事</b>，所以下列情形都属<b>正常</b>；只有「<b>没有事由的单边残留</b>」才是错账。</p>
+      <div class="split-title" style="margin-top:12px">① 负债没了、资产还在（义务已清，权利还在用）</div>
+      <table>
+        <tr><th>路径</th><th>依据</th><th>账面表现</th></tr>
+        <tr><td><b>起租日或之前一次性付清</b>（或提前清偿）</td><td>CAS 21 第十七条：负债＝<b>尚未支付</b>的付款额现值 → 没有未付款就没有负债</td><td>租赁负债 0、未确认融资费用 0；资产照旧折旧、不再有财务费用（见 ④ 卡延伸）</td></tr>
+        <tr><td><b>能合理确定取得所有权</b>（含合理确定行权）→ 按<b>剩余使用寿命</b>折旧</td><td>CAS 21 第二十一条</td><td>租期结束时负债已归零，资产继续折旧到使用寿命末</td></tr>
+        <tr><td><b>行使购买选择权／租期届满前买下资产</b></td><td>CAS 21；财会〔2022〕32 号年报通知：终止确认使用权资产与租赁负债，<b>差额调整固定资产成本</b>（没有购买选择权的提前购买也照此办）</td><td>租赁负债 0，资产转成「固定资产」继续折旧</td></tr>
+        <tr><td><b>出租人豁免剩余租金</b></td><td>定性为<b>租赁变更</b>→ CAS 21 第二十八条（先调资产、资产不足入损益）；定性为<b>债务重组</b>→ CAS 12</td><td>负债被清掉；资产按变更被调减（可能调到零，见下表 ②）</td></tr>
+      </table>
+      <div class="split-title" style="margin-top:12px">② 资产没了、负债还在（权利不在了，义务照旧）</div>
+      <table>
+        <tr><th>路径</th><th>依据</th><th>账面表现</th></tr>
+        <tr><td><b>减值</b>（门店关停、市价大跌、资产毁损）</td><td>CAS 21 第二十二条 → 按 CAS 8 处理；指南：减值准备<b>一旦计提不得转回</b>，此后按<b>减后账面价值</b>继续折旧（例 40：账面 30,000 → 年折旧 6,000）</td><td>资产可被减到 0；<b>负债照旧计息、照旧付款</b></td></tr>
+        <tr><td><b>重新计量把资产冲光了</b>（负债调减额超出资产可承受范围）</td><td>CAS 21 第二十七条：<b>资产已调减至零、负债仍需进一步调减的，剩余金额计入当期损益</b></td><td>资产 0，负债仍有余额，继续付息付款</td></tr>
+        <tr><td><b>转租赁（中间出租人，转出为融资租赁）</b></td><td>应用指南 §九（一）：终止确认转出去的那部分<b>使用权资产</b>、确认转租赁投资净额，<b>但原租赁的租赁负债保留在表上</b>（见 ⑧ 卡）</td><td>原「使用权资产」消失（换成「应收融资租赁款」），原租赁负债照旧——两头都要确认收益／费用</td></tr>
+        <tr><td><b>实物灭失但合同不可撤销</b>（拆除、火灾）</td><td>走减值路径：<b>付款义务不因资产灭失自动消失</b>，除非同步终止确认</td><td>资产 0，负债照旧</td></tr>
+      </table>
+      <p class="note"><b>什么才叫错账（无事由的单边残留）</b>：① 终止／退还时<b>只结转一边</b>（负债清了、资产余额挂着，或反过来）；② 报废、拆除就以为「账也没了」（除非同步终止确认）；③ 行权后没把资产转固（资产继续按短租期折旧到 0，提前归零）；④ 免债<b>只冲负债、不按变更调资产</b>。</p>
+      <p class="note"><b>系统监控三条规则（建议配置）</b>：① 任一合同出现「资产净额＝0 而负债净额&gt;0」或反之，<b>必须挂着事由代码</b>（减值／付清／行权／豁免／转租／终止），无代码即报错；② 减值后：资产净额 ≥ 0，此后折旧基数＝减后净额，负债不动；③ <b>终止时资产与负债必须同时归零</b>，终止损益一次性入账，任一非零即拦截。</p>
+      <p class="note"><b>一句话</b>：资产的尽头是「<b>减值／处置／转固</b>」，负债的尽头是「<b>还清／豁免／终止</b>」——<b>各有各的尽头，不必同步</b>。同源说明见《使用权资产与租赁负债计算详解》§8.12。</p>
+    </div>
+  </div>
+
+  <div class="card" id="c11">
+    <span class="kicker">第 ⑪ 步 · 复核红线</span>
+    <h2><span class="num">⑪</span>常见错账 9 条</h2>
+<p class="lead">一句话：九条最常见的错，<b>逐条自查</b>——每条都能在本文找到对应的正确做法。</p>
+    <table>
+      <tr><th>#</th><th>错账</th><th>后果</th></tr>
+      <tr><td>1</td><td>初始直接费用直接费用化，不进使用权资产</td><td>资产和费用同时错，折旧基数偏小</td></tr>
+      <tr><td>2</td><td>把<b>租赁期开始日已付</b>的租金也塞进租赁负债去折现</td><td>负债虚增；使用权资产重复计算，折旧基数偏大</td></tr>
+      <tr><td>3</td><td>把使用权资产并入固定资产列报</td><td>违反单独列示要求，附注对不上</td></tr>
+      <tr><td>4</td><td>免租期停提折旧</td><td>折旧期间缩短，各期费用失真</td></tr>
+      <tr><td>5</td><td>减值准备计提后又转回</td><td><span class="bad">准则不允许</span>，操纵利润</td></tr>
+      <tr><td>6</td><td>折旧起提月政策全公司不统一、也不披露</td><td>同类资产口径不一，审计会提</td></tr>
+      <tr><td>7</td><td>把「起租日已付租金」与「收到的租赁激励」方向记反</td><td>使用权资产高估或低估（<b>已付要加、激励要减</b>）</td></tr>
+      <tr><td>8</td><td>「一年内到期」只搬本金、不搬未确认融资费用</td><td>流动负债与附注对不上（两者要<b>一起搬</b>）</td></tr>
+      <tr><td>9</td><td>租赁变更／重估时把使用权资产<b>调成负数</b></td><td>违反"减至零后超出部分转损益"，资产出现贷方余额</td></tr>
+    </table>
+    <p class="note"><b>一句话检验</b>：任何一笔使用权资产的业务，都应该能回答——<b>它是什么权利、值多少、分几年耗掉、对方那边发生了什么</b>。四个都答得上，账就不会错。</p>
+  </div>
+
+  <div class="card" id="csys">
+    <span class="kicker">附 · 系统落地</span>
+    <h2>从科目到系统字段（本项目实现对照）</h2>
+<p class="lead">一句话：把上面每个科目<b>对应到系统字段</b>，账才有可能自动出、自动校。</p>
+    <table>
+      <tr><th>会计科目</th><th>系统字段</th><th>报表去向</th></tr>
+      <tr><td>租赁负债—租赁付款额</td><td><code>lease_liab_ori</code>（负债原值）</td><td>负债总额（附注原值）</td></tr>
+      <tr><td>租赁负债—未确认融资费用</td><td><code>unconfirmed_cost</code></td><td>备抵，抵减负债</td></tr>
+      <tr><td>租赁负债（净额）</td><td><code>lease_liab</code>（现值）</td><td>资产负债表列示数</td></tr>
+      <tr><td>财务费用—利息费用</td><td>逐期利息明细（日／月粒度）</td><td>利润表</td></tr>
+    </table>
+    <p class="note"><b>三数互校</b>：<code>lease_liab_ori</code> − <code>unconfirmed_cost</code> ＝ <code>lease_liab</code>。同一合同三字段必须<b>同源同算</b>，否则对不上。</p>
+    <h3 style="font-size:15px;margin:18px 0 8px">计算链路：从合同参数到报表（系统实现顺序）</h3>
+    <svg viewBox="0 0 1000 150" width="100%" height="150" role="img" aria-label="计算链路图">
+      <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#94a3b8"/></marker></defs>
+      <rect x="8"   y="42" width="176" height="62" rx="10" fill="#eff6ff" stroke="#bfdbfe"/>
+      <text x="96"  y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#2563eb">① 合同参数</text>
+      <text x="96"  y="84" text-anchor="middle" font-size="11" fill="#64748b">起租日／租期／租金计划</text>
+      <text x="96"  y="98" text-anchor="middle" font-size="11" fill="#64748b">递增／免租／折现率</text>
+      <line x1="186" y1="73" x2="208" y2="73" stroke="#94a3b8" stroke-width="2" marker-end="url(#ar)"/>
+      <rect x="212" y="42" width="176" height="62" rx="10" fill="#f5f3ff" stroke="#ddd6fe"/>
+      <text x="300" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#6d28d9">② 折现计算</text>
+      <text x="300" y="84" text-anchor="middle" font-size="11" fill="#64748b">现值 lease_liab</text>
+      <text x="300" y="98" text-anchor="middle" font-size="11" fill="#64748b">未确认融资费用 = 总额−现值</text>
+      <line x1="390" y1="73" x2="412" y2="73" stroke="#94a3b8" stroke-width="2" marker-end="url(#ar)"/>
+      <rect x="416" y="42" width="176" height="62" rx="10" fill="#fff7ed" stroke="#fed7aa"/>
+      <text x="504" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#c2410c">③ 摊销表</text>
+      <text x="504" y="84" text-anchor="middle" font-size="11" fill="#64748b">逐日／逐月利息明细</text>
+      <text x="504" y="98" text-anchor="middle" font-size="11" fill="#64748b">期末尾差封口</text>
+      <line x1="594" y1="73" x2="616" y2="73" stroke="#94a3b8" stroke-width="2" marker-end="url(#ar)"/>
+      <rect x="620" y="42" width="176" height="62" rx="10" fill="#f0fdf4" stroke="#bbf7d0"/>
+      <text x="708" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#15803d">④ 分录生成</text>
+      <text x="708" y="84" text-anchor="middle" font-size="11" fill="#64748b">起租／月折旧／月利息／付款</text>
+      <text x="708" y="98" text-anchor="middle" font-size="11" fill="#64748b">科目金额与方向</text>
+      <line x1="798" y1="73" x2="820" y2="73" stroke="#94a3b8" stroke-width="2" marker-end="url(#ar)"/>
+      <rect x="824" y="42" width="168" height="62" rx="10" fill="#f1f5f9" stroke="#cbd5e1"/>
+      <text x="908" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">⑤ 报表取数</text>
+      <text x="908" y="84" text-anchor="middle" font-size="11" fill="#64748b">资产净额／负债净额</text>
+      <text x="908" y="98" text-anchor="middle" font-size="11" fill="#64748b">一年内到期／利息费用</text>
+      <text x="8" y="132" font-size="12" fill="#64748b">每步都用上一步的产物：① → ② → ③ → ④ → ⑤；③ 是"唯一真源"——分录与报表都从它取数，避免各算各的。</text>
+    </svg>
+    <p class="note"><b>落地要点</b>：<b>摊销表（③）应当是可复现的数据表</b>，而不是"渲染时临时算"——否则账、表、附注三处会出现口径漂移（这正是本项目 dczh 与 Cosmic 差异的根因之一）。</p>
+    <p class="note"><b>异常处理三件套</b>：① <b>尾差封口</b>（末期利息＝付款−期初，令负债归零）；② <b>舍入规则固定</b>（逐月四舍五入 vs 只在期末舍入，二者差 1～2 元，须全系统统一）；③ <b>变更/重估（⑫）触发重算</b>，并保留变更前快照以便追溯。</p>
+    <p class="note"><b>期末三条勾稽</b>：① 负债净额 ＝ 付款额余额 − 未确认融资费用余额；② 资产净额 ＝ 原值 − 累计折旧 − 减值准备；③ 累计已摊销利息 ＝ 未确认融资费用期初 − 期末（＝累计财务费用）。</p>
+    <p class="note"><b>延伸阅读（同目录）</b>：逐日计息与尾差 →《计息算法差异详解（Cosmic vs dczh）》；豁免（≤12 个月／低价值）→《短期租赁豁免详解》；三条线与错账 →《租赁负债三线速查卡》。</p>
+  </div>
+
+  <div class="card" id="c12">
+    <span class="kicker">第 ⑫ 步 · 租赁变更</span>
+    <h2><span class="num">⑫</span>合同改了怎么办：两类判断</h2>
+    <p class="lead"><b>判据</b>（<b>同时</b>满足才算"单独租赁"）：① 通过增加一项或多项租赁资产的使用权而<b>扩大租赁范围</b>；② 增加的对价与扩大部分的<b>单独价格（按该合同情况调整后的金额）</b>相当。</p>
+    <table>
+      <tr><th>类型</th><th>处理</th></tr>
+      <tr><td><b>作为单独租赁</b></td><td>原租赁<b>不动</b>；按新租赁单独确认（新租赁负债 ＋ 新增使用权资产，用新折现率）</td></tr>
+      <tr><td><b>不作为单独租赁</b></td><td>① <b>范围缩小／租期缩短</b> → 按比例<b>减记</b>使用权资产（含累计折旧、减值准备），差额进 <span class="chip pl">资产处置损益</span>；<br>② 其他情形 → 用<b>变更后的折现率</b>重算租赁负债，调整使用权资产</td></tr>
+    </table>
+    <p class="note"><b>特别提醒</b>：重算导致使用权资产<b>被减至零</b>后，仍需调减的部分<b>直接计入当期损益</b>（管理费用／销售费用等），<b>不能把资产调成负数</b>。</p>
+  </div>
+
+  <div class="card" id="c13">
+    <span class="kicker">第 ⑬ 步 · 售后租回</span>
+    <h2><span class="num">⑬</span>先卖后租：关键在"算不算销售"</h2>
+    <p class="lead">第一步：按 <b>CAS 14 收入准则</b>判断"资产转让"属不属于销售。这一步决定后面走哪条路。</p>
+    <table>
+      <tr><th>分支</th><th>会计处理</th></tr>
+      <tr><td><b>属于销售</b></td><td>终止确认标的资产；<br>使用权资产 ＝ 原资产<b>账面价值</b> × <b>租回所保留的权利占比</b>，其中<b>占比 ＝ 租赁付款额现值 ÷ 转让当日资产公允价值</b>；<br><b>只就转让给出租人的那部分</b>确认利得／损失（保留部分不确认）</td></tr>
+      <tr><td><b>不属于销售</b></td><td>继续确认该资产；同时确认一项与<b>转让收入等额</b>的<b>金融负债</b>（按 CAS 22 处理）<br><span class="note" style="border:0;padding:0;margin:0">—— 实务中<b>多数售后租回属于此类</b>，实质是"抵押融资"</span></td></tr>
+    </table>
+    <p class="note"><b>例（属于销售）</b>：原资产账面 100 万、转让当日公允价值 180 万、租赁付款额现值 45 万 → 租回权利占比 ＝ 45/180 ＝ <b>25%</b> → 使用权资产 ＝ 100 × 25% ＝ <b>25 万</b>；<b>仅就转让出去的 75% 确认利得</b>。</p>
+  </div>
+
+  <div class="card" id="c14">
+    <span class="kicker">第 ⑭ 步 · 转租赁</span>
+    <h2><span class="num">⑭</span>一间房两头租：转租赁（中间出租人）</h2>
+    <p class="lead">一人两面：<b>对原出租人是承租人</b>（保留租赁负债），<b>对次承租人是出租人</b>（确认转租投资）。</p>
+    <table>
+      <tr><th>分类</th><th>依据</th><th>处理</th></tr>
+      <tr><td><b>融资转租赁</b></td><td>转租期 vs <b>主租赁使用权资产的剩余期限</b><br><span class="note" style="border:0;padding:0;margin:0">（不是标的资产的使用寿命！）</span></td><td><b>终止确认</b>与转租相关的使用权资产，确认<b>转租赁投资净额</b>，差额进 <span class="chip pl">资产处置收益</span>；<b>同时继续确认原租赁负债</b></td></tr>
+      <tr><td><b>经营转租赁</b></td><td>其余情形</td><td>继续保留使用权资产并计提折旧；租金收入按经营租赁处理</td></tr>
+    </table>
+    <p class="note"><b>风险点</b>：转租后<b>两头挂账</b>（原租赁负债 ＋ 转租投资净额），报表要分开看；分类看的是<b>使用权剩余期限</b>，不是资产本身寿命。</p>
+  </div>
+
+  <div class="card" id="c15">
+    <span class="kicker">第 ⑮ 步 · 首次执行过渡</span>
+    <h2><span class="num">⑮</span>存量合同怎么上路：首次执行日</h2>
+    <p class="lead">本项目"<b>存量合同首次入表</b>"（初始化测算）走的正是这一节。</p>
+    <table>
+      <tr><th>首次执行日前</th><th>首次执行日怎么做</th></tr>
+      <tr><td><b>融资租赁</b></td><td>按"融资租入资产"与"应付融资租赁款"的<b>原账面价值</b>，分别计量使用权资产与租赁负债</td></tr>
+      <tr><td><b>经营租赁</b></td><td>租赁负债 ＝ 剩余付款额按<b>首次执行日增量借款利率</b>折现的现值；<br>使用权资产<b>二选一</b>：（1）假设自始采用本准则的账面价值（用首次执行日折现率）　（2）<b>＝ 租赁负债</b>（按预付租金做必要调整）<span class="note" style="border:0;padding:0;margin:0">← 最常用、最简</span></td></tr>
+    </table>
+    <p class="note"><b>简化措施</b>：首次执行日后 <b>12 个月内</b>执行完毕的租赁，可按短期租赁处理；特征相似的租赁可用<b>单一折现率</b>（组合法）。</p>
+    <p class="note"><b>同目录延伸</b>：《使用权资产初始化测算-需求规格说明书》《…系统设计说明书》——存量合同的数据准备与测算落地。</p>
+  </div>
+
+  <div class="card" id="c16">
+    <span class="kicker">第 ⑯ 步 · 入表前延伸</span>
+    <h2><span class="num">⑯</span>合同里混了物业费／服务费，怎么办？——合同分拆</h2>
+    <p class="lead">一句话：一份合同里既有"租房子"，又有"物业服务"——<b>准则给了你选择权：拆，或者不拆</b>（承租人可按"租赁资产类别"整体选）。</p>
+
+    <div class="box a" style="margin-bottom:14px"><h3>依据与判断（CAS 21 第九条、第十条）</h3>
+      <ul>
+        <li><b>默认：分拆</b>——租赁部分按租赁准则；非租赁部分（物业、安保、保洁、维保、水电服务）按其他准则<b>当期费用化</b></li>
+        <li><b>简化处理：可不分拆</b>——承租人<b>按租赁资产的类别</b>选择，把各租赁部分与<b>与其相关的</b>非租赁部分<b>分别合并为一项租赁</b>处理
+          <span class="note" style="border:0;padding:0;margin:0">（注意：<b>只能按"类别"整体选，不能逐份合同挑</b>；且须全公司口径一致）</span></li>
+        <li><b>不能合并的例外</b>：符合 CAS 22 分拆条件的<b>嵌入衍生工具</b></li>
+        <li><b>分拆时怎么分摊对价</b>：按各部分的<b>相对单独价格</b>比例分摊合同对价（单独价格 = 出租人或类似供应商<b>单独收取</b>的价格）</li>
+        <li><b>出租人没有这个选择权</b>——必须分拆（按 CAS 14 分摊对价）</li>
+      </ul>
+      <p class="note" style="margin-top:8px"><b>特别提醒</b>：<b>车位</b>若是"已识别资产"且你能控制其使用 → 它<b>本身就是一项租赁</b>，不是服务费——要按租赁处理（可能是单独租赁成分）。</p>
+    </div>
+
+    <h3 style="font-size:15px;margin:16px 0 6px">两种选择，账和报表完全不同（3 年、年付、8%）</h3>
+    <p class="lead" style="margin-top:0">合同：租金 <b>100/年</b> ＋ 物业服务 <b>20/年</b> ＝ 合计 <b>120/年</b></p>
+    <table>
+      <tr><th>对比项</th><th class="n">① 分拆（默认）</th><th class="n">② 不分拆（合并）</th><th>影响</th></tr>
+      <tr><td>计入租赁付款额的金额</td><td class="n">100/年</td><td class="n"><b>120/年</b></td><td>服务费也被"租赁化"</td></tr>
+      <tr><td>租赁负债 / 使用权资产</td><td class="n">257.70</td><td class="n"><b>309.25</b></td><td>资产、负债<b>各 +51.55（+20%）</b>，资产负债率上升</td></tr>
+      <tr><td>年折旧</td><td class="n">85.90</td><td class="n">103.08</td><td>—</td></tr>
+      <tr><td>第 1 年利息</td><td class="n">20.62</td><td class="n">24.74</td><td>—</td></tr>
+      <tr><td>服务费处理</td><td class="n">当期费用 <b>20</b></td><td class="n">—（已资本化）</td><td>—</td></tr>
+      <tr class="tot"><td><b>第 1 年费用合计</b></td><td class="n"><b>126.52</b></td><td class="n"><b>127.82</b></td><td>合并后<b>费用前移</b>（差 +1.30，第 1 年）</td></tr>
+      <tr><td>三年费用总额</td><td class="n">360.00</td><td class="n">360.00</td><td><b>总额不变</b>，只是形状与位置变了</td></tr>
+      <tr><td><b>现金流量表</b></td><td class="n">租金→<b>筹资</b>；服务费→<b>经营</b></td><td class="n">全部 120/年→<b>筹资</b></td><td>⚠️ 经营现金流"净额"也会变</td></tr>
+    </table>
+
+    <div class="entry">
+<span class="t">起租日（拆）：只有"租"的部分进表</span>
+<span class="dr">借：使用权资产</span>                    257.70
+<span class="dr">借：租赁负债—未确认融资费用</span>         42.30
+<span class="cr">　贷：租赁负债—租赁付款额</span>               300.00
+<span class="cmt">　　　物业费 20/年 不进负债、不资本化：付款时 借 管理费用—物业费 20 贷 银行存款</span>
+<span class="t">起租日（不拆）：全额"租赁化"</span>
+<span class="dr">借：使用权资产</span>                    309.25
+<span class="dr">借：租赁负债—未确认融资费用</span>         50.75
+<span class="cr">　贷：租赁负债—租赁付款额</span>               360.00
+<span class="cmt">　　　120×3 ＝ 360；未确认融资费用 360 − 309.25 ＝ 50.75</span>
+<span class="t">两种口径的分录差异（第 1 年费用）</span>
+<span class="cmt">① 分拆：</span>
+<span class="dr">借：财务费用—利息费用</span>    20.62　<span class="cmt">（利息）</span>
+<span class="dr">借：管理费用—物业费</span>      20.00　<span class="cmt">（服务费直接进费用）</span>
+<span class="dr">借：管理费用—使用权资产折旧</span>  85.90
+<span class="cr">　贷：…（各对应科目）</span>
+<span class="cmt">② 不分拆：</span>
+<span class="dr">借：财务费用—利息费用</span>    24.74　<span class="cmt">（按 120 的负债计息）</span>
+<span class="dr">借：管理费用—使用权资产折旧</span> 103.08　<span class="cmt">（服务费已资本化进折旧）</span>
+<span class="cr">　贷：…（无单独的物业费费用）</span>
+    </div>
+    <p class="note"><b>怎么选？</b>服务金额<b>不重要</b>或单独价格<b>难获得</b> → 选<b>不拆</b>（省事）；服务金额<b>大</b>、或想让资产负债率与经营现金流更好看 → 选<b>拆</b>。无论选哪个，<b>必须按资产类别统一、并保持前后一致</b>；且<b>不得为调节报表而随意变更</b>——口径选择应有商业理由、留变更留痕，并在附注中披露所选政策。</p>
+    <p class="note"><b>税务提示（另一条理由）</b>：租金属<b>不动产经营租赁</b>、物业费属<b>物业管理服务</b>，一般计税下税率不同（<b>9% 与 6%</b>），且<b>未分别核算的从高适用税率</b>（财税〔2016〕36 号第三十九条），实务上要求<b>分别开票（可同一张发票分项）</b>。也就是说：<b>会计上"拆不拆"是选择，税务上"要分别核算"往往是必做</b>——合同与台账最好一开始就分开列示。</p>
+  </div>
+
+  <div class="card" id="c17">
+    <span class="kicker">第 ⑰ 步 · 第 ⑩ 卡的明细版</span>
+    <h2><span class="num">⑰</span>月度总表：连续 12 个月逐月看（PROP-2024-001）</h2>
+    <p class="lead">一句话：把"折旧 / 计息 / 付款"三件事按<b>月</b>排开，就能看清两条线怎么分岔（月折现率 5%÷12；免租期 2024-07～09；季付 120,000；<span style="background:var(--orange-bg);padding:0 6px;border-radius:4px">橙色行＝付款月</span>）。</p>
+    <table>
+      <tr><th>月份</th><th class="n">期初负债</th><th class="n">利息</th><th class="n">付款</th><th class="n">期末负债</th><th class="n">本月折旧</th><th class="n">累计折旧</th><th class="n">资产净额</th></tr>
+      <tr><td>2024-07</td><td class="n">2,071,906</td><td class="n">8,633</td><td class="n">—</td><td class="n">2,080,539</td><td class="n">35,115</td><td class="n">35,115</td><td class="n">2,071,791</td></tr>
+      <tr><td>2024-08</td><td class="n">2,080,539</td><td class="n">8,669</td><td class="n">—</td><td class="n">2,089,208</td><td class="n">35,115</td><td class="n">70,230</td><td class="n">2,036,676</td></tr>
+      <tr><td>2024-09</td><td class="n">2,089,208</td><td class="n">8,705</td><td class="n">—</td><td class="n">2,097,913</td><td class="n">35,115</td><td class="n">105,345</td><td class="n">2,001,561</td></tr>
+      <tr><td>2024-10</td><td class="n">2,097,913</td><td class="n">8,741</td><td class="n">—</td><td class="n">2,106,654</td><td class="n">35,115</td><td class="n">140,460</td><td class="n">1,966,446</td></tr>
+      <tr><td>2024-11</td><td class="n">2,106,654</td><td class="n">8,778</td><td class="n">—</td><td class="n">2,115,432</td><td class="n">35,115</td><td class="n">175,575</td><td class="n">1,931,331</td></tr>
+      <tr class="pay"><td>2024-12</td><td class="n">2,115,432</td><td class="n">8,814</td><td class="n"><b>120,000</b></td><td class="n">2,004,246</td><td class="n">35,115</td><td class="n">210,690</td><td class="n">1,896,216</td></tr>
+      <tr><td>2025-01</td><td class="n">2,004,246</td><td class="n">8,351</td><td class="n">—</td><td class="n">2,012,597</td><td class="n">35,115</td><td class="n">245,805</td><td class="n">1,861,101</td></tr>
+      <tr><td>2025-02</td><td class="n">2,012,597</td><td class="n">8,386</td><td class="n">—</td><td class="n">2,020,983</td><td class="n">35,115</td><td class="n">280,920</td><td class="n">1,825,986</td></tr>
+      <tr class="pay"><td>2025-03</td><td class="n">2,020,983</td><td class="n">8,421</td><td class="n"><b>120,000</b></td><td class="n">1,909,404</td><td class="n">35,115</td><td class="n">316,035</td><td class="n">1,790,871</td></tr>
+      <tr><td>2025-04</td><td class="n">1,909,404</td><td class="n">7,956</td><td class="n">—</td><td class="n">1,917,360</td><td class="n">35,115</td><td class="n">351,150</td><td class="n">1,755,756</td></tr>
+      <tr><td>2025-05</td><td class="n">1,917,360</td><td class="n">7,989</td><td class="n">—</td><td class="n">1,925,349</td><td class="n">35,115</td><td class="n">386,265</td><td class="n">1,720,641</td></tr>
+      <tr class="pay"><td>2025-06</td><td class="n">1,925,349</td><td class="n">8,022</td><td class="n"><b>120,000</b></td><td class="n">1,813,371</td><td class="n">35,115</td><td class="n">421,380</td><td class="n">1,685,526</td></tr>
+      <tr class="tot"><td><b>12 个月合计</b></td><td class="n">—</td><td class="n"><b>101,465</b></td><td class="n"><b>360,000</b></td><td class="n">—</td><td class="n"><b>421,380</b></td><td class="n">—</td><td class="n">—</td></tr>
+    </table>
+    <p class="note"><b>三个看点</b>：<br>
+    ① <b>免租期（2024-07～09）利息反而在涨</b>（8,633→8,669→8,705）——因为只计息不付款，负债只增不减；<br>
+    ② <b>付款那个月负债"台阶式"下降</b>（12 月：2,115,432→2,004,246），付款后利息立刻转降（8,814→8,351）；<br>
+    ③ <b>资产侧走直线、负债侧走实际利率</b>：一年下来资产净额 2,106,906→<b>1,685,526</b>（降 421,380），负债 2,071,906→<b>1,813,371</b>（降 258,535）——两者起点相近、<b>期末已经分岔</b>。</p>
+    <p class="note"><b>口径说明（两种口径并列保留）</b>：本表按"每月利息四舍五入到分、余额按月结转"计算；《从租户角度的租金入表逻辑》§3.1 按"只在期末舍入"（该表 2024-12 记为 8,815 / 期末 2,004,247）——两者前 6 个月仅差 <b>1 元</b>，属<b>舍入顺序差异</b>，不是算错。<b>两口径并列保留、待财务定稿</b>；系统实现时须<b>固定一种舍入规则</b>，并在末期做<b>尾差封口</b>（详见《计息算法差异详解（Cosmic vs dczh）》）。</p>
+  </div>
+
+  <div class="card" id="c18">
+    <span class="kicker">深挖 · 资产的出口</span>
+    <h2><span class="num">⑱</span>资产怎么"变成"费用？——折旧只是其中一条出口</h2>
+    <p class="lead">一句话：<b>资产 ＝ 还没用完的成本；费用 ＝ 已经用完的成本</b>。折旧／摊销／折耗／结转成本，都是把成本从资产负债表"搬"到利润表——区别只在<b>按什么尺子搬、搬到哪个科目</b>。四块砖里只有 ③④ 进资产后再慢慢搬出来；① 是负债，它的利息从不进资产。</p>
+
+    <div class="cols">
+      <div class="box a"><h3>先回答：折现之后，34,029 走了两条路</h3>
+        <p>起租日：借 <span class="chip">使用权资产</span> 34,029 ／ 贷 <span class="chip liab">预计负债</span> 34,029——同一天、同金额、都是现值。之后它分成两条路，出口完全不同：</p>
+        <table>
+          <tr><th>路径</th><th class="n">金额</th><th>出口（借方科目）</th></tr>
+          <tr><td><b>资产侧</b>：进使用权资产 → 随资产折旧</td><td class="n">34,029</td><td>管理费用（折旧 6,805.80／年 × 5）</td></tr>
+          <tr><td><b>负债侧</b>：从不进资产，只作时间价值</td><td class="n">15,971</td><td>财务费用（贴息 2,722 → 3,705）</td></tr>
+          <tr class="tot"><td>合计 ＝ 将来真正付出去的现金</td><td class="n">50,000</td><td>——</td></tr>
+        </table>
+        <p class="note">所以"折现后只靠折旧转费用"<b>只对一半</b>：<b>现值 34,029</b> 确实进资产、靠折旧转费用；<b>折现差额 15,971 从不进资产</b>，它自己走财务费用。第 1 年费用 9,527.80 ＝ 折旧 6,805.80 ＋ 贴息 2,722。</p>
+      </div>
+      <div class="box b"><h3>进资产的比例 ＝ 现值率</h3>
+        <table>
+          <tr><th>义务（未来现金）</th><th class="n">进资产 → 折旧</th><th class="n">走利息 → 损益</th></tr>
+          <tr><td>复原 5 年 · 8%（50,000）</td><td class="n">34,029 · 68.06%</td><td class="n">15,971 · 31.94%</td></tr>
+          <tr><td>复原 10 年 · 5%（100,000）</td><td class="n">61,391 · 61.39%</td><td class="n">38,609 · 38.61%</td></tr>
+          <tr><td>租赁 20 期（2,282,749）</td><td class="n">2,071,906 · 90.76%</td><td class="n">210,843 · 9.24%</td></tr>
+        </table>
+        <p class="note">规律：<b>利率越高、期限越长 → 进资产的比例越小、当利息进损益的比例越大</b>（现值率 ＝ 1 ÷ (1+r)ⁿ）。租赁负债的折现差额叫"未确认融资费用"，复原负债的叫"贴息"——<b>名字不同、性质相同</b>，都不进资产。</p>
+      </div>
+    </div>
+
+    <h3 style="font-size:15px;margin:22px 0 6px">家族谱：把成本搬出资产，共四条道 ＋ 两个一次性出口</h3>
+    <svg viewBox="0 0 920 250" width="100%" height="250" role="img" aria-label="资产变费用的四条道与两个一次性出口">
+      <rect x="14" y="78" width="168" height="116" rx="10" fill="#eff6ff" stroke="#1d4ed8"/>
+      <text x="98" y="112" text-anchor="middle" font-size="15" font-weight="700" fill="#1d4ed8">资产</text>
+      <text x="98" y="134" text-anchor="middle" font-size="12" fill="#334155">（尚未耗用的成本）</text>
+      <text x="98" y="160" text-anchor="middle" font-size="12" fill="#475569">使用权资产</text>
+      <text x="98" y="178" text-anchor="middle" font-size="12" fill="#475569">2,106,906</text>
+      <rect x="738" y="78" width="168" height="116" rx="10" fill="#fff7ed" stroke="#c2410c"/>
+      <text x="822" y="112" text-anchor="middle" font-size="15" font-weight="700" fill="#c2410c">费用／损益</text>
+      <text x="822" y="134" text-anchor="middle" font-size="12" fill="#334155">（已经耗用的成本）</text>
+      <text x="822" y="160" text-anchor="middle" font-size="12" fill="#475569">管理费用／财务费用</text>
+      <text x="822" y="178" text-anchor="middle" font-size="12" fill="#475569">资产减值损失</text>
+      <line x1="190" y1="64" x2="724" y2="64" stroke="#1d4ed8" stroke-width="2"/>
+      <polygon points="724,58 736,64 724,70" fill="#1d4ed8"/>
+      <text x="460" y="56" text-anchor="middle" font-size="12.5" fill="#1d4ed8">① 折旧 · 摊销 · 折耗 —— 按时间／产量搬（固资、无形资产、使用权资产、油气）</text>
+      <line x1="190" y1="112" x2="724" y2="112" stroke="#15803d" stroke-width="2"/>
+      <polygon points="724,106 736,112 724,118" fill="#15803d"/>
+      <text x="460" y="104" text-anchor="middle" font-size="12.5" fill="#15803d">② 结转成本 —— 按销量／履约进度搬（存货 → 主营业务成本）</text>
+      <line x1="190" y1="160" x2="724" y2="160" stroke="#6d28d9" stroke-width="2"/>
+      <polygon points="724,154 736,160 724,166" fill="#6d28d9"/>
+      <text x="460" y="152" text-anchor="middle" font-size="12.5" fill="#6d28d9">③ 实际利率法 —— 按利率搬（未确认融资费用、溢折价、未实现融资收益）</text>
+      <line x1="190" y1="208" x2="724" y2="208" stroke="#b91c1c" stroke-width="2"/>
+      <polygon points="724,202 736,208 724,214" fill="#b91c1c"/>
+      <text x="460" y="200" text-anchor="middle" font-size="12.5" fill="#b91c1c">④ 减值 · 处置 —— 一次性搬走（资产减值损失／资产处置损益）</text>
+      <text x="460" y="238" text-anchor="middle" font-size="12" fill="#475569">镜像也成立：负债有出口——贴息 → 财务费用；递延收益摊销 → 其他收益；合同负债 → 收入</text>
+    </svg>
+    <table>
+      <tr><th>转换机制</th><th>适用对象（举例）</th><th>驱动尺子</th><th>去向科目（借方）</th><th>能否反向</th></tr>
+      <tr><td><b>折旧</b></td><td>固定资产、<b>使用权资产</b>、投资性房地产（成本模式）、生产性生物资产</td><td>时间（直线／加速／工作量）</td><td>制造费用／管理费用／销售费用／研发支出 → 最终营业成本</td><td>不可逆（估计变更只调未来）</td></tr>
+      <tr><td><b>摊销</b></td><td>无形资产（专利、软件、土地使用权）、长期待摊费用（改建支出）、合同履约成本</td><td>时间或产量</td><td>管理费用／销售费用／营业成本</td><td>不可逆</td></tr>
+      <tr><td><b>折耗</b></td><td>油气资产（矿区权益、井及相关设施）、消耗性生物资产</td><td>产量</td><td>生产成本／营业成本</td><td>不可逆</td></tr>
+      <tr><td><b>结转成本</b></td><td>存货（原材料、库存商品）</td><td>销量</td><td>主营业务成本</td><td>不可逆</td></tr>
+      <tr><td><b>实际利率法</b></td><td>债权投资（利息调整）、应付债券（溢折价）、<b>租赁负债（未确认融资费用）</b>、应收融资租赁款（未实现融资收益）</td><td>利率（时间价值）</td><td>投资收益／财务费用／租赁收入</td><td>——</td></tr>
+      <tr><td><b>减值</b>（一次性）</td><td>几乎全部资产（含使用权资产）</td><td>可收回金额 ＜ 账面价值</td><td>资产减值损失</td><td><b>不得转回</b>（存货、应收款项等除外）</td></tr>
+      <tr><td><b>处置／终止确认</b>（一次性）</td><td>全部资产</td><td>卖出、退回、报废</td><td>资产处置损益／固定资产清理／营业外支出</td><td>——</td></tr>
+    </table>
+    <p class="note"><b>三个反例要点</b>：① <b>商誉</b>不摊销，只做减值测试——它没有"折旧"这条路；② <b>投资性房地产采用公允价值模式</b>时<b>不提折旧</b>（成本模式才提）——同一资产、两种模式、出口不同；③ <b>预计负债（复原）不折旧</b>——它是负债，出口只有"贴息 → 财务费用"和"清偿 → 冲减负债"。<br>另有一个"隐形出口"：<b>递延所得税资产</b>——转回时进<b>所得税费用</b>，也是资产 → 费用。</p>
+
+    <div class="cols" style="margin-top:14px">
+      <div class="box d"><h3>使用权资产自己的四个出口</h3>
+        <table>
+          <tr><th>出口</th><th>依据／要点</th></tr>
+          <tr><td><b>① 折旧</b>（每期）</td><td>时间驱动；三问见 ⑤ 卡（60 个月，月折旧 35,115）</td></tr>
+          <tr><td><b>② 减值</b>（一次性）</td><td>CAS 21 第二十二条 → CAS 8；<b>计提后不得转回</b>，之后按减后价值继续折旧（见 ⑥ 卡）</td></tr>
+          <tr><td><b>③ 重计量冲减</b></td><td>CAS 21 第二十七条：先调资产；<b>资产已调到零、负债仍需调减的，余额进当期损益</b></td></tr>
+          <tr><td><b>④ 变更／终止</b></td><td>第二十八条按比例结转，差额进<b>资产处置损益</b>；提前购买按财会〔2022〕32号，差额<b>调固定资产成本</b>（见 ⑩ 卡"单边残留"）</td></tr>
+        </table>
+      </div>
+      <div class="box"><h3>系统落地：给每类资产建"出口台账"</h3>
+        <ul>
+          <li>字段：<b>asset_id ／ outlet</b>（折旧·摊销·折耗·减值·处置）<b>／ driver</b>（时间·产量·销量·利率）<b>／ rate_or_qty ／ target_account ／ reversal_allowed</b></li>
+          <li><b>三条硬校验</b>：① 期末资产净值 ≥ 0（折旧／摊销不得超额）；② 出口累计 ＋ 期末账面 ＝ 初始成本；③ <b>贴息／未确认融资费用不得资本化进资产</b>——否则"资产虚增 ＋ 费用前置"双重错账（若把 15,971 也砌进墙，折旧基数就变成 50,000，每年多 3,194.20）</li>
+          <li>减值标记与"不得转回"联动；公允价值模式的投资性房地产自动关闭折旧任务</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note"><b>四个易错点</b>：① 以为"一切资产都靠折旧转费用"——存货靠<b>结转</b>、金融资产靠<b>利率或处置</b>、商誉<b>只减值</b>；② 把预计负债的<b>贴息</b>资本化进资产；③ 把<b>减值</b>当折旧（减值不得转回，且过后按减后价值继续折旧）；④ 只盯折旧、忘了"两段路"，于是对不上 50,000 ＝ 34,029 ＋ 15,971，误以为少记。</p>
+  </div>
+
+  <div class="card" id="cchk">
+    <span class="kicker">附 2 · 判断树</span>
+    <h2>一张流程图：从合同到入账</h2>
+<p class="lead">用法：从最上面往下走，<b>每个分叉选一边</b>；走到底，就是该做的账。</p>
+    <div style="max-width:760px;margin:0 auto">
+      <div class="box a" style="text-align:center;font-weight:600">合同：一段时期内 <b>控制</b> 特定资产的 <b>使用权</b>，换取对价</div>
+      <div class="arrow" style="margin:8px 0">↓</div>
+      <div class="cols">
+        <div class="box c"><b>有「已识别资产」＋「控制三要素」？</b><br><span class="note" style="border:0;padding:0">是 → 继续下一步</span></div>
+        <div class="box e"><b>否 → 不是租赁</b><br><span class="note" style="border:0;padding:0">按服务／采购处理，不进使用权资产</span></div>
+      </div>
+      <div class="arrow" style="margin:8px 0">↓</div>
+      <div class="cols">
+        <div class="box e"><b>短期（≤12 月、不含购买选择权）或 低价值（&lt; 4 万、非转租）？</b><br><span class="note" style="border:0;padding:0">是 → <b>简化处理</b>：直线法计费用，经营活动现金流，<b>不进表</b></span></div>
+        <div class="box d"><b>否 → 继续</b><br><span class="note" style="border:0;padding:0">进入承租人单一模型</span></div>
+      </div>
+      <div class="arrow" style="margin:8px 0">↓</div>
+      <div class="box d" style="text-align:center"><b>确定【租赁期】</b>（不可撤销 ＋ 合理确定的续租权 ＋ 不会行使的终止权）</div>
+      <div class="arrow" style="margin:8px 0">↓</div>
+      <div class="box b" style="text-align:center"><b>确定【折现率】</b>：租赁内含利率 →（拿不到）→ 承租人增量借款利率</div>
+      <div class="arrow" style="margin:8px 0">↓</div>
+      <div class="box a" style="text-align:center"><b>【租赁负债】</b>＝ 未付租赁付款额现值 &nbsp;→&nbsp; <b>【使用权资产】</b>＝ 负债 ＋ 已付租金 − 激励 ＋ 初始直接费用 ＋ 复原成本现值</div>
+      <div class="arrow" style="margin:8px 0">↓</div>
+      <div class="cols">
+        <div class="box c"><b>每月</b>：折旧 ＋ 计息<br><span class="note" style="border:0;padding:0">付款日：冲减负债</span></div>
+        <div class="box e"><b>发生事件</b>：重新计量／减值／租赁变更<br><span class="note" style="border:0;padding:0">各自按前面各卡处理</span></div>
+      </div>
+      <div class="arrow" style="margin:8px 0">↓</div>
+      <div class="box" style="text-align:center;background:#f1f5f9"><b>到期 / 终止</b>：清理结转，科目归零（提前终止的差额进损益）</div>
+    </div>
+  </div>
+
+  <div class="card" id="ccmp">
+    <span class="kicker">附 3 · 三类资产对照</span>
+    <h2>使用权资产 vs 固定资产 vs 无形资产</h2>
+<p class="lead">一句话：三类资产看着像，差别集中在<b>折旧起点</b>（当月 vs 次月）与<b>报表列示</b>（单独列示）。</p>
+    <table>
+      <tr><th>维度</th><th>使用权资产</th><th>固定资产</th><th>无形资产</th></tr>
+      <tr><td>依据</td><td>CAS 21</td><td>CAS 4</td><td>CAS 6</td></tr>
+      <tr><td><b>折旧／摊销起点</b></td><td><b>当月</b>（原则）<br><span class="note" style="border:0;padding:0;margin:0">确有困难可下月，须披露</span></td><td><b>次月</b><br><span class="note" style="border:0;padding:0;margin:0">当月增加不提</span></td><td><b>当月</b></td></tr>
+      <tr><td>年限</td><td>租期 vs 剩余寿命<b>孰短</b>；<br>能取得所有权 → 按剩余使用寿命</td><td>使用寿命</td><td>使用寿命与合同期孰短</td></tr>
+      <tr><td>备抵科目</td><td>使用权资产累计折旧／减值准备</td><td>累计折旧／减值准备</td><td>累计摊销／减值准备</td></tr>
+      <tr><td>减值转回</td><td><span class="bad">不得转回</span></td><td><span class="bad">不得转回</span></td><td><span class="bad">不得转回</span></td></tr>
+      <tr><td>报表列示</td><td><b>单独列示</b>（不并入固定资产）</td><td>固定资产</td><td>无形资产</td></tr>
+    </table>
+    <p class="note"><b>最实用的一条</b>：只记"<b>使用权资产当月提、固定资产次月提</b>"这一句，实务上就不会错。</p>
+  </div>
+
+  <div class="card" style="background:#0f172a;border-color:#0f172a">
+    <h2 style="color:#fff;margin-bottom:10px">一句话</h2>
+    <p style="color:#e2e8f0;font-size:18px;font-weight:700;margin:0;letter-spacing:-.3px">
+      使用权资产 ＝ <b style="color:#93c5fd">对方让渡的使用权</b>，按<b style="color:#93c5fd">四块成本</b>入账，
+      靠<b style="color:#fdba74">折旧</b>慢慢耗掉，遇<b style="color:#fdba74">减值</b>下台阶，遇<b style="color:#fdba74">重估</b>跟着调，最后<b style="color:#86efac">清理归零</b>。
+    </p>
+  </div>
+
+  <p class="foot">
+    详细口径与推导见同目录文档：<br>
+    《从租户角度的租金入表逻辑》（业务与账务主文档）｜《使用权资产与租赁负债计算详解》（计算与口径）<br>
+    《租赁负债三线速查卡》（速查）｜《计息算法差异详解（Cosmic vs dczh）》｜《短期租赁豁免详解（≤12个月）》<br>
+    配套图解：《一图看懂_使用权资产与租赁负债.html》（最小例子／利息池／两本账／费用形状／两把尺子）
+  </p>
+
+</div>
+</body>
+</html>
+

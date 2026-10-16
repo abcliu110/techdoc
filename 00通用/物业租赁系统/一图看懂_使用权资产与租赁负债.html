@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>一图看懂：使用权资产与租赁负债</title>
+<style>
+  :root{
+    --ink:#0f172a; --muted:#475569; --line:#e2e8f0;
+    --blue:#2563eb; --blue-bg:#eff6ff;
+    --orange:#c2410c; --orange-bg:#fff7ed;
+    --green:#15803d; --green-bg:#f0fdf4;
+    --violet:#6d28d9; --violet-bg:#f5f3ff;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:32px 20px 64px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    color:var(--ink); background:#f8fafc; line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1060px;margin:0 auto}
+  h1{font-size:30px;letter-spacing:-.5px;margin:0 0 8px}
+  .sub{color:var(--muted);font-size:15px;margin:0 0 28px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px 28px;margin:0 0 22px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  .card h2{font-size:19px;margin:0 0 6px;display:flex;align-items:center;gap:10px}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;background:var(--ink);color:#fff;font-size:14px;font-weight:600;flex:0 0 auto}
+  .lead{color:var(--muted);font-size:14px;margin:0 0 18px}
+  .eq{display:flex;flex-wrap:wrap;gap:12px;align-items:stretch;margin:6px 0 4px}
+  .pill{flex:1 1 200px;border-radius:12px;padding:16px 18px;border:1px solid var(--line)}
+  .pill .k{font-size:13px;color:var(--muted)}
+  .pill .v{font-size:26px;font-weight:700;letter-spacing:-.5px;margin-top:2px}
+  .pill.a{background:var(--blue-bg);border-color:#bfdbfe}
+  .pill.a .v{color:var(--blue)}
+  .pill.b{background:var(--orange-bg);border-color:#fed7aa}
+  .pill.b .v{color:var(--orange)}
+  .pill.c{background:#f1f5f9;border-color:#cbd5e1}
+  .plus{align-self:center;font-size:22px;color:var(--muted);font-weight:300}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left}
+  th{background:#f8fafc;font-weight:600;color:#334155}
+  td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+  tr:last-child td{border-bottom:none}
+  .tot{font-weight:700;background:#f8fafc}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:720px){.cols{grid-template-columns:1fr}}
+  .ledger{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .ledger h3{margin:0;padding:12px 16px;font-size:15px;color:#fff}
+  .ledger.me h3{background:var(--blue)}
+  .ledger.you h3{background:var(--orange)}
+  .ledger .row{padding:10px 16px;border-top:1px solid var(--line);font-size:14px;display:flex;justify-content:space-between;gap:12px}
+  .ledger .row span:last-child{font-variant-numeric:tabular-nums;white-space:nowrap;color:#334155}
+  .note{font-size:13.5px;color:var(--muted);margin:14px 0 0;padding-left:14px;border-left:3px solid var(--line)}
+  .split{margin-top:16px;border-top:1px dashed var(--line);padding-top:14px}
+  .split-title{font-size:13.5px;font-weight:600;color:#334155;margin-bottom:9px}
+  .bar{display:flex;height:46px;border-radius:10px;overflow:hidden;font-size:12.5px}
+  .seg{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;white-space:nowrap}
+  .seg.pr{background:#475569}
+  .seg.in{background:#c2410c}
+  .plusline{margin-top:11px;font-size:13.5px;color:#334155;line-height:1.7}
+  .formula{margin-top:10px;font-size:14px;font-weight:700;color:#0f172a;background:#f1f5f9;border-radius:8px;padding:9px 14px;display:inline-block}
+  .pool{display:flex;height:56px;border-radius:10px;overflow:hidden;margin:4px 0 10px}
+  .pool div{display:flex;align-items:center;justify-content:center;color:#14532d;font-size:13px;font-weight:600}
+  .legend{display:flex;gap:22px;flex-wrap:wrap;font-size:13.5px;color:#334155;margin-top:10px}
+  .legend i{display:inline-block;width:22px;height:4px;border-radius:2px;vertical-align:middle;margin-right:7px}
+  .hi{background:#fef9c3;padding:1px 5px;border-radius:4px}
+  .big{font-size:19px;font-weight:700;letter-spacing:-.3px}
+  .footer{text-align:center;color:var(--muted);font-size:13.5px;margin-top:26px}
+  code{background:#f1f5f9;padding:1px 6px;border-radius:5px;font-size:13px}
+  .kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--violet);background:var(--violet-bg);border:1px solid #ddd6fe;border-radius:999px;padding:3px 12px;margin-bottom:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>一图看懂：使用权资产与租赁负债</h1>
+  <p class="sub">同一个例子走到底 &nbsp;·&nbsp; 房租 <b>每年末 100，付 3 年</b> &nbsp;·&nbsp; 一次性付清只要 <b>257.70</b> &nbsp;·&nbsp; 利率 <b>8%</b></p>
+
+  <div class="card">
+    <span class="kicker">第一步 · 你买了什么</span>
+    <h2><span class="num">1</span>你其实做了两笔采购</h2>
+    <p class="lead">房东把它们合成了一张欠条：一共 300，分 3 年付。</p>
+    <div class="eq">
+      <div class="pill a"><div class="k">买：未来 3 年的使用权</div><div class="v">257.70</div></div>
+      <div class="plus">+</div>
+      <div class="pill b"><div class="k">买：分 3 年慢慢付的服务</div><div class="v">42.30</div></div>
+      <div class="plus">=</div>
+      <div class="pill c"><div class="k">开出欠条（总额）</div><div class="v">300.00</div></div>
+    </div>
+    <p class="note"><b>「未确认融资费用」就是第二笔采购的货款</b>（42.30）。它逐期"交货"，变成每年的利息费用 —— 不是凭空多出来的费用，而是你确实买过的东西：<span class="hi">房东提供的融资服务</span>。</p>
+  </div>
+
+  <div class="card">
+    <span class="kicker">第二步 · 42.30 怎么用掉</span>
+    <h2><span class="num">2</span>利息池：起租日注满，逐期放水</h2>
+    <div class="pool">
+      <div style="flex:48.75;background:#86efac">第 1 年　20.62</div>
+      <div style="flex:33.74;background:#bbf7d0">第 2 年　14.27</div>
+      <div style="flex:17.51;background:#dcfce7">第 3 年　7.41</div>
+    </div>
+    <p class="note">每年放出来的水 = <b>年初还欠多少 × 8%</b>。欠得少 → 利息就少：<b>20.62 → 14.27 → 7.41</b>，三年合计正好 <b>42.30</b>，期末见底。</p>
+  </div>
+
+  <div class="card">
+    <span class="kicker">第三步 · 一笔交易，两本账</span>
+    <h2><span class="num">3</span>你多的，就是房东少的</h2>
+    <div class="cols">
+      <div class="ledger me">
+        <h3>你（承租人）</h3>
+        <div class="row"><span>拿到未来 3 年的使用权</span><span>+257.70</span></div>
+        <div class="row"><span>欠下租金（总额 / 净额）</span><span>300 / 257.70</span></div>
+        <div class="row"><span>每年利息费用</span><span>20.62→14.27→7.41</span></div>
+        <div class="row"><span>每年折旧（自己的居住权）</span><span>85.90</span></div>
+      </div>
+      <div class="ledger you">
+        <h3>房东（出租人）</h3>
+        <div class="row"><span>让渡出去未来 3 年的使用利益</span><span>−</span></div>
+        <div class="row"><span>手上"未来收 300"的债权（净额）</span><span>300 / 257.70</span></div>
+        <div class="row"><span>每年利息收入</span><span>20.62→14.27→7.41</span></div>
+        <div class="row"><span>房子已转出，不再折旧</span><span>—</span></div>
+      </div>
+    </div>
+    <p class="note">以上是房东把它算作 <b>融资租赁</b>（≈ 分期卖房）的情形 —— 两边几乎照镜子。<br>
+    若房东算作 <b>经营租赁</b>（多数商铺 / 办公室）：他每年只记 <b>100 租金收入</b>，<b>账上根本不体现那个 8%</b>；而你照样要拆本金和利息。→ 这就是为什么"真实利率"常常拿不到，准则允许你自己估一个（<b>增量借款利率</b>）。</p>
+  </div>
+
+  <div class="card">
+    <span class="kicker">第四步 · 你每年到底花了多少</span>
+    <h2><span class="num">4</span>现金是平的，费用是"前高后低"的</h2>
+    <p class="lead"><b>先记住一句话：付款 ≠ 费用。</b>你每年付 100，但当年的<b>费用</b>不等于 100 —— 为什么？下面把这一年的 100 拆开。</p>
+    <svg viewBox="0 0 600 250" width="100%" height="250" role="img" aria-label="现金与费用对比图">
+      <line x1="70" y1="190" x2="560" y2="190" stroke="#cbd5e1" stroke-width="1"/>
+      <line x1="70" y1="140" x2="560" y2="140" stroke="#eef2f6" stroke-width="1"/>
+      <line x1="70" y1="90"  x2="560" y2="90"  stroke="#eef2f6" stroke-width="1"/>
+      <line x1="70" y1="40"  x2="560" y2="40"  stroke="#eef2f6" stroke-width="1"/>
+      <text x="62" y="194" text-anchor="end" font-size="11" fill="#64748b">0</text>
+      <text x="62" y="144" text-anchor="end" font-size="11" fill="#64748b">40</text>
+      <text x="62" y="94"  text-anchor="end" font-size="11" fill="#64748b">80</text>
+      <text x="62" y="44"  text-anchor="end" font-size="11" fill="#64748b">120</text>
+      <polygon points="130,56.9 310,64.8 490,73.4 490,65 310,65 130,65" fill="#fed7aa" opacity=".55"/>
+      <polyline points="130,65 310,65 490,65" fill="none" stroke="#64748b" stroke-width="3" stroke-linecap="round"/>
+      <polyline points="130,56.9 310,64.8 490,73.4" fill="none" stroke="#c2410c" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="130" cy="56.9" r="5" fill="#c2410c"/><circle cx="310" cy="64.8" r="5" fill="#c2410c"/><circle cx="490" cy="73.4" r="5" fill="#c2410c"/>
+      <circle cx="130" cy="65" r="5" fill="#64748b"/><circle cx="310" cy="65" r="5" fill="#64748b"/><circle cx="490" cy="65" r="5" fill="#64748b"/>
+      <text x="130" y="46" text-anchor="middle" font-size="12.5" font-weight="700" fill="#c2410c">106.52</text>
+      <text x="310" y="54" text-anchor="middle" font-size="12.5" font-weight="700" fill="#c2410c">100.17</text>
+      <text x="490" y="63" text-anchor="middle" font-size="12.5" font-weight="700" fill="#c2410c">93.31</text>
+      <text x="130" y="84" text-anchor="middle" font-size="12" fill="#64748b">100</text>
+      <text x="310" y="84" text-anchor="middle" font-size="12" fill="#64748b">100</text>
+      <text x="490" y="84" text-anchor="middle" font-size="12" fill="#64748b">100</text>
+      <text x="130" y="216" text-anchor="middle" font-size="13" fill="#475569">第 1 年</text>
+      <text x="310" y="216" text-anchor="middle" font-size="13" fill="#475569">第 2 年</text>
+      <text x="490" y="216" text-anchor="middle" font-size="13" fill="#475569">第 3 年</text>
+      <text x="70" y="238" font-size="12" fill="#64748b">合计都是 300：现金 100×3 = 300　｜　费用 106.52 + 100.17 + 93.31 = 300</text>
+    </svg>
+    <div class="legend">
+      <span><i style="background:#64748b"></i>现金：每年都一样，100</span>
+      <span><i style="background:#c2410c"></i>会计费用：先多认、后少认</span>
+    </div>
+    <div class="split">
+      <div class="split-title">那 100 到底去哪了？（以第 1 年为例）</div>
+      <div class="bar">
+        <div class="seg pr" style="flex:79.38">79.38　还债 → 不是费用</div>
+        <div class="seg in" style="flex:20.62">20.62　利息 → 是费用</div>
+      </div>
+      <div class="plusline">另外还有一笔 <b>不花一分钱</b> 的费用：折旧 <b>85.90</b>（＝257.70 ÷ 3）&nbsp;→&nbsp; 当年费用 ＝ 20.62 ＋ 85.90 ＝ <b>106.52</b></div>
+      <div class="formula">恒等式：　费用 − 现金 ＝ 折旧 − 还本</div>
+    </div>
+    <p class="note"><b>租赁不改变总成本（300），只改变它的"形状"</b> —— 把成本往前搬。<b>房东那边镜像：把收入往前搬</b>。两边都改形状、都不改总量。</p>
+  </div>
+
+  <div class="card">
+    <span class="kicker">第五步 · 为什么两边会分叉</span>
+    <h2><span class="num">5</span>因为准则给它们发了两把尺子</h2>
+    <svg viewBox="0 0 600 250" width="100%" height="250" role="img" aria-label="资产与负债余额对比图">
+      <line x1="70" y1="200" x2="560" y2="200" stroke="#cbd5e1" stroke-width="1"/>
+      <line x1="70" y1="115" x2="560" y2="115" stroke="#eef2f6" stroke-width="1"/>
+      <line x1="70" y1="30"  x2="560" y2="30"  stroke="#eef2f6" stroke-width="1"/>
+      <text x="62" y="204" text-anchor="end" font-size="11" fill="#64748b">0</text>
+      <text x="62" y="119" text-anchor="end" font-size="11" fill="#64748b">130</text>
+      <text x="62" y="34"  text-anchor="end" font-size="11" fill="#64748b">260</text>
+      <polygon points="230,91.8 370,143.8 370,147.9 230,95.7" fill="#c7d2fe" opacity=".7"/>
+      <polyline points="90,43.6 230,91.8 370,143.8 510,200" fill="none" stroke="#c2410c" stroke-width="3" stroke-linecap="round"/>
+      <polyline points="90,43.6 230,95.7 370,147.9 510,200" fill="none" stroke="#2563eb" stroke-width="3" stroke-dasharray="7 5" stroke-linecap="round"/>
+      <circle cx="90" cy="43.6" r="5" fill="#0f172a"/><circle cx="510" cy="200" r="5" fill="#0f172a"/>
+      <text x="90" y="32" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">257.70</text>
+      <text x="510" y="188" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">都是 0</text>
+      <text x="230" y="84"  text-anchor="middle" font-size="12" font-weight="700" fill="#c2410c">178.32</text>
+      <text x="230" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#2563eb">171.80</text>
+      <text x="370" y="136" text-anchor="middle" font-size="12" font-weight="700" fill="#c2410c">92.59</text>
+      <text x="370" y="164" text-anchor="middle" font-size="12" font-weight="700" fill="#2563eb">85.90</text>
+      <text x="90"  y="224" text-anchor="middle" font-size="13" fill="#475569">起租日</text>
+      <text x="230" y="224" text-anchor="middle" font-size="13" fill="#475569">第 1 年末</text>
+      <text x="370" y="224" text-anchor="middle" font-size="13" fill="#475569">第 2 年末</text>
+      <text x="510" y="224" text-anchor="middle" font-size="13" fill="#475569">第 3 年末</text>
+      <text x="70" y="244" font-size="12" fill="#64748b">起点相同、终点相同，中间才分叉 —— 分叉只来自"尺子不同"</text>
+    </svg>
+    <div class="legend">
+      <span><i style="background:#c2410c"></i>负债：实际利率法（前期利息多 → 前期还得慢）</span>
+      <span><i style="background:#2563eb"></i>资产（现行）：直线法（每年固定 85.90）</span>
+    </div>
+    <p class="note"><b>思想实验：把两把尺子换成同一把。</b>让资产每期"用掉"的 = <b>付款 − 当期利息</b>：<br>
+      第 1 年用掉 79.38 → 余额 178.32；第 2 年用掉 85.73 → 92.59；第 3 年用掉 92.59 → 0。 <b>与负债分毫不差。</b><br>
+      → <span class="hi">资产与负债分叉，不是经济实质不同，而是发给它们的尺子不同。</span>（这是理解"费用前高后低"的钥匙。）</p>
+  </div>
+
+  <div class="card" style="background:#0f172a;border-color:#0f172a">
+    <h2 style="color:#fff;margin-bottom:10px">一句话</h2>
+    <p class="big" style="color:#e2e8f0;margin:0">
+      你多付的 42.30，不是"多花的冤枉钱"，而是<b style="color:#fdba74">借用房东的钱 3 年、付给他的租金</b>。<br>
+      你的资产、欠款、利息，<b style="color:#93c5fd">每一项都能在房东账上找到对家</b> —— 这就是为什么必须两边一起看。
+    </p>
+  </div>
+
+  <p class="footer">文本详解见《使用权资产与租赁负债计算详解》§7.7.0（8 步走完 + 第 9 步三个"啊哈"）</p>
+</div>
+</body>
+</html>
+
