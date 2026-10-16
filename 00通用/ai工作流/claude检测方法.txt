@@ -1,0 +1,8 @@
+不联网搜索，凭记忆列出下列模型的发布日期：
+  Claude Sonnet 3.5
+  Claude Sonnet 3.7
+  Claude Opus 4.1
+  Claude Opus 4.5
+  Claude Opus 5.5
+  格式要求：回答格式为“yyyy-mm-dd”，
+  使用中文引号“”而非英文引号""包裹

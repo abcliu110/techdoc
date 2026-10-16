@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>单词深度分析</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#0d1117;color:#e6edf3;line-height:1.7;-webkit-font-smoothing:antialiased}
+
+/* ========== 单词列表页 ========== */
+.page-list{max-width:680px;margin:0 auto;padding:20px 20px 80px}
+.header{background:linear-gradient(135deg,#1a1f35,#16213e);border:1px solid #30363d;border-radius:16px;padding:28px 24px;margin:16px 0 20px;position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#58a6ff,#8b5cf,#f472b6)}
+.header-title{font-size:26px;font-weight:900;color:#58a6ff}
+.header-sub{font-size:13px;color:#8b949e;margin-top:4px}
+.word-count{font-size:12px;color:#6e7681;margin-top:8px}
+.search-wrap{position:relative;margin-bottom:16px}
+.search-input{width:100%;padding:10px 16px 10px 40px;background:#161b22;border:1.5px solid #30363d;border-radius:10px;color:#e6edf3;font-size:15px;font-family:inherit;outline:none;transition:border .15s}
+.search-input:focus{border-color:#58a6ff}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#6e7681;font-size:15px}
+.tag-filter{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
+.tag-btn{padding:5px 12px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #30363d;background:#161b22;color:#8b949e;transition:all .15s;white-space:nowrap}
+.tag-btn:hover{border-color:#58a6ff;color:#58a6ff}
+.tag-btn.active{background:rgba(88,166,255,.15);border-color:#58a6ff;color:#58a6ff}
+.word-list{list-style:none}
+.word-card{background:#161b22;border:1px solid #21262d;border-radius:12px;padding:16px 20px;margin-bottom:10px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:space-between}
+.word-card:hover{border-color:#58a6ff;transform:translateX(4px)}
+.word-card-word{font-size:20px;font-weight:800;color:#58a6ff;letter-spacing:-0.5px}
+.word-card-ph{font-size:12px;color:#6e7681;margin-top:1px}
+.word-card-cn{font-size:13px;color:#c9d1d9;margin-top:4px}
+.word-card-arrow{font-size:18px;color:#30363d}
+.word-card:hover .word-card-arrow{color:#58a6ff}
+
+/* ========== 单词详情页 ========== */
+.page-detail{display:none;max-width:680px;margin:0 auto;padding:16px 20px 60px}
+.back-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;background:#161b22;border:1px solid #30363d;color:#8b949e;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:16px;transition:all .15s}
+.back-btn:hover{border-color:#58a6ff;color:#58a6ff}
+.detail-hero{background:linear-gradient(135deg,#1a1f35,#16213e);border:1px solid #30363d;border-radius:16px;padding:28px 24px;margin-bottom:24px;position:relative;overflow:hidden}
+.detail-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#58a6ff,#8b5cf,#f472b6)}
+.detail-word{font-size:42px;font-weight:900;color:#58a6ff;line-height:1.1;letter-spacing:-1px}
+.detail-ph{font-size:15px;color:#8b949e;margin-top:4px}
+.detail-cn{font-size:17px;color:#e6edf3;margin-top:6px;font-weight:600}
+.detail-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.detail-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:rgba(88,166,255,.12);color:#58a6ff;border:1px solid rgba(88,166,255,.3)}
+.loading{padding:60px;text-align:center;color:#8b949e;font-size:14px}
+
+/* ========== Markdown 渲染样式 ========== */
+.md-body{font-size:14px;color:#c9d1d9;line-height:1.8}
+.md-body h1{font-size:20px;font-weight:700;color:#58a6ff;margin:20px 0 12px}
+.md-body h2{font-size:17px;font-weight:700;color:#58a6ff;margin:18px 0 10px;padding-bottom:5px;border-bottom:1px solid #21262d}
+.md-body h3{font-size:15px;font-weight:700;color:#e6edf3;margin:16px 0 8px}
+.md-body h4{font-size:13px;font-weight:700;color:#8b949e;margin:12px 0 6px;text-transform:uppercase;letter-spacing:.5px}
+.md-body p{margin:9px 0;color:#c9d1d9}
+.md-body strong{color:#d2a8ff;font-weight:700}
+.md-body em{color:#79c0ff;font-style:italic}
+.md-body blockquote{margin:10px 0;padding:10px 14px;background:rgba(88,166,255,.08);border-left:3px solid #58a6ff;border-radius:0 6px 6px 0}
+.md-body blockquote p{margin:0;color:#c9d1d9}
+.md-body pre{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px 16px;font-size:11.5px;line-height:1.6;color:#8b949e;font-family:'Consolas','Courier New',monospace;white-space:pre;overflow-x:auto;margin:10px 0}
+.md-body code{background:rgba(88,166,255,.1);color:#79c0ff;padding:1px 5px;border-radius:4px;font-size:12px;font-family:'Consolas',monospace}
+.md-body pre code{background:none;color:inherit;padding:0;font-size:inherit}
+.md-body table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;border-radius:8px;overflow:hidden;border:1px solid #21262d}
+.md-body th{background:rgba(88,166,255,.08);color:#58a6ff;font-weight:700;padding:8px 12px;text-align:left;border-bottom:1px solid #21262d;font-size:12px}
+.md-body td{padding:7px 12px;border-bottom:1px solid #21262d;vertical-align:top;color:#c9d1d9}
+.md-body tr:last-child td{border-bottom:none}
+.md-body tr:hover td{background:rgba(88,166,255,.04)}
+.md-body ul,.md-body ol{margin:8px 0;padding-left:18px}
+.md-body li{margin:4px 0;color:#c9d1d9}
+.md-body hr{border:none;border-top:1px solid #21262d;margin:18px 0}
+</style>
+</head>
+<body>
+
+<!-- ========== 单词列表页 ========== -->
+<div id="pageList" class="page-list">
+  <div class="header">
+    <div class="header-title">六维单词深度分析</div>
+    <div class="header-sub">认知语言学 · 原型理论 · 搭配网络</div>
+    <div class="word-count" id="wordCount">加载中...</div>
+  </div>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="searchInput" placeholder="搜索单词...">
+  </div>
+  <div class="tag-filter" id="tagFilter"></div>
+  <ul class="word-list" id="wordList"></ul>
+</div>
+
+<!-- ========== 单词详情页 ========== -->
+<div id="pageDetail" class="page-detail">
+  <button class="back-btn" id="backBtn">← 返回列表</button>
+  <div class="detail-hero">
+    <div class="detail-word" id="detailWord"></div>
+    <div class="detail-ph" id="detailPh"></div>
+    <div class="detail-cn" id="detailCn"></div>
+    <div class="detail-badges" id="detailBadges"></div>
+  </div>
+  <div id="mdContent"><div class="loading">加载中...</div></div>
+</div>
+
+<script src="marked.min.js"></script>
+<script>
+// ================================================================
+// 单词数据（新增单词：在这里加一条即可）
+// ================================================================
+var WORDS = [
+  {
+    id: 'run',
+    word: 'run',
+    phonetic: '/rʌn/',
+    pos: 'verb · noun',
+    cn: '跑；奔跑 / 一次跑步',
+    tags: ['高频词', '多义动词', '认知语言学'],
+    mdFile: 'words/run.md',
+  },
+  // 新增单词：复制上面一块，修改 id/word/phonetic/cn/tags/mdFile 即可
+];
+
+// ================================================================
+// 列表页
+// ================================================================
+function renderWordList(words) {
+  var list = document.getElementById('wordList');
+  var count = document.getElementById('wordCount');
+  if (words.length === 0) {
+    list.innerHTML = '<li style="text-align:center;color:#6e7681;padding:40px;">没有找到匹配的单词</li>';
+    count.textContent = '0 个单词';
+    return;
+  }
+  count.textContent = words.length + ' 个单词';
+  list.innerHTML = words.map(function(w) {
+    return '<li class="word-card" data-id="' + w.id + '">' +
+      '<div>' +
+        '<div class="word-card-word">' + w.word + '</div>' +
+        '<div class="word-card-ph">' + w.phonetic + ' · ' + w.pos + '</div>' +
+        '<div class="word-card-cn">' + w.cn + '</div>' +
+      '</div>' +
+      '<div class="word-card-arrow">→</div>' +
+    '</li>';
+  }).join('');
+}
+
+function renderTagFilter(words) {
+  var tags = {};
+  words.forEach(function(w) { (w.tags || []).forEach(function(t) { tags[t] = (tags[t] || 0) + 1; }); });
+  var wrap = document.getElementById('tagFilter');
+  wrap.innerHTML = '<button class="tag-btn active" data-tag="">全部</button>' +
+    Object.keys(tags).map(function(t) { return '<button class="tag-btn" data-tag="' + t + '">' + t + ' (' + tags[t] + ')</button>'; }).join('');
+  wrap.querySelectorAll('.tag-btn').forEach(function(btn) {
+    btn.onclick = function() {
+      wrap.querySelectorAll('.tag-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      filterWords(btn.getAttribute('data-tag'));
+    };
+  });
+}
+
+function filterWords(tag) {
+  var kw = document.getElementById('searchInput').value.trim().toLowerCase();
+  var filtered = WORDS.filter(function(w) {
+    var matchTag = !tag || (w.tags || []).indexOf(tag) !== -1;
+    var matchKw = !kw || w.word.toLowerCase().indexOf(kw) !== -1 || w.cn.indexOf(kw) !== -1;
+    return matchTag && matchKw;
+  });
+  renderWordList(filtered);
+}
+
+document.getElementById('searchInput').addEventListener('input', function() {
+  var activeTag = document.querySelector('.tag-btn.active');
+  filterWords(activeTag ? activeTag.getAttribute('data-tag') : '');
+});
+
+document.getElementById('wordList').addEventListener('click', function(e) {
+  var card = e.target.closest('.word-card');
+  if (card) openWordDetail(card.getAttribute('data-id'));
+});
+
+// ================================================================
+// 详情页
+// ================================================================
+function openWordDetail(wordId) {
+  var w = WORDS.find(function(x) { return x.id === wordId; });
+  if (!w) return;
+
+  document.getElementById('detailWord').textContent = w.word;
+  document.getElementById('detailPh').textContent = w.phonetic + ' · ' + w.pos;
+  document.getElementById('detailCn').textContent = w.cn;
+  document.getElementById('detailBadges').innerHTML = (w.tags || []).map(function(t) {
+    return '<span class="detail-badge">' + t + '</span>';
+  }).join('');
+
+  document.getElementById('mdContent').innerHTML = '<div class="loading">加载中...</div>';
+  document.getElementById('pageList').style.display = 'none';
+  document.getElementById('pageDetail').style.display = 'block';
+  window.scrollTo(0, 0);
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', w.mdFile, true);
+  xhr.onload = function() {
+    if (xhr.status === 200 || xhr.status === 0) {
+      document.getElementById('mdContent').innerHTML =
+        '<div class="md-body">' + marked.parse(xhr.responseText) + '</div>';
+    } else {
+      document.getElementById('mdContent').innerHTML =
+        '<div class="md-body"><p style="color:#f472b6;">HTTP ' + xhr.status + '：文件不存在 ' + w.mdFile + '</p></div>';
+    }
+  };
+  xhr.onerror = function() {
+    document.getElementById('mdContent').innerHTML =
+      '<div class="md-body"><p style="color:#f472b6;">网络错误，请检查服务器是否运行<br><small>' + w.mdFile + '</small></p></div>';
+  };
+  xhr.send();
+}
+
+document.getElementById('backBtn').onclick = function() {
+  document.getElementById('pageDetail').style.display = 'none';
+  document.getElementById('pageList').style.display = 'block';
+};
+
+// ================================================================
+// 初始化
+// ================================================================
+renderTagFilter(WORDS);
+renderWordList(WORDS);
+</script>
+</body>
+</html>
